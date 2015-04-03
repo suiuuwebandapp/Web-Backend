@@ -1,0 +1,174 @@
+<?php
+namespace common\components;
+
+use Faker\Provider\Uuid;
+use yii\base\Exception;
+/**
+ * Created by PhpStorm.
+ * User : xin.zhang
+ * Date : 15/4/1
+ * Time : 上午10:18
+ * Email: zhangxinmailvip@foxmail.com
+ */
+
+/**
+ * 返回状态码和部分系统常量
+ * Class Code
+ */
+class Code
+{
+
+
+    //***************************************************通用************************************************************
+
+    /**
+     * 错误码
+     */
+    const SUCCESS = 1;
+    const FAIL = -1;
+    const PARAMS_ERROR = -2;
+    /**
+     * 请求错误信息
+     */
+    const REQUEST_FAIL = '请求失败';
+
+    //***************************************************前台************************************************************
+
+    /**
+     *系统常量（前台）
+     */
+    const USER_LOGIN_SESSION='U_L_S';//用户是否登录 SESSION KEY
+    const USER_LOGIN_ERROR_COUNT_PREFIX='U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
+    const USER_LOGIN_VERIFY_CODE='U_L_V_C'; //用户登录验证码 SESSION KEY
+    const USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='86400';
+
+    const USER_PHONE_VALIDATE_CODE_AND_PHONE='U_P_V_C_A_P';//用户发送的手机验证码
+
+    /**
+     * 异常信息（后台）
+     */
+    const SYSTEM_EXCEPTION='系统未知异常,请与管理员联系';
+    const USER_PHONE_EXISTED='此手机号码已经注册';
+    const USER_EMAIL_EXISTED='此邮箱地址已经注册';
+    const USER_PHONE_CODE_ERROR='无效的验证码或验证码已经失效';
+
+    //***************************************************后台************************************************************
+    /**
+     *系统常量（后台）
+     */
+    const SYS_USER_LOGIN_SESSION='S_U_L_S';//用户是否登录 SESSION KEY
+    const SYS_USER_LOGIN_ERROR_COUNT_PREFIX='S_U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
+    const SYS_USER_LOGIN_VERIFY_CODE='S_U_L_V_C'; //用户登录验证码 SESSION KEY
+    const SYS_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='86400';
+
+
+    /**
+     * 异常信息（后台）
+     */
+    const SYS_SYSTEM_EXCEPTION='系统未知异常,请与管理员联系';
+    const SYS_USER_NAME_EXISTED='用户名已存在';
+
+
+
+    /**
+     * 登录
+     */
+    const SYS_LOGIN_ERROR_COUNT = 3;  //三次错误出现验证码
+    const MAX_LOGIN_ERROR_COUNT=20;//连续出现次数 则用户当日不能登录
+    /**
+     * 手机号为空
+     */
+    const USER_PHONE_NULL = -3;
+
+    const USER_ACCOUNT_TRUE = 3;
+
+    const LOGIN_ERROR = -4; //登录失败
+    const USER_EMAIL_NULL = -5;
+    const LOGIN_EXCEPTION = -6;//登录异常
+
+    const REGISTER_IP_SUM = 50;  //一天一个ip注册几次
+    const REGISTER_IP_NUM = -7; //一天注册ip上限
+    const REGISTER_IP_MESSAGE = "此ip当天注册上限！！";
+    const REGISTER_IP_BLACK = "此ip被封，请联系管理员解封！！";
+
+
+
+    /**
+     * 错误信息
+     */
+    const USER_PHONE_EMAIL_EMPTY = '用户手机或者邮箱不能为空';
+    const USER_PHONE_EMAIL_ERROR = '用户手机或者邮箱错误';
+    const USER_NAME_ERROR = '用户名错误';
+    const USER_EMAIL_ERROR = '用户邮箱错误';
+    const USER_EMAIL_EXIST = '此邮箱已存在';
+    const USER_EMAIL_EXIST_NOT = '邮箱不存在';
+    const USER_PHONE_ERROR = '用户手机号码错误';
+    const USER_PHONE_EXIST = '用户手机号码存在';
+    const USER_PHONE_EXIST_NOT = '用户手机号码不存在';
+    const USER_IS_NULL = '用户基本信息为空';
+    const USER_PASSWORD_EMPTY = '密码不能为空';
+    const CODE_EMPTY = '验证码不能为空';
+    const CODE_ERROR = '验证码输入错误';
+    const CODE_NULL = '请输入验证码';
+    const USER_PASSWORD_ERROR = "用户名或密码错误";
+    const USER_LOGIN_ERROR_NUM = "登录失败次数";
+    const LOGIN_FAIL = '登陆失败';
+
+    /**
+     * order error info
+     */
+    const ORDER_NUMBER_NULL = '订单编号为空';
+    const ORDER_MONEY_NULL = '订单金额为空';
+    const ORDER_UNIT_NULL = '订单单元id为空';
+
+
+
+    /**
+     * 返回数据和状态
+     * @param $infoCode       信息码
+     * @param string $data 返回的数据
+     * @param string $msg 返回的消息
+     * @param string $page 返回的分页
+     * @param string $pa 分页条件
+     * @return array
+     */
+    public static function statusDataReturn(integer $infoCode, $data = '', $msg = '', $page = '', $pa = '')
+    {
+        return [
+            'status' => $infoCode,
+            'data' => $data,
+            'message' => $msg,
+            'page_list' => $page,
+            'pa' => $pa,
+        ];
+
+    }
+
+    //替换数据库插入特殊字符
+    public static function TextReplace($str)
+    {
+        $str = str_replace("'", "|", $str);
+        return $str;
+    }
+
+    public static function TextReplaceR($str)
+    {
+        $str = str_replace("|", "'", $str);
+        return $str;
+    }
+
+    public static function showException(Exception $e)
+    {
+        echo '<pre>';
+        var_dump($e->getPrevious());
+        echo '</pre>';
+        exit;
+    }
+
+    public static function getUUID()
+    {
+        return  str_replace('-','',Uuid::uuid());
+    }
+
+
+}
