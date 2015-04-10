@@ -30,6 +30,8 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
     <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
+    <!-- 将Jquery 引入到前方，方便内部引用-->
+    <script type="text/javascript" src="/assets/global/plugins/jquery-1.11.0.min.js"></script>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -44,8 +46,10 @@ AppAsset::register($this);
         <!-- BEGIN PAGE -->
         <div class="page-content page-right">
             <?php include 'tools.php' ?>
-            <!--                <iframe id="rightFrame" name="rightFrame" width="100%" src="../..${selectModule.url}?${params}" frameborder="0" style="min-height: 700px;"></iframe>-->
-           <?= $content ?>
+            <?php include 'head.php' ?>
+            <div id="div_main_container">
+                <?= $content ?>
+            </div>
         </div>
         <!-- END PAGE -->
     </div>
@@ -56,11 +60,13 @@ AppAsset::register($this);
 <script type="text/javascript">
     var basePath = "/";
 </script>
+
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="/assets/plugins/respond.min.js"></script>
 <script src="/assets/plugins/excanvas.min.js"></script>
 <![endif]-->
+
 
 <script>
     jQuery(document).ready(function () {

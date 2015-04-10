@@ -132,7 +132,7 @@ class Code
      * @param string $pa 分页条件
      * @return array
      */
-    public static function statusDataReturn(integer $infoCode, $data = '', $msg = '', $page = '', $pa = '')
+    public static function statusDataReturn($infoCode, $data = '', $msg = '', $page = '', $pa = '')
     {
         return [
             'status' => $infoCode,
@@ -160,7 +160,7 @@ class Code
     public static function showException(Exception $e)
     {
         echo '<pre>';
-        var_dump($e->getPrevious());
+        var_dump($e->getTrace());
         echo '</pre>';
         exit;
     }

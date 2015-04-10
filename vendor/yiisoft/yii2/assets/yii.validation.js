@@ -10,7 +10,7 @@
  * @since 2.0
  */
 
-yii.validation = (function ($) {
+Validation = (function ($) {
     var pub = {
         isEmpty: function (value) {
             return value === null || value === undefined || value == [] || value === '';

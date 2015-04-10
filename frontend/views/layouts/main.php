@@ -20,6 +20,7 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <script type="text/javascript" src="/assets/35bf7abb/jquery.min.js"></script>
 </head>
 <body>
     <?php $this->beginBody() ?>
@@ -59,6 +60,8 @@ AppAsset::register($this);
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>
+        <?= Html::beginForm() ?>
+        <?= Html::endForm() ?>
         <?= $content ?>
         </div>
     </div>

@@ -78,11 +78,11 @@ class UserBase {
     /**
      * @var注册IP
      */
-    public $registerLoginIp;
+    public $registerIp;
     /**
      * @var注册时间
      */
-    public $registerLoginTime;
+    public $registerTime;
     /**
      * @var最后登录IP
      */

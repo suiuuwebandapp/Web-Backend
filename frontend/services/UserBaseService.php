@@ -40,11 +40,11 @@ class UserBaseService extends BaseDb
             //验证手机或者邮箱是否存在
             if(!empty($userBase->email)){
                 $userInfo=$this->userBaseDb->findByEmail($userBase->email);
-                if($userInfo==false||!isset($userInfo)) throw new Exception(Code::USER_EMAIL_EXIST);
+                if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
 
             }else{
                 $userInfo=$this->userBaseDb->findByPhone($userBase->phones);
-                if($userInfo==false||!isset($userInfo)) throw new Exception(Code::USER_PHONE_EXIST);
+                if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
             }
             //对用户密码进行加密
             $userBase->password = $this->encryptPassword($userBase->password);
@@ -52,6 +52,7 @@ class UserBaseService extends BaseDb
             $this->userBaseDb->addUser($userBase);
             $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
         } catch (Exception $e) {
+            throw $e;exit;
             throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
         } finally {
             $this->closeLink();
@@ -92,7 +93,7 @@ class UserBaseService extends BaseDb
      */
     public function findUserByEmail($email)
     {
-        $userBase=true;
+        $userBase=null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
@@ -151,10 +152,10 @@ class UserBaseService extends BaseDb
 
         $userBase->sex=UserBase::USER_SEX_SECRET;
         if(!empty($userBase->email)){
-            $userBase->phone='';
+            $userBase->phone=null;
             $userBase->nickname=$userBase->email;
         }else{
-            $userBase->email='';
+            $userBase->email=null;
             $userBase->nickname=$userBase->phone;
         }
         $userBase->areaCode='';
@@ -162,9 +163,13 @@ class UserBaseService extends BaseDb
         $userBase->info='';
         $userBase->intro='';
         $userBase->school='';
-        $userBase->birthday='';
+        $userBase->birthday='0000-00-00';
         $userBase->headImg='';
         $userBase->userSign=Code::getUUID();
+        $userBase->status=UserBase::USER_STATUS_NORMAL;
+        $userBase->registerIp=$_SERVER['REMOTE_ADDR'];
+        $userBase->lastLoginIp=$_SERVER['REMOTE_ADDR'];
+
 
         return $userBase;
     }

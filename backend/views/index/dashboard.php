@@ -1,9 +1,16 @@
 <?php
 /* @var $this yii\web\View */
+
 $this->title = 'My Yii Application';
+
 ?>
+
+
+<script>
+
+</script>
 <div class="site-index">
-s
+
     <div class="jumbotron">
         <h1>Congratulations!</h1>
 

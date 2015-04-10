@@ -1,0 +1,2 @@
+<?php die('forbidden'); ?>
+{"appid":"101206430","appkey":"a80bf172ce9c35c3822363af5b38c741","callback":"http://local.suiuu.com/access/qq-login","scope":"<?=$val?>","errorReport":true,"storageType":"file","host":"localhost","user":"root","password":"root","database":"test"}

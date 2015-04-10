@@ -19,6 +19,8 @@ class CController extends  Controller{
 
     public $userObj=null;
 
+    public $layout=false;
+
     public $__sysUserService=null;
 
     public function __construct($id, $module = null)

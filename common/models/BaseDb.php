@@ -49,7 +49,8 @@ class BaseDb {
         if(class_exists($className)) {
             $newClass=new $className;
             foreach($newClass as $prop =>$val){
-                $newClass->$prop=$array[$prop];
+                $val=array_key_exists($prop,$array)?$array[$prop]:null;
+                $newClass->$prop=$val;
             }
             return $newClass;
         }else{

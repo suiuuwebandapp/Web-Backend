@@ -10,6 +10,8 @@ class IndexController extends CController
 
     private $sysUserService;
 
+    public $layout='main';//只有Index 默认main使用layout
+
     public function __construct($id, $module = null)
     {
         $this->sysUserService = new SysUserService();
@@ -24,6 +26,13 @@ class IndexController extends CController
     public function actionInfo()
     {
         return $this->renderPartial('info');
+    }
+
+
+
+    public function actionDashboard()
+    {
+        return $this->renderPartial('dashboard');
     }
 
 

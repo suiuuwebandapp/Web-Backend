@@ -47,20 +47,8 @@ use yii\helpers\Html;
             </div>
         </div>
         <?php if($showVerifyCode){ ?>
-        <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">SecurityCode</label>
-            <div class="input-icon">
-                <table>
-                    <tr>
-                        <td width="50%">
-                            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="请输入验证码" name="captcha" maxlength="4" />
-                        </td>
-                        <td width="50%" style="padding-left: 10px;">
-                            <img src="/captcha.php" onclick="this.src='/captcha.php?d='+new Date()*1" style="cursor: pointer;" title="换一张"/>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <div class="form-group" style="padding-bottom: 20px;">
+            <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
         </div>
         <?php } ?>
         <div class="form-actions">

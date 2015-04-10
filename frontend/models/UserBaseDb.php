@@ -27,17 +27,16 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO user_base
             (
-              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,headImg,hobby,school,intro,info,travelCount,userSign
+              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,headImg,hobby,school,intro,info,travelCount,userSign,status
             )
             VALUES
             (
-              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,:headImg,:hobby,:school,:intro,:info,0,:userSign
+              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,:headImg,:hobby,:school,:intro,:info,0,:userSign,:status
             )
         ");
 
         $command=$this->getConnection()->createCommand($sql);
 
-        $command->bindParam(":username", $userBase->nickname, PDO::PARAM_INT);
         $command->bindParam(":password", $userBase->password, PDO::PARAM_STR);
         $command->bindParam(":phone", $userBase->phone, PDO::PARAM_STR);
         $command->bindParam(":areaCode", $userBase->areaCode, PDO::PARAM_STR);
@@ -53,6 +52,7 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
+        $command->bindParam(":status", $userBase->status, PDO::PARAM_INT);
 
         return $command->execute();
 

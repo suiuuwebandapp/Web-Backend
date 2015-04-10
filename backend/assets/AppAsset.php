@@ -31,7 +31,6 @@ class AppAsset extends AssetBundle
         'assets/admin/layout/css/custom.css'
     ];
     public $js = [
-        'assets/global/plugins/jquery-1.11.0.min.js',
         'assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js',
         'assets/global/plugins/bootstrap/js/bootstrap.min.js',
         'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js',
