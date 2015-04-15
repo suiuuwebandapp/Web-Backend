@@ -10,6 +10,8 @@
 namespace backend\controllers;
 
 
+use common\components\OssUpload;
+
 class ArticleController extends CController{
 
 
@@ -22,5 +24,15 @@ class ArticleController extends CController{
     public function actionAdd(){
         return $this->render('add');
     }
+
+
+    public function actionUploadImg()
+    {
+
+        $ossUpload=new OssUpload();
+    }
+
+
+
 
 }

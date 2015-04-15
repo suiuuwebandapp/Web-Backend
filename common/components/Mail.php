@@ -14,6 +14,12 @@ use yii\web\Cookie;
 
 class Mail {
 
+
+    /**
+     * 获取发送邮件内容
+     * @param $link
+     * @return string
+     */
     private static function getRegisterHtml($link)
     {
         $html=sprintf('
@@ -49,6 +55,13 @@ class Mail {
 
         return $html;
     }
+
+    /**
+     * SendCloud 发送邮件
+     * @param $email
+     * @param $link
+     * @return array
+     */
     public static function  sendRegisterMail($email,$link)
     {
         $url = 'http://sendcloud.sohu.com/webapi/mail.send.json';

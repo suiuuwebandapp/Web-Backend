@@ -2,55 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f1265888-2403-4428-b981-a12523bc5b34" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/frontend/controllers/AccessController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/controllers/ArticleController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/entity/ArticleInfo.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/models/ArticleInfoDb.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/class/ErrorCase.class.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/geetest/GeetestLib.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/components/Mail.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/class/Oauth.class.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/class/QC.class.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/class/Recorder.class.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/controllers/SysUserController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/frontend/interfaces/TencentInterface.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/class/URL.class.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/frontend/interfaces/WeiboInterface.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/frontend/views/index/activeError.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/frontend/views/index/activeSuccess.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/views/article/add.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/comm/config.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/views/index/dashboard.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/mail/emailRegister.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/views/layouts/head.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/comm/inc.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/frontend/views/index/index.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/views/article/list.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/qqConnectAPI.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/access/API/comm/utils.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/assets/AppAsset.php" afterPath="$PROJECT_DIR$/backend/assets/AppAsset.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/assets/AppAsset.php" afterPath="$PROJECT_DIR$/frontend/assets/AppAsset.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/models/BaseDb.php" afterPath="$PROJECT_DIR$/common/models/BaseDb.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/controllers/CController.php" afterPath="$PROJECT_DIR$/backend/controllers/CController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/components/OssUpload.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/controllers/UploadController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/controllers/ArticleController.php" afterPath="$PROJECT_DIR$/backend/controllers/ArticleController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/entity/ArticleInfo.php" afterPath="$PROJECT_DIR$/backend/entity/ArticleInfo.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/models/ArticleInfoDb.php" afterPath="$PROJECT_DIR$/backend/models/ArticleInfoDb.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/components/Code.php" afterPath="$PROJECT_DIR$/common/components/Code.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/controllers/IndexController.php" afterPath="$PROJECT_DIR$/backend/controllers/IndexController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/controllers/LoginController.php" afterPath="$PROJECT_DIR$/backend/controllers/LoginController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/entity/UserBase.php" afterPath="$PROJECT_DIR$/frontend/entity/UserBase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/models/UserBaseDb.php" afterPath="$PROJECT_DIR$/frontend/models/UserBaseDb.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/services/UserBaseService.php" afterPath="$PROJECT_DIR$/frontend/services/UserBaseService.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/components/Validate.php" afterPath="$PROJECT_DIR$/common/components/Validate.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/views/index/index.php" afterPath="$PROJECT_DIR$/backend/views/index/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/views/login/index.php" afterPath="$PROJECT_DIR$/backend/views/login/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/views/site/index.php" afterPath="$PROJECT_DIR$/frontend/views/site/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/views/layouts/left.php" afterPath="$PROJECT_DIR$/backend/views/layouts/left.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/views/layouts/main.php" afterPath="$PROJECT_DIR$/backend/views/layouts/main.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/config/main.php" afterPath="$PROJECT_DIR$/frontend/config/main.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/views/layouts/main.php" afterPath="$PROJECT_DIR$/frontend/views/layouts/main.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/config/params.php" afterPath="$PROJECT_DIR$/common/config/params.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/config/params.php" afterPath="$PROJECT_DIR$/frontend/config/params.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/suiuu.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/suiuu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/class/ErrorCase.class.php" afterPath="$PROJECT_DIR$/vendor/access/API/class/ErrorCase.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/geetest/GeetestLib.php" afterPath="$PROJECT_DIR$/vendor/geetest/GeetestLib.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/components/Mail.php" afterPath="$PROJECT_DIR$/common/components/Mail.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/class/Oauth.class.php" afterPath="$PROJECT_DIR$/vendor/access/API/class/Oauth.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/class/QC.class.php" afterPath="$PROJECT_DIR$/vendor/access/API/class/QC.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/class/Recorder.class.php" afterPath="$PROJECT_DIR$/vendor/access/API/class/Recorder.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/controllers/SysUserController.php" afterPath="$PROJECT_DIR$/backend/controllers/SysUserController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/interfaces/TencentInterface.php" afterPath="$PROJECT_DIR$/frontend/interfaces/TencentInterface.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/class/URL.class.php" afterPath="$PROJECT_DIR$/vendor/access/API/class/URL.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/views/index/activeError.php" afterPath="$PROJECT_DIR$/frontend/views/index/activeError.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/views/index/activeSuccess.php" afterPath="$PROJECT_DIR$/frontend/views/index/activeSuccess.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/comm/config.php" afterPath="$PROJECT_DIR$/vendor/access/API/comm/config.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/views/index/dashboard.php" afterPath="$PROJECT_DIR$/backend/views/index/dashboard.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/mail/emailRegister.php" afterPath="$PROJECT_DIR$/common/mail/emailRegister.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/views/layouts/head.php" afterPath="$PROJECT_DIR$/backend/views/layouts/head.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/comm/inc.php" afterPath="$PROJECT_DIR$/vendor/access/API/comm/inc.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/views/article/list.php" afterPath="$PROJECT_DIR$/backend/views/article/list.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/php.xml" afterPath="$PROJECT_DIR$/.idea/php.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/qqConnectAPI.php" afterPath="$PROJECT_DIR$/vendor/access/API/qqConnectAPI.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/access/API/comm/utils.php" afterPath="$PROJECT_DIR$/vendor/access/API/comm/utils.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/yiisoft/yii2/assets/yii.validation.js" afterPath="$PROJECT_DIR$/vendor/yiisoft/yii2/assets/yii.validation.js" />
     </list>
     <ignored path="suiuu.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -72,6 +50,20 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="suiuu" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="UploadController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/backend/controllers/UploadController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.27075812" vertical-offset="225" max-vertical-offset="1935">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -155,6 +147,38 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="suiuu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="suiuu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="suiuu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="suiuu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -193,6 +217,9 @@
       <BehatRunner />
       <method />
     </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
       <node-options />
       <gulpfile />
@@ -200,9 +227,6 @@
       <arguments />
       <pass-parent-envs>true</pass-parent-envs>
       <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
       <method />
     </configuration>
     <list size="0" />
@@ -222,7 +246,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="973" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -230,19 +254,19 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25239617" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2550586" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3295583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -264,5 +288,15 @@
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/backend/controllers/UploadController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.27075812" vertical-offset="225" max-vertical-offset="1935">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
