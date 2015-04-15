@@ -77,7 +77,7 @@
             'formObj'  :'#datatables_form',
             'tableDiv' :'#table_div',
             'tableObj' :'#table_list',
-            'tableUrl' :'${base}/sys/movieInfo/list',
+            'tableUrl' :'/article/article-list',
             'tableData':{},
             'tableOrder':[4,'asc'],
             'tableColumn':[

@@ -30,6 +30,7 @@ class OssUpload
      */
     const OSS_SUIUU_CONTENT_DIR='suiuu_content';
 
+
     public $oss_sdk_service;
 
     private $oss_key_id;

@@ -42,10 +42,24 @@ class UploadController extends CController{
         'jpg','png','gif','jpeg'
     ];
 
+    private $maxTitleImgSize=1024000;
+    private $titleImgTypes=[
+        'jpg','png','gif','jpeg'
+    ];
 
+
+    /**
+     * 上传封面图
+     * @return array
+     */
     public function actionUploadTitleImg()
     {
-
+        if(!array_key_exists('Filedata',$_FILES)){
+            echo json_encode(['status']);
+        }else{
+            $result=$this->uploadOssFile($_FILES['Filedata'],$this->maxTitleImgSize,$this->titleImgTypes,OssUpload::OSS_SUIUU_CONTENT_DIR);
+            return json_encode($result);
+        }
     }
 
 
@@ -118,7 +132,7 @@ class UploadController extends CController{
             {
                 return Code::statusDataReturn(Code::FAIL,'image type error');
             }
-
+            
             //新文件名
             $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $file_ext;
 

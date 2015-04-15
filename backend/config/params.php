@@ -16,6 +16,8 @@ return [
     //基础信息
     'base_dir' => 'http://sys.suiuu.com',
     'url'=>'sys.suiuu.com',
+    //资源URL
+    'res_url'=>'',
     //Cookie
     'sys_suiuu_sign'=> 'sys_suiuu_sign',
     'cookie_domain' => '/',

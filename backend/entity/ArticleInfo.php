@@ -12,6 +12,16 @@ namespace backend\entity;
 
 class ArticleInfo {
 
+    //const ARTICLE_STATUS_NORMAL=0;
+    /**
+     * 上线
+     */
+    const ARTICLE_STATUS_ONLINE=1;
+    /**
+     * 下线
+     */
+    const ARTICLE_STATUS_DOWN_LINE=2;
+
     public $articleId;
 
     public $title;

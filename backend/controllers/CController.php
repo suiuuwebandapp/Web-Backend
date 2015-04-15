@@ -13,6 +13,7 @@ namespace backend\controllers;
 use common\components\Code;
 use common\components\Aes;
 use backend\services\SysUserService;
+use frontend\entity\UserBase;
 use yii\web\Controller;
 
 class CController extends  Controller{
