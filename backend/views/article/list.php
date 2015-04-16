@@ -9,7 +9,9 @@
 
 
 ?>
-<link rel="stylesheet" type="text/css" href="/assets/global/plugins/data-tables/DT_bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/data-tables/DT_bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-colorbox/colorbox.css" />
+
 <div class="clearfix"></div>
 <div class="row">
     <div class="col-md-12">
@@ -18,9 +20,9 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">影视列表</span>
+                    <span class="caption-subject font-red-sunglo bold uppercase">专栏列表</span>
                             <span class="caption-helper">
-                                电影，电视剧，微电影，NBA录像
+                                随游专栏、文章列表
                             </span>
                 </div>
                 <div class="actions">
@@ -33,13 +35,13 @@
                 <div class="table-info-form">
                     <form id="datatables_form" onsubmit="return false;">
                         <div class="input-group input-xlarge pull-left">
-                            <input type="text" name="search" class="input-xlarge" placeholder="请输入影视名称">
+                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入专栏标题或者名称">
                                     <span class="input-group-btn">
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
                                     </span>
                         </div>
                         <div class="pull-right">
-                            <a id="addMovie" href="javascript:" class="btn green-meadow"><i class="fa fa-plus"></i> 添加影视</a>
+                            <a id="addArticle" href="javascript:" class="btn green-meadow"><i class="fa fa-plus"></i> 添加专栏</a>
                         </div>
                     </form>
                 </div>
@@ -48,10 +50,10 @@
                     <thead class="flip-content">
                     <tr>
                         <th>编号</th>
-                        <th>中文名</th>
-                        <th>英文名</th>
-                        <th>时长</th>
-                        <th>上映时间</th>
+                        <th>标题</th>
+                        <th>封面图</th>
+                        <th>名称</th>
+                        <th>更新时间</th>
                         <th>状态</th>
                         <th>操作</th>
                     </tr>
@@ -62,13 +64,19 @@
         <!-- END SAMPLE TABLE PORTLET-->
     </div>
 </div>
+
 <!-- END DASHBOARD STATS -->
 <div class="clearfix"></div>
 
 
-<script type="text/javascript" src="/assets/global/plugins/data-tables/jquery.dataTables.js"></script>
-<script type="text/javascript" src="/assets/global/plugins/data-tables/DT_bootstrap.js"></script>
-<script type="text/javascript" src="/assets/admin/pages/scripts/table-ajax.js" ></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/data-tables/jquery.dataTables.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/data-tables/DT_bootstrap.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/scripts/table-ajax.js" ></script>
+
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-colorbox/jquery.colorbox-min.js"></script>
+
+
+
 
 <script type="text/javascript">
 
@@ -79,13 +87,37 @@
             'tableObj' :'#table_list',
             'tableUrl' :'/article/article-list',
             'tableData':{},
-            'tableOrder':[4,'asc'],
+            'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "number","bSortable": false},
-                {"targets": [1],"data": "chineseName","bSortable": false},
-                {"targets": [2],"data": "englishName","bSortable": false},
-                {"targets": [3],"data": "mins","bSortable": false},
-                {"targets": [4],"data": "showTime","bSortable": false},
+                {"targets": [0],"data": "articleId","bSortable": false},
+                {
+                    "targets": [1],
+                    "data": "title",
+                    "bSortable": false,
+                    "width":"200px",
+                    "render": function(data, type, full) {
+                        return data.length<10?data:data.substring(0,10);
+                    }
+                },
+                {
+                    "targets": [2],
+                    "data": "name",
+                    "bSortable": false,
+                    "width":"200px",
+                    "render": function(data, type, full) {
+                        return data.length<10?data:data.substring(0,10);
+                    }
+                },
+                {
+                    "targets": [3],
+                    "data": "titleImg",
+                    "bSortable": false,
+                    "width":"200px",
+                    "render": function(data, type, full) {
+                       return '<a  class="titleImgGroup"  href="'+data+'"><img alt="" src="'+data+'" style="max-height:50px;"/></a>'
+                    }
+                },
+                {"targets": [4],"data": "lastUpdateTime","bSortable": false,"width":"180px"},
                 {
                     "targets": [5],
                     "data": "status",
@@ -93,7 +125,7 @@
                     "width":"100px",
                     "render": function(data, type, full) {
                         var html='';
-                        if(data=="ONLINE"){
+                        if(data==1){
                             html='<span class="label label-success">&nbsp;上&nbsp;线&nbsp;</span>'
                         }else{
                             html='<span class="label label-default">&nbsp;下&nbsp;线&nbsp;</span>';
@@ -103,68 +135,64 @@
                 },
                 {
                     "targets": [6],
-                    "data": "id",
+                    "data": "articleId",
                     "bSortable": false,
-                    "width":"400px",
+                    "width":"200px",
                     "render": function(data, type, full) {
                         var html='';
-                        if(full.status!="ONLINE"){
+                        if(full.status!=1){
                             html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
                         }else{
                             html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
                         }
-                        html +='<a href="javascript:;" onclick="editMovie(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 详情</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="editMovieDetail(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 图片</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="editMovieDownload(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 下载</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="editMovieRole(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 角色</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteMovie(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
+                        html +='<a href="javascript:;" onclick="editArticle(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
+                        html +='<a href="javascript:;" onclick="deleteArticle(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
                     }
                 }
-            ]
+            ],
+            'fnDrawCallBack': function(settings, json) {
+                $(".titleImgGroup").colorbox({'close':''});
+            }
         };
         TableAjax.init(tableInfo);
-        $("#addMovie").bind("click",function(){
-            parentMain.changeLocationUrl(addMovieUrlId);
+
+
+        $("#addArticle").bind("click",function(){
+           Main.goAction("/article/add");
         });
+
+
         $("#refresh,#search").bind("click",function(){
             TableAjax.refresh();
         });
     });
 
-    function editMovie(id){
-        parentMain.changeLocationUrl(editMovieUrlId,'movieId='+id);
-    }
-    function editMovieDetail(id){
-        parentMain.changeLocationUrl(editMovieDetailUrlId,'movieId='+id);
-    }
-    function editMovieDownload(id){
-        parentMain.changeLocationUrl(editMovieDownloadUrlId,'movieId='+id);
-    }
-    function editMovieRole(id){
-        parentMain.changeLocationUrl(editMovieRoleUrlId,'movieId='+id);
+    function editArticle(id){
+        Main.refreshContentAjax("/article/edit?articleId="+id);
     }
 
-    function deleteMovie(id){
-        parentMain.confirmTip("确认要删除此数据吗？",function(){
+    function deleteArticle(id){
+        Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
-                url:"${base}/sys/movieInfo/delete",
+                url:"/article/delete",
                 data:{
-                    movieId:id
+                    articleId:id
                 },beforeSend:function(){
-                    parentMain.showWait("#table_list");
+                    Main.showWait("#table_list");
                 },
                 error:function(){
-                    parentMain.errorTip("系统异常");
+                    Main.errorTip("系统异常");
                 },
                 success:function(data){
-                    parentMain.hideWait("#table_list");
-                    if(data=="success"){
+                    data=eval("("+data+")");
+                    Main.hideWait("#table_list");
+                    if(data.status==1){
                         TableAjax.deleteRefresh();
-                        parentMain.successTip("删除电影成功");
+                        Main.successTip("删除专栏成功");
                     }else{
-                        parentMain.errorTip("删除失败");
+                        Main.errorTip("删除失败");
                     }
                 }
             });
@@ -174,29 +202,30 @@
 
     function changeStatus(id,status){
         var url="";
-        if(status=="ONLINE"){
-            url="${base}/sys/movieInfo/outline";
+        if(status==1){
+            url="/article/outline";
         }else{
-            url="${base}/sys/movieInfo/online";
+            url="/article/online";
         }
         $.ajax({
             type:"POST",
             url:url,
             data:{
-                movieId:id
+                articleId:id
             },beforeSend:function(){
-                parentMain.showWait("#table_list");
+                Main.showWait("#table_list");
             },
             error:function(){
-                parentMain.errorTip("系统异常");
+                Main.errorTip("系统异常");
             },
             success:function(data){
-                parentMain.hideWait("#table_list");
-                if(data=="success"){
-                    TableAjax.refresh();
-                    parentMain.successTip("改变影片状态成功");
+                data=eval("("+data+")");
+                Main.hideWait("#table_list");
+                if(data.status==1){
+                    TableAjax.deleteRefresh();
+                    Main.successTip("改变状态成功");
                 }else{
-                    parentMain.errorTip("操作失败");
+                    Main.errorTip("操作失败");
                 }
             }
         });

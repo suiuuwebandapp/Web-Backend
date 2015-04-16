@@ -1,8 +1,8 @@
 <?php
-namespace backend\models;
+namespace common\models;
 
+use backend\components\Page;
 use backend\entity\ArticleInfo;
-use common\models\ProxyDb;
 use yii\db\mssql\PDO;
 
 /**
@@ -15,6 +15,32 @@ use yii\db\mssql\PDO;
 class ArticleInfoDb extends ProxyDb
 {
 
+
+    /**
+     *
+     * 获取文章列表
+     * @param Page $page
+     * @param $search
+     * @param $status
+     * @return array
+     */
+    public function getList(Page $page,$search,$status)
+    {
+        $sql=sprintf("
+            FROM ".self::TABLE_NAME." WHERE 1=1
+        ");
+        if(!empty($search)){
+            $sql.=" AND (title like :search OR name like :search ) ";
+            $this->setParam("search",$search."%");
+        }
+        if(!empty($status)){
+            $sql.=" and status=:status ";
+            $this->setParam("status",$status);
+        }
+
+        $this->setSql($sql);
+        return $this->find($page);
+    }
 
     /**
      * 添加专栏文章
@@ -46,10 +72,6 @@ class ArticleInfoDb extends ProxyDb
 
     }
 
-    public function getList()
-    {
-
-    }
 
 
     /**
@@ -62,9 +84,7 @@ class ArticleInfoDb extends ProxyDb
     {
         $sql = sprintf("
             UPDATE  article_info SET
-            (
-              title=:title,titleImg=:titleImg,name=:name,content=:content,lastUpdateTime=now(),status=:status
-            )
+            title=:title,titleImg=:titleImg,name=:name,content=:content,lastUpdateTime=now()
             WHERE articleId=:articleId
 
         ");
@@ -74,9 +94,8 @@ class ArticleInfoDb extends ProxyDb
         $command->bindParam(":titleImg", $articleInfo->titleImg, PDO::PARAM_STR);
         $command->bindParam(":name", $articleInfo->name, PDO::PARAM_STR);
         $command->bindParam(":content", $articleInfo->content, PDO::PARAM_STR);
-        $command->bindParam(":status", $articleInfo->status, PDO::PARAM_INT);
 
-        return $command->execute();
+        $command->execute();
     }
 
     /**
@@ -93,7 +112,7 @@ class ArticleInfoDb extends ProxyDb
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
-        return $command->execute();
+        return $command->queryOne();
     }
 
 
@@ -107,9 +126,32 @@ class ArticleInfoDb extends ProxyDb
         $sql=sprintf("
             DELETE FROM  article_info WHERE articleId=:articleId;
         ");
+
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
-        return $command->queryOne();
+        $command->execute();
+    }
+
+
+    /**
+     * 改变专栏状态
+     * @param $articleId
+     * @param $status
+     * @throws \yii\db\Exception
+     */
+    public function changeStatus($articleId,$status)
+    {
+        $sql = sprintf("
+            UPDATE  article_info SET
+            status=:status
+            WHERE articleId=:articleId
+
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
+        $command->bindParam(":status", $status, PDO::PARAM_INT);
+
+        $command->execute();
     }
 
 

@@ -11,6 +11,7 @@ namespace backend\controllers;
 
 
 use backend\components\Page;
+use backend\components\TableResult;
 use backend\entity\ArticleInfo;
 use backend\services\ArticleService;
 use common\components\Code;
@@ -33,20 +34,42 @@ class ArticleController extends CController{
 
     public function actionList(){
 
-        return $this->render('list');
+        return $this->render("list");
     }
 
 
     public function actionAdd(){
-        return $this->render('add');
+        return $this->render("add");
     }
 
+
+    /**
+     * 获取专栏列表
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionArticleList()
     {
+        $search=\Yii::$app->request->get("searchText","");
+        $status=\Yii::$app->request->get("status","");
+
         $page=new Page(\Yii::$app->request);
 
+        $page=$this->articleService->getList($page,$search,$status);
 
-        var_dump($page);
+        $tableResult=new TableResult($page->draw,$page->totalCount,count($page->getList()),$page->getList());
+
+        echo json_encode($tableResult);
+    }
+
+
+    public function actionEdit()
+    {
+        $articleId = \Yii::$app->request->get("articleId");
+
+        $articleInfo = $this->articleService->findById($articleId);
+
+        return $this->render("edit",['articleInfo'=>$articleInfo]);
     }
 
 
@@ -69,17 +92,98 @@ class ArticleController extends CController{
             $articleInfo->titleImg=$titleImg;
             $articleInfo->content=$content;
             $articleInfo->createUserId=$this->userObj->userId;
-            $articleInfo->status=ArticleInfo::ARTICLE_STATUS_DOWN_LINE;//初始为下线状态
+            $articleInfo->status=ArticleInfo::ARTICLE_STATUS_OUTLINE;//初始为下线状态
 
             $this->articleService->addArticleInfo($articleInfo);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            var_dump($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
         }
 
     }
 
+    /**
+     * 修改专栏信息
+     * @return string
+     */
+    public function actionEditArticle()
+    {
+        $articleId=\Yii::$app->request->post("articleId","");
+        $title=\Yii::$app->request->post("title","");
+        $name=\Yii::$app->request->post("name","");
+        $titleImg=\Yii::$app->request->post("titleImg","");
+        $content=\Yii::$app->request->post("content","");
 
+
+        try{
+            $articleInfo=new ArticleInfo();
+            $articleInfo->articleId=$articleId;
+            $articleInfo->title=$title;
+            $articleInfo->name=$name;
+            $articleInfo->titleImg=$titleImg;
+            $articleInfo->content=$content;
+
+            $this->articleService->updateArticleInfo($articleInfo);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+        }
+
+    }
+
+    /**
+     * 删除专栏
+     * @return string
+     */
+    public function actionDelete()
+    {
+        $articleId=\Yii::$app->request->post("articleId","");
+
+        try{
+            $this->articleService->deleteArticleInfoById($articleId);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+        }
+
+    }
+
+    /**
+     * 专栏上线
+     * @return string
+     */
+    public function actionOnline()
+    {
+        $articleId=\Yii::$app->request->post("articleId","");
+        if(empty($articleId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"参数异常"));
+        }
+        try{
+            $this->articleService->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_ONLINE);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+        }
+
+    }
+
+    /**
+     * 专栏下线
+     * @return string
+     */
+    public function actionOutline()
+            {
+                $articleId=\Yii::$app->request->post("articleId","");
+                if(empty($articleId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"参数异常"));
+        }
+        try{
+            $this->articleService->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_OUTLINE);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+        }
+
+    }
 
 }

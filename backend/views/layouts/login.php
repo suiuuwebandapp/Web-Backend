@@ -46,6 +46,8 @@ LoginAsset::register($this);
 </head>
 
 <?php $this->beginBody() ?>
+<?= Html::beginForm() ?>
+<?= Html::endForm() ?>
 <body class="login">
     <?= $content ?>
     <div class="copyright">

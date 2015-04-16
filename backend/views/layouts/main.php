@@ -40,6 +40,8 @@ AppAsset::register($this);
 <?php include 'top.php' ?>
 <div class="clearfix"></div>
 <!-- BEGIN CONTAINER -->
+<?= Html::beginForm() ?>
+<?= Html::endForm() ?>
 <div class="page-container">
     <?php include 'left.php' ?>
     <div class="page-content-wrapper">

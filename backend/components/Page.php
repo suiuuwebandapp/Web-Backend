@@ -21,48 +21,63 @@ class Page
     public $sortType = "asc";
 
     public $totalCount = 0;
-    public $list = [];
     public $showAll = false;
 
 
-    public function __construct(Request $request)
+    private $list = [];
+
+
+    public function __construct(Request $request=null)
     {
-        $draw = $request->post("draw");
-        $start = $request->post("start");
-        $length = $request->post("length");
-        $oColumn = $request->post("order[0][column]");
-        $oType = $request->post("order[0][dir]");
-        $isShowAll = $request->post("showAll");
+        if($request!=null){
+            $draw = $request->post("draw");
+            $start = $request->post("start");
+            $length = $request->post("length");
+            $oColumn = $request->post("order[0][column]");
+            $oType = $request->post("order[0][dir]");
+            $isShowAll = $request->post("showAll");
 
-        $cPage = $request->post("currentPage");
+            $cPage = $request->post("currentPage");
 
-        if (!empty($draw)) {
-            $this->draw = $draw;
-        }
-        if (!empty($length)) {
-            $this->pageSize = $length;
-        }
-        if (!empty($start)) {
-            $this->startRow = $start;
-        }
-        if (!empty($isShowAll) && $isShowAll != "false"&&$isShowAll!=false) {
-            $this->showAll = true;
-        }
+            if (!empty($draw)) {
+                $this->draw = $draw;
+            }
+            if (!empty($length)) {
+                $this->pageSize = $length;
+            }
+            if (!empty($start)) {
+                $this->startRow = $start;
+            }
+            if (!empty($isShowAll) && $isShowAll != "false"&&$isShowAll!=false) {
+                $this->showAll = true;
+            }
 
 
-        $this->currentPage = ($this->startRow / $this->pageSize + 1);
+            $this->currentPage = ($this->startRow / $this->pageSize + 1);
 
-        if (!empty($cPage)) {
-            $this->currentPage = $cPage;
-            $this->startRow = (($this->currentPage - 1) * $this->pageSize);
+            if (!empty($cPage)) {
+                $this->currentPage = $cPage;
+                $this->startRow = (($this->currentPage - 1) * $this->pageSize);
+            }
+            if (!empty($oColumn)) {
+                $orderColumn = $oColumn;
+                $orderKey = "columns[" . $orderColumn . "][data]";
+                $this->sortName = $request->post($orderKey);
+            }
+            if (!empty($oType)) {
+                $this->sortType = $oType;
+            }
         }
-        if (!empty($oColumn)) {
-            $orderColumn = $oColumn;
-            $orderKey = "columns[" . $orderColumn . "][data]";
-            $this->sortName = $request->post($orderKey);
-        }
-        if (!empty($oType)) {
-            $this->sortType = $oType;
+    }
+
+
+    public function getList(){
+        return $this->list;
+    }
+
+    public function setList($rst){
+        if($rst!==false){
+            $this->list=$rst;
         }
     }
 

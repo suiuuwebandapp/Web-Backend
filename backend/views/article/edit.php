@@ -42,20 +42,21 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">添加专栏文章</span>
-                    <span class="caption-helper"> 添加专栏文章基本信息 </span>
+                    <span class="caption-subject font-red-sunglo bold uppercase">修改专栏文章</span>
+                    <span class="caption-helper"> 修改专栏文章基本信息 </span>
                 </div>
             </div>
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
                 <form id="form_validate" class="form-horizontal" method="post" isSubmit="false">
+                    <input type="hidden" id="articleId" value="<?=$articleInfo->articleId ?>" class="form-control" />
                     <div class="form-body">
                         <div class="form-group">
                             <label class="col-md-3 control-label">标题<span class="required">*</span></label>
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="title" value="" class="form-control" placeholder="请输入文章标题" maxlength="20"  required/>
+                                    <input type="text" id="title" value="<?=$articleInfo->title ?>" class="form-control" placeholder="请输入文章标题" maxlength="20"  required/>
                                 </div>
                             </div>
                         </div>
@@ -64,15 +65,15 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="name" value="" class="form-control" placeholder="请输入文章名称" maxlength="30" required/>
+                                    <input type="text" id="name" value="<?=$articleInfo->name ?>" class="form-control" placeholder="请输入文章名称" maxlength="30" required/>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
                             <div class="col-md-4 valdate">
-                                <input type="hidden" id="titleImg"/>
-                                <img id="titleImgPre"/>
+                                <input type="hidden" id="titleImg" value="<?=$articleInfo->titleImg ?>"/>
+                                <img id="titleImgPre" src="<?=$articleInfo->titleImg ?>" />
                                 <div id="queue"></div>
                                 <input id="file_upload" name="file_upload" type="file">
                             </div>
@@ -106,15 +107,14 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">文章内容<span class="required">*</span></label>
                             <div class="col-md-6">
-                                <script id="container" name="content" type="text/plain" style="height:300px;">
-                                </script>
+                                <script id="container" name="content" type="text/plain" style="height:300px;"><?=$articleInfo->content ?> </script>
                             </div>
                         </div>
 
                     </div>
                     <div class="form-actions fluid">
                         <div class="col-md-offset-3 col-md-9">
-                            <button type="submit" class="btn green-meadow">&nbsp;&nbsp;添加专栏&nbsp;&nbsp;</button>
+                            <button type="submit" class="btn green-meadow">&nbsp;&nbsp;保存专栏&nbsp;&nbsp;</button>
                         </div>
                     </div>
                 </form>
@@ -134,6 +134,7 @@
 
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.config.js?<?=time().rand(100,999)?>"></script>
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.all.js?<?=time().rand(100,999)?>"></script>
+
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-uploadifive/jquery.uploadifive.min.js"></script>
 
 
@@ -141,8 +142,7 @@
 
 
     $(document).ready(function() {
-        FormValidation.init("addArticle");
-        $("#titleImgPre").hide();//隐藏预览封面图
+        FormValidation.init("editArticle");
     });
 
 
@@ -184,12 +184,17 @@
 
 
     //添加专栏文章
-    function addArticle(){
+    function editArticle(){
+        var articleId=$("#articleId").val();
         var title=$("#title").val();
         var name=$("#name").val();
         var titleImg=$("#titleImg").val();
         var content=ue.getContent();
 
+        if(articleId==''){
+            Main.errorTip("获取专栏编号异常，请刷新后重试");
+            return;
+        }
         if(titleImg==''){
             Main.errorTip("封面图不允许为空");
             return;
@@ -200,44 +205,34 @@
         }
 
         $.ajax({
-            url :'/article/add-article',
+            url :'/article/edit-article',
             type:'post',
             data:{
+                articleId:articleId,
                 title:title,
                 name:name,
                 titleImg:titleImg,
-                content:content
+                content:content,
+                _csrf: $('input[name="_csrf"]').val()
             },
             beforeSend:function(){
                 Main.showWait();
             },
             error:function(){
-                Main.errorTip("添加专栏失败,未知系统异常");
+                Main.errorTip("保存专栏失败,未知系统异常");
                 Main.hideWait();
             },
             success:function(data){
                 Main.hideWait();
                 var datas=eval('('+data+')');
                 if(datas.status==1){
-                    Main.successTip("添加专栏成功");
-                    initForm();
+                    Main.successTip("保存专栏成功");
+                    Main.goAction("/article/list");
                 }else{
-                    Main.errorTip("添加专栏失败,错误信息:"+datas.data);
+                    Main.errorTip("保存专栏失败,错误信息:"+datas.data);
                 }
             }
         });
-    }
-
-    //初始化表单信息
-    function initForm(){
-        FormValidation.resetForm();
-
-        $("#title").val("");
-        $("#name").val("");
-        $("#titleImg").val("");
-        $("#titleImgPre").hide();
-        $("#queue").html("");
-        ue.setContent("");
     }
 
 </script>

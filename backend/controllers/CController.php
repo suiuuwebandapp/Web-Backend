@@ -22,6 +22,8 @@ class CController extends  Controller{
 
     public $layout=false;
 
+    public $enableCsrfValidation=false;
+
     public $__sysUserService=null;
 
     public function __construct($id, $module = null)

@@ -20,7 +20,7 @@ class ArticleInfo {
     /**
      * 下线
      */
-    const ARTICLE_STATUS_DOWN_LINE=2;
+    const ARTICLE_STATUS_OUTLINE=2;
 
     public $articleId;
 

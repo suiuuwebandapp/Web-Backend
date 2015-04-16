@@ -15,14 +15,20 @@ use yii\db\Connection;
 
 class ProxyDb extends Connection {
 
+    const TABLE_NAME="{{TABLE_NAME}}";
+
     private $db;
 
-    private $paramArray=[];
+    private $paramArray=array();
 
     private $sql="";
 
-    public function __construct(Connection $db){
+    private $tableName;
+
+
+    public function __construct(Connection $db,$tableName=null){
         $this->db=$db;
+        $this->tableName=$tableName;
     }
 
     protected function getConnection(){
@@ -30,54 +36,74 @@ class ProxyDb extends Connection {
         return $this->db;
     }
 
-    protected function appendPageSql($sql,$PageEntity){
 
+    public function setSql($sql){
+        $this->sql=$sql;
     }
-
 
     public function setParam($key,$value){
         $this->paramArray[$key]=$value;
     }
 
 
+    public function getTableName(){
+        return $this->tableName;
+    }
+
+
+
     public function find(Page $page=null)
     {
-        if($page!=null){
+        if($page==null){
             $page=new Page();
             $page->showAll=true;
         }
+        //替换Table名称
+        $this->sql=str_replace(self::TABLE_NAME,$this->tableName,$this->sql);
+        $searchSql="SELECT * ".$this->sql;
 
+        $command=$this->db->createCommand($searchSql);
 
-        $command=$this->db->createCommand($this->sql);
+        if(!empty($page->sortName)){
+            $searchSql=$searchSql." order by ".$page->sortName." ".$page->sortType;
+        }
+
+        if(!$page->showAll){
+            $searchSql=$searchSql." limit ".$page->startRow.",".$page->pageSize;
+            $page->totalCount=$this->findAllCount();
+        }
+        $command->setSql($searchSql);
+
         foreach($this->paramArray as $key=>$value )
         {
             $command->bindParam(":".$key,$value);
         }
 
-        if($page){
+        $page->setList($command->queryAll());
+        return $page;
 
-        }
-
-        return $command->queryAll();
     }
+
 
     public function findAllCount()
     {
-        $command=$this->db->createCommand($this->sql);
+        $allCountSql=$this->sql;
+
+        $allCountSql=" SELECT COUNT(*) AS num ".$allCountSql;
+
+        $command=$this->db->createCommand($allCountSql);
         foreach($this->paramArray as $key=>$value )
         {
             $command->bindParam(":".$key,$value);
         }
-        return $command->queryAll();
+
+        $rst= $command->queryOne();
+        return $rst['num'];
+
+
     }
 
 
-    public function findList(Page $page,$sql)
-    {
-        if ($page == null) {
-            $page = new Page();
-            $page->showAll(true);
-        }
-    }
+
 
 }
