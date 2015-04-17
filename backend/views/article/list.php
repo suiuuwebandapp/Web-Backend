@@ -51,8 +51,8 @@
                     <tr>
                         <th>编号</th>
                         <th>标题</th>
-                        <th>封面图</th>
                         <th>名称</th>
+                        <th>封面图</th>
                         <th>更新时间</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -89,12 +89,11 @@
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "articleId","bSortable": false},
+                {"targets": [0],"data": "articleId","bSortable": false,"width":"50px"},
                 {
                     "targets": [1],
                     "data": "title",
                     "bSortable": false,
-                    "width":"200px",
                     "render": function(data, type, full) {
                         return data.length<10?data:data.substring(0,10);
                     }
@@ -103,7 +102,6 @@
                     "targets": [2],
                     "data": "name",
                     "bSortable": false,
-                    "width":"200px",
                     "render": function(data, type, full) {
                         return data.length<10?data:data.substring(0,10);
                     }

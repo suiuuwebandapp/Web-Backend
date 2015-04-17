@@ -96,10 +96,10 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="layout_horizontal_sidebar_menu.html"> 目的地列表</a>
+                        <a href="#~/destination/add"> 添加目的地</a>
                     </li>
-                    <li>
-                        <a href="index_horizontal_menu.html"> 景区管理</a>
+                    <li class="default_menu">
+                        <a href="#~/destination/list"> 目的地列表</a>
                     </li>
                 </ul>
             </li>
@@ -148,7 +148,7 @@
                             <i class="icon-globe"></i> Item 2 <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
-                            <li class="default_menu">
+                            <li>
                                 <a href="#~/sys-user/list"><i class="icon-power"></i> 随游游</a>
                             </li>
                             <li>
