@@ -42,8 +42,8 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">添加专栏详情</span>
-                    <span class="caption-helper"> 添加专栏、景区基本信息 </span>
+                    <span class="caption-subject font-red-sunglo bold uppercase">添加目的地详情</span>
+                    <span class="caption-helper"> 添加目的地基本信息 </span>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -61,7 +61,7 @@
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
-                            <div class="col-md-4 valdate">
+                            <div class="col-md-4">
                                 <input type="hidden" id="titleImg"/>
                                 <img id="titleImgPre"/>
                                 <div id="queue"></div>
@@ -138,7 +138,7 @@
 
 
     $(document).ready(function() {
-        FormValidation.init("addArticle");
+        FormValidation.init("addDes");
         $("#titleImgPre").hide();//隐藏预览封面图
 
         $(".muti_select").select2();
@@ -169,46 +169,42 @@
     });
 
 
-    //添加专栏文章
-    function addArticle(){
+    //添加目的地
+    function addDes(){
         var title=$("#title").val();
-        var name=$("#name").val();
         var titleImg=$("#titleImg").val();
-        var content=ue.getContent();
+        var countryId=$("#countryId").val();
+        var cityId=$("#cityId").val();
 
         if(titleImg==''){
             Main.errorTip("封面图不允许为空");
             return;
         }
-        if(content==''){
-            Main.errorTip("文章内容不允许为空");
-            return;
-        }
 
         $.ajax({
-            url :'/article/add-article',
+            url :'/destination/add-destination',
             type:'post',
             data:{
                 title:title,
-                name:name,
                 titleImg:titleImg,
-                content:content
+                countryId:countryId,
+                cityId:cityId
             },
             beforeSend:function(){
                 Main.showWait();
             },
             error:function(){
-                Main.errorTip("添加专栏失败,未知系统异常");
+                Main.errorTip("添加目的地失败,未知系统异常");
                 Main.hideWait();
             },
             success:function(data){
                 Main.hideWait();
                 var datas=eval('('+data+')');
                 if(datas.status==1){
-                    Main.successTip("添加专栏成功");
+                    Main.successTip("添加目的地成功");
                     initForm();
                 }else{
-                    Main.errorTip("添加专栏失败,错误信息:"+datas.data);
+                    Main.errorTip("添加目的地失败,错误信息:<br/>"+datas.data);
                 }
             }
         });

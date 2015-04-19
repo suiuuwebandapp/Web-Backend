@@ -1,0 +1,118 @@
+/* here you can put your own css to customize and override the theme */
+body{
+	font-family: "Microsoft YaHei" !important; 
+	color: #4D4D4D !important;
+}
+
+.right-container{margin-top: 0px !important;}
+
+.right-content{margin-left: 0px;padding: 0px 20px 20px 0px;min-height: 760px;}
+
+
+/* system tip begin*/
+.gritter-title{
+	font-family: "Microsoft YaHei" !important;
+	font-size: 14px !important;
+}
+.gritter-item p{
+	font-size:12px;
+}
+.successTip{
+	background: #26c281 !important;
+}
+.infoTip{
+	background: #27A9E3 !important;
+}
+.errorTip{
+	background: #f74d4d !important; /* Old browsers */
+}
+
+h1, h2, h3, h4, h5, h6{
+	font-family: "Microsoft YaHei" !important;
+}
+
+.page-title{
+	font-size: 20px !important;
+}
+
+/* system tip end*/
+
+/* system switch begin (has left border) */
+.has-switch > div.switch-off {
+	margin-left: 0px !important;
+}
+/* system switch end*/
+.page-content{
+	border-left:none !important;
+	border-bottom:none !important;
+}
+
+.page-right{
+	border-left: 1px solid #f0f5f7 !important;
+	/**border-bottom: 1px solid #f0f5f7 !important**/
+}
+
+
+
+.dataTables_info{
+	position:static !important;
+	float:right;
+}
+.dataTables_length{
+	margin-top:8px;
+}
+.table-info-form{
+	margin:5px 0px;
+}
+.required{
+	font-family: 'Open Sans', sans-serif !important;
+}
+
+.form-section{
+	padding-left: 50px;
+}
+
+/* select no result */
+.select2-results .select2-no-results{
+	font-size: 13px !important;
+	padding-left: 10px !important;
+	color: #555555;
+}
+/* select no result*/
+
+.portlet > .portlet-title > .caption{
+	font-size: 16px !important;
+}
+
+/**  QQ Music Style
+
+.header{
+	background-color: #2B3141 !important;
+}
+
+.portlet.box.green > .portlet-title{
+	background-color: #10A64F !important;
+}
+.green{
+	background: #10A64F !important;
+}
+*/
+
+
+.input-icon i{
+	z-index: 1;
+}
+.caption-helper{
+	padding-left: 10px !important;
+}
+.has-success .form-control{
+	border-color: #16987e !important;
+}
+.has-error .form-control{
+	border-color: #f3565d !important;
+}
+
+
+.select2-hidden-accessible{
+	display: none !important;
+}

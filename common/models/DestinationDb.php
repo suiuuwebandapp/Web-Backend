@@ -36,7 +36,7 @@ class DestinationDb extends ProxyDb{
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":countryId", $destinationInfo->countryId, PDO::PARAM_INT);
-        $command->bindParam(":cityId", $destinationInfo->cityId, PDO::PARAM_STR);
+        $command->bindParam(":cityId", $destinationInfo->cityId, PDO::PARAM_INT);
         $command->bindParam(":title", $destinationInfo->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $destinationInfo->titleImg, PDO::PARAM_STR);
         $command->bindParam(":createUserId", $destinationInfo->createUserId, PDO::PARAM_INT);

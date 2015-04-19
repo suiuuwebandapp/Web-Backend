@@ -12,6 +12,15 @@ namespace backend\entity;
 
 class DestinationInfo {
 
+    /**
+     * 上线
+     */
+    const DES_STATUS_ONLINE=1;
+    /**
+     * 下线
+     */
+    const DES_STATUS_OUTLINE=2;
+
     public $destinationId;
 
     public $countryId;

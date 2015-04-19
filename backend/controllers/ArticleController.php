@@ -97,7 +97,7 @@ class ArticleController extends CController{
             $this->articleService->addArticleInfo($articleInfo);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
 
     }
@@ -126,7 +126,7 @@ class ArticleController extends CController{
             $this->articleService->updateArticleInfo($articleInfo);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
 
     }
@@ -143,7 +143,7 @@ class ArticleController extends CController{
             $this->articleService->deleteArticleInfoById($articleId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
 
     }
@@ -162,7 +162,7 @@ class ArticleController extends CController{
             $this->articleService->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_ONLINE);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
 
     }
@@ -181,7 +181,7 @@ class ArticleController extends CController{
             $this->articleService->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_OUTLINE);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
 
     }

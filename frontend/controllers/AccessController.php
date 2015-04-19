@@ -22,7 +22,6 @@ class AccessController extends Controller
 
 
     private $qqInterface;
-    //token:954E9D7AEE616B1FEE21953A138F2B79
 
     public function __construct($id, $module, $config = []){
         parent::__construct($id, $module, $config = []);
