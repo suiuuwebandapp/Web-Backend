@@ -52,7 +52,7 @@ class CircleController extends Controller{
         $CircleArticleEntity->aContent=\Yii::$app->request->post('content');
         $CircleArticleEntity->aImg=\Yii::$app->request->post('img');
         $CircleArticleEntity->aAddr=\Yii::$app->request->post('addr');
-        $CircleArticleEntity->aCreateUserId=1;
+        $CircleArticleEntity->aCreateUserSign=1;
         $this->CircleService->CreateArticle($CircleArticleEntity);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
@@ -68,8 +68,8 @@ class CircleController extends Controller{
     {
         try{
             $articleId=\Yii::$app->request->post('articleId');
-            $userId = 1;
-            $this->CircleService->deleteArticleInfoById($articleId,$userId);
+            $userSign = 1;
+            $this->CircleService->deleteArticleInfoById($articleId,$userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
         {
@@ -93,7 +93,7 @@ class CircleController extends Controller{
             $CircleArticleEntity->aContent=\Yii::$app->request->post('content');
             $CircleArticleEntity->aImg=\Yii::$app->request->post('img');
             $CircleArticleEntity->aAddr=\Yii::$app->request->post('addr');
-            $CircleArticleEntity->aCreateUserId=1;
+            $CircleArticleEntity->aCreateUserSign=1;
             $this->CircleService->updateArticleInfo($CircleArticleEntity);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
@@ -164,7 +164,7 @@ class CircleController extends Controller{
         try {
 
             $CircleCommentEntity = new CircleComment();
-            $CircleCommentEntity->userId = 1;
+            $CircleCommentEntity->userSign = 1;
             $CircleCommentEntity->articleId = \Yii::$app->request->post('articleId');
             $CircleCommentEntity->content = \Yii::$app->request->post('content');
             $CircleCommentEntity->relativeCommentId = \Yii::$app->request->post('rId');
@@ -184,8 +184,8 @@ class CircleController extends Controller{
         try{
             $articleId=\Yii::$app->request->post('articleId');
             $commentId=\Yii::$app->request->post('commentId');
-            $userId = 6;
-            $this->CircleService->deleteCommentById($articleId,$commentId,$userId);
+            $userSign = 6;
+            $this->CircleService->deleteCommentById($articleId,$commentId,$userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
         {

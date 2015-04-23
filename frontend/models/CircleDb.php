@@ -27,11 +27,11 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO circle_article
             (
-             cId,aTitle,aContent,aImg,aCmtCount,aSupportCount,aCreateUserId,aCreateTime,aLastUpdateTime,aStatus,aAddr
+             cId,aTitle,aContent,aImg,aCmtCount,aSupportCount,aCreateUserSign,aCreateTime,aLastUpdateTime,aStatus,aAddr
             )
             VALUES
             (
-              :cId,:aTitle,:aContent,:aImg,:aCmtCount,:aSupportCount,:aCreateUserId,now(),now(),:aStatus,:aAddr
+              :cId,:aTitle,:aContent,:aImg,:aCmtCount,:aSupportCount,:aCreateUserSign,now(),now(),:aStatus,:aAddr
             )
         ");
 
@@ -42,7 +42,7 @@ class CircleDb extends ProxyDb
         $command->bindParam(":aImg", $CircleArticleEntity->aImg, PDO::PARAM_STR);
         $command->bindParam(":aCmtCount", $CircleArticleEntity->aCmtCount, PDO::PARAM_INT);
         $command->bindParam(":aSupportCount", $CircleArticleEntity->aSupportCount, PDO::PARAM_INT);
-        $command->bindParam(":aCreateUserId", $CircleArticleEntity->aCreateUserId, PDO::PARAM_INT);
+        $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_INT);
         $command->bindValue(":aStatus", CircleArticleEntity::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindParam(":aAddr", $CircleArticleEntity->aAddr, PDO::PARAM_STR);
 
@@ -55,18 +55,18 @@ class CircleDb extends ProxyDb
      * @param $articleId
      * @return int|bool
      */
-    public function deleteArticleById($articleId,$userId)
+    public function deleteArticleById($articleId,$userSign)
     {
         $sql = sprintf("
             UPDATE  circle_article SET
               aStatus=:aStatus
-            WHERE articleId=:articleId AND aCreateUserId=:aCreateUserId
+            WHERE articleId=:articleId AND aCreateUserSign=:aCreateUserSign
 
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindValue(":aStatus", CircleArticleEntity::ARTICLE_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
-        $command->bindParam(":aCreateUserId", $userId, PDO::PARAM_INT);
+        $command->bindParam(":aCreateUserSign", $userSign, PDO::PARAM_INT);
         return $command->execute();
     }
 
@@ -85,7 +85,7 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             UPDATE  circle_article SET
               aTitle=:aTitle,aImg=:aImg,aContent=:aContent,aLastUpdateTime=now(),aAddr=:aAddr
-            WHERE articleId=:articleId AND aCreateUserId=:aCreateUserId
+            WHERE articleId=:articleId AND aCreateUserSign=:aCreateUserSign
 
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -94,7 +94,7 @@ class CircleDb extends ProxyDb
         $command->bindParam(":aContent", $CircleArticleEntity->aContent, PDO::PARAM_STR);
         $command->bindParam(":aAddr", $CircleArticleEntity->aAddr, PDO::PARAM_INT);
         $command->bindParam(":articleId", $CircleArticleEntity->articleId, PDO::PARAM_INT);
-        $command->bindParam(":aCreateUserId", $CircleArticleEntity->aCreateUserId, PDO::PARAM_INT);
+        $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_INT);
         return $command->execute();
     }
     /**
@@ -110,14 +110,14 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             UPDATE  circle_article SET
             aCmtCount=:aCmtCount,aSupportCount=:aSupportCount
-            WHERE articleId=:articleId AND aCreateUserId=:aCreateUserId
+            WHERE articleId=:articleId AND aCreateUserSign=:aCreateUserSign
 
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":aCmtCount", $CircleArticleEntity->aCmtCount, PDO::PARAM_INT);
         $command->bindParam(":aSupportCount", $CircleArticleEntity->aSupportCount, PDO::PARAM_INT);
         $command->bindParam(":articleId", $CircleArticleEntity->articleId, PDO::PARAM_INT);
-        $command->bindParam(":aCreateUserId", $CircleArticleEntity->aCreateUserId, PDO::PARAM_INT);
+        $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_INT);
         return $command->execute();
     }
     /**
@@ -130,7 +130,7 @@ class CircleDb extends ProxyDb
     {
         $sql=sprintf("
             SELECT a.*,b.nickname,b.headImg FROM circle_article a
-            Left JOIN user_base b ON a.aCreateUserId=b.userId
+            Left JOIN user_base b ON a.aCreateUserSign=b.userSign
             WHERE articleId=:articleId AND aStatus=:aStatus
         ");
 
@@ -149,8 +149,8 @@ class CircleDb extends ProxyDb
     {
 
         $sql=sprintf("
-          SELECT a.cId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserId,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,b.nickname,b.headImg FROM circle_article a
-          Left JOIN user_base b ON a.aCreateUserId=b.userId WHERE cId=:cId AND aStatus=:aStatus
+          SELECT a.cId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,b.nickname,b.headImg FROM circle_article a
+          Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cId=:cId AND aStatus=:aStatus
         ");
 
         $command=$this->getConnection()->createCommand($sql);
@@ -187,16 +187,16 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO circle_article_comment
             (
-             userId,content,relativeCommentId,supportCount,opposeCount,cTime,cStatus,cLastTime,articleId
+             userSign,content,relativeCommentId,supportCount,opposeCount,cTime,cStatus,cLastTime,articleId
             )
             VALUES
             (
-              :userId,:content,:relativeCommentId,:supportCount,:opposeCount,now(),:cStatus,now(),:articleId
+              :userSign,:content,:relativeCommentId,:supportCount,:opposeCount,now(),:cStatus,now(),:articleId
             )
         ");
 
         $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userId", $CircleCommentEntity->userId, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_INT);
         $command->bindParam(":content", $CircleCommentEntity->content, PDO::PARAM_STR);
         $command->bindParam(":relativeCommentId", $CircleCommentEntity->relativeCommentId, PDO::PARAM_INT);
         $command->bindParam(":supportCount", $CircleCommentEntity->supportCount, PDO::PARAM_INT);
@@ -212,19 +212,19 @@ class CircleDb extends ProxyDb
      * @param $commentId
      * @return array|bool
      */
-    public function deleteCommentById($commentId,$userId)
+    public function deleteCommentById($commentId,$userSign)
     {
         $sql = sprintf("
             UPDATE  circle_article_comment SET
               cStatus=:cStatus
-            WHERE commentId=:commentId AND userId=:userId
+            WHERE commentId=:commentId AND userSign=:userSign
 
         ");
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindValue(":cStatus", CircleCommentEntity::COMMENT_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":commentId", $commentId, PDO::PARAM_INT);
-        $command->bindParam(":userId", $userId, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_INT);
         return $command->execute();
     }
 
@@ -243,13 +243,13 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             UPDATE  circle_article_comment SET
               content=:content,cLastTime=now()
-            WHERE commentId=:commentId AND userId=:userId
+            WHERE commentId=:commentId AND userSign=:userSign
 
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":content", $CircleCommentEntity->content, PDO::PARAM_STR);
         $command->bindParam(":commentId", $CircleCommentEntity->commentId, PDO::PARAM_INT);
-        $command->bindParam(":userId", $CircleCommentEntity->userId, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_INT);
         return $command->execute();
     }
 
@@ -266,14 +266,14 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             UPDATE  circle_article_comment SET
               supportCount=:supportCount,opposeCount=:opposeCount
-            WHERE commentId=:commentId AND userId=:userId
+            WHERE commentId=:commentId AND userSign=:userSign
 
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":supportCount", $CircleCommentEntity->supportCount, PDO::PARAM_INT);
         $command->bindParam(":opposeCount", $CircleCommentEntity->opposeCount, PDO::PARAM_INT);
         $command->bindParam(":commentId", $CircleCommentEntity->commentId, PDO::PARAM_INT);
-        $command->bindParam(":userId", $CircleCommentEntity->userId, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_INT);
         return $command->execute();
     }
     /**
@@ -286,7 +286,7 @@ class CircleDb extends ProxyDb
     {
         $sql=sprintf("
             SELECT a.*,b.nickname,b.headImg FROM circle_article_comment a
-            Left JOIN user_base b ON a.userId=b.userId
+            Left JOIN user_base b ON a.userSign=b.userSign
             WHERE articleId=:articleId AND cStatus=:cStatus
         ");
 

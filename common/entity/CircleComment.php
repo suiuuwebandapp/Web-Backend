@@ -17,7 +17,7 @@ class CircleComment{
     /**
      * @var 发表评论用户
      */
-    public $userId;
+    public $userSign;
     /**
      * @var 评论内容
      */

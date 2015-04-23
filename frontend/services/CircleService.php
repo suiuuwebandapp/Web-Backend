@@ -75,16 +75,16 @@ class CircleService extends BaseDb
     /**
      * 删除圈子文章
      * @param $articleId
-     * @param $userId
+     * @param $userSign
      * @throws Exception
      */
-    public function deleteArticleInfoById($articleId,$userId)
+    public function deleteArticleInfoById($articleId,$userSign)
     {
 
         try {
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $rst =$this->CircleDb->deleteArticleById($articleId,$userId);
+            $rst =$this->CircleDb->deleteArticleById($articleId,$userSign);
             if($rst==1)
             {
                 $this->CircleDb->deleteAllCommentById($articleId);
@@ -227,10 +227,10 @@ class CircleService extends BaseDb
      * 删除圈子文章评论
      * @param $articleId
      * @param $commentId
-     * @param $userId
+     * @param $userSign
      * @throws Exception
      */
-    public function deleteCommentById($articleId,$commentId,$userId)
+    public function deleteCommentById($articleId,$commentId,$userSign)
     {
 
         try {
@@ -238,7 +238,7 @@ class CircleService extends BaseDb
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
             $transaction = $conn->beginTransaction();
-            $rst = $this->CircleDb->deleteCommentById($commentId,$userId);
+            $rst = $this->CircleDb->deleteCommentById($commentId,$userSign);
             if($rst==0)
             {
                 throw new Exception('更新圈子文章评论失败',Code::FAIL);

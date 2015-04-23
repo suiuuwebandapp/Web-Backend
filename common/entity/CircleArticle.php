@@ -43,7 +43,7 @@ class CircleArticle{
     /**
      * @var创建的用户
      */
-    public $aCreateUserId;
+    public $aCreateUserSign;
     /**
      * @var创建时间
      */
