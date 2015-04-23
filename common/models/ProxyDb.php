@@ -12,6 +12,7 @@ namespace common\models;
 
 use backend\components\Page;
 use yii\db\Connection;
+use yii\db\mssql\PDO;
 
 class ProxyDb extends Connection {
 
@@ -24,6 +25,8 @@ class ProxyDb extends Connection {
     private $sql="";
 
     private $tableName;
+
+    private $selectInfo;
 
 
     public function __construct(Connection $db,$tableName=null){
@@ -51,6 +54,12 @@ class ProxyDb extends Connection {
     }
 
 
+    public function setSelectInfo($selectInfo)
+    {
+        $this->selectInfo=$selectInfo;
+    }
+
+
 
     public function find(Page $page=null)
     {
@@ -60,10 +69,14 @@ class ProxyDb extends Connection {
         }
         //替换Table名称
         $this->sql=str_replace(self::TABLE_NAME,$this->tableName,$this->sql);
-        $searchSql="SELECT * ".$this->sql;
+        if(!empty($this->selectInfo)){
+            $searchSql="SELECT ".$this->selectInfo." ".$this->sql;
+
+        }else{
+            $searchSql="SELECT * ".$this->sql;
+        }
 
         $command=$this->db->createCommand($searchSql);
-
         if(!empty($page->sortName)){
             $searchSql=$searchSql." order by ".$page->sortName." ".$page->sortType;
         }
@@ -76,9 +89,12 @@ class ProxyDb extends Connection {
 
         foreach($this->paramArray as $key=>$value )
         {
-            $command->bindParam(":".$key,$value);
+            if(is_numeric($value)){
+                $command->bindValue(":".$key,$value,PDO::PARAM_INT);
+            }else{
+                $command->bindValue(":".$key,$value,PDO::PARAM_STR);
+            }
         }
-
         $page->setList($command->queryAll());
         return $page;
 
@@ -94,9 +110,12 @@ class ProxyDb extends Connection {
         $command=$this->db->createCommand($allCountSql);
         foreach($this->paramArray as $key=>$value )
         {
-            $command->bindParam(":".$key,$value);
+            if(is_numeric($value)){
+                $command->bindValue(":".$key,$value,PDO::PARAM_INT);
+            }else{
+                $command->bindValue(":".$key,$value,PDO::PARAM_STR);
+            }
         }
-
         $rst= $command->queryOne();
         return $rst['num'];
 

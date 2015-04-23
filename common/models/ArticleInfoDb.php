@@ -2,7 +2,7 @@
 namespace common\models;
 
 use backend\components\Page;
-use backend\entity\ArticleInfo;
+use common\entity\ArticleInfo;
 use yii\db\mssql\PDO;
 
 /**

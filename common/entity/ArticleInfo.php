@@ -7,7 +7,7 @@
  * Email: zhangxinmailvip@foxmail.com
  */
 
-namespace backend\entity;
+namespace common\entity;
 
 
 class ArticleInfo {

@@ -11,7 +11,7 @@ namespace backend\services;
 
 
 use backend\components\Page;
-use backend\entity\ArticleInfo;
+use common\entity\ArticleInfo;
 use common\components\Code;
 use common\models\ArticleInfoDb;
 use common\models\BaseDb;

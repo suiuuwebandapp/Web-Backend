@@ -6,8 +6,6 @@
  * Time : 上午9:38
  * Email: zhangxinmailvip@foxmail.com
  */
-
-phpinfo();exit;
 ?>
 <script type="text/javascript" src="/assets/d74e916a/yii.js"></script>
 <script type="text/javascript" src="/assets/d74e916a/yii.validation.js"></script>

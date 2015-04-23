@@ -60,7 +60,7 @@
                         <a href="#~/sys-user/list"  class="left_menu_link"> <i class="icon-home"></i>  员工管理</a>
                     </li>
                     <li>
-                        <a href="ecommerce_orders.html"> <i class="icon-basket"></i> Orders</a>
+                        <a href="#~/country/to-country-list"> <i class="icon-pointer"></i> 国家城市配置</a>
                     </li>
                     <li>
                         <a href="ecommerce_orders_view.html"> <i class="icon-tag"></i> Order View</a>
@@ -95,14 +95,32 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li>
-                        <a href="#~/destination/add"> 添加目的地</a>
-                    </li>
                     <li class="default_menu">
-                        <a href="#~/destination/list"> 目的地列表</a>
+                        <a href="#~/destination/to-des-list"> 目的地列表</a>
                     </li>
                 </ul>
             </li>
+
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-rocket"></i>
+                    <span class="title"> 专栏管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#~/article/add"> 添加专栏</a>
+                    </li>
+                    <li>
+                        <a href="#~/article/list"  class="left_menu_link"> 专栏列表</a>
+                    </li>
+                    <li>
+                        <a href="index_horizontal_menu.html"> Dashboard & Mega Menu</a>
+                    </li>
+                </ul>
+            </li>
+
+            <!--
             <li class="menu_top">
                 <a href="javascript:;">
                     <i class="icon-folder"></i>
@@ -170,25 +188,7 @@
                 </ul>
             </li>
 
-            <li class="menu_top">
-                <a href="javascript:;">
-                    <i class="icon-rocket"></i>
-                    <span class="title"> 专栏管理</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="#~/article/add"> 添加专栏</a>
-                    </li>
-                    <li>
-                        <a href="#~/article/list"  class="left_menu_link"> 专栏列表</a>
-                    </li>
-                    <li>
-                        <a href="index_horizontal_menu.html"> Dashboard & Mega Menu</a>
-                    </li>
-                </ul>
-            </li>
-
+            -->
             <li class="last menu_top">
                 <a href="charts.html">  <i class="icon-bar-chart"></i> <span class="title">Visual Charts</span> </a>
             </li>

@@ -42,7 +42,7 @@ class BaseDb {
      */
     public static function arrayCastObject($array,$className)
     {
-        if($array === false){
+        if($array==null||$array === false){
             return null;
         };
 

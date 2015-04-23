@@ -10,12 +10,76 @@
 namespace common\models;
 
 
-use backend\entity\DestinationInfo;
-use backend\entity\DestinationScenic;
+use backend\components\Page;
+use common\entity\DestinationInfo;
+use common\entity\DestinationScenic;
 use yii\db\mssql\PDO;
 
 class DestinationDb extends ProxyDb{
 
+
+    /**
+     * 获取目的地列表
+     * @param Page $page
+     * @param $search
+     * @param $status
+     * @return \backend\components\Page
+     */
+    public function getDesList(Page $page,$search,$status)
+    {
+        $sql=sprintf("
+            FROM destination_info i
+            LEFT JOIN country co ON co.id=i.countryId
+            LEFT JOIN city ci ON ci.id=i.cityId
+            WHERE 1=1
+        ");
+
+        $selectInfo=sprintf("
+            i.*,co.cname as countryCname,co.ename as countryEname,
+            ci.cname as cityCname,ci.ename as cityEname
+        ");
+
+        $this->setSelectInfo($selectInfo);
+        if(!empty($search)){
+            $sql.=" AND title like :search ";
+           $this->setParam("search",$search."%");
+        }
+        if(!empty($status)){
+            $sql.=" AND status=:status ";
+            $this->setParam("status",$status);
+        }
+
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
+
+    /**
+     * 获取景区列表
+     * @param Page $page
+     * @param $desId
+     * @param $search
+     * @return Page
+     * @internal param $status
+     */
+    public function getScenicList(Page $page,$desId,$search)
+    {
+        $sql=sprintf("
+            FROM destination_scenic
+            WHERE destinationId=:desId
+        ");
+        $this->setParam("desId",$desId);
+        if(!empty($search)){
+            $sql.=" AND title like :search ";
+            $this->setParam("search",$search."%");
+        }
+        if(!empty($status)){
+            $sql.=" AND status=:status ";
+            $this->setParam("status",$status);
+        }
+        $this->setSql($sql);
+        return $this->find($page);
+    }
 
     /**
      * 添加目的地详情
@@ -57,11 +121,11 @@ class DestinationDb extends ProxyDb{
         $sql = sprintf("
             INSERT INTO destination_scenic
             (
-              destinationId,title,titleImg,beginTime,endTime
+              destinationId,title,titleImg,beginTime,endTime,lon,lat,address
             )
             VALUES
             (
-              :destinationId,:title,:titleImg,:beginTime,:endTime
+              :destinationId,:title,:titleImg,:beginTime,:endTime,:lon,:lat,:address
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -70,6 +134,10 @@ class DestinationDb extends ProxyDb{
         $command->bindParam(":titleImg", $destinationScenic->titleImg, PDO::PARAM_STR);
         $command->bindParam(":beginTime", $destinationScenic->beginTime, PDO::PARAM_STR);
         $command->bindParam(":endTime", $destinationScenic->endTime, PDO::PARAM_STR);
+        $command->bindParam(":lon", $destinationScenic->endTime, PDO::PARAM_STR);
+        $command->bindParam(":lat", $destinationScenic->endTime, PDO::PARAM_STR);
+        $command->bindParam(":address", $destinationScenic->endTime, PDO::PARAM_STR);
+
 
         $command->execute();
     }
@@ -84,9 +152,7 @@ class DestinationDb extends ProxyDb{
     {
         $sql = sprintf("
             UPDATE  destination_info SET
-            (
-              countryId=:countryId,cityId=:cityId,title=:title,titleImg=:titleImg,lastUpdateTime=now(),status=:status
-            )
+            countryId=:countryId,cityId=:cityId,title=:title,titleImg=:titleImg,lastUpdateTime=now()
             WHERE destinationId=:destinationId
 
         ");
@@ -95,7 +161,6 @@ class DestinationDb extends ProxyDb{
         $command->bindParam(":cityId", $destinationInfo->cityId, PDO::PARAM_STR);
         $command->bindParam(":title", $destinationInfo->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $destinationInfo->titleImg, PDO::PARAM_STR);
-        $command->bindParam(":status", $destinationInfo->status, PDO::PARAM_INT);
         $command->bindParam(":destinationId", $destinationInfo->destinationId, PDO::PARAM_INT);
 
 
@@ -113,9 +178,8 @@ class DestinationDb extends ProxyDb{
     {
         $sql = sprintf("
             UPDATE destination_scenic SET
-            (
-              destinationId=:destinationId,title=:title,titleImg=:titleImg,beginTime=:beginTime,endTime=:endTime
-            )
+            destinationId=:destinationId,title=:title,titleImg=:titleImg,beginTime=:beginTime,endTime=:endTime,
+            lon=:lon,lat=:lat,address=:address
             WHERE scenicId=:scenicId;
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -124,6 +188,9 @@ class DestinationDb extends ProxyDb{
         $command->bindParam(":titleImg", $destinationScenic->titleImg, PDO::PARAM_STR);
         $command->bindParam(":beginTime", $destinationScenic->beginTime, PDO::PARAM_STR);
         $command->bindParam(":endTime", $destinationScenic->endTime, PDO::PARAM_STR);
+        $command->bindParam(":lon", $destinationScenic->endTime, PDO::PARAM_STR);
+        $command->bindParam(":lat", $destinationScenic->endTime, PDO::PARAM_STR);
+        $command->bindParam(":address", $destinationScenic->endTime, PDO::PARAM_STR);
 
         $command->bindParam(":scenicId",$scenicId,PDO::PARAM_INT);
 
@@ -217,6 +284,28 @@ class DestinationDb extends ProxyDb{
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":destinationId", $destinationId, PDO::PARAM_INT);
         return $command->queryOne();
+    }
+
+
+    /**
+     * 改变目的地状态
+     * @param $desId
+     * @param $status
+     * @throws \yii\db\Exception
+     */
+    public function changeStatus($desId,$status)
+    {
+        $sql = sprintf("
+            UPDATE  destination_info SET
+            status=:status
+            WHERE destinationId=:desId
+
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":desId", $desId, PDO::PARAM_INT);
+        $command->bindParam(":status", $status, PDO::PARAM_INT);
+
+        $command->execute();
     }
 
 }

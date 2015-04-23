@@ -169,7 +169,7 @@
             'multi'            : false,
             'onUploadComplete' : function(file, data) {
                 var datas=eval('('+data+')');
-                if(datas.status=1){
+                if(datas.status==1){
                     Main.successTip("上传封面图成功");
                     $("#queue").html("");
                     $("#titleImg").val(datas.data);

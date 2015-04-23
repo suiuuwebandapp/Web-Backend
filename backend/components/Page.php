@@ -37,7 +37,7 @@ class Page
             $oType = $request->post("order[0][dir]");
             $isShowAll = $request->post("showAll");
 
-            $cPage = $request->post("currentPage");
+            $cPage = $request->get("currentPage");
 
             if (!empty($draw)) {
                 $this->draw = $draw;

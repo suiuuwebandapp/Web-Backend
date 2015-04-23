@@ -57,7 +57,7 @@ class ArticleController extends CController{
 
         $page=$this->articleService->getList($page,$search,$status);
 
-        $tableResult=new TableResult($page->draw,$page->totalCount,count($page->getList()),$page->getList());
+        $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());
 
         echo json_encode($tableResult);
     }
@@ -172,13 +172,13 @@ class ArticleController extends CController{
      * @return string
      */
     public function actionOutline()
-            {
-                $articleId=\Yii::$app->request->post("articleId","");
-                if(empty($articleId)){
+    {
+        $articleId=\Yii::$app->request->post("articleId","");
+        if(empty($articleId)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"参数异常"));
         }
         try{
-            $this->articleService->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_OUTLINE);
+            $this->des->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_OUTLINE);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));

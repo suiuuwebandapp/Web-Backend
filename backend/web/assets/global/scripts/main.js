@@ -14,14 +14,13 @@ var Main = function() {
 
     var initMenuOpen=function(currentLi){
         //初始化Head
-
         //初始化Menu
         currentLi.find("span[class='arrow']").addClass("open");
         var parentLi=$(currentLi).parent("ul").parent('li');
         parentLi.addClass("active");
         parentLi.addClass("open");
 
-        if(!currentLi.hasClass('menu_top')&&!parentLi.hasClass('menu_top')){
+        if($(currentLi).length>0&&!currentLi.hasClass('menu_top')&&!parentLi.hasClass('menu_top')){
             initMenuOpen(parentLi);
         }
     };
@@ -53,15 +52,16 @@ var Main = function() {
     var buildHeadInfo=function(currentLi){
         var text=currentLi.children("a").text();
         var url=currentLi.children("a").attr("href");
-
         $("#headUl").html('<li><i class="fa fa-angle-right"></i><a href="'+url+'">'+text+'</a></li>'+$("#headUl").html());
-        var parentLi=$(currentLi).parent("ul").parent('li');
-        if(!currentLi.hasClass('menu_top')&&!parentLi.hasClass('menu_top')){
-            buildHeadInfo(parentLi);
-        }else{
-            var defaultLi=$("#left_menu_ul li[class='default_menu']");
-            url=$(defaultLi).find("a").attr("href");
-            $("#headUl").html('<li><i class="fa fa-home"></i><a href="'+url+'"> 首页</a></li>'+$("#headUl").html());
+        if($(currentLi).length>0){
+            var parentLi=$(currentLi).parent("ul").parent('li');
+            if(!currentLi.hasClass('menu_top')&&!parentLi.hasClass('menu_top')){
+                buildHeadInfo(parentLi);
+            }else{
+                var defaultLi=$("#left_menu_ul li[class='default_menu']");
+                url=$(defaultLi).find("a").attr("href");
+                $("#headUl").html('<li><i class="fa fa-home"></i><a href="'+url+'"> 首页</a></li>'+$("#headUl").html());
+            }
         }
     }
 
@@ -74,7 +74,7 @@ var Main = function() {
         if(url.indexOf('#~')>-1){
             //如果有，加载相应的地址
             var href=url.substring(url.indexOf('#~')+2,url.length);
-            $.get(href,function(data){
+            $.get(href, function (data) {
                 $("#div_main_container").html(data);
             });
             var aObj="#left_menu_ul li a[href='#~"+href+"']";
@@ -289,6 +289,12 @@ var Main = function() {
 				}
 			});
 		},
+        refrenshTable:function(){
+            TableAjax.refresh();
+        },
+        refrenshTableCurrent:function(){
+            TableAjax.refreshCurrent();
+        },
 		// 刷新Iframe 表格
 		refrenshIframeTable : function() {
 			document.getElementById(iframeId).contentWindow.TableAjax.refresh();

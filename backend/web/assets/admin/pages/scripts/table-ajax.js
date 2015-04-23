@@ -47,7 +47,7 @@ var TableAjax = function () {
 					"zeroRecords":  "<div class='text-center text-danger'>没有匹配结果<div>",
 					"info":         '<div class="dataTables_paginate paging_bootstrap"><ul class="pagination" style="visibility: visible;"><li class="next disabled"><a href="javascript:;">'+'显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项'+'</a></li></ul></div>',
 					"infoEmpty":    '<div class="dataTables_paginate paging_bootstrap"><ul class="pagination" style="visibility: visible;"><li class="next disabled"><a href="javascript:;">显示第 0  至 0 项结果，共 0 项 </a></li></ul></div>',
-					"infoFiltered": "(由 _MAX_项结果过滤)",
+					"infoFiltered": "",
 					"infoPostFix":  "",
 					"search":       "搜索：",
 					"url":          "",
@@ -99,13 +99,27 @@ var TableAjax = function () {
         	if(this.tableInfo.tableData.showAll==true){
         		url=url + "&showAll=true";
         	}
-        	//模拟刷新当前页（点击当前页按钮）
-        	//$(this.tableInfo.tableObj+"_paginate").find("li[class='active']").click();
-        	var currentPage=TableAjax.getCurrentPage();
-        	if(currentPage!=1){
-        		url=url + "&currentPage="+currentPage;
-        	}
 			this.tableDatas.fnReloadAjax(url);
+        },
+        refreshCurrent:function(){
+            var url=this.tableInfo.tableUrl;
+            var params=$(this.tableInfo.formObj).serialize();
+            if(this.tableInfo.tableUrl.indexOf("?")==-1){
+                url=url+"?";
+            }
+            if(params!=""){
+                url=url + "&" +params;
+            }
+            if(this.tableInfo.tableData.showAll==true){
+                url=url + "&showAll=true";
+            }
+            //模拟刷新当前页（点击当前页按钮）
+            //$(this.tableInfo.tableObj+"_paginate").find("li[class='active']").click();
+            var currentPage=TableAjax.getCurrentPage();
+            if(currentPage!=1){
+                url=url + "&currentPage="+currentPage;
+            }
+            this.tableDatas.fnReloadAjax(url,null,true);
         },
         deleteRefresh:function(){
         	var size=$(this.tableInfo.tableObj).find("tbody").find("tr").size();
@@ -129,7 +143,6 @@ jQuery.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnC
 {
 	// DataTables 1.10 compatibility - if 1.10 then `versionCheck` exists.
 	// 1.10's API has ajax reloading built in, so we use those abilities
-	// directly.
 	if ( jQuery.fn.dataTable.versionCheck ) {
 		var api = new jQuery.fn.dataTable.Api( oSettings );
 		if ( sNewSource ) {
@@ -143,7 +156,6 @@ jQuery.fn.dataTableExt.oApi.fnReloadAjax = function ( oSettings, sNewSource, fnC
 	if ( sNewSource !== undefined && sNewSource !== null ) {
 		oSettings.sAjaxSource = sNewSource;
 	}
-
 	// Server-side processing should just call fnDraw
 	if ( oSettings.oFeatures.bServerSide ) {
 		this.fnDraw();

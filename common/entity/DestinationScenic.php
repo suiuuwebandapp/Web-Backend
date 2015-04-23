@@ -7,7 +7,7 @@
  * Email: zhangxinmailvip@foxmail.com
  */
 
-namespace backend\entity;
+namespace common\entity;
 
 
 class DestinationScenic {
@@ -23,6 +23,12 @@ class DestinationScenic {
     public $beginTime;
 
     public $endTime;
+
+    public $lon;
+
+    public $lat;
+
+    public $address;
 
 
 }

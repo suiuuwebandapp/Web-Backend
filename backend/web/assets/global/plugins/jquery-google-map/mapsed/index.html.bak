@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>演示：谷歌地图插件Mapsed.js</title>
+<link href="../css/main.css" rel="stylesheet">
+<link href="mapsed.css" rel="stylesheet">
+<style>
+.demo{width:760px; margin:20px auto 10px auto;box-shadow:10px 10px 15px 0px #ccc;}
+.demo p{line-height:32px; font-weight:bold}
+.maps{width:100%; height:400px}
+</style>
+</head>
+
+<body>
+<div id="header">
+   <div id="logo"><h1><a href="http://www.helloweba.com" title="返回helloweba首页">helloweba</a></h1></div>
+   <div class="demo_topad"><script src="/js/ad_js/demo_topad.js" type="text/javascript"></script></div>
+</div>
+
+<div id="main">
+   <h2 class="top_title"><a href="http://www.helloweba.com/view-blog-256.html">谷歌地图插件Mapsed.js</a></h2>
+   <div class="demo">
+   		<p>1、加载地点数据</p>
+   		<div id="custom_places" class="maps"></div>
+   </div>
+   
+   <div class="demo">
+   		<p>2、标注地点</p>
+   		<div id="add_places" class="maps"></div>
+   </div>
+   
+   <div class="demo">
+   		<p>3、搜索地点</p>
+   		<div id="search_places" class="maps"></div>
+   </div>
+   
+ 	<br/><div class="ad_76090"><script src="/js/ad_js/bd_76090.js" type="text/javascript"></script></div><br/>
+</div>
+
+<div id="footer">
+    <p>Powered by helloweba.com  允许转载、修改和使用本站的DEMO，但请注明出处：<a href="http://www.helloweba.com">www.helloweba.com</a></p>
+</div>
+<script src="mymap.js"></script>
+<script src="jquery-1.10.2.js"></script>
+<script src="mapsed.js"></script>
+<script>
+$(function(){
+	$("#custom_places").mapsed({
+		showOnLoad: 	
+		[
+			{
+				autoShow: true,
+				//canEdit: false,
+				lat: 22.540053,
+				lng: 113.983225,
+				name: "欢乐谷",
+				street: "参与性、观赏性、娱乐性、趣味性现代主题乐园。",
+				userData: 1
+			},
+			{
+				autoShow: true,
+				//canEdit: false,
+				lat: 22.536113,
+				lng: 113.972569,
+				name: "世界之窗",
+				street: "荟萃世界几千年人类文明精华，历史遗迹、名胜、自然风光、世界奇观！",
+				userData: 2
+			},
+			{
+				autoShow: true,
+				//canEdit: false,
+				lat: 22.530041,
+				lng: 113.982479,
+				name: "锦绣中华民俗文化村",
+				street: "邀你遨游最美赛花节！",
+				userData: 3
+			}
+		]
+		
+	});	
+	
+	$("#add_places").mapsed({
+		allowAdd: true,
+		onSave: function(m, newPlace) {
+			var missing = [];
+			
+			// detect errors starting at bottom
+			// ... we only have space for one error at a time, so this way we'll report 
+			// ... from the top down
+			if (newPlace.postCode === "") missing.push("postcode");
+			if (newPlace.street === "")   missing.push("street");
+			if (newPlace.name === "")     missing.push("name");
+			
+			// anything missing?
+			if (missing.length > 0) {
+				// return the error message so the callback doesn't progress
+				return "Required: " + missing.join();
+			}
+			
+			if (newPlace) {
+				if (newPlace.markerType == "new") {
+					// simulate a primary key being save to a db
+					newPlace.userData = parseInt(Math.random() * 100000);
+					var n_name = newPlace.name;
+					var n_street = newPlace.street;
+					var n_postCode = newPlace.postCode;
+					
+					$.post('do.php',{name:n_name,street:n_street,postcode:n_postCode},function(msg){
+						alert(msg);
+					});
+				}
+			}
+		
+			// indicate form was OK and saved
+			return "";
+		},
+		
+		showOnLoad: [
+			{
+				autoShow: false,
+				//canEdit: false,,
+				lat: 22.530041,
+				lng: 113.982479
+			}
+		]
+	});
+	
+	$("#search_places").mapsed({
+		searchOptions: {
+    		enabled: true,
+    		initSearch: "深圳世界之窗",
+    		placeholder: "搜索 ..."
+  		}
+	});
+});
+</script>
+<p id="stat"><script type="text/javascript" src="/js/tongji.js"></script></p>
+</body>
+</html>
