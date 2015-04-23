@@ -26,7 +26,7 @@
     <input id="btnPhone" type="button" value="手机注册"/>
 
     <br/><br/>
-    <a href="<?= $weiboUrl?>">微博登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="">微博登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="https://api.weibo.com/oauth2/authorize?client_id=123050457758183&redirect_uri=http://www.example.com/response&response_type=code">微信登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
 
     <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101206430&redirect_uri=http://local.suiuu.com/access/qq-login&state=asdfasd">QQ登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;

@@ -30,7 +30,7 @@ class IndexController extends Controller{
 
     public function actionIndex()
     {
-        $this->render("index");
+        return $this->render("index");
     }
 
     public function actionLogin()
