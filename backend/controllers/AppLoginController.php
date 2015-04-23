@@ -10,6 +10,8 @@
 namespace backend\controllers;
 
 
+use common\components\Code;
+
 class AppLoginController {
 
 
@@ -22,8 +24,13 @@ class AppLoginController {
         $sign=\Yii::$app->request->post("sign");
 
         if(empty($openId)){
-            
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"OpenId Is Not Allow Empty");
         }
+        if(empty($sign)){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"Sign Is Not Allow Empty");
+        }
+
+
 
     }
 
