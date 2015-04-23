@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'defaultRoute' => 'index',
     'components' => [
         'user' => [
             'identityClass' => 'common\models\User',
@@ -30,5 +31,4 @@ return [
         ],
     ],
     'params' => $params,
-
 ];

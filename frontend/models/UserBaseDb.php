@@ -14,6 +14,7 @@ use common\models\ProxyDb;
 use frontend\entity\UserBase;
 use yii\db\mssql\PDO;
 
+
 class UserBaseDb extends ProxyDb
 {
     /**
@@ -53,6 +54,8 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
         $command->bindParam(":status", $userBase->status, PDO::PARAM_INT);
+
+
 
         return $command->execute();
 

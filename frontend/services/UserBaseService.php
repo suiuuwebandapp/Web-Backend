@@ -2,10 +2,12 @@
 namespace frontend\services;
 
 use common\components\Code;
+use common\components\Validate;
 use common\models\BaseDb;
 use frontend\entity\UserBase;
 use frontend\models\UserBaseDb;
 use yii\base\Exception;
+use common\components\Easemob;
 
 /**
  * Created by PhpStorm.
@@ -49,8 +51,20 @@ class UserBaseService extends BaseDb
             //对用户密码进行加密
             $userBase->password = $this->encryptPassword($userBase->password);
             $userBase=$this->initRegisterUserInfo($userBase);
-            $this->userBaseDb->addUser($userBase);
-            $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
+
+            //环信im注册
+            $im=new Easemob(\Yii::$app->params['imConfig']);
+            $options=array('username'=>$userBase->userSign,'password'=>$userBase->password,'nickname'=>$userBase->nickname);
+            $imRes=$im->accreditRegister($options);
+            $arrRes=json_encode($imRes,true);
+            if(isset($imRes['error']))
+            {
+                throw new Exception(Code::USER_IM_REGISTER_ERROR);
+            }else
+            {
+                $this->userBaseDb->addUser($userBase);
+                $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
+            }
         } catch (Exception $e) {
             throw $e;exit;
             throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
@@ -61,13 +75,13 @@ class UserBaseService extends BaseDb
     }
 
     /**
-     * 查找用户（根据邮箱和密码）
-     * @param $email
+     * 查找用户（根据用户名和密码）
+     * @param $userName
      * @param $password
      * @return mixed|null
      * @throws Exception
      */
-    public function findUserByEmailAndPwd($email, $password)
+    public function findUserByUserNameAndPwd($userName, $password)
     {
         $userBase=null;
         try {
@@ -75,7 +89,15 @@ class UserBaseService extends BaseDb
             $this->userBaseDb = new UserBaseDb($conn);
             //对用户密码进行加密
             $password = $this->encryptPassword($password);
-            $result = $this->userBaseDb->findByEmailAndPwd($email, $password);
+            $valMsg = Validate::validateEmail($userName);
+            if(!empty($valMsg))
+            {
+                $result = $this->userBaseDb->findByPhoneAndPwd($userName, $password);
+            }else
+            {
+                $result = $this->userBaseDb->findByEmailAndPwd($userName, $password);
+            }
+
             $userBase=$this->arrayCastObject($result,UserBase::class);
         } catch (Exception $e) {
             throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
@@ -169,7 +191,6 @@ class UserBaseService extends BaseDb
         $userBase->status=UserBase::USER_STATUS_NORMAL;
         $userBase->registerIp=$_SERVER['REMOTE_ADDR'];
         $userBase->lastLoginIp=$_SERVER['REMOTE_ADDR'];
-
 
         return $userBase;
     }

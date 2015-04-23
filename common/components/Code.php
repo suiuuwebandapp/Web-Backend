@@ -32,8 +32,15 @@ class Code
      */
     const REQUEST_FAIL = '请求失败';
     const UPLOAD_YUN_OSS_ERROR='上传文件至云OSS失败';
-    const INVALID_PARAM='无效的参数';
 
+    //***************************************************APP************************************************************
+    /**
+     *系统常量（APP）
+     */
+    const APP_USER_LOGIN_SESSION='A_U_L_S';//用户是否登录 SESSION KEY
+    const APP_USER_LOGIN_ERROR_COUNT_PREFIX='A_U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
+    const APP_USER_LOGIN_VERIFY_CODE='A_U_L_V_C'; //用户登录验证码 SESSION KEY
+    const APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='86400';
     //***************************************************前台************************************************************
 
     /**
@@ -115,6 +122,8 @@ class Code
     const USER_PASSWORD_ERROR = "用户名或密码错误";
     const USER_LOGIN_ERROR_NUM = "登录失败次数";
     const LOGIN_FAIL = '登陆失败';
+    const USER_IM_REGISTER_ERROR='注册环信im出错';
+
 
     /**
      * order error info
@@ -136,12 +145,12 @@ class Code
      */
     public static function statusDataReturn($infoCode, $data = '', $msg = '', $page = '', $pa = '')
     {
+
         return [
             'status' => $infoCode,
             'data' => $data,
             'message' => $msg,
-            'page_list' => $page,
-            'pa' => $pa,
+            'token' => md5(json_encode($data).\Yii::$app->params['apiPassword']),
         ];
 
     }

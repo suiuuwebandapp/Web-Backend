@@ -12,6 +12,9 @@ return [
     //基础信息
     'base_dir' => 'http://local.suiuu.com',
     'url'=>'local.suiuu.com',
+
+    //app
+    'app_suiuu_sign'=>'app_suiuu_sign',
     //Cookie
     'suiuu_sign'=> 'suiuu_sign',
     'cookie_domain' => '/',
@@ -31,7 +34,12 @@ return [
 
 
     'token_url'=>'&^ie:84Oke@#@$$@%@@', //防止盗链
-
+    ////////////////////////////
+    /**
+     * 微信配置
+     */
+    'token_weChat'=>'suiuu9527',
+    //////////////////////////////
     //access（第三方接入）
 
     //微博
