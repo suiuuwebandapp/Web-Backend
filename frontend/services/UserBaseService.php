@@ -3,8 +3,9 @@ namespace frontend\services;
 
 use common\components\Code;
 use common\components\Validate;
+use common\entity\UserAccess;
 use common\models\BaseDb;
-use frontend\entity\UserBase;
+use common\entity\UserBase;
 use frontend\models\UserBaseDb;
 use yii\base\Exception;
 use common\components\Easemob;
@@ -28,29 +29,39 @@ class UserBaseService extends BaseDb
 
     /**
      * 添加用户
+     * 1.注册环信
+     * 2.注册前台用户基本信息
+     * 3.如果是第三方登录，记录第三方登录信息
+     *
      * @param UserBase $userBase
-     * @return UserBase
+     * @param UserAccess $userAccess
+     * @return array|bool|UserBase
      * @throws Exception
      */
-    public function addUser(UserBase $userBase)
+    public function addUser(UserBase $userBase,UserAccess $userAccess=null)
     {
+        $conn = $this->getConnection();
+        $tran=$conn->beginTransaction();
+
         try {
-            $conn = $this->getConnection();
+
             $this->userBaseDb = new UserBaseDb($conn);
             //验证手机或邮箱格式是否正确
             $userInfo=null;
-            //验证手机或者邮箱是否存在
-            if(!empty($userBase->email)){
-                $userInfo=$this->userBaseDb->findByEmail($userBase->email);
-                if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
+            //如果不是第三方登录，验证手机或者邮箱是否存在
+            if($userAccess==null){
+                if(!empty($userBase->email)){
+                    $userInfo=$this->userBaseDb->findByEmail($userBase->email);
+                    if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
 
-            }else{
-                $userInfo=$this->userBaseDb->findByPhone($userBase->phones);
-                if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
+                }else{
+                    $userInfo=$this->userBaseDb->findByPhone($userBase->phones);
+                    if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
+                }
             }
             //对用户密码进行加密
             $userBase->password = $this->encryptPassword($userBase->password);
-            $userBase=$this->initRegisterUserInfo($userBase);
+            $userBase=$this->initRegisterUserInfo($userBase,$userAccess);
 
             //环信im注册
             $im=new Easemob(\Yii::$app->params['imConfig']);
@@ -63,10 +74,16 @@ class UserBaseService extends BaseDb
             }else
             {
                 $this->userBaseDb->addUser($userBase);
+                if($userAccess!=null){
+                    $userAccess->userId=$userBase->userSign;//用户关联Id为UUID
+                    $this->userBaseDb->addUserAccess($userAccess);
+                }
                 $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
+                $userBase=$this->arrayCastObject($userBase,UserBase::class);
             }
+            $this->commit($tran);
         } catch (Exception $e) {
-            throw $e;exit;
+            $this->rollback($tran);
             throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
         } finally {
             $this->closeLink();
@@ -167,19 +184,23 @@ class UserBaseService extends BaseDb
     /**
      * 初始化注册用户信息
      * @param UserBase $userBase
+     * @param UserAccess $userAccess
      * @return UserBase
      */
-    private function initRegisterUserInfo(UserBase $userBase)
+    private function initRegisterUserInfo(UserBase $userBase,UserAccess $userAccess=null)
     {
 
-        $userBase->sex=UserBase::USER_SEX_SECRET;
-        if(!empty($userBase->email)){
-            $userBase->phone=null;
-            $userBase->nickname=$userBase->email;
-        }else{
-            $userBase->email=null;
-            $userBase->nickname=$userBase->phone;
+        if($userAccess==null){
+            $userBase->sex=UserBase::USER_SEX_SECRET;
+            if(!empty($userBase->email)){
+                $userBase->phone=null;
+                $userBase->nickname=$userBase->email;
+            }else{
+                $userBase->email=null;
+                $userBase->nickname=$userBase->phone;
+            }
         }
+
         $userBase->areaCode='';
         $userBase->hobby='';
         $userBase->info='';
@@ -192,6 +213,30 @@ class UserBaseService extends BaseDb
         $userBase->registerIp=$_SERVER['REMOTE_ADDR'];
         $userBase->lastLoginIp=$_SERVER['REMOTE_ADDR'];
 
+        return $userBase;
+    }
+
+
+    /**
+     * 根据OpenId 接入类型查询用户
+     * @param $openId
+     * @param $type
+     * @return mixed|null
+     * @throws Exception
+     */
+    public function findUserAccessByOpenIdAndType($openId,$type)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result = $this->userBaseDb->findUserByOpenIdAndType($openId,$type);
+            $userBase=$this->arrayCastObject($result,UserBase::class);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
         return $userBase;
     }
 

@@ -10,9 +10,11 @@
 namespace frontend\models;
 
 
+use common\entity\UserAccess;
 use common\models\ProxyDb;
-use frontend\entity\UserBase;
+use common\entity\UserBase;
 use yii\db\mssql\PDO;
+use yii\web\User;
 
 
 class UserBaseDb extends ProxyDb
@@ -54,7 +56,6 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
         $command->bindParam(":status", $userBase->status, PDO::PARAM_INT);
-
 
 
         return $command->execute();
@@ -132,16 +133,22 @@ class UserBaseDb extends ProxyDb
     /**
      * 查找用户（根据ID）
      * @param $userId
+     * @param null $status
      * @return array|bool
      */
-    public function findById($userId)
+    public function findById($userId,$status=null)
     {
         $sql=sprintf("
             SELECT * FROM user_base WHERE userId=:userId
         ");
+        if($status!=null){
+            $sql.=" AND status=:status";
+        }
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userId",$userId, PDO::PARAM_INT);
-
+        if($status!=null){
+            $command->bindParam(":status",$status, PDO::PARAM_INT);
+        }
         return $command->queryOne();
     }
 
@@ -149,16 +156,73 @@ class UserBaseDb extends ProxyDb
     /**
      * 查找用户（根据用户标示）
      * @param $userSign
+     * @param null $status
      * @return array|bool
      */
-    public function findByUserSign($userSign)
+    public function findByUserSign($userSign,$status=null)
     {
         $sql=sprintf("
-            SELECT * FROM user_base WHERE userSign=:userSign
+            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign
+            FROM user_base WHERE userSign=:userSign
         ");
+        if($status!=null){
+            $sql.=" AND status=:status";
+        }
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign",$userSign, PDO::PARAM_STR);
+        if($status!=null){
+            $command->bindParam(":status",$status, PDO::PARAM_INT);
+        }
 
         return $command->queryOne();
+    }
+
+
+    /**
+     * 根据openId 接入 类型获取用户Id
+     * @param $openId
+     * @param $type
+     * @return array|bool
+     */
+    public function findUserByOpenIdAndType($openId,$type)
+    {
+        $sql=sprintf("
+            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign
+            FROM user_base WHERE userId=
+            (
+              SELECT userId FROM user_access WHERE openId=:openId AND type=:type
+            )
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":openId",$openId, PDO::PARAM_STR);
+        $command->bindParam(":type",$type, PDO::PARAM_STR);
+
+        return $command->queryOne();
+    }
+
+
+    /**
+     * 添加用户接入关联
+     * @param UserAccess $userAccess
+     * @throws \yii\db\Exception
+     */
+    public function addUserAccess(UserAccess $userAccess)
+    {
+        $sql=sprintf("
+            INSERT INTO user_access
+            (
+              userId,openId,type
+            )VALUES
+            (
+              :userId,:openId,:type
+            )
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userId",$userAccess->userId, PDO::PARAM_STR);
+        $command->bindParam(":openId",$userAccess->openId, PDO::PARAM_STR);
+        $command->bindParam(":type",$userAccess->type, PDO::PARAM_INT);
+
+        $command->execute();
     }
 }

@@ -139,18 +139,15 @@ class Code
      * @param $infoCode       信息码
      * @param string $data 返回的数据
      * @param string $msg 返回的消息
-     * @param string $page 返回的分页
-     * @param string $pa 分页条件
      * @return array
      */
-    public static function statusDataReturn($infoCode, $data = '', $msg = '', $page = '', $pa = '')
+    public static function statusDataReturn($infoCode, $data = '', $msg = '')
     {
-
         return [
             'status' => $infoCode,
             'data' => $data,
             'message' => $msg,
-            'token' => md5(json_encode($data).\Yii::$app->params['apiPassword']),
+            'token' => md5(json_encode($infoCode).json_encode($data).json_encode($msg).\Yii::$app->params['apiPassword']),
         ];
 
     }

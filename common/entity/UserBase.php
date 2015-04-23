@@ -7,7 +7,7 @@
  * Email: zhangxinmailvip@foxmail.com
  */
 
-namespace frontend\entity;
+namespace common\entity;
 
 
 class UserBase {
