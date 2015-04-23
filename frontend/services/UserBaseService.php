@@ -56,8 +56,8 @@ class UserBaseService extends BaseDb
             $im=new Easemob(\Yii::$app->params['imConfig']);
             $options=array('username'=>$userBase->userSign,'password'=>$userBase->password,'nickname'=>$userBase->nickname);
             $imRes=$im->accreditRegister($options);
-            $arrRes=json_encode($imRes,true);
-            if(isset($imRes['error']))
+            $arrRes=json_decode($imRes,true);
+            if(isset($arrRes['error']))
             {
                 throw new Exception(Code::USER_IM_REGISTER_ERROR);
             }else

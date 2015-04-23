@@ -168,9 +168,6 @@ class IndexController extends Controller{
         $email=\Yii::$app->request->post('email');//用户输入的邮箱
         $password=\Yii::$app->request->post('password');//用户输入的密码
         $passwordConfirm=\Yii::$app->request->post('passwordConfirm');
-        $email='771705386@qq.com';
-        $password="qwe123";
-        $passwordConfirm='qwe123';
         $error="";//错误信息
         $valMsg=Validate::validateEmail($email);
         if(!empty($valMsg))
@@ -186,7 +183,6 @@ class IndexController extends Controller{
         if(!empty($error)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
         }
-        var_dump($email);
         //判断邮箱是否已经注册
         $userBase=$this->userBaseService->findUserByEmail($email);
         if(!empty($userBase)){
