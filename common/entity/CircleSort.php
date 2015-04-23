@@ -5,9 +5,9 @@
  * Date: 15/4/21
  * Time: 下午6:49
  */
-namespace frontend\entity;
+namespace common\entity;
 
-class CircleSortEntity{
+class CircleSort{
 
     const CIRCLE_TYPE_THEME=1;//主题
     const CIRCLE_TYPE_PLACE=2;  //地方

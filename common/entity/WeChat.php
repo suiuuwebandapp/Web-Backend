@@ -6,8 +6,8 @@
  * Time: 上午11:46
  * To change this template use File | Settings | File Templates.
  */
-namespace frontend\entity;
-class WeChatEntity {
+namespace common\entity;
+class WeChat {
 
     /*------------------------配置---------------------------*/
     /**

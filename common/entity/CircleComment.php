@@ -5,9 +5,9 @@
  * Date: 15/4/22
  * Time: 上午9:45
  */
-namespace frontend\entity;
+namespace common\entity;
 
-class CircleCommentEntity{
+class CircleComment{
     const COMMENT_STATUS_NORMAL=1;//用户状态：正常
     const COMMENT_STATUS_DISABLED=2;//用户状态：禁用
     /**

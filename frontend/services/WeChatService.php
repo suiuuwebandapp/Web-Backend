@@ -6,7 +6,9 @@
  * Time: 下午3:50
  * To change this template use File | Settings | File Templates.
  */
+namespace frontend\services;
 
+use common\entity\WeChat;
 class WeChatService{
 
     private $strItemRemain="";
@@ -25,8 +27,8 @@ class WeChatService{
     public function sendTemplateMessage($access_token,$toUser,$backUrl,$userName,$cmName,$date,$remark)
     {
 
-        $url = WeChatEntity::MESSAGE_SEN_TEMPLATE . $access_token;
-        $templateId=WeChatEntity::TEMPLATE_ID_FOR_RESERVE;
+        $url = WeChat::MESSAGE_SEN_TEMPLATE . $access_token;
+        $templateId=WeChat::TEMPLATE_ID_FOR_RESERVE;
         $rst = curlHandlePost($url, $this->getTemplate($toUser,$templateId,$backUrl,$userName,$cmName,$date,$remark));
         return $rst;
     }
@@ -36,7 +38,7 @@ class WeChatService{
      */
     public function createMenuInfo($access_token)
     {
-        $url = WeChatEntity::MENU_CREATE_LINK . $access_token;
+        $url = WeChat::MENU_CREATE_LINK . $access_token;
 
         $string = '{
                     "button":[
@@ -86,7 +88,7 @@ class WeChatService{
                     ]
                     }';
         $url_1 ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
-        $app_id = WeChatEntity::APP_ID;
+        $app_id = WeChat::APP_ID;
         $url_test1_1  ="http://".Yii::app()->params['vsinsHost'] ."/vsins/getCode/actionType/11";//购课放在了第一位
         $url_test1_2 ="http://".Yii::app()->params['vsinsHost'] ."/vsins/getCode/actionType/12";
         $url_test1_1_s=sprintf($url_1,$app_id,urlencode($url_test1_1));
@@ -164,12 +166,12 @@ class WeChatService{
      */
     public function sendMessage($toUsername, $keyword, $access_token)
     {
-        $url         = WeChatEntity::MESSAGE_SEND_LINK . $access_token;
-        $thisUser    = WeChatEntity::ADMIN_ID_W;
+        $url         = WeChat::MESSAGE_SEND_LINK . $access_token;
+        $thisUser    = WeChat::ADMIN_ID_W;
         $thisContent = '通知:[' . $toUsername . ']发送的消息为[' . $keyword . ']';
 
         $str       = '{"touser": "%s", "msgtype": "%s", "text": {"content": "%s"}}';
-        $data      = sprintf($str, $thisUser, WeChatEntity::MSGTYPE_TEXT, $thisContent);
+        $data      = sprintf($str, $thisUser, WeChat::MSGTYPE_TEXT, $thisContent);
         $rstInfo   = curlHandlePost($url, $data);
         $json_data = json_decode($rstInfo['data']);
 

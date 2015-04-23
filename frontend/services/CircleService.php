@@ -3,10 +3,10 @@ namespace frontend\services;
 
 
 use common\models\BaseDb;
-use frontend\entity\CircleCommentEntity;
+use common\entity\CircleComment;
 use frontend\models\CircleDb;
 use yii\base\Exception;
-use frontend\entity\CircleArticleEntity;
+use common\entity\CircleArticle;
 use common\components\Code;
 /**
  * Created by PhpStorm.
@@ -27,17 +27,17 @@ class CircleService extends BaseDb
 
     /**
      * 添加圈子文章
-     * @param CircleArticleEntity $CircleArticleEntity
-     * @return CircleArticleEntity
+     * @param CircleArticle $CircleArticle
+     * @return CircleArticle
      * @throws Exception
      */
-    public function CreateArticle(CircleArticleEntity $CircleArticleEntity)
+    public function CreateArticle(CircleArticle $CircleArticle)
     {
 
         try {
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $rst = $this->CircleDb ->addArticle($CircleArticleEntity);
+            $rst = $this->CircleDb ->addArticle($CircleArticle);
             if($rst==0)
             {
                 throw new Exception('添加圈子文章失败',Code::FAIL);
@@ -51,10 +51,10 @@ class CircleService extends BaseDb
     }
     /**
      * 更新圈子文章
-     * @param CircleArticleEntity $articleInfo
+     * @param CircleArticle $articleInfo
      * @throws Exception
      */
-    public function updateArticleInfo(CircleArticleEntity $articleInfo)
+    public function updateArticleInfo(CircleArticle $articleInfo)
     {
 
         try {
@@ -173,10 +173,10 @@ class CircleService extends BaseDb
 
     /**
      * 添加圈子文章评论
-     * @param CircleCommentEntity $CircleCommentEntity
+     * @param CircleComment $CircleComment
      * @throws Exception
      */
-    public function CreateArticleComment(CircleCommentEntity $CircleCommentEntity)
+    public function CreateArticleComment(CircleComment $CircleComment)
     {
 
         try {
@@ -184,12 +184,12 @@ class CircleService extends BaseDb
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
             $transaction = $conn->beginTransaction();
-            $rst = $this->CircleDb ->addComment($CircleCommentEntity);
+            $rst = $this->CircleDb ->addComment($CircleComment);
             if($rst==0)
             {
                 throw new Exception('添加圈子文章评论失败',Code::FAIL);
             }
-            $this->upDateArticleCommentNumb($this->CircleDb,$CircleCommentEntity->articleId,true);
+            $this->upDateArticleCommentNumb($this->CircleDb,$CircleComment->articleId,true);
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollback();
@@ -202,16 +202,16 @@ class CircleService extends BaseDb
     }
     /**
      * 更新圈子文章评论
-     * @param CircleCommentEntity $CircleCommentEntity
+     * @param CircleComment $CircleComment
      * @throws Exception
      */
-    public function updateCircleComment(CircleCommentEntity $CircleCommentEntity)
+    public function updateCircleComment(CircleComment $CircleComment)
     {
 
         try {
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $rst = $this->CircleDb->updateCircleComment($CircleCommentEntity);
+            $rst = $this->CircleDb->updateCircleComment($CircleComment);
             if($rst==0)
             {
                 throw new Exception('更新圈子文章评论失败',Code::FAIL);
@@ -287,8 +287,8 @@ class CircleService extends BaseDb
 
         $article=$CircleDb->getArticleInfoById($articleId);
 
-        $articleEntity=$this->arrayCastObject($article,CircleArticleEntity::class);
-        $cmt=$articleEntity->aCmtCount;
+        $article=$this->arrayCastObject($article,CircleArticle::class);
+        $cmt=$article->aCmtCount;
         if($isAdd){
         $cmt++;
         }else{
@@ -298,8 +298,8 @@ class CircleService extends BaseDb
                 $cmt=0;
             }
         }
-        $articleEntity->aCmtCount=$cmt;
-        $CircleDb->upDateArticleCommentNumb($articleEntity);
+        $article->aCmtCount=$cmt;
+        $CircleDb->upDateArticleCommentNumb($article);
     }
 
 

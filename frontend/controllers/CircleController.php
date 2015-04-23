@@ -8,8 +8,8 @@
 namespace frontend\controllers;
 
 
-use frontend\entity\CircleArticleEntity;
-use frontend\entity\CircleCommentEntity;
+use common\entity\CircleArticle;
+use common\entity\CircleComment;
 use frontend\services\CircleService;
 use frontend\services\UserBaseService;
 use common\components\Code;
@@ -46,7 +46,7 @@ class CircleController extends Controller{
     public function actionCreateArticle()
     {
         try{
-        $CircleArticleEntity = new CircleArticleEntity();
+        $CircleArticleEntity = new CircleArticle();
         $CircleArticleEntity->cId=\Yii::$app->request->post('circleId');
         $CircleArticleEntity->aTitle=\Yii::$app->request->post('title');
         $CircleArticleEntity->aContent=\Yii::$app->request->post('content');
@@ -87,7 +87,7 @@ class CircleController extends Controller{
 
         try{
 
-            $CircleArticleEntity = new CircleArticleEntity();
+            $CircleArticleEntity = new CircleArticle();
             $CircleArticleEntity->articleId=\Yii::$app->request->post('articleId');
             $CircleArticleEntity->aTitle=\Yii::$app->request->post('title');
             $CircleArticleEntity->aContent=\Yii::$app->request->post('content');
@@ -163,7 +163,7 @@ class CircleController extends Controller{
     {
         try {
 
-            $CircleCommentEntity = new CircleCommentEntity();
+            $CircleCommentEntity = new CircleComment();
             $CircleCommentEntity->userId = 1;
             $CircleCommentEntity->articleId = \Yii::$app->request->post('articleId');
             $CircleCommentEntity->content = \Yii::$app->request->post('content');

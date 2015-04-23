@@ -5,9 +5,9 @@
  * Date: 15/4/20
  * Time: 下午6:15
  */
-namespace frontend\entity;
+namespace common\entity;
 
-class CircleArticleEntity {
+class CircleArticle{
 
     const ARTICLE_STATUS_NORMAL=1;//用户状态：正常
     const ARTICLE_STATUS_DISABLED=2;//用户状态：禁用

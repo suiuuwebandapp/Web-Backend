@@ -42,7 +42,7 @@ class Common{
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         if (! empty ( $data )) {
             $options = json_encode ( $data );
-            curl_setopt ( $curl, CURLOPT_POSTFIELDS, $options ); // Post提交的数据包
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $options ); // Post提交的数据包
         }
         if (count($header) > 0) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
