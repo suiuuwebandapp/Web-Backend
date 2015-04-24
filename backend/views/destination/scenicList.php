@@ -15,6 +15,7 @@
 
 <div class="clearfix"></div>
 <div class="row">
+    <input type="hidden" id="desId"  value="<?= $desInfo->destinationId ?>"/>
     <div class="col-md-12">
         <!-- BEGIN SAMPLE TABLE PORTLET-->
         <div class="portlet light bg-inverse">
@@ -53,10 +54,10 @@
                         <th>编号</th>
                         <th>标题</th>
                         <th>封面图</th>
-                        <th>国家</th>
-                        <th>城市</th>
-                        <th>更新时间</th>
-                        <th>状态</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th>经度</th>
+                        <th>维度</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -87,11 +88,11 @@
             'formObj'  :'#datatables_form',
             'tableDiv' :'#table_div',
             'tableObj' :'#table_list',
-            'tableUrl' :'/destination/des-list',
+            'tableUrl' :'/destination/scenic-list?desId='+$("#desId").val(),
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "destinationId","bSortable": false,"width":"50px"},
+                {"targets": [0],"data": "scenicId","bSortable": false,"width":"50px"},
                 {
                     "targets": [1],
                     "data": "title",
@@ -109,38 +110,19 @@
                         return '<a  class="titleImgGroup"  href="'+data+'"><img alt="" src="'+data+'" style="max-height:50px;"/></a>'
                     }
                 },
-                {"targets": [3],"data": "countryCname","bSortable": false,"width":"180px"},
-                {"targets": [4],"data": "cityCname","bSortable": false,"width":"180px"},
-                {"targets": [5],"data": "lastUpdateTime","bSortable": false,"width":"180px"},
-                {
-                    "targets": [6],
-                    "data": "status",
-                    "bSortable": false,
-                    "width":"100px",
-                    "render": function(data, type, full) {
-                        var html='';
-                        if(data==1){
-                            html='<span class="label label-success">&nbsp;上&nbsp;线&nbsp;</span>'
-                        }else{
-                            html='<span class="label label-default">&nbsp;下&nbsp;线&nbsp;</span>';
-                        }
-                        return html;
-                    }
-                },
+                {"targets": [3],"data": "beginTime","bSortable": false,"width":"180px"},
+                {"targets": [4],"data": "endTime","bSortable": false,"width":"180px"},
+                {"targets": [5],"data": "lon","bSortable": false,"width":"180px"},
+                {"targets": [6],"data": "lat","bSortable": false,"width":"180px"},
                 {
                     "targets": [7],
-                    "data": "destinationId",
+                    "data": "scenicId",
                     "bSortable": false,
                     "width":"240px",
                     "render": function(data, type, full) {
                         var html='';
-                        if(full.status!=1){
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
-                        }else{
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
-                        }
-                        html +='<a href="javascript:;" onclick="editArticle(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteDes(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
+                        html +='<a href="javascript:;" onclick="editScenic(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
+                        html +='<a href="javascript:;" onclick="deleteScenic(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
                     }
                 }
@@ -153,7 +135,7 @@
 
 
         $("#addDes").bind("click",function(){
-            Main.openModal("/destination/to-add-scenic");
+            Main.openModal("/destination/to-add-scenic?desId="+$("#desId").val());
         });
 
 
@@ -163,17 +145,22 @@
     });
 
 
-    function editArticle(id){
-        Main.openModal("/destination/to-edit-des?desId="+id);
+
+    function editScenic(id){
+        Main.openModal("/destination/to-edit-scenic?scenicId="+id);
     }
 
-    function deleteDes(id){
+    /**
+     * 删除景区
+     * @param id
+     */
+    function deleteScenic(id){
         Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
-                url:"/destination/delete",
+                url:"/destination/delete-scenic",
                 data:{
-                    destinationId:id
+                    scenicId:id
                 },beforeSend:function(){
                     Main.showWait("#table_list");
                 },
@@ -185,7 +172,7 @@
                     Main.hideWait("#table_list");
                     if(data.status==1){
                         TableAjax.deleteRefresh();
-                        Main.successTip("删除目的地成功");
+                        Main.successTip("删除景区地成功");
                     }else{
                         Main.errorTip("删除失败");
                     }

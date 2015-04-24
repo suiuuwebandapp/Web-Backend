@@ -192,6 +192,8 @@ class UserBaseService extends BaseDb
 
         if($userAccess==null){
             $userBase->sex=UserBase::USER_SEX_SECRET;
+            $userBase->headImg='';
+
             if(!empty($userBase->email)){
                 $userBase->phone=null;
                 $userBase->nickname=$userBase->email;
@@ -207,7 +209,6 @@ class UserBaseService extends BaseDb
         $userBase->intro='';
         $userBase->school='';
         $userBase->birthday='0000-00-00';
-        $userBase->headImg='';
         $userBase->userSign=Code::getUUID();
         $userBase->status=UserBase::USER_STATUS_NORMAL;
         $userBase->registerIp=$_SERVER['REMOTE_ADDR'];

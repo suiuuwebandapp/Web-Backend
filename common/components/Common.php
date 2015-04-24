@@ -9,8 +9,11 @@ namespace common\components;
 
 class Common{
 
-    public static function CurlHandel($url,$data=null, $header = null, $type = 'POST')
+    public static function CurlHandel($url,$data=null, $header = array(), $type = 'POST')
     {
+        if($header==null){
+            $header=array();
+        }
         array_push($header, 'Accept:application/json');
         array_push($header, 'Content-Type:application/json');
 
@@ -54,7 +57,7 @@ class Common{
         curl_close($ch);
 
         if ($err) {
-            return $err;
+            return Code::statusDataReturn(Code::FAIL,$err);
         }
         if (empty($ret)) {
             return Code::statusDataReturn(Code::FAIL);

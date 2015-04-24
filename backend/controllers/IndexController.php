@@ -20,6 +20,7 @@ class IndexController extends CController
 
     public function actionIndex()
     {
+
         return $this->render('index', ['userObj' => $this->userObj]);
     }
 

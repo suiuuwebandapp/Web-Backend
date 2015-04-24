@@ -84,9 +84,13 @@ class LoginController extends Controller
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
             exit;
         }
+    }
 
 
-
+    public function actionLogout()
+    {
+        \Yii::$app->session->remove(Code::USER_LOGIN_SESSION);
+        return $this->redirect("/");
     }
 
 

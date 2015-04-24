@@ -138,6 +138,13 @@ class WeiboInterface {
     }
 
 
+    public function toConnectWeibo()
+    {
+        $url=$this->getAuthorizeURL();
+        header("Location:$url");
+    }
+
+
 
     /**
      * authorize接口

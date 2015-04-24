@@ -11,8 +11,11 @@ namespace frontend\controllers;
 
 
 use common\components\Code;
+use common\entity\UserAccess;
+use common\entity\UserBase;
 use frontend\interfaces\TencentInterface;
 use frontend\interfaces\WeiboInterface;
+use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\web\Controller;
 
@@ -22,11 +25,14 @@ class AccessController extends Controller
 
 
     private $qqInterface;
+    private $weiboInterface;
+    private $userBaseService;
     //token:954E9D7AEE616B1FEE21953A138F2B79
 
     public function __construct($id, $module, $config = []){
         parent::__construct($id, $module, $config = []);
         $this->qqInterface=new TencentInterface();
+        $this->weiboInterface=new WeiboInterface();
     }
     /**
      * 微博登录
@@ -39,7 +45,6 @@ class AccessController extends Controller
 
         //获取微博用户UID
         $uidRst=$weiboInterface->getWeiboUid($code);
-
         if($uidRst['status']!=Code::SUCCESS){
             throw new Exception('微博认证失败');
         }
@@ -51,21 +56,17 @@ class AccessController extends Controller
         }
         $userInfo=$userInfo['data'];
         $sex='';
-        if($userInfo['gender']=='m'){
-            $sex='男';
-        }else if($userInfo['gender']=='f'){
-            $sex='女';
-        }else if($userInfo['gender']=='n'){
-            $sex='未知';
+        if($userInfo['gender']=='m'){ $sex=1; }else if($userInfo['gender']=='f'){ $sex=0; }else if($userInfo['gender']=='n'){ $sex=2;}
+
+        $openId=$userInfo['id'];
+        $nickname=$userInfo['screen_name'];
+        $headImg=$userInfo['avatar_large'];
+        $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_SINA_WEIBO,$nickname,$sex,$headImg);
+        if($rst['status']==Code::SUCCESS){
+            return $this->redirect("/");
+        }else{
+            return $this->redirect("/error/access-error");
         }
-        echo 'ID:'.$userInfo['id'].'<br/>';
-        echo '昵称:'.$userInfo['screen_name'].'<br/>';
-        echo '友好显示名称:'.$userInfo['name'].'<br/>';
-        echo '性别:'.$sex.'<br/>';
-        echo '用户头像地址:'.$userInfo['avatar_large'].'<img src="'.$userInfo['avatar_large'].'" /><br/>';
-
-
-
 
     }
 
@@ -96,18 +97,71 @@ class AccessController extends Controller
             throw new Exception('获取QQ基本信息失败');
         }
         $userInfo=$userInfoRst['data'];
-        //将OpenId，token 等基本信息存入数据库
-        echo 'openId:'.$openId.'<br/>';
-        echo '昵称:'.$userInfo['nickname'].'<br/>';
-        echo '性别:'.$userInfo['gender'].'<br/>';
-        echo '用户头像地址(40x40):'.$userInfo['figureurl_qq_1'].'<img src="'.$userInfo['figureurl_qq_1'].'" /><br/>';
-        echo '用户头像地址(100x100):'.$userInfo['figureurl_qq_2'].'<img src="'.$userInfo['figureurl_qq_2'].'" /><br/>';
+        $sex=2;
+        if($userInfo['gender']=='男'){ $sex=1; }else if($userInfo['gender']=='v'){ $sex=0; }
+
+        $nickname=$userInfo['nickname'];
+        $headImg=$userInfo['figureurl_qq_2'];
+
+        $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_QQ,$nickname,$sex,$headImg);
+        if($rst['status']==Code::SUCCESS){
+            return $this->redirect("/");
+        }else{
+            return $this->redirect("/error/access-error");
+        }
 
 
+    }
+
+
+    private function accessLogin($openId,$type,$nickname,$sex,$headImg)
+    {
+        $this->userBaseService=new UserBaseService();
+        $userBase=$this->userBaseService->findUserAccessByOpenIdAndType($openId,$type);
+
+        if($userBase!=null){
+            if($userBase->status!=UserBase::USER_STATUS_NORMAL){
+                return Code::statusDataReturn(Code::FAIL,"User Status Is Disabled");
+            }else{
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
+                return Code::statusDataReturn(Code::SUCCESS,$userBase);
+            }
+        }
+        if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid Sex Value");
+        }
+        if($type!=UserAccess::ACCESS_TYPE_QQ&&$type!=UserAccess::ACCESS_TYPE_WECHAT&&$type!=UserAccess::ACCESS_TYPE_SINA_WEIBO){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid Type Value");
+        }
+        $userBase=null;
+        try{
+            $userBase=new UserBase();
+            $userBase->nickname=$nickname;
+            $userBase->headImg=$headImg;
+            $userBase->sex=$sex;
+
+            $userAccess=new UserAccess();
+            $userAccess->openId=$openId;
+            $userAccess->type=$type;
+            $userBase=$this->userBaseService->addUser($userBase,$userAccess);
+            \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
+
+        }catch (Exception $e){
+            return Code::statusDataReturn(Code::FAIL,$e->getName());
+        }
+       return Code::statusDataReturn(Code::SUCCESS,$userBase);
     }
 
     public function actionConnectQq(){
         $this->qqInterface->toConnectQQ();
     }
+
+    public function actionConnectWeibo()
+    {
+        $this->weiboInterface->toConnectWeibo();
+    }
+
+
+
 
 }

@@ -6,9 +6,6 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use frontend\widgets\Alert;
 
-/* @var $this \yii\web\View */
-/* @var $content string */
-
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -20,19 +17,17 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    <script type="text/javascript" src="/assets/35bf7abb/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery-1.10.2.min.js"></script>
 </head>
-<body>
-    <?php $this->beginBody() ?>
-    <div class="wrap">
-        <div class="container">
-        <?= Alert::widget() ?>
-        <?= Html::beginForm() ?>
-        <?= Html::endForm() ?>
-        <?= $content ?>
-        </div>
-    </div>
-    <?php $this->endBody() ?>
+<body style="background:#eeeeee;">
+<?php $this->beginBody() ?>
+<?php include 'top.php' ?>
+<?= Alert::widget() ?>
+<?= Html::beginForm() ?>
+<?= Html::endForm() ?>
+<?= $content ?>
+<?php include 'bottom.php' ?>
+<?php $this->endBody() ?>
 </body>
 </html>
 <?php $this->endPage() ?>

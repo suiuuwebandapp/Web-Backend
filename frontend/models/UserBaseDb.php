@@ -14,7 +14,6 @@ use common\entity\UserAccess;
 use common\models\ProxyDb;
 use common\entity\UserBase;
 use yii\db\mssql\PDO;
-use yii\web\User;
 
 
 class UserBaseDb extends ProxyDb
@@ -187,8 +186,8 @@ class UserBaseDb extends ProxyDb
     public function findUserByOpenIdAndType($openId,$type)
     {
         $sql=sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign
-            FROM user_base WHERE userId=
+            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,status
+            FROM user_base WHERE userSign=
             (
               SELECT userId FROM user_access WHERE openId=:openId AND type=:type
             )

@@ -129,7 +129,7 @@
             inputBinding.locationNameInput.val(gmapContext.locationName).change();
         }
     }
-    function setupInputListenersInput(inputBinding, gmapContext) {
+    function textsetupInputListenersInput(inputBinding, gmapContext) {
         if (inputBinding) {
             if (inputBinding.radiusInput) {
                 inputBinding.radiusInput.on("change", function(e) {

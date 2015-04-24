@@ -16,16 +16,19 @@
 
 <input type="hidden" class="form-control" id="us3-address"/>
 <input type="hidden" class="form-control" id="us3-radius"/>
-<input type="hidden" class="form-control" id="us3-lat"/>
-<input type="hidden" class="form-control" id="us3-lon"/>
+<input type="hidden" class="form-control" id="us3-lat" value="<?=$lat?>"/>
+<input type="hidden" class="form-control" id="us3-lon" value="<?=$lon?>"/>
 
 
 <div id="us3" style="width: 100%; height: 300px;"></div>
 
 <script>
 
-    $('#us3').locationpicker({
-        location: {latitude: 39.91295943669406, longitude: 116.40617084503174},
+     var lon=$("#us3-lon").val();
+     var lat=$("#us3-lat").val();
+
+     var map=$('#us3').locationpicker({
+        location: {latitude:lat , longitude:lon },
         radius: 0,
         inputBinding: {
             latitudeInput: $('#us3-lat'),
@@ -33,9 +36,26 @@
             radiusInput: $('#us3-radius'),
             locationNameInput: $('#us3-address')
         },
-        enableAutocomplete: true
+        enableAutocomplete: true,
+        onchanged: function (currentLocation, radius, isMarkerDropped) {
+            // Uncomment line below to show alert on each Location Changed event
+            //alert("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
+        }
     });
-    $('#us6-dialog').on('shown.bs.modal', function() {
-        $('#us3').locationpicker('autosize');
-    });
+
+    function setMapSite(lon,lat)
+    {
+        if(lon!=""&&lat!=""){
+            $('#us3').locationpicker({
+                location: {latitude: lat, longitude: lon}
+            });
+            $('#us3-lat').val(lat);
+            $('#us3-lon').val(lon);
+        }
+    }
+
+    function test()
+    {
+        alert(1);
+    }
 </script>

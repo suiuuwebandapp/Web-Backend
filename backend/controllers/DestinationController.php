@@ -12,10 +12,13 @@ namespace backend\controllers;
 
 use backend\components\Page;
 use backend\components\TableResult;
+use common\components\DateUtils;
+use common\components\GoogleMap;
 use common\entity\DestinationInfo;
 use backend\services\CountryService;
 use backend\services\DestinationService;
 use common\components\Code;
+use common\entity\DestinationScenic;
 use yii\base\Exception;
 
 class DestinationController extends CController
@@ -229,9 +232,212 @@ class DestinationController extends CController
     }
 
 
+    /**
+     * 添加景区
+     * @return string
+     */
+    public function actionAddScenic()
+    {
+        $title=\Yii::$app->request->post("title","");
+        $titleImg=\Yii::$app->request->post("titleImg","");
+        $beginTime=\Yii::$app->request->post("beginTime","");
+        $endTime=\Yii::$app->request->post("endTime","");
+        $lon=\Yii::$app->request->post("lon");
+        $lat=\Yii::$app->request->post("lat");
+        $desId=\Yii::$app->request->post("desId");
+
+
+        //TODO 验证时间顺序以及有效性
+        try{
+            $scenicInfo=new DestinationScenic();
+            $scenicInfo->title=$title;
+            $scenicInfo->titleImg=$titleImg;
+            $scenicInfo->beginTime=DateUtils::convertTimePicker($beginTime);
+            $scenicInfo->endTime=DateUtils::convertTimePicker($endTime);
+            $scenicInfo->lon=$lon;
+            $scenicInfo->lat=$lat;
+            $scenicInfo->destinationId=$desId;
+            $scenicInfo->address="";
+            $this->destinationService->addDestinationScenic($scenicInfo);
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+        }
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+    }
+
+
+
+    public function actionUpdateScenic()
+    {
+        $scenicId=\Yii::$app->request->post("scenicId","");
+        $title=\Yii::$app->request->post("title","");
+        $titleImg=\Yii::$app->request->post("titleImg","");
+        $beginTime=\Yii::$app->request->post("beginTime","");
+        $endTime=\Yii::$app->request->post("endTime","");
+        $lon=\Yii::$app->request->post("lon");
+        $lat=\Yii::$app->request->post("lat");
+        $desId=\Yii::$app->request->post("desId");
+
+
+        //TODO 验证时间顺序以及有效性
+        try{
+            $scenicInfo=$this->destinationService->findScenicById($scenicId);
+            $scenicInfo->title=$title;
+            $scenicInfo->titleImg=$titleImg;
+            $scenicInfo->beginTime=DateUtils::convertTimePicker($beginTime);
+            $scenicInfo->endTime=DateUtils::convertTimePicker($endTime);
+            $scenicInfo->lon=$lon;
+            $scenicInfo->lat=$lat;
+            $scenicInfo->destinationId=$desId;
+            $this->destinationService->updateDestinationScenic($scenicInfo);
+
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+        }
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+    }
+
+
+    /**
+     * 删除景区
+     * @return string
+     */
+    public function actionDeleteScenic()
+    {
+        $desId=\Yii::$app->request->post("scenicId","");
+        if(empty($desId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"参数异常"));
+        }
+        try{
+            $this->destinationService->deleteScenicById($desId);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+        }
+
+    }
+
+
+    public function actionToEditScenic()
+    {
+        $scenicId=\Yii::$app->request->get("scenicId");
+        $scenicInfo=$this->destinationService->findScenicById($scenicId);
+
+        return $this->render("editScenic",[
+            'scenicInfo'=>$scenicInfo
+        ]);
+    }
+
+    /**
+     * 跳转到景区列表
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionScenicList()
+    {
+        $desId=\Yii::$app->request->get("desId");
+        $search=\Yii::$app->request->get("searchText","");
+
+        $page=new Page(\Yii::$app->request);
+
+        $page=$this->destinationService->getScenicList($page,$desId,$search);
+
+        $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());
+
+        echo json_encode($tableResult);
+    }
+
     public function actionToMap()
     {
-        return $this->render("map");
+        //默认坐标 为 北京
+        $lon=\Yii::$app->request->get("lon","116.40617084503174");
+        $lat=\Yii::$app->request->get("lat","39.91295943669406");
+
+        return $this->render("map",[
+            'lon'=>$lon,
+            'lat'=>$lat
+        ]);
+    }
+
+
+    /**
+     * 获取地点详细信息
+     */
+    public function actionGetScenicMapInfo()
+    {
+        $search=\Yii::$app->request->get("search");
+        try{
+            $googleMap=GoogleMap::getInstance();
+            $rst=$googleMap->searchSiteInfo($search);
+            $rst='{
+                   "results" : [
+                      {
+                         "address_components" : [
+                            {
+                               "long_name" : "Paris",
+                               "short_name" : "Paris",
+                               "types" : [ "locality", "political" ]
+                            },
+                            {
+                               "long_name" : "Paris",
+                               "short_name" : "75",
+                               "types" : [ "administrative_area_level_2", "political" ]
+                            },
+                            {
+                               "long_name" : "Île-de-France",
+                               "short_name" : "IDF",
+                               "types" : [ "administrative_area_level_1", "political" ]
+                            },
+                            {
+                               "long_name" : "France",
+                               "short_name" : "FR",
+                               "types" : [ "country", "political" ]
+                            }
+                         ],
+                         "formatted_address" : "Paris, France",
+                         "geometry" : {
+                            "bounds" : {
+                               "northeast" : {
+                                  "lat" : 48.9021449,
+                                  "lng" : 2.4699208
+                               },
+                               "southwest" : {
+                                  "lat" : 48.815573,
+                                  "lng" : 2.224199
+                               }
+                            },
+                            "location" : {
+                               "lat" : 48.856614,
+                               "lng" : 2.3522219
+                            },
+                            "location_type" : "APPROXIMATE",
+                            "viewport" : {
+                               "northeast" : {
+                                  "lat" : 48.9021449,
+                                  "lng" : 2.4699208
+                               },
+                               "southwest" : {
+                                  "lat" : 48.815573,
+                                  "lng" : 2.224199
+                               }
+                            }
+                         },
+                         "place_id" : "ChIJD7fiBh9u5kcRYJSMaMOCCwQ",
+                         "types" : [ "locality", "political" ]
+                      }
+                   ],
+                   "status" : "OK"
+                }';
+            $rst=json_decode($rst);
+            if($rst->status=="OK"){
+                $location=$rst->results[0]->geometry->location;
+                echo json_encode(Code::statusDataReturn(Code::SUCCESS,$location));
+            }else{
+                echo json_encode(Code::statusDataReturn(Code::FAIL));
+            }
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+        }
     }
 
 

@@ -11,27 +11,30 @@ namespace frontend\controllers;
 
 use common\components\Aes;
 use common\components\Validate;
-use frontend\entity\UserBase;
+use common\entity\UserBase;
 use frontend\services\UserBaseService;
 use common\components\Code;
 use yii\base\Exception;
-use yii\web\Controller;
 
-class IndexController extends Controller{
+class IndexController extends UnCController{
 
 
     private $userBaseService;
+
+    public $userObj;
+
+    public $test;
+
 
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
         $this->userBaseService=new UserBaseService();
-
     }
 
     public function actionIndex()
     {
-
+        $this->test="adsf";
         return $this->render('index');
     }
 

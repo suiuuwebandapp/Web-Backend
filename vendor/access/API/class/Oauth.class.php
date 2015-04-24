@@ -74,7 +74,6 @@ class Oauth{
         );
 
         $login_url =  $this->urlUtils->combineURL(self::GET_AUTH_CODE_URL, $keysArr);
-
         header("Location:$login_url");
     }
 
@@ -89,10 +88,10 @@ class Oauth{
     public function qq_callback($csrf,$code){
         $state=Yii::$app->session->get('state');
 
-        //--------验证state防止CSRF攻击
-        if($csrf != $state){
-            $this->error->showError("30001");
-        }
+//        //--------验证state防止CSRF攻击
+//        if($csrf != $state){
+//            $this->error->showError("30001");
+//        }
 
         //-------请求参数列表
         $keysArr = array(

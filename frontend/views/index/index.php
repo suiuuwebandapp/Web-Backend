@@ -7,8 +7,97 @@
  * Email: zhangxinmailvip@foxmail.com
  */
 ?>
-<script type="text/javascript" src="/assets/d74e916a/yii.js"></script>
-<script type="text/javascript" src="/assets/d74e916a/yii.validation.js"></script>
+
+<!--banner开始-->
+<div class="index-banner">
+    <ul class="banners">
+        <li class="banner01"></li>
+    </ul>
+    <div class="serch">
+        <input type="text" value="" class="text1">
+        <input type="button" value="搜索" class="btn1">
+    </div>
+</div>
+<!--banner结束-->
+
+
+<!--list开始-->
+<div class="list w1200 clearfix">
+
+    <p class="title">热门</p>
+    <ul id="ul1">
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
+            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+            <h4>日本京都奈良公园一日游</h4>
+        </li>
+    </ul>
+</div>
+<a href="#"  class="btn8">显示更多</a>
+
+<!--list结束-->
+<div class="index-tuijian clearfix"><!--index-tuijian begin-->
+    <ul style="width:778px; height:368px; margin-bottom:20px;">
+        <li style="width:588px; height:368px;"><a href="javascript:;"><img src="/assets/images/idexpic.fw.png" alt=""></a><span style=" line-height:368px;">韩国</span></li>
+        <li style="width:170px; height:192px; margin-left:20px; margin-bottom:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:192px;">韩国</span></li>
+        <li style="width:170px; height:156px; margin-left:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:156px;">韩国</span></li>
+    </ul>
+    <ul style="width:402px; height:366px; margin-bottom:20px;">
+        <li style="width:402px; height:366px; margin-left:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:366px;">韩国</span></li>
+    </ul>
+    <ul>
+        <li style="width:286px; height:258px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:258px;">韩国</span></li>
+        <li style="width:286px; height:258px; margin-left:16px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:258px;">韩国</span></li>
+        <li style="width:592px; height:260px; margin-left:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:260px;">韩国</span></li>
+    </ul>
+</div>
+<a href="#"  class="btn8">显示更多</a>
+
+<!--index-tuijian end-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div>
     邮箱<input id="email" type="text"/>
     密码<input id="emailPwd" type="password"/>
@@ -47,63 +136,7 @@
     function accessQQ(){
 
     }
-    /**
-     * 邮箱注册
-     * @returns {boolean}
-     */
-    function emailRegister() {
-        var email = $("#email").val();
-        var password = $("#emailPwd").val();
-        var passwordConfirm = $("#emailConfirmPwd").val();
 
-        if(email.length>30||email.length<6){
-            alert("邮箱长度必须在6~30个字符之间");
-            return false;
-        }else{
-            var regexp = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
-            var matches = regexp.exec(email);
-            if(matches==null){
-                alert("邮箱格式不正确");
-                return false;
-            }
-        }
-        if(password.length>30||password.length<6){
-            alert("密码长度必须在6~30个字符之间");
-            return false;
-        }
-        if(password!=passwordConfirm){
-            alert("两次输入密码不一致");
-            return false;
-        }
-
-
-        $.ajax({
-            type: 'post',
-            url: '/index/email-register',
-            data: {
-                email: email,
-                password: password,
-                passwordConfirm: passwordConfirm,
-                _csrf: $('input[name="_csrf"]').val()
-            },
-            beforeSend: function () {
-                alert('正在提交，请稍后。。。');
-            },
-            error:function(){
-                alert("系统异常。。。");
-            },
-            success: function (data) {
-                var datas=eval('('+data+')');
-                if(datas.status==1){
-                    //do something
-                    alert(datas.data);
-                }else{
-                    //do something
-                    alert(datas.data);
-                }
-            }
-        });
-    }
     function sendPhoneCode() {
 
     }

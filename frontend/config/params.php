@@ -51,7 +51,7 @@ return [
     //qq
     'qq_app_id'=>'101206430',
     'qq_app_key'=>'a80bf172ce9c35c3822363af5b38c741',
-    'qq_callback'=>'http://local.suiuu.com/access/qq-login',
+    'qq_callback'=>'http://www.suiuu.com/access/qq-login',
 
     //缓存
     'redis'=>[

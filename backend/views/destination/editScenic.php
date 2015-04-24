@@ -36,14 +36,15 @@
 </head>
 <body>
 <form onsubmit="return false"  id=form_validate class="form-horizontal" novalidate="novalidate">
-    <input type="hidden" id="desId" value="<?= $desId?>"/>
+    <input type="hidden" id="desId" value="<?= $scenicInfo->destinationId?>"/>
+    <input type="hidden" id="scenicId" value="<?= $scenicInfo->scenicId?>"/>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="false"></button>
                 <h4 class="modal-title">
-                    添加景区信息
+                    修改景区信息
                 </h4>
             </div>
             <div class="modal-body">
@@ -66,7 +67,7 @@
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
-                                                <input type="text" id="title" value="" class="form-control" placeholder="请输入文章标题" maxlength="20"  required/>
+                                                <input type="text" id="title" value="<?= $scenicInfo->title?>" class="form-control" placeholder="请输入文章标题" maxlength="20"  required/>
                                             </div>
                                         </div>
                                     </div>
@@ -75,7 +76,7 @@
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
-                                                <input type="text" id="beginTime" class="form-control timepicker timepicker-no-seconds" required="">
+                                                <input type="text" id="beginTime" value="<?= $scenicInfo->beginTime?>" class="form-control timepicker timepicker-no-seconds" required="">
                                             </div>
                                         </div>
                                     </div>
@@ -84,22 +85,22 @@
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
-                                                <input type="text" id="endTime" class="form-control timepicker timepicker-no-seconds" required="">
+                                                <input type="text" id="endTime" value="<?= $scenicInfo->endTime?>" class="form-control timepicker timepicker-no-seconds" required="">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
-                                            <input type="hidden" id="titleImg"/>
-                                            <img id="titleImgPre"/>
+                                            <input type="hidden" id="titleImg" value="<?= $scenicInfo->titleImg?>"/>
+                                            <img id="titleImgPre" src="<?= $scenicInfo->titleImg?>"/>
                                             <div id="queue"></div>
                                             <input id="file_upload" name="file_upload" type="file">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group" style="padding-left: 54px;">
-                                    <iframe id="mapFrame" name="mapFrame" src="/destination/to-map" width="484px;" height="320px;" frameborder="0"></iframe>
+                                    <iframe id="mapFrame" name="mapFrame" src="/destination/to-map?lon=<?= $scenicInfo->lon?>&lat=<?= $scenicInfo->lat?>" width="484px;" height="320px;" frameborder="0"></iframe>
                                 </div>
                                 <!-- END FORM-->
                             </div>
@@ -135,8 +136,7 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
-        FormValidation.init("addScenic");
-        $("#titleImgPre").hide();//隐藏预览封面图
+        FormValidation.init("updateScenic");
 
         $('.timepicker-no-seconds').timepicker({
             autoclose: true,
@@ -146,6 +146,9 @@
         $("#title").bind("blur",function(){
             findScenicInfo();
         });
+
+        var lon="<?= $scenicInfo->lon?>";
+        var lat="<?= $scenicInfo->lat?>";
 
     });
 
@@ -203,12 +206,13 @@
     }
 
     //添加景区
-    function addScenic(){
+    function updateScenic(){
 
 
         var lat=document.getElementById('mapFrame').contentWindow.document.getElementById("us3-lat").value;
         var lon=document.getElementById('mapFrame').contentWindow.document.getElementById("us3-lon").value;
 
+        var scenicId=$("#scenicId").val();
         var desId=$("#desId").val();
         var title=$("#title").val();
         var titleImg=$("#titleImg").val();
@@ -222,9 +226,10 @@
 
 
         $.ajax({
-            url :'/destination/add-scenic',
+            url :'/destination/update-scenic',
             type:'post',
             data:{
+                scenicId:scenicId,
                 title:title,
                 titleImg:titleImg,
                 beginTime:beginTime,
@@ -237,18 +242,18 @@
                 Main.showWait();
             },
             error:function(){
-                Main.errorTip("添加景区失败,未知系统异常");
+                Main.errorTip("更新景区失败,未知系统异常");
                 Main.hideWait();
             },
             success:function(data){
                 data=eval("("+data+")");
                 Main.hideWait();
                 if(data.status==1){
-                    Main.successTip("添加景区地成功");
+                    Main.successTip("更新景区地成功");
                     $("#modal_close").click();
                     Main.refrenshTable();
                 }else{
-                    Main.errorTip("添加景区地失败,错误信息:<br/>"+data.data);
+                    Main.errorTip("更新景区地失败,错误信息:<br/>"+data.data);
                 }
             }
         });

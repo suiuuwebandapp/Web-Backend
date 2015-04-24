@@ -56,17 +56,18 @@ class DestinationService extends BaseDb {
     /**
      * 获取景区列表
      * @param Page $page
+     * @param $desId
      * @param $search
      * @return Page
      * @throws Exception
      * @throws \Exception
      */
-    public function getScenicList(Page $page,$search)
+    public function getScenicList(Page $page,$desId,$search)
     {
         try {
             $conn = $this->getConnection();
             $this->destinationDb = new DestinationDb($conn);
-            $page=$this->destinationDb->getDesList($page,$search);
+            $page=$this->destinationDb->getScenicList($page,$desId,$search);
         } catch (Exception $e) {
             throw $e;
         } finally {
