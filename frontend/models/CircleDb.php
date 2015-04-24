@@ -10,19 +10,20 @@ namespace frontend\models;
 
 
 use common\models\ProxyDb;
-use frontend\entity\CircleArticleEntity;
+use common\entity\CircleArticle;
+use common\entity\UserBase;
 use yii\db\mssql\PDO;
-use frontend\entity\CircleCommentEntity;
+use common\entity\CircleComment;
 
 class CircleDb extends ProxyDb
 {
     /**
      * 添加文章
-     * @param CircleArticleEntity $CircleArticleEntity
+     * @param CircleArticle $CircleArticleEntity
      * @return int
      * @throws \yii\db\Exception
      */
-    public function addArticle(CircleArticleEntity $CircleArticleEntity)
+    public function addArticle(CircleArticle $CircleArticleEntity)
     {
         $sql = sprintf("
             INSERT INTO circle_article
@@ -43,7 +44,7 @@ class CircleDb extends ProxyDb
         $command->bindParam(":aCmtCount", $CircleArticleEntity->aCmtCount, PDO::PARAM_INT);
         $command->bindParam(":aSupportCount", $CircleArticleEntity->aSupportCount, PDO::PARAM_INT);
         $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_INT);
-        $command->bindValue(":aStatus", CircleArticleEntity::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":aStatus", $CircleArticleEntity::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindParam(":aAddr", $CircleArticleEntity->aAddr, PDO::PARAM_STR);
 
         return $command->execute();
@@ -64,7 +65,7 @@ class CircleDb extends ProxyDb
 
         ");
         $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":aStatus", CircleArticleEntity::ARTICLE_STATUS_DISABLED, PDO::PARAM_INT);
+        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
         $command->bindParam(":aCreateUserSign", $userSign, PDO::PARAM_INT);
         return $command->execute();
@@ -74,11 +75,11 @@ class CircleDb extends ProxyDb
 
     /**
      * 更新圈子文章
-     * @param CircleArticleEntity $CircleArticleEntity
+     * @param CircleArticle $CircleArticleEntity
      * @return int
      * @throws \yii\db\Exception
      */
-    public function updateArticleInfo(CircleArticleEntity $CircleArticleEntity)
+    public function updateArticleInfo(CircleArticle $CircleArticleEntity)
     {
 
 
@@ -99,11 +100,11 @@ class CircleDb extends ProxyDb
     }
     /**
      * 更新圈子文章评论数
-     * @param CircleArticleEntity $CircleArticleEntity
+     * @param CircleArticle $CircleArticleEntity
      * @return int
      * @throws \yii\db\Exception
      */
-    public function upDateArticleCommentNumb(CircleArticleEntity $CircleArticleEntity)
+    public function upDateArticleCommentNumb(CircleArticle $CircleArticleEntity)
     {
 
 
@@ -131,12 +132,13 @@ class CircleDb extends ProxyDb
         $sql=sprintf("
             SELECT a.*,b.nickname,b.headImg FROM circle_article a
             Left JOIN user_base b ON a.aCreateUserSign=b.userSign
-            WHERE articleId=:articleId AND aStatus=:aStatus
+            WHERE articleId=:articleId AND aStatus=:aStatus AND b.status=:userStatus;
         ");
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
-        $command->bindValue(":aStatus", CircleArticleEntity::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
         return $command->queryOne();
     }
     /**
@@ -150,12 +152,13 @@ class CircleDb extends ProxyDb
 
         $sql=sprintf("
           SELECT a.cId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,b.nickname,b.headImg FROM circle_article a
-          Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cId=:cId AND aStatus=:aStatus
+          Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cId=:cId AND aStatus=:aStatus AND b.status=:userStatus
         ");
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":cId", $circleId, PDO::PARAM_INT);
-        $command->bindValue(":aStatus", CircleArticleEntity::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
         return $command->queryAll();
     }
 
@@ -178,11 +181,11 @@ class CircleDb extends ProxyDb
 
     /**
      * 添加评论
-     * @param CircleCommentEntity $CircleCommentEntity
+     * @param CircleComment $CircleCommentEntity
      * @return int
      * @throws \yii\db\Exception
      */
-    public function addComment(CircleCommentEntity $CircleCommentEntity)
+    public function addComment(CircleComment $CircleCommentEntity)
     {
         $sql = sprintf("
             INSERT INTO circle_article_comment
@@ -201,7 +204,7 @@ class CircleDb extends ProxyDb
         $command->bindParam(":relativeCommentId", $CircleCommentEntity->relativeCommentId, PDO::PARAM_INT);
         $command->bindParam(":supportCount", $CircleCommentEntity->supportCount, PDO::PARAM_INT);
         $command->bindParam(":opposeCount", $CircleCommentEntity->opposeCount, PDO::PARAM_INT);
-        $command->bindValue(":cStatus", CircleCommentEntity::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindValue(":articleId",$CircleCommentEntity->articleId, PDO::PARAM_INT);
         return $command->execute();
 
@@ -222,7 +225,7 @@ class CircleDb extends ProxyDb
         ");
 
         $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":cStatus", CircleCommentEntity::COMMENT_STATUS_DISABLED, PDO::PARAM_INT);
+        $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":commentId", $commentId, PDO::PARAM_INT);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_INT);
         return $command->execute();
@@ -232,11 +235,11 @@ class CircleDb extends ProxyDb
 
     /**
      * 更新评论
-     * @param CircleCommentEntity $CircleCommentEntity
+     * @param CircleComment $CircleCommentEntity
      * @return int
      * @throws \yii\db\Exception
      */
-    public function updateCircleComment(CircleCommentEntity $CircleCommentEntity)
+    public function updateCircleComment(CircleComment $CircleCommentEntity)
     {
 
 
@@ -255,11 +258,11 @@ class CircleDb extends ProxyDb
 
     /**
      * 更新评论支持反对数
-     * @param CircleCommentEntity $CircleCommentEntity
+     * @param CircleComment $CircleCommentEntity
      * @return int
      * @throws \yii\db\Exception
      */
-    public function updateCircleCommentNumb(CircleCommentEntity $CircleCommentEntity)
+    public function updateCircleCommentNumb(CircleComment $CircleCommentEntity)
     {
 
 
@@ -287,12 +290,13 @@ class CircleDb extends ProxyDb
         $sql=sprintf("
             SELECT a.*,b.nickname,b.headImg FROM circle_article_comment a
             Left JOIN user_base b ON a.userSign=b.userSign
-            WHERE articleId=:articleId AND cStatus=:cStatus
+            WHERE articleId=:articleId AND cStatus=:cStatus AND b.status=:userStatus
         ");
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
-        $command->bindValue(":cStatus", CircleCommentEntity::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
         return $command->queryAll();
     }
 
@@ -310,7 +314,7 @@ class CircleDb extends ProxyDb
 
         ");
         $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":cStatus", CircleCommentEntity::COMMENT_STATUS_DISABLED, PDO::PARAM_INT);
+        $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
         return $command->execute();
     }

@@ -10,9 +10,11 @@
 namespace frontend\controllers;
 
 
+use common\components\Aes;
 use common\components\Code;
 use common\entity\UserAccess;
 use common\entity\UserBase;
+use frontend\components\ValidateCode;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\web\Controller;
@@ -20,8 +22,8 @@ use yii\web\Controller;
 class AppLoginController extends Controller{
 
     private $userBaseService;
-
-
+    public $enableCsrfValidation=false;
+    public $layout=false;
     public function __construct($id, $module)
     {
         parent::__construct($id, $module);
@@ -41,14 +43,14 @@ class AppLoginController extends Controller{
         $type=\Yii::$app->request->post("type");
         $sign=\Yii::$app->request->post("sign");
 
-//        $openId=Code::getUUID();
-//        $nickname="测试";
-//        $sex=1;
-//        $headImg="http://www.baidu.com";
-//        $type=1;
-//        $sign=md5($openId.$type.\Yii::$app->params['apiPassword']);
 
-        \Yii::$app->session->id();
+       /* $openId=Code::getUUID();
+        $nickname="测试";
+        $sex=1;
+        $headImg="http://www.baidu.com";
+        $type=1;
+        $sign=md5($openId.$type.\Yii::$app->params['apiPassword']);*/
+
         if(empty($openId)){
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"OpenId Is Not Allow Empty"));
             return null;
@@ -74,8 +76,13 @@ class AppLoginController extends Controller{
             if($userBase->status!=UserBase::USER_STATUS_NORMAL){
                 echo json_encode(Code::statusDataReturn(Code::FAIL,"User Status Is Disabled"));
             }else{
-                \Yii::$app->session->set(Code::APP_USER_LOGIN_SESSION,$userBase);
-                echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userBase));
+                $enPassword = \Yii::$app->params['encryptPassword'];
+                $enDigit = \Yii::$app->params['encryptDigit'];
+                $aes=new Aes();
+                $sysSign=$aes->encrypt($userBase->userSign,$enPassword,$enDigit);
+                \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($userBase));
+                \Yii::$app->redis->expire(Code::APP_USER_LOGIN_SESSION.$sysSign,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userBase,$sysSign));
             }
             return null;
         }
@@ -99,8 +106,14 @@ class AppLoginController extends Controller{
             $userAccess->openId=$openId;
             $userAccess->type=$type;
             $userBase=$this->userBaseService->addUser($userBase,$userAccess);
-            \Yii::$app->session->set(Code::APP_USER_LOGIN_SESSION,$userBase);
-
+            $enPassword = \Yii::$app->params['encryptPassword'];
+            $enDigit = \Yii::$app->params['encryptDigit'];
+            $aes=new Aes();
+            $sysSign=$aes->encrypt($userBase->userSign,$enPassword,$enDigit);
+            \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($userBase));
+            \Yii::$app->redis->expire(Code::APP_USER_LOGIN_SESSION.$sysSign,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userBase,$sysSign));
+            return null;
         }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
             return null;
@@ -118,16 +131,121 @@ class AppLoginController extends Controller{
     }
 
 
-    public function actionSinaLogin()
+    public function actionAppLogin()
     {
+
+
+        $username=\Yii::$app->request->post('username');
+
+        $password=\Yii::$app->request->post('password');
+
+        $error="";
+        $code=\Yii::$app->request->post('validateCode');//验证码
+        $errorCount=0;
+        //从Redis 获取用户名登录错误次数
+        $cacheCount=\Yii::$app->redis->get(Code::APP_USER_LOGIN_ERROR_COUNT_PREFIX.$username);
+        if(!empty($cacheCount)){
+            $errorCount=$cacheCount;
+        }
+        //判断登录错误次数 是否验证 验证码
+        if($errorCount>=Code::SYS_LOGIN_ERROR_COUNT){
+            $serCode=\Yii::$app->session->get(Code::APP_USER_LOGIN_VERIFY_CODE);
+            if($serCode!=$code)
+            {
+                $error='验证码不正确';
+            }
+
+        }else if(empty($username)||strlen($username)>20||strlen($username)<5){
+            $error="用户名格式不正确";
+        }else if(empty($password)||strlen($password)>20||strlen($password)<5){
+            $error="密码格式不正确";
+        }
+        //用户输入信息验证
+        if($error!=''){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            exit;
+        }
+        try{
+            //验证用户名是否存在
+            $result=$this->userBaseService->findUserByUserNameAndPwd($username,$password);
+            if(isset($result)){
+
+                //设置Session
+
+                $enPassword = \Yii::$app->params['encryptPassword'];
+                $enDigit = \Yii::$app->params['encryptDigit'];
+                $aes=new Aes();
+                $sysSign=$aes->encrypt($result->userSign,$enPassword,$enDigit);
+                \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($result));
+                \Yii::$app->redis->expire(Code::APP_USER_LOGIN_SESSION.$sysSign,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                //如果用户点击记住密码，设置Cookie
+
+                //清除错误登录次数
+                \Yii::$app->redis->del(Code::APP_USER_LOGIN_ERROR_COUNT_PREFIX.$username);
+
+                echo json_encode(Code::statusDataReturn(Code::SUCCESS,$result,$sysSign));
+                exit;
+            }else{
+
+                \Yii::$app->redis->set(Code::APP_USER_LOGIN_ERROR_COUNT_PREFIX.$username,++$errorCount);
+                \Yii::$app->redis->expire(Code::APP_USER_LOGIN_ERROR_COUNT_PREFIX.$username,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                $error="用户名或密码错误";
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+                exit;
+            }
+        }catch (Exception $e){
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            exit;
+        }
+
+
 
     }
 
-
-    public function actionWechatLogin()
+    public function actionLogout()
     {
 
+        $appSign=\Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
+        $rst = \Yii::$app->redis->del(Code::APP_USER_LOGIN_SESSION.$appSign);
+        if($rst==1)
+        {
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,Code::APP_USER_LOGOUT_SUCCESS_STR));
+            exit;
+        }else
+        {
+            echo json_encode(Code::statusDataReturn(Code::FAIL,Code::APP_USER_LOGOUT_FAIL_STR));
+            exit;
+        }
     }
+
+
+    public function actionLoginVerify()
+    {
+        //验证用户是否登录
+        $appSign=\Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
+        $currentUser=json_decode(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION.$appSign));
+        if(empty($currentUser))
+        {
+            echo json_encode(Code::statusDataReturn(Code::UN_LOGIN));
+        }else
+        {
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }
+    }
+
+    public function actionGetCode()
+    {
+        $ValidateCode=new ValidateCode();
+        $ValidateCode->doimg();
+        \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,$ValidateCode->getCode());
+    }
+
+    public function actionTest()
+    {
+        echo  md5('1');
+    }
+
 
 
 

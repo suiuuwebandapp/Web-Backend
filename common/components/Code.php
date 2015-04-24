@@ -27,6 +27,7 @@ class Code
     const SUCCESS = 1;
     const FAIL = -1;
     const PARAMS_ERROR = -2;
+    const UN_LOGIN = -3;
     /**
      * 请求错误信息
      */
@@ -41,6 +42,9 @@ class Code
     const APP_USER_LOGIN_ERROR_COUNT_PREFIX='A_U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
     const APP_USER_LOGIN_VERIFY_CODE='A_U_L_V_C'; //用户登录验证码 SESSION KEY
     const APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='86400';
+
+    const APP_USER_LOGOUT_SUCCESS_STR='注销成功';
+    const APP_USER_LOGOUT_FAIL_STR='注销失败';
     //***************************************************前台************************************************************
 
     /**

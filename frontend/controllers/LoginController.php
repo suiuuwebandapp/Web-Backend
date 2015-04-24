@@ -94,22 +94,7 @@ class LoginController extends Controller
     }
 
 
-    /**
-     * 对象转数组
-     * @param $obj
-     * @return array
-     */
-    private function ob2arr($obj) {
-        if(is_object($obj)) {
-            $obj = (array)$obj;
-            $obj = $this->ob2arr($obj);
-        } elseif(is_array($obj)) {
-            foreach($obj as $key => $value) {
-                $obj[$key] = $this->ob2arr($value);
-            }
-        }
-        return $obj;
-    }
+
     public function actionGetCode()
     {
         $ValidateCode=new ValidateCode();

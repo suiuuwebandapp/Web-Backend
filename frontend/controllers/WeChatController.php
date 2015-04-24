@@ -11,7 +11,7 @@ use common\components\Code;
 use common\components\wx\WXBizMsgCrypt;
 use yii\web\Controller;
 use yii;
-use frontend\entity\WeChatEntity;
+use common\entity\WeChat;
 use common\components\Common;
 
 class WeChatController extends Controller
@@ -56,11 +56,11 @@ class WeChatController extends Controller
             $date_H = date("H");
             $date_I = date("i");
             $time = time();
-            $msgType_text = WeChatEntity::MSGTYPE_TEXT;
-            $msgType_news = WeChatEntity::MSGTYPE_NEWS;
-            $msgType_dkf = WeChatEntity::MSGTYPE_DKF;
+            $msgType_text = WeChat::MSGTYPE_TEXT;
+            $msgType_news = WeChat::MSGTYPE_NEWS;
+            $msgType_dkf = WeChat::MSGTYPE_DKF;
             //关注的
-            if ($msgType == WeChatEntity::MSGTYPE_EVENT && $objEvent == WeChatEntity::EVENT_SUBSCRIBE) {
+            if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_SUBSCRIBE) {
 
 
                 if (!empty($objEventKey)) {
@@ -72,9 +72,9 @@ class WeChatController extends Controller
                         $pointNumb = 0;
                         if($ThisUId>1000){
                             //好友推荐关注 改成了临时二维码需要重新测试
-                            $this->pointInterface->addPoint(PointEntity::POINT_EVENT_WECHAT_FRIEND_ATTENTION, intval($ThisUId), "推荐好友关注获得积分");
+                            $this->pointInterface->addPoint(Point::POINT_EVENT_WECHAT_FRIEND_ATTENTION, intval($ThisUId), "推荐好友关注获得积分");
                             $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, "欢迎关注巴别鱼,由于你的帮助好友已经获得积分");
-                            $pointRet = $this->pointInterface->getPointEventById(PointEntity::POINT_EVENT_WECHAT_FRIEND_ATTENTION);
+                            $pointRet = $this->pointInterface->getPointEventById(Point::POINT_EVENT_WECHAT_FRIEND_ATTENTION);
                             if ($pointRet['status'] == Code::SUCCESS) {
                                 $pointE = $pointRet['data'];
                                 $pointNumb = $pointE->pointEventPoint;
@@ -88,12 +88,12 @@ class WeChatController extends Controller
                 }
                 $this->getWechatUserInfo($fromUsername, true); //关注的时候抓取用户信息
                 $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, 'test');
-            } else if ($msgType == WeChatEntity::MSGTYPE_EVENT && $objEvent == WeChatEntity::EVENT_LOCATION) {
+            } else if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_LOCATION) {
                 //报告地理位置
                 //$this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, "欢迎关注巴别鱼");
-            } else if ($msgType == WeChatEntity::MSGTYPE_EVENT && $objEvent == WeChatEntity::EVENT_CLICK) {
+            } else if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_CLICK) {
 
-            } else if ($msgType == WeChatEntity::MSGTYPE_LOCATION) {
+            } else if ($msgType == WeChat::MSGTYPE_LOCATION) {
 
                 //发送位置签到
 
@@ -111,7 +111,7 @@ class WeChatController extends Controller
                         $type_v = $rstData['vType'];
                         $time_v = $rstData['vTime'];
                     }
-                    if ($time - $time_v > WeChatEntity::TIME_PAST) {
+                    if ($time - $time_v > WeChat::TIME_PAST) {
                         $timePast = false;
                     } else {
                         $timePast = true;
@@ -124,10 +124,10 @@ class WeChatController extends Controller
                     }
                     else {
                         if (
-                            ($date_H == WeChatEntity::TIME_OUT && $date_I >= WeChatEntity::TIME_OUT_I) ||
-                            ($date_H > WeChatEntity::TIME_OUT)
+                            ($date_H == WeChat::TIME_OUT && $date_I >= WeChat::TIME_OUT_I) ||
+                            ($date_H > WeChat::TIME_OUT)
                         ) {
-                            $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, WeChatEntity::TIME_OUT_STRING);
+                            $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, WeChat::TIME_OUT_STRING);
                         }else{
                             $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_dkf,'1');
                             //$this->actionSendMsg($fromUsername, $keyword);
@@ -161,9 +161,9 @@ class WeChatController extends Controller
 
         $access_token = $this->readToken();
 
-        $url = WeChatEntity::GET_USER_INFO . $access_token . "&openid=" . $openId . "&lang=zh_CN";
+        $url = WeChat::GET_USER_INFO . $access_token . "&openid=" . $openId . "&lang=zh_CN";
 
-        $rst = $this->curlHandlePost($url);
+        $rst =  Common::CurlHandel($url);
 
         if ($rst['status'] == Code::SUCCESS) {
             $rstJson = json_decode($rst['data']);
@@ -181,7 +181,7 @@ class WeChatController extends Controller
             } else {
 
                 $file_str = '错误发生时间：[' . date('Y-m-d H:i:s') . ']错误内容:{获取用户信息' . $rst['data'] . '}';
-                $this->write_to_log(WeChatEntity::LOG_XXX_NAME, $file_str);
+                $this->write_to_log(WeChat::LOG_XXX_NAME, $file_str);
                 exit;
             }
         }
@@ -205,14 +205,14 @@ class WeChatController extends Controller
         if($encrypt_type=='aes'){
             $timeStamp  =Yii::$app->request->get("timestamp");
             $nonce=Yii::$app->request->get("nonce");
-            $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChatEntity::EncodingAESKey, WeChatEntity::APP_ID);
+            $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChat::EncodingAESKey, WeChat::APP_ID);
             $encryptMsg = ''; //加密后的密文
             $errCode = $pc->encryptMsg($resultStr, $timeStamp, $nonce, $encryptMsg);
             if ($errCode == 0) {
                 $resultStr= $encryptMsg;
             }else
             {
-                $this->write_to_log(WeChatEntity::LOG_XXX_NAME, $errCode);
+                $this->write_to_log(WeChat::LOG_XXX_NAME, $errCode);
             }
         }
         echo $resultStr;
@@ -234,14 +234,14 @@ class WeChatController extends Controller
         if($encrypt_type=='aes'){
             $timeStamp  =Yii::$app->request->get("timestamp");
             $nonce=Yii::$app->request->get("nonce");
-            $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChatEntity::EncodingAESKey, WeChatEntity::APP_ID);
+            $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChat::EncodingAESKey, WeChat::APP_ID);
             $encryptMsg = ''; //加密后的密文
             $errCode = $pc->encryptMsg($resultStr, $timeStamp, $nonce, $encryptMsg);
             if ($errCode == 0) {
                 $resultStr= $encryptMsg;
             }else
             {
-                $this->write_to_log(WeChatEntity::LOG_XXX_NAME, $errCode);
+                $this->write_to_log(WeChat::LOG_XXX_NAME, $errCode);
             }
         }
         echo $resultStr;
@@ -260,13 +260,13 @@ class WeChatController extends Controller
             $nonce=Yii::$app->request->get("nonce");
             $msg_signature =Yii::$app->request->get("msg_signature");
             // 第三方收到公众号平台发送的消息
-            $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChatEntity::EncodingAESKey, WeChatEntity::APP_ID);
+            $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChat::EncodingAESKey, WeChat::APP_ID);
             $msg = '';
             $errCode =  $pc->decryptMsg($msg_signature, $timeStamp, $nonce, $postStr, $msg);
             if ($errCode == 0) {
                 return $this->xmlToArr($msg);
             } else {
-                $this->write_to_log(WeChatEntity::LOG_XXX_NAME, "@".$errCode."@");
+                $this->write_to_log(WeChat::LOG_XXX_NAME, "@".$errCode."@");
             }
         }else
         {
@@ -337,11 +337,11 @@ class WeChatController extends Controller
     {
 
         //调用计划任务设置的Token
-        $access_token = Yii::$app->redis->get(WeChatEntity::TOKEN_FILE_NAME);
+        $access_token = Yii::$app->redis->get(WeChat::TOKEN_FILE_NAME);
 
         if (empty($access_token)) {
             $this->actionGetToken();
-            $access_token = Yii::$app->redis->get(WeChatEntity::TOKEN_FILE_NAME);
+            $access_token = Yii::$app->redis->get(WeChat::TOKEN_FILE_NAME);
 
             //创建菜单  只有当token 为空的时候,又重写创建的时候,再重写创建菜单
             $this->WeChatSer->createMenuInfo($access_token);
@@ -358,20 +358,20 @@ class WeChatController extends Controller
     public function actionGetToken()
     {
 
-        $app_id = WeChatEntity::APP_ID;
-        $app_secret = WeChatEntity::APP_SECRET;
-        $url = WeChatEntity::TOKEN_LINK . 'client_credential&appid=' . $app_id . '&secret=' . $app_secret;
+        $app_id = WeChat::APP_ID;
+        $app_secret = WeChat::APP_SECRET;
+        $url = WeChat::TOKEN_LINK . 'client_credential&appid=' . $app_id . '&secret=' . $app_secret;
 
-        $rst = $this->curlHandlePost($url);
+        $rst =  Common::CurlHandel($url);
         if ($rst['status'] == Code::SUCCESS) {
             $rstJson = json_decode($rst['data']);
 
             if (isset($rstJson->access_token)) {
-                Yii::$app->redis->set(WeChatEntity::TOKEN_FILE_NAME,$rstJson->access_token);
+                Yii::$app->redis->set(WeChat::TOKEN_FILE_NAME,$rstJson->access_token);
             } else {
 
                 $file_str = '错误发生时间：[' . date('Y-m-d H:i:s') . ']错误内容:{' . $rst['data'] . '}';
-                $this->write_to_log(WeChatEntity::LOG_XXX_NAME, $file_str);
+                $this->write_to_log(WeChat::LOG_XXX_NAME, $file_str);
                 exit;
             }
         }
