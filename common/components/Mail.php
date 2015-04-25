@@ -23,10 +23,10 @@ class Mail {
     private static function getRegisterHtml($link)
     {
         $html=sprintf('
-            <p><img alt="随游欢迎您" src="http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_email/header.png" style="width: 604px; height: 118px;" /></p>
+            <p><img alt="随游欢迎您" src="http://image.suiuu.com/suiuu_email/header.png" style="width: 604px; height: 118px;" /></p>
 
             <div>
-            <p style="font-family: microsoft yahei;">&nbsp;<strong>XXX</strong>, 您好，</p>
+            <p style="font-family: microsoft yahei;">&nbsp;<strong>亲爱的随友</strong>, 您好，</p>
 
             <p style="width: 604px;font-family: microsoft yahei;">&nbsp; 欢迎你加入 随游，一个关于旅行以及分享的平台。 在这里你将结交来自全球的旅行爱好者，开启非同一般的旅行体验。</p>
 
@@ -37,7 +37,7 @@ class Mail {
 
             <p style="display:inline">&nbsp;</p>
 
-            <div style="float:left"><img alt="" src="http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_email/QRcode.png" style="width: 100px; height: 100px; margin-left: 20px; margin-right: 20px;" />
+            <div style="float:left"><img alt="" src="http://image.suiuu.com/suiuu_email/QRcode.png" style="width: 100px; height: 100px; margin-left: 20px; margin-right: 20px;" />
             <p style="font-family: microsoft yahei;">扫码获取更多关于我们的信息</p>
             </div>
 

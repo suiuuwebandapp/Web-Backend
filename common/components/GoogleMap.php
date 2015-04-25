@@ -44,9 +44,8 @@ class GoogleMap
         $url = "http://maps.google.com/maps/api/geocode/json?";
         $url .= "address=" . trim($search);
         $url .= "&sensor=false";
-        //$rst = Common::CurlHandel($url, null, null, "GET");
-        $rst="";
-        return $rst;
+        $rst = Common::CurlHandel($url, null, null, "GET");
+        return $rst['data'];
     }
 
 

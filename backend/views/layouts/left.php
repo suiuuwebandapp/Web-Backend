@@ -42,55 +42,55 @@
                 </form>
                 <!-- END RESPONSIVE QUICK SEARCH FORM -->
             </li>
-            <li class="start active menu_top">
-                <a href="#~/index/dashboard" class="left_menu_link">
-                    <i class="icon-home"></i>
-                    <span class="title">控制面板</span>
-                    <span class="selected"></span>
-                </a>
-            </li>
+<!--            <li class="start active menu_top">-->
+<!--                <a href="#~/index/dashboard" class="left_menu_link">-->
+<!--                    <i class="icon-home"></i>-->
+<!--                    <span class="title">控制面板</span>-->
+<!--                    <span class="selected"></span>-->
+<!--                </a>-->
+<!--            </li>-->
             <li class="menu_top">
                 <a href="javascript:;">
-                    <i class="icon-basket"></i>
+                    <i class="icon-settings"></i>
                     <span class="title"> 系统设置</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li>
-                        <a href="#~/sys-user/list"  class="left_menu_link"> <i class="icon-home"></i>  员工管理</a>
-                    </li>
+<!--                    <li>-->
+<!--                        <a href="#~/sys-user/list"  class="left_menu_link"> <i class="icon-home"></i>  员工管理</a>-->
+<!--                    </li>-->
                     <li>
                         <a href="#~/country/to-country-list"> <i class="icon-pointer"></i> 国家城市配置</a>
                     </li>
-                    <li>
-                        <a href="ecommerce_orders_view.html"> <i class="icon-tag"></i> Order View</a>
-                    </li>
-                    <li>
-                        <a href="ecommerce_products.html"> <i class="icon-handbag"></i> Products</a>
-                    </li>
-                    <li>
-                        <a href="ecommerce_products_edit.html">  <i class="icon-pencil"></i> Product Edit</a>
-                    </li>
+<!--                    <li>-->
+<!--                        <a href="ecommerce_orders_view.html"> <i class="icon-tag"></i> Order View</a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="ecommerce_products.html"> <i class="icon-handbag"></i> Products</a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="ecommerce_products_edit.html">  <i class="icon-pencil"></i> Product Edit</a>-->
+<!--                    </li>-->
                 </ul>
             </li>
+<!--            <li class="menu_top">-->
+<!--                <a href="javascript:;">-->
+<!--                    <i class="icon-rocket"></i>-->
+<!--                    <span class="title"> 用户管理</span>-->
+<!--                    <span class="arrow"></span>-->
+<!--                </a>-->
+<!--                <ul class="sub-menu">-->
+<!--                    <li>-->
+<!--                        <a href="layout_horizontal_sidebar_menu.html"> 普通用户</a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="index_horizontal_menu.html"> 随友管理</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </li>-->
             <li class="menu_top">
                 <a href="javascript:;">
-                    <i class="icon-rocket"></i>
-                    <span class="title"> 用户管理</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="layout_horizontal_sidebar_menu.html"> 普通用户</a>
-                    </li>
-                    <li>
-                        <a href="index_horizontal_menu.html"> 随友管理</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="menu_top">
-                <a href="javascript:;">
-                    <i class="icon-rocket"></i>
+                    <i class="icon-star"></i>
                     <span class="title"> 目的地管理</span>
                     <span class="arrow"></span>
                 </a>
@@ -113,9 +113,6 @@
                     </li>
                     <li>
                         <a href="#~/article/list"  class="left_menu_link"> 专栏列表</a>
-                    </li>
-                    <li>
-                        <a href="index_horizontal_menu.html"> Dashboard & Mega Menu</a>
                     </li>
                 </ul>
             </li>
@@ -189,9 +186,9 @@
             </li>
 
             -->
-            <li class="last menu_top">
-                <a href="charts.html">  <i class="icon-bar-chart"></i> <span class="title">Visual Charts</span> </a>
-            </li>
+<!--            <li class="last menu_top">-->
+<!--                <a href="charts.html">  <i class="icon-bar-chart"></i> <span class="title">Visual Charts</span> </a>-->
+<!--            </li>-->
         </ul>
         <!-- END SIDEBAR MENU -->
     </div>

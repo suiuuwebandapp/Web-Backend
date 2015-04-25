@@ -126,12 +126,6 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        $("#btnEmail").bind("click", function () {
-            emailRegister();
-        });
-    });
-
 
     function accessQQ(){
 
@@ -139,13 +133,6 @@
 
     function sendPhoneCode() {
 
-    }
-    function printObject(obj){
-        var temp = "";
-        for(var i in obj){//用javascript的for/in循环遍历对象的属性
-            temp += i+":"+obj[i]+"\n";
-        }
-        alert(temp);
     }
 
 </script>

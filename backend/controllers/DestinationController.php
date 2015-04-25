@@ -369,7 +369,7 @@ class DestinationController extends CController
         try{
             $googleMap=GoogleMap::getInstance();
             $rst=$googleMap->searchSiteInfo($search);
-            $rst='{
+            $rst1='{
                    "results" : [
                       {
                          "address_components" : [

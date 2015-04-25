@@ -10,6 +10,7 @@
 namespace frontend\controllers;
 
 use common\components\Aes;
+use common\components\Mail;
 use common\components\Validate;
 use common\entity\UserBase;
 use frontend\services\UserBaseService;
@@ -34,7 +35,16 @@ class IndexController extends UnCController{
 
     public function actionIndex()
     {
-        $this->test="adsf";
+        $emailTime=\Yii::$app->session->get(Code::USER_REGISTER_EMAIL_TIMER);
+        if(!empty($emailTime))
+        {
+            $now=date('Y-m-d H:i:s',time());
+            $tempTime=strtotime($now)-strtotime($emailTime);
+            $emailTime=$tempTime>Code::USER_REGISTER_TIMER?0:Code::USER_REGISTER_TIMER-$tempTime;
+        }
+
+        $view = \Yii::$app->view;
+        $view->params['emailTime']=$emailTime;
         return $this->render('index');
     }
 
@@ -170,7 +180,6 @@ class IndexController extends UnCController{
     {
         $email=\Yii::$app->request->post('email');//用户输入的邮箱
         $password=\Yii::$app->request->post('password');//用户输入的密码
-        $passwordConfirm=\Yii::$app->request->post('passwordConfirm');
         $error="";//错误信息
         $valMsg=Validate::validateEmail($email);
         if(!empty($valMsg))
@@ -179,24 +188,43 @@ class IndexController extends UnCController{
         }else if(empty($password)||strlen($password)>30)
         {
             $error='密码格式不正确';
-        }else if($password!=$passwordConfirm)
-        {
-            $error='两次密码输入不一致';
         }
         if(!empty($error)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
         }
-        //判断邮箱是否已经注册
-        $userBase=$this->userBaseService->findUserByEmail($email);
-        if(!empty($userBase)){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,Code::USER_EMAIL_EXIST));
-        }
 
-        $enPwd=$this->getEncryptPassword($password);
-        $code=$this->getEmailCode($email,$enPwd);
-        $url=\Yii::$app->params['base_dir'].'/index/active?e='.$email.'&p='.$enPwd.'&c='.$code;
-        //最终发送的地址内容
-        echo $url;
+
+        $emailTime=\Yii::$app->session->get(Code::USER_REGISTER_EMAIL_TIMER);
+
+        if(!empty($emailTime))
+        {
+            $now=date('Y-m-d H:i:s',time());
+            $tempTime=strtotime($now)-strtotime($emailTime);
+            $emailTime=$tempTime>Code::USER_REGISTER_TIMER?0:$tempTime;
+        }
+        if($emailTime==0){
+            //判断邮箱是否已经注册
+            $userBase=$this->userBaseService->findUserByEmail($email);
+            if(!empty($userBase)){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,Code::USER_EMAIL_EXIST));
+            }
+            $enPwd=$this->getEncryptPassword($password);
+            $code=$this->getEmailCode($email,$enPwd);
+            $url=\Yii::$app->params['base_dir'].'/index/active?e='.$email.'&p='.$enPwd.'&c='.$code;
+            //最终发送的地址内容
+            $rst=Mail::sendRegisterMail($email,$url);
+            //
+            if($rst['status']==Code::SUCCESS){
+                //设置邮件定时器，控制发送频率
+                \Yii::$app->session->set(Code::USER_REGISTER_EMAIL_TIMER,date('Y-m-d H:i:s',time()));
+                echo json_encode(Code::statusDataReturn(Code::SUCCESS,Code::USER_REGISTER_TIMER));
+            }else{
+                echo json_encode(Code::statusDataReturn(Code::FAIL,"发送邮件失败，请稍后重试"));
+            }
+        }else{
+            echo json_encode(Code::statusDataReturn(Code::FAIL,"发送邮件过于频繁，请稍后再试"));
+        }
+        return null;
     }
 
 

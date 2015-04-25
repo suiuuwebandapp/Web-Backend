@@ -10,8 +10,8 @@ return [
     'charset'=>'utf-8',
 
     //基础信息
-    'base_dir' => 'http://local.suiuu.com',
-    'url'=>'local.suiuu.com',
+    'base_dir' => 'http://www.suiuu.com',
+    'url'=>'www.suiuu.com',
 
     //app
     'app_suiuu_sign'=>'app_suiuu_sign',

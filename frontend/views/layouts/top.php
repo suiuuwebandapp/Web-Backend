@@ -8,7 +8,11 @@
  */
 
 ?>
-
+<style type="text/css">
+    #emailTime input{
+        font-size: 14px !important;
+    }
+</style>
 <?php if (isset($this->context->userObj)) { ?>
     <!--header开始-->
     <div class="header">
@@ -122,11 +126,11 @@
                         <div id="zhuce-main02">
                             <a href="#" class="tab-title tab-title02">手机注册</a>
 
-                            <p class="m-20"><label>邮箱</label><input type="text" value=""></p>
+                            <p class="m-20"><label>邮箱</label><input type="text" value="" id="regEmail"></p>
 
-                            <p><label>密码</label><input type="text" value=""></p>
+                            <p><label>密码</label><input type="password" value="" id="regEmailPwd"></p>
 
-                            <p class="shuaxin"><input type="text" value="拖动验证"></p>
+                            <p class="shuaxin" id="emailTime"><input type="button" value="发送成功，"/></p>
 
                             <p class="zidong"><a href="javascript:;" class="xieyi">网站注册协议</a>
                                 <input type="checkbox" value="同意" id="zhuce-check02">
@@ -141,9 +145,9 @@
                     <li><a href="javascript:;" id="denglu">登录</a>
 
                         <div id="denglu-main">
-                            <p><label>邮箱/手机号</label><input type="text" value="" id="regEmail"></p>
+                            <p><label>邮箱/手机号</label><input type="text" value=""> </p>
 
-                            <p><label>密码</label><input type="password" value="" id="regEmailPwd"></p>
+                            <p><label>密码</label><input type="password" value="" ></p>
 
                             <p class="fogot"><a href="wangji_mima.html">忘记密码</a></p>
 
@@ -173,12 +177,45 @@
 
 
 <script type="text/javascript">
+    var emailTime="<?= $this->params['emailTime']?>";
+    var emailTimer;
     $(document).ready(function(){
-
-        $("#emailRegister").bind("click",function(){
-            emailRegister();
-        });
+        initEmailTimer();
     });
+    function initEmailTimer()
+    {
+        emailTimer=window.setInterval(function(){
+            if(emailTime>0){
+                emailTime--;
+                initEmailTime();
+            }else{
+                window.clearInterval(emailTimer);
+                initEmailTime();
+            }
+        },1000);
+
+    }
+
+    function initEmailTime(){
+        //emailTime!=""&&emailTime>0
+        if(emailTime!=""&&emailTime>0){
+            $("#emailTime").show();
+            $("#emailTime input").val("发送成功，"+emailTime+"秒后可重新发送");
+            $("#emailRegister").attr("disabled","disabled");
+
+            $("#emailRegister").css("color","gray");
+            $("#emailRegister").unbind("click");
+        }else{
+            $("#emailTime input").val("");
+            $("#emailRegister").removeAttr("disabled");
+            $("#emailRegister").css("color","#ffeb81");
+            $("#emailTime").hide();
+            $("#emailRegister").unbind("click");
+            $("#emailRegister").bind("click",function(){
+                emailRegister();
+            });
+        }
+    }
 
     /**
      * 邮箱注册
@@ -210,7 +247,7 @@
 
         $.ajax({
             type: 'post',
-            url: '/index/email-register',
+            url: '/index/send-email',
             data: {
                 email: email,
                 password: password,
@@ -225,8 +262,8 @@
             success: function (data) {
                 var datas=eval('('+data+')');
                 if(datas.status==1){
-                    //do something
-                    Main.showTip(datas.data);
+                    emailTime=datas.data;
+                    initEmailTimer();
                 }else{
                     //do something
                     Main.showTip(datas.data);
