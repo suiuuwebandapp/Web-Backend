@@ -238,4 +238,19 @@ class CountryDb extends ProxyDb{
         return $command->queryOne();
     }
 
+    /**
+     * 获取手机区号列表
+     * @return array
+     */
+    public function getCountryPhoneCodeList()
+    {
+        $sql=sprintf("
+            SELECT cname,ename,areaCode FROM country
+            WHERE areaCode!='';
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        return $command->queryAll();
+
+    }
+
 }

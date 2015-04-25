@@ -13,6 +13,7 @@ use common\components\Aes;
 use common\components\Mail;
 use common\components\Validate;
 use common\entity\UserBase;
+use frontend\services\CountryService;
 use frontend\services\UserBaseService;
 use common\components\Code;
 use yii\base\Exception;
@@ -311,7 +312,24 @@ class IndexController extends UnCController{
         if(isset($this->userObj)&&$this->userObj->isPublisher){
             return $this->redirect("/");
         }else{
-            return $this->render("registerPublisher");
+            $email="";
+            $phone="";
+            $areaCode="";
+            $countryService=new CountryService();
+            $phoneCodeList=$countryService->getCountryPhoneCodeList();
+            if(isset($this->userObj)){
+                $email=$this->userObj->email;
+                $phone=$this->userObj->phone;
+            }
+            if($areaCode==""){
+                $areaCode="+86";
+            }
+            return $this->render("registerPublisher",[
+                'email'=>$email,
+                'phone'=>$phone,
+                'areaCode'=>$areaCode,
+                'phoneCodeList'=>$phoneCodeList
+            ]);
         }
 
     }

@@ -47,7 +47,7 @@ class LoginController extends Controller
                 $error='验证码不正确';
             }
 
-        }else if(empty($username)||strlen($username)>20||strlen($username)<5){
+        }else if(empty($username)||strlen($username)>50||strlen($username)<5){
             $error="用户名格式不正确";
         }else if(empty($password)||strlen($password)>20||strlen($password)<5){
             $error="密码格式不正确";
