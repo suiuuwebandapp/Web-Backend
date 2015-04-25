@@ -100,4 +100,9 @@ class UserBase {
      */
     public $status;
 
+    /**
+     * @var是否是随友
+     */
+    public $isPublisher;
+
 }

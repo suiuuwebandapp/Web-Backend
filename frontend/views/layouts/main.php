@@ -19,7 +19,7 @@ AppAsset::register($this);
     <?php $this->head() ?>
     <script type="text/javascript" src="/assets/js/jquery-1.10.2.min.js"></script>
 </head>
-<body style="background:#eeeeee;">
+<body>
 <?php $this->beginBody() ?>
 <?php include 'top.php' ?>
 <?= Alert::widget() ?>

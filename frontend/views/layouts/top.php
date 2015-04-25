@@ -19,11 +19,11 @@
         <div class="header-main clearfix w1200">
             <div class="header-nav fl">
                 <ul>
-                    <li><a href="index.html">首页</a></li>
+                    <li><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
                     <li class="active"><a href="javascript:;">随游</a></li>
                     <li><a href="mudi-shuaixuan.html">目的地</a></li>
                     <li><a href="zhuanlan.html">专栏</a></li>
-                    <li><a href="suiyou_bianji.html">发布随游</a></li>
+                    <li><a href="/index/create-travel">发布随游</a></li>
                 </ul>
             </div>
             <div class="header-right fr">
@@ -94,11 +94,11 @@
 
             <div class="nav">
                 <ul>
-                    <li><a href="index.html">首页</a></li>
+                    <li><a href="<?php echo Yii::$app->params['base_dir']; ?>">首页</a></li>
                     <li><a href="suiyou.html">随游</a></li>
                     <li><a href="mudi-shuaixuan.html">目的地</a></li>
                     <li><a href="zhuanlan.html">专栏</a></li>
-                    <li><a href="suiyou_bianji.html">发布随游</a></li>
+                    <li><a href="/index/create-travel">发布随游</a></li>
                 </ul>
             </div>
             <div class="nav-right">
@@ -177,7 +177,7 @@
 
 
 <script type="text/javascript">
-    var emailTime="<?= $this->params['emailTime']?>";
+    var emailTime="<?= array_key_exists('emailTime',$this->params)?$this->params['emailTime']:0;?>";
     var emailTimer;
     $(document).ready(function(){
         initEmailTimer();

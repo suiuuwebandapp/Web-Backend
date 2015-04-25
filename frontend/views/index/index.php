@@ -8,6 +8,12 @@
  */
 ?>
 
+<script type="text/javascript">
+    $("body").css("background","#eeeeee");
+</script>
+
+
+
 <!--banner开始-->
 <div class="index-banner">
     <ul class="banners">
@@ -95,9 +101,6 @@
 
 
 
-
-
-
 <div>
     邮箱<input id="email" type="text"/>
     密码<input id="emailPwd" type="password"/>
@@ -122,17 +125,3 @@
     <a href="/access/connect-qq">QQ登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
 
 </div>
-
-
-<script type="text/javascript">
-
-
-    function accessQQ(){
-
-    }
-
-    function sendPhoneCode() {
-
-    }
-
-</script>

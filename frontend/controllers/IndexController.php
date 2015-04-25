@@ -22,7 +22,6 @@ class IndexController extends UnCController{
 
     private $userBaseService;
 
-    public $userObj;
 
     public $test;
 
@@ -242,7 +241,7 @@ class IndexController extends UnCController{
         $password=$this->getDecryptPassword($password);
 
         if($code!=$valCode){
-            return $this->renderPartial('activeError.php',['error'=>'无效的链接地址']);
+            return $this->redirect(['/result','result'=>'无效的链接地址！！']);
         }
         try{
             $userBase=new UserBase();
@@ -251,9 +250,9 @@ class IndexController extends UnCController{
 
             $this->userBaseService->addUser($userBase);
         }catch (Exception $e){
-            return $this->renderPartial('activeError.php',['error'=>$e->getMessage()]);
+            return $this->redirect(['/result','result'=>'验证邮箱失败！']);
         }
-        return $this->renderPartial('activeSuccess.php');
+        return $this->redirect(['/result','result'=>'注册成功！']);
 
     }
 
@@ -305,6 +304,17 @@ class IndexController extends UnCController{
         return $code;
     }
 
+
+    public function actionCreateTravel()
+    {
+        //判断用户是否是随友，不是的话，跳转到随游注册页面
+        if(isset($this->userObj)&&$this->userObj->isPublisher){
+            return $this->redirect("/");
+        }else{
+            return $this->render("registerPublisher");
+        }
+
+    }
 
 
 

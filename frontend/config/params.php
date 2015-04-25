@@ -45,8 +45,8 @@ return [
     //微博
     'weibo_app_key'=>'2541477432',
     'weibo_app_secret'=>'606307461e286842fe941dfbf4e92b01',
-    'weibo_auth_callback'=>'http://local.suiuu.com/access/weibo-login',
-    'weibo_auth_exit_call_back'=>'http://local.suiuu.com/access/weibo-logout',
+    'weibo_auth_callback'=>'http://www.suiuu.com/access/weibo-login',
+    'weibo_auth_exit_call_back'=>'http://www.suiuu.com/access/weibo-logout',
 
     //qq
     'qq_app_id'=>'101206430',
