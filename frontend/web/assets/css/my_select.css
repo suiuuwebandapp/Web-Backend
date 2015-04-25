@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+/*.my_select{width:258px; height:36px; display:inline-block; position:relative; margin-top:20px;}
+.my_select span{display:block; width:258px; height:36px; line-height:36px; text-align:center; background:url(../images/sjicon.png) no-repeat 210px center;}
+.my_select ul{border:1px solid #ccc; position:absolute; left:-1px; top:36px; display:none; background:#CCC; z-index:5;}
+.my_select ul li{width:258px; height:30px; line-height:30px; text-align:center; border-bottom:1px solid #fff;}
+.my_select ul li:hover{ background:#F00; color:#fff;z-index:77;}
+#div div{ display:none;}*/
+
+.select-wrapper{ text-indent:3em;width:260px;background:#eee; font-size:18px; color:#858585;height:36px; line-height:36px; margin:20px auto 0; }
+.select-wrapper .select-list{  width:260px; background:#fff; height:auto; line-height:36px; z-index:999; position:relative;}
+.select-wrapper .select-icon{ display:inline-block; height:25px; width:25px; background:url(../images/sjicon.png) no-repeat right center;float: right;margin-right: 10px;margin-top: -30px;}
+.select-wrapper .select-list .select-option{ height:36px; line-height:36px; font-size:18px; color:#858585;}
+.select-wrapper .select-list .selected{ background:#7389ff; color:#fff;}
+.hide{ display:none;}
