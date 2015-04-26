@@ -16,7 +16,10 @@ use common\entity\UserBase;
 use frontend\services\CountryService;
 use frontend\services\UserBaseService;
 use common\components\Code;
+use vendor\geetest\GeetestLib;
 use yii\base\Exception;
+use yii;
+use yii\web\Cookie;
 
 class IndexController extends UnCController{
 
@@ -52,26 +55,145 @@ class IndexController extends UnCController{
     {
         echo "1";exit;
     }
+
+
+
+    public function actionGetPasswordCode()
+    {
+        $username=Yii::$app->request->post('username');//用户名
+        if(empty($username)||strlen($username)>50||strlen($username)<5){
+            $errors="用户名格式不正确";
+            return json_encode(Code::statusDataReturn(Code::FAIL,$errors));
+        }
+        $uscp=Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX.$username);
+        if($uscp>Code::MAX_SEND_COUNT)
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL,'发送次数过多24小时后将继续发送'));
+        }else
+        {
+            if(Validate::validatePhone($username))
+            {
+                //手机
+                Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX.$username,++$uscp);
+                Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX.$username,Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                $code=$this->randomPhoneCode();
+                $str=$username.'_'.$code;
+                yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD,$str);
+
+            }else if(Validate::validateEmail($username))
+            {
+                Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX.$username,++$uscp);
+                Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX.$username,Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+
+
+            }else
+            {
+                $errors="用户名格式不正确";
+                return json_encode(Code::statusDataReturn(Code::FAIL,$errors));
+            }
+        }
+    }
+    public function actionGetPassword()
+    {
+
+
+    }
+    /**
+     * 登录方法 POST
+     * @return string|\yii\web\Response
+     */
     public function actionLogin()
     {
-        $username=\Yii::$app->request->post('username');
-        $password=\Yii::$app->request->post('password');
-        $passwordConfirm=\Yii::$app->request->post('passwordConfirm');
-        $validateCode=\Yii::$app->request->post('validateCode');
 
 
-        $error="";
-        if(empty($username)||strlen($username)>30)
-        {
-            $error='用户名格式不正确';
-        }else if(empty($password)||strlen($password)>30)
-        {
-            $error='密码格式不正确';
-        }else if($password!=$passwordConfirm)
-        {
-            $error='两次密码输入不一致';
+        $username=Yii::$app->request->post('username');//用户名
+        $password=Yii::$app->request->post('password');//密码
+        $captcha=Yii::$app->request->post('captcha');//验证码
+
+        $geetestChallenge=Yii::$app->request->post('geetest_challenge');//极验验证
+        $geetestValidate=Yii::$app->request->post('geetest_validate');
+        $geetestSecCode=Yii::$app->request->post('geetest_seccode');
+
+        $returnUrl=Yii::$app->request->post('returnUrl');//登录前的URL
+        $remember=Yii::$app->request->post('remember');//记住密码
+
+
+        $errors=[];
+        $errorCount=0;
+        $showVerifyCode=false;
+        //从Redis 获取用户名登录错误次数
+        $cacheCount=Yii::$app->redis->get(Code::USER_LOGIN_ERROR_COUNT_PREFIX.$username);
+        if(!empty($cacheCount)){
+            $errorCount=$cacheCount;
+        }
+        //判断登录错误次数 是否验证 验证码
+        if($errorCount>=Code::SYS_LOGIN_ERROR_COUNT){
+            $showVerifyCode=true;
+            if(empty($geetestChallenge)||empty($geetestValidate)||empty($geetestSecCode)){
+                $errors[]="请完成验证码验证";
+            }else{
+                $geetestLib= new GeetestLib();
+                $validateResponse = $geetestLib->validate($geetestChallenge, $geetestValidate, $geetestSecCode);
+                if($validateResponse!=TRUE){
+                    $errors[]="验证码不正确";
+                }
+            }
+
+        }else if(empty($username)||strlen($username)>20||strlen($username)<5){
+            $errors[]="用户名格式不正确";
+        }else if(empty($password)||strlen($password)>20||strlen($password)<5){
+            $errors[]="密码格式不正确";
+        }
+        //用户输入信息验证
+        if(count($errors)>0){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$errors[0]));
+
         }
 
+        try{
+            //验证用户名是否存在
+            $result=$this->userBaseService->findUserByUserNameAndPwd($username,$password);
+            if(isset($result)){
+                //设置Session
+                Yii::$app->session->set(Code::USER_LOGIN_SESSION,$result);
+                //如果用户点击记住密码，设置Cookie
+                if($remember==true){
+
+                    //记录加密Cookie
+                    $enPassword = Yii::$app->params['encryptPassword'];
+                    $enDigit = Yii::$app->params['encryptDigit'];
+
+                    $aes=new Aes();
+                    $Sign=$aes->encrypt($result->userSign,$enPassword,$enDigit);
+                    $cookies=Yii::$app->response->cookies;//cookie 注意，发送Cookie 是response 读取是 request
+                    $signCookie= new Cookie([
+                        'name' => Yii::$app->params['suiuu_sign'],
+                        'value' => $Sign,
+                    ]);
+                    $signCookie->expire=time()+24*60*60*floor(Yii::$app->params['cookie_expire']);
+                    $cookies->add($signCookie);
+                }
+                //清除错误登录次数
+                Yii::$app->redis->del(Code::USER_LOGIN_ERROR_COUNT_PREFIX.$username);
+                //跳转用户登录前的页面
+                return json_encode(Code::statusDataReturn(Code::SUCCESS));
+
+            }else{
+                Yii::$app->redis->set(Code::USER_LOGIN_ERROR_COUNT_PREFIX.$username,++$errorCount);
+                Yii::$app->redis->expire(Code::USER_LOGIN_ERROR_COUNT_PREFIX.$username,Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+
+                $errors[]="用户名或密码错误";
+                return json_encode(Code::statusDataReturn(Code::FAIL,$errors[0],$errorCount));
+            }
+
+        }catch (Exception $e){
+            $errors[]=$e->getMessage();
+        }
+        //判断是否需要输入验证码
+        /*if($errorCount>=Code::SYS_LOGIN_ERROR_COUNT){
+            $showVerifyCode=true;
+        }
+        return $this->render('index', ['errors' => $errors, 'showVerifyCode' => $showVerifyCode]);*/
     }
 
     /**

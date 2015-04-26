@@ -145,18 +145,20 @@
                     <li><a href="javascript:;" id="denglu">登录</a>
 
                         <div id="denglu-main">
-                            <p><label>邮箱/手机号</label><input type="text" value=""> </p>
+                            <p><label>邮箱/手机号</label><input type="text" value="" id="username"> </p>
 
-                            <p><label>密码</label><input type="password" value="" ></p>
+                            <p><label>密码</label><input type="password" value="" id="userpassword"></p>
 
                             <p class="fogot"><a href="wangji_mima.html">忘记密码</a></p>
-
+                            <div id="code9527" class="form-group" style="padding-bottom: 20px;display: none">
+                                <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
+                            </div>
                             <p class="zidong">
                                 <input type="checkbox" id="logo-check" value="自动登录" />
                                 <label for="logo-check" class="check">自动登录</label>
                             </p>
 
-                            <a href="#" class="btn01">立即登录</a>
+                            <a href="#" class="btn01" onclick="login()" id="login-check">立即登录</a>
 
                             <div class="out-p clearfix">
                                 <a href="/access/connect-weibo" class="logo-icon icon01"></a>
@@ -272,4 +274,73 @@
         });
     }
 
+</script>
+<script>
+    var challenge='';
+    var validate='';
+    var seccode='';
+    var _isCode=false;
+    function gt_custom_ajax(result, selector, message) {
+        if (result) {
+            challenge = selector(".geetest_challenge").value;
+             validate = selector(".geetest_validate").value;
+             seccode = selector(".geetest_seccode").value;
+            _isCode=false;
+            //当验证成功时，获取相应input的值，并做ajax验证请求
+        }else
+        {
+            _isCode=true;
+        }
+    }
+    function login()
+    {
+        var username = $("#username").val();
+        var password = $("#userpassword").val();
+        var remember = $("#logo-check").is(":checked");
+
+        if(username=='')
+        {
+            Main.showTip('用户名不能为空');
+        }else if(password=='')
+        {
+            Main.showTip('密码不能为空');
+        }else if(_isCode)
+        {
+            Main.showTip('验证失败');
+        }else{
+        $.ajax({
+            type: 'post',
+            url: '/index/login',
+            data: {
+                username: username,
+                password: password,
+                remember:remember,
+                geetest_challenge:challenge,
+                geetest_validate: validate,
+                geetest_seccode:seccode,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            beforeSend: function () {
+                //Main.showTip('正在提交，请稍后。。。');
+            },
+            error:function(){
+                Main.showTip("系统异常。。。");
+            },
+            success: function (data) {
+                var obj=eval('('+data+')');
+                if(obj.status==1)
+                {
+                    window.location.reload();
+                }else
+                {
+                    Main.showTip(obj.data);
+                    if(obj.message>=2)
+                    {
+                        $("#code9527").css('display','block');
+                    }
+                }
+            }
+        });
+        }
+    }
 </script>
