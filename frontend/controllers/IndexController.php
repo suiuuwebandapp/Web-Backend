@@ -53,7 +53,7 @@ class IndexController extends UnCController{
 
     public function actionTest()
     {
-        echo "1";exit;
+        return $this->renderPartial('test');
     }
 
 

@@ -12,6 +12,10 @@ class CircleArticle{
     const ARTICLE_STATUS_NORMAL=1;//用户状态：正常
     const ARTICLE_STATUS_DISABLED=2;//用户状态：禁用
 
+
+    const ARTICLE_TYPE_PHOTO=1;
+    const ARTICLE_TYPE_ASK=2;
+    const ARTICLE_TYPE_RECORD=3;
     /**
      * @var文章id
      */
@@ -60,6 +64,15 @@ class CircleArticle{
      * @var发送地址
      */
     public $aAddr;
+
+    /**
+     * @var 用户图片列表
+     */
+    public $aImgList;
+    /**
+     * @var 帖子类型
+     */
+    public $aType;
 
 
 
