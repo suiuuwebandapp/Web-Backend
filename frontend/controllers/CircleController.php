@@ -18,11 +18,12 @@ use yii\base\Exception;
 use yii\web\Controller;
 use yii;
 //AController
-class CircleController extends AController{
+class CircleController extends Controller{
 
     private $userBaseService;
 
     private $CircleService;
+    public $enableCsrfValidation=false;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
@@ -52,6 +53,8 @@ class CircleController extends AController{
         $CircleArticleEntity->aContent=\Yii::$app->request->post('content');
         $CircleArticleEntity->aImg=\Yii::$app->request->post('img');
         $CircleArticleEntity->aAddr=\Yii::$app->request->post('addr');
+            $CircleArticleEntity->aImgList=\Yii::$app->request->post('imgList');
+            $CircleArticleEntity->aType=\Yii::$app->request->post('type');
         $CircleArticleEntity->aCreateUserSign=$this->userObj->userSign;
         $this->CircleService->CreateArticle($CircleArticleEntity);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
@@ -93,6 +96,8 @@ class CircleController extends AController{
             $CircleArticleEntity->aContent=\Yii::$app->request->post('content');
             $CircleArticleEntity->aImg=\Yii::$app->request->post('img');
             $CircleArticleEntity->aAddr=\Yii::$app->request->post('addr');
+            $CircleArticleEntity->aImgList=\Yii::$app->request->post('imgList');
+            $CircleArticleEntity->aType=\Yii::$app->request->post('type');
             $CircleArticleEntity->aCreateUserSign=$this->userObj->userSign;
             $this->CircleService->updateArticleInfo($CircleArticleEntity);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
@@ -110,7 +115,9 @@ class CircleController extends AController{
 
         try{
             $articleId=\Yii::$app->request->post('articleId');
-            $data=$this->CircleService->getArticleInfoById($articleId);
+            $page = \Yii::$app->request->post('page');
+            $userSign=$this->userObj->userSign;
+            $data=$this->CircleService->getArticleInfoById($articleId,$page, $userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
@@ -128,7 +135,9 @@ class CircleController extends AController{
 
         try{
             $circleId=\Yii::$app->request->post('circleId');
-            $data=$this->CircleService->getArticleByCircleId($circleId);
+            $page = \Yii::$app->request->post('page');
+            $userSign=$this->userObj->userSign;
+            $data=$this->CircleService->getArticleByCircleId($circleId,$page,$userSign);
 
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
@@ -147,7 +156,8 @@ class CircleController extends AController{
 
         try{
             $type = \Yii::$app->request->post('type');
-            $data=$this->CircleService->getCircleByType($type);
+            $page = \Yii::$app->request->post('page');
+            $data=$this->CircleService->getCircleByType($type,$page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {

@@ -13,18 +13,30 @@ class UserAttention
     const ATTENTION_STATUS_NORMAL = 1;//状态：正常
     const ATTENTION_STATUS_DISABLED = 2;//状态：禁用
     /**
-     *推荐类型为用户
+     *关注类型为用户
      */
     const TYPE_FOR_USER = 1;
     /**
-     * 推荐类型为圈子内容
+     * 关注类型为圈子内容
      */
     const TYPE_FOR_CIRCLE_ARTICLE = 2;
     /**
-     * 推荐类型为随游
+     * 关注类型为随游
      */
     const TYPE_FOR_TRAVEL = 3;
+    /**
+     * 关注类型为圈子主题
+     */
+    const TYPE_FOR_CIRCLE = 4;
 
+    /**
+     * 收藏类型为圈子主题
+     */
+    const TYPE_COLLECT_FOR_ARTICLE = 5;
+    /**
+     * 收藏类型为随游
+     */
+    const TYPE_COLLECT_FOR_TRAVEL = 6;
     /**
      * @var 关注id
      */

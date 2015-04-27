@@ -62,18 +62,31 @@ class UserBaseService extends BaseDb
                     $userInfo=$this->userBaseDb->findByEmail($userBase->email);
                     if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
 
+<<<<<<< HEAD
                 }else if(!empty($userBase->phone)){
+=======
+                }else{
+>>>>>>> origin/suiuu
                     $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
                     if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
                 }
             }
+            //环信im注册
+            $im=new Easemob(\Yii::$app->params['imConfig']);
+
             //对用户密码进行加密
             $userBase->password = $this->encryptPassword($userBase->password);
+<<<<<<< HEAD
             $userBase=$this->initRegisterUserInfo($userBase,$userAccess,$userPublisher);
 
             //环信im注册
             $im=new Easemob(\Yii::$app->params['imConfig']);
             $options=array('username'=>$userBase->userSign,'password'=>$userBase->password,'nickname'=>$userBase->nickname);
+=======
+            $userBase=$this->initRegisterUserInfo($userBase,$userAccess);
+            $imPassword = \Yii::$app->params['imPassword'];
+            $options=array('username'=>$userBase->userSign,'password'=>$imPassword,'nickname'=>$userBase->nickname);
+>>>>>>> origin/suiuu
             $imRes=$im->accreditRegister($options);
             $arrRes=json_decode($imRes,true);
             if(isset($arrRes['error']))

@@ -52,8 +52,12 @@ class IndexController extends UnCController
 
     public function actionTest()
     {
+<<<<<<< HEAD
         echo "1";
         exit;
+=======
+        return $this->renderPartial('test');
+>>>>>>> origin/suiuu
     }
 
 

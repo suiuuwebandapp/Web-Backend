@@ -64,5 +64,20 @@ class Common{
         }
         return Code::statusDataReturn(Code::SUCCESS, $ret);
     }
+
+    public static function PageResult($page)
+    {
+        $result='';
+        $pageCount =\Yii::$app->params['pageCount'];
+        if($page!=0)
+        {
+            $start=intval($page-1)*$pageCount;
+            $result='LIMIT '.$start.', '.$pageCount;
+        }
+
+        return $result;
+
+
+    }
 }
 
