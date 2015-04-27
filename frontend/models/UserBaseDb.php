@@ -29,11 +29,13 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO user_base
             (
-              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,headImg,hobby,school,intro,info,travelCount,userSign,status
+              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,
+              headImg,hobby,school,intro,info,travelCount,userSign,status,isPublisher
             )
             VALUES
             (
-              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,:headImg,:hobby,:school,:intro,:info,0,:userSign,:status
+              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,
+              :headImg,:hobby,:school,:intro,:info,0,:userSign,:status,:isPublisher
             )
         ");
 
@@ -55,6 +57,7 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
         $command->bindParam(":status", $userBase->status, PDO::PARAM_INT);
+        $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
 
 
         return $command->execute();
@@ -223,5 +226,43 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":type",$userAccess->type, PDO::PARAM_INT);
 
         $command->execute();
+    }
+
+
+    /**
+     * 更新用户基本信息
+     * @param UserBase $userBase
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function updateUserBase(UserBase $userBase)
+    {
+        $sql = sprintf("
+            UPDATE user_base SET
+            nickname=:nickname,phone=:phone,areaCode=:areaCode,email=:email,lastLoginIp=:lastLoginIp,sex=:sex,
+            birthday=:birthday,headImg=:headImg,hobby=:hobby,school=:school,intro=:intro,info=:info,isPublisher=:isPublisher
+
+            WHERE userId=:userId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":phone", $userBase->phone, PDO::PARAM_STR);
+        $command->bindParam(":areaCode", $userBase->areaCode, PDO::PARAM_STR);
+        $command->bindParam(":email", $userBase->email, PDO::PARAM_STR);
+        $command->bindParam(":nickname", $userBase->nickname, PDO::PARAM_STR);
+        $command->bindParam(":lastLoginIp", $userBase->lastLoginIp, PDO::PARAM_STR);
+        $command->bindParam(":sex", $userBase->sex, PDO::PARAM_INT);
+        $command->bindParam(":birthday", $userBase->birthday, PDO::PARAM_STR);
+        $command->bindParam(":headImg", $userBase->headImg, PDO::PARAM_STR);
+        $command->bindParam(":hobby", $userBase->hobby, PDO::PARAM_STR);
+        $command->bindParam(":school", $userBase->school, PDO::PARAM_STR);
+        $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
+        $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
+        $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
+
+        $command->bindParam(":userId", $userBase->userId, PDO::PARAM_INT);
+
+        return $command->execute();
     }
 }

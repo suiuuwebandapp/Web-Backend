@@ -20,7 +20,7 @@ class Validate {
     public static function validatePhone($phone)
     {
         $error='';
-        if(empty($phone)||strlen($phone)!=11||$phone[0]!=1)
+        if(empty($phone))
         {
             $error='手机格式不正确';
         }

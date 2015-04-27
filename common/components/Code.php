@@ -59,10 +59,13 @@ class Code
     const MAX_SEND_COUNT=10;//每天最大发送数
     const USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD='U_P_V_C_A_P_F_P';//用户发送的手机验证码
     const USER_PHONE_VALIDATE_CODE_AND_PHONE='U_P_V_C_A_P';//用户发送的手机验证码
+    const USER_PHONE_VALIDATE_CODE_EXPIRE_TIME='600';//验证码有效期 10分钟
+    const USER_EMAIL_VALIDATE_CODE_EXPIRE_TIME='86400';//邮箱验证有效时长 (24小时)
 
     const USER_REGISTER_TIMER=120;//用户注册手机或邮件时长（秒）
-    const USER_REGISTER_EMAIL_TIMER="U_R_E_T";//用户注册邮件时间控制
-    const USER_REGISTER_PHONE_TIMER="U_R_P_T";//用户注册手机时间控制
+    const USER_REGISTER_EMAIL_TIMER='U_R_E_T';//用户注册邮件时间控制
+    const USER_REGISTER_PHONE_TIMER='U_R_P_T';//用户注册手机时间控制
+
     /**
      * 异常信息（后台）
      */

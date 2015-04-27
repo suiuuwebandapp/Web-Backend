@@ -1,0 +1,170 @@
+﻿接口说明
+
+ /**
+	 * 初始化
+	 * @param serverIP     	必选参数	服务器地址
+	 * @param serverPort	必选参数	服务器端口
+	 * @param softVersion	必选参数	REST版本号
+	 */
+	 REST($serverIP,$serverPort,$softVersion)
+  
+  
+   /**
+    * 设置主帐号
+    * 
+    * @param AccountSid 主帐号
+    * @param AccountToken 主帐号Token
+    */    
+    function setAccount($AccountSid,$AccountToken)
+	
+	
+	 /**
+    * 设置子帐号
+    * 
+    * @param SubAccountSid 子帐号
+    * @param SubAccountToken 子帐号Token
+    * @param VoIPAccount VoIP帐号
+    * @param VoIPPassword VoIP密码
+    */    
+    function setSubAccount($SubAccountSid,$SubAccountToken,$VoIPAccount,$VoIPPassword)
+	
+	
+	 /**
+    * 设置应用ID
+    * 
+    * @param AppId 应用ID
+    */
+    function setAppId($AppId)
+	
+	
+   /**
+    * 打印日志
+    * 
+    * @param log 日志内容
+    */
+    function showlog($log)
+    
+    
+    /**
+     * 发起HTTPS请求
+     * @param url 请求地址
+     * @param data 请求包体
+     * @param header 请求包头
+     * @param post 请求方式 默认为1 1：post，0：get
+     */
+     function curl_post($url,$data,$header,$post=1)
+  
+  
+    /**
+     * 创建子帐号
+     * @param friendlyName 子帐号名称
+     */
+	   function createSubAccount($friendlyName)
+  
+  
+   /**
+    * 获取子帐号
+    * @param startNo 开始的序号，默认从0开始
+    * @param offset 一次查询的最大条数，最小是1条，最大是100条
+    */
+    function getSubAccounts($startNo,$offset)
+   
+   
+   /**
+    * 子帐号信息查询
+    * @param friendlyName 子帐号名称
+    */
+    function querySubAccount($friendlyName)
+  
+  
+   /**
+    * 发送模板短信
+    * @param to 短信接收彿手机号码集合,用英文逗号分开
+    * @param datas 内容数据
+    * @param $tempId 模板Id
+    */       
+    function sendTemplateSMS($to,$datas,$tempId)
+  
+  
+   /**
+    * 双向回呼
+    * @param from 主叫电话号码
+    * @param to 被叫电话号码
+    * @param customerSerNum 被叫侧显示的客服号码  
+    * @param fromSerNum 主叫侧显示的号码
+    * @param promptTone 第三方自定义回拨提示音
+    * @param userData 第三方私有数据
+    * @param maxCallTime 最大通话时长
+
+    * @param hangupCdrUrl 实时话单通知地址     
+    */
+	  function callBack($from,$to,$customerSerNum,$fromSerNum,$promptTone)
+  
+  
+   /**
+    * 外呼通知
+    * @param to 被叫号码
+    * @param mediaName 语音文件名称，格式 wav。与mediaTxt不能同时为空。当不为空时mediaTxt属性失效。
+    * @param mediaTxt 文本内容
+    * @param displayNum 显示的主叫号码
+    * @param playTimes 循环播放次数，1－3次，默认播放1次。
+    * @param respUrl 外呼通知状态通知回调地址，云通讯平台将向该Url地址发送呼叫结果通知。
+    */
+    function landingCall($to,$mediaName,$mediaTxt,$displayNum,$playTimes,$respUrl)
+   
+   
+   /**
+    * 语音验证码
+    * @param verifyCode 验证码内容，为数字和英文字母，不区分大小写，长度4-8位
+    * @param playTimes 播放次数，1－3次
+    * @param to 接收号码
+    * @param displayNum 显示的主叫号码
+    * @param respUrl 语音验证码状态通知回调地址，云通讯平台将向该Url地址发送呼叫结果通知
+    */
+    function voiceVerify($verifyCode,$playTimes,$to,$displayNum,$respUrl)
+  
+  
+   /**
+    * IVR外呼
+    * @param number   待呼叫号码，为Dial节点的属性
+    * @param userdata 用户数据，在<startservice>通知中返回，只允许填写数字字符，为Dial节点的属性
+    * @param record   是否录音，可填项为true和false，默认值为false不录音，为Dial节点的属性
+    */
+    function ivrDial($number,$userdata,$record)
+  
+  
+   /**
+    * 话单下载
+    * @param date     day 代表前一天的数据（从00:00 – 23:59）;week代表前一周的数据(周一 到周日)；month表示上一个月的数据（上个月表示当前月减1，如果今天是4月10号，则查询结果是3月份的数据）
+    * @param keywords   客户的查询条件，由客户自行定义并提供给云通讯平台。默认不填忽略此参数
+    */
+    function billRecords($date,$keywords)
+
+
+
+  
+
+ 
+ 
+
+
+ 
+ 
+  
+  
+
+  
+  
+
+  
+  
+
+
+  
+   
+
+  
+    
+
+ 
+   

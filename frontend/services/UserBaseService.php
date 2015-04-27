@@ -4,9 +4,11 @@ namespace frontend\services;
 use common\components\Code;
 use common\components\Validate;
 use common\entity\UserAccess;
+use common\entity\UserPublisher;
 use common\models\BaseDb;
 use common\entity\UserBase;
 use frontend\models\UserBaseDb;
+use frontend\models\UserPublisherDb;
 use yii\base\Exception;
 use common\components\Easemob;
 
@@ -35,10 +37,11 @@ class UserBaseService extends BaseDb
      *
      * @param UserBase $userBase
      * @param UserAccess $userAccess
+     * @param UserPublisher|null $userPublisher
      * @return array|bool|UserBase
      * @throws Exception
      */
-    public function addUser(UserBase $userBase,UserAccess $userAccess=null)
+    public function addUser(UserBase $userBase,UserAccess $userAccess=null,UserPublisher $userPublisher=null)
     {
         $conn = $this->getConnection();
         $tran=$conn->beginTransaction();
@@ -50,18 +53,23 @@ class UserBaseService extends BaseDb
             $userInfo=null;
             //如果不是第三方登录，验证手机或者邮箱是否存在
             if($userAccess==null){
-                if(!empty($userBase->email)){
+                if(!empty($userBase->phone)&&!empty($userBase->email)){
+                    $userInfo=$this->userBaseDb->findByEmail($userBase->email);
+                    if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
+                    $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
+                    if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
+                }else  if(!empty($userBase->email)){
                     $userInfo=$this->userBaseDb->findByEmail($userBase->email);
                     if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
 
-                }else{
-                    $userInfo=$this->userBaseDb->findByPhone($userBase->phones);
+                }else if(!empty($userBase->phone)){
+                    $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
                     if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
                 }
             }
             //对用户密码进行加密
             $userBase->password = $this->encryptPassword($userBase->password);
-            $userBase=$this->initRegisterUserInfo($userBase,$userAccess);
+            $userBase=$this->initRegisterUserInfo($userBase,$userAccess,$userPublisher);
 
             //环信im注册
             $im=new Easemob(\Yii::$app->params['imConfig']);
@@ -78,9 +86,61 @@ class UserBaseService extends BaseDb
                     $userAccess->userId=$userBase->userSign;//用户关联Id为UUID
                     $this->userBaseDb->addUserAccess($userAccess);
                 }
+                if($userPublisher!=null){
+                    $userPublisherDb=new UserPublisherDb($conn);
+                    $userPublisher->userId=$userBase->userSign;
+                    $userPublisherDb->addPublisher($userPublisher);
+                }
                 $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
                 $userBase=$this->arrayCastObject($userBase,UserBase::class);
             }
+            $this->commit($tran);
+        } catch (Exception $e) {
+            $this->rollback($tran);
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
+
+
+    /**
+     * 更新用户基本信息，并且注册随游
+     * @param UserBase $userBase
+     * @param UserPublisher $userPublisher
+     * @return array|bool|UserBase|mixed
+     * @throws Exception
+     */
+    public function updateUserBaseAndAddUserPublisher(UserBase $userBase,UserPublisher $userPublisher=null)
+    {
+        $conn = $this->getConnection();
+        $tran=$conn->beginTransaction();
+
+        try {
+
+            $this->userBaseDb = new UserBaseDb($conn);
+            //验证手机或邮箱格式是否正确
+            $userInfo=null;
+            if(!empty($userBase->email)){
+                $userInfo=$this->userBaseDb->findByEmail($userBase->email);
+                if($userInfo!=false&&$userInfo['userId']!=$userBase->userId) throw new Exception(Code::USER_EMAIL_EXIST);
+
+            }else{
+                $userInfo=$this->userBaseDb->findByPhone($userBase->phones);
+                if($userInfo!=false&&$userInfo['userId']!=$userBase->userId) throw new Exception(Code::USER_PHONE_EXIST);
+            }
+            if($userPublisher!=null){
+                $userPublisherDb=new UserPublisherDb($conn);
+                $userBase->isPublisher=true;
+                $userPublisher->userId=$userBase->userSign;
+                $userPublisherDb->addPublisher($userPublisher);
+            }
+            //添加顺序不要移动
+            $this->userBaseDb->updateUserBase($userBase);
+
+            $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
+            $userBase=$this->arrayCastObject($userBase,UserBase::class);
             $this->commit($tran);
         } catch (Exception $e) {
             $this->rollback($tran);
@@ -90,6 +150,8 @@ class UserBaseService extends BaseDb
         }
         return $userBase;
     }
+
+
 
     /**
      * 查找用户（根据用户名和密码）
@@ -147,6 +209,28 @@ class UserBaseService extends BaseDb
     }
 
     /**
+     * 查找用户（根据手机）
+     * @param $phone
+     * @return mixed|null
+     * @throws Exception
+     */
+    public function findUserByPhone($phone)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result = $this->userBaseDb->findByPhone($phone);
+            $userBase=$this->arrayCastObject($result,UserBase::class);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
+
+    /**
      * 查找用户（根据userSign）
      * @param $userSign
      * @return mixed|null
@@ -185,9 +269,10 @@ class UserBaseService extends BaseDb
      * 初始化注册用户信息
      * @param UserBase $userBase
      * @param UserAccess $userAccess
+     * @param UserPublisher $userPublisher
      * @return UserBase
      */
-    private function initRegisterUserInfo(UserBase $userBase,UserAccess $userAccess=null)
+    private function initRegisterUserInfo(UserBase $userBase,UserAccess $userAccess=null,UserPublisher $userPublisher=null)
     {
 
         if($userAccess==null){
@@ -203,6 +288,13 @@ class UserBaseService extends BaseDb
             }
         }
 
+        if($userPublisher!=null){
+            $userBase->isPublisher=true;
+        }else{
+            $userBase->isPublisher=false;
+        }
+
+
         $userBase->areaCode='';
         $userBase->hobby='';
         $userBase->info='';
@@ -213,7 +305,6 @@ class UserBaseService extends BaseDb
         $userBase->status=UserBase::USER_STATUS_NORMAL;
         $userBase->registerIp=$_SERVER['REMOTE_ADDR'];
         $userBase->lastLoginIp=$_SERVER['REMOTE_ADDR'];
-        $userBase->isPublisher=false;
 
         return $userBase;
     }
@@ -242,5 +333,40 @@ class UserBaseService extends BaseDb
         return $userBase;
     }
 
+    /**
+     * 验证手机是否存在
+     * @param $phone
+     * @param $userId
+     * @return bool
+     * @throws Exception
+     */
+    public function validatePhoneExist($phone,$userId)
+    {
+        $userInfo=$this->findUserByPhone($phone);
+        if($userInfo!=null){
+            if($userInfo->userId!=$userId){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 验证邮箱是否存在
+     * @param $phone
+     * @param $userId
+     * @return bool
+     * @throws Exception
+     */
+    public function validateEmailExist($phone,$userId)
+    {
+        $userInfo=$this->findUserByPhone($phone);
+        if($userInfo!=null){
+            if($userInfo->userId!=$userId){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

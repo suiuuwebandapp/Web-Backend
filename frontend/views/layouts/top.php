@@ -195,7 +195,6 @@
                 initEmailTime();
             }
         },1000);
-
     }
 
     function initEmailTime(){

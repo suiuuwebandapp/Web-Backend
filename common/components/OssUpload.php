@@ -30,6 +30,11 @@ class OssUpload
      */
     const OSS_SUIUU_CONTENT_DIR='suiuu_content';
 
+    /**
+     * 用户身份证目录
+     */
+    const OSS_SUIUU_CARD_DIR='user_card';
+
 
     public $oss_sdk_service;
 
@@ -52,6 +57,7 @@ class OssUpload
         //$this->oss_sdk_service->set_debug_mode(TRUE);
         $this->oss_sdk_service->set_enable_domain_style(TRUE);
         $this->oss_sdk_service->set_vhost("image.suiuu.com");
+
     }
 
 

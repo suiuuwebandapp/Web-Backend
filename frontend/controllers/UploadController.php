@@ -13,8 +13,9 @@ namespace frontend\controllers;
 use common\components\Code;
 use common\components\OssUpload;
 use yii\base\Exception;
+use yii\web\Controller;
 
-class UploadController extends AController{
+class UploadController extends Controller{
 
     public $enableCsrfValidation = false;
 
@@ -37,77 +38,27 @@ class UploadController extends AController{
     //上传文件类型列表
 
 
-    private $maxContentImgSize=1024000;//上传文件大小限制, 单位BYTE
-    private $contentImgTypes=[
-        'jpg','png','gif','jpeg'
-    ];
 
-    private $maxTitleImgSize=1024000;
-    private $titleImgTypes=[
-        'jpg','png','gif','jpeg'
+    private $maxCardImgSize=1024000;//上传文件大小限制, 单位BYTE
+    private $cardImgTypes=[
+        'jpg','png','jpeg'
     ];
 
 
     /**
-     * 上传封面图
+     * 上传用户身份证
      * @return array
      */
-    public function actionUploadTitleImg()
+    public function actionUploadCardImg()
     {
         if(!array_key_exists('Filedata',$_FILES)){
             echo json_encode(['status']);
         }else{
-            $result=$this->uploadOssFile($_FILES['Filedata'],$this->maxTitleImgSize,$this->titleImgTypes,OssUpload::OSS_SUIUU_CONTENT_DIR);
+            $result=$this->uploadOssFile($_FILES['Filedata'],$this->maxCardImgSize,$this->cardImgTypes,OssUpload::OSS_SUIUU_CARD_DIR);
             return json_encode($result);
         }
     }
 
-
-
-
-
-    /**
-     * 上传专栏，目的地图片
-     */
-    public function actionUploadContentImg()
-    {
-        if(!array_key_exists('upfile',$_FILES)){
-            echo json_encode(['status']);
-        }else{
-            $result=$this->uploadOssFile($_FILES["upfile"],$this->maxContentImgSize,$this->contentImgTypes,OssUpload::OSS_SUIUU_CONTENT_DIR);
-            if($result['status']==Code::SUCCESS) {
-                return json_encode([
-                    'state' => 'SUCCESS',//上传状态，上传成功时必须返回"SUCCESS"
-                    'url' => $result['data'],//返回的地址
-                    'title' => '',//新文件名
-                    'original' => '',
-                    'type' => '',
-                    'size' => '',
-                ]);
-            }
-        }
-    }
-    /**
-     * 上传app图片
-     */
-    public function actionAPPUploadImg()
-    {
-        if(!array_key_exists('file',$_FILES)){
-            echo json_encode(['status']);
-        }else{
-            $result=$this->uploadOssFile($_FILES["file"],$this->maxContentImgSize,$this->contentImgTypes,OssUpload::OSS_SUIUU_CONTENT_DIR);
-            if($result['status']==Code::SUCCESS) {
-                return json_encode([
-                    'state' => 'SUCCESS',//上传状态，上传成功时必须返回"SUCCESS"
-                    'url' => $result['data'],//返回的地址
-                    'title' => '',//新文件名
-                    'original' => '',
-                    'type' => '',
-                    'size' => '',
-                ]);
-            }
-        }
-    }
 
     /**
      * 上传文件

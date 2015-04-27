@@ -44,7 +44,7 @@ var FormValidation = function() {
 			 	}
 			 	
 			 	submitValidateMethod();
-				
+
 			},
 
 			errorPlacement : function(error, element) { // render error
@@ -63,7 +63,7 @@ var FormValidation = function() {
 			},
 
 			unhighlight : function(element) { // revert the change done by
-												// hightlight
+				// hightlight
 			},
 
 			success : function(label, element) {
