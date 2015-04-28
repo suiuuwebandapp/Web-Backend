@@ -30,7 +30,7 @@ class AttentionController extends Controller
         $this->CircleService = new CircleService();
         $this->AttentionService = new UserAttentionService();
         $this->userObj =new UserBase();
-        $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';
+        $this->userObj->userSign='7f11453d3ed03159808e5c8ee850f1db';
     }
 
     //得到关注圈子
@@ -232,5 +232,60 @@ class AttentionController extends Controller
             $error=$e->getMessage();
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
         }
+    }
+
+    //得到首页列表
+    public function actionGetIndexList()
+    {
+        try{
+            $page = 0;//得到所有的  个数在里面定义
+            $userSign = $this->userObj->userSign;
+            $data= array();
+            $data['circleDynamic'] = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
+            $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page);
+            $data['recommendUser'] =$this->AttentionService->getRecommendUser($page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
+    //得到粉丝
+    public function actionGetFans()
+    {
+        try{
+            $page = \Yii::$app->request->post('page');
+            $userSign = $this->userObj->userSign;
+            $data =$this->AttentionService->getUserFans($userSign,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
+
+    //得到消息提醒
+    public function actionGetMessagesRemind()
+    {
+        try{
+            $page = \Yii::$app->request->post('page');
+            $userSign = $this->userObj->userSign;
+            $data =$this->AttentionService->getMessageRemind($userSign,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
+
+    public function actionTest()
+    {
+        echo $this->AttentionService->addRemind();
     }
 }

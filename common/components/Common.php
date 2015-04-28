@@ -65,10 +65,15 @@ class Common{
         return Code::statusDataReturn(Code::SUCCESS, $ret);
     }
 
-    public static function PageResult($page)
+    public static function PageResult($page,$count=0)
     {
         $result='';
+        if($count==0)
+        {
         $pageCount =\Yii::$app->params['pageCount'];
+        }else{
+            $pageCount= $count;
+        }
         if($page!=0)
         {
             $start=intval($page-1)*$pageCount;

@@ -11,6 +11,7 @@ namespace frontend\controllers;
 use common\components\Common;
 use common\entity\CircleArticle;
 use common\entity\CircleComment;
+use common\entity\UserBase;
 use frontend\services\CircleService;
 use frontend\services\UserBaseService;
 use common\components\Code;
@@ -24,11 +25,14 @@ class CircleController extends Controller{
 
     private $CircleService;
     public $enableCsrfValidation=false;
+    private $userObj;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
         $this->userBaseService=new UserBaseService();
         $this->CircleService =new CircleService();
+        $this->userObj =new UserBase();
+        $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';
     }
 
     public function actionIndex()
@@ -55,6 +59,7 @@ class CircleController extends Controller{
         $CircleArticleEntity->aAddr=\Yii::$app->request->post('addr');
             $CircleArticleEntity->aImgList=\Yii::$app->request->post('imgList');
             $CircleArticleEntity->aType=\Yii::$app->request->post('type');
+            $CircleArticleEntity->cAddrId=\Yii::$app->request->post('addrId');
         $CircleArticleEntity->aCreateUserSign=$this->userObj->userSign;
         $this->CircleService->CreateArticle($CircleArticleEntity);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
@@ -136,10 +141,10 @@ class CircleController extends Controller{
         try{
             $circleId=\Yii::$app->request->post('circleId');
             $page = \Yii::$app->request->post('page');
+            $type=\Yii::$app->request->post('type');
             $userSign=$this->userObj->userSign;
-            $data=$this->CircleService->getArticleByCircleId($circleId,$page,$userSign);
-
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+            $data=$this->CircleService->getArticleByCircleId(1,$page,$userSign,1);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,(object)$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();
@@ -178,7 +183,10 @@ class CircleController extends Controller{
             $CircleCommentEntity->articleId = \Yii::$app->request->post('articleId');
             $CircleCommentEntity->content = \Yii::$app->request->post('content');
             $CircleCommentEntity->relativeCommentId = \Yii::$app->request->post('rId');
-            $this->CircleService->CreateArticleComment($CircleCommentEntity);
+            $relativeUserSign = \Yii::$app->request->post('rUserSign');
+            $isReply = \Yii::$app->request->post('reply');
+            $isAt = \Yii::$app->request->post('at');//是否艾特@
+            $this->CircleService->CreateArticleComment($CircleCommentEntity,$relativeUserSign,$isReply,$isAt);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
         {
@@ -204,12 +212,41 @@ class CircleController extends Controller{
         }
 
     }
+
+    //得到搜索结果
+    public function actionGetSeek()
+    {
+        try{
+            $str=\Yii::$app->request->post('str');
+            $page = \Yii::$app->request->post('page');
+            $this->CircleService->getSeekResult($str,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+    //得到主页
+    public function actionGetHomepageInfo()
+    {
+        try{
+            $userSign=\Yii::$app->request->post('userSign');
+            $page = \Yii::$app->request->post('page');
+            $this->CircleService->getHomepageInfo($userSign,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
     public function actionTest()
     {
-        var_dump(Yii::$app->redis->get('A_U_L_S0QN3EDCwOVU6D0nso/c5aWzV56z4geAI+vCRcDATebVxQNofqGP2Ew=='));exit;
-        //var_dump(Yii::$app->redis->del('A_U_L_S0QN3EDCwOVU6D0nso/c5aWzV56z4geAI+vCRcDATebVxQNofqGP2Ew=='));exit;
-        //var_dump(Yii::$app->redis->keys('*'));exit;
-        echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,123));
+        $arr = array ('a'=>1,'b'=>2,'c'=>3,'d'=>4,'e'=>array('a'=>1,'b'=>2));
+        $arr['ss']=1;
+        echo json_encode($arr);
     }
 
 }

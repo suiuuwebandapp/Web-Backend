@@ -10,7 +10,10 @@ namespace common\entity;
 class CircleSort{
 
     const CIRCLE_TYPE_THEME=1;//主题
-    const CIRCLE_TYPE_PLACE=2;  //地方
+    /**
+     * @var地方
+     */
+    const CIRCLE_TYPE_PLACE=2;
     /**
      * @var 圈子id
      */

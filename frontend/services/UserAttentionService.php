@@ -11,9 +11,11 @@ use common\components\Code;
 use common\components\Common;
 use common\entity\UserAttention;
 use common\entity\UserBase;
+use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\models\RecommendListDb;
 use common\models\UserAttentionDb;
+use common\models\UserMessageRemindDb;
 use frontend\models\UserBaseDb;
 use yii\base\Exception;
 
@@ -23,6 +25,7 @@ class UserAttentionService extends BaseDb
     private $AttentionDb;
     private $userBaseDb;
     private $recommendDb;
+    private $remindDb;
     public function __construct()
     {
 
@@ -71,6 +74,7 @@ class UserAttentionService extends BaseDb
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
             $this->userBaseDb =new UserBaseDb($conn);
+            $this->remindDb =new UserMessageRemindDb($conn);
             $userInfo = $this->userBaseDb->findByUserSign($userSign);
             $rId =isset($userInfo['userId'])?$userInfo['userId']:0;
             $attention =new UserAttention();
@@ -80,7 +84,8 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
-                $this->AttentionDb ->addUserAttention($rId,UserAttention::TYPE_FOR_USER,$userSign);
+                $rstId = $this->AttentionDb ->addUserAttention($rId,UserAttention::TYPE_FOR_USER,$userSign);
+                $this->remindDb->addUserMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign);
 
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注无需继续关注'));
@@ -279,10 +284,21 @@ class UserAttentionService extends BaseDb
     public function getAttentionCircleDynamic($userSign,$pageNumb)
     {
         try {
+            $rstArr=array();
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            $page = Common::PageResult($pageNumb);
-            return $this->recommendDb->getAttentionCircleDynamic($userSign,$page);
+            $page = Common::PageResult($pageNumb,2);//返回第几页 ， 返回几个数据
+            $rst1 = $this->recommendDb->getAttentionCircleDynamicTheme($userSign,$page);
+            $rst2 = $this->recommendDb->getAttentionCircleDynamicAddr($userSign,$page);
+            if(empty($rst1)&&empty($rst2))
+            {
+                return $rstArr;
+            }else
+            {
+                $rstArr['theme']=$rst1;
+                $rstArr['address']=$rst2;
+                return $rstArr;
+            }
         } catch (Exception $e) {
             throw new Exception('获取圈子动态异常',Code::FAIL,$e);
         } finally {
@@ -299,10 +315,12 @@ class UserAttentionService extends BaseDb
     public function getAttentionUserDynamic($userSign,$pageNumb)
     {
         try {
+
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            $page = Common::PageResult($pageNumb);
+            $page = Common::PageResult($pageNumb,3);//返回第几页 ， 返回几个数据
             return $this->recommendDb->getAttentionUserDynamic($userSign,$page);
+
         } catch (Exception $e) {
             throw new Exception('获取用户动态异常',Code::FAIL,$e);
         } finally {
@@ -310,5 +328,54 @@ class UserAttentionService extends BaseDb
         }
     }
 
+    /**
+     * 得到粉丝
+     * @param $userSign
+     * @param $pageNumb
+     * @return array
+     * @throws Exception
+     */
+    public function getUserFans($userSign,$pageNumb)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $this->userBaseDb =new UserBaseDb($conn);
+            $page = Common::PageResult($pageNumb);
+            $rst = $this->userBaseDb->findByUserSign($userSign);
+            $userId=0;
+            if(empty($rst)||$rst==false)
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'未知的用户'));
+            }else{
+                $userId = $rst['userId'];
+                return $this->AttentionDb->getAttentionFans($userId,$page);
+            }
+        } catch (Exception $e) {
+            throw new Exception('获取用户粉丝异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    public function getMessageRemind($userSign,$pageNumb)
+    {
+        try {
+            $page = Common::PageResult($pageNumb);
+            $conn = $this->getConnection();
+            $this->remindDb=new UserMessageRemindDb($conn);
+
+            return $this->remindDb->getAttentionCircleArticle($userSign,$page);
+        } catch (Exception $e) {
+            throw new Exception('获取用户消息异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    public function addRemind()
+    {
+
+    }
 
 }

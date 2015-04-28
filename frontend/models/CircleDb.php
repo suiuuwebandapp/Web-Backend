@@ -28,14 +28,13 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO circle_article
             (
-             cId,aTitle,aContent,aImg,aCmtCount,aSupportCount,aCreateUserSign,aCreateTime,aLastUpdateTime,aStatus,aAddr,aImgList,aType
+             cId,aTitle,aContent,aImg,aCmtCount,aSupportCount,aCreateUserSign,aCreateTime,aLastUpdateTime,aStatus,aAddr,aImgList,aType,cAddrId
             )
             VALUES
             (
-              :cId,:aTitle,:aContent,:aImg,:aCmtCount,:aSupportCount,:aCreateUserSign,now(),now(),:aStatus,:aAddr,:aImgList,:aType
+              :cId,:aTitle,:aContent,:aImg,:aCmtCount,:aSupportCount,:aCreateUserSign,now(),now(),:aStatus,:aAddr,:aImgList,:aType,:cAddrId
             )
         ");
-
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":cId", $CircleArticleEntity->cId, PDO::PARAM_INT);
         $command->bindParam(":aTitle", $CircleArticleEntity->aTitle, PDO::PARAM_STR);
@@ -43,11 +42,12 @@ class CircleDb extends ProxyDb
         $command->bindParam(":aImg", $CircleArticleEntity->aImg, PDO::PARAM_STR);
         $command->bindParam(":aCmtCount", $CircleArticleEntity->aCmtCount, PDO::PARAM_INT);
         $command->bindParam(":aSupportCount", $CircleArticleEntity->aSupportCount, PDO::PARAM_INT);
-        $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_INT);
+        $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_STR);
         $command->bindValue(":aStatus", $CircleArticleEntity::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindParam(":aAddr", $CircleArticleEntity->aAddr, PDO::PARAM_STR);
         $command->bindParam(":aImgList", $CircleArticleEntity->aImgList, PDO::PARAM_STR);
         $command->bindParam(":aType", $CircleArticleEntity->aType, PDO::PARAM_INT);
+        $command->bindParam(":cAddrId", $CircleArticleEntity->cAddrId, PDO::PARAM_INT);
         return $command->execute();
 
     }
@@ -124,6 +124,26 @@ class CircleDb extends ProxyDb
         $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_INT);
         return $command->execute();
     }
+
+    /**
+     * 查找文章根据用户sign
+     * @param $userSign
+     * @param $page
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getArticleListByUserSign($userSign,$page)
+    {
+        $sql=sprintf("
+            SELECT a.cId,a.cAddrId,a.aTitle,a.aContent,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
+            WHERE aCreateUserSign=:aCreateUserSign AND aStatus=:aStatus
+        ");
+        $sql.=$page;
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":aCreateUserSign", $userSign, PDO::PARAM_STR);
+        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        return $command->queryAll();
+    }
     /**
      * 查找文章
      * @param $articleId
@@ -133,7 +153,7 @@ class CircleDb extends ProxyDb
     public function getArticleInfoById($articleId)
     {
         $sql=sprintf("
-            SELECT a.cId,a.aTitle,a.aContent,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
+            SELECT a.cId,a.cAddrId,a.aTitle,a.aContent,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,a.aType,b.nickname,b.headImg FROM circle_article a
             Left JOIN user_base b ON a.aCreateUserSign=b.userSign
             WHERE articleId=:articleId AND aStatus=:aStatus AND b.status=:userStatus;
         ");
@@ -145,17 +165,38 @@ class CircleDb extends ProxyDb
         return $command->queryOne();
     }
     /**
-     * 查找文章根据圈子id
+     * 查找文章根据地区id
+     * @param $cAddrId
+     *  @param $page
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getArticleListByAddrId($cAddrId,$page)
+    {
+
+        $sql=sprintf("
+          SELECT a.articleId,a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
+          Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cAddrId=:cAddrId AND aStatus=:aStatus AND b.status=:userStatus
+        ");
+        $sql.=$page;
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":cAddrId", $cAddrId, PDO::PARAM_INT);
+        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
+        return $command->queryAll();
+    }
+    /**
+     * 查找文章根据主题id
      * @param $circleId
      *  @param $page
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getArticleListByCircleId($circleId,$page)
+    public function getArticleListByThemeId($circleId,$page)
     {
 
         $sql=sprintf("
-          SELECT a.cId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
+          SELECT a.articleId,a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
           Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cId=:cId AND aStatus=:aStatus AND b.status=:userStatus
         ");
         $sql.=$page;
@@ -165,7 +206,6 @@ class CircleDb extends ProxyDb
         $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
         return $command->queryAll();
     }
-
     /**
      * 查找圈子
      * @param $type
@@ -211,7 +251,7 @@ class CircleDb extends ProxyDb
         $command->bindParam(":opposeCount", $CircleCommentEntity->opposeCount, PDO::PARAM_INT);
         $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindValue(":articleId",$CircleCommentEntity->articleId, PDO::PARAM_INT);
-        return $command->execute();
+        $command->execute();
 
     }
 
@@ -325,4 +365,24 @@ class CircleDb extends ProxyDb
         return $command->execute();
     }
 
+
+    /**
+     * 得到搜索结果
+     * @param $str
+     * @return array|bool
+     */
+    public function getSeekResult($str,$page)
+    {
+        $sql = sprintf("
+           SELECT a.articleId,a.aImg,a.aTitle,b.nickname,b.headImg FROM circle_article a LEFT JOIN user_base b
+ON a.aCreateUserSign = b.userSign WHERE b.`status`=:userStatus AND a.aStatus=:aStatus AND a.aTitle LIKE '%:str%'
+
+        ");
+        $sql.=$page;
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindParam(":str", $str, PDO::PARAM_STR);
+        return $command->execute();
+    }
 }

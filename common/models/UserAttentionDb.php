@@ -32,6 +32,7 @@ class UserAttentionDb extends ProxyDb
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
         $command->bindValue(":status", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
         $command->execute();
+        return $this->getConnection()->lastInsertID;
     }
 
     /**
@@ -106,7 +107,7 @@ class UserAttentionDb extends ProxyDb
     public function getAttentionUser($userSign,$page)
     {
         $sql=sprintf("
-           SELECT a.nickname,a.headImg,a.intro,a.hobby FROM  user_base a
+           SELECT a.nickname,a.headImg,a.intro,a.hobby,a.userSign FROM  user_base a
             LEFT JOIN user_attention b ON b.relativeId = a.userId
             WHERE a.`status`=:userStatus AND b.relativeType=:relativeType  AND b.`status`=:attentionStatus AND b.userSign=:userSign
         ");
@@ -122,7 +123,7 @@ class UserAttentionDb extends ProxyDb
     /**
      * 得到关注结果
      * @param UserAttention $userAttention
-     * @return array|bool
+     * @return array
      */
     public function getAttentionResult(UserAttention $userAttention)
     {
@@ -140,7 +141,7 @@ class UserAttentionDb extends ProxyDb
     /**
      * 得到收藏随游列表
      * @param $userSign
-     * @return array|bool
+     * @return array
      */
     public function getCollectTravelList($userSign,$page)
     {
@@ -158,7 +159,7 @@ class UserAttentionDb extends ProxyDb
      * 得到收藏圈子文章列表
      * @param $page
      * @param $userSign
-     * @return array|bool
+     * @return array
      */
     public function getCollectArticleList($userSign,$page)
     {
@@ -178,21 +179,58 @@ class UserAttentionDb extends ProxyDb
 
     /**
      * 得到粉丝
+     * @param $userId
      * @param $page
-     * @param $userSign
-     * @return array|bool
+     * @return array
      */
-    public function getAttentionFans($userSign,$page)
+    public function getAttentionFans($userId,$page)
     {
         $sql=sprintf("
-           SELECT  FROM user_base a LEFT JOIN user_attention b ON a.userSign = b.userSign
-           WHERE b.relativeType=4 AND b.relativeId=1;
+            SELECT a.headImg,a.nickname,a.intro,a.userSign FROM user_base a
+            LEFT JOIN user_attention b ON a.userSign = b.userSign
+            WHERE b.relativeType=:relativeType AND b.relativeId=:userId;
         ");
         $sql.=$page;
         $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        $command->bindValue(":relativeType", UserAttention::TYPE_COLLECT_FOR_ARTICLE, PDO::PARAM_INT);
+        $command->bindParam(":userId", $userId, PDO::PARAM_STR);
+        $command->bindValue(":relativeType", UserAttention::TYPE_FOR_USER, PDO::PARAM_INT);
         return $command->queryAll();
     }
+
+    /**
+     * 得到粉丝数量
+     * @param $userId
+     * @return array
+     */
+    public function getAttentionFansCount($userId)
+    {
+        $sql=sprintf("
+            SELECT COUNT(*) as numb  FROM user_base a
+            LEFT JOIN user_attention b ON a.userSign = b.userSign
+            WHERE b.relativeType=:relativeType AND b.relativeId=:userId;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userId", $userId, PDO::PARAM_STR);
+        $command->bindValue(":relativeType", UserAttention::TYPE_FOR_USER, PDO::PARAM_INT);
+        return $command->queryOne();
+    }
+    /**
+     * 得到关注数量
+     * @param $userSign
+     * @return array
+     */
+    public function getAttentionCount($userSign)
+    {
+        $sql=sprintf("
+            SELECT COUNT(*) as numb  FROM user_attention a
+            WHERE a.relativeType=:relativeType AND a.`status`=1 AND a.userSign=:userSign;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        $command->bindValue(":relativeType", UserAttention::TYPE_FOR_USER, PDO::PARAM_INT);
+        return $command->queryOne();
+    }
+
+
 
 }

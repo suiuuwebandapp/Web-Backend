@@ -3,14 +3,20 @@ namespace frontend\services;
 
 
 use common\components\Common;
+use common\entity\CircleSort;
 use common\entity\UserAttention;
+use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\entity\CircleComment;
 use common\models\UserAttentionDb;
+use common\models\UserMessageRemindDb;
 use frontend\models\CircleDb;
+use frontend\models\UserBaseDb;
 use yii\base\Exception;
 use common\entity\CircleArticle;
 use common\components\Code;
+use yii\base\Object;
+
 /**
  * Created by PhpStorm.
  * User: suiuu
@@ -22,7 +28,8 @@ class CircleService extends BaseDb
 
     private $CircleDb;
     private $userAttentionDb;
-
+    private $userBaseDb;
+    private $remindDb;
     public function __construct()
     {
 
@@ -149,32 +156,40 @@ class CircleService extends BaseDb
      * 查询圈子文章详情根据圈子
      * @param $circleId
      * @param $pageNumb
-     * @param$userSign
+     * @param $userSign
+     * @param $type 1
      * @throws Exception
      * @return array
      */
-    public function getArticleByCircleId($circleId,$pageNumb,$userSign)
+    public function getArticleByCircleId($circleId,$pageNumb,$userSign,$type)
     {
 
         try {
+            $data1=array();
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
             $page=Common::PageResult($pageNumb);
-            $data = $this->CircleDb->getArticleListByCircleId($circleId,$page);
+            if($type==CircleSort::CIRCLE_TYPE_PLACE)
+            {
+                $data = $this->CircleDb->getArticleListByAddrId($circleId,$page);
+            }else
+            {
+                $data = $this->CircleDb->getArticleListByThemeId($circleId,$page);
+            }
             $this->userAttentionDb =new UserAttentionDb($conn);
             $attention= new UserAttention();
             $attention->relativeType = UserAttention::TYPE_FOR_CIRCLE;
             $attention->relativeId = $circleId;
             $attention->userSign = $userSign;
-
+            $str='';
             if(!empty($data)){
                 $rst =  $this->userAttentionDb->getAttentionResult($attention);
-                $data['attentionId']='';
+
                 if($rst!=false) {
-                    $data['attentionId'] = $rst['attentionId'];
+                    $str = $rst['attentionId'];
                 }
             }
-            return $this->unifyReturn($data);
+            return $this->unifyReturn(array('data'=>$data,'attentionId'=>$str));
         } catch (Exception $e) {
             throw new Exception('根据圈子查询文章异常',Code::FAIL,$e);
         } finally {
@@ -212,9 +227,11 @@ class CircleService extends BaseDb
     /**
      * 添加圈子文章评论
      * @param CircleComment $CircleComment
+     * @param $relativeUserSign
+     * @param $isReply
      * @throws Exception
      */
-    public function CreateArticleComment(CircleComment $CircleComment)
+    public function CreateArticleComment(CircleComment $CircleComment,$relativeUserSign,$isReply,$isAt)
     {
 
         try {
@@ -223,12 +240,25 @@ class CircleService extends BaseDb
             $this->CircleDb = new CircleDb($conn);
             $transaction = $conn->beginTransaction();
             $rst = $this->CircleDb ->addComment($CircleComment);
-            if($rst==0)
+            $this->remindDb =new UserMessageRemindDb($conn);
+            if(empty($rst))
             {
                 throw new Exception('添加圈子文章评论失败',Code::FAIL);
+            }else{
+                $this->upDateArticleCommentNumb($this->CircleDb,$CircleComment->articleId,true);
+                if($isAt)
+                {
+                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_AT,$CircleComment->userSign,$relativeUserSign);
+                }
+                if($isReply){
+                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_REPLY,$CircleComment->userSign,$relativeUserSign);
+                }else
+                {
+                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_COMMENT,$CircleComment->userSign,$relativeUserSign);
+                }
+                $transaction->commit();
             }
-            $this->upDateArticleCommentNumb($this->CircleDb,$CircleComment->articleId,true);
-            $transaction->commit();
+
         } catch (Exception $e) {
             $transaction->rollback();
             throw new Exception('添加圈子文章评论异常',Code::FAIL,$e);
@@ -317,6 +347,67 @@ class CircleService extends BaseDb
     }
 
     /**
+     * 查询搜索的文章结果
+     * @param $str
+     * @param $pageNumb
+     * @throws Exception
+     * @return array
+     */
+    public function getSeekResult($str,$pageNumb)
+    {
+
+        try {
+            $conn = $this->getConnection();
+            $this->CircleDb = new CircleDb($conn);
+            $page=Common::PageResult($pageNumb);
+            $data=$this->CircleDb->getSeekResult($str,$page);
+
+            return $this->unifyReturn($data);
+        } catch (Exception $e) {
+            throw new Exception('查询圈子文章评论异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+
+    }
+
+    public function getHomepageInfo($userSign,$page)
+    {
+        try {
+            $data = array();
+            $conn = $this->getConnection();
+            $this->CircleDb = new CircleDb($conn);
+            $this->userAttentionDb =new UserAttentionDb($conn);
+            $this->userBaseDb =new UserBaseDb($conn);
+            $userArr  = $this->userBaseDb->findByUserSign($userSign);
+            if(empty($userArr)||$userArr==false)
+            {
+                return $data;
+            }
+            $data['user']=$userArr;
+            $userId=$userArr['userId'];
+            $fansArr= $this->userAttentionDb->getAttentionFansCount($userId);
+            if(!empty($userArr)&&$userArr!=false)
+            {
+                $data['fansNumb']=$fansArr['numb'];
+            }
+            $AttArr= $this->userAttentionDb->getAttentionCount($userSign);
+            if(!empty($userArr)&&$userArr!=false)
+            {
+                $data['AttentionNumb']=$AttArr['numb'];
+            }
+            $page= Common::PageResult($page);
+            $articleList=$this->CircleDb->getArticleListByUserSign($userSign,$page);
+            $data['articleList'] = $articleList;
+            return $this->unifyReturn($data);
+        } catch (Exception $e) {
+            throw new Exception('查询圈子文章评论异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    /**
      * @param CircleDb $CircleDb db对象
      * @param $articleId 评论的id
      * @param $isAdd 是否添加  true 添加 false 减少
@@ -341,6 +432,8 @@ class CircleService extends BaseDb
         $article->aCmtCount=$cmt;
         $CircleDb->upDateArticleCommentNumb($article);
     }
+
+
 
 
 

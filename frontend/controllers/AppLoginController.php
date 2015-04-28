@@ -136,9 +136,7 @@ class AppLoginController extends Controller{
 
 
         $username=\Yii::$app->request->post('username');
-
         $password=\Yii::$app->request->post('password');
-
         $error="";
         $code=\Yii::$app->request->post('validateCode');//验证码
         $errorCount=0;
@@ -236,6 +234,7 @@ class AppLoginController extends Controller{
 
     public function actionGetCode()
     {
+        return;
         $ValidateCode=new ValidateCode();
         $ValidateCode->doimg();
         \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,$ValidateCode->getCode());

@@ -73,6 +73,10 @@ class CircleArticle{
      * @var 帖子类型
      */
     public $aType;
+    /**
+     * @var 地区id
+     */
+    public $cAddrId;
 
 
 
