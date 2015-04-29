@@ -19,6 +19,7 @@ AppAsset::register($this);
 <html lang="<?= Yii::$app->params['language']; ?>" class="no-js"> <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
+
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= Html::encode($this->title) ?></title>
@@ -27,6 +28,7 @@ AppAsset::register($this);
     <meta content="" name="description"/>
     <meta content="" name="author"/>
     <meta name="MobileOptimized" content="320">
+
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
     <link rel="shortcut icon" href="/assets/img/favicon.ico"/>

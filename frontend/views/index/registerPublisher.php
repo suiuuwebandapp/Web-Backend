@@ -23,22 +23,11 @@
     .syRegister span {
         display: inline;
     }
-
-    .form_tip {
-        font-size: 14px;
-        padding-left: 20px;
-        color: red;
-    }
-
     .select2-container .select2-choice {
         background-color: #eee;
         border-radius: 0px;
         font-size: 14px;
         color: dimgray;
-    }
-
-    .select2-result {
-
     }
 
     .select2-drop {
@@ -47,6 +36,11 @@
 
     .select2-highlighted {
         background-color: #0088e4;
+    }
+    .select2-no-results {
+        font-size: 14px;
+        color: dimgray;
+        text-align: center;
     }
 
     #phone {
@@ -59,11 +53,6 @@
         font-size: 14px;
     }
 
-    .select2-no-results {
-        font-size: 14px;
-        color: dimgray;
-        text-align: center;
-    }
 
     .p_chose_card_front {
         height: 170px;
@@ -102,11 +91,16 @@
         width: 130px;
     }
     .form_tip{
+        font-size: 14px;
+        padding-left: 20px;
+        color: red;
         display: inline-block !important;
         text-align: right;
         float: right;
         width: 250px !important;
     }
+
+
 </style>
 <!--初始化select-->
 <!-------随友注册------>
@@ -189,7 +183,7 @@
         </div>
 
         <p class="p1 agree">
-            <input name="" type="checkbox" value="" id="red">
+            <input name="" type="checkbox" value="" id="rad">
             <label for="rad">同意</label><a href="javascript:;">《网站注册协议》</a>
         </p>
         <input type="button" value="注册" class="zbtn" id="createPublisher">
@@ -202,110 +196,6 @@
     var phoneTime = 0;
     var phoneTimer;
     var finishPhone=false;
-    <?php $timestamp = time();?>
-    jQuery.fn.extend({
-        uploadPreview: function (opts) {
-            var _self = this,
-                _this = $(this);
-            opts = jQuery.extend({
-                Img: "ImgPr",
-                Width: 100,
-                Height: 100,
-                ImgType: ["gif", "jpeg", "jpg", "bmp", "png"],
-                Callback: function () {
-                }
-            }, opts || {});
-            _self.getObjectURL = function (file) {
-                var url = null;
-                if (window.createObjectURL != undefined) {
-                    url = window.createObjectURL(file)
-                } else if (window.URL != undefined) {
-                    url = window.URL.createObjectURL(file)
-                } else if (window.webkitURL != undefined) {
-                    url = window.webkitURL.createObjectURL(file)
-                }
-                return url
-            };
-            _this.change(function () {
-                if (this.value) {
-                    if (!RegExp("\.(" + opts.ImgType.join("|") + ")$", "i").test(this.value.toLowerCase())) {
-                        alert("选择文件错误,图片类型必须是" + opts.ImgType.join("，") + "中的一种");
-                        this.value = "";
-                        return false
-                    }
-                    if (navigator.userAgent.indexOf("MSIE") > -1) {
-                        try {
-                            $("#" + opts.Img).attr('src', _self.getObjectURL(this.files[0]))
-                        } catch (e) {
-                            var src = "";
-                            var obj = $("#" + opts.Img);
-                            var div = obj.parent("div")[0];
-                            _self.select();
-                            if (top != self) {
-                                window.parent.document.body.focus()
-                            } else {
-                                _self.blur()
-                            }
-                            src = document.selection.createRange().text;
-                            document.selection.empty();
-                            obj.hide();
-                            obj.parent("div").css({
-                                'filter': 'progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)',
-                                'width': opts.Width + 'px',
-                                'height': opts.Height + 'px'
-                            });
-                            div.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = src
-                        }
-                    } else {
-                        $("#" + opts.Img).attr('src', _self.getObjectURL(this.files[0]))
-                    }
-                    opts.Callback()
-                }
-            })
-        }
-    });
-
-    //初始化上传控件
-    $(function () {
-        $('#fileCardFront').uploadifive({
-            'auto': false,
-            'queueID': 'frontQueue',
-            'uploadScript': '/upload/upload-card-img',
-            'multi': false,
-            'dnd': false,
-            'onUploadComplete': function (file, data) {
-                var datas = eval('(' + data + ')');
-                if (datas.status == 1) {
-                    frontFinish = true;
-                    $("#userCardFront").val(datas.data);
-                    $("#cardTip").html("");
-                    $("#uploadAll").val("上传成功！");
-                } else {
-                    $("#uploadAll").val("上传失败，请稍后重试。。。");
-                }
-            },
-            onUpload: function () {
-                frontFinish = false;
-            },
-            onInit: function () {
-                //初始化预览图片
-                $("#uploadifive-fileCardFront input[type='file']").last().uploadPreview({
-                    Img: "imgFront",
-                    Width: 120,
-                    Height: 120,
-                    ImgType: [
-                        "jpeg", "jpg", "png"
-                    ], Callback: function () {
-                        $("#imgFront").show();
-                        $("#imgFront").unbind("click");
-                        $("#imgFront").bind("click", function () {
-                            $(".p_chose_card_front").click();
-                        });
-                    }
-                });
-            }
-        });
-    });
 
     $(document).ready(function () {
         var email = $("#email").val();
@@ -391,6 +281,13 @@
            }
         });
 
+        initUploadfive();
+        initValidate();
+
+    });
+
+    function initValidate(){
+
         $("#validateForm").validate({
             errorElement: 'span', // default input error message container
             errorClass: 'errorTip', // default input error message class
@@ -453,7 +350,59 @@
             }
 
         });
-    });
+    }
+    function initUploadfive(){
+        $('#fileCardFront').uploadifive({
+            'auto': false,
+            'queueID': 'frontQueue',
+            'uploadScript': '/upload/upload-card-img',
+            'multi': false,
+            'dnd': false,
+            'onUploadComplete': function (file, data) {
+                var datas = eval('(' + data + ')');
+                if (datas.status == 1) {
+                    frontFinish = true;
+                    $("#userCardFront").val(datas.data);
+                    $("#cardTip").html("");
+                    $("#uploadAll").val("上传成功！");
+                } else {
+                    $("#uploadAll").val("上传失败，请稍后重试。。。");
+                }
+
+            },
+            onInit: function () {
+                //初始化预览图片
+                $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
+                    Img: "imgFront",
+                    Width: 120,
+                    Height: 120,
+                    ImgType: [
+                        "jpeg", "jpg", "png"
+                    ], Callback: function () {
+                        $("#imgFront").show();
+                        $("#imgFront").unbind("click");
+                        $("#imgFront").bind("click", function () {
+                            $(".p_chose_card_front").click();
+                        });
+                        $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
+                            Img: "imgFront",
+                            Width: 120,
+                            Height: 120,
+                            ImgType: [
+                                "jpeg", "jpg", "png"
+                            ], Callback: function () {
+                                $("#imgFront").show();
+                                $("#imgFront").unbind("click");
+                                $("#imgFront").bind("click", function () {
+                                    $(".p_chose_card_front").click();
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 
     function initPhoneTimer() {
         phoneTimer = window.setInterval(function () {
@@ -526,7 +475,7 @@
 
     function uploadAll() {
         if ($("#imgFront").attr("src") == "") {
-            Main.showTip("请选择身份证正面图片");
+            Main.showTip("请选择护照图片");
             return;
         }
         $('#fileCardFront').uploadifive('upload');

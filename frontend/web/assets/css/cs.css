@@ -3,8 +3,7 @@
 /*----------公用样式--------*/
 html{-webkit-text-size-adjust:none;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,img,legend,input,textarea,p,blockquote,th,td,span,i,b,font{margin:0;padding:0; list-style:none; border:none;font-family: "Microsoft YaHei"; font-weight:normal; outline:none; }
-html,body{ height:100%; width:100%;}
-input,button,select,textarea{outline:none; background:none; color:#858585;}
+input,button,select,textarea{outline:none; background:none; color:#858585; font-size:16px;}
 table{border-collapse:collapse;border-spacing:0;}
 textarea{resize:none;}
 body { font-family: "Microsoft YaHei"; font-size:16px; color:#858585; }
@@ -39,12 +38,13 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .nav-out .nav-right .search-btn{ background:url(../images/top-search.png) no-repeat; width:35px; height:35px; margin:4px 0px 0px 6px; display:inline-block; margin-top:25px;}
 .nav-right ol li:last-child{ padding-right:0;}
 .nav-right ol li a{color:#ddd; font-size:18px; text-decoration:none;}
-.nav-right #denglu-main{ width:370px; height:240px; color:#ddd; background:#333;background:url(../images/logo-bg.png) no-repeat center 0;padding-top:60px; display:none; position:absolute; top:70px; right:0;}
+.nav-right #denglu-main{ width:370px; color:#ddd; background:#333;background:url(../images/logo-bg.png) no-repeat center 0;padding-top:60px; display:none; position:absolute; top:70px; right:0;}
 .nav-right #denglu-main p{ width:210px; height:40px; padding-bottom:6px; border-bottom:1px solid #999; margin:0 auto;line-height:36px; position:relative;}
 .nav-right #denglu-main p.fogot{border:none;}
 .nav-right #denglu-main p.fogot a{ font-size:12px; position:absolute; top:0; right:0;}
 .nav-right #denglu-main p label{ float:left; display:block; height:36px; line-height:36px; margin-top:6px; color:#ddd; font-size:16px;}
 .nav-right #denglu-main p input{ float:right; display:block; border:none; width:110px; height:36px; line-height:36px; padding-left:10px; bottom:0px; margin-top:6px; background:none; color:#ddd;}
+.nav-right #denglu-main p input[type='password']{ width:165px;}
 /* --------登录弹框-----*/
 #denglu-main p.zidong,#zhuce-main p.zidong,#zhuce-main02 p.zidong{ width:130px; margin:0 auto; border-bottom:none; height:36px;}
 #denglu-main p.zidong input,#zhuce-main p.zidong input,#zhuce-main02 p.zidong input{ float:left; display:block; width:14px; height:14px; margin-top:12px; opacity:0;}
@@ -139,7 +139,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 /*------------footer----------------*/
 #footer-out{ height:260px; background:#858585; margin-top:40px;}
-#footer-out .footer{ padding-top:30px; font-size:16px; color:#ddd; height:180px; border-bottom:1px solid #999;}
+#footer-out .footer{ overflow:hidden; padding-top:30px; font-size:16px; color:#ddd; height:180px; border-bottom:1px solid #999;}
 #footer-out .footer dl{ width:160px;}
 #footer-out .footer dt{ font-size:18px; margin-bottom:10px;}
 #footer-out .footer dd{ line-height:30px;}
@@ -279,7 +279,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .forgotPaw ul li{ width:80px; height:38px; line-height:38px; text-align:center; float:left;}
 .forgotPaw ul li a{ color:#858585; display:block;}
 .forgotPaw ul li a.active{ background:#858585; color:#ffea85;}
-.forgotPaw div{ height:480px; width:350px; margin-top:10px; display:none;}
+.forgotPaw div{width:350px; margin-top:10px; display:none;}
 .forgotPaw div span{ display:block; height:36px; line-height:36px;}
 .forgotPaw div input{ background:#eeeeee; border:none; height:36px; padding-left: 15px;width: 335px;line-height:36px;}
 
@@ -309,7 +309,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .syRegister .p1 input.btn{ margin:0; width:100px; height:36px; line-height:36px; float:left; background:#ff7a4d; color:#fff; font-size:16px; text-align:center; padding:0;}
 .syRegister .agree{ padding-left:75px;}
 .syRegister .agree input{ cursor:pointer;opacity:0;  width:auto; vertical-align:middle; float:left}
-.syRegister .agree input+label{ background:url("../images/check.png") no-repeat 0 -157px; padding-left:20px; height:36px; line-height:36px; float:left;}
+.syRegister .agree input+label{ background:url("../images/check.png") no-repeat 0 -102px; padding-left:20px; height:36px; line-height:36px; float:left;}
 .syRegister .agree a{ margin-left:15px; float:left; color:#858585; height:36px; line-height:36px; }
 .syRegister .agree a:hover{ text-decoration:underline;}
 .syRegister input.zbtn{ width:80px; height:36px; line-height:36px; text-align:center; display:block; margin:20px auto; padding-left:0px; background:#73b9ff; color:#fff; font-size:16px; cursor:pointer; }
@@ -350,7 +350,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 /*-------------随友注册完成-end-----------*/
 
 /*----------------完成页------------*/
-#finish{ width:586px; padding-bottom:100px;margin:110px auto 0px;}
+#finish{ width:586px;margin:110px auto 0;}
 #finish .pic{ padding-bottom:70px; text-align:center; }
 #finish .pic p{ font-size:18px; text-align:center; margin-top:10px;}
 #finish .m14{ margin-left:70px;}
@@ -380,7 +380,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sycon .synav li a.active{ background:#858585; color:#ffea87;}
 .sycon .tab-div{ border:1px solid #ddd; width:1200px; height:auto;text-align:center; display:none; padding-bottom:20px;}
 
-    /*----TabCon1-收藏----*/
+    /*----TabCon3-收藏----*/
 .sycon .shoucang{height:auto; margin:0 auto;}
 .sycon .shoucang ul li{ float:left; width:265px; height:352px; border:1px solid #ddd; overflow:hidden; margin:25px 0px 0 25px; position:relative;}
 .sycon .shoucang ul li a{ width:265px; height:242px; overflow:hidden; display:block;}
@@ -391,7 +391,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sycon .shoucang ul li .userPic span{ float:left; padding-left:20px; width:200px; overflow:hidden; text-align:left; line-height:60px;}
 .sycon .shoucang ul li p{ padding:5px; margin-top:25px;}
  
-    /*----TabCon2-回复----*/
+    /*----TabCon2-发言----*/
 .sycon .huifu .huifu-top{ height:102px; padding:20px 20px 0;}
 .sycon .huifu .huifu-top .pic{ width:132px; height:102px;  float:left; margin-left:40px; background:#eee;}
 .sycon .huifu .huifu-top .picright{ height:102px;  float:left; padding-left:30px; }
@@ -408,7 +408,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sycon .huifu .huifu-list ul li p{ float:left; padding-left:20px; width:445px; text-align:left;}
 .sycon .huifu .huifu-list ul li b{ float:right; font-size:14px;}
 
-    /*----TabCon3-我的订单---*/
+    /*----TabCon4-我的预定---*/
 	
 .sycon .orderCon{ background:#eee; padding:40px 0 20px;}
 .sycon .orderCon .myOderNav{ width:100px; float:left; _display:inline}
@@ -440,7 +440,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 	
 	
 
-    /*----TabCon4-随游管理---*/
+    /*----TabCon5-随游管理---*/
 .sycon .mySuiyou{ background:#eee; padding:40px 0 20px;}
 .sycon .mySuiyou .myOderNav{ width:100px; float:left; _display:inline}
 .sycon .mySuiyou .myOderNav li{ height:40px; line-height:40px;  }
@@ -478,7 +478,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 
 
-    /*----TabCon5-个人资料-----*/
+    /*----TabCon6-个人资料-----*/
 	
 .sycon .myInformation{ background:#eee; padding:40px 0 20px;}
 .sycon .myInformation .InformationNav{ width:100px; float:left; _display:inline}
@@ -588,7 +588,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sycon .myInformation .past03 .wdzl .moreRen ul li input.active{ color:#ffeb80; background:#ff8000;}
 .sycon .myInformation .past03 .wdzl .surebtn{background: none repeat scroll 0 0 #73b9ff;color: #fff;cursor: pointer;display: block;font-size: 16px; height: 36px; line-height: 36px;margin: 20px auto;padding-left: 0; text-align: center; width:100px;}
 
-/*----TabCon6-我的邮件-----*/
+/*----TabCon1-我的邮件-----*/
 	
 .sycon .myEmail{ background:#eee; padding:40px 0 20px;}
 .sycon .myEmail .emailNav{ width:100px; float:left; _display:inline}
@@ -596,7 +596,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sycon .myEmail .emailNav li a{color:#858585; }
 .sycon .myEmail .emailNav .active{ color:#FF794C; text-decoration:underline; width:100px; float:left; _display:inline}
 .sycon .myEmail .emailCon{ width:1070px; float:left; _display:inline; display:none; padding-bottom:30px;background:#fff;height:auto; }
-         /*----TabCon6-past01-----*/
+         /*----我的邮件-past01-----*/
 .sycon .myEmail .past01{ padding:10px;}
 .sycon .myEmail .past01 .left{ text-align:left; width:50%; height:auto; padding:15px 0; float:left; _display:inline; }
 .sycon .myEmail .past01 .left ul{ height:575px;overflow:hidden;}
@@ -622,7 +622,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sycon .myEmail .past01 .right .con .write{ margin:50px 0 20px; height:36px; padding-left:15px; background:#fff;}
 .sycon .myEmail .past01 .right .con .write .txt{ float:left; height:36px; line-height:36px; text-align:left;width:80%;}
 .sycon .myEmail .past01 .right .con .write .btn{ cursor:pointer; float:right; height:36px; line-height:36px; text-align:center;  width:80px; background:#73b9ff; color:#ffeb80; font-size:16px;}
-         /*----TabCon6-past02-----*/
+         /*----我的邮件-past02-----*/
 .sycon .myEmail .past02 .con{ width:585px; margin:0 auto;}
 .sycon .myEmail .past02 .con p{ height:40px; line-height:40px; margin-top:10px; text-align:left;}
 .sycon .myEmail .past02 .con input{color:#858585;  height:36px; line-height:36px; padding:0 15px; font-size:16px; background:#eee; text-align:left; display:block; width:555px;}
@@ -632,7 +632,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sycon .myEmail .past02 .con .yanzheng .codePic{ height:36px; width:120px; float:left; _display:inline;}
 .sycon .myEmail .past02 .con .yanzheng .change{ cursor:pointer; width:auto; background:none; float:left; _display:inline;}
 .sycon .myEmail .past02 .con .yanzheng .btn{ cursor:pointer; width:80px; float:right; _display:inline; background:#ff8000; color:#ffeb80;}
-         /*----TabCon6-past03-----*/
+         /*----我的邮件-past03-----*/
 .sycon .myEmail .past03 .con{ width:440px; margin:0 auto; padding-bottom:70px; background:#fff;}
 .sycon .myEmail .past03 .con h2{ height:70px; line-height:70px; margin-top:10px; text-align:center; font-size:18px;}
 .sycon .myEmail .past03 .con p{ height:36px; line-height:36px; margin-top:10px; text-align:left;font-size:16px;}
@@ -748,44 +748,49 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .djy-list{ width:1030px; height:auto; overflow:hidden; margin:0px auto;}
 .bjy-bj1{ margin:80px auto 20px;}
 .bjy-bj1 span,.bjy-bj1 input,.bjy-bj2 span,.bjy-bj2 input{ width:346px; height:36px; display:block; text-align:left; line-height:36px; margin:0px auto;}
-.bjy-bj1 input,.bjy-bj2 input{ text-align:center; background:#ECECFC; border:none; padding:0 10px; width:330px;}
-.bjy-bj2 input{ margin-bottom:20px;}
-.bjy-bj1 .jianjie{padding:0 10px; width:330px; height:100px;background:#ECECFC; border:none;display:block; text-align:left; line-height:36px; margin:0px auto; resize:none;}
+.bjy-bj1 input,.bjy-bj2 input{ background:#eee; border:none; padding:0 10px; width:330px;}
+.bjy-bj2 input{ margin-bottom:20px; text-align:center;}
+.bjy-bj1 .jianjie{padding:0 10px; width:330px; height:100px;background:#eee; border:none;display:block; text-align:left; line-height:36px; margin:0px auto; resize:none;}
 .bjy-bj1 .pic{width:285px; height:260px; background:#ECECFC; margin:0px auto;}
 .bjy-bj2{ width:350px;margin:80px auto 20px;}
 .bjy-bj2 .jing{ position:relative;}
 .bjy-bj2 .jing a{ position:absolute; right:-50px; top:0; display:inline-block; width:36px; height:36px;}
 .bjy-bj2 .jing a.add{ background:url(../images/creat.fw.png) no-repeat 0 center;}
-.bjy-bj2 .jing a.remove{ background:url(../images/jian.png) no-repeat 0 center;}
+.bjy-bj2 .jing a.remove{ background:url(../images/jian.fw.png) no-repeat 0 center;}
 .bjy-bj2 .map{width:350px; height:320px; background:#ececec; margin:0px auto;}
 
 .bjy-bj3{ width:450px;margin:80px auto 20px; }
-.bjy-bj3 .imgs{ width:205px; height:115px; overflow:hidden; background:#eee; float:left; margin-right:20px; margin-bottom:20px; }
+.bjy-bj3 .imgs{ width:205px; height:115px; overflow:hidden; background:#eee; float:left; margin-right:20px; margin-bottom:20px; position:relative; }
+.bjy-bj3 .imgs img{ width:205px; }
+.bjy-bj3 .imgs .delet{ background:rgba(0,0,0,0.3) url(../images/delete02.png) no-repeat 182px 4px; height:115px; width:205px; display:block; position:absolute; left:0; top:0; display:none;}
+.bjy-bj3 .imgs:hover .delet{ display:block; }
 
 .bjy-bj4{height:950px; overflow:hidden; width:1030px;margin:80px auto 20px; }
 .bjy-bj4 span{width:440px; height:36px; display:block; line-height:36px; text-align:left; margin:10px auto 0; }
 .bjy-bj4 p{ width:440px; height:36px; margin:0px auto;}
 .bjy-bj4 p.mixi{ border-bottom:1px solid #ddd;}
-.bjy-bj4 p input{ display:block; float:left;_display:inline; width:340px; height:36px; line-height:36px; padding-left:12px; border:none; background:#ECECFC;}
-.bjy-bj4 p a{ display:block; float:right;_display:inline; width:78px; height:36px; line-height:36px; text-align:center;background:#ECECFC; color:#333;}
+.bjy-bj4 p input{ display:block; float:left;_display:inline; width:340px; height:36px; line-height:36px; padding-left:12px; border:none; background:#eee;}
+.bjy-bj4 p a{ display:block; float:right;_display:inline; width:78px; height:36px; line-height:36px; text-align:center;background:#eee; color:#333;}
+.bjy-bj4 p a.add{ background:url(../images/creat.fw.png) no-repeat 0 center;}
+.bjy-bj4 p a.jian{ background:url(../images/jian.fw.png) no-repeat 0 center;}
 .bjy-bj4 font{width:80px; height:36px; line-height:36px; text-align:center; margin:30px auto 0px; background:#FF7A45;color:#FFEB79; display:block;}
 .bj4-main{width:440px; height:auto; overflow:hidden; margin:0px auto;}
-.sx{width:430px; height:36px; line-height:36px; padding-left:10px; border:none; background:#ECECFC; font-size:16px;}
+.sx{width:430px; height:36px; line-height:36px; padding-left:10px; border:none; background:#eee; font-size:16px;}
 .bj4-main p{width:475px; height:36px; line-height:36px; margin-top:10px;}
-.bj4-main p em{ display:block; float:left; text-align:center; font-style:normal;}
-.bj4-main p input{ width:110px; display:block; float:left; height:36px; }
+.bj4-main p em{ display:block; float:left; text-align:center; font-style:normal; margin:0 2px;}
+.bj4-main p input{ width:85px; display:block; float:left; height:36px; }
 .creat{ width:440px; height:auto; margin:5px auto 0px; border-bottom:1px solid #ddd; padding-bottom:10px;}
 
 .bjy-bj4 .creat dl dd,.bjy-bj4 .creat dl dt{width:440px; height:36px; line-height:36px;}
 .bjy-bj4 .creat dl dd{ margin-bottom:10px; position:relative;}
 .bjy-bj4 .creat dl dt span{width:33%; height:36px; line-height:36px; float:left; margin:0;}
-.bjy-bj4 .creat dl dd input{width:31%; margin-right:2%; height:36px; line-height:36px; float:left; background:#ececfc; padding-left:5px;}
+.bjy-bj4 .creat dl dd input{width:31%; margin-right:2%; height:36px; line-height:36px; float:left; background:#eee; padding-left:5px;}
 .bjy-bj4 .creat dl dd .sect{float:left; position:relative; width:100px; height:36px; line-height:36px; display:inline-block;}
 .bjy-bj4 .creat dl dd a{ width:36px; height:36px; float:right; _display:inline; }
-.bjy-bj4 .creat dl dd a.add{ background:url(../images/jia.png) no-repeat 0 center;}
-.bjy-bj4 .creat dl dd a.jian{  background:url(../images/jian.png) no-repeat 0 center;}
+.bjy-bj4 .creat dl dd a.add{ background:url(../images/creat.fw.png) no-repeat 0 center;}
+.bjy-bj4 .creat dl dd a.jian{ background:url(../images/jian.fw.png) no-repeat 0 center;}
 			/*---------------- select-------------*/
-.bjy-bj4 .sect .select-wrapper{ width:100px; height:36px; line-height:36px; text-align:center; text-indent:0; margin:0; background:#ececfc;}
+.bjy-bj4 .sect .select-wrapper{ width:100px; height:36px; line-height:36px; text-align:center; text-indent:0; margin:0; background:#eee;}
 .bjy-bj4 .select-wrapper .select-list{width:100px; height:36px; line-height:36px; text-align:center; text-indent:0;}
 .bjy-bj4 .select-wrapper .select-list .select-item{ margin-top:0; width:100%;}
 .bjy-bj4 .select-wrapper .select-list .select-option{ background:#ececfc; width:100%;}
@@ -794,20 +799,20 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 .bjy-bj4 .start-time{width:440px; margin:20px auto 0px;}
 .bjy-bj4 .start-time dt span{ width:210px; height:36px; line-height:36px; text-align:left; float:left; margin-right:10px;}
-.bjy-bj4 .start-time dd input{ padding-left:5px; background:#ececfc; width:190px; height:36px; line-height:36px; _display:inline; float:left; text-align:center; margin-right:10px;}
+.bjy-bj4 .start-time dd input{ padding-left:5px; background:#eee; width:190px; height:36px; line-height:36px; _display:inline; float:left; text-align:center; margin-right:10px;}
 
 .bjy-bj4 .times dl dd,.bjy-bj4 .times dl dt{width:440px; height:36px; line-height:36px;}
 .bjy-bj4 .times dl dd{ margin-bottom:10px;}
 .bjy-bj4 .times dl dt span{width:33%; height:36px; line-height:36px; float:left; margin:0;}
-.bjy-bj4 .times dl dd input{width:31%; margin-right:2%; height:36px; line-height:36px; float:left; background:#ececfc; padding-left:5px;}
+.bjy-bj4 .times dl dd input{width:31%; margin-right:2%; height:36px; line-height:36px; float:left; background:#eee; padding-left:5px;}
 .bjy-bj4 .times dl dd .sect{float:left; position:relative; width:100px;line-height:36px; display:inline-block;}
 
 
 .bjy-bj5{height:auto; overflow:hidden; width:1030px;margin:80px auto 90px; }
 .bjy-bj5 span,.bjy-bj5 div span{width:440px; height:40px; margin:0px auto; display:block; line-height:40px; text-align:left;}
-.bjy-bj5 textarea{ width:410px; height:226px; border:none; resize:none; background:#ececfb; margin:0px auto; display:block; padding:15px; line-height:24px;}
+.bjy-bj5 textarea{ width:410px; height:226px; border:none; resize:none; background:#eee; margin:0px auto; display:block; padding:15px; line-height:24px;}
 .bjy-bj5 div{width:440px; margin:0px auto;}
-.bjy-bj5 div ul{ background:none; width:350px; margin:0px auto; padding:5px 45px;  background:#ececfb; height:auto; padding-bottom:20px;}
+.bjy-bj5 div ul{ background:none; width:350px; margin:0px auto; padding:5px 45px;  background:#eee; height:auto; padding-bottom:20px;}
 .bjy-bj5 div ul li{ width:70px; height:36px; margin:16px 0px 0px 14px; float:left; font-size:14px; text-align:center; line-height:36px; background:#848484; color:#FFEB7F; border-radius:3px;}
 .bjy-bj5 div ul li:hover{ cursor:pointer;}
 .bjy-bj5 div ul li.active-bj{ background:#6EB8FF;}

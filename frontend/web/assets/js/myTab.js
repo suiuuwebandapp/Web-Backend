@@ -19,8 +19,11 @@ $(function(){
 	  })
 	}
 		tabs('.con-nav', '.TabCon');
+		tabs('.innerNav', '.innerCon');
+		tabs('.tabTitle', '.tabCon');
+		tabs('.myTit', '.myCon');
+		tabs('.recTit', '.slideRec');
 		/*通用----*/
-		/*	tabs('.rec-tit', '.slideRec');*/	
 		/*	tabs('.logintab', '.logincon');*/
 })
 

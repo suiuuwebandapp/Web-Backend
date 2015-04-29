@@ -83,6 +83,11 @@ class Code
     const SYS_USER_LOGIN_VERIFY_CODE='S_U_L_V_C'; //用户登录验证码 SESSION KEY
     const SYS_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='86400';
 
+    /**
+     * 标签key Tag Redis Key
+     */
+    const SYS_TAGS_REDIS_KEY='S_T_R_K';
+
 
     /**
      * 异常信息（后台）

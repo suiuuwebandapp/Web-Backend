@@ -52,6 +52,11 @@ function bz(id,sClass){
 		 oBtn[i].index = i; 
 		 oBtn[i].onclick = function(){
 			 iNow = this.index;
+             if(iNow==0){
+                 $(oBjyprev).hide();
+             }else{
+                 $(oBjyprev).show();
+             }
 			 tab();
 				 
 		 };
@@ -72,6 +77,11 @@ function bz(id,sClass){
 		if(iNow == -1){
 			iNow = oBtn.length - 1;
 		}
+         if(iNow==0){
+           $(oBjyprev).hide();
+         }else{
+             $(oBjyprev).show();
+         }
 		tab();
 	 };
 	 
@@ -82,6 +92,11 @@ function bz(id,sClass){
 		if(iNow == oBtn.length){
 			iNow = 0;
 		}
+         if(iNow==0){
+             $(oBjyprev).hide();
+         }else{
+             $(oBjyprev).show();
+         }
 		tab();
 	 }
 };

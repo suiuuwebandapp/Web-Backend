@@ -13,6 +13,8 @@ return [
     'base_dir' => 'http://www.suiuu.com',
     'url'=>'www.suiuu.com',
 
+    //www
+    'www_suiuu_sign'=>'www_suiuu_sign',
     //app
     'app_suiuu_sign'=>'app_suiuu_sign',
     //Cookie

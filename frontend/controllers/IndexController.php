@@ -372,7 +372,10 @@ class IndexController extends UnCController
             $userBase->email = $email;
             $userBase->password = $password;
 
-            $this->userBaseService->addUser($userBase);
+            $userBase=$this->userBaseService->addUser($userBase);
+            //设置SESSION 登录状态
+            Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
+
         } catch (Exception $e) {
             return $this->redirect(['/result', 'result' => '验证邮箱失败！']);
         }
@@ -440,7 +443,7 @@ class IndexController extends UnCController
     {
         //判断用户是否是随友，不是的话，跳转到随游注册页面
         if (isset($this->userObj) && $this->userObj->isPublisher) {
-            return $this->redirect("/");
+            return $this->redirect("/trip/new-trip");
         } else {
 
             $email = "";

@@ -86,3 +86,19 @@ request body = <TemplateSMS>
                   </TemplateSMS>
 request url = https://sandboxapp.cloopen.com:8883/2013-12-26/Accounts/8a48b5514cc55d22014cc62a9ba1010f/SMS/TemplateSMS?sig=AFCBDABEB7A8C0AD18733DCE7157EA0F
 response body = <?xml version="1.0" encoding="UTF-8" standalone="yes"?><Response><statusCode>000000</statusCode><TemplateSMS><dateCreated>20150427174728</dateCreated><smsMessageSid>201504271747276267948</smsMessageSid></TemplateSMS></Response>
+request body = <TemplateSMS>
+                    <to>17701085674</to> 
+                    <appId>8a48b5514ce46cb8014cf89dd7d00ebf</appId>
+                    <templateId>1</templateId>
+                    <datas><data>042619</data><data>10</data></datas>
+                  </TemplateSMS>
+request url = https://sandboxapp.cloopen.com:8883/2013-12-26/Accounts/8a48b5514cc55d22014cc62a9ba1010f/SMS/TemplateSMS?sig=5F6D1D09A4DD8BCCF7FBA500C75CD50C
+response body = <?xml version="1.0" encoding="UTF-8" standalone="yes"?><Response><statusCode>112314</statusCode><statusMsg>【短信】短信下发超过当日发送限制</statusMsg></Response>
+request body = <TemplateSMS>
+                    <to>17701085674</to> 
+                    <appId>8a48b5514ce46cb8014cf89dd7d00ebf</appId>
+                    <templateId>1</templateId>
+                    <datas><data>345150</data><data>10</data></datas>
+                  </TemplateSMS>
+request url = https://sandboxapp.cloopen.com:8883/2013-12-26/Accounts/8a48b5514cc55d22014cc62a9ba1010f/SMS/TemplateSMS?sig=6166C72CD94A219A11F90A5B70D45E73
+response body = <?xml version="1.0" encoding="UTF-8" standalone="yes"?><Response><statusCode>112314</statusCode><statusMsg>【短信】短信下发超过当日发送限制</statusMsg></Response>

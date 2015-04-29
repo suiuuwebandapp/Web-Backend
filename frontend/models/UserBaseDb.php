@@ -164,7 +164,7 @@ class UserBaseDb extends ProxyDb
     public function findByUserSign($userSign,$status=null)
     {
         $sql=sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign
+            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,isPublisher
             FROM user_base WHERE userSign=:userSign
         ");
         if($status!=null){
@@ -189,7 +189,7 @@ class UserBaseDb extends ProxyDb
     public function findUserByOpenIdAndType($openId,$type)
     {
         $sql=sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,status
+            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,status,isPublisher
             FROM user_base WHERE userSign=
             (
               SELECT userId FROM user_access WHERE openId=:openId AND type=:type
