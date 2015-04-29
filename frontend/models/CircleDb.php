@@ -86,7 +86,7 @@ class CircleDb extends ProxyDb
 
         $sql = sprintf("
             UPDATE  circle_article SET
-              aTitle=:aTitle,aImg=:aImg,aContent=:aContent,aLastUpdateTime=now(),aAddr=:aAddr,aImgList=:aImgList,aType=:aType
+              aTitle=:aTitle,aImg=:aImg,aContent=:aContent,aLastUpdateTime=now(),aAddr=:aAddr,aImgList=:aImgList
             WHERE articleId=:articleId AND aCreateUserSign=:aCreateUserSign
 
         ");
@@ -98,7 +98,6 @@ class CircleDb extends ProxyDb
         $command->bindParam(":articleId", $CircleArticleEntity->articleId, PDO::PARAM_INT);
         $command->bindParam(":aCreateUserSign", $CircleArticleEntity->aCreateUserSign, PDO::PARAM_INT);
         $command->bindParam(":aImgList", $CircleArticleEntity->aImgList, PDO::PARAM_STR);
-        $command->bindParam(":aType", $CircleArticleEntity->aType, PDO::PARAM_STR);
         return $command->execute();
     }
     /**

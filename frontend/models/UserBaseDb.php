@@ -265,4 +265,25 @@ class UserBaseDb extends ProxyDb
 
         return $command->execute();
     }
+
+    /**
+     * 更新密码
+     * @param UserBase $userBase
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function updatePassword(UserBase $userBase)
+    {
+        $sql = sprintf("
+            UPDATE user_base SET
+           password=:password
+            WHERE userId=:userId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":password", $userBase->password, PDO::PARAM_STR);
+        $command->bindParam(":userId", $userBase->userId, PDO::PARAM_INT);
+
+        return $command->execute();
+    }
 }

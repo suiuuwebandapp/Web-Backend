@@ -15,6 +15,7 @@ use common\components\SmsUtils;
 use common\components\Validate;
 use common\entity\UserBase;
 use common\entity\UserPublisher;
+use frontend\components\ValidateCode;
 use frontend\services\CountryService;
 use frontend\services\UserBaseService;
 use common\components\Code;
@@ -52,45 +53,196 @@ class IndexController extends UnCController
 
     public function actionTest()
     {
-        return $this->renderPartial('test');
+
     }
 
 
-    public function actionGetPasswordCode()
+    public function actionPasswordSendCode()
     {
+        if(!isset($_POST['username']))
+        {
+            $areaCode = "";
+            $countryService = new CountryService();
+            $countryList=$countryService->getCountryList();
+            if ($areaCode == "") {
+                $areaCode = "+86";
+            }
+            return $this->render('forgetPassword',['areaCode'=>$areaCode,'countryList'=>$countryList]);
+        }
         $username = Yii::$app->request->post('username');//用户名
         if (empty($username) || strlen($username) > 50 || strlen($username) < 5) {
             $errors = "用户名格式不正确";
             return json_encode(Code::statusDataReturn(Code::FAIL, $errors));
         }
+
         $count = Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX . $username);
         if ($count > Code::MAX_SEND_COUNT) {
             return json_encode(Code::statusDataReturn(Code::FAIL, '发送次数过多24小时后将继续发送'));
         } else {
-            if (Validate::validatePhone($username)) {
-                //手机
-                Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $username, ++$count);
-                Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $username, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
-                $code = $this->randomPhoneCode();
-                $str = $username . '_' . $code;
-                yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD, $str);
+           if (empty(Validate::validateEmail($username))) {
 
-            } else if (Validate::validateEmail($username)) {
-                Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $username, ++$count);
-                Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $username, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                $code = Yii::$app->request->post('code');//用户名
+                $codeSession = yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
+                if($code!=$codeSession||empty($codeSession)){
+                    return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误'));
+                }
 
+                $userBase = $this->userBaseService->findUserByEmail($username);
+                if (empty($userBase)) {
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '用户不存在，请先注册'));
+                }
+               $now = date('Y-m-d H:i:s', time());
+               $time = strtotime($now);
+                $r = $this->getEncryptPassword($time);
+                $c = $this->getEmailCode($username,$r);
+                $url = \Yii::$app->params['base_dir'] . '/index/reset-password?r=' . $r.'&u='. $username.'&c='. $c;
+                //最终发送的地址内容
+                $rst = Mail::sendPasswordMail($username, $url);
+                //
+                if ($rst['status'] == Code::SUCCESS) {
+                    \Yii::$app->redis->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, $c);
+                    Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
+                    //设置邮件定时器，控制发送频率
+                    echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+                    Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $username, ++$count);
+                    Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $username, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                } else {
+                    echo json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
+                }
+            }elseif(empty(Validate::validatePhone($username))){
+               //手机验证
+               $areaCode = Yii::$app->request->post('areaCode');
+               $userBase = $this->userBaseService->findUserByPhone($username);
+               if (empty($userBase)) {
+                   return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '用户不存在，请先注册'));
+               }
 
-            } else {
-                $errors = "用户名格式不正确";
+               $code = $this->randomPhoneCode();
+                //设置验证码 和 有效时长
+               \Yii::$app->redis->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, $code);
+               Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
+               $rst = null;
+               if ($areaCode == "0086" || $areaCode == "+86") {
+                   $smsUtils = new SmsUtils();
+                   $rst = $smsUtils->sendPasswordSMS($username, $code);
+               } else {
+
+               }
+               if(!empty($rst))
+               {
+                   echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+                   Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $username, ++$count);
+                   Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $username, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+               }else {
+                   echo json_encode(Code::statusDataReturn(Code::FAIL, "发送信息失败，请稍后重试"));
+               }
+           } else {
+               $errors = "用户名格式不正确";
                 return json_encode(Code::statusDataReturn(Code::FAIL, $errors));
             }
         }
     }
 
-    public function actionGetPassword()
+    public function actionResetPasswordView()
     {
+        return $this->render('resetPassword');
+    }
+    //发送邮箱链接跳转或者手机正确验证后跳转
+    public function actionResetPassword()
+    {
+        if(isset($_POST['u']))
+        {
+            $u = Yii::$app->request->post('u');//用户名
+            $code = Yii::$app->request->post('code');//验证码
+            $phoneCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $u);
+             if(empty($phoneCode)||$code!=$phoneCode)
+             {
+                 return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误'));
+             }
+            Yii::$app->session->set(Code::USER_NAME_SESSION,$u);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }
 
 
+        $r = Yii::$app->request->get('r');//时间加密
+        $u = Yii::$app->request->get('u');//用户名
+        $c = Yii::$app->request->get('c');//验证
+        $time =$this->getDecryptPassword($r);
+        $cc = $this->getEmailCode($u,$r);
+        $redisCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $u);
+        if($cc==$c&&!empty($redisCode)&&$cc==$redisCode)
+        {
+            $now = date('Y-m-d H:i:s', time());
+            $nowTime = strtotime($now);
+            $t=$nowTime-$time;
+            if($t>intval(Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME))
+            {
+                return $this->redirect(['/result', 'result' => '链接已过期！！']);
+            }
+            Yii::$app->session->set(Code::USER_NAME_SESSION,$u);
+            return $this->render('resetPassword');
+        }else{
+            return $this->redirect(['/result', 'result' => '无效的链接地址！！']);
+        }
+
+    }
+
+    //更新密码
+    public function actionUpdatePassword()
+    {
+        $username=  Yii::$app->session->get(Code::USER_NAME_SESSION);
+        $redisCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD .$username);
+        $password = Yii::$app->request->post('password');
+        $confirmPassword = Yii::$app->request->post('confirmPassword');
+        $code = Yii::$app->request->post('code');//用户名
+        $codeSession = yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
+        if($code!=$codeSession||empty($codeSession)){
+            return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误'));
+        }
+        $error='';
+        if(empty($username)||empty($redisCode))
+        {
+            $error = "请重新验证手机或邮箱";
+            return json_encode(Code::statusDataReturn(Code::FAIL,$error));
+        }
+        if($password!=$confirmPassword)
+        {
+            $error = "密码不统一";
+            return json_encode(Code::statusDataReturn(Code::FAIL,$error));
+        }
+        try{
+            if (empty(Validate::validateEmail($username))) {
+                $rst = $this->userBaseService->findUserByEmail($username);
+            }else
+            {
+                $rst = $this->userBaseService->findUserByPhone($username);
+            }
+            if(empty($rst))
+            {
+                $error='未发现该用户';
+                return json_encode(Code::statusDataReturn(Code::FAIL,$error));
+            }
+            $r=$this->userBaseService->updatePassword($rst->userId,$password);
+            if($r==1)
+            {
+                Yii::$app->session->set(Code::USER_NAME_SESSION,'');
+                Yii::$app->redis->del(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username);
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,'修改成功'));
+            }else
+            {
+                //密码重复
+                return json_encode(Code::statusDataReturn(Code::FAIL,'密码重复无需修改'));
+            }
+        } catch (Exception $e) {
+            $errors[] = $e->getMessage();
+        }
+    }
+    public function actionGetCode()
+    {
+        \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,'9527');
+        /*$ValidateCode=new ValidateCode();
+        $ValidateCode->doimg();
+        \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,$ValidateCode->getCode());*/
     }
 
     /**

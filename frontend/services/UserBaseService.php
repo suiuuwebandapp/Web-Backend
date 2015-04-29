@@ -369,4 +369,19 @@ class UserBaseService extends BaseDb
         return false;
     }
 
+    public function updatePassword($userId,$password)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $userBase =new UserBase();
+            $userBase->password = $this->encryptPassword($password);
+            $userBase->userId=$userId;
+           return $this->userBaseDb->updatePassword($userBase);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
 }

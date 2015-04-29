@@ -50,6 +50,7 @@ class Code
     /**
      *系统常量（前台）
      */
+    const USER_NAME_SESSION = 'U_N_S';//用户名session
     const USER_LOGIN_SESSION='U_L_S';//用户是否登录 SESSION KEY
     const USER_LOGIN_ERROR_COUNT_PREFIX='U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
     const USER_LOGIN_VERIFY_CODE='U_L_V_C'; //用户登录验证码 SESSION KEY
@@ -57,7 +58,7 @@ class Code
     const USER_SEND_ERROR_COUNT_PREFIX='U_S_E_C_P';//用户发送错误次数前缀 使用方法 前缀+用户名
     const USER_SEND_COUNT_PREFIX='U_S_C_P';//用户发送次数 使用方法 前缀+用户名
     const MAX_SEND_COUNT=10;//每天最大发送数
-    const USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD='U_P_V_C_A_P_F_P';//用户发送的手机验证码
+    const USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD='U_P_V_C_A_P_F_P';//用户发送的手机验证码找回密码
     const USER_PHONE_VALIDATE_CODE_AND_PHONE='U_P_V_C_A_P';//用户发送的手机验证码
     const USER_PHONE_VALIDATE_CODE_EXPIRE_TIME='600';//验证码有效期 10分钟
     const USER_EMAIL_VALIDATE_CODE_EXPIRE_TIME='86400';//邮箱验证有效时长 (24小时)

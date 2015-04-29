@@ -13,6 +13,7 @@
     #emailTime input{
         font-size: 14px !important;
     }
+
 </style>
 <?php if (isset($this->context->userObj)) { ?>
     <!--header开始-->
@@ -150,7 +151,7 @@
 
                             <p><label>密码</label><input type="password" value="" id="userpassword"></p>
 
-                            <p class="fogot"><a href="wangji_mima.html">忘记密码</a></p>
+                            <p class="fogot"><a href="/index/password-send-code">忘记密码</a></p>
                             <div id="code9527" class="form-group" style="padding-bottom: 20px;display: none">
                                 <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
                             </div>

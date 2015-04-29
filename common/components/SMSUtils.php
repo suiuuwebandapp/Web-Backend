@@ -88,7 +88,36 @@ class SmsUtils
         }
 
     }
+    /**
+     * 发送找回密码短信
+     * @param 手机号码集合 $to 手机号码集合 $to ,用英文逗号分开
+     * @param $code
+     * @return array|void
+     */
+    public function sendPasswordSMS($to, $code)
+    {
+        // $datas 格式为数组 例如：array('Marry','Alon')，如不需替换请填 null
+        try {
+            $datas = [$code, $this->validateTime];
+            //param 模板Id $tempId (测试为1)
+            $tempId = 1;
+            // 发送模板短信
+            $result = $this->rest->sendTemplateSMS($to, $datas, $tempId);
+            if ($result == NULL) {
+                return Code::statusDataReturn(Code::FAIL, "result error!");
+            }
+            if ($result->statusCode != 0) {
+                return Code::statusDataReturn(Code::FAIL, $result->statusMsg);
+            } else {
+                // 获取返回信息
+                $smsMessage = $result->TemplateSMS;
+                return Code::statusDataReturn(Code::SUCCESS, $code, $smsMessage);
+            }
+        } catch (Exception $e) {
+            return Code::statusDataReturn(Code::FAIL, $e->getName());
+        }
 
+    }
     //Demo调用
     //sendTemplateSMS("手机号码","内容数据","模板Id");
 

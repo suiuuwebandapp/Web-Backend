@@ -15,28 +15,26 @@ use frontend\services\UserBaseService;
 use yii\base\Controller;
 use yii\base\Exception;
 
-class AttentionController extends Controller
+class AttentionController extends AController
 {
 
     private $userBaseService;
     private $CircleService;
     private $AttentionService;
 
-    private $userObj;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
         $this->userBaseService = new UserBaseService();
         $this->CircleService = new CircleService();
         $this->AttentionService = new UserAttentionService();
-        $this->userObj =new UserBase();
-        $this->userObj->userSign='7f11453d3ed03159808e5c8ee850f1db';
+
     }
 
     //得到关注圈子
     public function  actionGetAttentionCircle()
     {
-
+        $this->loginValid();
         try {
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
@@ -53,6 +51,7 @@ class AttentionController extends Controller
     public function  actionGetAttentionUser()
     {
 
+        $this->loginValid();
         try {
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
@@ -68,7 +67,7 @@ class AttentionController extends Controller
     //得到收藏文章
     public function  actionGetCollectionArticle()
     {
-
+        $this->loginValid();
         try {
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
@@ -84,7 +83,7 @@ class AttentionController extends Controller
     //得到收藏随游
     public function  actionGetCollectionTravel()
     {
-
+        $this->loginValid();
         try {
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
@@ -99,6 +98,7 @@ class AttentionController extends Controller
     //关注圈子
     public function actionAddAttentionCircle()
     {
+        $this->loginValid();
         try{
             $circleId= \Yii::$app->request->post('cId');
             if(empty($circleId))
@@ -118,6 +118,7 @@ class AttentionController extends Controller
     //关注用户
     public function actionAddAttentionUser()
     {
+        $this->loginValid();
         try{
             $userSign= \Yii::$app->request->post('userSign');
             if(empty($userSign))
@@ -137,6 +138,7 @@ class AttentionController extends Controller
     //收藏文章
     public function actionAddCollectionArticle()
     {
+        $this->loginValid();
         try{
             $articleId= \Yii::$app->request->post('articleId');
             if(empty($articleId))
@@ -156,6 +158,7 @@ class AttentionController extends Controller
     //收藏随游
     public function actionAddCollectionTravel()
     {
+        $this->loginValid();
         try{
             $travelId= \Yii::$app->request->post('travelId');
             if(empty($travelId))
@@ -175,6 +178,7 @@ class AttentionController extends Controller
     //删除
     public function actionDeleteAttention()
     {
+        $this->loginValid();
         try{
             $attentionId= \Yii::$app->request->post('attentionId');
             if(empty($travelId))
@@ -195,6 +199,7 @@ class AttentionController extends Controller
     //圈子动态
     public function actionGetCircleDynamic()
     {
+        $this->loginValid();
         try{
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
@@ -209,6 +214,7 @@ class AttentionController extends Controller
     //用户动态
     public function actionGetUserDynamic()
     {
+        $this->loginValid();
         try{
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
@@ -255,6 +261,7 @@ class AttentionController extends Controller
     //得到粉丝
     public function actionGetFans()
     {
+        $this->loginValid();
         try{
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
@@ -271,6 +278,7 @@ class AttentionController extends Controller
     //得到消息提醒
     public function actionGetMessagesRemind()
     {
+        $this->loginValid();
         try{
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;

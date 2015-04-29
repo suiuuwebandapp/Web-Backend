@@ -27,7 +27,7 @@ class AController extends Controller{
     public function __construct($id, $module = null)
     {
         //验证用户是否登录
-        $appSign=\Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
+        /*$appSign=\Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
         $currentUser=json_decode(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION.$appSign));
 
         if(!isset($currentUser)&&empty($appSign)) {
@@ -35,14 +35,40 @@ class AController extends Controller{
             exit;
         }else if(isset($currentUser)){
             if($currentUser->status!=UserBase::USER_STATUS_NORMAL){
-                echo json_encode(Code::statusDataReturn(Code::FAIL,"User Status Is Disabled"));
+                echo json_encode(Code::statusDataReturn(Code::FAIL,"用户已经被删除"));
             }else {
                 $this->userObj = $currentUser;
             }
         }else {
             echo json_encode(Code::statusDataReturn(Code::UN_LOGIN,'登陆已过期请重新登陆'));
             exit;
-        }
+        }*/
         parent::__construct($id, $module);
+    }
+    public function loginValid($bo=true)
+    {
+        if($bo){
+            //验证用户是否登录
+            $appSign=\Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
+            $currentUser=json_decode(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION.$appSign));
+
+            if(!isset($currentUser)&&empty($appSign)) {
+                echo json_encode(Code::statusDataReturn(Code::UN_LOGIN,'appSign不能为空'));
+                exit;
+            }else if(isset($currentUser)){
+                if($currentUser->status!=UserBase::USER_STATUS_NORMAL){
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,"用户已经被删除"));
+                }else {
+                    $this->userObj = $currentUser;
+                }
+            }else {
+                echo json_encode(Code::statusDataReturn(Code::UN_LOGIN,'登陆已过期请重新登陆'));
+                exit;
+            }
+        }else
+        {
+            $this->userObj =new UserBase();
+            $this->userObj->userSign='8ce4179e01ed3a39b439a9f686633df1';
+        }
     }
 }
