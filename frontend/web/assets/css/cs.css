@@ -110,7 +110,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .index-banner{ width:100%; height:600px; margin:-70px auto 0px; position:relative;}
 .index-banner .banners li{ width:100%; height:600px;}
 .index-banner .banners .banner01{ background:url(../images/banner01.jpg) no-repeat fixed center 0; background-size:100% 600px;}
-.serch{ position:absolute; top:310px; left:50%; margin-left:-170px;  width:340px; height:50px; overflow:hidden; } 
+.serch{ position:absolute; top:310px; left:50%; margin-left:-170px;  width:340px; height:50px; overflow:hidden; }
 .text1{ width:264px; height:50px; line-height:50px; border:none; background:rgba(0,0,0,0.8); padding-left:20px; color:#ddd; float:left;}
 .btn1{ height:49px; line-height:49px; width:50px; text-align:center;background:rgba(0,0,0,0.8); border:none; float:left; margin-left:4px; font-size:16px; color:#ddd;}
 
@@ -129,24 +129,24 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 #ul1 li p font{ float:left; margin-left:10px; width:230px; height:20px; line-height:20px; margin-top:20px; display:block; font-size:14px;}
 #ul1 li h4{ width:284px; height:30px; line-height:30px; text-align:center; margin-top:20px; font-weight:normal;}
 #ul1 li span{ position:absolute; left:0; top:0; width:100%; height:0; background:#000; color:#ddd; text-align:center; line-height:260px; font-size:40px; font-weight:bold; opacity:0;
-transition:all 0.4s ease-in-out;
--webkit-transition:all 0.4s ease-in-out;
--moz-transition:all 0.4s ease-in-out;
--ms-transition:all 0.4s ease-in-out;
--o-transition:all 0.4s ease-in-out;
+    transition:all 0.4s ease-in-out;
+    -webkit-transition:all 0.4s ease-in-out;
+    -moz-transition:all 0.4s ease-in-out;
+    -ms-transition:all 0.4s ease-in-out;
+    -o-transition:all 0.4s ease-in-out;
 }
 #ul1 li:hover span{ height:260px; opacity:0.6;}
 
 .index-tuijian{ height:645px; overflow:hidden;}
 .index-tuijian .countrys{ position:relative; height:645px;}
 .index-tuijian .countrys li{ overflow:hidden; position:absolute; background:#eee;}
-.index-tuijian .countrys li img{ width:100%; display:block; 
+.index-tuijian .countrys li img{ width:100%; display:block;
 
- -webkit-transition:all ease-in-out 2s;
- -moz-transition:all ease-in-out 2s;
- -ms-transition:all ease-in-out 2s;
- -o-transition:all ease-in-out 2s;
- transition:all ease-in-out 2s;
+    -webkit-transition:all ease-in-out 2s;
+    -moz-transition:all ease-in-out 2s;
+    -ms-transition:all ease-in-out 2s;
+    -o-transition:all ease-in-out 2s;
+    transition:all ease-in-out 2s;
 }
 .index-tuijian .countrys li:first{ left:0; top:0; width:590px; height:365px;}
 .index-tuijian .countrys li:nth-child(2){ left:610px; top:0; width:170px; height:190px;}
@@ -156,27 +156,27 @@ transition:all 0.4s ease-in-out;
 .index-tuijian .countrys li:nth-child(6){left:305px; bottom:0; width:290px; height:260px;}
 .index-tuijian .countrys li:nth-child(7){right:0; bottom:0; width:590px; height:260px;}
 .index-tuijian .countrys li span{ position:absolute; top:50%; display:block; width:100%; text-align:center;  font-size:40px; font-weight:500; color:#fff;
- -webkit-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
- -moz-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
- -ms-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
- -o-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
- text-shadow:3px 3px 3px rgba(0,0,0,0.8);
- 
-  transform:translate(-50%,-50%);
-  -webkit-transform:translateY(-50%);
-  -moz-transform:translateY(-50%);
-  -ms-transform:translateY(-50%);
-  -o-transform:translateY(-50%);
-  
- -webkit-transition:all ease-in-out 1s;
- -moz-transition:all ease-in-out 1s;
- -ms-transition:all ease-in-out 1s;
- -o-transition:all ease-in-out 1s;
- transition:all ease-in-out 1s;
- }
+    -webkit-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
+    -moz-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
+    -ms-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
+    -o-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
+    text-shadow:3px 3px 3px rgba(0,0,0,0.8);
+
+    transform:translate(-50%,-50%);
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -ms-transform:translateY(-50%);
+    -o-transform:translateY(-50%);
+
+    -webkit-transition:all ease-in-out 1s;
+    -moz-transition:all ease-in-out 1s;
+    -ms-transition:all ease-in-out 1s;
+    -o-transition:all ease-in-out 1s;
+    transition:all ease-in-out 1s;
+}
 .index-tuijian .countrys li:hover span{ transform:scale(1.5,1.5);}
 .index-tuijian .countrys li:hover img{ transform:scale(1.5,1.5);}
- 
+
 
 /*----------index页面样式-end---------*/
 
@@ -364,7 +364,7 @@ transition:all 0.4s ease-in-out;
 .syRegister .agree a{ margin-left:15px; float:left; color:#858585; height:36px; line-height:36px; }
 .syRegister .agree a:hover{ text-decoration:underline;}
 .syRegister input.zbtn{ width:80px; height:36px; line-height:36px; text-align:center; display:block; margin:20px auto; padding-left:0px; background:#73b9ff; color:#fff; font-size:16px; cursor:pointer; }
-			/*----------------随友注册 select-------------*/
+/*----------------随友注册 select-------------*/
 .syRegister .phone-select{ height:36px; line-height:36px;}
 .syRegister .sect{ float:left; position:relative; width:100px; height:36px; line-height:36px; display:inline-block;}
 .syRegister .sect .select-wrapper{ position:absolute; top:0; left:0; width:100px; height:36px; line-height:36px; text-align:center; text-indent:0; margin-top:0;}
@@ -431,7 +431,7 @@ transition:all 0.4s ease-in-out;
 .sycon .synav li a.active{ background:#858585; color:#ffea87;}
 .sycon .tab-div{ border:1px solid #ddd; width:1200px; height:auto;text-align:center; display:none; padding-bottom:20px;}
 
-    /*----TabCon3-收藏----*/
+/*----TabCon3-收藏----*/
 .sycon .shoucang{height:auto; margin:0 auto;}
 .sycon .shoucang ul li{ float:left; width:265px; height:352px; border:1px solid #ddd; overflow:hidden; margin:25px 0px 0 25px; position:relative;}
 .sycon .shoucang ul li a{ width:265px; height:242px; overflow:hidden; display:block;}
@@ -441,8 +441,8 @@ transition:all 0.4s ease-in-out;
 .sycon .shoucang ul li .userPic a img{ width:40px; height:auto; }
 .sycon .shoucang ul li .userPic span{ float:left; padding-left:20px; width:200px; overflow:hidden; text-align:left; line-height:60px;}
 .sycon .shoucang ul li p{ padding:5px; margin-top:25px;}
- 
-    /*----TabCon2-发言----*/
+
+/*----TabCon2-发言----*/
 .sycon .huifu .huifu-top{ height:102px; padding:20px 20px 0;}
 .sycon .huifu .huifu-top .pic{ width:132px; height:102px;  float:left; margin-left:40px; background:#eee;}
 .sycon .huifu .huifu-top .picright{ height:102px;  float:left; padding-left:30px; }
@@ -459,8 +459,8 @@ transition:all 0.4s ease-in-out;
 .sycon .huifu .huifu-list ul li p{ float:left; padding-left:20px; width:445px; text-align:left;}
 .sycon .huifu .huifu-list ul li b{ float:right; font-size:14px;}
 
-    /*----TabCon4-我的预定---*/
-	
+/*----TabCon4-我的预定---*/
+
 .sycon .orderCon{ background:#eee; padding:40px 0 20px;}
 .sycon .orderCon .myOderNav{ width:100px; float:left; _display:inline}
 .sycon .orderCon .myOderNav li{ height:40px; line-height:40px; }
@@ -488,10 +488,10 @@ transition:all 0.4s ease-in-out;
 .sycon .orderCon .orderList p span.orange{ color:#FF7945;}
 .sycon .orderCon .orderList p span a{ float:left;  color:#FF7A4D; }
 .sycon .orderCon .orderList p span b{  color:#FF7A4D; }
-	
-	
 
-    /*----TabCon5-随游管理---*/
+
+
+/*----TabCon5-随游管理---*/
 .sycon .mySuiyou{ background:#eee; padding:40px 0 20px;}
 .sycon .mySuiyou .myOderNav{ width:100px; float:left; _display:inline}
 .sycon .mySuiyou .myOderNav li{ height:40px; line-height:40px;  }
@@ -529,15 +529,15 @@ transition:all 0.4s ease-in-out;
 
 
 
-    /*----TabCon6-个人资料-----*/
-	
+/*----TabCon6-个人资料-----*/
+
 .sycon .myInformation{ background:#eee; padding:40px 0 20px;}
 .sycon .myInformation .InformationNav{ width:100px; float:left; _display:inline}
 .sycon .myInformation .InformationNav li{ height:40px; line-height:40px; }
 .sycon .myInformation .InformationNav li a{color:#858585; }
 .sycon .myInformation .InformationNav .active{ color:#FF794C; text-decoration:underline; width:100px; float:left; _display:inline}
 .sycon .myInformation .InformationCon{ width:1070px; float:left; _display:inline; display:none;background:#fff; padding-bottom:30px; }
-	/*-----past01 我的资料----*/
+/*-----past01 我的资料----*/
 .sycon .myInformation .past01{ padding-top:30px;}
 .sycon .myInformation .past01 .wdzl{ width:350px; height:auto; margin:0 auto;}
 .sycon .myInformation .past01 .wdzl .sel-pic{ position:relative; width:350px; height:210px; margin:0 auto 20px;  background:#eee; cursor:pointer;}
@@ -566,7 +566,7 @@ transition:all 0.4s ease-in-out;
 .sycon .myInformation .past01 .wdzl .shenfen input{ opacity:0; width:0; height:0; }
 .sycon .myInformation .past01 .wdzl .shenfen input+label{  padding-left:20px; margin-right:20px; height:36px; line-height:36px; background:url(../images/check.png) no-repeat 0 10px; display:inline-block;}
 .sycon .myInformation .past01 .wdzl .shenfen input.other{ height:36px; line-height:36px; width:100px; background:#eee; padding-left:15px; position:absolute; right:0; bottom:0;opacity:1; display:none;}
-			/*---------------select-------------*/
+/*---------------select-------------*/
 .sycon .myInformation .past01 .wdzl .phone-select{ height:36px; line-height:36px;}
 .sycon .myInformation .past01 .wdzl .sect{ float:left; position:relative; width:100px; height:36px; line-height:36px; display:inline-block;}
 .sycon .myInformation .past01 .wdzl .sect .select-wrapper{ position:static; top:0; left:0; width:100px; height:36px; line-height:36px; text-align:center; text-indent:0; margin-top:0;}
@@ -582,7 +582,7 @@ transition:all 0.4s ease-in-out;
 .sycon .myInformation .past01 .wdzl .textarea{ width:330px; height:120px; resize:none; padding:10px; border:none; background:#eeeeee;}
 .sycon .myInformation .past01 .wdzl .surebtn{background: none repeat scroll 0 0 #73b9ff;color: #fff;cursor: pointer;display: block;font-size: 16px; height: 36px; line-height: 36px;margin: 20px auto;padding-left: 0; text-align: center; width:100px;}
 
-	/*------past02 身份验证--------*/
+/*------past02 身份验证--------*/
 .sycon .myInformation .past02{ padding-top:30px;}
 .sycon .myInformation .past02 .wdzl{ width:350px; height:auto; margin:0 auto;}
 .sycon .myInformation .past02 .wdzl .sel-pic{ position:relative; width:350px; height:210px; margin:0 auto 20px;  background:#eee; cursor:pointer;}
@@ -594,7 +594,7 @@ transition:all 0.4s ease-in-out;
 .sycon .myInformation .past02 .wdzl-img{ width:350px; height:180px; line-height:120px; margin-top:40px; position:relative;}
 .sycon .myInformation .past02 .wdzl .wdzl-xx span{ display:block; width:100%; height:36px; line-height:36px; text-align:left;}
 .sycon .myInformation .past02 .wdzl .wdzl-xx input{ width:335px; height:36px; line-height:36px; border:none; background:#eeeeee; padding-left:15px; font-size:16px;}
-			/*---------------select-------------*/
+/*---------------select-------------*/
 .sycon .myInformation .past02 .wdzl .wdzl-xx .select-wrapper{ width:100%; margin:0; margin-bottom:36px; text-indent:0;}
 .sycon .myInformation .past02 .wdzl .phone-select{ height:36px; line-height:36px;}
 .sycon .myInformation .past02 .wdzl .sect{ float:left; position:relative; width:100px; height:36px; line-height:36px; display:inline-block;}
@@ -620,7 +620,7 @@ transition:all 0.4s ease-in-out;
 .sycon .myInformation .past02 .wdzl .moreRen ul li input{ cursor:pointer; color:#858585; padding:0; text-align:center; width:80px; height:30px; line-height:30px;margin:20px auto;}
 .sycon .myInformation .past02 .wdzl .moreRen ul li input.active{ color:#ffeb80; background:#ff8000;}
 .sycon .myInformation .past02 .wdzl .surebtn{background: none repeat scroll 0 0 #73b9ff;color: #fff;cursor: pointer;display: block;font-size: 16px; height: 36px; line-height: 36px;margin: 20px auto;padding-left: 0; text-align: center; width:100px;}
-	/*------past03 账号设置--------*/
+/*------past03 账号设置--------*/
 .sycon .myInformation .past03{ padding-top:30px;}
 .sycon .myInformation .past03 .Mtitle{ font-size:18px;}
 .sycon .myInformation .past03 .wdzl{ width:350px; height:auto; margin:0 auto;}
@@ -640,14 +640,14 @@ transition:all 0.4s ease-in-out;
 .sycon .myInformation .past03 .wdzl .surebtn{background: none repeat scroll 0 0 #73b9ff;color: #fff;cursor: pointer;display: block;font-size: 16px; height: 36px; line-height: 36px;margin: 20px auto;padding-left: 0; text-align: center; width:100px;}
 
 /*----TabCon1-我的邮件-----*/
-	
+
 .sycon .myEmail{ background:#eee; padding:40px 0 20px;}
 .sycon .myEmail .emailNav{ width:100px; float:left; _display:inline}
 .sycon .myEmail .emailNav li{ height:40px; line-height:40px;  }
 .sycon .myEmail .emailNav li a{color:#858585; }
 .sycon .myEmail .emailNav .active{ color:#FF794C; text-decoration:underline; width:100px; float:left; _display:inline}
 .sycon .myEmail .emailCon{ width:1070px; float:left; _display:inline; display:none; padding-bottom:30px;background:#fff;height:auto; }
-         /*----我的邮件-past01-----*/
+/*----我的邮件-past01-----*/
 .sycon .myEmail .past01{ padding:10px;}
 .sycon .myEmail .past01 .left{ text-align:left; width:50%; height:auto; padding:15px 0; float:left; _display:inline; }
 .sycon .myEmail .past01 .left ul{ height:575px;overflow:hidden;}
@@ -673,7 +673,7 @@ transition:all 0.4s ease-in-out;
 .sycon .myEmail .past01 .right .con .write{ margin:50px 0 20px; height:36px; padding-left:15px; background:#fff;}
 .sycon .myEmail .past01 .right .con .write .txt{ float:left; height:36px; line-height:36px; text-align:left;width:80%;}
 .sycon .myEmail .past01 .right .con .write .btn{ cursor:pointer; float:right; height:36px; line-height:36px; text-align:center;  width:80px; background:#73b9ff; color:#ffeb80; font-size:16px;}
-         /*----我的邮件-past02-----*/
+/*----我的邮件-past02-----*/
 .sycon .myEmail .past02 .con{ width:585px; margin:0 auto;}
 .sycon .myEmail .past02 .con p{ height:40px; line-height:40px; margin-top:10px; text-align:left;}
 .sycon .myEmail .past02 .con input{color:#858585;  height:36px; line-height:36px; padding:0 15px; font-size:16px; background:#eee; text-align:left; display:block; width:555px;}
@@ -683,7 +683,7 @@ transition:all 0.4s ease-in-out;
 .sycon .myEmail .past02 .con .yanzheng .codePic{ height:36px; width:120px; float:left; _display:inline;}
 .sycon .myEmail .past02 .con .yanzheng .change{ cursor:pointer; width:auto; background:none; float:left; _display:inline;}
 .sycon .myEmail .past02 .con .yanzheng .btn{ cursor:pointer; width:80px; float:right; _display:inline; background:#ff8000; color:#ffeb80;}
-         /*----我的邮件-past03-----*/
+/*----我的邮件-past03-----*/
 .sycon .myEmail .past03 .con{ width:440px; margin:0 auto; padding-bottom:70px; background:#fff;}
 .sycon .myEmail .past03 .con h2{ height:70px; line-height:70px; margin-top:10px; text-align:center; font-size:18px;}
 .sycon .myEmail .past03 .con p{ height:36px; line-height:36px; margin-top:10px; text-align:left;font-size:16px;}
@@ -840,7 +840,7 @@ transition:all 0.4s ease-in-out;
 .bjy-bj4 .creat dl dd a{ width:36px; height:36px; float:right; _display:inline; }
 .bjy-bj4 .creat dl dd a.add{ background:url(../images/creat.fw.png) no-repeat 0 center;}
 .bjy-bj4 .creat dl dd a.jian{ background:url(../images/jian.fw.png) no-repeat 0 center;}
-			/*---------------- select-------------*/
+/*---------------- select-------------*/
 .bjy-bj4 .sect .select-wrapper{ width:100px; height:36px; line-height:36px; text-align:center; text-indent:0; margin:0; background:#eee;}
 .bjy-bj4 .select-wrapper .select-list{width:100px; height:36px; line-height:36px; text-align:center; text-indent:0;}
 .bjy-bj4 .select-wrapper .select-list .select-item{ margin-top:0; width:100%;}
@@ -868,16 +868,16 @@ transition:all 0.4s ease-in-out;
 .bjy-bj5 div ul li:hover{ cursor:pointer;}
 .bjy-bj5 div ul li.active-bj{ background:#6EB8FF;}
 .bjy-bj5 .yulan{
-   background: none repeat scroll 0 0 #6cb6ff;
+    background: none repeat scroll 0 0 #6cb6ff;
     color: #ffeb81;
     display: block;
     height: 36px;
     line-height: 36px;
     text-align: center;
-    width: 80px; 
-	text-align:center; margin:40px auto; 
-	font-size:18px;
-  
+    width: 80px;
+    text-align:center; margin:40px auto;
+    font-size:18px;
+
 }
 /*---------------随友编辑-end------------*/
 
@@ -995,7 +995,7 @@ transition:all 0.4s ease-in-out;
 .sydetail .web-content .web-left .route .pay span b{ font-size:18px; color:#ff7945; }
 .sydetail .web-content .web-left .route .pay .btn{ font-size:16px; color:#FFEB79; padding:10px 20px; background:#FF7A4D; margin-left:40px; }
 
-	/*---随游详情评论-分享----*/
+/*---随游详情评论-分享----*/
 .sydetail .web-content .web-left .web-con .web-bar{ height:45px; line-height:45px; margin:30px auto;}
 .sydetail .web-content .web-left .web-con .web-bar ol{ background:#99CCFF; height:45px; }
 .sydetail .web-content .web-left .web-con .web-bar li{ height:45px; width:33.3%; float:left; text-align:center; color:#fff;}
@@ -1031,7 +1031,7 @@ transition:all 0.4s ease-in-out;
 .sydetail .web-content .web-left .web-con .zhuanlan-web ol li input{ width:70px; height:30px; float:right; margin-top:0px; line-height:30px; border-bottom:#CCC 1px solid;}
 .sydetail .web-content .web-left .web-con .zhuanlan-text textarea{ height:100px; resize:none; width:95%;  border:none; background:#eeeeee; display:block; padding:15px;}
 .sydetail .web-content .web-left .web-con .zhuanlan-text .zl-btn{ width:80px; height:35px; line-height:35px; padding:0 10px;text-align:center; font-size:16px; background:#858585; color:#FFEA86; border:none; margin-top:20px; float:right;}
-		/*---随游详情评论-分享----*/
+/*---随游详情评论-分享----*/
 .sydetail .web-content .web-right{ float:right; width:328px; }
 .sydetail .web-content .web-right p{ height:36px; line-height:36px; padding-left:15px;}
 .sydetail .web-content .web-right .user{height:50px;}
@@ -1055,15 +1055,9 @@ transition:all 0.4s ease-in-out;
 .sydetail .web-content .web-right ol{width:285px; height:120px; }
 .sydetail .web-content .web-right ol li{ width:140px; height:40px; line-height:40px; float:left; overflow:hidden;}
 .sydetail .web-content .web-right ol li span{ display:block; float:left; width:68px;height:40px; margin-right:8px;}
-<<<<<<< Updated upstream
-.sydetail .web-content .web-right input{ width:136px; height:40px; color:#ffea87; border:none; font-size:16px;   text-align:center; line-height:40px; margin-top:8px;}
-.sydetail .web-content .web-right input.web-btn5{ background:#ff7a4d; margin-right:8px; cursor:pointer;}
-.sydetail .web-content .web-right input.web-btn6{ background:#70b8ff; cursor:pointer;}
-=======
 .sydetail .web-content .web-right input{ width:150px; height:40px; color:#ffea87; border:none; font-size:16px;  text-align:center; line-height:40px; margin-top:8px;}
 .sydetail .web-content .web-right input.web-btn5{ background:#ff7a4d; margin-right:8px; margin-left:10px;}
 .sydetail .web-content .web-right input.web-btn6{ background:#70b8ff;}
->>>>>>> Stashed changes
 
 .sydetail .web-content .web-right .web-tuijian{width:325px; height:298px; overflow:hidden; margin-top:20px; border:1px solid #ddd;}
 .sydetail .web-content .web-right .web-tuijian .xing{ text-align:center;}
@@ -1184,13 +1178,13 @@ transition:all 0.4s ease-in-out;
 .tanchu-list ul li p{ width:261px; line-height:30px;padding:0px 10px; line-height:24px; overflow:hidden; text-align:center;}
 
 
-		/*----专栏弹出层----*/
+/*----专栏弹出层----*/
 .mask{ background:rgba(0,0,0,.78); position:fixed; z-index:5; display:none; }
 .tanchu-main{width:874px; height:auto; overflow:hidden; background:#FFF; position:absolute; left:50%; top:0px; margin-left:-437px; display:none;z-index:66; padding-bottom:30px;}
 .tanchu-main img{ margin:37px 49px; width:768px; height:411px;}
 .tanchu-main p{ padding:10px 49px; line-height:24px;}
 
-		/*---微博-分享----*/
+/*---微博-分享----*/
 .tanchu-main .web-bar{ height:45px; line-height:45px;padding:0 49px; margin:30px auto;}
 .tanchu-main .web-bar ol{ background:#99CCFF; height:45px; }
 .tanchu-main .web-bar li{ height:45px; width:33.3%; float:left; text-align:center; color:#fff;}
@@ -1316,65 +1310,14 @@ transition:all 0.4s ease-in-out;
 #aboutCon-out .aboutBanner{ height:360px; width:100%; background:url(../images/help/helpBanner.png) no-repeat center 0; background-size:cover;}
 #aboutCon-out{ height:auto;}
 #aboutCon-out .aboutNav-out{ height:40px; height:40px; line-height:40px; background:rgba(0,0,0,0.4); margin-top:-40px; }
-<<<<<<< Updated upstream
-#aboutCon-out .aboutNav li{ float:left; height:40px; line-height:40px;font-size:18px; color:#fff; padding-right:40px;}
-#aboutCon-out .aboutNav li a{ height:40px; line-height:40px;font-size:18px; color:#fff;}
-#aboutCon-out .aboutNav li a:hover,#aboutCon-out .aboutNav li a.active{ height:40px; line-height:40px;font-size:18px; color:#ffeb81;}
-=======
 #aboutCon-out .aboutNav li{ float:left; height:40px; line-height:40px;font-size:18px; color:#fff; padding-right:45px;}
 #aboutCon-out .aboutNav li a{ height:40px; line-height:40px;font-size:18px; color:#fff;}
 #aboutCon-out .aboutNav li a:hover,#aboutCon-out .aboutNav li a.active{ height:40px; line-height:40px;font-size:18px; color:#ffeb81;}
 #aboutCon-out .aboutCon{ margin-top:30px; display:none;}
->>>>>>> Stashed changes
 #aboutCon-out .aboutCon{ margin-top:30px;}
 #aboutCon-out .aboutCon .leftNav{ height:auto; width:120px; float:left; font-size:18px;}
 #aboutCon-out .aboutCon .leftNav li a{ height:40px; line-height:40px;font-size:18px; color:#858585;}
 #aboutCon-out .aboutCon .leftNav li a:hover,#aboutCon-out .aboutCon .leftNav li a.active{ color:#858585;color:#ff794c; text-decoration:underline; }
-<<<<<<< Updated upstream
-#aboutCon-out .aboutCon .rightCon{ float:right; width:1000px; font-size:16px; background:#fff; padding:20px 40px 40px; line-height:24px; display:none; }
-#aboutCon-out .aboutCon .companyItr .rightCon.server{ height:600px; overflow-y:scroll; }
-#aboutCon-out .aboutCon .rightCon .title{ margin-top:20px;font-size:18px; height:36px; line-height:36px;}
-#aboutCon-out .aboutCon .rightCon p{ margin-top:6px;}
-#aboutCon-out .aboutCon .rightCon .indent p{ padding-left:30px;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
 #aboutCon-out .aboutCon .rightCon{ float:right; width:1000px; font-size:16px; background:#fff; padding:20px 40px 40px 40px; line-height:24px; display:none; min-height:200px; }
 #aboutCon-out .aboutCon .rightCon.server{ padding-right:0; height:600px; overflow-y:scroll; overflow:hidden;}
 #aboutCon-out .aboutCon .rightCon.server .serverinner{ height:600px; overflow-y:scroll; padding-right:40px;}
@@ -1386,7 +1329,6 @@ transition:all 0.4s ease-in-out;
 #aboutCon-out .aboutCon .rightCon textarea{ height:160px; padding:20px; width:940px; background:#eee; resize:none;}
 #aboutCon-out .aboutCon .rightCon .btnbar{ height:36px; line-height:36px;width:980px; }
 #aboutCon-out .aboutCon .rightCon .btnbar .btn{ height:36px; line-height:36px; padding:0 20px; display:block; background:#73b9ff; color:#ffeb80;  float:right;}
->>>>>>> Stashed changes
 
 /*------------帮助中心--end-----------*/
 
