@@ -13,7 +13,6 @@
     <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/select2/select2_metro.css">
     <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-uploadifive/uploadifive.css">
 
-
     <style type="text/css">
         .uploadifive-button{
             background: #1bbc9b;
@@ -67,6 +66,15 @@
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
                                                 <input type="text" id="title" value="" class="form-control" placeholder="请输入文章标题" maxlength="20"  required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">简介<span class="required">*</span></label>
+                                        <div class="col-md-7 valdate">
+                                            <div class="input-icon right">
+                                                <i class="fa"></i>
+                                                <textarea id="intro" class="form-control" placeholder="请输入文章简介" required/>
                                             </div>
                                         </div>
                                     </div>
@@ -130,6 +138,7 @@
 
     $(document).ready(function() {
         FormValidation.init("addDes");
+        Metronic.initSlimScroll($(".scroller"));
         $("#titleImgPre").hide();//隐藏预览封面图
         $(".muti_select").select2();
         $("#countryId").on("change", function (e) {
@@ -168,6 +177,7 @@
         var titleImg=$("#titleImg").val();
         var countryId=$("#countryId").val();
         var cityId=$("#cityId").val();
+        var intro=$("#intro").val();
 
         if(titleImg==''){
             Main.errorTip("封面图不允许为空");
@@ -180,6 +190,7 @@
             data:{
                 title:title,
                 titleImg:titleImg,
+                intro:intro,
                 countryId:countryId,
                 cityId:cityId
             },

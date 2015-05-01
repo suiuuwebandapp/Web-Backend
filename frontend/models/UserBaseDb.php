@@ -266,6 +266,7 @@ class UserBaseDb extends ProxyDb
         return $command->execute();
     }
 
+<<<<<<< Updated upstream
     /**
      * 更新密码
      * @param UserBase $userBase
@@ -286,4 +287,6 @@ class UserBaseDb extends ProxyDb
 
         return $command->execute();
     }
+=======
+>>>>>>> Stashed changes
 }

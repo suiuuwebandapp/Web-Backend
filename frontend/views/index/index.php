@@ -69,19 +69,16 @@
 <a href="#"  class="btn8">显示更多</a>
 
 <!--list结束-->
-<div class="index-tuijian clearfix"><!--index-tuijian begin-->
-    <ul style="width:778px; height:368px; margin-bottom:20px;">
-        <li style="width:588px; height:368px;"><a href="javascript:;"><img src="/assets/images/idexpic.fw.png" alt=""></a><span style=" line-height:368px;">韩国</span></li>
-        <li style="width:170px; height:192px; margin-left:20px; margin-bottom:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:192px;">韩国</span></li>
-        <li style="width:170px; height:156px; margin-left:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:156px;">韩国</span></li>
-    </ul>
-    <ul style="width:402px; height:366px; margin-bottom:20px;">
-        <li style="width:402px; height:366px; margin-left:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:366px;">韩国</span></li>
-    </ul>
-    <ul>
-        <li style="width:286px; height:258px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:258px;">韩国</span></li>
-        <li style="width:286px; height:258px; margin-left:16px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:258px;">韩国</span></li>
-        <li style="width:592px; height:260px; margin-left:20px;"><a href="javascript:;"><img src="" alt=""></a><span  style=" line-height:260px;">韩国</span></li>
+<!--index-tuijian begin-->
+<div class="index-tuijian w1200 clearfix">
+    <ul class="countrys">
+        <li><a href="javascript:;"><img src="/assets/images/index/01.png"></a><span>济州岛</span></li>
+        <li><a href="javascript:;"><img src="/assets/images/index/02.png"></a><span>巴黎</span></li>
+        <li><a href="javascript:;"><img src="/assets/images/index/03.png"></a><span>圣母院</span></li>
+        <li><a href="javascript:;"><img src="/assets/images/index/04.png"></a><span>台北</span></li>
+        <li><a href="javascript:;"><img src="/assets/images/index/05.png"></a><span>芬兰</span></li>
+        <li><a href="javascript:;"><img src="/assets/images/index/06.png"></a><span>巴黎</span></li>
+        <li><a href="javascript:;"><img src="/assets/images/index/07.png"></a><span>伦敦</span></li>
     </ul>
 </div>
 <a href="#"  class="btn8">显示更多</a>
@@ -90,38 +87,48 @@
 
 
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        loadTrip();
+    });
+    function loadTrip(){
+        var tripId=$("#tripId").val();
+        $.ajax({
+            url :'/view-trip/get-trip-list',
+            type:'post',
+            data:{
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            beforeSend:function(){
+                //show load
+            },
+            error:function(){
+                //hide load
+                Main.showTip("发布随游失败");
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    var list=data.data;
+                    if(list.length==0){
+                       return;
+                    }
+                    var trip,html="";
+                    for(var i=0;i<list.length;i++){
+                        trip=list[i];
+                        html+='<li>' +
+                        '<img src="'+trip.titleImg+'" alt=""><span>一</span>' +
+                        '<p><img src="'+trip.headImg+'" alt=""><font>'+trip.nickname+'</font></p>' +
+                        '<h4>'+trip.title+'</h4>' +
+                        '</li>';
+                    }
+                    $("#ul1").append(html);
+                }else{
+                    Main.showTip("获取随游失败");
+                }
+            }
+        });
+    }
+</script>
 
-
-
-
-
-
-
-
-
-
-
-<div>
-    邮箱<input id="email" type="text"/>
-    密码<input id="emailPwd" type="password"/>
-    确认密码 <input id="emailConfirmPwd" type="password"/>
-
-    <input id="btnEmail" type="button" value="邮箱注册"/>
-
-    <br/><br/>
-
-    手机<input id="phone" type="text"/>
-    密码<input id="phonePwd" type="password"/>
-    确认密码 <input id="phoneConfirmPassword" type="password"/>
-    验证码<input id="phoneValidateCode" type="text"/>
-    <input id="sendPhoneCode" type="button" value="获取验证码">
-    <input id="btnPhone" type="button" value="手机注册"/>
-
-    <br/><br/>
-    <a href="">微博登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="https://api.weibo.com/oauth2/authorize?client_id=123050457758183&redirect_uri=http://www.example.com/response&response_type=code">微信登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
-
-    <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101206430&redirect_uri=http://local.suiuu.com/access/qq-login&state=asdfasd">QQ登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="/access/connect-qq">QQ登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
-
-</div>

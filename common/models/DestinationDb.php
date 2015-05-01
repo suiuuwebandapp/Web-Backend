@@ -23,9 +23,11 @@ class DestinationDb extends ProxyDb{
      * @param Page $page
      * @param $search
      * @param $status
-     * @return \backend\components\Page
+     * @param null $countryId
+     * @param null $cityId
+     * @return Page
      */
-    public function getDesList(Page $page,$search,$status)
+    public function getDesList(Page $page,$search,$status,$countryId=null,$cityId=null)
     {
         $sql=sprintf("
             FROM destination_info i
@@ -48,10 +50,18 @@ class DestinationDb extends ProxyDb{
             $sql.=" AND status=:status ";
             $this->setParam("status",$status);
         }
-
+        if(!empty($countryId)){
+            $sql.=" AND co.id=:countryId ";
+            $this->setParam("countryId",$countryId);
+        }
+        if(!empty($cityId)){
+            $sql.=" AND ci.id=:cityId ";
+            $this->setParam("cityId",$cityId);
+        }
         $this->setSql($sql);
         return $this->find($page);
     }
+
 
 
     /**
@@ -86,11 +96,11 @@ class DestinationDb extends ProxyDb{
         $sql = sprintf("
             INSERT INTO destination_info
             (
-              countryId,cityId,title,titleImg,createUserId,createTime,lastUpdateTime,status
+              countryId,cityId,title,titleImg,intro,createUserId,createTime,lastUpdateTime,status
             )
             VALUES
             (
-              :countryId,:cityId,:title,:titleImg,:createUserId,now(),now(),:status
+              :countryId,:cityId,:title,:titleImg,:intro,:createUserId,now(),now(),:status
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -98,6 +108,7 @@ class DestinationDb extends ProxyDb{
         $command->bindParam(":cityId", $destinationInfo->cityId, PDO::PARAM_INT);
         $command->bindParam(":title", $destinationInfo->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $destinationInfo->titleImg, PDO::PARAM_STR);
+        $command->bindParam(":intro", $destinationInfo->intro, PDO::PARAM_STR);
         $command->bindParam(":createUserId", $destinationInfo->createUserId, PDO::PARAM_INT);
         $command->bindParam(":status", $destinationInfo->status, PDO::PARAM_INT);
 
@@ -116,17 +127,18 @@ class DestinationDb extends ProxyDb{
         $sql = sprintf("
             INSERT INTO destination_scenic
             (
-              destinationId,title,titleImg,beginTime,endTime,lon,lat,address
+              destinationId,title,titleImg,intro,beginTime,endTime,lon,lat,address
             )
             VALUES
             (
-              :destinationId,:title,:titleImg,:beginTime,:endTime,:lon,:lat,:address
+              :destinationId,:title,:titleImg,:intro,:beginTime,:endTime,:lon,:lat,:address
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":destinationId", $destinationScenic->destinationId, PDO::PARAM_INT);
         $command->bindParam(":title", $destinationScenic->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $destinationScenic->titleImg, PDO::PARAM_STR);
+        $command->bindParam(":intro", $destinationScenic->intro, PDO::PARAM_STR);
         $command->bindParam(":beginTime", $destinationScenic->beginTime, PDO::PARAM_STR);
         $command->bindParam(":endTime", $destinationScenic->endTime, PDO::PARAM_STR);
         $command->bindParam(":lon", $destinationScenic->lon, PDO::PARAM_STR);
@@ -147,7 +159,7 @@ class DestinationDb extends ProxyDb{
     {
         $sql = sprintf("
             UPDATE  destination_info SET
-            countryId=:countryId,cityId=:cityId,title=:title,titleImg=:titleImg,lastUpdateTime=now()
+            countryId=:countryId,cityId=:cityId,title=:title,intro=:intro,titleImg=:titleImg,lastUpdateTime=now()
             WHERE destinationId=:destinationId
 
         ");
@@ -156,6 +168,7 @@ class DestinationDb extends ProxyDb{
         $command->bindParam(":cityId", $destinationInfo->cityId, PDO::PARAM_STR);
         $command->bindParam(":title", $destinationInfo->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $destinationInfo->titleImg, PDO::PARAM_STR);
+        $command->bindParam(":intro", $destinationInfo->intro, PDO::PARAM_STR);
         $command->bindParam(":destinationId", $destinationInfo->destinationId, PDO::PARAM_INT);
 
 
@@ -173,7 +186,7 @@ class DestinationDb extends ProxyDb{
     {
         $sql = sprintf("
             UPDATE destination_scenic SET
-            destinationId=:destinationId,title=:title,titleImg=:titleImg,beginTime=:beginTime,endTime=:endTime,
+            destinationId=:destinationId,title=:title,titleImg=:titleImg,intro=:intro,beginTime=:beginTime,endTime=:endTime,
             lon=:lon,lat=:lat,address=:address
             WHERE scenicId=:scenicId;
         ");
@@ -181,6 +194,7 @@ class DestinationDb extends ProxyDb{
         $command->bindParam(":destinationId", $destinationScenic->destinationId, PDO::PARAM_INT);
         $command->bindParam(":title", $destinationScenic->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $destinationScenic->titleImg, PDO::PARAM_STR);
+        $command->bindParam(":intro", $destinationScenic->intro, PDO::PARAM_STR);
         $command->bindParam(":beginTime", $destinationScenic->beginTime, PDO::PARAM_STR);
         $command->bindParam(":endTime", $destinationScenic->endTime, PDO::PARAM_STR);
         $command->bindParam(":lon", $destinationScenic->lon, PDO::PARAM_STR);

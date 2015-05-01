@@ -9,8 +9,9 @@
 
 ?>
 
-
 <!-----footer------>
+
+
 <div id="footer-out" class="clearfix">
     <div class="footer w1200 clearfix">
         <div class="left fl">
@@ -21,7 +22,7 @@
             <dd><a href="#">关于随游</a></dd>
             <dd><a href="#">服务协议</a></dd>
             <dd><a href="#">联系我们</a></dd>
-            <dd><a href="#">加入我们</a></dd>
+            <dd><a href="http://www.jobtong.com/e/15004">加入我们</a></dd>
         </dl>
         <dl class="fl ">
             <dt>帮助中心</dt>
@@ -41,11 +42,14 @@
         </dl>
         <div class="fr right">
             <ul>
-                <li class="fl"><a href="#" class="icon sina"></a></li>
-                <li class="fl"><a href="#" class="icon weixin"></a></li>
+                <li class="fl"><a href="#" class="icon sina"></a><img src="/assets/images/weiboCoda.png" width="110" height="110" class="weiboCoda"></li>
+                <li class="fl"><a href="#" class="icon weixin"></a><img src="/assets/images/weixinCoda.png" width="110" height="110" class="weixinCoda"></li>
             </ul>
 
         </div>
+
+
     </div>
+
 </div>
 <!-----footer--end---->

@@ -18,6 +18,7 @@ use yii\web\Controller;
 class CController extends Controller{
 
     public $userObj=null;
+    public $userPublisherObj=null;
 
 
     public $userBaseService=null;
@@ -49,6 +50,11 @@ class CController extends Controller{
                 return $this->redirect(['/result', 'result' => '请登录过后再进行操作']);
             }
 
+        }
+        if($currentUser->isPublisher){
+            if($this->userBaseService==null)$this->userBaseService=new UserBaseService();
+            $userPublisherObj=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+            $this->userPublisherObj=$userPublisherObj;
         }
         parent::__construct($id, $module);
     }

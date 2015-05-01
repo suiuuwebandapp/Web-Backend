@@ -21,9 +21,9 @@
         <div class="header-main clearfix w1200">
             <div class="header-nav fl">
                 <ul>
-                    <li><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
-                    <li class="active"><a href="javascript:;">随游</a></li>
-                    <li><a href="mudi-shuaixuan.html">目的地</a></li>
+                    <li class="active"><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
+                    <li><a href="/view-trip/list">随游</a></li>
+                    <li><a href="/destination/list">目的地</a></li>
                     <li><a href="zhuanlan.html">专栏</a></li>
                     <li><a href="/index/create-travel">发布随游</a></li>
                 </ul>
@@ -96,9 +96,9 @@
 
             <div class="nav">
                 <ul>
-                    <li><a href="<?php echo Yii::$app->params['base_dir']; ?>">首页</a></li>
-                    <li><a href="suiyou.html">随游</a></li>
-                    <li><a href="mudi-shuaixuan.html">目的地</a></li>
+                    <li class="active"><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
+                    <li><a href="/view-trip/list">随游</a></li>
+                    <li><a href="/destination/list">目的地</a></li>
                     <li><a href="zhuanlan.html">专栏</a></li>
                     <li><a href="/index/create-travel">发布随游</a></li>
                 </ul>

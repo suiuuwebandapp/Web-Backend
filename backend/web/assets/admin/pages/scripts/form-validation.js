@@ -75,7 +75,7 @@ var FormValidation = function() {
 			
 			submitHandler : function(form) {
 				//success.show();
-				//error.hide();
+				//error.hide();f
 				if(submitValidateMethod()){
 					var result=true;
 					//BeforSubmit Validate

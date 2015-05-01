@@ -12,7 +12,7 @@ namespace backend\controllers;
 
 use backend\components\Page;
 use backend\components\TableResult;
-use backend\entity\ArticleInfo;
+use common\entity\ArticleInfo;
 use backend\services\ArticleService;
 use common\components\Code;
 use yii\base\Exception;
@@ -97,6 +97,7 @@ class ArticleController extends CController{
             $this->articleService->addArticleInfo($articleInfo);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            var_dump($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
 
@@ -116,7 +117,7 @@ class ArticleController extends CController{
 
 
         try{
-            $articleInfo=new ArticleInfo();
+            $articleInfo=$this->articleService->findById($articleId);
             $articleInfo->articleId=$articleId;
             $articleInfo->title=$title;
             $articleInfo->name=$name;
@@ -178,7 +179,7 @@ class ArticleController extends CController{
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"参数异常"));
         }
         try{
-            $this->des->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_OUTLINE);
+            $this->articleService->changeStatus($articleId,ArticleInfo::ARTICLE_STATUS_OUTLINE);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));

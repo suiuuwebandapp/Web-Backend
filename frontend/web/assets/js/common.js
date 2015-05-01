@@ -35,7 +35,27 @@ $(function(){
 })
 
 
-/*-----index登录、注册弹框-----*/
+/*----导航效果----*/
+
+
+$(function(){
+	$(window).scroll(function(e) {
+		var h1=$(window).scrollTop();
+		if(h1>10){
+			$('.nav-out,.header').css('box-shadow','1px 3px 5px rgba(0,0,0,0.6)')
+		}else{
+			$('.nav-out,.header').css('box-shadow','none')
+		}
+		
+		
+        
+    });
+	
+
+
+})
+
+/*----nav-index登录、注册弹框-----*/
 
 
 $(function(){
@@ -94,7 +114,7 @@ $(function(){
 })
 */
 
-/*-----注册方式切换弹框-----*/
+/*---nav--注册方式切换弹框-----*/
 $(function(){
 	$('#zhuce-main .tab-title01').click(function(e) {
         $(this).parent('').css('display','none').siblings().css('display','block')
@@ -107,7 +127,7 @@ $(function(){
 
 })
 
-/*---登陆后--top 搜索-----*/
+/*---header--top 搜索-----*/
 $(function(){
 	$('.header-right .search-btn').click(function(e) {
 		if($('.header-right .search').width()==0){
@@ -120,7 +140,7 @@ $(function(){
 
 
 })
-/*--无登陆--top 搜索-----*/
+/*---nav-top 搜索-----*/
 $(function(){
 	$('.nav-right .search-btn').click(function(e) {
 		if($('.nav-right .search').width()==0){
@@ -154,12 +174,14 @@ $(function(){
 $(function(){
 	var num=0;
 	var timer=null;
+	var maxnum=$('.web-banner #banner li').size()-1;
+
 	function fn(){
 		
 		num++;
-		if(num>5){num=0}
-		$('.web-banner ul').stop().animate({left:num*-894},1000)
-		$('.web-banner ol').stop().animate({left:num*-146},1000)
+		if(num>maxnum){num=0}
+		$('.web-banner ul').stop().animate({left:num*-830},1000)
+		$('.web-banner ol').stop().animate({left:num*-195},1000)
 	}
 	timer=setInterval(fn,2000)
 	$('.web-banner ul li,.web-banner ol li').hover(function(e) {
@@ -171,18 +193,18 @@ $(function(){
     
     });
 	
-	$('.web-banner .next').click(function(e) {
+	$('.web-banner .nex').click(function(e) {
         num++;
-		if(num>5){num=0}
-		$('.web-banner ul').stop().animate({left:num*-894},500)
-		$('.web-banner ol').stop().animate({left:num*-146},500)
+		if(num>maxnum){num=0}
+		$('.web-banner ul').stop().animate({left:num*-830},500)
+		$('.web-banner ol').stop().animate({left:num*-195},500)
 
     });
-	$('.web-banner .prev').click(function(e) {
+	$('.web-banner .pre').click(function(e) {
         num--;
-		if(num<0){num=5}
-		$('.web-banner ul').stop().animate({left:num*-894},500)
-		$('.web-banner ol').stop().animate({left:num*-146},500)
+		if(num<0){num=maxnum}
+		$('.web-banner ul').stop().animate({left:num*-830},500)
+		$('.web-banner ol').stop().animate({left:num*-195},500)
     });
 	$('.web-banner .prev,.web-banner .next').hover(function(e) {
         clearInterval(timer)

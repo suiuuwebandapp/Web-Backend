@@ -23,6 +23,7 @@ $(function(){
 		tabs('.tabTitle', '.tabCon');
 		tabs('.myTit', '.myCon');
 		tabs('.recTit', '.slideRec');
+		tabs('.aboutNav', '.aboutCon')
 		/*通用----*/
 		/*	tabs('.logintab', '.logincon');*/
 })

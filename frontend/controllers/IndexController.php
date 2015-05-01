@@ -9,6 +9,7 @@
 
 namespace frontend\controllers;
 
+use backend\components\Page;
 use common\components\Aes;
 use common\components\Mail;
 use common\components\SmsUtils;
@@ -17,6 +18,7 @@ use common\entity\UserBase;
 use common\entity\UserPublisher;
 use frontend\components\ValidateCode;
 use frontend\services\CountryService;
+use frontend\services\TripService;
 use frontend\services\UserBaseService;
 use common\components\Code;
 use vendor\geetest\GeetestLib;
@@ -649,7 +651,7 @@ class IndexController extends UnCController
         }
         $code = $this->randomPhoneCode();
         //设置验证码 和 有效时长
-        \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, $code);
+        \Yii::$app->redis->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, $code);
         Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
 
         //设置验证码次数时效
@@ -720,7 +722,12 @@ class IndexController extends UnCController
             return;
         }
 
-        $userBase= clone $this->userObj;
+        $userBase=null;
+        if($this->userObj==null){
+            $userBase=new UserBase();
+        }else{
+            $userBase= clone $this->userObj;
+        }
         $userPublisher=new UserPublisher();
         $userPublisher->countryId=$countryId;
         $userPublisher->cityId=$cityId;
@@ -909,7 +916,7 @@ class IndexController extends UnCController
      */
     private function validatePhoneCode($phone,$code)
     {
-        $vCode=\Yii::$app->session->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
+        $vCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
         return $vCode==$code?true:false;
     }
 
@@ -951,8 +958,6 @@ class IndexController extends UnCController
         }
         return $emailTime;
     }
-
-
 
 
 }

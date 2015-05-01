@@ -27,11 +27,11 @@ class UserPublisherDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO user_publisher
             (
-              userId,countryId,cityId,lon,lat,idCard,idCardImg,kind,tripCount,leadCount,registerTime,lastUpdateTime
+              userId,countryId,cityId,lon,lat,idCard,idCardImg,kind,tripCount,leadCount,registerTime,lastUpdateTime,score
             )
             VALUES
             (
-              :userId,:countryId,:cityId,:lon,:lat,:idCard,:idCardImg,:kind,0,0,now(),now()
+              :userId,:countryId,:cityId,:lon,:lat,:idCard,:idCardImg,:kind,0,0,now(),now(),0
             )
         ");
 
@@ -61,7 +61,7 @@ class UserPublisherDb extends ProxyDb
     {
         $sql = sprintf("
             UPDATE user_publisher SET
-            countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,idCard=:idCard,idCardImg=:idCardImg,kind=:kind,lastUpdateTime=now()
+            countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,idCard=:idCard,idCardImg=:idCardImg,kind=:kind,lastUpdateTime=now(),score=:score
             WHERE userPublisherId=:userPublisherId
 
         ");
@@ -76,6 +76,8 @@ class UserPublisherDb extends ProxyDb
         $command->bindParam(":idCard", $userPublisher->idCard, PDO::PARAM_STR);
         $command->bindParam(":idCardImg", $userPublisher->idCardImg, PDO::PARAM_STR);
         $command->bindParam(":kind", $userPublisher->kind, PDO::PARAM_INT);
+        $command->bindParam(":score", $userPublisher->score, PDO::PARAM_STR);
+
         $command->bindParam(":userPublisherId", $userPublisher->userPublisherId, PDO::PARAM_INT);
 
 
@@ -100,6 +102,27 @@ class UserPublisherDb extends ProxyDb
 
         $command->bindParam(":userPublisherId", $userPublisherId, PDO::PARAM_INT);
 
-        return $command->execute();
+        return $command->queryOne();
+    }
+
+    /**
+     * 根据用户Id获取随友详情
+     * @param $userId
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function findUserPublisherByUserId($userId)
+    {
+        $sql = sprintf("
+            SELECT * FROM  user_publisher
+            WHERE userId=:userId
+
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":userId", $userId, PDO::PARAM_STR);
+
+        return $command->queryOne();
     }
 }

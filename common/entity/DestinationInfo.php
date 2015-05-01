@@ -31,6 +31,8 @@ class DestinationInfo {
 
     public $titleImg;
 
+    public $intro;
+
     public $createUserId;
 
     public $createTime;

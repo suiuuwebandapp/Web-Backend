@@ -74,6 +74,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-md-3 control-label">简介<span class="required">*</span></label>
+                                        <div class="col-md-7 valdate">
+                                            <div class="input-icon right">
+                                                <i class="fa"></i>
+                                                <textarea id="intro" class="form-control" placeholder="请输入文章简介" required><?= $desInfo->intro; ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
                                             <input type="hidden" id="titleImg" value="<?= $desInfo->titleImg; ?>"/>
@@ -137,6 +146,7 @@
 
     $(document).ready(function() {
         FormValidation.init("saveDes");
+        Metronic.initSlimScroll($(".scroller"));
         $(".muti_select").select2();
         var selectCityId=$("#initCityId").val();
         getCityList(selectCityId);
@@ -175,6 +185,7 @@
         var desId=$("#desId").val();
         var title=$("#title").val();
         var titleImg=$("#titleImg").val();
+        var intro=$("#intro").val()
         var countryId=$("#countryId").val();
         var cityId=$("#cityId").val();
 
@@ -190,6 +201,7 @@
                 desId:desId,
                 title:title,
                 titleImg:titleImg,
+                intro:intro,
                 countryId:countryId,
                 cityId:cityId
             },

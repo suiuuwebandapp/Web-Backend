@@ -24,6 +24,7 @@ class UserBaseService extends BaseDb
 
     private $userBaseDb;
 
+
     public function __construct()
     {
 
@@ -369,6 +370,7 @@ class UserBaseService extends BaseDb
         return false;
     }
 
+<<<<<<< Updated upstream
     public function updatePassword($userId,$password)
     {
         try {
@@ -378,10 +380,27 @@ class UserBaseService extends BaseDb
             $userBase->password = $this->encryptPassword($password);
             $userBase->userId=$userId;
            return $this->userBaseDb->updatePassword($userBase);
+=======
+    public function findUserPublisherByUserSign($userSign)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $userPublisherDb=new UserPublisherDb($conn);
+            $result=$userPublisherDb->findUserPublisherByUserId($userSign);
+            $userBase=$this->arrayCastObject($result,UserPublisher::class);
+>>>>>>> Stashed changes
         } catch (Exception $e) {
             throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }
+<<<<<<< Updated upstream
     }
+=======
+        return $userBase;
+    }
+
+
+>>>>>>> Stashed changes
 }

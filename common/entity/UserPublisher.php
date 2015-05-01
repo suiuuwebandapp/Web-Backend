@@ -81,6 +81,10 @@ class UserPublisher {
      * @var最后更新时间
      */
     public $lastUpdateTime;
+    /**
+     * @var评分
+     */
+    public $score;
 
 
 

@@ -48,7 +48,7 @@
             </div>
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
-                <form id="form_validate" class="form-horizontal" method="post" isSubmit="false">
+                <form id="form_validate" class="form-horizontal" method="post" isSubmit="false" onsubmit="return false">
                     <input type="hidden" id="articleId" value="<?=$articleInfo->articleId ?>" class="form-control" />
                     <div class="form-body">
                         <div class="form-group">
@@ -78,32 +78,6 @@
                                 <input id="file_upload" name="file_upload" type="file">
                             </div>
                         </div>
-
-                        <!--
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">国家&nbsp;</label>
-                            <div class="col-md-4">
-                                <select id="kindIds" name="kindIds" class="form-control muti_select" placeholder=" 请选电影分类"  required>
-                                        <option value=""></option>
-                                        <option value="0">中国</option>
-                                        <option value="1">日本</option>
-                                        <option value="2">韩国</option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">城市&nbsp;</label>
-                            <div class="col-md-4">
-                                <select id="kindIds" name="tagIds" class="form-control muti_select" placeholder=" 请选电影分类"  required>
-                                        <option value=""></option>
-                                        <option value="0">北京</option>
-                                        <option value="1">上海</option>
-                                        <option value="2">郑州</option>
-                                </select>
-                            </div>
-                        </div>
-                        -->
                         <div class="form-group">
                             <label class="col-md-3 control-label">文章内容<span class="required">*</span></label>
                             <div class="col-md-6">
@@ -125,14 +99,14 @@
     </div>
 </div>
 
-<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/dist/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/dist/jquery.validate.min.js""></script>
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/dist/additional-methods.min.js"></script>
-<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/scripts/form-validation.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/scripts/form-validation.js?<?=time().rand(100,999)?>"></script>
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/localization/messages_zh.js" ></script>
 
 
 
-<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.config.js?<?=time().rand(100,999)?>"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.all.min.js?<?=time().rand(100,999)?>"></script>
 
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-uploadifive/jquery.uploadifive.min.js"></script>
@@ -140,27 +114,29 @@
 
 <script type="text/javascript">
 
+    var ue="";
+
+
+    (function(){
+        //初始化ueditor
+        ue= UE.getEditor('container');
+        UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+        UE.Editor.prototype.getActionUrl = function(action) {
+            if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
+                return '/upload/upload-content-img';
+            } else if (action == 'uploadvideo') {
+                return 'http://a.b.com/video.php';
+            } else {
+                return this._bkGetActionUrl.call(this, action);
+            }
+        }
+    })(jQuery);
+
 
     $(document).ready(function() {
+
         FormValidation.init("editArticle");
-    });
 
-
-    //初始化ueditor
-    var ue = UE.getEditor('container');
-    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
-    UE.Editor.prototype.getActionUrl = function(action) {
-        if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return '/upload/upload-content-img';
-        } else if (action == 'uploadvideo') {
-            return 'http://a.b.com/video.php';
-        } else {
-            return this._bkGetActionUrl.call(this, action);
-        }
-    }
-
-    <?php $timestamp = time();?>
-    $(function() {
         $('#file_upload').uploadifive({
             'auto'             : true,
             'buttonText'       : '请选择封面图',
@@ -183,6 +159,8 @@
     });
 
 
+
+
     //添加专栏文章
     function editArticle(){
         var articleId=$("#articleId").val();
@@ -203,17 +181,16 @@
             Main.errorTip("文章内容不允许为空");
             return;
         }
-
         $.ajax({
             url :'/article/edit-article',
             type:'post',
+            cache:false,
             data:{
                 articleId:articleId,
                 title:title,
                 name:name,
                 titleImg:titleImg,
-                content:content,
-                _csrf: $('input[name="_csrf"]').val()
+                content:content
             },
             beforeSend:function(){
                 Main.showWait();

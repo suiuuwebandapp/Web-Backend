@@ -100,6 +100,29 @@ class ProxyDb extends Connection {
 
     }
 
+    public function findList(Page $page)
+    {
+        if($page==null){
+            $page=new Page();
+            $page->showAll=true;
+        }
+        $searchSql=$this->sql;
+        $command=$this->db->createCommand($searchSql);
+
+        $command->setSql($searchSql);
+
+        foreach($this->paramArray as $key=>$value )
+        {
+            if(is_numeric($value)){
+                $command->bindValue(":".$key,$value,PDO::PARAM_INT);
+            }else{
+                $command->bindValue(":".$key,$value,PDO::PARAM_STR);
+            }
+        }
+        $page->setList($command->queryAll());
+        return $page;
+    }
+
 
     public function findAllCount()
     {

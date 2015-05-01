@@ -20,6 +20,8 @@ class DestinationScenic {
 
     public $titleImg;
 
+    public $intro;
+
     public $beginTime;
 
     public $endTime;

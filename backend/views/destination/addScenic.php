@@ -47,7 +47,7 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <div class="scroller" style="height: 600px" data-always-visible="1" data-rail-visible1="1">
+                <div class="scroller" style="height: 400px" data-always-visible="1" data-rail-visible1="1">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="portlet-body form">
@@ -67,6 +67,15 @@
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
                                                 <input type="text" id="title" value="" class="form-control" placeholder="请输入文章标题" maxlength="20"  required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">景点简介<span class="required">*</span></label>
+                                        <div class="col-md-7 valdate">
+                                            <div class="input-icon right">
+                                                <i class="fa"></i>
+                                                <textarea id="intro" class="form-control" placeholder="请输入景区简介" required/>
                                             </div>
                                         </div>
                                     </div>
@@ -135,6 +144,7 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+        Metronic.initSlimScroll($(".scroller"));
         FormValidation.init("addScenic");
         $("#titleImgPre").hide();//隐藏预览封面图
 
@@ -212,6 +222,7 @@
         var desId=$("#desId").val();
         var title=$("#title").val();
         var titleImg=$("#titleImg").val();
+        var intro=$("#intro").val();
         var beginTime=$("#beginTime").val();
         var endTime=$("#endTime").val();
 
@@ -227,6 +238,7 @@
             data:{
                 title:title,
                 titleImg:titleImg,
+                intro:intro,
                 beginTime:beginTime,
                 endTime:endTime,
                 lat:lat,

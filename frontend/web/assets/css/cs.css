@@ -67,7 +67,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 #zhuce-main p{width:210px; height:36px; line-height:36px; margin:4px auto 0; clear:both; border-bottom:#999 1px solid;}
 #zhuce-main p.m-20{ margin-top:20px;}
 #zhuce-main p label{ width:60px; height:36px;line-height:36px; float:left;}
-#zhuce-main p input{ width:130px; height:30px; padding-left:10px; line-height:30px; float:left; border:none; margin-bottom:3px; background:none; color:#ddd;}
+#zhuce-main p input{ width:130px; height:36px; padding-left:10px; line-height:36px; float:left; border:none;background:none; color:#ddd;}
 #zhuce-main p.shuaxin input{width:120px; display:block; height:36px; float:left; margin-right:5px; padding-left:0px; background:#554a4b;}
 #zhuce-main p.shuaxin{ border-bottom:none; margin-top:35px;}
 #zhuce-main p.shuaxin font a{ float:left;  font-size:16px; color:#72B8FF; }
@@ -939,19 +939,20 @@ transition:all 0.4s ease-in-out;
 
 .sydetail .titTop .title{ color:#858585; font-size:20px;}
 .sydetail .web-content{ width:1200px; height:auto; overflow:hidden; margin:20px auto 60px;}
-.sydetail .web-content .web-left{ float:left;width:894px; position:relative;}
+.sydetail .web-content .web-left{ float:left;width:830px; position:relative;}
 .sydetail .web-content .web-left .collection{ position:absolute; right:0; top:0; background:url(../images/syxqicon.png) no-repeat 0 0; display:block; width:157px; height:60px; z-index:12;}
 .sydetail .web-content .web-left .collection:hover{ background-position:0 -75px;}
 
-.sydetail .web-content .web-banner{ width:894px; height:410px; overflow:hidden; position:relative;}
-.sydetail .web-content .web-banner .prev{ position:absolute; left:0px; top:350px;}
-.sydetail .web-content .web-banner .next{ position:absolute; right:0px; top:350px;}
-.sydetail .web-content .web-banner ul{ width:22222px; height:300px; overflow:hidden; position:absolute; left:0px; top:0px;}
-.sydetail .web-content .web-banner ul li{ width:894px; height:100%; float:left;}
-.sydetail .web-content .web-banner ul li img{ width:894px; height:300px;}
-.sydetail .web-content .web-banner ol{ width:22224px; height:100px; margin-top:10px;position:absolute; left:0px; top:310px; background:#ccc;}
-.sydetail .web-content .web-banner ol li{ width:130px; height:100px; float:left; margin-left:16px;}
-.sydetail .web-content .web-banner ol li img:hover{ width:128px; height:98px; border:#FF0 1px solid;}
+.sydetail .web-content .web-banner{ width:830px; height:570px; overflow:hidden; position:relative;}
+.sydetail .web-content .web-banner .pre{ position:absolute; left:0px; top:225px;}
+.sydetail .web-content .web-banner .nex{ position:absolute; right:0px; top:225px;}
+.sydetail .web-content .web-banner ul{ width:22222px; height:460px; overflow:hidden; position:absolute; left:0px; top:0px;}
+.sydetail .web-content .web-banner ul li{ width:830px; height:460px; overflow:hidden;  float:left;}
+.sydetail .web-content .web-banner ul li img{ width:830px;}
+.sydetail .web-content .web-banner ol{ width:22224px; height:100px; margin-top:10px;position:absolute; left:0px; bottom:0;}
+.sydetail .web-content .web-banner ol li{ width:185px; height:100px; overflow:hidden; overflow:hidden; float:left; margin-right:10px;}
+.sydetail .web-content .web-banner ol li img{ width:185px; }
+.sydetail .web-content .web-banner ol li img:hover{ width:183px;  border:#FF0 1px solid;}
 .sydetail .web-content .web-left .map{ padding:10px 0;}
 .sydetail .web-content .web-left .map .title01{ font-size:20px; line-height:80px; height:80px; text-align:center;}
 .sydetail .web-content .web-left .map .details li{height:36px; line-height:36px; width:38%; float:left; font-size:18px;}
@@ -967,21 +968,25 @@ transition:all 0.4s ease-in-out;
 .web-content .web-left .newsLists .title{ color:#FF7945; font-size:18px; height:45px; line-height:45px; border-bottom:1px solid #ddd; margin-top:60px;}
 .sydetail .web-content .web-left .newsLists .lists{ width:100%;  margin-top:60px;}
 .sydetail .web-content .web-left .newsLists .lists .userpic{float:left; width:66px; border-radius:360px;}
-.sydetail .web-content .web-left .newsLists .lists ul{ height:65px; border-bottom:1px solid #ddd; width:700px; float:left; padding-left:20px; padding-bottom:5px;}
+.sydetail .web-content .web-left .newsLists .lists ul{ height:65px; border-bottom:1px solid #ddd; width:650px; float:left; padding-left:20px; padding-bottom:5px;}
 .sydetail .web-content .web-left .newsLists .lists ul li{ padding-top:33px; float:left; width:25%; height:33px; line-height:33px;}
 .sydetail .web-content .web-left .newsLists .lists ul .li01{ padding-top:0;}
 .sydetail .web-content .web-left .newsLists .lists ul li img{ width:18px; height:12px;}
 .sydetail .web-content .web-left .newsLists .lists ul li b{ margin-left:10px; color:#ff7945;}
 .sydetail .web-content .web-left .newsLists .lists .sureBtn{ width:80px; height:36px; line-height:36px; text-align:center; float:right; margin-top:32px; background:#ff7a4d; color:#ffeb81;border:none; font-size:16px;}
 
+
 .sydetail .web-content .web-left .route .title{ color:#FF7945; font-size:18px; height:45px; line-height:45px; border-bottom:1px solid #ddd; margin-top:60px;}
 .sydetail .web-content .web-left .route ul{ width:435px; margin:0 auto;}
 .sydetail .web-content .web-left .route ul li{ margin-top:25px; display:table; }
 .sydetail .web-content .web-left .route ul li span{ vertical-align:middle; line-height:36px; height:36px; display:table-cell; width:90px;}
 .sydetail .web-content .web-left .route ul p{ width:344px; height:36px; line-height:36px;  position:relative; display:table-cell; vertical-align:middle;}
+.sydetail .web-content .web-left .route ul p label{ width:25%; display:inline-block;text-align:center; height:36px; line-height:36px;  position:relative;}
+.sydetail .web-content .web-left .route ul p span{ width:25%; display:inline-block; text-align:center; height:36px; line-height:36px;  position:relative;}
+.sydetail .web-content .web-left .route ul p b{ font-size:16px; color:#FF7A4D;}
 .sydetail .web-content .web-left .route ul p .text{ width:324px; padding:10px;  background:#EBEBFA; position:relative; display:table-cell; vertical-align:middle;}
 .sydetail .web-content .web-left .route ul p .radio{ opacity:0; width:20px; height:20px; float:left;}
-.sydetail .web-content .web-left .route ul p .radio+label{ width:130px; float:left; background:url(../images/check.png) no-repeat 0 -102px; padding-left:20px;}
+.sydetail .web-content .web-left .route ul p .radio+label{ float:left; background:url(../images/check.png) no-repeat 0 -102px; padding-left:20px;}
 .web-content .web-left .route .cal-icon{ display:inline-block; background:url(../images/calenda-icon.fw.png) no-repeat 0 center; height:36px; width:36px; position:absolute; right:0; top:0; }
 .sydetail .web-content .web-left .route .cal-icon:hover{ background-position:-49px center; }
 .sydetail .web-content .web-left .route .pay{ height:40px; border-bottom:1px solid #ddd; margin-top:25px; }
@@ -1027,27 +1032,44 @@ transition:all 0.4s ease-in-out;
 .sydetail .web-content .web-left .web-con .zhuanlan-text textarea{ height:100px; resize:none; width:95%;  border:none; background:#eeeeee; display:block; padding:15px;}
 .sydetail .web-content .web-left .web-con .zhuanlan-text .zl-btn{ width:80px; height:35px; line-height:35px; padding:0 10px;text-align:center; font-size:16px; background:#858585; color:#FFEA86; border:none; margin-top:20px; float:right;}
 		/*---随游详情评论-分享----*/
-.sydetail .web-content .web-right{ float:right; width:285px; }
+.sydetail .web-content .web-right{ float:right; width:328px; }
+.sydetail .web-content .web-right p{ height:36px; line-height:36px; padding-left:15px;}
 .sydetail .web-content .web-right .user{height:50px;}
 .sydetail .web-content .web-right .user .user-name{ position:relative; width:40px; height:40px; border-radius:360px; float:left; margin-right:15px; margin-left:15px;}
 .sydetail .web-content .web-right .user .user-name .user-pic{ float:left; display:block; width:40px; height:40px; border-radius:360px; float:left; margin-right:15px;}
-.sydetail .web-content .web-right .pf{ width:285px; height:40px; line-height:40px;}
+.sydetail .web-content .web-right .pf{ overflow:hidden;width:285px; height:40px; line-height:40px;}
+.sydetail .web-content .web-right .pf ul{ width:100%;  overflow:hidden; text-align:center;}
 .sydetail .web-content .web-right .pf li{ width:95px; float:left; overflow:hidden; text-align:center;}
+.sydetail .web-content .web-right .ul01{ width:100%; overflow:hidden;}
+.sydetail .web-content .web-right .ul01 .tit{ height:36px; line-height:36px; color:#70B8FF;}
+.sydetail .web-content .web-right .ul01 li span{ height:36px; line-height:36px; width:33%; text-align:center; float:left;}
+.sydetail .web-content .web-right .ul01 li span b{ font-size:18px; color:#ff7945;}
+.sydetail .web-content .web-right .ul02{ width:100%; overflow:hidden;}
+.sydetail .web-content .web-right .ul02 .tit{ height:36px; line-height:36px; color:#70B8FF;}
+.sydetail .web-content .web-right .ul02 li span{ height:36px; line-height:36px; width:25%; text-align:center; float:left;}
+.sydetail .web-content .web-right .ul02 li span b{ font-size:18px; color:#ff7945;}
+.sydetail .web-content .web-right p b{ font-size:18px; color:#ff7945; margin:0 10px;}
 .sydetail .web-content .web-right .user .user-name span{ position:absolute; left:50px; top:0;}
 .sydetail .web-content .web-right .user p{ margin-top:24px; float:left;}
 .sydetail .web-content .web-right p span{ width:130px; overflow:hidden; display:block; float:left;}
 .sydetail .web-content .web-right ol{width:285px; height:120px; }
 .sydetail .web-content .web-right ol li{ width:140px; height:40px; line-height:40px; float:left; overflow:hidden;}
 .sydetail .web-content .web-right ol li span{ display:block; float:left; width:68px;height:40px; margin-right:8px;}
+<<<<<<< Updated upstream
 .sydetail .web-content .web-right input{ width:136px; height:40px; color:#ffea87; border:none; font-size:16px;   text-align:center; line-height:40px; margin-top:8px;}
 .sydetail .web-content .web-right input.web-btn5{ background:#ff7a4d; margin-right:8px; cursor:pointer;}
 .sydetail .web-content .web-right input.web-btn6{ background:#70b8ff; cursor:pointer;}
+=======
+.sydetail .web-content .web-right input{ width:150px; height:40px; color:#ffea87; border:none; font-size:16px;  text-align:center; line-height:40px; margin-top:8px;}
+.sydetail .web-content .web-right input.web-btn5{ background:#ff7a4d; margin-right:8px; margin-left:10px;}
+.sydetail .web-content .web-right input.web-btn6{ background:#70b8ff;}
+>>>>>>> Stashed changes
 
-.sydetail .web-content .web-right .web-tuijian{width:283px; height:298px; overflow:hidden; margin-top:20px; border:1px solid #ddd;}
+.sydetail .web-content .web-right .web-tuijian{width:325px; height:298px; overflow:hidden; margin-top:20px; border:1px solid #ddd;}
 .sydetail .web-content .web-right .web-tuijian .xing{ text-align:center;}
-.sydetail .web-content .web-right .web-tuijian h4{width:285px; height:40px; line-height:40px; text-align:center;}
+.sydetail .web-content .web-right .web-tuijian h4{ height:40px; line-height:40px; text-align:center;}
 .sydetail .web-content .web-right .web-tuijian .pic{ width:80%;  margin:5px auto; display:block;}
-.sydetail .web-content .web-right .web-tuijian div{width:265px; height:50px; padding:10px; overflow:hidden; line-height:20px; font-size:14px;}
+.sydetail .web-content .web-right .web-tuijian div{width:305px; height:50px; padding:10px; overflow:hidden; line-height:20px; font-size:14px;}
 .sydetail .web-content .web-right .web-tuijian span{ display:block; height:50px; width:185px; width:285px; line-height:46px; text-align:center;}
 .sydetail .web-content .web-right .web-tuijian span a{color:#ff7a45;}
 
@@ -1059,23 +1081,25 @@ transition:all 0.4s ease-in-out;
 .yldetail{margin:110px auto 0px;}
 .yldetail .titTop{ height:auto; overflow:hidden;  position:relative;}
 .yldetail .titTop .bjBtn{display:block; background:#70b8ff; color:#ffea87; position:absolute; right:0; top:0; height:40px; line-height:40px; width:136px; text-align:center; }
-.yldetail .titTop .backbj{display:block; background:#ff7a4d; color:#ffea87; position:absolute; right:140px; top:0; height:40px; line-height:40px; width:136px; text-align:center; }
+.yldetail .titTop .backbj{display:block; background:#ff7a4d; color:#ffea87; position:absolute; right:140px; top:0; height:40px; line-height:40px; width:155px; text-align:center; }
 
 .yldetail .titTop .title{ color:#858585; font-size:20px;}
 .yldetail .web-content{ width:1200px; height:auto; overflow:hidden; margin:20px auto 60px;}
-.yldetail .web-content .web-left{ float:left;width:894px; position:relative;}
+.yldetail .web-content .web-left{ float:left;width:830px; position:relative;}
 .yldetail .web-content .web-left .collection{ position:absolute; right:0; top:0; background:url(../images/syxqicon.png) no-repeat 0 0; display:block; width:157px; height:60px; z-index:12;}
+
 .yldetail .web-content .web-left .collection:hover{ background-position:0 -75px;}
 
-.yldetail .web-content .web-banner{ width:894px; height:410px; overflow:hidden; position:relative;}
-.yldetail .web-content .web-banner .prev{ position:absolute; left:0px; top:350px;}
-.yldetail .web-content .web-banner .next{ position:absolute; right:0px; top:350px;}
-.yldetail .web-content .web-banner ul{ width:22222px; height:300px; overflow:hidden; position:absolute; left:0px; top:0px;}
-.yldetail .web-content .web-banner ul li{ width:894px; height:100%; float:left;}
-.yldetail .web-content .web-banner ul li img{ width:894px; height:300px;}
-.yldetail .web-content .web-banner ol{ width:22224px; height:100px; margin-top:10px;position:absolute; left:0px; top:310px; background:#ccc;}
-.yldetail .web-content .web-banner ol li{ width:130px; height:100px; float:left; margin-left:16px;}
-.yldetail .web-content .web-banner ol li img:hover{ width:128px; height:98px; border:#FF0 1px solid;}
+.yldetail .web-content .web-banner{ width:830px; height:570px; overflow:hidden; position:relative;}
+.yldetail .web-content .web-banner .pre{ position:absolute; left:0px; top:225px;}
+.yldetail .web-content .web-banner .nex{ position:absolute; right:0px; top:225px;}
+.yldetail .web-content .web-banner ul{ width:22222px; height:460px; overflow:hidden; position:absolute; left:0px; top:0px;}
+.yldetail .web-content .web-banner ul li{ width:830px; height:460px; overflow:hidden;  float:left;}
+.yldetail .web-content .web-banner ul li img{ width:830px;}
+.yldetail .web-content .web-banner ol{ width:22224px; height:100px; margin-top:10px;position:absolute; left:0px; bottom:0;}
+.yldetail .web-content .web-banner ol li{ width:185px; height:100px; overflow:hidden; float:left; margin-right:10px;}
+.yldetail .web-content .web-banner ol li img{ width:185px;}
+.yldetail .web-content .web-banner ol li img:hover{ width:183px; border:#FF0 1px solid;}
 .yldetail .web-content .web-left .map{ padding:10px 0;}
 .yldetail .web-content .web-left .map .title01{ font-size:20px; line-height:80px; height:80px; text-align:center;}
 .yldetail .web-content .web-left .map .details li{height:36px; line-height:36px; width:38%; float:left; font-size:18px;}
@@ -1103,9 +1127,12 @@ transition:all 0.4s ease-in-out;
 .yldetail .web-content .web-left .route ul li{ margin-top:25px; display:table; }
 .yldetail .web-content .web-left .route ul li span{ vertical-align:middle; line-height:36px; height:36px; display:table-cell; width:90px;}
 .yldetail .web-content .web-left .route ul p{ width:344px; height:36px; line-height:36px;  position:relative; display:table-cell; vertical-align:middle;}
+.yldetail .web-content .web-left .route ul p label{ width:25%; display:inline-block;text-align:center; height:36px; line-height:36px;  position:relative;}
+.yldetail .web-content .web-left .route ul p span{ width:25%; display:inline-block; text-align:center; height:36px; line-height:36px;  position:relative;}
+.yldetail .web-content .web-left .route ul p b{ font-size:16px; color:#FF7A4D;}
 .yldetail .web-content .web-left .route ul p .text{ width:324px; padding:10px;  background:#EBEBFA; position:relative; display:table-cell; vertical-align:middle;}
 .yldetail .web-content .web-left .route ul p .radio{ opacity:0; width:20px; height:20px; float:left;}
-.yldetail .web-content .web-left .route ul p .radio+label{ width:130px; float:left; background:url(../images/check.png) no-repeat 0 -102px; padding-left:20px;}
+.yldetail .web-content .web-left .route ul p .radio+label{ float:left; background:url(../images/check.png) no-repeat 0 -102px; padding-left:20px;}
 .web-content .web-left .route .cal-icon{ display:inline-block; background:url(../images/calenda-icon.fw.png) no-repeat 0 center; height:36px; width:36px; position:absolute; right:0; top:0; }
 .yldetail .web-content .web-left .route .cal-icon:hover{ background-position:-49px center; }
 .yldetail .web-content .web-left .route .pay{ height:40px; border-bottom:1px solid #ddd; margin-top:25px; }
@@ -1114,20 +1141,31 @@ transition:all 0.4s ease-in-out;
 .yldetail .web-content .web-left .route .pay span b{ font-size:18px; color:#ff7945; }
 .yldetail .web-content .web-left .route .pay .btn{ font-size:16px; color:#FFEB79; padding:10px 20px; background:#FF7A4D; margin-left:40px; }
 
-.yldetail .web-content .web-right{ float:right; width:285px; }
+.yldetail .web-content .web-right{ float:right; width:328px; }
+.yldetail .web-content .web-right p{ height:36px; line-height:36px; padding-left:15px;}
 .yldetail .web-content .web-right .user{height:50px;}
 .yldetail .web-content .web-right .user .user-name{ position:relative; width:40px; height:40px; border-radius:360px; float:left; margin-right:15px; margin-left:15px;}
 .yldetail .web-content .web-right .user .user-name .user-pic{ float:left; display:block; width:40px; height:40px; border-radius:360px; float:left; margin-right:15px;}
-.yldetail .web-content .web-right .pf{ width:285px; height:40px; line-height:40px;}
+.yldetail .web-content .web-right .pf{ overflow:hidden;width:285px; height:40px; line-height:40px;}
+.yldetail .web-content .web-right .pf ul{ width:100%;  overflow:hidden; text-align:center;}
 .yldetail .web-content .web-right .pf li{ width:95px; float:left; overflow:hidden; text-align:center;}
+.yldetail .web-content .web-right .ul01{ width:100%; overflow:hidden;}
+.yldetail .web-content .web-right .ul01 .tit{ height:36px; line-height:36px; color:#70B8FF;}
+.yldetail .web-content .web-right .ul01 li span{ height:36px; line-height:36px; width:33%; text-align:center; float:left;}
+.yldetail .web-content .web-right .ul01 li span b{ font-size:18px; color:#ff7945;}
+.yldetail .web-content .web-right .ul02{ width:100%; overflow:hidden;}
+.yldetail .web-content .web-right .ul02 .tit{ height:36px; line-height:36px; color:#70B8FF;}
+.yldetail .web-content .web-right .ul02 li span{ height:36px; line-height:36px; width:25%; text-align:center; float:left;}
+.yldetail .web-content .web-right .ul02 li span b{ font-size:18px; color:#ff7945;}
+.yldetail .web-content .web-right p b{ font-size:18px; color:#ff7945; margin:0 10px;}
 .yldetail .web-content .web-right .user .user-name span{ position:absolute; left:50px; top:0;}
 .yldetail .web-content .web-right .user p{ margin-top:24px; float:left;}
 .yldetail .web-content .web-right p span{ width:130px; overflow:hidden; display:block; float:left;}
 .yldetail .web-content .web-right ol{width:285px; height:120px; }
 .yldetail .web-content .web-right ol li{ width:140px; height:40px; line-height:40px; float:left; overflow:hidden;}
 .yldetail .web-content .web-right ol li span{ display:block; float:left; width:68px;height:40px; margin-right:8px;}
-.yldetail .web-content .web-right input{ width:136px; height:40px; color:#ffea87; border:none; font-size:16px;  text-align:center; line-height:40px; margin-top:8px;}
-.yldetail .web-content .web-right input.web-btn5{ background:#ff7a4d; margin-right:8px;}
+.yldetail .web-content .web-right input{ width:150px; height:40px; color:#ffea87; border:none; font-size:16px;  text-align:center; line-height:40px; margin-top:8px;}
+.yldetail .web-content .web-right input.web-btn5{ background:#ff7a4d; margin-right:8px; margin-left:10px;}
 .yldetail .web-content .web-right input.web-btn6{ background:#70b8ff;}
 /*---------------预览--end----------*/
 
@@ -1139,7 +1177,7 @@ transition:all 0.4s ease-in-out;
 .zl-banner .tit{ font-size:30px; margin-top:30px; color:#fff; padding:0 50px;}
 .tanchu-list{  height:auto; overflow:hidden; margin:20px auto;}
 .tanchu-list ul{ width:1172px; height:auto; margin:0px auto; }
-.tanchu-list ul li{width:283px; height:350px; float:left; margin:5px; background: #fff;}
+.tanchu-list ul li{ cursor:pointer;width:283px; height:350px; float:left; margin:5px; background: #fff;}
 .tanchu-list ul li img{ width:283px; height:259px; border:none;}
 .tanchu-list ul li div{ margin-top:-4px;}
 .tanchu-list ul li h4{ width:281px; height:40px; line-height:40px; text-align:center;}
@@ -1220,8 +1258,8 @@ transition:all 0.4s ease-in-out;
 .mdd{ width:1204px; height:auto; overflow:hidden; margin:110px auto 0px;}
 .mdd-left{ width:292px; height:auto; float:left;}
 .mdd-left img{width:232px; margin:0px 30px 20px; height:142px;}
-.mdd-left ul{ width:232px; margin:0px 30px; height:330px; background:url(../images/mddbj.fw.png) no-repeat center 8px;}
-.mdd-left li{ width:100%; height:30px; line-height:30px; text-align:center; overflow:hidden; margin-bottom:30px; font-size:18px;}
+.mdd-left ul{ width:232px; margin:0px 30px;  background:url(../images/mddbj.fw.png) repeat-y center 8px;}
+.mdd-left li{ width:100%; height:30px; line-height:30px; text-align:center; overflow:hidden; margin-bottom:29px; font-size:18px;}
 .mdd-left li a{color:#333;}
 .mdd-left li:hover{color:#FFA54C; cursor:pointer;}
 .mdd-left li p.mdd-btn-left{width:100px; height:30px; line-height:30px; float:left; text-align:right; padding-right:8px; overflow:hidden;}
@@ -1278,13 +1316,21 @@ transition:all 0.4s ease-in-out;
 #aboutCon-out .aboutBanner{ height:360px; width:100%; background:url(../images/help/helpBanner.png) no-repeat center 0; background-size:cover;}
 #aboutCon-out{ height:auto;}
 #aboutCon-out .aboutNav-out{ height:40px; height:40px; line-height:40px; background:rgba(0,0,0,0.4); margin-top:-40px; }
+<<<<<<< Updated upstream
 #aboutCon-out .aboutNav li{ float:left; height:40px; line-height:40px;font-size:18px; color:#fff; padding-right:40px;}
 #aboutCon-out .aboutNav li a{ height:40px; line-height:40px;font-size:18px; color:#fff;}
 #aboutCon-out .aboutNav li a:hover,#aboutCon-out .aboutNav li a.active{ height:40px; line-height:40px;font-size:18px; color:#ffeb81;}
+=======
+#aboutCon-out .aboutNav li{ float:left; height:40px; line-height:40px;font-size:18px; color:#fff; padding-right:45px;}
+#aboutCon-out .aboutNav li a{ height:40px; line-height:40px;font-size:18px; color:#fff;}
+#aboutCon-out .aboutNav li a:hover,#aboutCon-out .aboutNav li a.active{ height:40px; line-height:40px;font-size:18px; color:#ffeb81;}
+#aboutCon-out .aboutCon{ margin-top:30px; display:none;}
+>>>>>>> Stashed changes
 #aboutCon-out .aboutCon{ margin-top:30px;}
 #aboutCon-out .aboutCon .leftNav{ height:auto; width:120px; float:left; font-size:18px;}
 #aboutCon-out .aboutCon .leftNav li a{ height:40px; line-height:40px;font-size:18px; color:#858585;}
 #aboutCon-out .aboutCon .leftNav li a:hover,#aboutCon-out .aboutCon .leftNav li a.active{ color:#858585;color:#ff794c; text-decoration:underline; }
+<<<<<<< Updated upstream
 #aboutCon-out .aboutCon .rightCon{ float:right; width:1000px; font-size:16px; background:#fff; padding:20px 40px 40px; line-height:24px; display:none; }
 #aboutCon-out .aboutCon .companyItr .rightCon.server{ height:600px; overflow-y:scroll; }
 #aboutCon-out .aboutCon .rightCon .title{ margin-top:20px;font-size:18px; height:36px; line-height:36px;}
@@ -1328,6 +1374,19 @@ transition:all 0.4s ease-in-out;
 
 
 
+=======
+#aboutCon-out .aboutCon .rightCon{ float:right; width:1000px; font-size:16px; background:#fff; padding:20px 40px 40px 40px; line-height:24px; display:none; min-height:200px; }
+#aboutCon-out .aboutCon .rightCon.server{ padding-right:0; height:600px; overflow-y:scroll; overflow:hidden;}
+#aboutCon-out .aboutCon .rightCon.server .serverinner{ height:600px; overflow-y:scroll; padding-right:40px;}
+#aboutCon-out .aboutCon .companyItr .rightCon.server{ height:600px; overflow-y:scroll; }
+#aboutCon-out .aboutCon .rightCon .title{ margin-top:20px;font-size:18px;}
+#aboutCon-out .aboutCon .rightCon p{ margin-top:10px; line-height:24px;}
+#aboutCon-out .aboutCon .rightCon .indent p{ padding-left:30px;}
+#aboutCon-out .aboutCon .rightCon.mianze p{ text-indent:2em;}
+#aboutCon-out .aboutCon .rightCon textarea{ height:160px; padding:20px; width:940px; background:#eee; resize:none;}
+#aboutCon-out .aboutCon .rightCon .btnbar{ height:36px; line-height:36px;width:980px; }
+#aboutCon-out .aboutCon .rightCon .btnbar .btn{ height:36px; line-height:36px; padding:0 20px; display:block; background:#73b9ff; color:#ffeb80;  float:right;}
+>>>>>>> Stashed changes
 
 /*------------帮助中心--end-----------*/
 

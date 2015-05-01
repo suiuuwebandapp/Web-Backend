@@ -549,7 +549,7 @@
             $("#phoneTip").focus();
             return;
         }
-        if(!$("#red").is(":checked")){
+        if(!$("#rad").is(":checked")){
             Main.showTip("请先阅读并且同意注册协议");
             return;
         }
@@ -574,6 +574,7 @@
                 $("#createPublisher").attr("disabled","disabled");
             },
             error:function(){
+                $("#createPublisher").removeAttr("disabled");
                 Main.showTip("注册随友失败，请稍后再试");
             },
             success:function(data){

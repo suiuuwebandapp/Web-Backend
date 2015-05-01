@@ -12,6 +12,7 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\GoogleMap;
+use frontend\services\TripService;
 use yii\base\Exception;
 
 class GoogleMapController extends CController{
@@ -36,6 +37,22 @@ class GoogleMapController extends CController{
     }
 
     /**
+     * 获取景区列表
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionViewScenicMap()
+    {
+        $tripId=\Yii::$app->request->get("tripId");
+        $tripService=new TripService();
+        $scenicList=$tripService->getTravelTripScenicList($tripId);
+        return $this->render("viewScenicMap",[
+            'scenicList'=>$scenicList
+        ]);
+    }
+
+    /**
      * 获取地点详细信息
      */
     public function actionSearchMapInfo()
@@ -43,7 +60,7 @@ class GoogleMapController extends CController{
         $search=\Yii::$app->request->get("search");
         try{
             $googleMap=GoogleMap::getInstance();
-            //$rst=$googleMap->searchSiteInfo($search);
+            $rst=$googleMap->searchSiteInfo($search);
             $rst='{
                    "results" : [
                       {

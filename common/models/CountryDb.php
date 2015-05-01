@@ -70,7 +70,7 @@ class CountryDb extends ProxyDb{
         $command->bindParam(":cname",$city->cname);
         $command->bindParam(":ename",$city->ename);
         $command->bindParam(":code",$city->code);
-        $command->bindParam(":countryId",$city->countryIds);
+        $command->bindParam(":countryId",$city->countryId);
 
         $command->execute();
     }

@@ -109,6 +109,7 @@ class DestinationController extends CController
     {
         $title=\Yii::$app->request->post("title","");
         $titleImg=\Yii::$app->request->post("titleImg","");
+        $intro=\Yii::$app->request->post("intro","");
         $countryId=\Yii::$app->request->post("countryId");
         $cityId=\Yii::$app->request->post("cityId");
 
@@ -117,6 +118,7 @@ class DestinationController extends CController
             $desInfo=new DestinationInfo();
             $desInfo->title=$title;
             $desInfo->titleImg=$titleImg;
+            $desInfo->intro=$intro;
             $desInfo->countryId=$countryId;
             $desInfo->cityId=$cityId;
             $desInfo->createUserId=$this->userObj->userId;
@@ -139,6 +141,7 @@ class DestinationController extends CController
         $desId=\Yii::$app->request->post("desId");
         $title=\Yii::$app->request->post("title","");
         $titleImg=\Yii::$app->request->post("titleImg","");
+        $intro=\Yii::$app->request->post("intro","");
         $countryId=\Yii::$app->request->post("countryId");
         $cityId=\Yii::$app->request->post("cityId");
 
@@ -148,6 +151,7 @@ class DestinationController extends CController
             $desInfo->destinationId=$desId;
             $desInfo->title=$title;
             $desInfo->titleImg=$titleImg;
+            $desInfo->intro=$intro;
             $desInfo->countryId=$countryId;
             $desInfo->cityId=$cityId;
 
@@ -240,6 +244,7 @@ class DestinationController extends CController
     {
         $title=\Yii::$app->request->post("title","");
         $titleImg=\Yii::$app->request->post("titleImg","");
+        $intro=\Yii::$app->request->post("intro","");
         $beginTime=\Yii::$app->request->post("beginTime","");
         $endTime=\Yii::$app->request->post("endTime","");
         $lon=\Yii::$app->request->post("lon");
@@ -252,6 +257,7 @@ class DestinationController extends CController
             $scenicInfo=new DestinationScenic();
             $scenicInfo->title=$title;
             $scenicInfo->titleImg=$titleImg;
+            $scenicInfo->intro=$intro;
             $scenicInfo->beginTime=DateUtils::convertTimePicker($beginTime);
             $scenicInfo->endTime=DateUtils::convertTimePicker($endTime);
             $scenicInfo->lon=$lon;
@@ -271,6 +277,7 @@ class DestinationController extends CController
     {
         $scenicId=\Yii::$app->request->post("scenicId","");
         $title=\Yii::$app->request->post("title","");
+        $intro=\Yii::$app->request->post("intro","");
         $titleImg=\Yii::$app->request->post("titleImg","");
         $beginTime=\Yii::$app->request->post("beginTime","");
         $endTime=\Yii::$app->request->post("endTime","");
@@ -284,6 +291,7 @@ class DestinationController extends CController
             $scenicInfo=$this->destinationService->findScenicById($scenicId);
             $scenicInfo->title=$title;
             $scenicInfo->titleImg=$titleImg;
+            $scenicInfo->intro=$intro;
             $scenicInfo->beginTime=DateUtils::convertTimePicker($beginTime);
             $scenicInfo->endTime=DateUtils::convertTimePicker($endTime);
             $scenicInfo->lon=$lon;
@@ -358,6 +366,28 @@ class DestinationController extends CController
             'lat'=>$lat
         ]);
     }
+
+      /**
+     * 获取地点详细信息
+     */
+    public function actionGetScenicMapInfo()
+    {
+        $search=\Yii::$app->request->get("search");
+        try{
+            $googleMap=GoogleMap::getInstance();
+            $rst=$googleMap->searchSiteInfo($search);
+            $rst=json_decode($rst);
+            if($rst->status=="OK"){
+                $location=$rst->results[0]->geometry->location;
+                echo json_encode(Code::statusDataReturn(Code::SUCCESS,$location));
+            }else{
+                echo json_encode(Code::statusDataReturn(Code::FAIL));
+            }
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+        }
+    }
+
 
 
 

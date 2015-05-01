@@ -1,0 +1,170 @@
+.form_tip{
+    font-size: 14px;
+    padding-left: 20px;
+    color: red;
+    display: inline-block !important;
+    text-align: right !important;
+    float: right;
+    width: 250px !important;
+}
+.spn_title{
+    display: inline !important;
+}
+.select2-container .select2-choice {
+    background-color: #eee;
+    border-radius: 0px;
+    font-size: 14px;
+    color: dimgray;
+}
+.select2-drop {
+    font-size: 14px;
+}
+.select2-highlighted {
+    background-color: #eee;
+}
+.select2-no-results {
+    font-size: 14px;
+    color: dimgray;
+    text-align: center;
+}
+.p_chose_title_img {
+    height: 260px;
+    width: 285px;
+    text-align: center;
+    line-height:260px;
+    background-color: #ECECFC;
+}
+.upload_tip {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 15px;
+}
+.imgPic {
+    cursor: pointer;
+    height: 260px;
+    width: 285px;
+    margin: auto;
+}
+.showImg {
+    height: 260px;
+    width: 285px;
+}
+#uploadifive-titleImgFile {
+    display: none;
+}
+.queue {
+    display: none;
+}
+#uploadAll{
+    width: 286px;
+    background-color: #FF7A45;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+}
+input,textarea{
+    font-size: 14px;
+}
+.bjy-bj{
+    margin-top: 70px;
+}
+.content{
+    width: 350px;
+    margin: auto;
+}
+.map{
+    background-color: #ffffff !important;
+}
+
+.upload_div{
+    min-height: 400px;
+}
+#uploadifive-picFile{
+    display: none;
+}
+.upload_show_info{
+    text-align: center;
+    margin-top: 50px;
+    display: block;
+}
+.ti_tx, .mi_tx, .mer_tx{
+    height: 40px;
+    padding-left:0px;
+    margin-left:6px;
+}
+.bj4-main{
+    overflow: visible;
+}
+.timepicki-input{
+    width: 45px !important;
+    padding-left: 0px !important;
+}
+.timepicker_wrap{
+    top: 90px !important;
+    border-radius:0 !important;
+}
+.prev, .next{
+    border-radius: 0 !important;
+}
+.time_end{
+    left: 200px !important;
+    width: 240px !important;
+}
+.service_time_tip{
+    float: left;
+    line-height: 36px;
+    height: 36px;
+    margin-right: 10px;
+}
+.timepicker_start, .timepicker_end{
+    width: 177px !important;
+}
+.trip_time{
+    width: 288px !important;
+}
+
+.service_price .select2-search{
+    display: none !important;
+}
+.sect .serviceSelect .select2-chosen{
+    margin: 0px !important;
+}
+.sect .serviceSelect .select2-choice{
+    width: 90px !important;
+}
+.sect .serviceSelect a{
+    height: 36px !important;
+    line-height: 36px !important;
+    border: none;
+
+}
+.sect .serviceSelect .select2-choice{ padding-top: 0; border: 0;}
+.sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
+.sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
+.bjy-bj4 p a{
+    color: #858585;
+}
+
+.bjy-bj4 .bj4-div{
+    width: 440px;
+    margin: auto;
+}
+.bjy-bj4 .bj4-div span{
+    width: 150px;
+    float: left;
+}
+.bjy-bj4 p{
+    clear: both;
+}
+
+.bjy-bj4 .creat dl dd input{
+    margin-bottom: 10px;
+}
+.bjy-bj4 .start-time dt span{
+    width: 150px;
+}
+
+.input-group-btn{
+    display: none !important;
+}

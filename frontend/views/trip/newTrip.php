@@ -9,214 +9,20 @@
 ?>
 
 <link rel="stylesheet" type="text/css" href="/assets/plugins/time-picki/css/timepicki.css">
-
-
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 <link rel="stylesheet" type="text/css" href="/assets/plugins/jquery-uploadifive/uploadifive.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/my_select.css">
+<link rel="stylesheet" type="text/css" href="/assets/pages/trip/new-trip.css"/>
 
 
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/jquery-uploadifive/jquery.uploadifive.min.js"></script>
 <script type="text/javascript" src="/assets/js/squid.js"></script>
-<script type="text/javascript" src="/assets/js/jselect-1.0.js"></script>
-
 <script type="text/javascript" src="/assets/plugins/time-picki/js/timepicki.js"></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
 
-
-<!--初始化select-->
-<script type="text/javascript">
-</script>
-
-
-
 <!--编辑切换-->
-<script src="/assets/js/xcbjy.js"></script>
+<script  type="text/javascript" src="/assets/js/xcbjy.js"></script>
 
-<style type="text/css">
-    .select2-container .select2-choice {
-        background-color: #eee;
-        border-radius: 0px;
-        font-size: 14px;
-        color: dimgray;
-    }
-    .form_tip{
-        font-size: 14px;
-        padding-left: 20px;
-        color: red;
-        display: inline-block !important;
-        text-align: right !important;
-        float: right;
-        width: 250px !important;
-    }
-
-
-    .select2-drop {
-        font-size: 14px;
-    }
-
-    .select2-highlighted {
-        background-color: #eee;
-    }
-    .select2-no-results {
-        font-size: 14px;
-        color: dimgray;
-        text-align: center;
-    }
-
-    .spn_title{
-        display: inline !important;
-    }
-
-    .p_chose_title_img {
-        height: 260px;
-        width: 285px;
-        text-align: center;
-        line-height:260px;
-        background-color: #ECECFC;
-    }
-    .upload_tip {
-        font-size: 12px;
-        text-align: center;
-        margin-top: 15px;
-    }
-
-    .imgPic {
-        cursor: pointer;
-        height: 260px;
-        width: 285px;
-        margin: auto;
-    }
-
-    .showImg {
-        height: 260px;
-        width: 285px;
-    }
-
-    #uploadifive-titleImgFile {
-        display: none;
-    }
-    .queue {
-        display: none;
-    }
-    #uploadAll{
-        width: 286px;
-        background-color: #FF7A45;
-        font-weight: bold;
-        color: #ffffff;
-        cursor: pointer;
-        text-align: center;
-    }
-    input,textarea{
-        font-size: 14px;
-    }
-    .bjy-bj{
-        margin-top: 70px;
-    }
-    .content{
-        width: 350px;
-        margin: auto;
-    }
-    .map{
-        background-color: #ffffff !important;
-    }
-
-    .upload_div{
-        min-height: 400px;
-    }
-
-    #uploadifive-picFile{
-        display: none;
-    }
-    .upload_show_info{
-        text-align: center;
-        margin-top: 50px;
-        display: block;
-    }
-
-    .ti_tx, .mi_tx, .mer_tx{
-        height: 40px;
-        padding-left:0px;
-        margin-left:6px;
-    }
-    .bj4-main{
-        overflow: visible;
-    }
-    .timepicki-input{
-        width: 45px !important;
-        padding-left: 0px !important;
-    }
-    .timepicker_wrap{
-        top: 90px !important;
-        border-radius:0 !important;
-    }
-    .prev, .next{
-        border-radius: 0 !important;
-    }
-    .time_end{
-        left: 200px !important;
-        width: 240px !important;
-    }
-    .service_time_tip{
-        float: left;
-        line-height: 36px;
-        height: 36px;
-        margin-right: 10px;
-    }
-    .timepicker_start, .timepicker_end{
-        width: 177px !important;
-    }
-    .trip_time{
-        width: 288px !important;
-    }
-
-    .service_price .select2-search{
-        display: none !important;
-    }
-    .sect .serviceSelect .select2-chosen{
-        margin: 0px !important;
-    }
-    .sect .serviceSelect .select2-choice{
-        width: 90px !important;
-    }
-    .sect .serviceSelect a{
-        height: 36px !important;
-        line-height: 36px !important;
-        border: none;
-
-    }
-    .sect .serviceSelect .select2-choice{ padding-top: 0; border: 0;}
-    .sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
-    .sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
-
-    .bjy-bj4 p a{
-        color: #858585;
-    }
-
-    .bjy-bj4 .bj4-div{
-        width: 440px;
-        margin: auto;
-    }
-    .bjy-bj4 .bj4-div span{
-        width: 150px;
-        float: left;
-    }
-    .bjy-bj4 p{
-        clear: both;
-    }
-
-    .bjy-bj4 .creat dl dd input{
-        margin-bottom: 10px;
-    }
-    .bjy-bj4 .start-time dt span{
-        width: 150px;
-    }
-
-    .input-group-btn{
-        display: none !important;
-    }
-</style>
 
 <div class="bjy clearfix" id="bjy-box">
     <ul id="bz">
@@ -225,7 +31,7 @@
         <li><a href="javascript:;">上传图片</a></li>
         <li><a href="javascript:;">服务/价格</a></li>
         <li><a href="javascript:;">详情描述</a></li>
-        <li><a href="wancheng.html">完成</a></li>
+        <li><a href="javascript:;" id="finishTab">完成</a></li>
     </ul>
     <a href="javascript:;" class="bjy-prev" id="bjy-prev">上一步</a>
     <a href="javascript:;" class="bjy-next" id="bjy-next">下一步</a>
@@ -233,15 +39,21 @@
         <!--step1-->
         <div class="bjy-bj1 bjy-bj" style=" display:block;">
             <div class="content">
-                <span class="spn_title">标题</span>
-                <span class="form_tip" id="titleTip"></span>
+                <p>
+                    <span class="spn_title">标题</span>
+                    <span class="form_tip" id="titleTip"></span>
+                </p>
                 <input type="text" value="" id="title" step="1">
-                <span class="spn_title">随游简介</span>
-                <span class="form_tip" id="introTip"></span>
+                <p>
+                    <span class="spn_title">随游简介</span>
+                    <span class="form_tip" id="introTip"></span>
+                </p>
                 <textarea class="jianjie" id="intro"></textarea>
                 <div>
-                    <span class="spn_title">封面</span>
-                    <span id="titleImgTip" class="form_tip"></span>
+                    <p>
+                        <span class="spn_title">封面</span>
+                        <span id="titleImgTip" class="form_tip"></span>
+                    </p>
                     <div id="divCardFront" class="imgPic">
                         <img src="" id="titleImg" style="display: none" class="showImg"/>
                         <p class="p_chose_title_img">点击上传封面图</p>
@@ -260,8 +72,10 @@
 
         <!--step2 begin-->
         <div class="bjy-bj2 bjy-bj">
-            <span class="spn_title">坐标</span>
-            <span class="form_tip" id="countryTip"></span>
+            <p>
+               <span class="spn_title">坐标</span>
+               <span class="form_tip" id="countryTip"></span>
+            </p>
             <select id="countryId" name="country" class="select2" required placeholder="国家">
                 <option value=""></option>
                 <?php foreach ($countryList as $c) { ?>
@@ -270,8 +84,10 @@
                 <?php } ?>
             </select>
             <select id="cityId" name="city" class="select2" required placeholder="城市"></select>
-            <span>景点名称</span>
-            <span class="form_tip" id="scenicTip"></span>
+            <p>
+                <span class="spn_title">景点名称</span>
+                <span class="form_tip" id="scenicTip"></span>
+            </p>
             <div id="scenicList">
                 <div class="jing">
                     <input type="text" placeholder="景点" onfocus="loadLocation(this)" onblur="searchLocation(this)" />
@@ -299,38 +115,46 @@
         <!----step4 ------>
         <div class="bjy-bj4 bjy-bj">
             <div class="bj4-div">
-                <span>基本价格</span>
-                <span class="form_tip" id="basePriceTip"></span>
+                <p>
+                    <span>基本价格</span>
+                    <span class="form_tip" id="basePriceTip"></span>
+                </p>
                 <p><input type="text" vlaue="" id="basePrice">
                     <a href="javascript:;">人/次</a>
                 </p>
                 <p class="mixi"><font>价格明细</font></p>
                 <div class="bj4-main" >
-                    <span>人数上限</span>
-                    <span class="form_tip" id="peopleCountTip"></span>
+                    <p>
+                        <span>人数上限</span>
+                        <span class="form_tip" id="peopleCountTip"></span>
+                    </p>
                     <input type="text" placeholder="你最多可以接待多少人呢" class="sx" id="peopleCount">
-                    <span>阶梯价格</span>
-                    <span class="form_tip" id="stepTip"></span>
+                    <P>
+                        <span>阶梯价格</span>
+                        <span class="form_tip" id="stepTip"></span>
+                    </P>
                     <div id="stepDiv">
                         <p>
-                            <input type="text" value=""><em>人至</em>
-                            <input type="text" value=""><em>人</em>
-                            <input type="text" value=""><em>RMB</em>
+                            <input type="text" value="" class="step_people"><em>人至</em>
+                            <input type="text" value="" class="step_people"><em>人</em>
+                            <input type="text" value="" class="step_price"><em>RMB</em>
                             <a href="javascript:;" id="addStepPrice" class="add"></a>
                         </p>
                     </div>
-                    <span>单项服务及价格</span>
-                    <span class="form_tip" id="servicePriceTip"></span>
+                    <p>
+                        <span>单项服务及价格</span>
+                        <span class="form_tip" id="servicePriceTip"></span>
+                    </p>
                     <div class="creat clearfix">
                         <dl id="stepDl">
                             <dt><span>服务</span><span>价格</span><span>单位</span></dt>
                             <dd style="z-index:14">
                                 <input type="text" value="" class="m0-input">
-                                <input type="text" value="">
+                                <input type="text" value="" class="service_price_step">
                                 <div class="sect">
                                     <select name="" class="serviceSelect">
-                                        <option>一人</option>
-                                        <option>一次</option>
+                                        <option value="1">一人</option>
+                                        <option value="0">一次</option>
                                     </select>
                                 </div>
                                 <a id="addServicePrice" href="javascript:;" class="add"></a>
@@ -354,9 +178,9 @@
                             <dd>
                                 <input type="text" value="" class="trip_time" id="tripLong">
                                 <div class="sect">
-                                    <select name="" data-enabled="false" class="serviceSelect">
-                                        <option>小时</option>
-                                        <option>天</option>
+                                    <select name="" id="tripKind" data-enabled="false" class="serviceSelect">
+                                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR?>">小时</option>
+                                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TIME_TYPE_DAY?>">天</option>
                                     </select>
                                 </div>
                                 <a href="###" class="jian"></a>
@@ -373,11 +197,11 @@
 
         <!---step5- begin-->
         <div class="bjy-bj5 bjy-bj clearfix"  id="bjy">
-            <span>详情介绍</span>
-            <textarea></textarea>
-            <span>添加行程标签</span>
+            <span>详情介绍<b class="form_tip" id="infoTip"></b></span>
+            <textarea id="info"></textarea>
+            <span>添加行程标签<b class="form_tip" id="tagsTip"></b></span>
             <div class="biaoqian clearfix">
-                <ul class="clearfix">
+                <ul class="clearfix" id="tagsUl">
                     <!--<li class="active-bj">家庭</li>-->
                     <?php foreach($tagList as $tag){ ?>
                     <li><?=$tag?></li>
@@ -414,7 +238,6 @@
             }
         });
 
-
         $(".serviceSelect").select2({
             width:'100px',
             allowClear: true,
@@ -448,8 +271,6 @@
             $(file).click();
         });
 
-
-
         //绑定上传事件
         $("#uploadAll").bind("click", function () {
             if ($("#titleImg").attr("src") == "") {
@@ -465,9 +286,16 @@
             addScenic();
         });
 
-        $('.timepicker_start').timepicki();
+        $('.timepicker_start').timepicki({
+            format_output: function(tim, mini, meri) {
+                return tim + ":" + mini + " " + meri;
+            }
+        });
         $('.timepicker_end').timepicki({
-            custom_classes:'time_end'
+            custom_classes:'time_end',
+            format_output: function(tim, mini, meri) {
+                return tim + ":" + mini + " " + meri;
+            }
         });
 
         $("#addServicePrice").bind("click",function(){
@@ -479,18 +307,52 @@
 
 
         $("#preview").bind("click",function(){
-            saveTrip(1);
+            saveTrip(2);
         });
 
         initValidate();
+        initTouchSpin();
 
+    });
+
+    //初始化选择器
+    function initTouchSpin()
+    {
         $("#peopleCount").TouchSpin({
             buttondown_class: "btn-link",
             buttonup_class: "btn-link",
             max:10000
         });
 
-    });
+        $("#basePrice").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000000
+        });
+
+        $(".step_people").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000
+        });
+        $(".step_price").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000000
+        });
+
+        $(".service_price_step").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000000
+        });
+
+        $("#tripLong").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000
+        });
+    }
 
     function initValidate()
     {
@@ -501,137 +363,246 @@
             if($("#intro").val()==""){$("#introTip").html("请输入随游简介");}else{$("#introTip").html("");};
         });
 
+        $("#basePrice").bind("focus",function(){
+            $("#basePriceTip").html("");
+        });
+
+        $("#peopleCount").bind("focus",function(){
+            $("#peopleCountTip").html("");
+        });
+        $("#beginTime").bind("focus",function(){
+            $("#serviceTimeTip").html("");
+        });
+        $("#tripLong").bind("focus",function(){
+            $("#tripLongTip").html("");
+        });
+
+        $("#info").bind("focus",function(){
+            $("#infoTip").html("");
+        });
+        $("#tagsUl li").bind("click",function(){
+            $("#tagsTip").html("");
+        });
+
+
     }
 
 
-    function saveTrip(saveType){
+    //保存随游
+    function saveTrip(saveType) {
 
-        var title=$("#title").val();
-        var titleImg=$("#tripTitleImg").val();
-        var intro=$("#intro").val();
+        var title = $("#title").val();
+        var titleImg = $("#tripTitleImg").val();
+        var intro = $("#intro").val();
 
-        var countryId=$("#countryId").val();
-        var cityId=$("#cityId").val();
-        var scenicList=new Array();
-        var picList=new Array();
+        var countryId = $("#countryId").val();
+        var cityId = $("#cityId").val();
+        var scenicList = new Array();
+        var picList = new Array();
 
-        var basePrice=$("#basePrice").val();
-        var peopleCount=$("#peopleCount").val();
+        var basePrice = $("#basePrice").val();
+        var peopleCount = $("#peopleCount").val();
+        var stepPriceList = new Array();
+        var serviceList = new Array();
+        var beginTime = $("#beginTime").val();
+        var endTime = $("#endTime").val();
+        var tripLong = $("#tripLong").val();
+        var tripKind=$("#tripKind").val();
 
-        var beginTime=$("#beginTime").val();
-        var endTime=$("#endTime").val();
-
-        var tripLong=$("#tripLong").val();
-        var error=false;
-
-
-
-        if(basePrice==""){
-            $("#basePriceTip").html("请输入基础价格");
-            error=true;
-        }
+        var info = $("#info").val();
+        var tagList = new Array();
 
 
-        if(peopleCount==""){
-            $("#peopleCountTip").html("请输入最多可接待人数");
-            error=true;
-        }
-
-        if(beginTime==""||endTime==""){
-            $("#serviceTimeTip").html("请选择可提供服务时间");
-            error=true;
-        }
-        if(tripLong==""){
-            $("#tripLongTip").html("请输入随游时长");
-            error=true;
-        }
-
-        if(error){
-            selectTab(4);
-            return;
-        }
+        var error = false;
 
 
 
-        if(title==""){
+        //TAB 1验证
+        if (title == "") {
             $("#titleTip").html("请输入随游标题");
-            error=true;
+            error = true;
         }
-        if(intro==""){
+        if (intro == "") {
             $("#introTip").html("请输入随游简介");
-            error=true;
+            error = true;
         }
-        if(titleImg==""){
+        if (titleImg == "") {
             $("#titleImgTip").html("请选择随游封面并上传");
-            error=true;
+            error = true;
         }
-        if(error){
+        if (error) {
             selectTab(1);
             return;
         }
 
-        if(countryId==""||cityId==""){
+        //TAB 2验证
+        if (countryId == "" || cityId == "") {
             $("#countryTip").html("请选择国家和城市");
-            error=true;
+            error = true;
         }
-        $("#scenicList input").each(function(){
-            var lon=$(this).attr("lon");
-            var lat=$(this).attr("lat");
-            if(lon!=""&&lon!=undefined&&lat!=""&&lat!=undefined){
-                var scenic=[lon,lat];
+        $("#scenicList input").each(function () {
+            var title=$(this).val();
+            var lon = $(this).attr("lon");
+            var lat = $(this).attr("lat");
+            if (lon != "" && lon != undefined && lat != "" && lat != undefined) {
+                var scenic = [title,lon, lat];
                 scenicList.push(scenic);
             }
         });
-
-        if(scenicList.length==0){
+        if (scenicList.length == 0) {
             $("#scenicTip").html("至少选择一个景区");
-            error=true;
+            error = true;
         }
-        if(error){
+        if (error) {
             selectTab(2);
             return;
         }
-        var size=$("#upload_div a[class='imgs'] img").size();
 
-        if(size==0){
+
+        //TAB 3验证
+        var size = $("#upload_div a[class='imgs'] img").size();
+        if (size == 0) {
             selectTab(3);
             Main.showTip("请至少上传一张图片");
             return;
         }
-        $("#upload_div a[class='imgs'] img").each(function(){
+
+        //TAB 4验证
+        $("#upload_div a[class='imgs'] img").each(function () {
             picList.push($(this).attr("src"));
         });
+        if (basePrice == "") {
+            $("#basePriceTip").html("请输入基础价格");
+            error = true;
+        }
+        if (peopleCount == "") {
+            $("#peopleCountTip").html("请输入最多可接待人数");
+            error = true;
+        }
+        if (beginTime == "" || endTime == "") {
+            $("#serviceTimeTip").html("请选择可提供服务时间");
+            error = true;
+        }
+        if (tripLong == "") {
+            $("#tripLongTip").html("请输入随游时长");
+            error = true;
+        }
 
+        $("#stepDiv p").each(function () {
+            var ipts = $(this).find("input");
+            var min = $(ipts).eq(0).val();
+            var max = $(ipts).eq(1).val();
+            var price = $(ipts).eq(2).val();
+            if (min != "" && max != "" && price != "") {
+                var stepPrice = [min, max, price];
+                stepPriceList.push(stepPrice);
+            }
+        });
+        $("#stepDl dd").each(function () {
+            var ipts = $(this).find("input");
+            var service = $(ipts).eq(0).val();
+            var price = $(ipts).eq(1).val();
+            var unit = $(this).find("select").val();
+            if (service != "" && price != "" && unit != "") {
+                var serviceInfo = [service, price, unit];
+                serviceList.push(serviceInfo);
+            }
+        });
+        if (error) {
+            selectTab(4);
+            return;
+        }
 
+        //TAB 5 验证
+        if (info == "") {
+            $("#infoTip").html("请输入详情介绍");
+            error=true;
+        }
+        $("#tagsUl li").each(function () {
+            if ($(this).hasClass("active-bj")) {
+                tagList.push($(this).html());
+            }
+        });
+        if (tagList.length == 0) {
+            $("#tagsTip").html("至少要选择一个标签哦~");
+            error=true;
+        }
+        if (error) {
+            selectTab(5);
+            return;
+        }
 
+        $.ajax({
+            url :'/trip/save-trip',
+            type:'post',
+            data:{
+                title:title,
+                titleImg:titleImg,
+                intro:intro,
+                countryId:countryId,
+                cityId:cityId,
+                scenicList:scenicList,
+                picList:picList,
+                basePrice:basePrice,
+                peopleCount:peopleCount,
+                stepPriceList:stepPriceList,
+                serviceList:serviceList,
+                beginTime:beginTime,
+                endTime:endTime,
+                tripLong:tripLong,
+                tripKind:tripKind,
+                info:info,
+                tagList:tagList,
+                status:saveType
 
-
-
-
-
-        alert(title);
-        alert(titleImg);
-        alert(intro);
-
+            },
+            beforeSend:function(){
+                $("#preview").attr("disabled","disabled");
+            },
+            error:function(){
+                $("#preview").removeAttr("disabled");
+                Main.showTip("保存随游失败");
+            },
+            success:function(data){
+                $("#preview").removeAttr("disabled");
+                data=eval("("+data+")");
+                if(data.status==1){
+                    window.location.href='/trip/preview?trip='+data.data.tripId;
+                }else{
+                    Main.showTip("保存随游失败");
+                }
+            }
+        });
 
 
 
     }
 
+
+    //切换TAB
     function selectTab(count)
     {
         $("#bjy-box ul li").eq(count-1).click();
     }
 
-
-
+    //添加阶梯价格
     function addStepPrice(){
-        var html='<p><input type="text" value=""><em>人至</em>' +
-                    '<input type="text" value=""><em>人</em>' +
-                    '<input type="text" value=""><em>RMB</em>' +
+        var html='<p><input type="text" value="" class="step_people"><em>人至</em>' +
+                    '<input type="text" value="" class="step_people"><em>人</em>' +
+                    '<input type="text" value="" class="step_price"><em>RMB</em>' +
                     '<a href="javascript:;" onclick="removeStepPrice(this)" class="jian"></a>' +
                 '</p>';
         $("#stepDiv").append(html);
+        $(".step_people").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000
+        });
+        $(".step_price").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000000
+        });
     }
 
     function removeStepPrice(obj){
@@ -639,12 +610,17 @@
     }
     //添加专项服务
     function addServicePrice(){
-        var html=' <dd style="z-index:11"><input type="text" value="" class="m0-input"><input type="text" value="">' +
-            '<div class="sect"><select id="test" class="serviceSelect"><option>一人</option><option>一次</option></select>' +
+        var html=' <dd style="z-index:11"><input type="text" value="" class="m0-input"><input type="text" value="" class="service_price_step">' +
+            '<div class="sect"><select id="test" class="serviceSelect"><option value="1">一人</option><option value="0">一次</option></select>' +
             '</div><a href="javascript:;" onclick="removeServicePrice(this)" class="jian"></a>' +
             '</dd>';
         $("#stepDl").append(html);
         initSelect();
+        $(".service_price_step").TouchSpin({
+            buttondown_class: "btn-link",
+            buttonup_class: "btn-link",
+            max:10000000
+        });
 
     }
 
@@ -751,9 +727,9 @@
                     $("#uploadAll").val("上传失败，请稍后重试。。。");
                 }
             },
-            onInit: function () {
+            onSelect:function(){
                 //初始化预览图片
-                $("#uploadifive-titleImgFile input[type='file']").last().uploadPreview({
+                $("#uploadifive-titleImgFile input[type='file'][id!='titleImgFile']").last().uploadPreview({
                     Img: "titleImg",
                     Width: 120,
                     Height: 120,
@@ -766,19 +742,22 @@
                         $("#titleImg").bind("click", function () {
                             $(".p_chose_title_img").click();
                         });
-                        $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
-                            Img: "imgFront",
-                            Width: 120,
-                            Height: 120,
-                            ImgType: [
-                                "jpeg", "jpg", "png"
-                            ], Callback: function () {
-                                $("#imgFront").show();
-                                $("#imgFront").unbind("click");
-                                $("#imgFront").bind("click", function () {
-                                    $(".p_chose_card_front").click();
-                                });
-                            }
+                    }
+                });
+            },
+            onInit:function(){
+                $("#uploadifive-titleImgFile input[type='file'][id!='titleImgFile']").last().uploadPreview({
+                    Img: "titleImg",
+                    Width: 120,
+                    Height: 120,
+                    ImgType: [
+                        "jpeg", "jpg", "png"
+                    ], Callback: function () {
+                        $("#titleImg").show();
+                        $("#titleImg").unbind("click");
+                        $(".p_chose_title_img").hide();
+                        $("#titleImg").bind("click", function () {
+                            $(".p_chose_title_img").click();
                         });
                     }
                 });
