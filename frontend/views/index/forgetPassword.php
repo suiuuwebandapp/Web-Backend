@@ -51,8 +51,9 @@
     <div style="display:block;" class="TabCon">
         <span>绑定邮箱:</span>
         <input id="username_1" type="text" value="" class="wjmm-text">
+        <span>验证码:</span>
         <p>
-            <span>验证码:</span>
+
             <input id="sendCode_1" type="text" value="" class="zhsz-text1">
             <img id="codeImg" src="/index/get-code" alt="" class="csmm-img">
             <input type="button" value="换一个" class="zhsz-btn" onclick="getcode1()">

@@ -13,7 +13,9 @@
     #emailTime input{
         font-size: 14px !important;
     }
-
+    /*input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px #858585 inset;
+    }*/
 </style>
 <?php if (isset($this->context->userObj)) { ?>
     <!--header开始-->
@@ -111,6 +113,20 @@
 
                         <div id="zhuce-main">
                             <a href="#" class="tab-title tab-title01">邮箱注册</a>
+                           <!-- <p class="m-20"><label>国家</label>
+                                <select id="codeId" name="countryIds" class="areaCodeSelect1" required>
+                                <option value=""></option>
+                                <?php /*foreach ($countryList as $c) { */?>
+                                    <?php /*if(empty($c['areaCode'])){continue;} */?>
+                                    <?php /*if ($c['areaCode'] == $areaCode) { */?>
+                                        <option selected
+                                                value="<?/*= $c['areaCode'] */?>"><?/*= $c['cname'] . " " . $c['areaCode'] */?></option>
+                                    <?php /*} else { */?>
+                                        <option value="<?/*= $c['areaCode'] */?>"><?/*= $c['cname'] . " " . $c['areaCode'] */?></option>
+                                    <?php /*} */?>
+
+                                <?php /*} */?>
+                            </select></p>-->
                             <p class="m-20"><label>手机号</label><input type="text" value="" maxlength="30"></p>
                             <p><label>密码</label><input type="text" value=""></p>
                             <p class="shuaxin"><input type="text" value=""><font><a href="javascript:;">获取验证码</a></font></p>
@@ -152,7 +168,7 @@
                             <p><label>密码</label><input type="password" value="" id="userpassword"></p>
 
                             <p class="fogot"><a href="/index/password-send-code">忘记密码</a></p>
-                            <div id="code9527" class="form-group" style="padding-bottom: 20px;display: none">
+                            <div id="code9527" class="form-group" style="padding-bottom: 20px;display: block">
                                 <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
                             </div>
                             <p class="zidong">

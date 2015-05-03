@@ -12,7 +12,41 @@
     $("body").css("background","#eeeeee");
 </script>
 
+<link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
+<script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 
+<style type="text/css">
+    .select2-container .select2-choice {
+        background-color: #eee;
+        border-radius: 0px;
+        font-size: 13px;
+        color: dimgray;
+        padding-top:0 ;
+        margin: 0 auto;
+        border: none;
+
+    }
+
+
+
+    .select2-container .areaCodeSelect1
+    {
+
+    }
+    .select2-drop {
+        font-size: 14px;
+    }
+
+    .select2-highlighted {
+        background-color: #0088e4;
+    }
+    .select2-no-results {
+        font-size: 13px;
+        color: dimgray;
+        text-align: center;
+    }
+
+</style>
 
 <!--banner开始-->
 <div class="index-banner">

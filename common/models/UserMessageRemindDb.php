@@ -62,22 +62,24 @@ class UserMessageRemindDb extends ProxyDb
      * 查找消息
      * @param $userSign
      * @param $page
+     * @param $type
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getAttentionCircleArticle($userSign,$page)
+    public function getAttentionCircleArticle($userSign,$page,$type)
     {
         $sql=sprintf("
           SELECT a.relativeId,a.relativeType,a.remindId,b.headImg,b.nickname FROM user_message_remind a
             LEFT JOIN user_base b ON b.userSign = a.createUserSign
-            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND b.status=:userStatus;
-
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND b.status=:userStatus AND relativeType=:relativeType
         ");
         $sql.=$page;
         $command=$this->getConnection()->createCommand($sql);
         $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindValue(":rStatus", UserMessageRemind::REMIND_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":rStatus", UserMessageRemind::REMIND_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        $command->bindParam(":relativeType", $type, PDO::PARAM_STR);
         return $command->queryAll();
     }
 }

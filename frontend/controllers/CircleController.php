@@ -284,17 +284,21 @@ class CircleController extends AController{
     //得到用户主页
     public function actionGetHomepageInfo()
     {
-        $this->loginValid();
+        //确实当前用户是否关注
+        //需要验证 true
+        $this->loginValid(false);
         try{
             $userSign=\Yii::$app->request->post('userSign');
             $page = \Yii::$app->request->post('page');
+            $userSign='7f11453d3ed03159808e5c8ee850f1db';
+            $mySign=$this->userObj->userSign;
             if(empty($userSign))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法得到未知用户主页'));
                 exit;
             }
-            $this->CircleService->getHomepageInfo($userSign,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            $data=$this->CircleService->getHomepageInfo($userSign,$page,$mySign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();

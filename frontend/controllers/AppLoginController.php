@@ -10,8 +10,10 @@
 namespace frontend\controllers;
 
 
+use frontend\services\CountryService;
 use common\components\Aes;
 use common\components\Code;
+use common\components\SmsUtils;
 use common\entity\UserAccess;
 use common\entity\UserBase;
 use frontend\components\ValidateCode;
@@ -130,7 +132,105 @@ class AppLoginController extends Controller{
         return $valSign==$sign?true:false;
     }
 
+    public function actionGetCountryList()
+    {
+        $countryService = new CountryService();
+        $countryList=$countryService->getCountryList();
+        if(empty($countryList)){
+            echo json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
+            exit;
+        }
+        echo json_encode(Code::statusDataReturn(Code::SUCCESS,$countryList));
 
+    }
+    public function actionGetPhoneCode()
+    {
+        $areaCode=\Yii::$app->request->post('areaCode');
+        $phone=\Yii::$app->request->post('phone');
+        $phone='18611517517';
+        if(empty($phone))
+        {
+            echo json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
+            exit;
+        }
+        if(empty($areaCode))
+        {
+            $areaCode='+86';
+        }
+
+        $count = \Yii::$app->redis->get(Code::USER_SEND_ERROR_COUNT_PREFIX . $phone);
+        if ($count >= Code::MAX_SEND_COUNT) {
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "发送次数过多24小时后将继续发送"));
+            return;
+        }
+        $code = $this->randomPhoneCode();
+        //设置验证码 和 有效时长
+        \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, $code);
+        \Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
+
+        //设置验证码次数时效
+        \Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
+        \Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+
+        $rst = null;
+        if ($areaCode == "0086" || $areaCode == "+86") {
+            $smsUtils = new SmsUtils();
+            $rst = $smsUtils->sendPasswordSMS($phone, $code);
+        } else {
+
+        }
+        echo json_encode($rst);
+
+
+
+
+    }
+    public function actionAppRegister()
+    {
+        $phone=\Yii::$app->request->post('phone');
+        $password=\Yii::$app->request->post('password');
+        $cPassword=\Yii::$app->request->post('cPassword');
+        $nick=\Yii::$app->request->post('nick');
+        $code=\Yii::$app->request->post('validateCode');//验证码
+        if(empty($password))
+        {
+            echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不能为空'));
+        }
+        if($cPassword!=$password)
+        {
+            echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不一致'));
+        }
+        $rCode=\Yii::$app->session->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
+        if(empty($rCode)||$rCode!=$code)
+        {
+            echo json_encode(Code::statusDataReturn(Code::FAIL,'验证码不正确'));
+        }
+        $userBase=new UserBase();
+        $userBase->nickname=$nick;
+        $userBase->password=$password;
+        $userBase->phone=$phone;
+        $user=$this->userBaseService->addUser($userBase);
+        $enPassword = \Yii::$app->params['encryptPassword'];
+        $enDigit = \Yii::$app->params['encryptDigit'];
+        $aes=new Aes();
+        $sysSign=$aes->encrypt($user->userSign,$enPassword,$enDigit);
+        \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($user));
+        \Yii::$app->redis->expire(Code::APP_USER_LOGIN_SESSION.$sysSign,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+        echo json_encode(Code::statusDataReturn(Code::SUCCESS,$user,$sysSign));
+        exit;
+    }
+    /**
+     * 生成手机六位验证码
+     * @return string
+     */
+    private function randomPhoneCode()
+    {
+        $code = "";
+        for ($i = 0; $i < 6; $i++) {
+            $code .= rand(0, 9);
+        }
+        return $code;
+    }
     public function actionAppLogin()
     {
 

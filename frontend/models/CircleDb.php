@@ -134,7 +134,7 @@ class CircleDb extends ProxyDb
     public function getArticleListByUserSign($userSign,$page)
     {
         $sql=sprintf("
-            SELECT a.cId,a.cAddrId,a.aTitle,a.aContent,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
+            SELECT a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.articleId FROM circle_article a
             WHERE aCreateUserSign=:aCreateUserSign AND aStatus=:aStatus
         ");
         $sql.=$page;
@@ -243,7 +243,7 @@ class CircleDb extends ProxyDb
         ");
 
         $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_STR);
         $command->bindParam(":content", $CircleCommentEntity->content, PDO::PARAM_STR);
         $command->bindParam(":relativeCommentId", $CircleCommentEntity->relativeCommentId, PDO::PARAM_INT);
         $command->bindParam(":supportCount", $CircleCommentEntity->supportCount, PDO::PARAM_INT);
@@ -271,7 +271,7 @@ class CircleDb extends ProxyDb
         $command=$this->getConnection()->createCommand($sql);
         $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":commentId", $commentId, PDO::PARAM_INT);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
         return $command->execute();
     }
 
@@ -296,7 +296,7 @@ class CircleDb extends ProxyDb
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":content", $CircleCommentEntity->content, PDO::PARAM_STR);
         $command->bindParam(":commentId", $CircleCommentEntity->commentId, PDO::PARAM_INT);
-        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_STR);
         return $command->execute();
     }
 
@@ -313,14 +313,14 @@ class CircleDb extends ProxyDb
         $sql = sprintf("
             UPDATE  circle_article_comment SET
               supportCount=:supportCount,opposeCount=:opposeCount
-            WHERE commentId=:commentId AND userSign=:userSign
+            WHERE commentId=:commentId
 
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":supportCount", $CircleCommentEntity->supportCount, PDO::PARAM_INT);
         $command->bindParam(":opposeCount", $CircleCommentEntity->opposeCount, PDO::PARAM_INT);
         $command->bindParam(":commentId", $CircleCommentEntity->commentId, PDO::PARAM_INT);
-        $command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_INT);
+        //$command->bindParam(":userSign", $CircleCommentEntity->userSign, PDO::PARAM_STR);
         return $command->execute();
     }
     /**

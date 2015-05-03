@@ -45,7 +45,7 @@ class AController extends Controller{
         }*/
         parent::__construct($id, $module);
     }
-    public function loginValid($bo=true)
+    public function loginValid($bo=false)
     {
         if($bo){
             //验证用户是否登录
@@ -68,7 +68,7 @@ class AController extends Controller{
         }else
         {
             $this->userObj =new UserBase();
-            $this->userObj->userSign='8ce4179e01ed3a39b439a9f686633df1';
+            $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';
         }
     }
 }

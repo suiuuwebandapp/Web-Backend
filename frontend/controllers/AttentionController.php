@@ -217,8 +217,9 @@ class AttentionController extends AController
         $this->loginValid();
         try{
             $page = \Yii::$app->request->post('page');
+            $count = \Yii::$app->request->post('count');
             $userSign = $this->userObj->userSign;
-            $data = $this->AttentionService->getAttentionUserDynamic($userSign,$page);
+            $data = $this->AttentionService->getAttentionUserDynamic($userSign,$page,$count);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
@@ -228,7 +229,7 @@ class AttentionController extends AController
     }
     //获得推荐用户
     public function actionGetRecommendUser()
-    {
+    { $this->loginValid(false);
         try{
             $page = \Yii::$app->request->post('page');
             $data =$this->AttentionService->getRecommendUser($page);
@@ -243,12 +244,13 @@ class AttentionController extends AController
     //得到首页列表
     public function actionGetIndexList()
     {
+        $this->loginValid(false);
         try{
-            $page = 0;//得到所有的  个数在里面定义
+            $page = 1;//得到所有的  个数在里面定义
             $userSign = $this->userObj->userSign;
             $data= array();
             $data['circleDynamic'] = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
-            $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page);
+            $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page,3);
             $data['recommendUser'] =$this->AttentionService->getRecommendUser($page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
@@ -282,8 +284,25 @@ class AttentionController extends AController
         try{
             $page = \Yii::$app->request->post('page');
             $userSign = $this->userObj->userSign;
-            $data =$this->AttentionService->getMessageRemind($userSign,$page);
+            $type = \Yii::$app->request->post('type');
+            $data =$this->AttentionService->getMessageRemind($userSign,$page,$type);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
+    //取消消息 即阅读消息
+    public function actionDeleteUserMessageRemind()
+    {
+        $this->loginValid();
+        try{
+            $rid = \Yii::$app->request->post('rid');
+            $userSign = $this->userObj->userSign;
+            $this->AttentionService->deleteUserMessageRemind($rid,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
         {
             $error=$e->getMessage();
@@ -294,6 +313,5 @@ class AttentionController extends AController
 
     public function actionTest()
     {
-        echo $this->AttentionService->addRemind();
     }
 }

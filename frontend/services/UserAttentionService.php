@@ -287,17 +287,28 @@ class UserAttentionService extends BaseDb
             $rstArr=array();
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            $page = Common::PageResult($pageNumb,2);//返回第几页 ， 返回几个数据
+            $page = Common::PageResult($pageNumb,6);//返回第几页 ， 返回几个数据
             $rst1 = $this->recommendDb->getAttentionCircleDynamicTheme($userSign,$page);
             $rst2 = $this->recommendDb->getAttentionCircleDynamicAddr($userSign,$page);
+
             if(empty($rst1)&&empty($rst2))
             {
                 return $rstArr;
             }else
             {
-                $rstArr['theme']=$rst1;
-                $rstArr['address']=$rst2;
-                return $rstArr;
+
+                $arr = array_merge($rst1,$rst2);
+                if(count($arr)>6)
+                {
+                    usort($arr, function($a, $b){
+                        if ($a['articleId'] < $b['articleId'])
+                            return 1;
+                        else if ($a['articleId'] == $b['articleId'])
+                            return 0;
+                        else return -1;
+                    });
+                }
+                return array_slice($arr,0,6);
             }
         } catch (Exception $e) {
             throw new Exception('获取圈子动态异常',Code::FAIL,$e);
@@ -305,20 +316,29 @@ class UserAttentionService extends BaseDb
             $this->closeLink();
         }
     }
+
     /**
      * 得到关注用户动态
      * @param $userSign
      * @param $pageNumb
+     * @param $count
      * @return array
      * @throws Exception
      */
-    public function getAttentionUserDynamic($userSign,$pageNumb)
+    public function getAttentionUserDynamic($userSign,$pageNumb,$count=null)
     {
         try {
 
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            $page = Common::PageResult($pageNumb,3);//返回第几页 ， 返回几个数据
+            if(empty($count))
+            {
+                $page = Common::PageResult($pageNumb);//返回第几页 ， 返回几个数据
+            }else
+            {
+                $page = Common::PageResult($pageNumb,$count);//返回第几页 ， 返回几个数据
+            }
+
             return $this->recommendDb->getAttentionUserDynamic($userSign,$page);
 
         } catch (Exception $e) {
@@ -342,13 +362,16 @@ class UserAttentionService extends BaseDb
             $this->AttentionDb = new UserAttentionDb($conn);
             $this->userBaseDb =new UserBaseDb($conn);
             $page = Common::PageResult($pageNumb);
+
             $rst = $this->userBaseDb->findByUserSign($userSign);
+
             $userId=0;
             if(empty($rst)||$rst==false)
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'未知的用户'));
             }else{
                 $userId = $rst['userId'];
+
                 return $this->AttentionDb->getAttentionFans($userId,$page);
             }
         } catch (Exception $e) {
@@ -358,14 +381,14 @@ class UserAttentionService extends BaseDb
         }
     }
 
-    public function getMessageRemind($userSign,$pageNumb)
+    public function getMessageRemind($userSign,$pageNumb,$type)
     {
         try {
             $page = Common::PageResult($pageNumb);
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
 
-            return $this->remindDb->getAttentionCircleArticle($userSign,$page);
+            return $this->remindDb->getAttentionCircleArticle($userSign,$page,$type);
         } catch (Exception $e) {
             throw new Exception('获取用户消息异常',Code::FAIL,$e);
         } finally {
@@ -373,9 +396,19 @@ class UserAttentionService extends BaseDb
         }
     }
 
-    public function addRemind()
-    {
 
+    public function deleteUserMessageRemind($rid,$userSign)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->remindDb=new UserMessageRemindDb($conn);
+
+            return $this->remindDb->deleteUserMessageRemind($rid,$userSign);
+        } catch (Exception $e) {
+            throw new Exception('获取用户消息异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
     }
 
 }

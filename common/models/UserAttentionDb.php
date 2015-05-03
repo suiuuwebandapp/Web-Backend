@@ -20,8 +20,9 @@ class UserAttentionDb extends ProxyDb
      * @param $relativeId
      * @param $relativeType
      * @param $userSign
+     * @return int
      */
-    public function addUserAttention($relativeId,$relativeType,$userSign)
+    public function addUserAttention($relativeId,$relativeType,$userSign,$isStatus=1)
     {
         $sql=sprintf("
             INSERT INTO user_attention (relativeId,relativeType,status,addTime,userSign) VALUES (:relativeId,:relativeType,:status,now(),:userSign);
@@ -30,7 +31,12 @@ class UserAttentionDb extends ProxyDb
         $command->bindParam(":relativeId", $relativeId, PDO::PARAM_INT);
         $command->bindParam(":relativeType", $relativeType, PDO::PARAM_INT);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        if($isStatus==1){
         $command->bindValue(":status", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
+        }else
+        {
+            $command->bindValue(":status", UserAttention::ATTENTION_STATUS_DISABLED, PDO::PARAM_INT);
+        }
         $command->execute();
         return $this->getConnection()->lastInsertID;
     }
@@ -125,17 +131,25 @@ class UserAttentionDb extends ProxyDb
      * @param UserAttention $userAttention
      * @return array
      */
-    public function getAttentionResult(UserAttention $userAttention)
+    public function getAttentionResult(UserAttention $userAttention,$isSupport=false)
     {
         $sql=sprintf("
            SELECT attentionId,relativeId,relativeType,status,addTime,userSign FROM  user_attention
-            WHERE userSign=:userSign AND relativeType=:relativeType AND relativeId=:relativeId AND status=:attentionStatus
+            WHERE userSign=:userSign AND relativeType=:relativeType AND relativeId=:relativeId
         ");
+        if(!$isSupport)
+        {
+            $sql.='AND status=:attentionStatus';
+        }
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign", $userAttention->userSign, PDO::PARAM_STR);
         $command->bindParam(":relativeType", $userAttention->relativeType, PDO::PARAM_INT);
         $command->bindParam(":relativeId", $userAttention->relativeId, PDO::PARAM_INT);
-        $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
+        if(!$isSupport)
+        {
+            $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
+        }
+
         return $command->queryOne();
     }
     /**
@@ -188,7 +202,7 @@ class UserAttentionDb extends ProxyDb
         $sql=sprintf("
             SELECT a.headImg,a.nickname,a.intro,a.userSign FROM user_base a
             LEFT JOIN user_attention b ON a.userSign = b.userSign
-            WHERE b.relativeType=:relativeType AND b.relativeId=:userId;
+            WHERE b.relativeType=:relativeType AND b.relativeId=:userId
         ");
         $sql.=$page;
         $command=$this->getConnection()->createCommand($sql);
@@ -207,7 +221,7 @@ class UserAttentionDb extends ProxyDb
         $sql=sprintf("
             SELECT COUNT(*) as numb  FROM user_base a
             LEFT JOIN user_attention b ON a.userSign = b.userSign
-            WHERE b.relativeType=:relativeType AND b.relativeId=:userId;
+            WHERE b.relativeType=:relativeType AND b.relativeId=:userId
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userId, PDO::PARAM_STR);
@@ -223,7 +237,7 @@ class UserAttentionDb extends ProxyDb
     {
         $sql=sprintf("
             SELECT COUNT(*) as numb  FROM user_attention a
-            WHERE a.relativeType=:relativeType AND a.`status`=1 AND a.userSign=:userSign;
+            WHERE a.relativeType=:relativeType AND a.`status`=1 AND a.userSign=:userSign
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);

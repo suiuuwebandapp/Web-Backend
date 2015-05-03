@@ -111,7 +111,7 @@ class SmsUtils
             } else {
                 // 获取返回信息
                 $smsMessage = $result->TemplateSMS;
-                return Code::statusDataReturn(Code::SUCCESS, $code, $smsMessage);
+                return Code::statusDataReturn(Code::SUCCESS,'success');
             }
         } catch (Exception $e) {
             return Code::statusDataReturn(Code::FAIL, $e->getName());
