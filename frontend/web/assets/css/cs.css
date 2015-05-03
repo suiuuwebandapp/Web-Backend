@@ -69,13 +69,13 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 #zhuce-main .tab-title{ position:absolute; right:10px; top:32px; font-size:16px; color:#ffeb81; height:36px; line-height:36px; }
 #zhuce-main p{width:210px; height:36px; line-height:36px; margin:4px auto 0; clear:both; border-bottom:#999 1px solid;}
 #zhuce-main p.m-20{ margin-top:20px;}
-#zhuce-main p label{ width:60px; height:36px;line-height:36px; float:left;}
+#zhuce-main p label{ height:36px;line-height:36px; float:left;}
 #zhuce-main p input{ width:130px; height:36px; padding-left:10px; line-height:36px; float:left; border:none;background:none; color:#ddd;}
 #zhuce-main p.shuaxin input{width:120px; display:block; height:36px; float:left; margin-right:5px; padding-left:0px; background:#554a4b;}
 #zhuce-main p.shuaxin{ border-bottom:none; margin-top:35px;}
 #zhuce-main p.shuaxin font a{ float:left;  font-size:16px; color:#72B8FF; }
-#zhuce-main p.zidong{ width:100%; margin-top:35px;}
-#zhuce-main .zidong .xieyi{ float:left; font-size:16px; color:#ffeb81; height:36px; line-height:36px; margin-left:80px; margin-top:4px; margin-right:10px;text-align:center; text-decoration:underline; }
+#zhuce-main p.zidong{ width:200px; margin:35px auto 0;}
+#zhuce-main .zidong .xieyi{ float:left; font-size:16px; margin:0 10px; color:#ffeb81; height:36px; line-height:36px; text-decoration:underline; }
 #zhuce-main .btn01{ font-size:20px; color:#ffeb81; padding:30px 0; display:block; text-align:center;}
 
 #zhuce-main .out-p{ position:absolute;bottom:0; right:10px; height:45px; overflow:hidden;  }
@@ -91,13 +91,13 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 #zhuce-main02 .tab-title{ position:absolute; right:10px; top:32px; font-size:16px; color:#ffeb81; height:36px; line-height:36px; }
 #zhuce-main02 p{width:210px; height:36px; line-height:36px; margin:4px auto 0; clear:both; border-bottom:#999 1px solid;}
 #zhuce-main02 p.m-20{ margin-top:20px;}
-#zhuce-main02 p label{ width:60px; height:36px;line-height:36px; float:left;}
-#zhuce-main02 p input{ width:130px; height:30px; padding-left:10px; line-height:30px; float:left; border:none; margin-bottom:3px; background:none; color:#ddd;}
+#zhuce-main02 p label{  height:36px;line-height:36px; float:left;}
+#zhuce-main02 p input{ width:160px; height:30px; padding-left:10px; line-height:30px; float:left; border:none; margin-bottom:3px; background:none; color:#ddd;}
 #zhuce-main02 p.shuaxin input{width:100%; display:block; height:36px; float:left; margin-right:5px; padding-left:0px; background:#ddd; color:#72B8FF; font-size:16px; text-align:center;}
 #zhuce-main02 p.shuaxin{ border-bottom:none; margin-top:35px;}
 #zhuce-main02 p.shuaxin font a{ float:left;  font-size:16px; color:#72B8FF; }
-#zhuce-main02 p.zidong{ width:100%; margin-top:35px;}
-#zhuce-main02 .zidong .xieyi{ float:left; font-size:16px; color:#ffeb81; height:36px; line-height:36px; margin-left:80px; margin-top:4px; margin-right:10px;text-align:center; text-decoration:underline; }
+#zhuce-main02 p.zidong{ width:200px; margin:40px auto 0;}
+#zhuce-main02 .zidong .xieyi{ float:left; font-size:16px; color:#ffeb81; height:36px; line-height:36px;text-decoration:underline; margin:0 10px; }
 #zhuce-main02 .btn01{ font-size:20px; color:#ffeb81; padding:30px 0; display:block; text-align:center;}
 
 #zhuce-main02 .out-p{ position:absolute;bottom:0; right:10px; height:45px; overflow:hidden;  }
@@ -126,20 +126,24 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 #ul1{ width:1216px; margin:0 auto; overflow:hidden;}
 #ul1 li{ width:284px; height:340px; margin:10px; float:left; position:relative; overflow:hidden; background:#FFF; cursor:pointer;}
 #ul1 li:hover{ box-shadow:0 0 8px rgba(0,0,0,0.4);}
-#ul1 li img{ display:block; width:100%;}
-#ul1 li p{width:284px; height:40px; position:absolute; left:0px; top:240px;}
-#ul1 li p img{ float:left; width:40px; height:40px; border-radius:360px;}
-#ul1 li p font{ float:left; margin-left:10px; width:230px; height:20px; line-height:20px; margin-top:20px; display:block; font-size:14px;}
+#ul1 li>img{ display:block; width:100%;}
+#ul1 li .user01{width:284px; height:40px; position:absolute; left:0px; top:240px;}
+#ul1 li .user01 img{ float:left; width:40px; height:40px; border-radius:360px;}
+#ul1 li .user01 font{ float:left; margin-left:10px; width:230px; height:20px; line-height:20px; margin-top:20px; display:block; font-size:14px;}
 #ul1 li h4{ width:284px; height:30px; line-height:30px; text-align:center; margin-top:20px; font-weight:normal;}
-#ul1 li div.zhezhao{ position:absolute; left:0; top:0; width:100%; height:0; background:rgba(0,0,0,0.7); color:#ddd; text-align:center; line-height:260px; font-size:14px; font-weight:bold; opacity:0;
+#ul1 li div.zhezhao{ position:absolute; left:0; top:0; width:100%; height:0; background:rgba(0,0,0,0.7); color:#fff; line-height:22px; font-size:14px; font-weight:bold; opacity:0;
 transition:all 0.4s ease-in-out;
 -webkit-transition:all 0.4s ease-in-out;
 -moz-transition:all 0.4s ease-in-out;
 -ms-transition:all 0.4s ease-in-out;
 -o-transition:all 0.4s ease-in-out;
 }
-#ul1 li:hover div.zhezhao{ height:260px; opacity:0.6;}
-#ul1 li div.zhezhao p{ position:relative; color:#858585; font-size:14px; text-indent:2em;}
+#ul1 li:hover div.zhezhao{ height:260px; opacity:1;}
+#ul1 li div.zhezhao p{ position:relative; color:#ddd; font-size:14px; text-indent:2em; margin:15px}
+#ul1 li div.zhezhao .pingjia{ position:absolute; bottom:10px; right:10px;margin:0;}
+#ul1 li div.zhezhao .pingjia img{ margin:0 2px;}
+#ul1 li div.zhezhao .pingjia span b{ color:#ff794c; font-size:16px;}
+#ul1 li div.zhezhao .pingjia span{ margin-left:5px;}
 
 .index-tuijian{ height:645px; overflow:hidden;}
 .index-tuijian .countrys{ position:relative; height:645px;}
@@ -208,7 +212,7 @@ transition:all 0.4s ease-in-out;
 
 
 /*------------header---------------*/
-.header{ width:100%; height:70px; background:rgba(0,0,0,0.6);position:fixed;top:0px; z-index:999;}
+.header{ width:100%; height:70px; background:rgba(0,0,0,0.6);position:fixed;top:0px; z-index:30;}
 .header-main{ height:70px; margin:0px auto;}
 .header-nav{ width:470px; height:70px; padding-left:245px; margin:0px auto; background:url(../images/logo.png) no-repeat 48px 14px;}
 .header-nav ul li{ float:left; padding-right:35px; line-height:70px;}
@@ -1184,7 +1188,7 @@ transition:all 0.4s ease-in-out;
 		/*----专栏弹出层----*/
 .mask{ background:rgba(0,0,0,.78); position:fixed; z-index:5; display:none; }
 .tanchu-main{width:874px; height:auto; overflow:hidden; background:#FFF; position:absolute; left:50%; top:0px; margin-left:-437px; display:none;z-index:66; padding-bottom:30px;}
-.tanchu-main img{ margin:37px 49px; width:768px; height:411px;}
+.tanchu-main img{  width:100%; height:411px;}
 .tanchu-main p{ padding:10px 49px; line-height:24px;}
 
 		/*---微博-分享----*/
@@ -1288,7 +1292,7 @@ transition:all 0.4s ease-in-out;
 .show div{ width:281px; height:116px; float:left;}
 .show div img{ float:left; width:143px;}
 .show div h4{width:130px; height:24px; float:right; padding-left:8px;}
-.show div p{ background:none; height:13px; width:130px; padding-left:8px; float:right; margin:15px 0px 0px 0px;}
+.show div .user01{ background:none; height:13px; width:130px; padding-left:8px; float:right; margin:15px 0px 0px 0px;}
 .show div p span { width:13px; height:13px; float:left; display:block; margin-left:5px; background:none;}
 .show div p span:hover{ cursor:pointer;}
 .show div p span img{ width:13px; height:13px;}

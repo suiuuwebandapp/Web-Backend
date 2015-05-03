@@ -10,7 +10,6 @@
 namespace frontend\controllers;
 
 
-use backend\components\Page;
 use common\components\Code;
 use common\components\DateUtils;
 use common\components\TagUtil;
@@ -24,7 +23,6 @@ use frontend\services\CountryService;
 use frontend\services\PublisherService;
 use frontend\services\TripService;
 use frontend\services\UserBaseService;
-use frontend\services\UserPublisherService;
 use yii\base\Exception;
 
 class TripController extends CController
@@ -40,6 +38,12 @@ class TripController extends CController
     }
 
 
+    /**
+     * 创建随游
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionNewTrip()
     {
         $countryService = new CountryService();
@@ -53,11 +57,27 @@ class TripController extends CController
     }
 
 
+    /**
+     * 预览页面
+     * @return string|\yii\web\Response
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionPreview()
     {
         $tripId=\Yii::$app->request->get("trip");
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
         $tripInfo=$travelInfo['info'];
+        if($tripInfo['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE||$tripInfo['status']==TravelTrip::TRAVEL_TRIP_STATUS_NORMAL){
+            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
+        }
+
+        //验证当前用户是不是随游的所属者
+        $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
+        if($tripInfo['createPublisherId']!=$userPublisherId){
+            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
+        }
+
         $userService=new UserBaseService();
         $publisherService=new PublisherService();
         $tripPublisherId=$tripInfo['createPublisherId'];
@@ -71,6 +91,13 @@ class TripController extends CController
         ]);
     }
 
+
+    /**
+     * 编辑随游
+     * @return string|\yii\web\Response
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionEditTrip()
     {
         $tripId=\Yii::$app->request->get("trip");
@@ -79,7 +106,14 @@ class TripController extends CController
         $tagList = TagUtil::getInstance()->getTagList();
 
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
-
+        if($travelInfo['info']['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
+            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
+        }
+        //验证当前用户是不是随游的所属者
+        $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
+        if($travelInfo['info']['createPublisherId']!=$userPublisherId){
+            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
+        }
         return $this->render("editTrip",[
             'travelInfo'=>$travelInfo,
             'countryList' => $countryList,
@@ -88,6 +122,9 @@ class TripController extends CController
     }
 
 
+    /**
+     * 添加随游
+     */
     public function actionSaveTrip()
     {
 
@@ -253,7 +290,11 @@ class TripController extends CController
     }
 
 
-
+    /**
+     * 更新随游
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionUpdateTrip()
     {
 
@@ -342,10 +383,20 @@ class TripController extends CController
             return;
         }
 
+        //验证当前用户是不是随游的所属者
+        $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
+        $travelTrip = $this->tripService->getTravelTripById($tripId);
+        if($travelTrip->createPublisherId!=$userPublisherId){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
+            return;
+        }
+        if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
+            return;
+        }
 
         $tripStartTime = DateUtils::convertTimePicker($beginTime, 1);
         $tripEndTime = DateUtils::convertTimePicker($endTime, 1);
-        $userPublisherId = $this->userPublisherObj->userPublisherId;
 
         $tripScenicList = array();
         $tripPicList = array();
@@ -408,7 +459,7 @@ class TripController extends CController
         }
 
         try {
-            $travelTrip=$this->tripService->addTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $travelTripPublisher, $tripServiceList);
+            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $travelTripPublisher, $tripServiceList);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
             echo json_encode(Code::statusDataReturn(Code::FAIL));
@@ -428,7 +479,39 @@ class TripController extends CController
             return;
         }
         try{
+            $travelTrip=$this->tripService->getTravelTripById($tripId);
+            if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
+                return;
+            }
             $this->tripService->changeTripStatus($tripId,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL, "发布随游失败"));
+        }
+    }
+
+
+    /**
+     * 跳转随游申请页面
+     */
+    public function actionToApplyTrip()
+    {
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+        if (empty($tripId)) {
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
+            return;
+        }
+        try{
+            $travelTrip=$this->tripService->getTravelTripById($tripId);
+            if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
+                return;
+            }
+            if($travelTrip->createPublisherId==$this->userPublisherObj->userPublisherId){
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您不能加入自己的随游"));
+                return;
+            }
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL, "发布随游失败"));

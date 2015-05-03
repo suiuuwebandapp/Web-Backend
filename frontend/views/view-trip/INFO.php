@@ -66,7 +66,6 @@
     }
 </style>
 
-<!---------------预览页--------->
 <div class="sydetail w1200 clearfix">
     <input type="hidden" value="<?=$travelInfo['info']['tripId'];?>" id="tripId"/>
     <div class="titTop clearfix">
@@ -78,8 +77,10 @@
             <img src="<?= $travelInfo['info']['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
             <img src="<?= $travelInfo['info']['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
         </p>
-        <a href="javascript:;" class="bjBtn" id="finishTrip">确认发布</a>
-        <a id="backEdit" href="/trip/edit-trip?trip=<?=$travelInfo['info']['tripId']?>" class="backbj">返回编辑</a>
+        <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
+        <?php if($isOwner){?>
+            <a id="backEdit" href="/trip/edit-trip?trip=<?=$travelInfo['info']['tripId']?>" class="bjBtn">返回编辑</a>
+        <?php } ?>
     </div>
     <div class="web-content">
         <div class="web-left">
@@ -121,6 +122,40 @@
                     <?=$travelInfo['info']['info'];?>
                 </div>
             </div>
+            <div class="newsLists clearfix">
+                <h2 class="title">随游处理</h2>
+                <div class="lists clearfix">
+                    <img src="/assets/images/4.png" alt="" class="userpic">
+                    <ul class="clearfix">
+                        <li class="li01">xiaohele<img src="images/xf.fw.png" width="18" height="12"> <br>性别:<b>女</b></li>
+                        <li>年龄:<b>22</b></li>
+                        <li>职业:<b>学生</b></li>
+                        <li>随游次数:<b>1</b></li>
+                    </ul>
+                    <a href="#" class="sureBtn">移除</a>
+                </div>
+                <div class="lists clearfix">
+                    <img src="/assets/images/4.png" alt="" class="userpic">
+                    <ul class="clearfix">
+                        <li class="li01">xiaohele<img src="images/xf.fw.png" width="18" height="12"> <br>性别:<b>女</b></li>
+                        <li>年龄:<b>22</b></li>
+                        <li>职业:<b>学生</b></li>
+                        <li>随游次数:<b>1</b></li>
+                    </ul>
+                    <a href="#" class="sureBtn">移除</a>
+                </div>
+                <div class="lists clearfix">
+                    <img src="/assets/images/4.png" alt="" class="userpic">
+                    <ul class="clearfix">
+                        <li class="li01">xiaohele<img src="images/xf.fw.png" width="18" height="12"> <br>性别:<b>女</b></li>
+                        <li>年龄:<b>22</b></li>
+                        <li>职业:<b>学生</b></li>
+                        <li>随游次数:<b>1</b></li>
+                    </ul>
+                    <a href="#" class="sureBtn">移除</a>
+                </div>
+
+            </div>
             <div class="route">
                 <h2 class="title">购买路线</h2>
                 <ul>
@@ -143,8 +178,117 @@
                 <div class="pay">
                     <p>
                         <span>总价：<b id="allPrice"><?=$travelInfo['info']['basePrice'];?></span>
-                        <a href="javascript:;" class="btn" disabled style="background-color: #ddd">支付</a>
+                        <a href="javascript:;" class="btn" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >支付</a>
                     </p>
+                </div>
+            </div>
+            <div class="web-con">
+                <div class="web-bar">
+                    <ol>
+                        <li><a href="#comments">评论</a></li>
+                        <li><a href="#">收藏</a></li>
+                        <li id="fenxiang"><a href="###">分享</a>
+                            <div id="other-line">
+                                <a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a>
+
+                            </div>
+                        </li>
+                    </ol>
+
+
+                </div>
+                <div class="zhuanlan-web">
+                    <ul>
+                        <li>
+                            <div class="user-pic fl">
+                                <img src="/assets/images/5.png" alt="">
+                                <span class="user-name">xiaoheluo</span>
+                            </div>
+                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
+                            <div class="fr resp">
+                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
+                            </div>
+
+                        </li>
+                        <li>
+                            <div class="user-pic fl">
+                                <img src="/assets/images/5.png" alt="">
+                                <span class="user-name">xiaoheluo</span>
+                            </div>
+                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
+                            <div class="fr resp">
+                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
+                            </div>
+
+                        </li>
+                        <li>
+                            <div class="user-pic fl">
+                                <img src="/assets/images/5.png" alt="">
+                                <span class="user-name">xiaoheluo</span>
+                            </div>
+                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
+                            <div class="fr resp">
+                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
+                            </div>
+
+                        </li>
+                        <li>
+                            <div class="user-pic fl">
+                                <img src="/assets/images/5.png" alt="">
+                                <span class="user-name">xiaoheluo</span>
+                            </div>
+                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
+                            <div class="fr resp">
+                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
+                            </div>
+
+                        </li>
+                        <li>
+                            <div class="user-pic fl">
+                                <img src="/assets/images/5.png" alt="">
+                                <span class="user-name">xiaoheluo</span>
+                            </div>
+                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
+                            <div class="fr resp">
+                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
+                            </div>
+
+                        </li>
+                        <li>
+                            <div class="user-pic fl">
+                                <img src="/assets/images/5.png" alt="">
+                                <span class="user-name">xiaoheluo</span>
+                            </div>
+                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
+                            <div class="fr resp">
+                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
+                            </div>
+
+                        </li>
+                        <li>
+                            <div class="user-pic fl">
+                                <img src="/assets/images/5.png" alt="">
+                                <span class="user-name">xiaoheluo</span>
+                            </div>
+                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
+                            <div class="fr resp">
+                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
+                            </div>
+
+                        </li>
+                    </ul>
+                    <ol>
+                        <li><a href="javascript:;">首页</a></li>
+                        <li class="active"><a href="javascript:;">1</a></li>
+                        <li><a href="javascript:;">2</a></li>
+                        <li><a href="javascript:;">3</a></li>
+                        <li><a href="javascript:;">.....</a></li>
+                    </ol>
+                </div>
+                <div class="zhuanlan-text">
+
+                    <textarea id="comments"></textarea>
+                    <a href="#" class="zl-btn">发表评论</a>
                 </div>
             </div>
 
@@ -191,12 +335,50 @@
                 </ul>
             <?php } ?>
             <p>基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
-            <input type="button" value="购买路线" class="web-btn5" disabled style="background-color: #ddd">
-            <input type="button" value="申请加入路线" class="web-btn6" disabled style="background-color: #ddd">
+            <input type="button" value="购买路线" class="web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <input type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <div class="web-tuijian">
+                <h4>日本京都奈良公园一日游</h4>
+                <img src="/assets/images/23.png" alt="" class="pic">
+                <p class="xing">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                </p>
+                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
+                <span>总价:<a>1234345</a></span>
+            </div>
+            <div class="web-tuijian">
+                <h4>日本京都奈良公园一日游</h4>
+                <img src="/assets/images/23.png" alt="" class="pic">
+                <p class="xing">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                </p>
+                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
+                <span>总价:<a>1234345</a></span>
+            </div><div class="web-tuijian">
+                <h4>日本京都奈良公园一日游</h4>
+                <img src="/assets/images/23.png" alt="" class="pic">
+                <p class="xing">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                </p>
+                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
+                <span>总价:<a>1234345</a></span>
+            </div>
+
         </div>
     </div>
 </div>
-<!---------预览页-end-------------->
 
 <script type="text/javascript">
 
@@ -231,7 +413,7 @@
         initDatePicker();
 
         $("#peopleCount").bind("blur",function(){
-           showPrice();
+            showPrice();
         });
         $("#serviceLi input[type='checkbox']").bind("click",function(){
             showPrice();
@@ -241,34 +423,6 @@
         });
 
     });
-
-
-    function finishTrip(){
-        var tripId=$("#tripId").val();
-        $.ajax({
-            url :'/trip/finish-trip',
-            type:'post',
-            data:{
-                tripId:tripId
-            },
-            beforeSend:function(){
-                $("#finishTrip").attr("disabled","disabled");
-            },
-            error:function(){
-                $("#finishTrip").removeAttr("disabled");
-                Main.showTip("发布随游失败");
-            },
-            success:function(data){
-                $("#finishTrip").removeAttr("disabled");
-                data=eval("("+data+")");
-                if(data.status==1){
-                    window.location.href='/view-trip/info?trip='+tripId;
-                }else{
-                    Main.showTip("发布随游失败");
-                }
-            }
-        });
-    }
 
     function initDatePicker(){
         $('#beginTime').datetimepicker({
@@ -313,7 +467,7 @@
         var allPrice=0;
 
         if(peopleCount==''||peopleCount==0){
-          return;
+            return;
         }
 
         peopleCount=parseInt(peopleCount);

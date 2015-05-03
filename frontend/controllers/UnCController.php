@@ -13,16 +13,19 @@ namespace frontend\controllers;
 use backend\services\SysUserService;
 use common\components\Aes;
 use common\components\Code;
+use frontend\services\UserBaseService;
 use yii\web\Controller;
 
 class UnCController extends Controller{
+
     public $userObj=null;
+    public $userPublisherObj=null;
+    public $__userBaseService=null;
 
     public $layout="main";
 
     //public $enableCsrfValidation=false;
 
-    public $__sysUserService=null;
 
     public function __construct($id, $module = null)
     {
@@ -39,12 +42,17 @@ class UnCController extends Controller{
             $aes=new Aes();
             $userSign=$aes->decrypt($cookieSign,$enPassword,$enDigit);
 
-            $this->__sysUserService=new SysUserService();
-            $currentUser=$this->__sysUserService->findUserByUserSign($userSign);
+            $this->__userBaseService=new SysUserService();
+            $currentUser=$this->__userBaseService->findUserByUserSign($userSign);
             if(isset($currentUser)){
                 $this->userObj=$currentUser;
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
             }
+        }
+        if($currentUser!=null&&$currentUser->isPublisher){
+            if($this->__userBaseService==null)$this->__userBaseService=new UserBaseService();
+            $userPublisherObj=$this->__userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+            $this->userPublisherObj=$userPublisherObj;
         }
         parent::__construct($id, $module);
     }

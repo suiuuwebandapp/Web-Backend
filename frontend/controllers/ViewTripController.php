@@ -57,7 +57,7 @@ class ViewTripController extends UnCController{
         $createPublisherId=$publisherService->findById($tripPublisherId);
         $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
 
-        return $this->render("preview",[
+        return $this->render("info",[
             'travelInfo'=>$travelInfo,
             'createUserInfo'=>$createUserInfo,
             'createPublisherInfo'=>$createPublisherId
