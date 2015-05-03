@@ -234,7 +234,7 @@ class ArticleDb extends ProxyDb{
 FROM article_comment a
 LEFT JOIN user_base c ON c.userSign=a.userSign
 LEFT JOIN (SELECT * FROM user_attention bd WHERE bd.userSign=:userSign AND bd.relativeType=8 ) b ON a.commentId=b.relativeId
-WHERE a.articleId=:articleId
+WHERE a.articleId=:articleId AND c.`status`=1
         ");
         $sql.=$page;
         $command=$this->getConnection()->createCommand($sql);
@@ -254,7 +254,7 @@ WHERE a.articleId=:articleId
 FROM article_comment a
 LEFT JOIN user_base c ON c.userSign=a.userSign
 LEFT JOIN (SELECT * FROM user_attention bd WHERE bd.userSign=:userSign AND bd.relativeType=8 ) b ON a.commentId=b.relativeId
-WHERE a.articleId=:articleId
+WHERE a.articleId=:articleId AND c.`status`=1
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);

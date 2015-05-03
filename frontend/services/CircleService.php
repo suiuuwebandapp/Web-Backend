@@ -53,6 +53,7 @@ class CircleService extends BaseDb
             {
                 throw new Exception('添加圈子文章失败',Code::FAIL);
             }
+            return $rst;
         } catch (Exception $e) {
             throw new Exception('添加圈子文章异常',Code::FAIL,$e);
         } finally {

@@ -48,7 +48,8 @@ class CircleDb extends ProxyDb
         $command->bindParam(":aImgList", $CircleArticleEntity->aImgList, PDO::PARAM_STR);
         $command->bindParam(":aType", $CircleArticleEntity->aType, PDO::PARAM_INT);
         $command->bindParam(":cAddrId", $CircleArticleEntity->cAddrId, PDO::PARAM_INT);
-        return $command->execute();
+        $command->execute();
+        return $this->getConnection()->lastInsertID;
 
     }
 

@@ -2,6 +2,7 @@
 namespace common\models;
 use common\entity\CircleArticle;
 use common\entity\RecommendList;
+use common\entity\TravelTrip;
 use common\entity\UserAttention;
 use common\entity\UserBase;
 use yii\db\mssql\PDO;
@@ -160,10 +161,16 @@ class UserAttentionDb extends ProxyDb
     public function getCollectTravelList($userSign,$page)
     {
         $sql=sprintf("
-
+SELECT a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname FROM travel_trip a
+LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
+LEFT JOIN user_base b ON b.userSign=c.userId
+LEFT JOIN user_attention d ON d.relativeId = a.tripId
+WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND b.userSign=:userSign
         ");
         $sql.=$page;
         $command=$this->getConnection()->createCommand($sql);
+        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindValue(":tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindParam(":userSign",$userSign, PDO::PARAM_STR);
         $command->bindValue(":relativeType", UserAttention::TYPE_COLLECT_FOR_TRAVEL, PDO::PARAM_INT);
         $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);

@@ -229,7 +229,7 @@ class UserAttentionService extends BaseDb
             $page = Common::PageResult($pageNumb);
             return $this->AttentionDb->getCollectTravelList($userSign,$page);
         } catch (Exception $e) {
-            throw new Exception('获取关注用户异常',Code::FAIL,$e);
+            throw new Exception('获取收藏的随游异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }
@@ -248,7 +248,7 @@ class UserAttentionService extends BaseDb
             $page = Common::PageResult($pageNumb);
             return $this->AttentionDb->getCollectArticleList($userSign,$page);
         } catch (Exception $e) {
-            throw new Exception('获取关注用户异常',Code::FAIL,$e);
+            throw new Exception('获取收藏的圈子文章异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }
@@ -273,7 +273,25 @@ class UserAttentionService extends BaseDb
             $this->closeLink();
         }
     }
-
+    /**
+     * 得到推荐随游
+     * @param $pageNumb
+     * @return array
+     * @throws Exception
+     */
+    public function getRecommendTravel($pageNumb)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->recommendDb = new RecommendListDb($conn);
+            $page = Common::PageResult($pageNumb);
+            return $this->recommendDb->getRecommendTravel($page);
+        } catch (Exception $e) {
+            throw new Exception('获取推荐随游异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
     /**
      * 得到关注圈子动态
      * @param $userSign

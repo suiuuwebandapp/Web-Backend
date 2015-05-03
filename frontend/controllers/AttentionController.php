@@ -252,6 +252,7 @@ class AttentionController extends AController
             $data['circleDynamic'] = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
             $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page,3);
             $data['recommendUser'] =$this->AttentionService->getRecommendUser($page);
+            $data['recommendTravel'] =$this->AttentionService->getRecommendTravel($page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {

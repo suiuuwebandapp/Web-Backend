@@ -62,6 +62,7 @@ class CircleController extends AController{
             $CircleArticleEntity->aType=\Yii::$app->request->post('type');
             $CircleArticleEntity->cAddrId=\Yii::$app->request->post('addrId');
             $CircleArticleEntity->aCreateUserSign=$this->userObj->userSign;
+
             if(empty( $CircleArticleEntity->cId)&&empty( $CircleArticleEntity->cAddrId))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'请选择所属圈子'));
@@ -72,8 +73,8 @@ class CircleController extends AController{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'请选择文章类型'));
                 exit;
             }
-            $this->CircleService->CreateArticle($CircleArticleEntity);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            $data = $this->CircleService->CreateArticle($CircleArticleEntity);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();

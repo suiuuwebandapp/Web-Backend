@@ -92,11 +92,13 @@ class ArticleService extends BaseDb
             $page = Common::PageResult($page,$numb);
             $comment=$this->articleDb->getCommentListByArticleId($id,$page,$userSign);
             $count= $this->articleDb->getCommentListByArticleIdCount($id,$userSign);
+
+
             $data['count']=isset($count['numb'])?$count['numb']:0;
             $data['comment']=$comment;
             return $data;
         } catch (Exception $e) {
-            throw new Exception('查询目的地详情异常',Code::FAIL,$e);
+            throw new Exception('查询目的地评论异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

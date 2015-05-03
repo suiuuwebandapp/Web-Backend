@@ -13,8 +13,10 @@ namespace frontend\services;
 use backend\components\Page;
 use common\entity\TravelTrip;
 use common\entity\TravelTripPublisher;
+use common\entity\UserAttention;
 use common\models\BaseDb;
 use common\models\TravelTripDb;
+use common\models\UserAttentionDb;
 use yii\base\Exception;
 
 class TripService extends BaseDb{
@@ -26,14 +28,10 @@ class TripService extends BaseDb{
 
     }
 
-    public function getList(Page $page,$title,$countryName,$cityName,$peopleCount,$startPrice,$endPrice,$tag)
+    public function getList(Page $page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag)
     {
         try {
             $conn = $this->getConnection();
-
-            //暂时先不支持国家，城市查询
-            $countryId="";
-            $cityId="";
             $this->tripTravelDb = new TravelTripDb($conn);
             return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         } catch (Exception $e) {
@@ -180,7 +178,7 @@ class TripService extends BaseDb{
      * @throws Exception
      * @throws \Exception
      */
-    public function getTravelTripInfoById($tripId)
+    public function getTravelTripInfoById($tripId,$userSign=null)
     {
         if(empty($tripId)){
             throw new Exception ("TripId Is Not Empty");
@@ -189,6 +187,17 @@ class TripService extends BaseDb{
         try{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
+            $attention =new UserAttentionDb($conn);
+            $userAttention = new UserAttention();
+            $userAttention->relativeId=$tripId;
+            $userAttention->relativeType=UserAttention::TYPE_COLLECT_FOR_TRAVEL;
+            $userAttention->userSign = $userSign;
+            $attentionEntity = new UserAttention();
+            $attentionEntity->relativeId=$tripId;
+            $attentionEntity->relativeType=UserAttention::TYPE_PRAISE_FOR_TRAVEL;
+            $attentionEntity->userSign = $userSign;
+            $tripInfo['praise']=$attention->getAttentionResult($attentionEntity);
+            $tripInfo['attention']=$attention->getAttentionResult($userAttention);
             $tripInfo['info']=$this->tripTravelDb->findTravelTripById($tripId);
             $tripInfo['picList']=$this->tripTravelDb->getTravelTripPicList($tripId);
             $tripInfo['priceList']=$this->tripTravelDb->getTravelTripPriceList($tripId);
@@ -289,6 +298,8 @@ class TripService extends BaseDb{
         }
         return $userPublisher;
     }
+
+
 
 
 }

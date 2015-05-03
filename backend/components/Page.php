@@ -24,7 +24,7 @@ class Page
     public $showAll = false;
 
 
-    private $list = [];
+    public $list = [];
 
 
     public function __construct(Request $request=null)

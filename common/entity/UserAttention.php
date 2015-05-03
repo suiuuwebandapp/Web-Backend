@@ -17,7 +17,7 @@ class UserAttention
      */
     const TYPE_FOR_USER = 1;
     /**
-     * 关注类型为圈子内容
+     * 关注类型为圈子文章内容
      */
     const TYPE_FOR_CIRCLE_ARTICLE = 2;
     /**
@@ -46,6 +46,15 @@ class UserAttention
      * 支持类型为圈子文章评论
      */
     const TYPE_COMMENT_FOR_CIRCLE_ARTICLE = 9;
+
+    /**
+     * 点赞类型为随游点赞
+     */
+    const TYPE_PRAISE_FOR_TRAVEL=11;
+    /**
+     * 点赞类型为随游点赞
+     */
+    const TYPE_PRAISE_FOR_CIRCLE_ARTICLE=12;
     /**
      * @var 关注id
      */
