@@ -118,6 +118,8 @@
             getDesList();
         });
 
+        getDesList();
+
     });
 
     //级联获取城市列表

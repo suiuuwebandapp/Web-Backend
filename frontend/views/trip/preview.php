@@ -98,7 +98,7 @@
                         <li><a href="javascript:;"><img src="<?= $pic['url'];?>" alt=""></a></li>
                     <?php }?>
                 </ol>
-                <a href="javascript:;" class="pre" id="pre∂∂"><img src="/assets/images/prev.png" alt=""></a>
+                <a href="javascript:;" class="pre" id="pre"><img src="/assets/images/prev.png" alt=""></a>
                 <a href="javascript:;" class="nex" id="nex"><img src="/assets/images/next.png" alt=""></a>
             </div>
             <div class="map">
@@ -111,8 +111,8 @@
                             </b>
                         </span>
                     </li>
-                    <li><span class="icon icon2">随游时长<b><?=$travelInfo['info']['travelTime'];?></b>小时</span></li>
-                    <li class="last"><span class="icon icon3">随友最多接待<b><?=$travelInfo['info']['maxUserCount'];?></b>人</span></li>
+                    <li><span class="icon icon2">随游时长<b id="tripTime"><?=$travelInfo['info']['travelTime'];?></b><?=$travelInfo['info']['travelTimeType']==\common\entity\TravelTrip::TRAVEL_TRIP_TIME_TYPE_DAY?'天':'小时';?></span></li>
+                    <li class="last"><span class="icon icon3">随友最多接待<b id="maxPeopleCount"><?=$travelInfo['info']['maxUserCount'];?></b>人</span></li>
                 </ul>
                 <div class="map-pic">
                     <iframe id="mapFrame" name="mapFrame" src="/google-map/view-scenic-map?tripId=<?=$travelInfo['info']['tripId'];?>" width="893px" height="330px;" frameborder="0" scrolling="no"></iframe>
@@ -125,7 +125,7 @@
                 <h2 class="title">购买路线</h2>
                 <ul>
                     <li><span>出发日期：</span><p><input type="text" class="text" id="beginTime"><a href="#" class="cal-icon"></a></p></li>
-                    <li><span>出游人数: </span><p><input type="text"  class="text" id="peopleCount"></p></li>
+                    <li><span>出游人数: </span><p><input type="text"  class="text" id="peopleCount" value="1"></p></li>
                     <li><span>起始时间：</span><p><input type="text"  class="text" id="startTime"></p></li>
                     <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
                         <li>
@@ -140,7 +140,7 @@
                 </ul>
                 <div class="pay">
                     <p>
-                        <span>总价：<b>8000</b></span>
+                        <span>总价：<b id="allPrice"><?=$travelInfo['info']['basePrice'];?></span>
                         <a href="javascript:;" class="btn" disabled style="background-color: #ddd">支付</a>
                     </p>
                 </div>
@@ -172,7 +172,7 @@
             </div>
             <?php if($travelInfo['serviceList']!=null){ ?>
                 <p>附加服务</p>
-                <ul class="ul01">
+                <ul class="ul01" id="stepPriceList">
                     <li class="tit"><span>服务</span><span>价格</span><span>单位</span></li>
                     <?php foreach($travelInfo['serviceList'] as $service){  ?>
                         <li><span><?=$service['title']?></span><span><b>¥<?=$service['money']?></b></span><span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span></li>
@@ -188,7 +188,7 @@
                     <?php } ?>
                 </ul>
             <?php } ?>
-            <p>基础价格:<b><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
+            <p>基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
             <input type="button" value="购买路线" class="web-btn5" disabled style="background-color: #ddd">
             <input type="button" value="申请加入路线" class="web-btn6" disabled style="background-color: #ddd">
             <div class="web-tuijian">
@@ -237,6 +237,15 @@
 
 <script type="text/javascript">
 
+    <?php
+        $stepPriceJson='';
+        if(!empty($travelInfo['priceList'])){
+            $stepPriceJson=json_encode($travelInfo['priceList']);
+        }
+    ?>
+    var basePrice='<?=$travelInfo['info']['basePrice'];?>';
+    var maxPeopleCount='<?=$travelInfo['info']['maxUserCount'];?>';
+    var stepPriceJson='<?=$stepPriceJson;?>';
 
     $(document).ready(function(){
         $('#startTime').timepicki({
@@ -255,6 +264,10 @@
         });
 
         initDatePicker();
+
+        $("#peopleCount").bind("blur",function(){
+           showPrice();
+        });
 
     });
 
@@ -321,8 +334,42 @@
             $(".datetimepicker").hide();
         });
     }
+    function showPrice()
+    {
+        var peopleCount=$("#peopleCount").val();
+
+        var tripTime=$("#tripTime").val();
+        var allPrice=0;
+
+        if(peopleCount==''||peopleCount==0){
+          return;
+        }
+        if(peopleCount>maxPeopleCount){
+            Main.showTip("这个随友最多之能接待"+maxPeopleCount+"个小伙伴呦~");
+            return;
+        }
+        //判断有没有阶梯价格
+        var stepPriceList=data("("+stepPriceJson+")");
+        if(stepPriceList.length>0){
+            for(var i=0;i<stepPriceList.length;i++){
+                var stepPrice=stepPriceList[i];
+                if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
+
+                }
+            }
+        }else{
+            allPrice=basePrice*peopleCount;
+        }
 
 
+        //判断有没有附加服务
+
+
+
+
+        $("#allPrice").html(allPrice);
+
+    }
 
 
 

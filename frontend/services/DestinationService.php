@@ -42,6 +42,7 @@ class DestinationService extends BaseDb{
         $desInfo=array();
         $desPage=new Page();
         $desPage->showAll=true;
+        $desPage->sortName="beginTime";
         try {
             $conn = $this->getConnection();
             $this->destinationDb=new DestinationDb($conn);

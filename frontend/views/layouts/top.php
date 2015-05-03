@@ -26,7 +26,7 @@
                     <li class="active"><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
                     <li><a href="/view-trip/list">随游</a></li>
                     <li><a href="/destination/list">目的地</a></li>
-                    <li><a href="zhuanlan.html">专栏</a></li>
+                    <li><a href="/article">专栏</a></li>
                     <li><a href="/index/create-travel">发布随游</a></li>
                 </ul>
             </div>
@@ -43,28 +43,28 @@
                                 <li class="xtxx">系统消息</li>
                             </ol>
                             <ul>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
-                                <li><img src="images/1.png"><span>昵称</span>
+                                <li><img src="/assets/images/1.png"><span>昵称</span>
 
                                     <p>给您发了私信</p></li>
                             </ul>
@@ -101,7 +101,7 @@
                     <li class="active"><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
                     <li><a href="/view-trip/list">随游</a></li>
                     <li><a href="/destination/list">目的地</a></li>
-                    <li><a href="zhuanlan.html">专栏</a></li>
+                    <li><a href="/article">专栏</a></li>
                     <li><a href="/index/create-travel">发布随游</a></li>
                 </ul>
             </div>

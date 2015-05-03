@@ -63,6 +63,7 @@ class ProxyDb extends Connection {
 
     public function find(Page $page=null)
     {
+
         if($page==null){
             $page=new Page();
             $page->showAll=true;
@@ -77,6 +78,7 @@ class ProxyDb extends Connection {
         }
 
         $command=$this->db->createCommand($searchSql);
+
         if(!empty($page->sortName)){
             $searchSql=$searchSql." order by ".$page->sortName." ".$page->sortType;
         }

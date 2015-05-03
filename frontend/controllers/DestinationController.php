@@ -54,6 +54,7 @@ class DestinationController extends UnCController{
 
         $page=new Page();
         $page->showAll=true;
+
         try{
             $destinationService=new DestinationService();
             $rst=$destinationService->getList($page,null,$countryId,$cityId);
