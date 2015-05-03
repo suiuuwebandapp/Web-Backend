@@ -37,6 +37,15 @@ class UserAttention
      * 收藏类型为随游
      */
     const TYPE_COLLECT_FOR_TRAVEL = 6;
+
+    /**
+     * 支持类型为目的地评论
+     */
+    const TYPE_COMMENT_FOR_ARTICLE_MDD = 8;
+    /**
+     * 支持类型为圈子文章评论
+     */
+    const TYPE_COMMENT_FOR_CIRCLE_ARTICLE = 9;
     /**
      * @var 关注id
      */
@@ -50,7 +59,7 @@ class UserAttention
      */
     public $relativeType;
     /**
-     * @var 状态 是否启用
+     * @var 状态 是否启用 /或
      */
     public $status;
 

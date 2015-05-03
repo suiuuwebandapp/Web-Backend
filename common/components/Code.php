@@ -67,6 +67,10 @@ class Code
     const USER_REGISTER_EMAIL_TIMER='U_R_E_T';//用户注册邮件时间控制
     const USER_REGISTER_PHONE_TIMER='U_R_P_T';//用户注册手机时间控制
 
+
+    const USER_COMMENT_SUPPORT='USER_COMMENT_SUPPORT';
+
+
     /**
      * 异常信息（后台）
      */

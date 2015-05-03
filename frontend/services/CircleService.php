@@ -116,14 +116,14 @@ class CircleService extends BaseDb
      * @throws Exception
      * @return array
      */
-    public function getArticleInfoById($articleId,$pageNumb,$userSign)
+    public function getArticleInfoById($articleId,$userSign)
     {
 
         try {
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
             $data=$this->CircleDb->getArticleInfoById($articleId);
-            $page=Common::PageResult($pageNumb);
+            $page=Common::PageResult(1,4);
             $commentList=$this->CircleDb->getCircleCommentByArticleId($articleId,$page);
             $this->userAttentionDb =new UserAttentionDb($conn);
             $attention= new UserAttention();
@@ -371,7 +371,7 @@ class CircleService extends BaseDb
 
     }
 
-    public function getHomepageInfo($userSign,$page)
+    public function getHomepageInfo($userSign,$page,$mySign)
     {
         try {
             $data = array();
@@ -387,11 +387,23 @@ class CircleService extends BaseDb
             $data['user']=$userArr;
             $userId=$userArr['userId'];
             $fansArr= $this->userAttentionDb->getAttentionFansCount($userId);
+            $data['fansNumb']='0';
             if(!empty($userArr)&&$userArr!=false)
             {
                 $data['fansNumb']=$fansArr['numb'];
             }
+            $userAttention = new UserAttention();
+            $userAttention->userSign=$mySign;
+            $userAttention->relativeId=$userId;
+            $userAttention->relativeType=UserAttention::TYPE_FOR_USER;
+            $attRst=$this->userAttentionDb->getAttentionResult($userAttention);
+            $data['attentionRst']=array();
+            if(!empty($attRst)&&$attRst!=false)
+            {
+                $data['attentionRst']=$attRst;
+            }
             $AttArr= $this->userAttentionDb->getAttentionCount($userSign);
+            $data['AttentionNumb']='0';
             if(!empty($userArr)&&$userArr!=false)
             {
                 $data['AttentionNumb']=$AttArr['numb'];
@@ -401,7 +413,7 @@ class CircleService extends BaseDb
             $data['articleList'] = $articleList;
             return $this->unifyReturn($data);
         } catch (Exception $e) {
-            throw new Exception('查询圈子文章评论异常',Code::FAIL,$e);
+            throw new Exception('查询用户主页异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }
