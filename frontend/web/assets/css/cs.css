@@ -61,7 +61,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 #denglu-main .icon03{ background-position:0 -323px;}
 #denglu-main .icon03:hover{ background-position:0 -258px;}
 
-#denglu-main . float .gt_holder{ margin-left:50px; font-size:16px;}
+#denglu-main .float .gt_holder{ margin-left:53px; font-size:16px;}
 .nav-right ol li .float .gt_holder .gt_guide_tip a{ color:#858585; font-size:12px;}
 
 /* --------注册弹框-----*/
@@ -963,6 +963,7 @@ transition:all 0.4s ease-in-out;
 .sydetail .web-content .web-banner ol li img{ width:185px; }
 .sydetail .web-content .web-banner ol li img:hover{ width:183px;  border:#FF0 1px solid;}
 .sydetail .web-content .web-left .map{ padding:10px 0;}
+.sydetail .web-content .web-left .map .title{ line-height:50px; height:50px; font-size:20px; text-align:center;}
 .sydetail .web-content .web-left .map .details li{height:36px; line-height:36px; width:38%; float:left; font-size:18px;}
 .sydetail .web-content .web-left .map .details li.last{width:24%;}
 .sydetail .web-content .web-left .map .details li span{ height:36px; line-height:28px; display:block; font-size:18px;}
@@ -1103,6 +1104,7 @@ transition:all 0.4s ease-in-out;
 .yldetail .web-content .web-banner ol li img{ width:185px;}
 .yldetail .web-content .web-banner ol li img:hover{ width:183px; border:#FF0 1px solid;}
 .yldetail .web-content .web-left .map{ padding:10px 0;}
+.yldetail .web-content .web-left .map .title{ font-size:20px; text-align:center; line-height:50px; height:50px;}
 .yldetail .web-content .web-left .map .details li{height:36px; line-height:36px; width:38%; float:left; font-size:18px;}
 .yldetail .web-content .web-left .map .details li.last{width:24%;}
 .yldetail .web-content .web-left .map .details li span{ height:36px; line-height:28px; display:block; font-size:18px;}

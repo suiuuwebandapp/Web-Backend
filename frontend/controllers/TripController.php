@@ -499,23 +499,17 @@ class TripController extends CController
     {
         $tripId=trim(\Yii::$app->request->post("tripId", ""));
         if (empty($tripId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
-            return;
+            return $this->redirect(['/result', 'result' => '随游不允许为空']);
         }
-        try{
-            $travelTrip=$this->tripService->getTravelTripById($tripId);
-            if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
-                return;
-            }
-            if($travelTrip->createPublisherId==$this->userPublisherObj->userPublisherId){
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您不能加入自己的随游"));
-                return;
-            }
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
-        }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL, "发布随游失败"));
+        $travelTrip=$this->tripService->getTravelTripById($tripId);
+        if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
+            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
         }
+        if($travelTrip->createPublisherId==$this->userPublisherObj->userPublisherId){
+            return $this->redirect(['/result', 'result' => '您不能加入自己的随游']);
+        }
+
+        return $this->render("apply");
     }
 
 }
