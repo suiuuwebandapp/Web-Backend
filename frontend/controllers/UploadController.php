@@ -39,7 +39,7 @@ class UploadController extends Controller{
 
 
 
-    private $maxCardImgSize=1024000;//上传文件大小限制, 单位BYTE
+    private $maxCardImgSize=2048000;//上传文件大小限制, 单位BYTE
     private $cardImgTypes=[
         'jpg','png','jpeg'
     ];

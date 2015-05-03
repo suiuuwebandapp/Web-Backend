@@ -67,16 +67,16 @@
 </style>
 
 <!---------------预览页--------->
-<div class="yldetail w1200 clearfix">
+<div class="sydetail w1200 clearfix">
     <input type="hidden" value="<?=$travelInfo['info']['tripId'];?>" id="tripId"/>
     <div class="titTop clearfix">
         <h3 class="title"><?=$travelInfo['info']['title'];?></h3>
         <p class="xing">
-            <img src="/assets/images/start1.fw.png" width="13" height="13">
-            <img src="/assets/images/start1.fw.png" width="13" height="13">
-            <img src="/assets/images/start1.fw.png" width="13" height="13">
-            <img src="/assets/images/start2.fw.png" width="13" height="13">
-            <img src="/assets/images/start2.fw.png" width="13" height="13">
+            <img src="<?= $travelInfo['info']['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+            <img src="<?= $travelInfo['info']['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+            <img src="<?= $travelInfo['info']['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+            <img src="<?= $travelInfo['info']['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+            <img src="<?= $travelInfo['info']['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
         </p>
         <a href="javascript:;" class="bjBtn" id="finishTrip">确认发布</a>
         <a id="backEdit" href="/trip/edit-trip?trip=<?=$travelInfo['info']['tripId']?>" class="backbj">返回编辑</a>
@@ -98,8 +98,8 @@
                         <li><a href="javascript:;"><img src="<?= $pic['url'];?>" alt=""></a></li>
                     <?php }?>
                 </ol>
-                <a href="javascript:;" class="prev" id="prev"><img src="/assets/images/prev.png" alt=""></a>
-                <a href="javascript:;" class="next" id="next"><img src="/assets/images/next.png" alt=""></a>
+                <a href="javascript:;" class="pre" id="pre∂∂"><img src="/assets/images/prev.png" alt=""></a>
+                <a href="javascript:;" class="nex" id="nex"><img src="/assets/images/next.png" alt=""></a>
             </div>
             <div class="map">
                 <h2 class="title01"><?=$travelInfo['info']['title'];?></h2>
@@ -127,26 +127,22 @@
                     <li><span>出发日期：</span><p><input type="text" class="text" id="beginTime"><a href="#" class="cal-icon"></a></p></li>
                     <li><span>出游人数: </span><p><input type="text"  class="text" id="peopleCount"></p></li>
                     <li><span>起始时间：</span><p><input type="text"  class="text" id="startTime"></p></li>
-                    <li><span>附加服务：</span>
-                        <p>
-
-                            <input type="checkbox"  class="radio" id="radio01" ><label for="radio01">租车500</label>
-                            <input type="checkbox"  class="radio" id="radio02"><label for="radio02">租车500</label>
-                            <input type="checkbox"  class="radio" id="radio03"><label for="radio03">租车500</label>
-                            <input type="checkbox"  class="radio" id="radio04"><label for="radio04">租车500</label>
-                            <input type="checkbox"  class="radio" id="radio05"><label for="radio05">租车500</label>
-                            <input type="checkbox"  class="radio" id="radio06"><label for="radio06">租车500</label>
-
-                        </p>
-
-                    </li>
+                    <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
+                        <li>
+                            <span><?=$key==0?'附加服务：':''?></span>
+                            <p><input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>" >
+                                <label for="radio<?=$service['serviceId']?>"><?=$service['title']?></label>
+                                <span><b><?=$service['money']?>￥</b></span>
+                                <span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span>
+                            </p>
+                        </li>
+                    <?php } ?>
                 </ul>
                 <div class="pay">
                     <p>
-                        <span>基础价格：<b><?=$travelInfo['info']['basePrice'];?></b></span><span>总价：<b>8000</b></span>
+                        <span>总价：<b>8000</b></span>
                         <a href="javascript:;" class="btn" disabled style="background-color: #ddd">支付</a>
                     </p>
-
                 </div>
             </div>
 
@@ -163,33 +159,77 @@
                 <ul>
                     <li class="fen">
                         <p class="xing">
-                            <img src="/assets/images/start1.fw.png" width="13" height="13">
-                            <img src="/assets/images/start1.fw.png" width="13" height="13">
-                            <img src="/assets/images/start1.fw.png" width="13" height="13">
-                            <img src="/assets/images/start2.fw.png" width="13" height="13">
-                            <img src="/assets/images/start2.fw.png" width="13" height="13">
+                            <img src="<?= $createPublisherInfo->score>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $createPublisherInfo->score>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $createPublisherInfo->score>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $createPublisherInfo->score>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $createPublisherInfo->score>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                         </p>
                     </li>
                     <li>行程数:<b><?=$createPublisherInfo->tripCount;?></b></li>
                     <li>随游次数:<b><?=$createUserInfo->travelCount;?></b></li>
                 </ul>
             </div>
-            <p><span>基础价格:<b><?=$travelInfo['info']['basePrice'];?></b></span><span><b>&nbsp;</b></span></p>
-            <ol>
-                <li><span>单项价格:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-                <?php
-                    if($travelInfo['serviceList']!=null){
-                        foreach($travelInfo['serviceList'] as $service){
-                ?>
-                            <li><span></span><?=$service['title']?> <?=$service['money']?> <?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?> </li>
-                <?php
-                        }
-                    }
-                ?>
-            </ol>
+            <?php if($travelInfo['serviceList']!=null){ ?>
+                <p>附加服务</p>
+                <ul class="ul01">
+                    <li class="tit"><span>服务</span><span>价格</span><span>单位</span></li>
+                    <?php foreach($travelInfo['serviceList'] as $service){  ?>
+                        <li><span><?=$service['title']?></span><span><b>¥<?=$service['money']?></b></span><span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span></li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+
+            <?php if($travelInfo['priceList']!=null){ ?>
+                <p>优惠价格:</p>
+                <ul class="ul02">
+                    <?php foreach($travelInfo['priceList'] as $price){  ?>
+                        <li><span><?=$price['minCount']?>人</span><span>至</span><span><?=$price['maxCount']?>人</span><span><b>¥<?=$price['price']?></b></span></li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+            <p>基础价格:<b><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
             <input type="button" value="购买路线" class="web-btn5" disabled style="background-color: #ddd">
             <input type="button" value="申请加入路线" class="web-btn6" disabled style="background-color: #ddd">
-            <input type="text" id="test" />
+            <div class="web-tuijian">
+                <h4>日本京都奈良公园一日游</h4>
+                <img src="/assets/images/23.png" alt="" class="pic">
+                <p class="xing">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                </p>
+                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
+                <span>总价:<a>1234345</a></span>
+            </div>
+            <div class="web-tuijian">
+                <h4>日本京都奈良公园一日游</h4>
+                <img src="/assets/images/23.png" alt="" class="pic">
+                <p class="xing">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                </p>
+                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
+                <span>总价:<a>1234345</a></span>
+            </div>
+            <div class="web-tuijian">
+                <h4>日本京都奈良公园一日游</h4>
+                <img src="/assets/images/23.png" alt="" class="pic">
+                <p class="xing">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                </p>
+                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
+                <span>总价:<a>1234345</a></span>
+            </div>
         </div>
     </div>
 </div>

@@ -98,8 +98,8 @@
                         <li><a href="javascript:;"><img src="<?= $pic['url'];?>" alt=""></a></li>
                     <?php }?>
                 </ol>
-                <a href="javascript:;" class="prev" id="prev"><img src="/assets/images/prev.png" alt=""></a>
-                <a href="javascript:;" class="next" id="next"><img src="/assets/images/next.png" alt=""></a>
+                <a href="javascript:;" class="pre" id="pre"><img src="/assets/images/prev.png" alt=""></a>
+                <a href="javascript:;" class="nex" id="nex"><img src="/assets/images/next.png" alt=""></a>
             </div>
             <div class="map">
                 <h2 class="title01"><?=$travelInfo['info']['title'];?></h2>
