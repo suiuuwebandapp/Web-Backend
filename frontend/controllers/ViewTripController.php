@@ -87,6 +87,7 @@ class ViewTripController extends UnCController{
         try{
             $page=new Page();
             $page->currentPage=$c;
+            $page->showAll=true;
 
             $this->tripService=new TripService();
             //查询基本

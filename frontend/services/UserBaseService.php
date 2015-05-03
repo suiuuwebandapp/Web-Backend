@@ -74,7 +74,8 @@ class UserBaseService extends BaseDb
 
             //环信im注册
             $im=new Easemob(\Yii::$app->params['imConfig']);
-            $options=array('username'=>$userBase->userSign,'password'=>$userBase->password,'nickname'=>$userBase->nickname);
+            $imPassword = \Yii::$app->params['imPassword'];
+            $options=array('username'=>$userBase->userSign,'password'=>$imPassword,'nickname'=>$userBase->nickname);
             $imRes=$im->accreditRegister($options);
             $arrRes=json_decode($imRes,true);
             if(isset($arrRes['error']))
@@ -370,10 +371,7 @@ class UserBaseService extends BaseDb
         return false;
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/suiuu
     public function updatePassword($userId,$password)
     {
         try {
@@ -384,25 +382,15 @@ class UserBaseService extends BaseDb
             $userBase->userId=$userId;
            return $this->userBaseDb->updatePassword($userBase);
 
-<<<<<<< HEAD
         }catch (Exception $e) {
             throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
-        }
-    }
-
-    public function findUserPublisherByUserSign($userSign)
-=======
-        } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
-        } finally {
+        }finally{
             $this->closeLink();
         }
-
-        return $userBase;
     }
 
-public function findUserPublisherByUserSign($userSign)
->>>>>>> origin/suiuu
+
+    public function findUserPublisherByUserSign($userSign)
     {
         $userBase=null;
         try {
@@ -415,12 +403,7 @@ public function findUserPublisherByUserSign($userSign)
         } finally {
             $this->closeLink();
         }
-<<<<<<< HEAD
         return $userBase;
     }
-=======
 
-    }
-
->>>>>>> origin/suiuu
 }
