@@ -12,6 +12,7 @@ namespace common\models;
 
 use backend\components\Page;
 use common\entity\TravelTrip;
+use common\entity\TravelTripApply;
 use common\entity\TravelTripPicture;
 use common\entity\TravelTripPrice;
 use common\entity\TravelTripPublisher;
@@ -89,6 +90,7 @@ class TravelTripDb extends ProxyDb{
               :isHotel,:score,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status
             )
         ");
+
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":createPublisherId", $travelTrip->createPublisherId, PDO::PARAM_INT);
         $command->bindParam(":title", $travelTrip->title, PDO::PARAM_STR);
@@ -126,10 +128,10 @@ class TravelTripDb extends ProxyDb{
         $sql = sprintf("
             UPDATE travel_trip SET
             title=:title,titleImg=:titleImg,countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,basePrice=:basePrice,
-            maxUserCount=:maxUserCount,:isAirplane=isAirplane,isHote=:isHotel,score=:score,startTime=:startTime,
+            maxUserCount=:maxUserCount,isAirplane=:isAirplane,isHotel=:isHotel,score=:score,startTime=:startTime,
             endTime=:endTime,travelTime=:travelTime,travelTimeType=:travelTimeType,intro=:intro,info=:info,tags=:tags,
             status=:status
-            WHERE tripI=:tripId
+            WHERE tripId=:tripId
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":title", $travelTrip->title, PDO::PARAM_STR);
@@ -225,10 +227,10 @@ class TravelTripDb extends ProxyDb{
      * @param $tripId
      * @throws \yii\db\Exception
      */
-    public function deleteTravelTripPicBytripId($tripId)
+    public function deleteTravelTripPicByTripId($tripId)
     {
         $sql=sprintf("
-            DELETE FROM trave_trip_picture
+            DELETE FROM travel_trip_picture
             WHERE tripId=:tripId
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -493,6 +495,81 @@ class TravelTripDb extends ProxyDb{
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryAll();
+    }
+
+
+    /**
+     * 添加随游申请
+     * @param TravelTripApply $travelTripApply
+     * @throws \yii\db\Exception
+     */
+    public function addTravelTripApply(TravelTripApply $travelTripApply)
+    {
+        $sql=sprintf("
+            INSERT INTO travel_trip_apply
+            (
+              tripId,publisherId,sendTime,info,status
+            )
+            VALUES
+            (
+              :tripId,:publisherId,now(),:info,:status
+            )
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $travelTripApply->tripId, PDO::PARAM_INT);
+        $command->bindParam(":publisherId", $travelTripApply->publisherId, PDO::PARAM_INT);
+        $command->bindParam(":info", $travelTripApply->info, PDO::PARAM_STR);
+        $command->bindParam(":status", $travelTripApply->status, PDO::PARAM_INT);
+
+        $command->execute();
+
+    }
+
+
+    /**
+     * 改变申请加入随游状态
+     * @param $applyId
+     * @param $status
+     * @throws \yii\db\Exception
+     */
+    public function changeTravelTripApplyStatus($applyId,$status)
+    {
+        $sql=sprintf("
+            UPDATE travel_trip_apply SET
+            status=:status
+            WHERE applyId=:applyId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":applyId", $applyId, PDO::PARAM_INT);
+        $command->bindParam(":status", $status, PDO::PARAM_INT);
+
+        $command->execute();
+    }
+
+    /**
+     * 获取随游申请列表(根据状态)
+     * @param $tripId
+     * @param $status
+     */
+    public function getTelTripApply($tripId,$status)
+    {
+        $sql=sprintf("
+            FROM travel_trip_apply
+            WHERE tripId=:tripId
+        ");
+
+        $this->setParam("tripId",$tripId);
+        if(!empty($tripId))
+        {
+            $this->setParam("status",$status);
+            $sql.=" AND status=:status";
+        }
+
+        $this->setSql($sql);
+        $this->findListBySql();
     }
 
 

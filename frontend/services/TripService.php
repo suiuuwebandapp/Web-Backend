@@ -12,6 +12,7 @@ namespace frontend\services;
 
 use backend\components\Page;
 use common\entity\TravelTrip;
+use common\entity\TravelTripApply;
 use common\entity\TravelTripPublisher;
 use common\entity\UserAttention;
 use common\models\BaseDb;
@@ -111,13 +112,12 @@ class TripService extends BaseDb{
      * @param $scenicList
      * @param $picList
      * @param $priceList
-     * @param TravelTripPublisher $travelTripPublisher
      * @param $serviceList
      * @return array|bool
      * @throws Exception
      * @throws \Exception
      */
-    public function updateTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,TravelTripPublisher $travelTripPublisher,$serviceList)
+    public function updateTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,$serviceList)
     {
         $conn = $this->getConnection();
         $tran=$conn->beginTransaction();
@@ -125,10 +125,7 @@ class TripService extends BaseDb{
 
             $this->tripTravelDb = new TravelTripDb($conn);
             $this->tripTravelDb->updateTravelTrip($travelTrip);
-            $travelTripPublisher->tripId=$travelTrip->tripId;
             //删除 ，添加
-            $this->tripTravelDb->deleteTravelTripPublisherBytripId($travelTrip->tripId);
-            $this->tripTravelDb->addTravelTripPublisher($travelTripPublisher);
             if($scenicList!=null){
                 foreach($scenicList as $scenic)
                 {
@@ -199,6 +196,9 @@ class TripService extends BaseDb{
             $tripInfo['praise']=$attention->getAttentionResult($attentionEntity);
             $tripInfo['attention']=$attention->getAttentionResult($userAttention);
             $tripInfo['info']=$this->tripTravelDb->findTravelTripById($tripId);
+            if($tripInfo['info']['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
+                throw new Exception("随游不存在");
+            }
             $tripInfo['picList']=$this->tripTravelDb->getTravelTripPicList($tripId);
             $tripInfo['priceList']=$this->tripTravelDb->getTravelTripPriceList($tripId);
             $tripInfo['publisherList']=$this->tripTravelDb->getTravelTripPublisherList($tripId);
@@ -229,6 +229,9 @@ class TripService extends BaseDb{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
             $tripInfo=$this->tripTravelDb->findTravelTripById($tripId);
+            if($tripInfo['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
+                throw new Exception("随游不存在");
+            }
             $tripInfo=$this->arrayCastObject($tripInfo,TravelTrip::class);
 
         }catch (Exception $e){
@@ -248,6 +251,10 @@ class TripService extends BaseDb{
     public function getTravelTripScenicList($trip)
     {
         $scenicList=null;
+        if(empty($tripId))
+        {
+            throw new Exception("TripId Is Not Allow Empty");
+        }
         try{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
@@ -269,6 +276,10 @@ class TripService extends BaseDb{
      */
     public function changeTripStatus($tripId,$status)
     {
+        if(empty($tripId))
+        {
+            throw new Exception("TripId Is Not Allow Empty");
+        }
         try{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
@@ -300,6 +311,64 @@ class TripService extends BaseDb{
     }
 
 
+    /**
+     * 添加随游申请
+     * @param TravelTripApply $travelTripApply
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function addTravelTripApply(TravelTripApply $travelTripApply)
+    {
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $this->tripTravelDb->addTravelTripApply($travelTripApply);
+        }catch (Exception $e){
+            throw $e;
+        }
+    }
 
+    /**
+     * 更新随游申请状态
+     * @param $applyId
+     * @param $status
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function updateTravelTripApplyStatus($applyId,$status)
+    {
+        if(empty($tripId))
+        {
+            throw new Exception("TripId Is Not Allow Empty");
+        }
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $this->tripTravelDb->changeTravelTripApplyStatus($applyId,$status);
+        }catch (Exception $e){
+            throw $e;
+        }
+    }
 
+    /**
+     * 获取随游申请列表
+     * @param $tripId
+     * @param $status
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getTelTripApply($tripId,$status)
+    {
+        if(empty($tripId))
+        {
+            throw new Exception("TripId Is Not Allow Empty");
+        }
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $this->tripTravelDb->getTelTripApply($tripId,$status);
+        }catch (Exception $e){
+            throw $e;
+        }
+    }
 }

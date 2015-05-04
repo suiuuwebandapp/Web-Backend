@@ -865,7 +865,7 @@ class IndexController extends UnCController
         }
 
         $jsonInfo=json_decode($jsonInfo,true);
-
+        var_dump($jsonInfo);exit;
         $userBase=$jsonInfo['userBase'];
         $userPublisher=$jsonInfo['userPublisher'];
         $userBase=$this->userBaseService->arrayCastObject($userBase,UserBase::class);

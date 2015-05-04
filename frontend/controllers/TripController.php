@@ -14,6 +14,7 @@ use common\components\Code;
 use common\components\DateUtils;
 use common\components\TagUtil;
 use common\entity\TravelTrip;
+use common\entity\TravelTripApply;
 use common\entity\TravelTripPicture;
 use common\entity\TravelTripPrice;
 use common\entity\TravelTripPublisher;
@@ -68,9 +69,6 @@ class TripController extends CController
         $tripId=\Yii::$app->request->get("trip");
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
         $tripInfo=$travelInfo['info'];
-        if($tripInfo['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE||$tripInfo['status']==TravelTrip::TRAVEL_TRIP_STATUS_NORMAL){
-            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
-        }
 
         //验证当前用户是不是随游的所属者
         $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
@@ -106,9 +104,6 @@ class TripController extends CController
         $tagList = TagUtil::getInstance()->getTagList();
 
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
-        if($travelInfo['info']['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
-            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
-        }
         //验证当前用户是不是随游的所属者
         $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
         if($travelInfo['info']['createPublisherId']!=$userPublisherId){
@@ -390,10 +385,6 @@ class TripController extends CController
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
             return;
         }
-        if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
-            return;
-        }
 
         $tripStartTime = DateUtils::convertTimePicker($beginTime, 1);
         $tripEndTime = DateUtils::convertTimePicker($endTime, 1);
@@ -422,9 +413,6 @@ class TripController extends CController
         $travelTrip->createPublisherId = $userPublisherId;
         $travelTrip->tags = implode(",", $tagList);
 
-        //默认把发布人加入随游关联
-        $travelTripPublisher = new TravelTripPublisher();
-        $travelTripPublisher->tripPublisherId = $userPublisherId;
 
         //设置景区列表
         foreach ($scenicList as $scenic) {
@@ -441,25 +429,28 @@ class TripController extends CController
             $tripPicList[] = $tempPic;
         }
         //阶梯价格
-        foreach ($stepPriceList as $step) {
-            $tempPrice = new TravelTripPrice();
-            $tempPrice->minCount = $step[0];
-            $tempPrice->maxCount = $step[1];
-            $tempPrice->price = $step[2];
-            $tripStepPriceList[] = $tempPrice;
+        if(!empty($stepPriceList)){
+            foreach ($stepPriceList as $step) {
+                $tempPrice = new TravelTripPrice();
+                $tempPrice->minCount = $step[0];
+                $tempPrice->maxCount = $step[1];
+                $tempPrice->price = $step[2];
+                $tripStepPriceList[] = $tempPrice;
+            }
         }
-
-        //专项服务
-        foreach ($serviceList as $service) {
-            $tempService = new TravelTripService();
-            $tempService->title = $service[0];
-            $tempService->money = $service[1];
-            $tempService->type = $service[2];
-            $tripServiceList[] = $tempService;
+        if(!empty($serviceList)){
+            //专项服务
+            foreach ($serviceList as $service) {
+                $tempService = new TravelTripService();
+                $tempService->title = $service[0];
+                $tempService->money = $service[1];
+                $tempService->type = $service[2];
+                $tripServiceList[] = $tempService;
+            }
         }
 
         try {
-            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $travelTripPublisher, $tripServiceList);
+            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
             echo json_encode(Code::statusDataReturn(Code::FAIL));
@@ -480,8 +471,8 @@ class TripController extends CController
         }
         try{
             $travelTrip=$this->tripService->getTravelTripById($tripId);
-            if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
+            if($travelTrip->status!=TravelTrip::TRAVEL_TRIP_STATUS_DRAFT){
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改该随游"));
                 return;
             }
             $this->tripService->changeTripStatus($tripId,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
@@ -497,19 +488,54 @@ class TripController extends CController
      */
     public function actionToApplyTrip()
     {
-        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+        $tripId=trim(\Yii::$app->request->get("trip", ""));
         if (empty($tripId)) {
             return $this->redirect(['/result', 'result' => '随游不允许为空']);
         }
         $travelTrip=$this->tripService->getTravelTripById($tripId);
-        if($travelTrip->status==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
-            return $this->redirect(['/result', 'result' => '您没有权限修改此随游']);
-        }
         if($travelTrip->createPublisherId==$this->userPublisherObj->userPublisherId){
             return $this->redirect(['/result', 'result' => '您不能加入自己的随游']);
         }
 
-        return $this->render("apply");
+        $userService=new UserBaseService();
+        $publisherService=new PublisherService();
+        $tripPublisherId=$travelTrip->createPublisherId;
+        $createPublisherId=$publisherService->findById($tripPublisherId);
+        $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
+
+        return $this->render("apply",[
+            'tripInfo'=>$travelTrip,
+            'createUserInfo'=>$createUserInfo,
+            'createPublisherInfo'=>$createPublisherId
+        ]);
+    }
+
+
+    /**
+     * 申请加入随游
+     * @return \yii\web\Response
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionApplyTrip()
+    {
+        $tripId=trim(\Yii::$app->request->post("trip", ""));
+        $info=trim(\Yii::$app->request->post("info", ""));
+        $publisherId=$this->userPublisherObj->userPublisherId;
+
+        $tripInfo=$this->tripService->getTravelTripById($tripId);
+        if(!isset($tripInfo)){
+            return $this->redirect(['/result', 'result' => '您的申请已经提交，请耐心等待审核']);
+        }
+
+        $travelTripApply=new TravelTripApply();
+        $travelTripApply->tripId=$tripId;
+        $travelTripApply->publisherId=$publisherId;
+        $travelTripApply->info=$info;
+        $travelTripApply->status=TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT;
+        $this->tripService->addTravelTripApply($travelTripApply);
+
+        return $this->redirect(['/result', 'result' => '您的申请已经提交，请耐心等待审核']);
     }
 
 }

@@ -148,6 +148,32 @@ class ProxyDb extends Connection {
     }
 
 
+    public function findListBySql()
+    {
+        //替换Table名称
+        $this->sql=str_replace(self::TABLE_NAME,$this->tableName,$this->sql);
+
+        if(!empty($this->selectInfo)){
+            $searchSql="SELECT ".$this->selectInfo." ".$this->sql;
+
+        }else{
+            $searchSql="SELECT * ".$this->sql;
+        }
+
+        $command=$this->db->createCommand($searchSql);
+
+        $command->setSql($searchSql);
+
+        foreach($this->paramArray as $key=>$value )
+        {
+            if(is_numeric($value)){
+                $command->bindValue(":".$key,$value,PDO::PARAM_INT);
+            }else{
+                $command->bindValue(":".$key,$value,PDO::PARAM_STR);
+            }
+        }
+        return $command->queryAll();
+    }
 
 
 }

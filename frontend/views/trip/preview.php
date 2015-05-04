@@ -102,7 +102,7 @@
                 <a href="javascript:;" class="nex" id="nex"><img src="/assets/images/next.png" alt=""></a>
             </div>
             <div class="map">
-                <h2 class="title01"><?=$travelInfo['info']['title'];?></h2>
+                <h2 class="title"><?=$travelInfo['info']['title'];?></h2>
                 <ul class="details">
                     <li>
                         <span class="icon icon1">随游
@@ -118,7 +118,7 @@
                     <iframe id="mapFrame" name="mapFrame" src="/google-map/view-scenic-map?tripId=<?=$travelInfo['info']['tripId'];?>" width="893px" height="330px;" frameborder="0" scrolling="no"></iframe>
                 </div>
                 <div class="trip_info">
-                    <?=$travelInfo['info']['info'];?>
+                    <?=str_replace("\n","</br>",$travelInfo['info']['info']);?>
                 </div>
             </div>
             <div class="route">

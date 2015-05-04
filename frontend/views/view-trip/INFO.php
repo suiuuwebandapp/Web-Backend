@@ -103,7 +103,7 @@
                 <a href="javascript:;" class="nex" id="nex"><img src="/assets/images/next.png" alt=""></a>
             </div>
             <div class="map">
-                <h2 class="title01"><?=$travelInfo['info']['title'];?></h2>
+                <h2 class="title"><?=$travelInfo['info']['title'];?></h2>
                 <ul class="details">
                     <li>
                         <span class="icon icon1">随游
@@ -119,7 +119,7 @@
                     <iframe id="mapFrame" name="mapFrame" src="/google-map/view-scenic-map?tripId=<?=$travelInfo['info']['tripId'];?>" width="893px" height="330px;" frameborder="0" scrolling="no"></iframe>
                 </div>
                 <div class="trip_info">
-                    <?=$travelInfo['info']['info'];?>
+                    <?=str_replace("\n","</br>",$travelInfo['info']['info']);?>
                 </div>
             </div>
             <div class="newsLists clearfix">
@@ -335,8 +335,8 @@
                 </ul>
             <?php } ?>
             <p>基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
-            <input type="button" value="购买路线" class="web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-            <input type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <input id="toBuy" type="button" value="购买路线" class="web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <input id="toApply" type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
             <div class="web-tuijian">
                 <h4>日本京都奈良公园一日游</h4>
                 <img src="/assets/images/23.png" alt="" class="pic">
@@ -393,6 +393,7 @@
     var stepPriceJson='<?=$stepPriceJson;?>';
     var serviceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT;?>';
     var serviceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE;?>';
+    var userPublisherId='<?= $this->context->userPublisherObj!=null?$this->context->userPublisherObj->userPublisherId:''?>';
 
     $(document).ready(function(){
         $('#startTime').timepicki({
@@ -406,10 +407,6 @@
             buttonup_class: "btn-link",
             max:10000
         });
-        $("#finishTrip").bind("click",function(){
-            finishTrip();
-        });
-
         initDatePicker();
 
         $("#peopleCount").bind("blur",function(){
@@ -421,8 +418,15 @@
         $("#calendar").bind("click",function(){
             $("#beginTime").focus();
         });
-
+        $("#toApply").bind("click",function(){
+            if(userPublisherId==''){
+                Main.showTip("登录后并且成为随友才能加入线路！");
+                return;
+            }
+            window.location.href='/trip/to-apply-trip?trip='+$("#tripId").val();
+        });
     });
+
 
     function initDatePicker(){
         $('#beginTime').datetimepicker({
