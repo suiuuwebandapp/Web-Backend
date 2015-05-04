@@ -7,9 +7,11 @@
  */
 namespace frontend\controllers;
 
+use backend\components\Page;
 use common\components\Code;
 use common\components\Common;
 use common\entity\ArticleComment;
+use common\entity\ArticleInfo;
 use common\entity\UserBase;
 use frontend\services\ArticleService;
 use Yii;
@@ -32,9 +34,13 @@ class ArticleController extends UnCController{
 
         $page=Yii::$app->request->get('page');
         $numb =Yii::$app->request->get('numb');
-        $oldList=$this->aritcleSer->getOldArticleList($page,$numb);
-        $onList= $this->aritcleSer->getOnArticle();
-        return $this->render('index',['onList'=>$onList,'oldList'=>$oldList]);
+        $page=new Page();
+        $page->showAll=true;
+        $select='title,titleImg,name,articleId';
+        //ArticleInfo::ARTICLE_STATUS_ONLINE
+        $data= $this->aritcleSer->getArticleList($page,null,ArticleInfo::ARTICLE_STATUS_ONLINE,$select);
+
+        return $this->render('index',['oldList'=>$data['old']->list,'onList'=>$data['on']]);
     }
 
     public function actionGetArticleInfo()
@@ -59,13 +65,14 @@ class ArticleController extends UnCController{
     {
         try {
             $id=Yii::$app->request->post('id');
-            $page=Yii::$app->request->get('page');
-            $numb =Yii::$app->request->get('numb');
-
+            $page=Yii::$app->request->post('page');
+            $numb =Yii::$app->request->post('numb');
             $userSign=$this->userObj->userSign;
-            $id=3;
-            $page=1;
-            $numb=2;
+            if(empty($page))
+            {
+                $page = 1;
+            }
+            $numb=0;
             //$id=3;
             $data=$this->aritcleSer->getArticleCommentById($id,$page,$numb,$userSign);
             $str='';
@@ -91,12 +98,28 @@ class ArticleController extends UnCController{
             $articleId = \Yii::$app->request->post('articleId');
             $content = \Yii::$app->request->post('content');
             $rId= \Yii::$app->request->post('rId');
+            $rTitle= \Yii::$app->request->post('rTitle');
             if(empty($articleId))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法评论未知文章'));
                 exit;
             }
-            $this->aritcleSer->addArticleComment($userSign,$content,$rId,$articleId);
+            $this->aritcleSer->addArticleComment($userSign,$content,$rId,$articleId,$rTitle);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
+    public function actionAddSupport()
+    {
+        try {
+            $userSign =$this->userObj->userSign;
+            $articleId = \Yii::$app->request->post('articleId');
+            $rId= \Yii::$app->request->post('rId');
+            $this->aritcleSer->addCommentSupport($articleId,$rId,$userSign,ArticleComment::TYPE_SUPPORT);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
         {

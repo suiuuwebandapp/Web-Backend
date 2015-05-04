@@ -405,7 +405,6 @@ class UserAttentionService extends BaseDb
             $page = Common::PageResult($pageNumb);
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
-
             return $this->remindDb->getAttentionCircleArticle($userSign,$page,$type);
         } catch (Exception $e) {
             throw new Exception('获取用户消息异常',Code::FAIL,$e);
@@ -423,7 +422,7 @@ class UserAttentionService extends BaseDb
 
             return $this->remindDb->deleteUserMessageRemind($rid,$userSign);
         } catch (Exception $e) {
-            throw new Exception('获取用户消息异常',Code::FAIL,$e);
+            throw new Exception('删除用户消息异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

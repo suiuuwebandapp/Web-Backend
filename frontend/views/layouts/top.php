@@ -168,7 +168,7 @@
                             <p><label>密码</label><input type="password" value="" id="userpassword"></p>
 
                             <p class="fogot"><a href="/index/password-send-code">忘记密码</a></p>
-                            <div id="code9527" class="form-group" style="padding-bottom: 20px;display: block">
+                            <div id="code9527" class="form-group" style="padding-bottom: 20px;display: none">
                                 <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
                             </div>
                             <p class="zidong">
@@ -344,12 +344,13 @@
                 Main.showTip("系统异常。。。");
             },
             success: function (data) {
+                $('.gt_refresh_button')[0].click()
                 var obj=eval('('+data+')');
                 if(obj.status==1)
                 {
                     window.location.reload();
                 }else
-                {
+                {$('.gt_refresh_button')[0].click();
                     Main.showTip(obj.data);
                     if(obj.message>=2)
                     {

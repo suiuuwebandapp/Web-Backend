@@ -67,6 +67,7 @@ class Common{
 
     public static function PageResult($page,$count=0)
     {
+
         $result='';
         if($count==0)
         {
@@ -109,7 +110,7 @@ class Common{
         //$str.='<ol>';
         if($nowPage>1)
         {
-            $str.='<li><a href="javascript:;">上一页</a></li>';
+            $str.='<li><a  page="'.($nowPage-1).'" href="javascript:;">上一页</a></li>';
         }
             for($i=1;$i<$count+1;$i++)
             {
@@ -134,7 +135,7 @@ class Common{
 
                 }
             }
-        if($nowPage<$count){$str.='<li><a href="javascript:;">下一页</a></li>';}
+        if($nowPage<$count){$str.='<li><a  page="'.($nowPage+1).'" href="javascript:;">下一页</a></li>';}
         //$str.='</ol>';
             }
         return $str;

@@ -7,11 +7,14 @@
  */
 namespace frontend\services;
 
+use backend\components\Page;
 use common\components\Code;
 use common\components\Common;
 use common\entity\ArticleComment;
+use common\entity\ArticleInfo;
+use common\entity\CircleArticle;
 use common\entity\UserAttention;
-use common\models\ArticleDb;
+use common\models\ArticleInfoDb;
 use common\models\BaseDb;
 use common\models\UserAttentionDb;
 use yii\base\Exception;
@@ -26,28 +29,16 @@ class ArticleService extends BaseDb
     {
 
     }
-    public function getOldArticleList($page,$numb)
-    {
-        try {
-            $conn = $this->getConnection();
-            $this->articleDb = new ArticleDb($conn);
-            $page = Common::PageResult($page,$numb);
-            $rstOld = $this->articleDb->getOldArticleList($page);
-            return $rstOld;
-        } catch (Exception $e) {
-            throw new Exception('查询目的地列表异常',Code::FAIL,$e);
-        } finally {
-            $this->closeLink();
-        }
-    }
-    public function getOnArticle()
-    {
-        try {
-            $conn = $this->getConnection();
-            $this->articleDb = new ArticleDb($conn);
-            $rstOn = $this->articleDb->getOnArticle();
 
-            return $rstOn;
+    public function getArticleList(Page $page,$search,$status,$select=null)
+    {
+        try {
+            $data=array();
+            $conn = $this->getConnection();
+            $this->articleDb = new ArticleInfoDb($conn,'article_info');
+            $data['old']=$this->articleDb->getList($page,$search,$status,$select);
+            $data['on']=$this->articleDb->getTopArticle();
+            return $data;
         } catch (Exception $e) {
             throw new Exception('查询目的地列表异常',Code::FAIL,$e);
         } finally {
@@ -66,7 +57,7 @@ class ArticleService extends BaseDb
     {
         try {
             $conn = $this->getConnection();
-            $this->articleDb = new ArticleDb($conn);
+            $this->articleDb = new ArticleInfoDb($conn);
             $rst =$this->articleDb->getArticleInfoById($id);
             return $rst;
         } catch (Exception $e) {
@@ -88,7 +79,7 @@ class ArticleService extends BaseDb
         try {
             $data=array();
             $conn = $this->getConnection();
-            $this->articleDb = new ArticleDb($conn);
+            $this->articleDb = new ArticleInfoDb($conn);
             $page = Common::PageResult($page,$numb);
             $comment=$this->articleDb->getCommentListByArticleId($id,$page,$userSign);
             $count= $this->articleDb->getCommentListByArticleIdCount($id,$userSign);
@@ -111,16 +102,17 @@ class ArticleService extends BaseDb
      * @param $articleId
      * @throws Exception
      */
-    public function addArticleComment($userSing,$content,$relativeCommentId,$articleId)
+    public function addArticleComment($userSing,$content,$relativeCommentId,$articleId,$rTitle)
     {
         try {
             $conn = $this->getConnection();
-            $this->articleDb = new ArticleDb($conn);
+            $this->articleDb = new ArticleInfoDb($conn);
             $commentEntity=new ArticleComment();
             $commentEntity->articleId=$articleId;
             $commentEntity->userSign=$userSing;
             $commentEntity->content=$content;
             $commentEntity->relativeCommentId=$relativeCommentId;
+            $commentEntity->rTitle=$rTitle;
             $this->articleDb->addArticleComment($commentEntity);
         } catch (Exception $e) {
             throw new Exception('添加评论异常',Code::FAIL,$e);
@@ -131,41 +123,43 @@ class ArticleService extends BaseDb
         /**
          * 添加支持或反对
          * @param $articleId //圈子文章id
+         * @param $commentId //评论id
          * @param $userSign,//收藏用户
          * @throws Exception
          */
-        public function addCommentSupport($articleId,$userSign,$isSupport)
+        public function addCommentSupport($articleId,$commentId,$userSign,$isSupport)
         {
 
             try {
                 $conn = $this->getConnection();
                 $this->AttentionDb = new UserAttentionDb($conn);
-                $this->articleDb = new ArticleDb($conn);
+                $this->articleDb = new ArticleInfoDb($conn);
                 $attention =new UserAttention();
                 $attention->relativeType=UserAttention::TYPE_COMMENT_FOR_ARTICLE_MDD;
-                $attention->relativeId=$articleId;
+                $attention->relativeId=$commentId;
                 $attention->userSign = $userSign;
                 $result = $this->AttentionDb->getAttentionResult($attention,true);
+
                 if(empty($result)||$result==false)
                 {
-                    $this->AttentionDb ->addUserAttention($articleId,UserAttention::TYPE_COMMENT_FOR_ARTICLE_MDD,$userSign,$isSupport);
+                    $this->AttentionDb ->addUserAttention($commentId,UserAttention::TYPE_COMMENT_FOR_ARTICLE_MDD,$userSign,$isSupport);
                     $this->upDateCommentSupport($this->articleDb,$articleId,$isSupport);
                 }else{
-                    echo json_encode(Code::statusDataReturn(Code::FAIL,'已经收藏无需继续收藏'));
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,'已经点赞无需继续点赞'));exit;
                 }
             } catch (Exception $e) {
-                throw new Exception('添加圈子文章收藏异常',Code::FAIL,$e);
+                throw new Exception('添加点赞异常',Code::FAIL,$e);
             } finally {
                 $this->closeLink();
             }
         }
 
-    private function upDateCommentSupport(ArticleDb $articleDb,$articleId,$isSupport)
+    private function upDateCommentSupport(ArticleInfoDb $articleDb,$articleId,$isSupport)
     {
 
         $articleComment=$articleDb->getArticleInfoById($articleId);
 
-        $articleComment=$this->arrayCastObject($articleComment,CircleArticle::class);
+        $articleComment=$this->arrayCastObject($articleComment,ArticleComment::class);
         $supportCount=$articleComment->supportCount;
         $opposeCount=$articleComment->opposeCount;
         if($isSupport==1){

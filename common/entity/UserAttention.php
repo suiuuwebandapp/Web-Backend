@@ -30,7 +30,7 @@ class UserAttention
     const TYPE_FOR_CIRCLE = 4;
 
     /**
-     * 收藏类型为圈子主题
+     * 收藏类型为圈子文章
      */
     const TYPE_COLLECT_FOR_ARTICLE = 5;
     /**
@@ -39,11 +39,11 @@ class UserAttention
     const TYPE_COLLECT_FOR_TRAVEL = 6;
 
     /**
-     * 支持类型为目的地评论
+     * 支持类型为目的地评论 支持或反对
      */
     const TYPE_COMMENT_FOR_ARTICLE_MDD = 8;
     /**
-     * 支持类型为圈子文章评论
+     * 支持类型为圈子文章评论支持或反对
      */
     const TYPE_COMMENT_FOR_CIRCLE_ARTICLE = 9;
 
@@ -52,7 +52,7 @@ class UserAttention
      */
     const TYPE_PRAISE_FOR_TRAVEL=11;
     /**
-     * 点赞类型为随游点赞
+     * 点赞类型为圈子文章点赞
      */
     const TYPE_PRAISE_FOR_CIRCLE_ARTICLE=12;
     /**

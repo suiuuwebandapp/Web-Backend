@@ -58,7 +58,7 @@
 
     <input hidden="hidden" id="content_tc">
     </div>
-    <div class="web-bar">
+    <div id="pllist" class="web-bar">
         <ol>
             <li><a href="#pinglun">评论</a></li>
             <li></li>
@@ -180,20 +180,39 @@ function getComment(page)
                 var str='';
                 for(var i=0;i<obj.data.comment.length;i++)
                 {
+                    var r=obj.data.comment[i].rTitle;
+                    if(r==null)
+                    {
+                        r='';
+                    }
+                    var c='';
+                    var status=obj.data.comment[i].status;
+                    if(status==1)
+                    {
+                        c='active'
+                    }
                     str+='<li>';
                     str+='<div class="user-pic fl">';
                     str+='<img src=\"'+obj.data.comment[i].headImg+'\" alt=\"\">';
-                    str+='<span  class=\"user-name\">';
+                    str+='<span class=\"user-name\">';
                     str+=obj.data.comment[i].nickname;
-                    str+="</span></div><p class='fl'>";
-                    str+=obj.data.comment[i].content;
-                    str+="</p><div class='fr resp'><a href='#' class='picon zan'></a><a href='#' class='picon huifu' onclick='reply("+obj.data.comment[i].commentId+")'></a>";
+                    str+="</span></div><p class='fl'><b>";
+                    str+=r;
+                    str+="</b>";
+                    str+=' '+obj.data.comment[i].content;
+                    str+="</p><div class='fr resp'><a href='javascript:;' onclick='sumbmitZan("+obj.data.comment[i].commentId+","+"this)' class='picon zan "+c+"'></a><a href='#pllist' id='"+obj.data.comment[i].commentId+"' class='picon huifu' onclick='reply(this)'></a>";
                     str+="</div></li>";
                 }
                 $('#tanchu_pl').append(str);
 
                 $('#tanchu_page').html('');
                 $('#tanchu_page').append(obj.message);
+
+                $("#tanchu_page li a").click(function() {
+                   var page=$(this).attr('page');
+                    getComment(page);
+                });
+
             }else
             {
                 Main.showTip(obj.data);
@@ -202,20 +221,27 @@ function getComment(page)
         }
     });
 }
-    function reply(i)
+    function reply(obj)
     {
-        rid=i;
+        rid=$(obj).attr('id');
+        var t=$(obj).parent("div").prev().prev().find("span").html();
+        $("#pinglun").val('@'+t+'   :');
+
     }
 
     function submitComment()
     {
-
+        var s=$('#pinglun').val();
+        var i =s.indexOf(':');
+        var t=s.slice(0,i);
+        var content= s.slice(i);
         $.ajax({
             type: 'post',
             url: '/article/add-article-comment',
             data: {
                 articleId: articleId,
-                content: $('#pinglun').val(),
+                content: content,
+                rTitle: t,
                 rId: rid,
                 _csrf: $('input[name="_csrf"]').val()
             },
@@ -229,8 +255,9 @@ function getComment(page)
                 var obj=eval('('+data+')');
                 if(obj.status==1)
                 {
-                    Main.showTip("发表成功。。。");
-
+                    //Main.showTip("发表成功。。。");
+                    getComment(page);
+                    $("#pinglun").val('');
                 }else
                 {
                     Main.showTip(obj.data);
@@ -239,26 +266,44 @@ function getComment(page)
             }
         });
     }
-   /* function chageComment()
+
+    function sumbmitZan(id,obj)
     {
-
-        $('#tanchu_pl').html('');
-        var str='';
-        for(var i=0;i<obj.data.comment.length;i++)
-        {
-            str+='<li>';
-            str+='<div class="user-pic fl">';
-            str+='<img src=\"'+obj.data.comment[i].headImg+'\" alt=\"\">';
-            str+='<span  class=\"user-name\">';
-            str+=obj.data.comment[i].nickname;
-            str+="</span></div><p class='fl'>";
-            str+=obj.data.comment[i].content;
-            str+="</p><div class='fr resp'><a href='#' class='picon zan'></a><a href='#' class='picon huifu' onclick='reply("+obj.data.comment[i].commentId+")'></a>";
-            str+="</div></li>";
+        var s =$(obj).attr('class');
+        var i =s.indexOf('active');
+        if(i!=-1){
+            Main.showTip('已经点赞');
+            return;
         }
-        $('#tanchu_pl').append(str);
+        $(obj).attr('class','picon zan active');
+        $.ajax({
+            type: 'post',
+            url: '/article/add-support',
+            data: {
+                articleId: articleId,
+                rId: id,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            beforeSend: function () {
+                //Main.showTip('正在提交，请稍后。。。');
+            },
+            error:function(){
+                Main.showTip("系统异常。。。");
+            },
+            success: function (data) {
+                var obj=eval('('+data+')');
+                if(obj.status==1)
+                {
 
-        $('#tanchu_page').html('');
-        $('#tanchu_page').append(obj.message);
-    }*/
+                    //Main.showTip("发表成功。。。");
+                    getComment(page);
+                }else
+                {
+                    Main.showTip(obj.data);
+                    $(obj).attr('class','picon zan');
+
+                }
+            }
+        });
+    }
 </script>

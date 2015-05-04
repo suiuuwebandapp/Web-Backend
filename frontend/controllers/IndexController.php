@@ -295,7 +295,7 @@ class IndexController extends UnCController
         }
         //用户输入信息验证
         if (count($errors) > 0) {
-            return json_encode(Code::statusDataReturn(Code::FAIL, $errors[0]));
+            return json_encode(Code::statusDataReturn(Code::FAIL, $errors[0],$errorCount));
 
         }
 

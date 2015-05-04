@@ -8,6 +8,8 @@
 namespace common\entity;
 
 class ArticleComment{
+
+    const TYPE_SUPPORT=1;
     /**
      * @var 评论id
      */
@@ -41,4 +43,8 @@ class ArticleComment{
      * @var针对文章id
      */
     public $articleId;
+    /**
+     * @var相对的内容标题
+     */
+    public $rTitle;
 }

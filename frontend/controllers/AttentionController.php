@@ -8,6 +8,7 @@
 namespace frontend\controllers;
 
 use common\components\Code;
+use common\components\Common;
 use common\entity\UserBase;
 use frontend\services\CircleService;
 use frontend\services\UserAttentionService;
@@ -311,8 +312,4 @@ class AttentionController extends AController
         }
     }
 
-
-    public function actionTest()
-    {
-    }
 }

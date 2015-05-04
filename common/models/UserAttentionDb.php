@@ -165,7 +165,7 @@ SELECT a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.head
 LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
 LEFT JOIN user_base b ON b.userSign=c.userId
 LEFT JOIN user_attention d ON d.relativeId = a.tripId
-WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND b.userSign=:userSign
+WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
         ");
         $sql.=$page;
         $command=$this->getConnection()->createCommand($sql);
