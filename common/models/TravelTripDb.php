@@ -288,7 +288,7 @@ class TravelTripDb extends ProxyDb{
      * @param $tripId
      * @throws \yii\db\Exception
      */
-    public function deleteTravelTripPriceBytripId($tripId)
+    public function deleteTravelTripPriceByTripId($tripId)
     {
         $sql=sprintf("
             DELETE FROM travel_trip_price
@@ -337,7 +337,7 @@ class TravelTripDb extends ProxyDb{
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $travelTripPublisher->tripId, PDO::PARAM_INT);
-        $command->bindParam(":publisherId", $travelTripPublisher->tripPublisherId, PDO::PARAM_INT);
+        $command->bindParam(":publisherId", $travelTripPublisher->publisherId, PDO::PARAM_INT);
 
         $command->execute();
     }
@@ -366,8 +366,11 @@ class TravelTripDb extends ProxyDb{
     public function getTravelTripPublisherList($tripId)
     {
         $sql=sprintf("
-            SELECT * FROM travel_trip_publisher
-            WHERE tripId=:tripId
+            SELECT  ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,t.* FROM travel_trip_publisher t
+            LEFT JOIN user_publisher up ON up.userPublisherId=t.publisherId
+            LEFT JOIN user_base ub ON ub.userSign=up.userId
+            WHERE t.tripId=:tripId
         ");
         $command=$this->getConnection()->createCommand($sql);
 
@@ -407,7 +410,7 @@ class TravelTripDb extends ProxyDb{
      * @param $tripId
      * @throws \yii\db\Exception
      */
-    public function deleteTravelTripScenicBytripId($tripId)
+    public function deleteTravelTripScenicByTripId($tripId)
     {
         $sql=sprintf("
             DELETE FROM travel_trip_scenic
@@ -554,7 +557,7 @@ class TravelTripDb extends ProxyDb{
      * @param $tripId
      * @param $status
      */
-    public function getTelTripApply($tripId,$status)
+    public function getTelTripApplyList($tripId,$status)
     {
         $sql=sprintf("
             FROM travel_trip_apply
@@ -572,6 +575,98 @@ class TravelTripDb extends ProxyDb{
         $this->findListBySql();
     }
 
+
+    /**
+     * 删除随友关联
+     * @param TravelTripPublisher $travelTripPublisher
+     * @throws \yii\db\Exception
+     */
+    public function deleteTravelTripPublisher(TravelTripPublisher $travelTripPublisher)
+    {
+        $sql=sprintf("
+            DELETE FROM travel_trip_publisher
+            WHERE tripId=:tripId AND tripPublisherId:tripPublisherId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $travelTripPublisher->tripId, PDO::PARAM_INT);
+        $command->bindParam(":tripPublisherId", $travelTripPublisher->tripPublisherId, PDO::PARAM_INT);
+
+        $command->execute();
+    }
+
+
+    /**
+     * 获取我的随游列表
+     * @param $createPublisherId
+     * @return array
+     */
+    public function getMyTripList($createPublisherId)
+    {
+        $sql=sprintf("
+            FROM travel_trip AS t
+            LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
+            LEFT JOIN user_base AS u ON uo.userId=u.userSign
+            LEFT JOIN
+            (
+                SELECT tta.tripId,COUNT(*) AS count FROM travel_trip_apply tta WHERE tta.status=:status GROUP BY tta.tripId
+            ) AS apply
+            ON apply.tripId=t.tripId
+            LEFT JOIN
+            (
+                SELECT tts.tripId,GROUP_CONCAT(tts.title) as names FROM travel_trip_service tts GROUP BY tts.tripId
+            )
+            AS service
+            ON service.tripId=t.tripId
+            WHERE t.createPublisherId=:createPublisherId
+        ");
+        $this->setParam("createPublisherId",$createPublisherId);
+        $this->setParam("status",TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
+
+        $this->setSql($sql);
+        $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");
+
+        return $this->findListBySql();
+    }
+
+    /**
+     * 获取某个随友加入的随游
+     * @param $publisherId
+     * @return array
+     */
+    public function getMyJoinTripList($publisherId)
+    {
+        $sql=sprintf("
+            FROM travel_trip AS t
+            LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
+            LEFT JOIN user_base AS u ON uo.userId=u.userSign
+            LEFT JOIN
+            (
+                SELECT tta.tripId,COUNT(*) AS count FROM travel_trip_apply tta WHERE tta.status=:status GROUP BY tta.tripId
+            ) AS apply
+            ON apply.tripId=t.tripId
+            LEFT JOIN
+            (
+                SELECT tts.tripId,GROUP_CONCAT(tts.title) as names FROM travel_trip_service tts GROUP BY tts.tripId
+            )
+            AS service
+            ON service.tripId=t.tripId
+            WHERE t.tripId in
+			(
+				SELECT tripId  FROM travel_trip_publisher
+				WHERE publisherId =:publisherId
+			)
+			AND t.createPublisherId!=:publisherId
+        ");
+        $this->setParam("publisherId",$publisherId);
+        $this->setParam("status",TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
+
+        $this->setSql($sql);
+        $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");
+
+        return $this->findListBySql();
+    }
 
 
 

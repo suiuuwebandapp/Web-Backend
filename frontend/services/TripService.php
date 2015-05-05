@@ -171,6 +171,8 @@ class TripService extends BaseDb{
     /**
      * 获取随游详情
      * @param $tripId
+     * @param
+     * $userSign
      * @return array
      * @throws Exception
      * @throws \Exception
@@ -243,12 +245,12 @@ class TripService extends BaseDb{
 
     /**
      * 获取景区列表
-     * @param $trip
+     * @param $tripId
      * @return array|null
      * @throws Exception
      * @throws \Exception
      */
-    public function getTravelTripScenicList($trip)
+    public function getTravelTripScenicList($tripId)
     {
         $scenicList=null;
         if(empty($tripId))
@@ -258,7 +260,7 @@ class TripService extends BaseDb{
         try{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
-            $scenicList=$this->tripTravelDb->getTravelTripScenicList($trip);
+            $scenicList=$this->tripTravelDb->getTravelTripScenicList($tripId);
 
         }catch (Exception $e){
             throw $e;
@@ -357,7 +359,7 @@ class TripService extends BaseDb{
      * @throws Exception
      * @throws \Exception
      */
-    public function getTelTripApply($tripId,$status)
+    public function getTelTripApplyList($tripId,$status)
     {
         if(empty($tripId))
         {
@@ -366,7 +368,73 @@ class TripService extends BaseDb{
         try{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
-            $this->tripTravelDb->getTelTripApply($tripId,$status);
+            $this->tripTravelDb->getTelTripApplyList($tripId,$status);
+        }catch (Exception $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * 删除随友
+     * @param TravelTripPublisher $travelTripPublisher
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function deleteTravelTriPublisher(TravelTripPublisher $travelTripPublisher)
+    {
+        if($travelTripPublisher!=null)
+        {
+            throw new Exception("TravelTripPublisher Is Not Allow Null");
+        }
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $this->tripTravelDb->deleteTravelTripPublisher($travelTripPublisher);
+        }catch (Exception $e){
+            throw $e;
+        }
+    }
+
+
+    /**
+     * 获取我的随游列表
+     * @param $createPublisherId
+     * @return array
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getMyTripList($createPublisherId)
+    {
+        if(empty($createPublisherId))
+        {
+            throw new Exception("CreatePublisherId Is Not Allow Null");
+        }
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            return $this->tripTravelDb->getMyTripList($createPublisherId);
+        }catch (Exception $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * 获取某个随友加入的随游
+     * @param $publisherId
+     * @return array
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getMyJoinTripList($publisherId)
+    {
+        if(empty($publisherId))
+        {
+            throw new Exception("PublisherId Is Not Allow Null");
+        }
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            return $this->tripTravelDb->getMyJoinTripList($publisherId);
         }catch (Exception $e){
             throw $e;
         }

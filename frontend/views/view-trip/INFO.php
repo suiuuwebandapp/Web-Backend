@@ -122,40 +122,28 @@
                     <?=str_replace("\n","</br>",$travelInfo['info']['info']);?>
                 </div>
             </div>
-            <div class="newsLists clearfix">
+
+            <?php if($isOwner){?>
+            <div class="newsLists clearfix" id="publisherList">
                 <h2 class="title">随游处理</h2>
-                <div class="lists clearfix">
-                    <img src="/assets/images/4.png" alt="" class="userpic">
-                    <ul class="clearfix">
-                        <li class="li01">xiaohele<img src="images/xf.fw.png" width="18" height="12"> <br>性别:<b>女</b></li>
-                        <li>年龄:<b>22</b></li>
-                        <li>职业:<b>学生</b></li>
-                        <li>随游次数:<b>1</b></li>
-                    </ul>
-                    <a href="#" class="sureBtn">移除</a>
-                </div>
-                <div class="lists clearfix">
-                    <img src="/assets/images/4.png" alt="" class="userpic">
-                    <ul class="clearfix">
-                        <li class="li01">xiaohele<img src="images/xf.fw.png" width="18" height="12"> <br>性别:<b>女</b></li>
-                        <li>年龄:<b>22</b></li>
-                        <li>职业:<b>学生</b></li>
-                        <li>随游次数:<b>1</b></li>
-                    </ul>
-                    <a href="#" class="sureBtn">移除</a>
-                </div>
-                <div class="lists clearfix">
-                    <img src="/assets/images/4.png" alt="" class="userpic">
-                    <ul class="clearfix">
-                        <li class="li01">xiaohele<img src="images/xf.fw.png" width="18" height="12"> <br>性别:<b>女</b></li>
-                        <li>年龄:<b>22</b></li>
-                        <li>职业:<b>学生</b></li>
-                        <li>随游次数:<b>1</b></li>
-                    </ul>
-                    <a href="#" class="sureBtn">移除</a>
-                </div>
+                <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
+                    <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">
+                        <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
+                        <ul class="clearfix">
+                            <li class="li01"><?=$publisherInfo['nickname'];?><img src="/assets/images/xf.fw.png" width="18" height="12">
+                                <br>性别:<b><?php if($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b>
+                            </li>
+                            <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($publisherInfo['birthday']);?></b></li>
+                            <li>职业:<b><?=$publisherInfo['profession']?></b></li>
+                            <li>随游次数:<b><?=$publisherInfo['travelCount']?></b></li>
+                        </ul>
+                        <a href="javascript:;" tripPublisherId="<?=$publisherInfo['tripPublisherId']?>" class="sureBtn">移除</a>
+                    </div>
+                <?php } ?>
 
             </div>
+            <?php } ?>
+            <div  id="buyTrip"></div>
             <div class="route">
                 <h2 class="title">购买路线</h2>
                 <ul>
@@ -178,7 +166,7 @@
                 <div class="pay">
                     <p>
                         <span>总价：<b id="allPrice"><?=$travelInfo['info']['basePrice'];?></span>
-                        <a href="javascript:;" class="btn" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >支付</a>
+                        <a href="javascript:;" id="addOrder" class="btn" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >支付</a>
                     </p>
                 </div>
             </div>
@@ -190,7 +178,6 @@
                         <li id="fenxiang"><a href="###">分享</a>
                             <div id="other-line">
                                 <a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a>
-
                             </div>
                         </li>
                     </ol>
@@ -394,7 +381,7 @@
     var serviceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT;?>';
     var serviceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE;?>';
     var userPublisherId='<?= $this->context->userPublisherObj!=null?$this->context->userPublisherObj->userPublisherId:''?>';
-
+    var userId='<?= $this->context->userObj!=null?$this->context->userObj->userSign:''?>';
     $(document).ready(function(){
         $('#startTime').timepicki({
             format_output: function(tim, mini, meri) {
@@ -425,9 +412,53 @@
             }
             window.location.href='/trip/to-apply-trip?trip='+$("#tripId").val();
         });
+
+        $("#toBuy").bind("click",function(){
+            if(userId==''){
+                Main.showTip("登录后才能购买哦~！");
+                return;
+            }
+            $("html,body").animate({scrollTop: $("#buyTrip").offset().top-30}, 500);
+        });
+
+        $("#addOrder").bind("click",function(){
+            addOrder();
+        });
+
+        //绑定移除
+        $("#publisherList div a").bind("click",function(){
+            var tripPublisherId=$(this).attr("tripPublisherId");
+            var tripId=$("tripId").val()
+            $.ajax({
+                url :'/trip/remove-publisher',
+                type:'post',
+                data:{
+                    tripId:tripId,
+                    tripPublisherId:tripPublisherId,
+                    _csrf: $('input[name="_csrf"]').val()
+                },
+                error:function(){
+                    //hide load
+                    Main.showTip("移除随友失败");
+                },
+                success:function(data){
+                    //hide load
+                    data=eval("("+data+")");
+                    if(data.status==1){
+                        $("#div_trip_publisher_"+tripPublisherId).remove();
+d                    }else{
+                        Main.showTip("移除随友失败");
+                    }
+                }
+            });
+
+        });
     });
 
 
+    /**
+     * 初始化日期控件
+     */
     function initDatePicker(){
         $('#beginTime').datetimepicker({
             language:  'zh-CN',
@@ -508,6 +539,36 @@
         });
 
         $("#allPrice").html(allPrice);
+    }
+
+
+    function addOrder()
+    {
+        var peopleCount=$("#peopleCount").val();
+        var tripId=$("#tripId").val();
+        var beginDate=$("#beginTime").val();
+        var startTime=$("#startTime").val();
+        var serviceArr=[];
+        var serviceIds='';
+
+        $("#serviceLi input[type='checkbox']").each(function(){
+            if($(this).is(":checked")){
+                serviceArr.push($(this).attr("serviceId"));
+            }
+        });
+        serviceIds=serviceArr.join(",");
+
+        alert(peopleCount);
+        alert(tripId);
+        alert(beginDate);
+        alert(startTime);
+        alert(serviceIds);
+
+        $.ajax(function(){
+
+        });
+
+
 
     }
 

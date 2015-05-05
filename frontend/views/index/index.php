@@ -26,13 +26,6 @@
         border: none;
 
     }
-
-
-
-    .select2-container .areaCodeSelect1
-    {
-
-    }
     .select2-drop {
         font-size: 14px;
     }
@@ -66,36 +59,56 @@
 
     <p class="title">热门</p>
     <ul id="ul1">
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+        <li><img src="/assets/images/lvyou.png" alt="">
+            <div class="zhezhao">
+                <p>rytut剪辑剪辑剪辑剪辑</p>
+                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <span>总价：<b>800</b></span></p>
+            </div>
+            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
             <h4>日本京都奈良公园一日游</h4>
         </li>
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+        <li><img src="/assets/images/lvyou.png" alt="">
+            <div class="zhezhao">
+                <p>rytut剪辑剪辑剪辑剪辑</p>
+                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <span>总价：<b>800</b></span></p>
+            </div>
+            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
             <h4>日本京都奈良公园一日游</h4>
         </li>
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+        <li><img src="/assets/images/lvyou.png" alt="">
+            <div class="zhezhao">
+                <p>rytut剪辑剪辑剪辑剪辑</p>
+                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <span>总价：<b>800</b></span></p>
+            </div>
+            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
             <h4>日本京都奈良公园一日游</h4>
         </li>
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
-        <li><img src="/assets/images/lvyou.png" alt=""><span>一</span>
-            <p><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
+        <li><img src="/assets/images/lvyou.png" alt="">
+            <div class="zhezhao">
+                <p>rytut剪辑剪辑剪辑剪辑</p>
+                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start1.fw.png" width="13" height="13">
+                    <img src="/assets/images/start2.fw.png" width="13" height="13">
+                    <span>总价：<b>800</b></span></p>
+            </div>
+            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
             <h4>日本京都奈良公园一日游</h4>
         </li>
     </ul>
@@ -151,11 +164,21 @@
                     var trip,html="";
                     for(var i=0;i<list.length;i++){
                         trip=list[i];
-                        html+='<li>' +
-                        '<img src="'+trip.titleImg+'" alt=""><span>一</span>' +
-                        '<p><img src="'+trip.headImg+'" alt=""><font>'+trip.nickname+'</font></p>' +
-                        '<h4>'+trip.title+'</h4>' +
-                        '</li>';
+                        html+='<li><img src="'+trip.titleImg+'" alt="">';
+                        html+='<a href="/view-trip/info?trip='+trip.tripId+'"><div class="zhezhao">';
+                        html+='<p>'+trip.intro+'</p>';
+                        html+='<p class="pingjia">评价';
+                        html+='<img src="/assets/images/start1.fw.png" width="13" height="13">';
+                        html+='<img src="/assets/images/start1.fw.png" width="13" height="13">';
+                        html+='<img src="/assets/images/start1.fw.png" width="13" height="13">';
+                        html+='<img src="/assets/images/start2.fw.png" width="13" height="13">';
+                        html+='<img src="/assets/images/start2.fw.png" width="13" height="13">';
+                        html+='<span>基础价格：<b>'+trip.basePrice+'</b></span></p>';
+                        html+='</div></a>';
+                        html+='<p class="user01"><img src="'+trip.headImg+'" alt="" width="40" height="40"><font>'+trip.nickname+'</font></p>';
+                        html+='<h4>'+trip.title+'</h4>';
+                        html+='</li>';
+
                     }
                     $("#ul1").append(html);
                 }else{

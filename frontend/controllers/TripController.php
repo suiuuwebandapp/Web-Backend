@@ -524,8 +524,9 @@ class TripController extends CController
         $publisherId=$this->userPublisherObj->userPublisherId;
 
         $tripInfo=$this->tripService->getTravelTripById($tripId);
-        if(!isset($tripInfo)){
-            return $this->redirect(['/result', 'result' => '您的申请已经提交，请耐心等待审核']);
+        if(!isset($tripInfo))
+        {
+            return $this->redirect(['/result', 'result' => '找不到该随游']);
         }
 
         $travelTripApply=new TravelTripApply();
@@ -537,5 +538,120 @@ class TripController extends CController
 
         return $this->redirect(['/result', 'result' => '您的申请已经提交，请耐心等待审核']);
     }
+
+
+    /**
+     * 移除用户随游关联
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionRemovePublisher()
+    {
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+        $tripPublisherId=trim(\Yii::$app->request->post("tripPublisherId", ""));
+
+        if(empty($tripId)){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty");
+            return;
+        }
+        if(empty($tripPublisherId)){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR,"TripPublisherId Is Not Allow Empty");
+            return;
+        }
+        $tripInfo=$this->tripService->getTravelTripById($tripId);
+        if(!isset($tripInfo)){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR);
+            return;
+        }
+        if($tripInfo->createPublisherId!=$this->userPublisherObj->userPublisherId){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid User Power");
+            return;
+        }
+        try{
+            $travelTripPublisher=new TravelTripPublisher();
+            $travelTripPublisher->tripId;
+            $travelTripPublisher->tripPublisherId;
+
+            $this->tripService->deleteTravelTriPublisher($travelTripPublisher);
+            echo Code::statusDataReturn(Code::SUCCESS);
+        }catch (Exception $e){
+            echo Code::statusDataReturn(Code::FAIL);
+        }
+        return;
+    }
+
+
+    /**
+     * 获取我的随游列表
+     */
+    public function actionMyTripList()
+    {
+        if(!$this->userObj->isPublisher){
+            echo json_encode(Code::statusDataReturn(Code::FAIL,"User Is Not Publisher"));
+            return;
+        }
+        try{
+            $list=$this->tripService->getMyTripList($this->userPublisherObj->userPublisherId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+    /**
+     * 获取某个随友加入的随游
+     */
+    public function actionMyJoinTripList()
+    {
+        if(!$this->userObj->isPublisher){
+            echo json_encode(Code::statusDataReturn(Code::FAIL,"User Is Not Publisher"));
+            return;
+        }
+        try{
+            $list=$this->tripService->getMyJoinTripList($this->userPublisherObj->userPublisherId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
+            throw $e;
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
+    public function actionAddOrder()
+    {
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+        $peopleCount=trim(\Yii::$app->request->post("peopleCount", ""));
+        $beginDate=trim(\Yii::$app->request->post("beginDate", ""));
+        $startTime=trim(\Yii::$app->request->post("startTime", ""));
+        $serviceIds=trim(\Yii::$app->request->post("serviceIds", ""));
+
+        if(empty($tripId)){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty");
+            return;
+        }
+        if(empty($peopleCount)){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Is Not Allow Empty");
+            return;
+        }
+        if(empty($beginDate)){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR,"BeginDate Is Not Allow Empty");
+            return;
+        }
+        if(empty($startTime)){
+            echo Code::statusDataReturn(Code::PARAMS_ERROR,"StartTime Is Not Allow Empty");
+            return;
+        }
+
+        $orderTripInfoJson="";
+        try{
+            $tripInfo=$this->tripService->getTravelTripInfoById($tripId);
+
+        }catch (Exception $e){
+
+        }
+
+    }
+
+
 
 }

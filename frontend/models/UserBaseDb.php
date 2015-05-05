@@ -30,12 +30,13 @@ class UserBaseDb extends ProxyDb
             INSERT INTO user_base
             (
               nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,
-              headImg,hobby,school,intro,info,travelCount,userSign,status,isPublisher
+
+              headImg,hobby,profession,school,intro,info,travelCount,userSign,status,isPublisher
             )
             VALUES
             (
               :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,
-              :headImg,:hobby,:school,:intro,:info,0,:userSign,:status,:isPublisher
+              :headImg,:hobby,:profession,:school,:intro,:info,0,:userSign,:status,:isPublisher
             )
         ");
 
@@ -52,6 +53,7 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":birthday", $userBase->birthday, PDO::PARAM_STR);
         $command->bindParam(":headImg", $userBase->headImg, PDO::PARAM_STR);
         $command->bindParam(":hobby", $userBase->hobby, PDO::PARAM_STR);
+        $command->bindParam(":profession", $userBase->profession, PDO::PARAM_STR);
         $command->bindParam(":school", $userBase->school, PDO::PARAM_STR);
         $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
@@ -239,7 +241,7 @@ class UserBaseDb extends ProxyDb
     {
         $sql = sprintf("
             UPDATE user_base SET
-            nickname=:nickname,phone=:phone,areaCode=:areaCode,email=:email,lastLoginIp=:lastLoginIp,sex=:sex,
+            nickname=:nickname,phone=:phone,areaCode=:areaCode,email=:email,lastLoginIp=:lastLoginIp,sex=:sex,profession=:profession,
             birthday=:birthday,headImg=:headImg,hobby=:hobby,school=:school,intro=:intro,info=:info,isPublisher=:isPublisher
 
             WHERE userId=:userId
@@ -256,6 +258,7 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":birthday", $userBase->birthday, PDO::PARAM_STR);
         $command->bindParam(":headImg", $userBase->headImg, PDO::PARAM_STR);
         $command->bindParam(":hobby", $userBase->hobby, PDO::PARAM_STR);
+        $command->bindParam(":profession", $userBase->profession, PDO::PARAM_STR);
         $command->bindParam(":school", $userBase->school, PDO::PARAM_STR);
         $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);

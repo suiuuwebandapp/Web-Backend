@@ -46,5 +46,15 @@ class DateUtils {
 
     }
 
+    public static function convertBirthdayToAge($birthday)
+    {
+        if(empty($birthday)||$birthday=='0000-00-00'){
+            return "保密";
+        }
+        $nowYear=date('Y',time());
+        $birYear=date('Y',strtotime($birthday));
+        return $nowYear-$birYear;
+    }
+
 
 }

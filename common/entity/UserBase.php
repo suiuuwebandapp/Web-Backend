@@ -60,6 +60,10 @@ class UserBase {
      */
     public $hobby;
     /**
+     * @var职业
+     */
+    public $profession;
+    /**
      * @var学校
      */
     public $school;
