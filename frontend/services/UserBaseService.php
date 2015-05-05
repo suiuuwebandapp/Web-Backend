@@ -307,7 +307,7 @@ class UserBaseService extends BaseDb
         $userBase->status=UserBase::USER_STATUS_NORMAL;
         $userBase->registerIp=$_SERVER['REMOTE_ADDR'];
         $userBase->lastLoginIp=$_SERVER['REMOTE_ADDR'];
-
+        $userBase->profession='';
         return $userBase;
     }
 

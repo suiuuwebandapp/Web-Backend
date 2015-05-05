@@ -31,6 +31,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .nav-out .nav li{ float:left;line-height:70px; padding-right:35px;}
 .nav-left-content li a{ display:block; text-decoration:none; color:#ddd; font-size:16px; }
 
+
 .nav-out .nav-right{ position:absolute; top:0; right:0;}
 .nav-out .nav-right ol li{float:left;line-height:70px; padding-right:30px; position:relative;}
 .nav-out .nav-right .search{ width:0; height:30px; line-height:30px; border-radius:30px; float:left; background:#eee; margin-top:18px; position:absolute;right:185px; top:5px; }
@@ -39,7 +40,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .nav-right ol li:last-child{ padding-right:0;}
 .nav-right ol li a{color:#ddd; font-size:18px; text-decoration:none;}
 .nav-right #denglu-main{ width:370px; color:#ddd; background:#333;background:url(../images/logo-bg.png) no-repeat center 0;padding-top:60px; display:none; position:absolute; top:70px; right:0;}
-.nav-right #denglu-main p{ width:210px; height:40px; padding-bottom:6px; border-bottom:1px solid #999; margin:0 auto;line-height:36px; position:relative;}
+.nav-right #denglu-main p{ width:260px; height:40px; padding-bottom:6px; border-bottom:1px solid #999; margin:0 auto;line-height:36px; position:relative;}
 .nav-right #denglu-main p.fogot{border:none;}
 .nav-right #denglu-main p.fogot a{ font-size:12px; position:absolute; top:0; right:0;}
 .nav-right #denglu-main p label{ float:left; display:block; height:36px; line-height:36px; margin-top:6px; color:#ddd; font-size:16px;}
@@ -63,20 +64,29 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 #denglu-main .float .gt_holder{ margin-left:53px; font-size:16px;}
 .nav-right ol li .float .gt_holder .gt_guide_tip a{ color:#858585; font-size:12px;}
+.nav-right ol li .float .gt_holder .gt_guide_tip a{ color:#858585; font-size:12px;}
+
+.nav-right .select2-container{ float:left;}
+.nav-right .select2-container .select2-choice{ background:none;color:#ddd;}
+.nav-right .select2-container .select2-choice:hover{ color:#ddd;}
+.nav-right .select2-container .select2-choice>.select2-chosen{ color:#ddd; }
+.nav-right .select2-container .select2-choice>.select2-chosen:hover{ color:#ddd; }
+.nav-right .select2-container .select2-choice>.select2-chosen{ color:#ddd; font-size:16px; height:36px; line-height:36px;}
+.nav-right .select2-container .select2-choice .select2-arrow{ border:none;}
 
 /* --------注册弹框-----*/
-#zhuce-main{ width:370px; height:375px;color:#ddd; background:url(../images/index-zhu.png) no-repeat center 0; padding-top:85px; display:none; position:absolute; top:70px; right:0;}
+#zhuce-main{ width:370px;color:#ddd; background:url(../images/index-zhu.png) no-repeat center 0; padding-top:85px; display:none; position:absolute; top:70px; right:0;}
 #zhuce-main .tab-title{ position:absolute; right:10px; top:32px; font-size:16px; color:#ffeb81; height:36px; line-height:36px; }
-#zhuce-main p{width:210px; height:36px; line-height:36px; margin:4px auto 0; clear:both; border-bottom:#999 1px solid;}
+#zhuce-main p{width:260px; height:36px; line-height:36px; margin:4px auto 0; clear:both; border-bottom:#999 1px solid;}
 #zhuce-main p.m-20{ margin-top:20px;}
 #zhuce-main p label{ height:36px;line-height:36px; float:left;}
 #zhuce-main p input{ width:130px; height:36px; padding-left:10px; line-height:36px; float:left; border:none;background:none; color:#ddd;}
-#zhuce-main p.shuaxin input{width:120px; display:block; height:36px; float:left; margin-right:5px; padding-left:0px; background:#554a4b;}
+#zhuce-main p.shuaxin input{width:80px; display:block; height:36px; float:left; margin-right:5px; padding-left:3px; background:#554a4b;}
 #zhuce-main p.shuaxin{ border-bottom:none; margin-top:35px;}
 #zhuce-main p.shuaxin font a{ float:left;  font-size:16px; color:#72B8FF; }
 #zhuce-main p.zidong{ width:200px; margin:35px auto 0;}
 #zhuce-main .zidong .xieyi{ float:left; font-size:16px; margin:0 10px; color:#ffeb81; height:36px; line-height:36px; text-decoration:underline; }
-#zhuce-main .btn01{ font-size:20px; color:#ffeb81; padding:30px 0; display:block; text-align:center;}
+#zhuce-main .btn01{ font-size:20px; color:#ffeb81; padding:10px 0; display:block; text-align:center;}
 
 #zhuce-main .out-p{ position:absolute;bottom:0; right:10px; height:45px; overflow:hidden;  }
 #zhuce-main .logo-icon{ display:inline-block; width:30px; height:30px; margin-left:10px;background:url(../images/logo-icon.png) no-repeat 0 -65px; margin:0 5px;}
@@ -89,7 +99,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 #zhuce-main02{ width:370px; height:375px;color:#ddd; background:url(../images/index-zhu.png) no-repeat center 0; padding-top:85px; display:none; position:absolute; top:70px; right:0;}
 #zhuce-main02 .tab-title{ position:absolute; right:10px; top:32px; font-size:16px; color:#ffeb81; height:36px; line-height:36px; }
-#zhuce-main02 p{width:210px; height:36px; line-height:36px; margin:4px auto 0; clear:both; border-bottom:#999 1px solid;}
+#zhuce-main02 p{width:260px; height:36px; line-height:36px; margin:4px auto 0; clear:both; border-bottom:#999 1px solid;}
 #zhuce-main02 p.m-20{ margin-top:20px;}
 #zhuce-main02 p label{  height:36px;line-height:36px; float:left;}
 #zhuce-main02 p input{ width:160px; height:30px; padding-left:10px; line-height:30px; float:left; border:none; margin-bottom:3px; background:none; color:#ddd;}
@@ -732,15 +742,15 @@ transition:all 0.4s ease-in-out;
 .syManage .newTip span{ display:block; width:20px; height:20px; border-radius:360px; position:absolute; right:0px; top:-10px; background:#ff7a4d; color:#ffea88; text-align:center; line-height:20px; font-size:12px;}
 
 .syManage .newsLists{height:auto;}
-.syManage .newsLists .lists{ width:100%; height:66px; overflow:hidden; margin-top:60px;}
+.syManage .newsLists .lists{ width:100%; overflow:hidden; margin-top:60px;}
 .syManage .newsLists .lists img{float:left; width:66px; border-radius:360px;}
 .syManage .newsLists .lists ul{ width:575px; float:left; padding-left:20px;}
-.syManage .newsLists .lists ul li{ float:left; width:20%; height:33px; line-height:33px;}
+.syManage .newsLists .lists ul li{ float:left; width:20%; height:33px; line-height:33px; border-bottom:1px solid #ddd;}
 .syManage .newsLists .lists ul li b{ margin-left:10px;}
-.syManage .newsLists .lists ul li.last{ width:100%; border-top:1px solid #ddd; height:32px; line-height:32px;}
-.syManage .newsLists .lists ul li.last a{ float:left; width:20%; display:inline-block; color:#ff7945; padding-left:10px; overflow:hidden;}
+.syManage .newsLists .lists ul li.last{ width:100%; height:auto; line-height:32px; border:none; display:table}
+.syManage .newsLists .lists ul li.last a{ float:left; width:30px; height:30px; display:table-cell;  color:#ff7945; padding-left:10px;}
+.syManage .newsLists .lists ul li.last p{ word-break:break-all; padding:0 20px; display:table-cell; width:470px;}
 .syManage .newsLists .lists ul li.last a img{ width:18px; height:12px; margin:12px;}
-.syManage .newsLists .lists ul li.last span{ margin-right:20px; background:#ffdfbd; color:#ff7945; margin-top:10px; font-size:12px; float:left; padding:0 5px; height:22px; line-height:22px;}
 .syManage .newsLists .lists .sure,.syManage .newsLists .lists .removeBtn{ width:80px; height:36px; line-height:36px; text-align:center; float:right; margin-top:15px; background:#ff7a4d; color:#ffeb81;border:none; font-size:16px;}
 .syManage .newsLists .lists .removeBtn{ margin-left:15px; background:#73b9ff; }
 
@@ -950,8 +960,9 @@ transition:all 0.4s ease-in-out;
 .sydetail .titTop .title{ color:#858585; font-size:20px;}
 .sydetail .web-content{ width:1200px; height:auto; overflow:hidden; margin:20px auto 60px;}
 .sydetail .web-content .web-left{ float:left;width:830px; position:relative;}
-.sydetail .web-content .web-left .collection{ position:absolute; right:0; top:0; background:url(../images/syxqicon.png) no-repeat 0 0; display:block; width:157px; height:60px; z-index:12;}
-.sydetail .web-content .web-left .collection:hover{ background-position:0 -75px;}
+.sydetail .web-content .web-left .collection{ position:absolute; right:0; top:0; background:url(../images/syxqicon.png) no-repeat 0 -75px; display:block; width:157px; height:60px; z-index:12;}
+.sydetail .web-content .web-left .collection:hover{ background-position:0 0;}
+.sydetail .web-content .web-left .collection.active{ background-position:0 0;}
 
 .sydetail .web-content .web-banner{ width:830px; height:570px; overflow:hidden; position:relative;}
 .sydetail .web-content .web-banner .pre{ position:absolute; left:0px; top:225px;}
@@ -979,8 +990,8 @@ transition:all 0.4s ease-in-out;
 .sydetail .web-content .web-left .newsLists .lists{ width:100%;  margin-top:60px;}
 .sydetail .web-content .web-left .newsLists .lists .userpic{float:left; width:66px; border-radius:360px;}
 .sydetail .web-content .web-left .newsLists .lists ul{ height:65px; border-bottom:1px solid #ddd; width:650px; float:left; padding-left:20px; padding-bottom:5px;}
-.sydetail .web-content .web-left .newsLists .lists ul li{ padding-top:33px; float:left; width:25%; height:33px; line-height:33px;}
-.sydetail .web-content .web-left .newsLists .lists ul .li01{ padding-top:0;}
+.sydetail .web-content .web-left .newsLists .lists ul li{ padding-top:33px; float:left; width:23%; height:33px; line-height:33px;}
+.sydetail .web-content .web-left .newsLists .lists ul .li01{ padding-top:0; width:31%;}
 .sydetail .web-content .web-left .newsLists .lists ul li img{ width:18px; height:12px;}
 .sydetail .web-content .web-left .newsLists .lists ul li b{ margin-left:10px; color:#ff7945;}
 .sydetail .web-content .web-left .newsLists .lists .sureBtn{ width:80px; height:36px; line-height:36px; text-align:center; float:right; margin-top:32px; background:#ff7a4d; color:#ffeb81;border:none; font-size:16px;}
@@ -1090,9 +1101,10 @@ transition:all 0.4s ease-in-out;
 .yldetail .titTop .title{ color:#858585; font-size:20px;}
 .yldetail .web-content{ width:1200px; height:auto; overflow:hidden; margin:20px auto 60px;}
 .yldetail .web-content .web-left{ float:left;width:830px; position:relative;}
-.yldetail .web-content .web-left .collection{ position:absolute; right:0; top:0; background:url(../images/syxqicon.png) no-repeat 0 0; display:block; width:157px; height:60px; z-index:12;}
+.yldetail .web-content .web-left .collection{ position:absolute; right:0; top:0; background:url(../images/syxqicon.png) no-repeat 0 -75px; display:block; width:157px; height:60px; z-index:12;}
 
-.yldetail .web-content .web-left .collection:hover{ background-position:0 -75px;}
+.yldetail .web-content .web-left .collection:hover{ background-position:0 0;}
+.yldetail .web-content .web-left .collection.active{ background-position:0 0;}
 
 .yldetail .web-content .web-banner{ width:830px; height:570px; overflow:hidden; position:relative;}
 .yldetail .web-content .web-banner .pre{ position:absolute; left:0px; top:225px;}

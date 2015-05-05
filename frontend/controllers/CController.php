@@ -24,6 +24,7 @@ class CController extends Controller{
     public $userBaseService=null;
     public $enableCsrfValidation=false;
 
+
     public function __construct($id, $module = null)
     {
         //验证用户是否登录

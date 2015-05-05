@@ -195,8 +195,10 @@ class TripService extends BaseDb{
             $attentionEntity->relativeId=$tripId;
             $attentionEntity->relativeType=UserAttention::TYPE_PRAISE_FOR_TRAVEL;
             $attentionEntity->userSign = $userSign;
-            $tripInfo['praise']=$attention->getAttentionResult($attentionEntity);
-            $tripInfo['attention']=$attention->getAttentionResult($userAttention);
+            $praise=$attention->getAttentionResult($attentionEntity);
+            $collect=$attention->getAttentionResult($userAttention);
+            $tripInfo['praise']=$praise==false?array():$praise;
+            $tripInfo['attention']=$collect==false?array():$collect;
             $tripInfo['info']=$this->tripTravelDb->findTravelTripById($tripId);
             if($tripInfo['info']['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
                 throw new Exception("随游不存在");

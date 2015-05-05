@@ -13,6 +13,7 @@ namespace frontend\controllers;
 use backend\services\SysUserService;
 use common\components\Aes;
 use common\components\Code;
+use frontend\services\CountryService;
 use frontend\services\UserBaseService;
 use yii\web\Controller;
 
@@ -26,9 +27,14 @@ class UnCController extends Controller{
 
     //public $enableCsrfValidation=false;
 
+    public $countryList;
+    public $areaCode='+86';
 
     public function __construct($id, $module = null)
     {
+        $countrySer=new CountryService();
+        $this->countryList=$countrySer->getCountryList();
+        $this->areaCode='0086';
         //验证用户是否登录
         $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
         $cookieSign=\Yii::$app->request->cookies->getValue(\Yii::$app->params['suiuu_sign']);

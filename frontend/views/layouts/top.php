@@ -8,8 +8,10 @@
  */
 
 ?>
-
+<link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
+<script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <style type="text/css">
+
     #emailTime input{
         font-size: 14px !important;
     }
@@ -113,27 +115,27 @@
 
                         <div id="zhuce-main">
                             <a href="#" class="tab-title tab-title01">邮箱注册</a>
-                           <!-- <p class="m-20"><label>国家</label>
-                                <select id="codeId" name="countryIds" class="areaCodeSelect1" required>
+                            <p class="m-20"><label>国家</label>
+                                <select id="codeId_top" name="countryIds" class="areaCodeSelect_top" required>
                                 <option value=""></option>
-                                <?php /*foreach ($countryList as $c) { */?>
-                                    <?php /*if(empty($c['areaCode'])){continue;} */?>
-                                    <?php /*if ($c['areaCode'] == $areaCode) { */?>
+                                <?php foreach ($this->context->countryList as $c) { ?>
+                                    <?php if(empty($c['areaCode'])){continue;} ?>
+                                    <?php if ($c['areaCode'] == $this->context->areaCode) { ?>
                                         <option selected
-                                                value="<?/*= $c['areaCode'] */?>"><?/*= $c['cname'] . " " . $c['areaCode'] */?></option>
-                                    <?php /*} else { */?>
-                                        <option value="<?/*= $c['areaCode'] */?>"><?/*= $c['cname'] . " " . $c['areaCode'] */?></option>
-                                    <?php /*} */?>
+                                                value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
+                                    <?php } else { ?>
+                                        <option value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
+                                    <?php } ?>
 
-                                <?php /*} */?>
-                            </select></p>-->
-                            <p class="m-20"><label>手机号</label><input type="text" value="" maxlength="30"></p>
-                            <p><label>密码</label><input type="text" value=""></p>
-                            <p class="shuaxin"><input type="text" value=""><font><a href="javascript:;">获取验证码</a></font></p>
+                                <?php } ?>
+                            </select></p>
+                            <p class="m-20"><label>手机号</label><input id="phone_top" type="text" value="" maxlength="30"></p>
+                            <p><label>密码</label><input id="phone_password_top" type="text" value=""></p>
+                            <p class="shuaxin"><input type="text" value="" id="phoneCode_top"><font><a href="javascript:;" id="getCodePhoneRegister">获取验证码</a></font></p>
                             <p class="zidong"><a href="javascript:;" class="xieyi">网站注册协议</a>
-                                <input type="checkbox" id="zhuce-check">
-                                <label for="zhuce-check" class="check">同意</label></p>
-                            <a href="#" class="btn01">注 册</a>
+                                <input type="checkbox" id="zhuce-check01">
+                                <label for="zhuce-check01" class="check">同意</label></p>
+                            <a href="javascript:;" class="btn01" id="phoneRegister">注 册</a>
                             <div class="out-p clearfix">
                                 <a href="/access/connect-weibo" class="logo-icon icon01"></a>
                                 <a href="#" class="logo-icon icon02"></a>
@@ -201,6 +203,7 @@
     var emailTimer;
     $(document).ready(function(){
         initEmailTimer();
+        initPhoneRegister();
     });
     function initEmailTimer()
     {
@@ -344,7 +347,7 @@
                 Main.showTip("系统异常。。。");
             },
             success: function (data) {
-                $('.gt_refresh_button')[0].click()
+
                 var obj=eval('('+data+')');
                 if(obj.status==1)
                 {
@@ -361,4 +364,131 @@
         });
         }
     }
+</script>
+
+<script>
+    var phoneTimer;
+    var phoneTime=0;
+    function initPhoneRegister()
+    {
+        phoneTimer=window.setInterval(function(){
+            if(phoneTime>0){
+                phoneTime--;
+                $("#getCodePhoneRegister").html(phoneTime+"秒后可发送");
+
+                $("#getCodePhoneRegister").unbind("click");
+            }else{
+                window.clearInterval(phoneTimer);
+                $("#getCodePhoneRegister").html("发送验证码");
+                $("#getCodePhoneRegister").bind("click",function(){
+                    getCodePhoneRegister();
+                });
+            }
+        },1000);
+
+
+    }
+    function getCodePhoneRegister()
+    {
+        var phone=$('#phone_top').val();
+        var password=$('#phone_password_top').val();
+        var areaCode = $("#codeId_top").val();
+
+        if(phone=='')
+        {
+            Main.showTip("手机号不能为空");
+        }else if(password=='')
+        {
+            Main.showTip("密码不能为空");
+        }else if(areaCode=='')
+        {
+            Main.showTip("国家区号不能为空");
+        }else
+        {
+            $.ajax({
+                type: 'post',
+                url: '/index/send-message',
+                data: {
+                    phone:phone,
+                    password:password,
+                    areaCode:areaCode,
+                    _csrf: $('input[name="_csrf"]').val()
+                },
+                beforeSend: function () {
+                    //Main.showTip('正在提交，请稍后。。。');
+                },
+                error:function(){
+                    Main.showTip("系统异常。。。");
+                },
+                success: function (data) {
+                    var obj=eval('('+data+')');
+                    if(obj.status==1)
+                    {
+                        phoneTime=obj.data;
+                        $("#phoneRegister").bind("click",function(){
+                            phoneRegister();
+                        });
+                        initPhoneRegister();
+                        Main.showTip("发送成功请注意查收。。。");
+                    }else
+                    {
+                        Main.showTip(obj.data);
+
+                    }
+                }
+            });
+        }
+    }
+    function phoneRegister()
+    {
+        var code=$('#phoneCode_top').val();
+        if(code=='')
+        {
+            Main.showTip('验证码不能为空');
+        }else{
+            if(!$("#zhuce-check01").is(":checked")){
+                Main.showTip("请同意《网站注册协议》");
+                return;
+            }
+            $.ajax({
+                type: 'post',
+                url: '/index/phone-register',
+                data: {
+                    code:code,
+                    _csrf: $('input[name="_csrf"]').val()
+                },
+                beforeSend: function () {
+                    //Main.showTip('正在提交，请稍后。。。');
+                },
+                error:function(){
+                    Main.showTip("系统异常。。。");
+                },
+                success: function (data) {
+                    var obj=eval('('+data+')');
+                    if(obj.status==1)
+                    {
+                        Main.showTip("注册成功即将跳转");
+                        setTimeout(function(){ window.location.reload();},500)
+                    }else
+                    {
+                        Main.showTip(obj.data);
+
+                    }
+                }
+            });
+        }
+    }
+</script>
+<script>
+    $(document).ready(function () {
+
+        //初始化区号选择
+        $(".areaCodeSelect_top").select2({
+            'width':'174px',
+            formatNoMatches: function () {
+                return "暂无匹配";
+            }
+        });
+
+    });
 </script>

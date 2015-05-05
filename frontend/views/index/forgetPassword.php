@@ -23,12 +23,6 @@
 
     }
 
-
-
-    .select2-container .areaCodeSelect1
-    {
-
-    }
     .select2-drop {
         font-size: 14px;
     }
