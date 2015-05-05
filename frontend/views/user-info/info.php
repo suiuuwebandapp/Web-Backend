@@ -288,62 +288,8 @@
             <li><a href="#"  class="active">未完成订单</a></li>
             <li><a href="#">过往订单</a></li>
         </ul>
-        <div class="myOder nowOder innerCon" style="display:block;">
-            <div class="orderList clearfix">
-                <dl class="order clearfix">
-                    <dt class="title">
-                        <span>3小时前</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>
-                    </dt>
-                    <dd>
-                        <span class="pic"><img src="/assets/images/2.png"></span>
-                        <span>日本京都奈良公园一日游秀公园...</span>
-                        <span>9:00AM</span>
-                        <span><a href="#" class="user"><img src="/assets/images/1.png" ></a><a href="#" class="message"><b>xiao</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>
-                        <span>35345345453</span>
-                        <span>2015.3.14</span>
-                        <span>2</span>
-                        <span>接机<b>300</b><br>租车<b>500</b></span>
-                    </dd>
-                </dl>
-                <p><a href="#" class="cancel">取消订单</a><span>总价：<b>8000</b></span><span class="blue">已支付</span><span class="orange">待接单</span></p>
-            </div>
-            <div class="orderList clearfix">
-                <dl class="order clearfix">
-                    <dt class="title">
-                        <span>3小时前</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>
-                    </dt>
-                    <dd>
-                        <span class="pic"><img src="/assets/images/2.png"></span>
-                        <span>日本京都奈良公园一日游秀公园...</span>
-                        <span>9:00AM</span>
-                        <span><a href="#" class="user"><img src="/assets/images/1.png" ></a><a href="#" class="message"><b>xiao</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>
-                        <span>35467867879</span>
-                        <span>2015.3.14</span>
-                        <span>2</span>
-                        <span>接机<b>300</b><br>租车<b>500</b></span>
-                    </dd>
-                </dl>
-                <p><a href="#" class="sure">确认游玩</a><a href="#" class="btn02">申请退款</a>
-                    <span>总价：<b>8000</b></span><span class="blue">已支付</span><span class="orange">待接单</span></p>
-            </div>
-            <div class="orderList clearfix">
-                <dl class="order clearfix">
-                    <dt class="title">
-                        <span>3小时前</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>
-                    </dt>
-                    <dd>
-                        <span class="pic"><img src="/assets/images/2.png"></span>
-                        <span>日本京都奈良公园一日游秀公园...</span>
-                        <span>9:00AM</span>
-                        <span><a href="#" class="user"><img src="/assets/images/1.png" ></a><a href="#" class="message"><b>xiao</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>
-                        <span>45566787899</span>
-                        <span>2015.3.14</span>
-                        <span>2</span>
-                        <span>接机<b>300</b><br>租车<b>500</b></span>
-                    </dd>
-                </dl>
-                <p><a href="#" class="cancel">结算</a><span>总价：<b>8000</b></span><span class="orange">待支付</span></p>
-            </div>
+        <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList">
+
         </div>
         <div class="myOder pastOder innerCon">
             <div class="orderList clearfix">
@@ -643,11 +589,19 @@
 <!-----------个人中心-end--------------->
 
 <script type="text/javascript">
+    var tripServiceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT?>';
+    var tripServiceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?>';
+
     $(document).ready(function(){
         getMyTripList();
         getMyJoinTripList();
+        getUnFinishList();
     });
 
+
+    /**
+     * 获取我的随游
+     */
     function getMyTripList()
     {
         $.ajax({
@@ -671,6 +625,11 @@
         });
     }
 
+    /**
+     * 构建我的随游HTML
+     * @param tripList
+     * @returns {string}
+     */
     function buildMyTripHtml(tripList)
     {
         if(tripList==''||tripList.length==0){
@@ -707,6 +666,9 @@
         return html;
     }
 
+    /**
+     * 获取我加入的随游
+     */
     function getMyJoinTripList()
     {
         $.ajax({
@@ -730,6 +692,11 @@
         });
     }
 
+    /**
+     * 构建我加入的随游HTML
+     * @param tripList
+     * @returns {string}
+     */
     function buildMyJoinTripHtml(tripList)
     {
         if(tripList==''||tripList.length==0){
@@ -765,6 +732,87 @@
         }
         return html;
     }
+
+
+    function getUnFinishList()
+    {
+        $.ajax({
+            url :'/user-order/get-un-finish-order',
+            type:'post',
+            data:{
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip("获取我的未完成订单失败");
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    $("#unFinishList").html(buildUnFinishList(data.data));
+                }else{
+                    Main.showTip("获取我的未完成订单失败");
+                }
+            }
+        });
+    }
+
+    function buildUnFinishList(list)
+    {
+        var html="";
+        if(list==""||list.length==0){
+            return html;
+        }
+        for(var i=0;i<list.length;i++){
+            var orderInfo=list[i];
+            var travelInfo=orderInfo.tripJsonInfo;
+            travelInfo=eval("("+travelInfo+")");
+            var serviceInfo=orderInfo.serviceInfo;
+            serviceInfo=eval("("+serviceInfo+")");
+            Main.printObject(travelInfo.createPublisherInfo);
+            html+='<div class="orderList clearfix">';
+            html+='<dl class="order clearfix">';
+            html+='<dt class="title">';
+            html+='<span>3小时前</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>';
+            html+='</dt>';
+            html+='<dd>';
+            html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"></span>';
+            html+='<span>'+travelInfo.info.title+'</span>';
+            html+='<span>'+orderInfo.startTime+'</span>';
+            if(orderInfo.phone==''||orderInfo.phone==null){
+                html+='<span>未接单</span>';
+                html+='<span>未接单</span>';
+            }else{
+                html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+                html+='<span>'+orderInfo.phone+'</span>';
+            }
+
+            html+='<span>'+orderInfo.beginDate+'</span>';
+            html+='<span>'+orderInfo.personCount+'</span>';
+            html+='<span>';
+            if(serviceInfo!=''&&serviceInfo.length>0){
+                for(var j=0;j<serviceInfo.length;j++){
+                    var service=serviceInfo[j];
+                    html+=service.title+'<b>'+service.money+'</b>';
+                    if(service.type==tripServiceTypePeople){
+                        html+='/人';
+                    }else{
+                        html+='/次';
+                    }
+                    html+='<br>';
+                }
+            }
+            html+='</span>';
+            html+='</dd>';
+            html+='</dl>';
+            html+='<p><a href="#" class="cancel">取消订单</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span><span class="blue">已支付</span><span class="orange">待接单</span></p>';
+            html+='</div>';
+        }
+        return html;
+
+    }
+
+
 
 
     function deleteTravelTrip(tripId)

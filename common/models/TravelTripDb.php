@@ -187,7 +187,9 @@ class TravelTripDb extends ProxyDb{
     public function findTravelTripById($tripId)
     {
         $sql=sprintf("
-            SELECT * FROM travel_trip
+            SELECT t.*,c.cname AS countryCname,c.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname FROM travel_trip AS t
+            LEFT JOIN country AS c ON c.id=t.countryId
+            LEFT JOIN city AS ci ON ci.id=t.cityId
             WHERE tripId=:tripId
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -471,7 +473,7 @@ class TravelTripDb extends ProxyDb{
      * @param $tripId
      * @throws \yii\db\Exception
      */
-    public function deleteTravelTripServiceBytripId($tripId)
+    public function deleteTravelTripServiceByTripId($tripId)
     {
         $sql=sprintf("
             DELETE FROM travel_trip_service

@@ -49,4 +49,6 @@ class UserOrderInfo {
 
     public $status;
 
+    public $isDel;
+
 }

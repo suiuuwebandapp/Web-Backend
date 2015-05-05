@@ -209,6 +209,12 @@ class TripService extends BaseDb{
             $tripInfo['scenicList']=$this->tripTravelDb->getTravelTripScenicList($tripId);
             $tripInfo['serviceList']=$this->tripTravelDb->getTravelTripServiceList($tripId);
 
+            foreach($tripInfo['publisherList'] as $publisherInfo){
+                if($publisherInfo['publisherId']==$tripInfo['info']['createPublisherId']){
+                    $tripInfo['createPublisherInfo']=$publisherInfo;
+                }
+            }
+
         }catch (Exception $e){
             throw $e;
         }

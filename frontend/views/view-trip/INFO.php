@@ -27,6 +27,7 @@
         width: 45px !important;
         padding-left: 0px !important;
     }
+
     .timepicker_wrap{
         top: 40px !important;
         border-radius:0 !important;
@@ -67,7 +68,6 @@
 </style>
 
 <div class="sydetail w1200 clearfix">
-    <input type="hidden" value="<?=$travelInfo['info']['tripId'];?>" id="tripId"/>
     <div class="titTop clearfix">
         <h3 class="title"><?=$travelInfo['info']['title'];?></h3>
         <p class="xing">
@@ -144,12 +144,15 @@
             </div>
             <?php } ?>
             <div  id="buyTrip"></div>
+            <form action="/user-order/add-order" method="post" id="orderForm">
+                <input type="hidden" name="tripId" value="<?=$travelInfo['info']['tripId'];?>" id="tripId"/>
+                <input type="hidden" name="serviceIds" id="serviceIds" />
             <div class="route">
                 <h2 class="title">购买路线</h2>
                 <ul>
-                    <li><span>出发日期：</span><p><input type="text" class="text" id="beginTime"><a href="javascript:;" class="cal-icon" id="calendar"></a></p></li>
-                    <li><span>出游人数: </span><p><input type="text"  class="text" id="peopleCount"></p></li>
-                    <li><span>起始时间：</span><p><input type="text"  class="text" id="startTime"></p></li>
+                    <li><span>出发日期：</span><p><input type="text" class="text" name="beginDate" id="beginTime"><a href="javascript:;" class="cal-icon" id="calendar"></a></p></li>
+                    <li><span>出游人数: </span><p><input type="text"  class="text" name="peopleCount" id="peopleCount"></p></li>
+                    <li><span>起始时间：</span><p><input type="text"  class="text" name="startTime" id="startTime"></p></li>
                     <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
                         <li id="serviceLi">
                             <span><?=$key==0?'附加服务：':''?></span>
@@ -170,6 +173,7 @@
                     </p>
                 </div>
             </div>
+            </form>
             <div class="web-con">
                 <div class="web-bar">
                     <ol>
@@ -422,7 +426,50 @@
         });
 
         $("#addOrder").bind("click",function(){
-            addOrder();
+            var peopleCount=$("#peopleCount").val();
+            var tripId=$("#tripId").val();
+            var beginDate=$("#beginTime").val();
+            var startTime=$("#startTime").val();
+            var serviceArr=[];
+            var serviceIds='';
+
+
+            if(userId==''){
+                Main.showTip("登录后才能购买哦~！");
+                return;
+            }
+            if(beginDate==''){
+                Main.showTip("请选择您的出行日期");
+                return;
+            }
+            if(peopleCount==''||peopleCount==0){
+                Main.showTip("请输入你的出行人数");
+                return;
+            }
+            peopleCount=parseInt(peopleCount);
+            maxPeopleCount=parseInt(maxPeopleCount);
+
+            if(peopleCount>maxPeopleCount){
+                Main.showTip("这个随友最多之能接待"+maxPeopleCount+"个小伙伴呦~");
+                return;
+            }
+            if(startTime==''){
+                Main.showTip("请输入您的起始时间");
+                return;
+            }
+
+            $("#serviceLi input[type='checkbox']").each(function(){
+                if($(this).is(":checked")){
+                    serviceArr.push($(this).attr("serviceId"));
+                }
+            });
+            if(serviceArr!=''&&serviceArr.length>0){
+                serviceIds=serviceArr.join(",");
+            }
+
+            $("#serviceIds").val(serviceIds);
+            $("#orderForm").submit();
+
         });
 
         //绑定移除
@@ -540,39 +587,4 @@ d                    }else{
 
         $("#allPrice").html(allPrice);
     }
-
-
-    function addOrder()
-    {
-        var peopleCount=$("#peopleCount").val();
-        var tripId=$("#tripId").val();
-        var beginDate=$("#beginTime").val();
-        var startTime=$("#startTime").val();
-        var serviceArr=[];
-        var serviceIds='';
-
-        $("#serviceLi input[type='checkbox']").each(function(){
-            if($(this).is(":checked")){
-                serviceArr.push($(this).attr("serviceId"));
-            }
-        });
-        serviceIds=serviceArr.join(",");
-
-        alert(peopleCount);
-        alert(tripId);
-        alert(beginDate);
-        alert(startTime);
-        alert(serviceIds);
-
-        $.ajax(function(){
-
-        });
-
-
-
-    }
-
-
-
-
 </script>
