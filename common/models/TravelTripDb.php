@@ -10,7 +10,6 @@
 namespace common\models;
 
 
-use backend\components\Page;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripPicture;
@@ -24,7 +23,7 @@ class TravelTripDb extends ProxyDb{
 
 
 
-    public function getList(Page $page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$status)
+    public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$status)
     {
 
         $sql=sprintf("

@@ -12,6 +12,7 @@ use common\components\Common;
 use common\entity\CircleArticle;
 use common\entity\CircleComment;
 use common\entity\UserBase;
+use frontend\components\Page;
 use frontend\services\CircleService;
 use frontend\services\UserBaseService;
 use common\components\Code;
@@ -143,14 +144,16 @@ class CircleController extends AController{
 
         try{
             $articleId=\Yii::$app->request->post('articleId');
-            $page = \Yii::$app->request->post('page');
+            $page = new Page();
+            $page->startRow=0;
+            $page->pageSize=4;
             $userSign=$this->userObj->userSign;
             if(empty($articleId))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知文章'));
                 exit;
             }
-            $data=$this->CircleService->getArticleInfoById($articleId,$page, $userSign);
+            $data=$this->CircleService->getArticleInfoById($articleId,$userSign,$page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
@@ -159,6 +162,26 @@ class CircleController extends AController{
         }
     }
 
+    public function actionGetCommentByArticleId()
+    {
+        $this->loginValid(false);
+
+        try{
+            $articleId=\Yii::$app->request->post('articleId');
+            $page = new Page(\Yii::$app->request);
+            if(empty($articleId))
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知文章的评论'));
+                exit;
+            }
+            $data=$this->CircleService->getCommentByArticleId($articleId,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
     /**
      * @var 查询文章列表根据圈子id
      */
@@ -168,9 +191,9 @@ class CircleController extends AController{
 
         try{
             $circleId=\Yii::$app->request->post('circleId');
-            $page = \Yii::$app->request->post('page');
             $type=\Yii::$app->request->post('type');
             $userSign=$this->userObj->userSign;
+            $page=new Page(\Yii::$app->request);
             if(empty($circleId))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知圈子列表'));
@@ -199,7 +222,7 @@ class CircleController extends AController{
         $this->loginValid(false);
         try{
             $type = \Yii::$app->request->post('type');
-            $page = \Yii::$app->request->post('page');
+            $page =new Page(\Yii::$app->request);
             $data=$this->CircleService->getCircleByType($type,$page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
@@ -268,7 +291,7 @@ class CircleController extends AController{
         $this->loginValid(false);
         try{
             $str=\Yii::$app->request->post('str');
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             if(empty($str))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法搜索未知标题'));
@@ -290,8 +313,8 @@ class CircleController extends AController{
         $this->loginValid(false);
         try{
             $userSign=\Yii::$app->request->post('userSign');
-            $page = \Yii::$app->request->post('page');
-            $userSign='7f11453d3ed03159808e5c8ee850f1db';
+            $page = new Page(\Yii::$app->request);
+            //$userSign='7f11453d3ed03159808e5c8ee850f1db';
             $mySign=$this->userObj->userSign;
             if(empty($userSign))
             {

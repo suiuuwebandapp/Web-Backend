@@ -10,7 +10,6 @@
 namespace frontend\services;
 
 
-use backend\components\Page;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripPublisher;
@@ -29,7 +28,7 @@ class TripService extends BaseDb{
 
     }
 
-    public function getList(Page $page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag)
+    public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag)
     {
         try {
             $conn = $this->getConnection();
@@ -197,8 +196,8 @@ class TripService extends BaseDb{
             $attentionEntity->userSign = $userSign;
             $praise=$attention->getAttentionResult($attentionEntity);
             $collect=$attention->getAttentionResult($userAttention);
-            $tripInfo['praise']=$praise==false?array():$praise;
-            $tripInfo['attention']=$collect==false?array():$collect;
+            $tripInfo['praise']=$praise==false?array():array($praise);
+            $tripInfo['attention']=$collect==false?array():array($collect);
             $tripInfo['info']=$this->tripTravelDb->findTravelTripById($tripId);
             if($tripInfo['info']['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
                 throw new Exception("随游不存在");

@@ -30,10 +30,10 @@ class Page {
     public function __construct(Request $request=null)
     {
         if($request!=null){
-            $length = $request->post("s");
-            $cPage = $request->post("p");
-            $oColumn = $request->post("o");
-            $oType = $request->post("t");
+            $length = $request->post("number");//每页显示多少条
+            $cPage = $request->post("page");//开始页
+            $oColumn = $request->post("o");//排序的列
+            $oType = $request->post("t");//排序的顺序
             $isShowAll = $request->post("showAll");
 
             if (!empty($length)) {

@@ -28,6 +28,8 @@ class ProxyDb extends Connection {
 
     private $selectInfo;
 
+    private $page;
+
 
     public function __construct(Connection $db,$tableName=null){
         $this->db=$db;
@@ -60,8 +62,7 @@ class ProxyDb extends Connection {
     }
 
 
-
-    public function find(Page $page=null)
+    public function find($page=null)
     {
 
         if($page==null){
@@ -102,7 +103,7 @@ class ProxyDb extends Connection {
 
     }
 
-    public function findList(Page $page)
+    public function findList($page)
     {
         if($page==null){
             $page=new Page();

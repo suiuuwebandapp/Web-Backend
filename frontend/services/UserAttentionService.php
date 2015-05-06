@@ -179,17 +179,17 @@ class UserAttentionService extends BaseDb
 
     /**得到关注的圈子
      * @param $userSign
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getUserAttentionCircle($userSign,$pageNumb)
+    public function getUserAttentionCircle($userSign,$page)
     {
         try {
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
-            $page = Common::PageResult($pageNumb);
-            return $this->AttentionDb->getAttentionCircle($userSign,$page);
+            $data=$this->AttentionDb->getAttentionCircle($userSign,$page);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取关注圈子异常',Code::FAIL,$e);
         } finally {
@@ -198,17 +198,17 @@ class UserAttentionService extends BaseDb
     }
     /**得到关注的用户
      * @param $userSign
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getUserAttentionUser($userSign,$pageNumb)
+    public function getUserAttentionUser($userSign,$page)
     {
         try {
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
-            $page = Common::PageResult($pageNumb);
-            return $this->AttentionDb->getAttentionUser($userSign,$page);
+            $data = $this->AttentionDb->getAttentionUser($userSign,$page);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取关注用户异常',Code::FAIL,$e);
         } finally {
@@ -217,17 +217,17 @@ class UserAttentionService extends BaseDb
     }
     /**得到收藏的随游
      * @param $userSign
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getUserCollectionTravel($userSign,$pageNumb)
+    public function getUserCollectionTravel($userSign,$page)
     {
         try {
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
-            $page = Common::PageResult($pageNumb);
-            return $this->AttentionDb->getCollectTravelList($userSign,$page);
+            $data = $this->AttentionDb->getCollectTravelList($userSign,$page);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取收藏的随游异常',Code::FAIL,$e);
         } finally {
@@ -236,17 +236,17 @@ class UserAttentionService extends BaseDb
     }
     /**得到收藏的圈子文章
      * @param $userSign
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getUserCollectionArticle($userSign,$pageNumb)
+    public function getUserCollectionArticle($userSign,$page)
     {
         try {
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
-            $page = Common::PageResult($pageNumb);
-            return $this->AttentionDb->getCollectArticleList($userSign,$page);
+            $data = $this->AttentionDb->getCollectArticleList($userSign,$page);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取收藏的圈子文章异常',Code::FAIL,$e);
         } finally {
@@ -256,17 +256,17 @@ class UserAttentionService extends BaseDb
 
     /**
      * 得到推荐用户
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getRecommendUser($pageNumb)
+    public function getRecommendUser($page)
     {
         try {
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            $page = Common::PageResult($pageNumb);
-            return $this->recommendDb->getRecommendUser($page);
+            $data= $this->recommendDb->getRecommendUser($page);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取推荐用户异常',Code::FAIL,$e);
         } finally {
@@ -275,17 +275,17 @@ class UserAttentionService extends BaseDb
     }
     /**
      * 得到推荐随游
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getRecommendTravel($pageNumb)
+    public function getRecommendTravel($page)
     {
         try {
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            $page = Common::PageResult($pageNumb);
-            return $this->recommendDb->getRecommendTravel($page);
+            $data= $this->recommendDb->getRecommendTravel($page);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取推荐随游异常',Code::FAIL,$e);
         } finally {
@@ -295,20 +295,20 @@ class UserAttentionService extends BaseDb
     /**
      * 得到关注圈子动态
      * @param $userSign
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getAttentionCircleDynamic($userSign,$pageNumb)
+    public function getAttentionCircleDynamic($userSign,$page)
     {
         try {
             $rstArr=array();
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            $page = Common::PageResult($pageNumb,6);//返回第几页 ， 返回几个数据
-            $rst1 = $this->recommendDb->getAttentionCircleDynamicTheme($userSign,$page);
-            $rst2 = $this->recommendDb->getAttentionCircleDynamicAddr($userSign,$page);
-
+            $data1 = $this->recommendDb->getAttentionCircleDynamicTheme($userSign,$page);
+            $data2 = $this->recommendDb->getAttentionCircleDynamicAddr($userSign,$page);
+            $rst1=$data1->getList();
+            $rst2=$data2->getList();
             if(empty($rst1)&&empty($rst2))
             {
                 return $rstArr;
@@ -338,27 +338,18 @@ class UserAttentionService extends BaseDb
     /**
      * 得到关注用户动态
      * @param $userSign
-     * @param $pageNumb
-     * @param $count
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getAttentionUserDynamic($userSign,$pageNumb,$count=null)
+    public function getAttentionUserDynamic($userSign,$page)
     {
         try {
 
             $conn = $this->getConnection();
             $this->recommendDb = new RecommendListDb($conn);
-            if(empty($count))
-            {
-                $page = Common::PageResult($pageNumb);//返回第几页 ， 返回几个数据
-            }else
-            {
-                $page = Common::PageResult($pageNumb,$count);//返回第几页 ， 返回几个数据
-            }
-
-            return $this->recommendDb->getAttentionUserDynamic($userSign,$page);
-
+            $data=$this->recommendDb->getAttentionUserDynamic($userSign,$page);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取用户动态异常',Code::FAIL,$e);
         } finally {
@@ -369,17 +360,16 @@ class UserAttentionService extends BaseDb
     /**
      * 得到粉丝
      * @param $userSign
-     * @param $pageNumb
+     * @param $page
      * @return array
      * @throws Exception
      */
-    public function getUserFans($userSign,$pageNumb)
+    public function getUserFans($userSign,$page)
     {
         try {
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
             $this->userBaseDb =new UserBaseDb($conn);
-            $page = Common::PageResult($pageNumb);
 
             $rst = $this->userBaseDb->findByUserSign($userSign);
 
@@ -390,7 +380,8 @@ class UserAttentionService extends BaseDb
             }else{
                 $userId = $rst['userId'];
 
-                return $this->AttentionDb->getAttentionFans($userId,$page);
+                $data = $this->AttentionDb->getAttentionFans($userId,$page);
+                return array('data'=>$data->getList(),'msg'=>$data);
             }
         } catch (Exception $e) {
             throw new Exception('获取用户粉丝异常',Code::FAIL,$e);
@@ -399,13 +390,13 @@ class UserAttentionService extends BaseDb
         }
     }
 
-    public function getMessageRemind($userSign,$pageNumb,$type)
+    public function getMessageRemind($userSign,$page,$type)
     {
         try {
-            $page = Common::PageResult($pageNumb);
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
-            return $this->remindDb->getAttentionCircleArticle($userSign,$page,$type);
+            $data=$this->remindDb->getAttentionCircleArticleRemind($userSign,$page,$type);
+            return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取用户消息异常',Code::FAIL,$e);
         } finally {

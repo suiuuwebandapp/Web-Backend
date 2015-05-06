@@ -481,7 +481,6 @@
 </script>
 <script>
     $(document).ready(function () {
-
         //初始化区号选择
         $(".areaCodeSelect_top").select2({
             'width':'174px',

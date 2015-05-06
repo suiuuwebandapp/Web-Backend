@@ -7,7 +7,7 @@
  */
 namespace frontend\controllers;
 
-use backend\components\Page;
+use frontend\components\Page;
 use common\components\Code;
 use common\components\TagUtil;
 use frontend\services\CountryService;
@@ -31,8 +31,8 @@ class AppTravelController extends AController
     {
         $this->loginValid();
         try{
-            $page=new Page();
-            $page->showAll=true;
+            $page=new Page(Yii::$app->request);
+            //$page->showAll=true;
             $title=Yii::$app->request->post('title');
             $countryId=Yii::$app->request->post('countryId');
             $cityId=Yii::$app->request->post('cityId');
@@ -41,7 +41,7 @@ class AppTravelController extends AController
             $endPrice=Yii::$app->request->post('endPrice');
             $tag=Yii::$app->request->post('tag');
             $data=$this->travelSer->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data->getList(),$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();

@@ -10,6 +10,7 @@ use common\models\BaseDb;
 use common\entity\CircleComment;
 use common\models\UserAttentionDb;
 use common\models\UserMessageRemindDb;
+use frontend\components\Page;
 use frontend\models\CircleDb;
 use frontend\models\UserBaseDb;
 use yii\base\Exception;
@@ -117,14 +118,13 @@ class CircleService extends BaseDb
      * @throws Exception
      * @return array
      */
-    public function getArticleInfoById($articleId,$userSign)
+    public function getArticleInfoById($articleId,$userSign,Page $page)
     {
 
         try {
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
             $data=$this->CircleDb->getArticleInfoById($articleId);
-            $page=Common::PageResult(1,4);
             $commentList=$this->CircleDb->getCircleCommentByArticleId($articleId,$page);
             $this->userAttentionDb =new UserAttentionDb($conn);
             $attention= new UserAttention();
@@ -141,7 +141,7 @@ class CircleService extends BaseDb
                 }
                 if($data!=false)
                 {
-                    $data['commentList']=$commentList;
+                    $data['commentList']=$commentList->getList();
                 }
             }
             return $this->unifyReturn($data);
@@ -156,20 +156,20 @@ class CircleService extends BaseDb
     /**
      * 查询圈子文章详情根据圈子
      * @param $circleId
-     * @param $pageNumb
+     * @param $page
      * @param $userSign
      * @param $type 1
      * @throws Exception
      * @return array
      */
-    public function getArticleByCircleId($circleId,$pageNumb,$userSign,$type)
+    public function getArticleByCircleId($circleId,Page $page,$userSign,$type)
     {
 
         try {
             $data1=array();
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $page=Common::PageResult($pageNumb);
+
             if($type==CircleSort::CIRCLE_TYPE_PLACE)
             {
                 $data = $this->CircleDb->getArticleListByAddrId($circleId,$page);
@@ -190,7 +190,7 @@ class CircleService extends BaseDb
                     $str = $rst['attentionId'];
                 }
             }
-            return $this->unifyReturn(array('data'=>$data,'attentionId'=>$str));
+            return $this->unifyReturn(array('data'=>$data->getList(),'attentionId'=>$str,'msg'=>$data));
         } catch (Exception $e) {
             throw new Exception('根据圈子查询文章异常',Code::FAIL,$e);
         } finally {
@@ -207,15 +207,14 @@ class CircleService extends BaseDb
      * @throws Exception
      * @return array
      */
-    public function getCircleByType($type,$pageNumb)
+    public function getCircleByType($type,$page)
     {
         try {
 
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $page=Common::PageResult($pageNumb);
             $data = $this->CircleDb->getCircleByType($type,$page);
-            return $this->unifyReturn($data);
+            return $this->unifyReturn(array('data'=>$data->getList(),'msg'=>$data));
         } catch (Exception $e) {
             throw new Exception('查询圈子异常',Code::FAIL,$e);
         } finally {
@@ -329,16 +328,15 @@ class CircleService extends BaseDb
      * @throws Exception
      * @return array
      */
-    public function getCommentByArticleId($articleId,$pageNumb)
+    public function getCommentByArticleId($articleId,Page $page)
     {
 
         try {
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $page=Common::PageResult($pageNumb);
             $data=$this->CircleDb->getCircleCommentByArticleId($articleId,$page);
 
-            return $this->unifyReturn($data);
+            return $this->unifyReturn(array('data'=>$data->getList(),'msg'=>$data));
         } catch (Exception $e) {
             throw new Exception('查询圈子文章评论异常',Code::FAIL,$e);
         } finally {
@@ -354,16 +352,15 @@ class CircleService extends BaseDb
      * @throws Exception
      * @return array
      */
-    public function getSeekResult($str,$pageNumb)
+    public function getSeekResult($str,$page)
     {
 
         try {
             $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $page=Common::PageResult($pageNumb);
             $data=$this->CircleDb->getSeekResult($str,$page);
 
-            return $this->unifyReturn($data);
+            return $this->unifyReturn(array('data'=>$data->getList(),'msg'=>$data));
         } catch (Exception $e) {
             throw new Exception('查询圈子文章评论异常',Code::FAIL,$e);
         } finally {
@@ -409,9 +406,9 @@ class CircleService extends BaseDb
             {
                 $data['AttentionNumb']=$AttArr['numb'];
             }
-            $page= Common::PageResult($page);
             $articleList=$this->CircleDb->getArticleListByUserSign($userSign,$page);
-            $data['articleList'] = $articleList;
+            $data['articleList'] = $articleList->getList();
+            $data['msg'] = $articleList;
             return $this->unifyReturn($data);
         } catch (Exception $e) {
             throw new Exception('查询用户主页异常',Code::FAIL,$e);

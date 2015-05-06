@@ -58,7 +58,7 @@ class UserAttentionDb extends ProxyDb
         $command->execute();
     }
     /**
-     * 查找关注圈子文章
+     * 查找关注圈子文章  //暂时没用到
      * @param $userSign
      * @return array
      * @throws \yii\db\Exception
@@ -66,21 +66,20 @@ class UserAttentionDb extends ProxyDb
     public function getAttentionCircleArticle($userSign,$page)
     {
         $sql=sprintf("
-            SELECT a.articleId,a.aContent,a.aTitle,a.aImg FROM  circle_article a
+         FROM  circle_article a
             LEFT JOIN user_base b ON b.userSign = a.aCreateUserSign
             LEFT JOIN user_attention c ON c.relativeId = a.articleId
             LEFT JOIN user_base d ON d.userSign = c.userSign
-            WHERE b.`status`=:userStatus AND c.relativeType=:relativeType AND a.aStatus=:aStatus AND c.`status`=:attentionStatus AND c.userSign=:userSign
-
+            WHERE b.`status`=:userStatus AND c.relativeType=:relativeType AND a.aStatus=:aStatus AND c.`status`=:attentionStatus AND c.userSign=:userSign ORDER BY a.articleId DESC
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":relativeType", UserAttention::TYPE_FOR_CIRCLE_ARTICLE, PDO::PARAM_INT);
-        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        return $command->queryAll();
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("relativeType", UserAttention::TYPE_FOR_CIRCLE_ARTICLE);
+        $this->setParam("aStatus", CircleArticle::ARTICLE_STATUS_NORMAL);
+        $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.articleId,a.aContent,a.aTitle,a.aImg ');
+        $this->setSql($sql);
+        return $this->find($page);
     }
 
     /**
@@ -90,20 +89,20 @@ class UserAttentionDb extends ProxyDb
      */
     public function getAttentionCircle($userSign,$page)
     {
+
         $sql=sprintf("
-            SELECT a.cName,a.cId,a.cpic FROM  sys_circle_sort a
+         FROM  sys_circle_sort a
             LEFT JOIN user_attention c ON c.relativeId = a.cId
             LEFT JOIN user_base b ON c.userSign =b.userSign
             WHERE b.`status`=:userStatus AND c.relativeType=:relativeType AND c.`status`=:attentionStatus AND c.userSign=:userSign
-
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":relativeType", UserAttention::TYPE_FOR_CIRCLE, PDO::PARAM_INT);
-        $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        return $command->queryAll();
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("relativeType", UserAttention::TYPE_FOR_CIRCLE);
+        $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.cName,a.cId,a.cpic');
+        $this->setSql($sql);
+        return $this->find($page);
     }
 
     /**
@@ -114,17 +113,18 @@ class UserAttentionDb extends ProxyDb
     public function getAttentionUser($userSign,$page)
     {
         $sql=sprintf("
-           SELECT a.nickname,a.headImg,a.intro,a.hobby,a.userSign FROM  user_base a
+         FROM  user_base a
             LEFT JOIN user_attention b ON b.relativeId = a.userId
             WHERE a.`status`=:userStatus AND b.relativeType=:relativeType  AND b.`status`=:attentionStatus AND b.userSign=:userSign
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":relativeType", UserAttention::TYPE_FOR_USER, PDO::PARAM_INT);
-        $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        return $command->queryAll();
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("relativeType", UserAttention::TYPE_FOR_USER);
+        $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.nickname,a.headImg,a.intro,a.hobby,a.userSign');
+        $this->setSql($sql);
+        return $this->find($page);
+
     }
 
     /**
@@ -160,21 +160,23 @@ class UserAttentionDb extends ProxyDb
      */
     public function getCollectTravelList($userSign,$page)
     {
+
         $sql=sprintf("
-SELECT a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname FROM travel_trip a
+        FROM travel_trip a
 LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
 LEFT JOIN user_base b ON b.userSign=c.userId
 LEFT JOIN user_attention d ON d.relativeId = a.tripId
 WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindParam(":userSign",$userSign, PDO::PARAM_STR);
-        $command->bindValue(":relativeType", UserAttention::TYPE_COLLECT_FOR_TRAVEL, PDO::PARAM_INT);
-        $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+        $this->setParam("relativeType", UserAttention::TYPE_COLLECT_FOR_TRAVEL);
+        $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
+        $this->setParam("userSign", $userSign);
+
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname');
+        $this->setSql($sql);
+        return $this->find($page);
     }
     /**
      * 得到收藏圈子文章列表
@@ -185,17 +187,19 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
     public function getCollectArticleList($userSign,$page)
     {
         $sql=sprintf("
-            SELECT c.headImg,c.nickname,a.articleId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aContent FROM circle_article a
+       FROM circle_article a
             LEFT JOIN user_attention b ON a.articleId = b.relativeId
             LEFT JOIN user_base c ON c.userSign=a.aCreateUserSign
             LEFT JOIN user_base d  ON d.userSign=b.userSign
             WHERE a.aStatus=1 AND b.`status`=1 AND c.`status`=1 AND b.relativeType=:relativeType AND b.userSign=:userSign
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        $command->bindValue(":relativeType", UserAttention::TYPE_COLLECT_FOR_ARTICLE, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("relativeType", UserAttention::TYPE_COLLECT_FOR_ARTICLE);
+        $this->setParam("userSign", $userSign);
+
+        $this->setSelectInfo('c.headImg,c.nickname,a.articleId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aContent');
+        $this->setSql($sql);
+        return $this->find($page);
+
     }
 
     /**
@@ -207,15 +211,17 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
     public function getAttentionFans($userId,$page)
     {
         $sql=sprintf("
-            SELECT a.headImg,a.nickname,a.intro,a.userSign FROM user_base a
+            FROM user_base a
             LEFT JOIN user_attention b ON a.userSign = b.userSign
             WHERE b.relativeType=:relativeType AND b.relativeId=:userId
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":userId", $userId, PDO::PARAM_STR);
-        $command->bindValue(":relativeType", UserAttention::TYPE_FOR_USER, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("relativeType", UserAttention::TYPE_FOR_USER);
+        $this->setParam("userId", $userId);
+
+        $this->setSelectInfo('a.headImg,a.nickname,a.intro,a.userSign');
+        $this->setSql($sql);
+        return $this->find($page);
+
     }
 
     /**

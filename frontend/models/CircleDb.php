@@ -12,6 +12,7 @@ namespace frontend\models;
 use common\models\ProxyDb;
 use common\entity\CircleArticle;
 use common\entity\UserBase;
+use frontend\components\Page;
 use yii\db\mssql\PDO;
 use common\entity\CircleComment;
 
@@ -135,14 +136,15 @@ class CircleDb extends ProxyDb
     public function getArticleListByUserSign($userSign,$page)
     {
         $sql=sprintf("
-            SELECT a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.articleId FROM circle_article a
-            WHERE aCreateUserSign=:aCreateUserSign AND aStatus=:aStatus
+         FROM circle_article a
+            WHERE aCreateUserSign=:aCreateUserSign AND aStatus=:aStatus ORDER BY a.articleId DESC
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":aCreateUserSign", $userSign, PDO::PARAM_STR);
-        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("aCreateUserSign", $userSign);
+        $this->setParam("aStatus", CircleArticle::ARTICLE_STATUS_NORMAL);
+        $this->setSelectInfo('a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.articleId');
+
+        $this->setSql($sql);
+        return $this->find($page);
     }
     /**
      * 查找文章
@@ -153,7 +155,7 @@ class CircleDb extends ProxyDb
     public function getArticleInfoById($articleId)
     {
         $sql=sprintf("
-            SELECT a.cId,a.cAddrId,a.aTitle,a.aContent,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,a.aType,b.nickname,b.headImg FROM circle_article a
+            SELECT a.cId,a.cAddrId,a.aTitle,a.aContent,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,a.aType,b.nickname,b.headImg,a.articleId FROM circle_article a
             Left JOIN user_base b ON a.aCreateUserSign=b.userSign
             WHERE articleId=:articleId AND aStatus=:aStatus AND b.status=:userStatus;
         ");
@@ -171,40 +173,41 @@ class CircleDb extends ProxyDb
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getArticleListByAddrId($cAddrId,$page)
+    public function getArticleListByAddrId($cAddrId,Page $page)
     {
-
         $sql=sprintf("
-          SELECT a.articleId,a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
+         FROM circle_article a
           Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cAddrId=:cAddrId AND aStatus=:aStatus AND b.status=:userStatus
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":cAddrId", $cAddrId, PDO::PARAM_INT);
-        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("cAddrId", $cAddrId);
+        $this->setParam("aStatus", CircleArticle::ARTICLE_STATUS_NORMAL);
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setSelectInfo('a.articleId,a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg ');
+
+        $this->setSql($sql);
+        return $this->find($page);
+
     }
     /**
      * 查找文章根据主题id
      * @param $circleId
-     *  @param $page
+     *  @param Page $page
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getArticleListByThemeId($circleId,$page)
+    public function getArticleListByThemeId($circleId,Page $page)
     {
-
         $sql=sprintf("
-          SELECT a.articleId,a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg FROM circle_article a
-          Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cId=:cId AND aStatus=:aStatus AND b.status=:userStatus
+         FROM circle_article a
+          Left JOIN user_base b ON a.aCreateUserSign=b.userSign WHERE cId=:cId AND aStatus=:aStatus AND b.status=:userStatus ORDER BY a.articleId DESC
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":cId", $circleId, PDO::PARAM_INT);
-        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("cId", $circleId);
+        $this->setParam("aStatus", CircleArticle::ARTICLE_STATUS_NORMAL);
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setSelectInfo('a.articleId,a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.aCreateUserSign,a.aCreateTime,a.aLastUpdateTime,a.aStatus,a.aAddr,a.aImgList,b.nickname,b.headImg');
+
+        $this->setSql($sql);
+        return $this->find($page);
     }
     /**
      * 查找圈子
@@ -213,15 +216,14 @@ class CircleDb extends ProxyDb
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getCircleByType($type,$page)
+    public function getCircleByType($type,Page $page)
     {
         $sql=sprintf("
-            SELECT * FROM sys_circle_sort WHERE cType=:cType
+        FROM sys_circle_sort WHERE cType=:cType
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":cType", $type, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("cType", $type);
+        $this->setSql($sql);
+        return $this->find($page);
     }
 
     /**
@@ -334,16 +336,18 @@ class CircleDb extends ProxyDb
     public function getCircleCommentByArticleId($articleId,$page)
     {
         $sql=sprintf("
-            SELECT a.*,b.nickname,b.headImg FROM circle_article_comment a
+         FROM circle_article_comment a
             Left JOIN user_base b ON a.userSign=b.userSign
-            WHERE articleId=:articleId AND cStatus=:cStatus AND b.status=:userStatus
+            WHERE articleId=:articleId AND cStatus=:cStatus AND b.status=:userStatus  ORDER BY a.commentId DESC
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
-        $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        return $command->queryAll();
+        $this->setParam("articleId", $articleId);
+        $this->setParam("cStatus", CircleComment::COMMENT_STATUS_NORMAL);
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setSelectInfo('a.*,b.nickname,b.headImg');
+
+        $this->setSql($sql);
+        return $this->find($page);
+
     }
 
     /**
@@ -373,16 +377,16 @@ class CircleDb extends ProxyDb
      */
     public function getSeekResult($str,$page)
     {
-        $sql = sprintf("
-           SELECT a.articleId,a.aImg,a.aTitle,b.nickname,b.headImg FROM circle_article a LEFT JOIN user_base b
+        $sql=sprintf("
+         FROM circle_article a LEFT JOIN user_base b
 ON a.aCreateUserSign = b.userSign WHERE b.`status`=:userStatus AND a.aStatus=:aStatus AND a.aTitle LIKE '%:str%'
-
         ");
-        $sql.=$page;
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":userStatus", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindValue(":aStatus", CircleArticle::ARTICLE_STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindParam(":str", $str, PDO::PARAM_STR);
-        return $command->execute();
+        $this->setParam("str", $str);
+        $this->setParam("aStatus", CircleArticle::ARTICLE_STATUS_NORMAL);
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setSelectInfo('a.articleId,a.aImg,a.aTitle,b.nickname,b.headImg');
+
+        $this->setSql($sql);
+        return $this->find($page);
     }
 }

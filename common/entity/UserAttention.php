@@ -17,7 +17,7 @@ class UserAttention
      */
     const TYPE_FOR_USER = 1;
     /**
-     * 关注类型为圈子文章内容
+     * 关注类型为圈子文章内容  //暂无关注文章内容 现在文章内容只能收藏
      */
     const TYPE_FOR_CIRCLE_ARTICLE = 2;
     /**

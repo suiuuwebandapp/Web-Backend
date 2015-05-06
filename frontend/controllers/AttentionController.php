@@ -10,6 +10,7 @@ namespace frontend\controllers;
 use common\components\Code;
 use common\components\Common;
 use common\entity\UserBase;
+use frontend\components\Page;
 use frontend\services\CircleService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
@@ -37,7 +38,7 @@ class AttentionController extends AController
     {
         $this->loginValid();
         try {
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserAttentionCircle($userSign, $page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
@@ -54,7 +55,7 @@ class AttentionController extends AController
 
         $this->loginValid();
         try {
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserAttentionUser($userSign, $page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
@@ -70,7 +71,7 @@ class AttentionController extends AController
     {
         $this->loginValid();
         try {
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserCollectionArticle($userSign, $page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
@@ -86,7 +87,7 @@ class AttentionController extends AController
     {
         $this->loginValid();
         try {
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserCollectionTravel($userSign, $page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
@@ -197,12 +198,12 @@ class AttentionController extends AController
         }
     }
 
-    //圈子动态
+    //圈子动态  /热门动态
     public function actionGetCircleDynamic()
     {
         $this->loginValid();
         try{
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
@@ -212,12 +213,12 @@ class AttentionController extends AController
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
         }
     }
-    //用户动态
+    //用户动态 //关注动态
     public function actionGetUserDynamic()
     {
         $this->loginValid();
         try{
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $count = \Yii::$app->request->post('count');
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getAttentionUserDynamic($userSign,$page,$count);
@@ -232,7 +233,7 @@ class AttentionController extends AController
     public function actionGetRecommendUser()
     { $this->loginValid(false);
         try{
-            $page = \Yii::$app->request->post('page');
+            $page =new Page(\Yii::$app->request);
             $data =$this->AttentionService->getRecommendUser($page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
@@ -247,7 +248,7 @@ class AttentionController extends AController
     {
         $this->loginValid(false);
         try{
-            $page = 1;//得到所有的  个数在里面定义
+            $page = new Page();//得到所有的  个数在里面定义
             $userSign = $this->userObj->userSign;
             $data= array();
             $data['circleDynamic'] = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
@@ -267,7 +268,7 @@ class AttentionController extends AController
     {
         $this->loginValid();
         try{
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data =$this->AttentionService->getUserFans($userSign,$page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
@@ -284,7 +285,7 @@ class AttentionController extends AController
     {
         $this->loginValid();
         try{
-            $page = \Yii::$app->request->post('page');
+            $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $type = \Yii::$app->request->post('type');
             $data =$this->AttentionService->getMessageRemind($userSign,$page,$type);
