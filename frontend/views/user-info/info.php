@@ -37,8 +37,8 @@
         <li><a href="#"  class="active">收件箱</a></li>
         <li><a href="#">发言</a></li>
         <li><a href="#">收藏</a></li>
-        <li><a href="#">我的预定</a></li>
-        <li><a href="#">随游管理</a></li>
+        <li><a href="#" id="myOrderManager">我的预定</a></li>
+        <li><a href="#" id="tripManager">随游管理</a></li>
         <li><a href="#">个人资料</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
@@ -285,8 +285,8 @@
     <!-------------TabCon4-我的预定------------->
     <div class="tab-div orderCon TabCon clearfix">
         <ul class="myOderNav innerNav">
-            <li><a href="#"  class="active">未完成订单</a></li>
-            <li><a href="#">过往订单</a></li>
+            <li><a href="#"  class="active" id="unFinishOrderManager">未完成订单</a></li>
+            <li><a href="#" id="finishOrderManager">过往订单</a></li>
         </ul>
         <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList">
         </div>
@@ -317,9 +317,9 @@
     <!-------------TabCon5-随游管理------------->
     <div class="tab-div mySuiyou TabCon clearfix">
         <ul class="myOderNav tabTitle">
-            <li><a href="#"  class="active">随游订单</a></li>
-            <li><a href="#">我的随游</a></li>
-            <li><a href="#">我加入的随游</a></li>
+            <li><a href="#" class="active" id="unConfirmOrderManager">随游订单</a></li>
+            <li><a href="#" id="myTripManager">我的随游</a></li>
+            <li><a href="#" id="myJoinTripManager">我加入的随游</a></li>
         </ul>
         <div class="myOder past01 tabCon" style="display:block;" id="unConfirmList">
         </div>
@@ -554,13 +554,37 @@
 <script type="text/javascript">
     var tripServiceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT?>';
     var tripServiceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?>';
-
+    var isPublisher=<?=$this->context->userObj->isPublisher?'true':'false';?>;
     $(document).ready(function(){
-        getMyTripList();
-        getMyJoinTripList();
-        getUnFinishList();
-        getFinishList();
-        getUnConfirmOrderByPublisher();
+        if(isPublisher){
+            $("#tripManager").bind("click",function(){
+                getUnConfirmOrderByPublisher();
+            });
+            $("#myTripManager").bind("click",function(){
+                getMyTripList();
+            });
+            $("#myJoinTripManager").bind("click",function(){
+                getMyJoinTripList();
+            });
+            $("#unConfirmOrderManager").bind("click",function(){
+                getUnConfirmOrderByPublisher();
+            });
+
+        }else{
+            $("#tripManager").parent("li").hide();
+        }
+        
+        $("#myOrderManager").bind("click",function(){
+            getUnFinishList();
+        });
+        $("#unFinishOrderManager").bind("click",function(){
+            getUnFinishList();
+        });
+        $("#finishOrderManager").bind("click",function(){
+            getFinishList();
+        });
+
+
     });
 
 

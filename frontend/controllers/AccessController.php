@@ -77,8 +77,33 @@ class AccessController extends Controller
     {
         $code = \Yii::$app->request->get("code");
         $state = \Yii::$app->request->get("state");
-        $tokenRst=$this->wechatInterface->getAccessToken();
-        var_dump($tokenRst);
+        $tokenRst=$this->wechatInterface->callBackGetTokenInfo($state,$code);
+        if($tokenRst['status']!=Code::SUCCESS){
+            throw new Exception('微信认证失败');
+        }
+        $tokenInfo=$tokenRst['data'];
+        $openId=$tokenInfo['openid'];
+        $accessToken=$tokenInfo['access_token'];
+
+        $userInfoRst=$this->wechatInterface->getUserInfo($accessToken,$openId);
+        if($userInfoRst['status']!=Code::SUCCESS){
+            throw new Exception('获取微信用户信息失败');
+        }
+        $userInfo=$userInfoRst['data'];
+        $nickname=$userInfo['nickname'];
+        $headImg=$userInfo['headimgurl'];
+        $unionid=$userInfo['unionid'];
+        $sex=UserBase::USER_SEX_FEMALE;
+        if($userInfo['sex']==1){
+            $sex=UserBase::USER_SEX_MALE;
+        }
+        $rst=$this->accessLogin($unionid,UserAccess::ACCESS_TYPE_WECHAT,$nickname,$sex,$headImg);
+
+        if($rst['status']==Code::SUCCESS){
+            return $this->redirect("/");
+        }else{
+            return $this->redirect("/error/access-error");
+        }
     }
 
 

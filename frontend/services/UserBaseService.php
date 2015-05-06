@@ -328,7 +328,7 @@ class UserBaseService extends BaseDb
             $result = $this->userBaseDb->findUserByOpenIdAndType($openId,$type);
             $userBase=$this->arrayCastObject($result,UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw $e;
         } finally {
             $this->closeLink();
         }
