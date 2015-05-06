@@ -109,8 +109,8 @@ class AttentionController extends AController
                 return;
             }
             $userSign = $this->userObj->userSign;
-            $this->AttentionService->CreateAttentionToCircle($circleId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            $data =  $this->AttentionService->CreateAttentionToCircle($circleId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();
@@ -129,8 +129,8 @@ class AttentionController extends AController
                 return;
             }
             $cUserSign = $this->userObj->userSign;
-            $this->AttentionService->CreateAttentionToUser($userSign,$cUserSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            $data =$this->AttentionService->CreateAttentionToUser($userSign,$cUserSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();
@@ -149,8 +149,8 @@ class AttentionController extends AController
                 return;
             }
             $userSign = $this->userObj->userSign;
-            $this->AttentionService->CreateCollectionToArticle($articleId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            $data = $this->AttentionService->CreateCollectionToArticle($articleId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();
@@ -169,8 +169,8 @@ class AttentionController extends AController
                 return;
             }
             $userSign = $this->userObj->userSign;
-            $this->AttentionService->CreateCollectionToTravel($travelId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            $data= $this->AttentionService->CreateCollectionToTravel($travelId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {
             $error=$e->getMessage();
@@ -183,7 +183,7 @@ class AttentionController extends AController
         $this->loginValid();
         try{
             $attentionId= \Yii::$app->request->post('attentionId');
-            if(empty($travelId))
+            if(empty($attentionId))
             {
                 echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'取消信息不能为空'));
                 return;
@@ -206,6 +206,20 @@ class AttentionController extends AController
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
+    public function actionGetRecommendCircle()
+    {
+        $this->loginValid(false);
+        try{
+            $page = new Page(\Yii::$app->request);
+            $data = $this->AttentionService->getRecommendCircle($page);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {

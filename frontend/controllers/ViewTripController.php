@@ -12,9 +12,14 @@ namespace frontend\controllers;
 
 use backend\components\Page;
 use common\components\Code;
+use common\components\Common;
 use common\components\TagUtil;
+use common\entity\TravelTripComment;
+use common\entity\UserAttention;
 use frontend\services\PublisherService;
+use frontend\services\TravelTripCommentService;
 use frontend\services\TripService;
+use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
 
@@ -22,11 +27,15 @@ class ViewTripController extends UnCController{
 
 
     public $tripService;
+    public $tripCommentSer;
+    public $AttentionService;
 
 
     public function __construct($id, $module = null)
     {
         $this->tripService=new TripService();
+        $this->AttentionService=new UserAttentionService();
+        $this->tripCommentSer=new TravelTripCommentService();
         parent::__construct($id, $module);
     }
 
@@ -56,17 +65,74 @@ class ViewTripController extends UnCController{
         $tripPublisherId=$tripInfo['createPublisherId'];
         $createPublisherId=$publisherService->findById($tripPublisherId);
         $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
+        $attention =new UserAttentionService();
+        if(empty($this->userObj))
+        {
+            $userSign='';
+        }else
+        {
+            $userSign=$this->userObj->userSign;
+        }
+
+        $rst=$attention->getAttentionResult(UserAttention::TYPE_COLLECT_FOR_TRAVEL,$tripId,$userSign);
 
         return $this->render("info",[
             'travelInfo'=>$travelInfo,
             'createUserInfo'=>$createUserInfo,
-            'createPublisherInfo'=>$createPublisherId
+            'createPublisherInfo'=>$createPublisherId,
+            'attention'=>$rst
         ]);
     }
 
+    //收藏随游
+    public function actionAddCollectionTravel()
+    {
+        try{
+            if(empty($this->userObj))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
+                return;
+            }
+            $travelId= \Yii::$app->request->post('travelId');
+            if(empty($travelId))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
+                return;
+            }
+            $userSign = $this->userObj->userSign;
+            $data=$this->AttentionService->CreateCollectionToTravel($travelId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+    //删除
+    public function actionDeleteAttention()
+    {
 
-
-
+        try{
+            if(empty($this->userObj))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
+                return;
+            }
+            $attentionId= \Yii::$app->request->post('attentionId');
+            if(empty($attentionId))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'取消信息不能为空'));
+                return;
+            }
+            $userSign = $this->userObj->userSign;
+            $this->AttentionService->deleteAttention($attentionId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
     public function actionGetTripList()
     {
         $c=\Yii::$app->request->post("p");
@@ -104,4 +170,78 @@ class ViewTripController extends UnCController{
         return;
     }
 
+    public function actionGetCommentList()
+    {
+        try{
+            $cPage=\Yii::$app->request->post('cPage');
+            $tripId=\Yii::$app->request->post('tripId');
+
+            $numb=5;
+            $page=new Page();
+            $page->currentPage=$cPage;
+            $page->pageSize=$numb;
+            $page->startRow = (($page->currentPage - 1) * $page->pageSize);
+            if(empty($this->userObj))
+            {
+                $userSign='';
+            }else
+            {
+                $userSign=$this->userObj->userSign;
+            }
+
+            $rst= $this->tripCommentSer->getTravelComment($tripId,$page,$userSign);
+            $str='';
+            $totalCount=$rst['msg']->totalCount;
+            if(intval($totalCount)!=0)
+            {
+
+                $count=intval($totalCount);
+                $str=Common::pageHtml($cPage,$numb,$count);
+            }
+            //
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$str));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
+        }
+    }
+
+    public function actionAddComment()
+    {
+        try{
+            if(empty($this->userObj))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再发布评论'));
+                return;
+            }
+            $userSign=$this->userObj->userSign;
+            $tripId = \Yii::$app->request->post('tripId');
+            $content = \Yii::$app->request->post('content');
+            $rId= \Yii::$app->request->post('rId');
+            $rTitle= \Yii::$app->request->post('rTitle');
+            if(empty($tripId)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知随游'));}
+            if(empty($content)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法发布空评论'));}
+            $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            }catch (Exception $e){
+        echo json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));
+        }
+    }
+    public function actionAddSupport()
+    {
+        try {
+            if(empty($this->userObj))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再发布评论'));
+                return;
+            }
+            $userSign =$this->userObj->userSign;
+            $commentId= \Yii::$app->request->post('rId');//评论id
+            $this->tripCommentSer->addCommentSupport($commentId,$userSign,TravelTripComment::TYPE_SUPPORT);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
 }

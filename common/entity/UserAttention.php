@@ -46,7 +46,10 @@ class UserAttention
      * 支持类型为圈子文章评论支持或反对
      */
     const TYPE_COMMENT_FOR_CIRCLE_ARTICLE = 9;
-
+    /**
+     * 支持类型为圈子文章评论支持或反对
+     */
+    const TYPE_COMMENT_FOR_TRAVEL = 10;
     /**
      * 点赞类型为随游点赞
      */

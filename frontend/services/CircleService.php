@@ -245,7 +245,14 @@ class CircleService extends BaseDb
             {
                 throw new Exception('添加圈子文章评论失败',Code::FAIL);
             }else{
-                $this->upDateArticleCommentNumb($this->CircleDb,$CircleComment->articleId,true);
+                $article = $this->CircleDb->getArticleInfoById($CircleComment->articleId);
+                if(empty($article)||$article==false)
+                {
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,'无法评论未知文章'));
+                    exit;
+                }
+                $articleRst =$this->upDateArticleCommentNumb($article,true);
+                $this->CircleDb->upDateArticleCommentNumb($articleRst);
                 if($isAt)
                 {
                     $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_AT,$CircleComment->userSign,$relativeUserSign);
@@ -311,7 +318,14 @@ class CircleService extends BaseDb
             {
                 throw new Exception('更新圈子文章评论失败',Code::FAIL);
             }
-            $this->upDateArticleCommentNumb($this->CircleDb,$articleId,false);
+            $article = $this->CircleDb->getArticleInfoById($articleId);
+            if(empty($article)||$article==false)
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法删除未知文章评论'));
+                exit;
+            }
+            $articleRst =$this->upDateArticleCommentNumb($article,false);
+            $this->CircleDb->upDateArticleCommentNumb($articleRst);
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollback();
@@ -418,15 +432,14 @@ class CircleService extends BaseDb
     }
 
     /**
-     * @param CircleDb $CircleDb db对象
-     * @param $articleId 评论的id
+     * @param $article
      * @param $isAdd 是否添加  true 添加 false 减少
      * @throws Exception
+     * @return article
      */
-    private function upDateArticleCommentNumb(CircleDb $CircleDb,$articleId,$isAdd)
+    private function upDateArticleCommentNumb($article,$isAdd)
     {
 
-        $article=$CircleDb->getArticleInfoById($articleId);
 
         $article=$this->arrayCastObject($article,CircleArticle::class);
         $cmt=$article->aCmtCount;
@@ -440,7 +453,7 @@ class CircleService extends BaseDb
             }
         }
         $article->aCmtCount=$cmt;
-        $CircleDb->upDateArticleCommentNumb($article);
+        return $article;
     }
 
 

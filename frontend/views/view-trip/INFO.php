@@ -84,7 +84,11 @@
     </div>
     <div class="web-content">
         <div class="web-left">
-            <a href="###" class="collection"></a>
+            <?php if(empty($attention)||$attention==false){?>
+            <a href="javascript:;" class="collection" attentionIdTrip="0" id="collection_trip"></a>
+            <?php  }else{?>
+                <a href="javascript:;" class="collection active" attentionIdTrip="<?php echo $attention['attentionId']?>" id="collection_trip"></a>
+            <?php  }?>
             <div class="web-banner" id="ban">
                 <ul id="banner">
                     <?php foreach($travelInfo['picList'] as $pic ){?>
@@ -175,111 +179,29 @@
             </div>
             </form>
             <div class="web-con">
-                <div class="web-bar">
+                <div id="pllist" class="web-bar">
                     <ol>
-                        <li><a href="#comments">评论</a></li>
-                        <li><a href="#">收藏</a></li>
+                        <li><a href="#pinglun">评论</a></li>
+                        <li></li>
                         <li id="fenxiang"><a href="###">分享</a>
                             <div id="other-line">
                                 <a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a>
+
                             </div>
                         </li>
                     </ol>
 
-
                 </div>
                 <div class="zhuanlan-web">
-                    <ul>
-                        <li>
-                            <div class="user-pic fl">
-                                <img src="/assets/images/5.png" alt="">
-                                <span class="user-name">xiaoheluo</span>
-                            </div>
-                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
-                            <div class="fr resp">
-                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
-                            </div>
-
-                        </li>
-                        <li>
-                            <div class="user-pic fl">
-                                <img src="/assets/images/5.png" alt="">
-                                <span class="user-name">xiaoheluo</span>
-                            </div>
-                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
-                            <div class="fr resp">
-                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
-                            </div>
-
-                        </li>
-                        <li>
-                            <div class="user-pic fl">
-                                <img src="/assets/images/5.png" alt="">
-                                <span class="user-name">xiaoheluo</span>
-                            </div>
-                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
-                            <div class="fr resp">
-                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
-                            </div>
-
-                        </li>
-                        <li>
-                            <div class="user-pic fl">
-                                <img src="/assets/images/5.png" alt="">
-                                <span class="user-name">xiaoheluo</span>
-                            </div>
-                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
-                            <div class="fr resp">
-                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
-                            </div>
-
-                        </li>
-                        <li>
-                            <div class="user-pic fl">
-                                <img src="/assets/images/5.png" alt="">
-                                <span class="user-name">xiaoheluo</span>
-                            </div>
-                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
-                            <div class="fr resp">
-                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
-                            </div>
-
-                        </li>
-                        <li>
-                            <div class="user-pic fl">
-                                <img src="/assets/images/5.png" alt="">
-                                <span class="user-name">xiaoheluo</span>
-                            </div>
-                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
-                            <div class="fr resp">
-                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
-                            </div>
-
-                        </li>
-                        <li>
-                            <div class="user-pic fl">
-                                <img src="/assets/images/5.png" alt="">
-                                <span class="user-name">xiaoheluo</span>
-                            </div>
-                            <p class="fl">其中有1200头鹿生活在这里，这些鹿大多温顺而讨人喜爱。</p>
-                            <div class="fr resp">
-                                <a href="##" class="picon zan"></a><a href="##" class="picon huifu"></a>
-                            </div>
-
-                        </li>
+                    <ul id="tanchu_pl">
                     </ul>
-                    <ol>
-                        <li><a href="javascript:;">首页</a></li>
-                        <li class="active"><a href="javascript:;">1</a></li>
-                        <li><a href="javascript:;">2</a></li>
-                        <li><a href="javascript:;">3</a></li>
-                        <li><a href="javascript:;">.....</a></li>
+                    <ol id="tanchu_page">
                     </ol>
                 </div>
                 <div class="zhuanlan-text">
 
-                    <textarea id="comments"></textarea>
-                    <a href="#" class="zl-btn">发表评论</a>
+                    <textarea id="pinglun"></textarea>
+                    <a href="javascript:;" class="zl-btn" onclick="submitComment()">发表评论</a>
                 </div>
             </div>
 
@@ -399,7 +321,10 @@
             max:10000
         });
         initDatePicker();
-
+        $("#collection_trip").bind("click",function(){
+            submitCollection();
+        });
+        getComment(1);
         $("#peopleCount").bind("blur",function(){
             showPrice();
         });
@@ -493,7 +418,7 @@
                     data=eval("("+data+")");
                     if(data.status==1){
                         $("#div_trip_publisher_"+tripPublisherId).remove();
-d                    }else{
+                    }else{
                         Main.showTip("移除随友失败");
                     }
                 }
@@ -586,5 +511,246 @@ d                    }else{
         });
 
         $("#allPrice").html(allPrice);
+    }
+
+    function submitCollection()
+    {
+        var tripId=$("#tripId").val();
+        if(tripId==''||tripId==undefined||tripId==0)
+        {
+            Main.showTip('未知的随游');
+            return;
+        }
+       var isCollection=false;
+        if($('#collection_trip').attr('class')=='collection')
+        {
+            $('#collection_trip').attr('class','collection active');
+            isCollection = true;
+        }else
+        {
+            $('#collection_trip').attr('class','collection');
+            isCollection=false;
+        }
+
+        if(isCollection)
+        {
+            //添加收藏
+            $.ajax({
+                url :'/view-trip/add-collection-travel',
+                type:'post',
+                data:{
+                    travelId:tripId,
+                    _csrf: $('input[name="_csrf"]').val()
+                },
+                error:function(){
+                    //hide load
+                    Main.showTip("收藏随游失败");
+                    $('#collection_trip').attr('class','collection');
+                    isCollection=false;
+                },
+                success:function(data){
+                    //hide load
+                    data=eval("("+data+")");
+                    if(data.status==1){
+                        $('#collection_trip').attr('attentionIdTrip',data.data);
+                    }else{
+                        Main.showTip(data.data);
+                        $('#collection_trip').attr('class','collection');
+                        isCollection=false;
+                    }
+                }
+            });
+        }else
+        {
+            //取消收藏
+            $.ajax({
+                url :'/view-trip/delete-attention',
+                type:'post',
+                data:{
+                    attentionId:$('#collection_trip').attr('attentionIdTrip'),
+                    _csrf: $('input[name="_csrf"]').val()
+                },
+                error:function(){
+                    //hide load
+                    $('#collection_trip').attr('class','collection active');
+                    isCollection = true;
+                    Main.showTip("收藏随游失败");
+                },
+                success:function(data){
+                    //hide load
+                    data=eval("("+data+")");
+                    if(data.status==1){
+
+                    }else{
+                        $('#collection_trip').attr('class','collection active');
+                        isCollection = true;
+                        Main.showTip(data.data);
+                    }
+                }
+            });
+        }
+    }
+</script>
+<script>
+    var rid=0;
+    var tripId=$("#tripId").val();
+    var page=1;
+    function getComment(page)
+    {
+        $.ajax({
+            type: 'post',
+            url: '/view-trip/get-comment-list',
+            data: {
+                tripId: tripId,
+                cPage:page,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            beforeSend: function () {
+                //Main.showTip('正在提交，请稍后。。。');
+            },
+            error:function(){
+                Main.showTip("系统异常。。。");
+            },
+            success: function (data) {
+                var obj=eval('('+data+')');
+                if(obj.status==1)
+                {
+                    $('#tanchu_pl').html('');
+                    var str='';
+                    for(var i=0;i<obj.data.length;i++)
+                    {
+                        var r=obj.data[i].rTitle;
+                        if(r==null)
+                        {
+                            r='';
+                        }
+                        var c='';
+                        var status=obj.data[i].status;
+                        if(status==1)
+                        {
+                            c='active'
+                        }
+                        str+='<li>';
+                        str+='<div class="user-pic fl">';
+                        str+='<img src=\"'+obj.data[i].headImg+'\" alt=\"\">';
+                        str+='<span class=\"user-name\">';
+                        str+=obj.data[i].nickname;
+                        str+="</span></div><p class='fl'><b>";
+                        str+=r;
+                        str+="</b>";
+                        str+=' '+obj.data[i].content;
+                        str+="</p><div class='fr resp'><a href='javascript:;' onclick='sumbmitZan("+obj.data[i].commentId+","+"this)' class='picon zan "+c+"'></a><a href='#pllist' id='"+obj.data[i].commentId+"' class='picon huifu' onclick='reply(this)'></a>";
+                        str+="</div></li>";
+                    }
+                    $('#tanchu_pl').append(str);
+
+                    $('#tanchu_page').html('');
+                    $('#tanchu_page').append(obj.message);
+
+                    $("#tanchu_page li a").click(function() {
+                        var page=$(this).attr('page');
+                        getComment(page);
+                    });
+
+                }else
+                {
+                    Main.showTip(obj.data);
+
+                }
+            }
+        });
+    }
+    function reply(obj)
+    {
+        rid=$(obj).attr('id');
+        var t=$(obj).parent("div").prev().prev().find("span").html();
+        $("#pinglun").val('@'+t+'   :');
+
+    }
+
+    function submitComment()
+    {
+        var s=$('#pinglun').val();
+        var i =s.indexOf(':');
+        if(i==-1){
+            var content= s;
+            var t='';
+        }else
+        {
+
+            var t=s.slice(0,i);
+            var content= s.slice(i);
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/view-trip/add-comment',
+            data: {
+                tripId: tripId,
+                content: content,
+                rTitle: t,
+                rId: rid,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            beforeSend: function () {
+                //Main.showTip('正在提交，请稍后。。。');
+            },
+            error:function(){
+                Main.showTip("系统异常。。。");
+            },
+            success: function (data) {
+                var obj=eval('('+data+')');
+                if(obj.status==1)
+                {
+                    //Main.showTip("发表成功。。。");
+                    getComment(page);
+                    $("#pinglun").val('');
+                }else
+                {
+                    Main.showTip(obj.data);
+
+                }
+            }
+        });
+    }
+
+    function sumbmitZan(id,obj)
+    {
+        var s =$(obj).attr('class');
+        var i =s.indexOf('active');
+        if(i!=-1){
+            Main.showTip('已经点赞');
+            return;
+        }
+        $(obj).attr('class','picon zan active');
+        $.ajax({
+            type: 'post',
+            url: '/view-trip/add-support',
+            data: {
+                tripId: tripId,
+                rId: id,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            beforeSend: function () {
+                //Main.showTip('正在提交，请稍后。。。');
+            },
+            error:function(){
+                Main.showTip("系统异常。。。");
+            },
+            success: function (data) {
+                var obj=eval('('+data+')');
+                if(obj.status==1)
+                {
+
+                    //Main.showTip("发表成功。。。");
+                    getComment(page);
+                }else
+                {
+                    Main.showTip(obj.data);
+                    $(obj).attr('class','picon zan');
+
+                }
+            }
+        });
     }
 </script>

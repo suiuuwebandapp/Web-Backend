@@ -87,6 +87,26 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
 
     }
 
+    /**
+     * 查找推荐圈子
+     *  @param $page
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getRecommendCircle($page)
+    {
+
+        $sql=sprintf("
+        FROM recommend_list a LEFT JOIN sys_circle_sort b ON a.relativeId=b.cId
+WHERE a.relativeType=:relativeType AND a.`status`=:rStatus
+        ");
+        $this->setParam("relativeType", UserAttention::TYPE_FOR_CIRCLE);
+        $this->setParam("rStatus", RecommendList::RECOMMEND_STATUS_NORMAL);
+        $this->setSelectInfo('b.cId,b.cName,b.cType,b.cpic');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
 
     /**
      * 查找圈子动态 主题
@@ -163,5 +183,6 @@ b GROUP BY b.userSign )as ss
         $this->setSql($sql);
         return $this->find($page);
     }
+
 
 }

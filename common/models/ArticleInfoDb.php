@@ -244,7 +244,7 @@ class ArticleInfoDb extends ProxyDb
      * @return int
      * @throws \yii\db\Exception
      */
-    public function updateCommentNumb(ArticleComment $articleComment)
+    public function updateCommentSupportNumb(ArticleComment $articleComment)
     {
 
 
@@ -298,6 +298,18 @@ WHERE a.articleId=:articleId AND c.`status`=1
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":articleId", $articleId, PDO::PARAM_INT);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        return $command->queryOne();
+    }
+
+
+        public function getCommentInfoById($commentId)
+    {
+        $sql = sprintf("
+       SELECT * FROM article_comment WHERE commentId=:commentId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":commentId", $commentId, PDO::PARAM_INT);
         return $command->queryOne();
     }
 

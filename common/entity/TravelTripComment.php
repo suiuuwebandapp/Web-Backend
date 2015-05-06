@@ -1,13 +1,13 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: jl
- * Date: 15/4/30
- * Time: 上午9:45
+ * User: suiuu
+ * Date: 15/5/6
+ * Time: 下午4:09
  */
 namespace common\entity;
 
-class ArticleComment{
+class TravelTripComment{
 
     const TYPE_SUPPORT=1;
     /**
@@ -42,9 +42,13 @@ class ArticleComment{
     /**
      * @var针对文章id
      */
-    public $articleId;
+    public $tripId;
     /**
-     * @var相对的内容标题
+     * @var是否玩过
+     */
+    public $isTravel;
+    /**
+     * @var评论的标题变色部分
      */
     public $rTitle;
 }

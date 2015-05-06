@@ -94,9 +94,9 @@ class Common{
      */
     public static function pageHtml($nowPage,$pageCount,$allCount)
     {
-        if($nowPage==null)
+        if($nowPage==null||$nowPage==0)
         {$nowPage=1;}
-        if($pageCount==null)
+        if($pageCount==null||$pageCount==0)
         {$pageCount=10;}
         $str='';
         if($allCount%$pageCount==0)

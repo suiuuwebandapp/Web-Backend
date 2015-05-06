@@ -32,9 +32,7 @@ class UnCController extends Controller{
 
     public function __construct($id, $module = null)
     {
-        $countrySer=new CountryService();
-        $this->countryList=$countrySer->getCountryList();
-        $this->areaCode='0086';
+
         //验证用户是否登录
         $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
         $cookieSign=\Yii::$app->request->cookies->getValue(\Yii::$app->params['suiuu_sign']);
@@ -54,6 +52,10 @@ class UnCController extends Controller{
                 $this->userObj=$currentUser;
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
             }
+        }else{
+            $countrySer=new CountryService();
+            $this->countryList=$countrySer->getCountryList();
+            $this->areaCode='0086';
         }
         if($currentUser!=null&&$currentUser->isPublisher){
             if($this->__userBaseService==null)$this->__userBaseService=new UserBaseService();

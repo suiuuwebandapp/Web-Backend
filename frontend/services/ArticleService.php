@@ -83,8 +83,6 @@ class ArticleService extends BaseDb
             $page = Common::PageResult($page,$numb);
             $comment=$this->articleDb->getCommentListByArticleId($id,$page,$userSign);
             $count= $this->articleDb->getCommentListByArticleIdCount($id,$userSign);
-
-
             $data['count']=isset($count['numb'])?$count['numb']:0;
             $data['comment']=$comment;
             return $data;
@@ -122,12 +120,11 @@ class ArticleService extends BaseDb
     }
         /**
          * 添加支持或反对
-         * @param $articleId //圈子文章id
          * @param $commentId //评论id
          * @param $userSign,//收藏用户
          * @throws Exception
          */
-        public function addCommentSupport($articleId,$commentId,$userSign,$isSupport)
+        public function addCommentSupport($commentId,$userSign,$isSupport)
         {
 
             try {
@@ -139,11 +136,13 @@ class ArticleService extends BaseDb
                 $attention->relativeId=$commentId;
                 $attention->userSign = $userSign;
                 $result = $this->AttentionDb->getAttentionResult($attention,true);
-
+                $articleComment=$this->articleDb->getCommentInfoById($commentId);
+                if(empty($articleComment)||$articleComment==false){echo json_encode(Code::statusDataReturn(Code::FAIL,'无法为未知评论点赞'));exit;}
                 if(empty($result)||$result==false)
                 {
                     $this->AttentionDb ->addUserAttention($commentId,UserAttention::TYPE_COMMENT_FOR_ARTICLE_MDD,$userSign,$isSupport);
-                    $this->upDateCommentSupport($this->articleDb,$articleId,$isSupport);
+                    $rst= $this->upDateCommentSupport($articleComment,$isSupport);
+                    $this->articleDb->updateCommentSupportNumb($rst);
                 }else{
                     echo json_encode(Code::statusDataReturn(Code::FAIL,'已经点赞无需继续点赞'));exit;
                 }
@@ -154,10 +153,8 @@ class ArticleService extends BaseDb
             }
         }
 
-    private function upDateCommentSupport(ArticleInfoDb $articleDb,$articleId,$isSupport)
+    private function upDateCommentSupport($articleComment,$isSupport)
     {
-
-        $articleComment=$articleDb->getArticleInfoById($articleId);
 
         $articleComment=$this->arrayCastObject($articleComment,ArticleComment::class);
         $supportCount=$articleComment->supportCount;
@@ -169,7 +166,7 @@ class ArticleService extends BaseDb
         }
         $articleComment->supportCount=$supportCount;
         $articleComment->opposeCount=$opposeCount;
-        $articleDb->updateCommentNumb($articleComment);
+       return $articleComment;
     }
 
 

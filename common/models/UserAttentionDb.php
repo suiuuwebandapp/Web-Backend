@@ -100,7 +100,7 @@ class UserAttentionDb extends ProxyDb
         $this->setParam("relativeType", UserAttention::TYPE_FOR_CIRCLE);
         $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
         $this->setParam("userSign", $userSign);
-        $this->setSelectInfo('a.cName,a.cId,a.cpic');
+        $this->setSelectInfo('a.cName,a.cId,a.cpic,a.cType');
         $this->setSql($sql);
         return $this->find($page);
     }

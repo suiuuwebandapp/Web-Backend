@@ -36,6 +36,7 @@ class UserAttentionService extends BaseDb
      * @param $circleId,
      *  @param $userSign
      * @throws Exception
+     * @return int
      */
     public function CreateAttentionToCircle($circleId,$userSign)
     {
@@ -50,9 +51,10 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
-                $this->AttentionDb ->addUserAttention($circleId,UserAttention::TYPE_FOR_CIRCLE,$userSign);
+              return  $this->AttentionDb ->addUserAttention($circleId,UserAttention::TYPE_FOR_CIRCLE,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注无需继续关注'));
+                exit;
             }
 
         } catch (Exception $e) {
@@ -66,6 +68,7 @@ class UserAttentionService extends BaseDb
      * @param $userSign,//关注谁
      *  @param $cUserSign //谁关注的
      * @throws Exception
+     *  @return int
      */
     public function CreateAttentionToUser($userSign,$cUserSign)
     {
@@ -87,8 +90,10 @@ class UserAttentionService extends BaseDb
                 $rstId = $this->AttentionDb ->addUserAttention($rId,UserAttention::TYPE_FOR_USER,$userSign);
                 $this->remindDb->addUserMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign);
 
+                return $rstId;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注无需继续关注'));
+                exit;
             }
         } catch (Exception $e) {
             throw new Exception('添加用户关注异常',Code::FAIL,$e);
@@ -101,6 +106,7 @@ class UserAttentionService extends BaseDb
      * @param $articleId //圈子文章id
      * @param $userSign,//收藏用户
      * @throws Exception
+     *  @return int
      */
     public function CreateCollectionToArticle($articleId,$userSign)
     {
@@ -115,10 +121,10 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
-                $this->AttentionDb ->addUserAttention($articleId,UserAttention::TYPE_COLLECT_FOR_ARTICLE,$userSign);
+               return $this->AttentionDb ->addUserAttention($articleId,UserAttention::TYPE_COLLECT_FOR_ARTICLE,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经收藏无需继续收藏'));
-
+                exit;
             }
         } catch (Exception $e) {
             throw new Exception('添加圈子文章收藏异常',Code::FAIL,$e);
@@ -132,6 +138,7 @@ class UserAttentionService extends BaseDb
      * @param $travelId //随游id
      * @param $userSign,//收藏用户
      * @throws Exception
+     * @return int
      */
     public function CreateCollectionToTravel($travelId,$userSign)
     {
@@ -146,10 +153,10 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
-                $this->AttentionDb ->addUserAttention($travelId,UserAttention::TYPE_COLLECT_FOR_ARTICLE,$userSign);
+               return $this->AttentionDb ->addUserAttention($travelId,UserAttention::TYPE_COLLECT_FOR_TRAVEL,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经收藏无需继续收藏'));
-
+                exit;
             }
         } catch (Exception $e) {
             throw new Exception('添加随游收藏异常',Code::FAIL,$e);
@@ -292,6 +299,26 @@ class UserAttentionService extends BaseDb
             $this->closeLink();
         }
     }
+
+    /**
+     * 得到推荐圈子
+     * @param $page
+     * @return array
+     * @throws Exception
+     */
+    public function getRecommendCircle($page)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->recommendDb = new RecommendListDb($conn);
+            $data= $this->recommendDb->getRecommendCircle($page);
+            return array('data'=>$data->getList(),'msg'=>$data);
+        } catch (Exception $e) {
+            throw new Exception('获取推荐随游异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
     /**
      * 得到关注圈子动态
      * @param $userSign
@@ -414,6 +441,33 @@ class UserAttentionService extends BaseDb
             return $this->remindDb->deleteUserMessageRemind($rid,$userSign);
         } catch (Exception $e) {
             throw new Exception('删除用户消息异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    /**
+     * 得到关注收藏结果
+     * @param $type
+     * @param $travelId
+     * @param $userSign
+     * @return array
+     * @throws Exception
+     */
+    public function getAttentionResult($type,$travelId,$userSign)
+    {
+
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $attention =new UserAttention();
+            $attention->relativeType=$type;
+            $attention->relativeId=$travelId;
+            $attention->userSign = $userSign;
+            return  $this->AttentionDb->getAttentionResult($attention);
+
+        } catch (Exception $e) {
+            throw new Exception('获取关注收藏结果异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

@@ -254,7 +254,7 @@ class CircleDb extends ProxyDb
         $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindValue(":articleId",$CircleCommentEntity->articleId, PDO::PARAM_INT);
         $command->execute();
-
+        return $this->getConnection()->lastInsertID;
     }
 
     /**

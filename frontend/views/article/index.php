@@ -83,7 +83,7 @@
     <div class="zhuanlan-text">
 
         <textarea id="pinglun"></textarea>
-        <a href="#" class="zl-btn" onclick="submitComment()">发表评论</a>
+        <a href="javascript:;" class="zl-btn" onclick="submitComment()">发表评论</a>
     </div>
 
 
@@ -178,7 +178,12 @@ function getComment(page)
             {
                 $('#tanchu_pl').html('');
                 var str='';
-                for(var i=0;i<obj.data.comment.length;i++)
+                var l =obj.data.comment.length;
+                if(l==0)
+                {
+                    str='快来抢沙发';
+                }
+                for(var i=0;i<l;i++)
                 {
                     var r=obj.data.comment[i].rTitle;
                     if(r==null)
@@ -233,8 +238,15 @@ function getComment(page)
     {
         var s=$('#pinglun').val();
         var i =s.indexOf(':');
-        var t=s.slice(0,i);
-        var content= s.slice(i);
+        if(i==-1){
+            var content= s;
+            var t='';
+        }else
+        {
+
+            var t=s.slice(0,i);
+            var content= s.slice(i);
+        }
         $.ajax({
             type: 'post',
             url: '/article/add-article-comment',

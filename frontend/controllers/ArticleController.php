@@ -20,13 +20,10 @@ use yii\base\Exception;
 class ArticleController extends UnCController{
 
     private $aritcleSer;
-    public $userObj;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
         $this->aritcleSer = new ArticleService();
-        $this->userObj =new UserBase();
-        $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';
     }
 
     public function actionIndex()
@@ -72,8 +69,7 @@ class ArticleController extends UnCController{
             {
                 $page = 1;
             }
-            $numb=0;
-            //$id=3;
+            $numb=5;
             $data=$this->aritcleSer->getArticleCommentById($id,$page,$numb,$userSign);
             $str='';
             if(intval($data['count'])!=0)
@@ -95,10 +91,16 @@ class ArticleController extends UnCController{
     {
         try {
             $userSign =$this->userObj->userSign;
+
             $articleId = \Yii::$app->request->post('articleId');
             $content = \Yii::$app->request->post('content');
             $rId= \Yii::$app->request->post('rId');
             $rTitle= \Yii::$app->request->post('rTitle');
+            if(empty($userSign))
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'登陆之后才能评论'));
+                exit;
+            }
             if(empty($articleId))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法评论未知文章'));
@@ -117,9 +119,13 @@ class ArticleController extends UnCController{
     {
         try {
             $userSign =$this->userObj->userSign;
-            $articleId = \Yii::$app->request->post('articleId');
+            if(empty($userSign))
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'登陆之后才能点赞'));
+                exit;
+            }
             $rId= \Yii::$app->request->post('rId');
-            $this->aritcleSer->addCommentSupport($articleId,$rId,$userSign,ArticleComment::TYPE_SUPPORT);
+            $this->aritcleSer->addCommentSupport($rId,$userSign,ArticleComment::TYPE_SUPPORT);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
         {
