@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
 /*----------公用样式--------*/
-html{-webkit-text-size-adjust:none;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+html{-webkit-text-size-adjust:none;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-font-smoothing:antialiased;}
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,img,legend,input,textarea,p,blockquote,th,td,span,i,b,font{margin:0;padding:0; list-style:none; border:none;font-family: "Microsoft YaHei"; font-weight:normal; outline:none; }
 input,button,select,textarea{outline:none; background:none; color:#858585; font-size:16px;}
 table{border-collapse:collapse;border-spacing:0;}
@@ -124,8 +124,8 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .index-banner .banners li{ width:100%; height:600px;}
 .index-banner .banners .banner01{ background:url(../images/banner01.jpg) no-repeat fixed center 0; background-size:100% 600px;}
 .serch{ position:absolute; top:310px; left:50%; margin-left:-170px;  width:340px; height:50px; overflow:hidden; } 
-.text1{ width:264px; height:50px; line-height:50px; border:none; background:rgba(0,0,0,0.8); padding-left:20px; color:#ddd; float:left;}
-.btn1{ height:49px; line-height:49px; width:50px; text-align:center;background:rgba(0,0,0,0.8); border:none; float:left; margin-left:4px; font-size:16px; color:#ddd;}
+.text1{ width:264px; height:50px; line-height:50px; border:none; background:rgba(0,0,0,0.6); padding-left:20px; color:#ddd; float:left;}
+.btn1{ height:49px; line-height:49px; width:50px; text-align:center;background:rgba(0,0,0,0.6); border:none; float:left; margin-left:4px; font-size:16px; color:#ddd;}
 
 .list{ height:auto;margin:35px auto 0px;}
 .list .title{height:40px; line-height:30px; font-size:24px; color:#858585; padding-left:10px;}
@@ -142,7 +142,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 #ul1 li .user01 img{ float:left; width:40px; height:40px; border-radius:360px;}
 #ul1 li .user01 font{ float:left; margin-left:10px; width:230px; height:20px; line-height:20px; margin-top:20px; display:block; font-size:14px;}
 #ul1 li h4{ width:284px; height:30px; line-height:30px; text-align:center; margin-top:20px; font-weight:normal;}
-#ul1 li div.zhezhao{ position:absolute; left:0; top:0; width:100%; height:0; background:rgba(0,0,0,0.7); color:#fff; line-height:22px; font-size:14px; font-weight:bold; opacity:0;
+#ul1 li div.zhezhao{ position:absolute; left:0; top:0; width:100%; height:0; background:rgba(0,0,0,0.6); color:#fff; line-height:22px; font-size:14px; font-weight:bold; opacity:0;
 transition:all 0.4s ease-in-out;
 -webkit-transition:all 0.4s ease-in-out;
 -moz-transition:all 0.4s ease-in-out;
@@ -323,8 +323,9 @@ transition:all 0.4s ease-in-out;
 /*------------结算--------------*/
 #checkOut{ margin:110px auto 20px;}
 #checkOut .check{ height:auto; position:relative; background:#fff;}
-#checkOut .check .checkList{ padding:20px 20px 40px;}
-#checkOut .check .checkList .title span{ width:11.1%; display:inline-block; float:left; text-align:center; height:45px; line-height:45px;}
+#checkOut .check .checkList{ padding-bottom:80px;}
+#checkOut .check .checkList .title{ background:#ffbc68; color:#fff; height:36px; margin-bottom:20px;}
+#checkOut .check .checkList .title span{ width:11.1%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px;}
 #checkOut .check .checkList dd span{ text-align:center;width:11.1%; display:inline-block; float:left; line-height:22px;}
 #checkOut .check .checkList dd .pic img{ width:50%; margin:0 auto; display:block;}
 #checkOut .check .checkList dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; float:left; margin-left:10px;}
@@ -333,9 +334,42 @@ transition:all 0.4s ease-in-out;
 #checkOut .check .checkList dd span .message b{ color:#858585; font-size:14px;}
 #checkOut .check p{ height:36px; line-height:36px;}
 #checkOut .check p .btn{ float:right; width:80px; height:36px; line-height:36px; color:#fff; background:#FF7A4D; text-align:center; }
-#checkOut .check p span{ float:right; margin-right:50px; _display:inline;  }
+#checkOut .check p span{ float:right; margin-right:40px; _display:inline;  }
 #checkOut .check p span b{  color:#FF7A4D; }
 
+#checkOut .yuding{ height:auto; position:relative; background:#fff; margin:15px 0; padding:40px 0;}
+#checkOut .yuding .con{ text-align:center; height:auto; margin:0 auto;}
+#checkOut .yuding .con li{  width:100%;}
+#checkOut .yuding .con li img{ margin:0 30px;}
+
+#checkOut .yuding .con li input{ height:0; width:0; opacity:0;}
+#checkOut .yuding .con li input+label{background: url("../images/check.png") no-repeat scroll 0 10px rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+    padding-left: 20px;
+	margin-right:10px;
+	}
+	
+#checkOut .yuding .con li input+label.zb{ margin-right:93px;}	
+#checkOut .yuding p{ font-size:14px; width:200px; line-height:21px; margin:0 auto;}
+#checkOut .yuding .btn{ height:36px; line-height:36px; width:95px; display:block; background:#97CBFF; color:#FFEB80; font-size:16px; position:absolute; right:0; bottom:0; text-align:center;}
+
+#checkOut .finish{ height:auto; position:relative; background:#fff; margin:15px 0; padding:40px 0;}
+#checkOut .finish p{ font-size:16px; text-align:center; }
+#checkOut .finish p a{ color:#FF7945; text-decoration:underline;}
+#checkOut .finish .title{ font-size:20px; margin-bottom:30px; }
+#checkOut .finish .tip{ margin-bottom:40px; }
+
+#checkOut .finish .share{ width:150px; margin:20px auto;}
+#checkOut .finish .icon{background: url("../images/footer-icon.png") no-repeat 0 -252px;
+    cursor: pointer;
+    display: block;
+    height: 44px;
+    width: 44px; float:left; margin:0 15px;}
+#checkOut .finish .weixin{ background-position:0 -252px;;}
+#checkOut .finish .sina{ background-position:0 -85px;;}
+#checkOut .finish .btn{ height:36px; line-height:36px; width:95px; display:block; background:#97CBFF; color:#FFEB80; font-size:16px; position:absolute; right:0; bottom:0; text-align:center;}
 /*------------结算--end-------------*/
 
 
@@ -439,7 +473,16 @@ transition:all 0.4s ease-in-out;
 .syTop .banner .banner-inner{height:400px; width:1200px; margin:0 auto; position:relative; }
 .syTop .banner .banner-inner .btn{ width:80px; height:40px; text-align:center; line-height:40px; position:absolute; right:20px; bottom:10px; color:#f00; background:#FF0; z-index:2;}
 .syTop .user{height:245px; text-align:center; position:relative; margin-top:-60px; }
-.syTop .user .userPic{ height:120px; width:120px; display:block; margin:0 auto; border-radius:120px; overflow:hidden;}
+.syTop .user .userPic{ height:120px; width:120px; display:block; margin:0 auto; border-radius:120px; overflow:hidden; box-shadow:0 0 5px rgba(0,0,0,0.3);
+-webkit-transition:transform 1s ease-in-out;
+-moz-transition:transform 1s ease-in-out;
+-ms-transition:transform 1s ease-in-out;
+-o-transition:transform 1s ease-in-out;
+transition:transform 1s ease-in-out;
+
+}
+.syTop .user .userPic:hover{ -webkit-transform:rotate(360deg);transform:rotate(360deg);}
+.syTop .user .userPic img{ width:100%; border-radius:50%; display:block;}
 .syTop .user ul{ width:500px; height:60px; line-height:60px; margin:0px auto; overflow:hidden;}
 .syTop .user ul li{ float:left; width:25%;}
 
@@ -453,6 +496,7 @@ transition:all 0.4s ease-in-out;
     /*----TabCon3-收藏----*/
 .sycon .shoucang{height:auto; margin:0 auto;}
 .sycon .shoucang ul li{ float:left; width:265px; height:352px; border:1px solid #ddd; overflow:hidden; margin:25px 0px 0 25px; position:relative;}
+.sycon .shoucang ul li:hover{ border:1px solid #ffbc68; box-shadow:0 0 5px rgba(255,102,0,0.3);}
 .sycon .shoucang ul li a{ width:265px; height:242px; overflow:hidden; display:block;}
 .sycon .shoucang ul li img{ width:265px; height:242px; }
 .sycon .shoucang ul li .userPic{ display:block; width:265px; height:40px; line-height:40px; position:absolute; left:0px; bottom:85px; }
@@ -487,9 +531,10 @@ transition:all 0.4s ease-in-out;
 .sycon .orderCon .myOderNav .active{ color:#FF794C; text-decoration:underline; width:100px; float:left; _display:inline}
 .sycon .orderCon .myOder{ width:1070px; float:left; _display:inline; display:none; }
 .sycon .orderCon .orderList{margin-bottom:30px; height:auto; position:relative; background:#fff;}
-.sycon .orderCon .orderList .rubbish{ float:right; cursor:pointer;}
-.sycon .orderCon .orderList .order{ padding:20px 20px 40px;}
-.sycon .orderCon .orderList .order .title span{ width:12.5%; display:inline-block; float:left; text-align:center; height:45px; line-height:45px;}
+.sycon .orderCon .orderList .rubbish{ position:absolute; top:0; right:0; cursor:pointer;}
+.sycon .orderCon .orderList .order{ padding-bottom:40px;}
+.sycon .orderCon .orderList .order .title{ margin-bottom:20px; height:36px; background:#ffbc68; color:#fff;}
+.sycon .orderCon .orderList .order .title span{ width:12.5%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px;}
 .sycon .orderCon .orderList .order dd span{ text-align:center;width:12.5%; display:inline-block; float:left; line-height:22px;}
 .sycon .orderCon .orderList .order dd .pic img{ width:50%; margin:0 auto; display:block;}
 .sycon .orderCon .orderList .order dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; float:left; margin-left:10px;}
@@ -518,9 +563,10 @@ transition:all 0.4s ease-in-out;
 .sycon .mySuiyou .myOderNav .active{ color:#FF794C; text-decoration:underline; width:100px; float:left; _display:inline}
 .sycon .mySuiyou .myOder{ width:1070px; float:left; _display:inline; display:none; }
 .sycon .mySuiyou .orderList{margin-bottom:30px; height:auto; position:relative; background:#fff;}
-.sycon .mySuiyou .orderList .rubbish{ float:right; cursor:pointer;}
-.sycon .mySuiyou .orderList .order{ padding:20px 20px 40px;}
-.sycon .mySuiyou .orderList .order .title span{ width:14.28%; display:inline-block; float:left; text-align:center; height:45px; line-height:45px;}
+.sycon .mySuiyou .orderList .rubbish{ position:absolute; top:0;right:0; cursor:pointer;}
+.sycon .mySuiyou .orderList .order{ padding-bottom:40px;}
+.sycon .mySuiyou .orderList .order .title{ margin-bottom:20px; height:36px; background:#ffbc68; color:#fff;}
+.sycon .mySuiyou .orderList .order .title span{ width:14.28%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px;}
 .sycon .mySuiyou .orderList .order dd span{ text-align:center;width:14.28%; display:inline-block; float:left; line-height:22px;}
 .sycon .mySuiyou .orderList .order dd .pic img{ width:50%; margin:0 auto; display:block;}
 .sycon .mySuiyou .orderList .order dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; float:left; margin-left:10px;}
@@ -1194,6 +1240,7 @@ transition:all 0.4s ease-in-out;
 .tanchu-list{  height:auto; overflow:hidden; margin:20px auto;}
 .tanchu-list ul{ width:1172px; height:auto; margin:0px auto; }
 .tanchu-list ul li{ cursor:pointer;width:283px; height:350px; float:left; margin:5px; background: #fff;}
+.tanchu-list ul li:hover{ box-shadow:0 0 8px rgba(0,0,0,0.3);}
 .tanchu-list ul li img{ width:283px; height:259px; border:none;}
 .tanchu-list ul li div{ margin-top:-4px;}
 .tanchu-list ul li h4{ width:281px; height:40px; line-height:40px; text-align:center;}

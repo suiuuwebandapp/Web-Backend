@@ -611,45 +611,79 @@ class TripController extends CController
             $list=$this->tripService->getMyJoinTripList($this->userPublisherObj->userPublisherId);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            throw $e;
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
 
-    public function actionAddOrder()
+    /**
+     * 跳转到申请列表页面
+     * @return string|\yii\web\Response
+     */
+    public function actionToApplyList()
     {
-        $tripId=trim(\Yii::$app->request->post("tripId", ""));
-        $peopleCount=trim(\Yii::$app->request->post("peopleCount", ""));
-        $beginDate=trim(\Yii::$app->request->post("beginDate", ""));
-        $startTime=trim(\Yii::$app->request->post("startTime", ""));
-        $serviceIds=trim(\Yii::$app->request->post("serviceIds", ""));
-
+        $tripId=trim(\Yii::$app->request->get("trip", ""));
         if(empty($tripId)){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty");
-            return;
-        }
-        if(empty($peopleCount)){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Is Not Allow Empty");
-            return;
-        }
-        if(empty($beginDate)){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR,"BeginDate Is Not Allow Empty");
-            return;
-        }
-        if(empty($startTime)){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR,"StartTime Is Not Allow Empty");
-            return;
+            return $this->redirect(['/result', 'result' => '找不到该随游']);
         }
 
-        $orderTripInfoJson="";
         try{
+            $applyList=$this->tripService->getPublisherApplyList($tripId);
             $tripInfo=$this->tripService->getTravelTripInfoById($tripId);
-
+            return $this->render("applyList",[
+                'applyList'=>$applyList,
+                'travelInfo'=>$tripInfo
+            ]);
         }catch (Exception $e){
+            return $this->redirect(['/result', 'result' => '未知系统异常']);
 
         }
+    }
 
+
+    /**
+     * 同意随游申请
+     */
+    public function actionAgreeApply()
+    {
+        $applyId=trim(\Yii::$app->request->post("applyId", ""));
+        $publisherId=trim(\Yii::$app->request->post("publisherId", ""));
+
+        if(empty($applyId)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ApplyId Is Not Allow Empty"));
+            return;
+        }
+        if(empty($publisherId)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"PublisherId Is Not Allow Empty"));
+            return;
+        }
+
+        try{
+            $this->tripService->agreePublisherApply($applyId,$publisherId,$this->userPublisherObj->userPublisherId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+    /**
+     * 拒绝随游申请
+     */
+    public function actionOpposeApply()
+    {
+        $applyId=trim(\Yii::$app->request->post("applyId", ""));
+
+        if(empty($applyId)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ApplyId Is Not Allow Empty"));
+            return;
+        }
+
+        try{
+            $this->tripService->opposePublisherApply($applyId,$this->userPublisherObj->userPublisherId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
     }
 
 

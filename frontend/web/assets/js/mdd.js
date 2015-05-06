@@ -83,6 +83,12 @@ window.onload=function(){
 			zcmain.style.display="none";		
 		};
 */	
+
+}
+
+
+$(document).ready(function(e) {
+	
 /*登录注册*/
 	var oMdd=document.getElementById('mdd-btn');
 	var oBtn=oMdd.getElementsByTagName('li');
@@ -90,7 +96,7 @@ window.onload=function(){
 	var aDiv=getByClass(oBox,'show');
 	var oBtnprev=document.getElementById('mdd-prev');
 	var oBtnnext=document.getElementById('mdd-next');
-
+	
 	var now=0;
 	var left=0;
 	oBox.style.width=aDiv[0].offsetWidth*aDiv.length+"px";
@@ -105,15 +111,15 @@ window.onload=function(){
 	/*tab*/
 	function tab(){
 		for(var i=0;i<oBtn.length;i++){
-			oBtn[i].className="";
-		}
+			oBtn[i].className="";	
+		}	
 		oBtn[now].className="mdd-active";
-		move(oBox,{left:-aDiv[0].offsetWidth*now},{time:1000});
+		move(oBox,{left:-aDiv[0].offsetWidth*now},{time:1000});		
 	}
 	/*上一个*/
 	oBtnprev.onclick=function(){
 		if(now>0){
-			now--;
+			now--;	
 		}else{
 			now=oBtn.length-1;
 		}
@@ -126,8 +132,8 @@ window.onload=function(){
 			now=0;
 		}
 		tab();
-	};
-
+	};	
+	
 	addMouseWheel(oBox,function(down){
 			if(down){
 				now++;
@@ -137,7 +143,7 @@ window.onload=function(){
 			tab();
 		}else{
 		if(now>0){
-				now--;
+				now--;	
 			}else{
 				now=oBtn.length-1;
 			}
@@ -145,5 +151,4 @@ window.onload=function(){
 		}
 	});
 
-
-}
+});

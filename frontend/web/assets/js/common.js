@@ -206,12 +206,17 @@ $(function(){
 		$('.web-banner ul').stop().animate({left:num*-830},500)
 		$('.web-banner ol').stop().animate({left:num*-195},500)
     });
+	$('.web-banner .nex,.web-banner .pre').hover(function(e) {
+		clearInterval(timer)
+    });
+	
 	$('.web-banner .prev,.web-banner .next').hover(function(e) {
         clearInterval(timer)
     },function(){
 		clearInterval(timer)
 		timer=setInterval(fn,2000)
 	});
+	
 	
 	
 })

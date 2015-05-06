@@ -70,7 +70,9 @@ var Main = function() {
     var basePath = "";
 
     var initMenuOpen=function(currentLi){
+
     };
+
 
     // public functions
     return {
@@ -118,13 +120,93 @@ var Main = function() {
                 }
             }
             return format;
+        },
+        convertTimePicker:function(time,type){
+            if(time==''||time==null){
+                return '';
+            }
+            var rst='';
+            var timeArr='';
+            var timeInfo='';
+            if(type==1){
+                timeArr=time.split(" ");
+                timeInfo=timeArr[0].split(":");
+
+                if(timeArr[1]=="AM"){
+                    rst=timeArr[0];
+                }else{
+                    rst=(timeInfo[0]+12)+":"+timeInfo[1];
+                }
+            }else{
+                timeInfo=time.split(":");
+                if(timeInfo[0]>12){
+                    rst=(timeInfo[0]-12)+":"+timeInfo[1]+" PM";
+                }else{
+                    rst=timeInfo[0]+":"+timeInfo[1]+" AM";
+                }
+            }
+            return rst;
+        },
+        convertOrderDateToShow:function(stringDate)
+        {
+            var time=Math.round(Date.parse(stringDate));
+            var now=Math.round(new Date().getTime());
+            var diffValue=now-time;
+            var result=this.formatDate(stringDate,'yyyy-MM-dd hh:mm');
+
+            var minute = 1000 * 60;
+            var hour = minute * 60;
+            var day = hour * 24;
+            var halfamonth = day * 15;
+            var month = day * 30;
+
+            if(diffValue < 0){
+                //若日期不符则弹出窗口告之
+                //alert("结束日期不能小于开始日期！");
+            }
+            var monthC =diffValue/month;
+            var weekC =diffValue/(7*day);
+            var dayC =diffValue/day;
+            var hourC =diffValue/hour;
+            var minC =diffValue/minute;
+            if(monthC>=1){
+                //result="发表于" + parseInt(monthC) + "个月前";
+            }
+            else if(weekC>=1){
+                //result="发表于" + parseInt(weekC) + "周前";
+            }
+            else if(dayC>=1){
+                result=""+ parseInt(dayC) +"天前";
+            }
+            else if(hourC>=1){
+                result=""+ parseInt(hourC) +"小时前";
+            }
+            else if(minC>=1){
+                result=""+ parseInt(minC) +"分钟前";
+            }else
+                result="刚刚";
+
+            return result;
         }
+
+
 
 };
 
 
 }();
 
+
+var OrderStatus= {
+    'USER_ORDER_STATUS_PAY_WAIT': 0,
+    'USER_ORDER_STATUS_PAY_SUCCESS': 1,
+    'USER_ORDER_STATUS_CONFIRM': 2,
+    'USER_ORDER_STATUS_CANCELED': 3,
+    'USER_ORDER_STATUS_REFUND_WAIT': 4,
+    'USER_ORDER_STATUS_REFUND_SUCCESS': 5,
+    'USER_ORDER_STATUS_PLAY_SUCCESS': 6,
+    'USER_ORDER_STATUS_PLAY_FINISH': 7
+};
 
 /*******************************************************************************
  * Usage

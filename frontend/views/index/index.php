@@ -151,7 +151,7 @@
             },
             error:function(){
                 //hide load
-                Main.showTip("发布随游失败");
+                //Main.showTip("获取随游失败");
             },
             success:function(data){
                 //hide load

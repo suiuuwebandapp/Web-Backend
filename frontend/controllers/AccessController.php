@@ -14,6 +14,7 @@ use common\components\Code;
 use common\entity\UserAccess;
 use common\entity\UserBase;
 use frontend\interfaces\TencentInterface;
+use frontend\interfaces\WechatInterface;
 use frontend\interfaces\WeiboInterface;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
@@ -26,13 +27,14 @@ class AccessController extends Controller
 
     private $qqInterface;
     private $weiboInterface;
+    private $wechatInterface;
     private $userBaseService;
-    //token:954E9D7AEE616B1FEE21953A138F2B79
 
     public function __construct($id, $module, $config = []){
         parent::__construct($id, $module, $config = []);
         $this->qqInterface=new TencentInterface();
         $this->weiboInterface=new WeiboInterface();
+        $this->wechatInterface=new WechatInterface();
     }
     /**
      * 微博登录
@@ -73,8 +75,12 @@ class AccessController extends Controller
 
     public function actionWeixinLogin()
     {
-
+        $code = \Yii::$app->request->get("code");
+        $state = \Yii::$app->request->get("state");
+        $tokenRst=$this->wechatInterface->getAccessToken();
+        var_dump($tokenRst);
     }
+
 
 
     public function actionQqLogin()
@@ -159,6 +165,11 @@ class AccessController extends Controller
     public function actionConnectWeibo()
     {
         $this->weiboInterface->toConnectWeibo();
+    }
+
+    public function actionConnectWechat()
+    {
+        $this->wechatInterface->toConnectWechat();
     }
 
 

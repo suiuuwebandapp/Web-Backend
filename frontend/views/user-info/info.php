@@ -23,8 +23,8 @@
         <p><?=$this->context->userObj->intro ?></p>
         <ul>
             <li>姓名:<b>小A</b></li>
-            <li>性别:<b>女</b></li>
-            <li>年龄:<b>20</b></li>
+            <li>性别:<b><?php if($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></li>
+            <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($this->context->userObj->birthday)?></b></li>
             <li>城市:<b>北京</b></li>
         </ul>
     </div>
@@ -289,9 +289,8 @@
             <li><a href="#">过往订单</a></li>
         </ul>
         <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList">
-
         </div>
-        <div class="myOder pastOder innerCon">
+        <div class="myOder pastOder innerCon" id="finishList">
             <div class="orderList clearfix">
                 <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish">
                 <dl class="order clearfix">
@@ -322,43 +321,7 @@
             <li><a href="#">我的随游</a></li>
             <li><a href="#">我加入的随游</a></li>
         </ul>
-        <div class="myOder past01 tabCon" style="display:block;">
-            <div class="orderList clearfix">
-                <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish">
-                <dl class="order clearfix">
-                    <dt class="title">
-                        <span>3小时前</span><span>申请随游</span><span>开始时间</span><span>申请游客</span><span>出行时间</span><span>人数</span><span>附加服务</span>
-                    </dt>
-                    <dd>
-                        <span class="pic"><img src="/assets/images/2.png"></span>
-                        <span>日本京都奈良公园一日游秀公园...</span>
-                        <span>9:00AM</span>
-                        <span><a href="#" class="user"><img src="/assets/images/1.png" ></a><a href="#" class="message"><b>xiao</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>
-                        <span>2015.3.14</span>
-                        <span>2</span>
-                        <span>接机<b></b><br>租车<b></b></span>
-                    </dd>
-                </dl>
-                <p><a href="#" class="cancel">忽略</a><a href="#" class="sure">接受</a></p>
-            </div>
-            <div class="orderList clearfix">
-                <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish">
-                <dl class="order clearfix">
-                    <dt class="title">
-                        <span>3小时前</span><span>申请随游</span><span>开始时间</span><span>申请游客</span><span>出行时间</span><span>人数</span><span>附加服务</span>
-                    </dt>
-                    <dd>
-                        <span class="pic"><img src="/assets/images/2.png"></span>
-                        <span>日本京都奈良公园一日游秀公园...</span>
-                        <span>9:00AM</span>
-                        <span><a href="#" class="user"><img src="/assets/images/1.png" ></a><a href="#" class="message"><b>xiao</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>
-                        <span>2015.3.14</span>
-                        <span>2</span>
-                        <span>接机<b></b><br>租车<b></b></span>
-                    </dd>
-                </dl>
-                <p><a href="#" class="cancel">忽略</a><a href="#" class="sure">接受</a></p>
-            </div>
+        <div class="myOder past01 tabCon" style="display:block;" id="unConfirmList">
         </div>
         <div class="myOder past02 tabCon" id="myTripList">
         </div>
@@ -596,6 +559,8 @@
         getMyTripList();
         getMyJoinTripList();
         getUnFinishList();
+        getFinishList();
+        getUnConfirmOrderByPublisher();
     });
 
 
@@ -639,7 +604,7 @@
         for(var i=0;i<tripList.length;i++){
             tripInfo=tripList[i];
             var count=tripInfo.count==null?'':tripInfo.count;
-            if(count!=''){ count='<a href="#" class="sure">新申请</a><b>'+count+'</b>'};
+            if(count!=''){ count='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a><b>'+count+'</b>'};
             html+='<div class="orderList clearfix">';
             html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+')">';
             html+=' <dl class="order clearfix">';
@@ -708,7 +673,6 @@
             var count=tripInfo.count==null?'':tripInfo.count;
             if(count!=''){ count='<a href="#" class="sure">新申请</a><b>'+count+'</b>'};
             html+='<div class="orderList clearfix">';
-            html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+')">';
             html+=' <dl class="order clearfix">';
             html+='   <dt class="title">';
             html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';
@@ -734,6 +698,9 @@
     }
 
 
+    /**
+     * 获取用户未完成的订单
+     */
     function getUnFinishList()
     {
         $.ajax({
@@ -749,7 +716,7 @@
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
-                    $("#unFinishList").html(buildUnFinishList(data.data));
+                    $("#unFinishList").html(buildOrderList(data.data,0));
                 }else{
                     Main.showTip("获取我的未完成订单失败");
                 }
@@ -757,7 +724,39 @@
         });
     }
 
-    function buildUnFinishList(list)
+    /**
+     * 获取用户已完成的订单
+     */
+    function getFinishList()
+    {
+        $.ajax({
+            url :'/user-order/get-finish-order',
+            type:'post',
+            data:{
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip("获取我的完成订单失败");
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    $("#finishList").html(buildOrderList(data.data,1));
+                }else{
+                    Main.showTip("获取完成订单失败");
+                }
+            }
+        });
+    }
+
+    /**
+     * 构建用户订单页面
+     * @param list
+     * @param type
+     * @returns {string}
+     */
+    function buildOrderList(list,type)
     {
         var html="";
         if(list==""||list.length==0){
@@ -769,21 +768,23 @@
             travelInfo=eval("("+travelInfo+")");
             var serviceInfo=orderInfo.serviceInfo;
             serviceInfo=eval("("+serviceInfo+")");
-            Main.printObject(travelInfo.createPublisherInfo);
             html+='<div class="orderList clearfix">';
+            if(type==1){
+                html+='<img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish">'
+            }
             html+='<dl class="order clearfix">';
             html+='<dt class="title">';
-            html+='<span>3小时前</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>';
+            html+='<span>'+Main.convertOrderDateToShow(orderInfo.createTime)+'</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>';
             html+='</dt>';
             html+='<dd>';
             html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"></span>';
             html+='<span>'+travelInfo.info.title+'</span>';
-            html+='<span>'+orderInfo.startTime+'</span>';
+            html+='<span>'+Main.convertTimePicker(orderInfo.startTime,2)+'</span>';
             if(orderInfo.phone==''||orderInfo.phone==null){
                 html+='<span>未接单</span>';
                 html+='<span>未接单</span>';
             }else{
-                html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+                html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'"  width="40" height="40"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
                 html+='<span>'+orderInfo.phone+'</span>';
             }
 
@@ -805,7 +806,106 @@
             html+='</span>';
             html+='</dd>';
             html+='</dl>';
-            html+='<p><a href="#" class="cancel">取消订单</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span><span class="blue">已支付</span><span class="orange">待接单</span></p>';
+            if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PAY_WAIT){
+                html+='<p><a href="#" class="cancel">取消订单</a><a href="#" class="sure">支付</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+                html+='<span class="blue">待支付</span><span class="orange"></span></p>';
+            }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PAY_SUCCESS) {
+                html+='<p><a href="#" class="cancel">取消订单</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+                html+='<span class="blue">已支付</span><span class="orange">待接单</span></p>';
+            }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CONFIRM){
+                html+='<p><a href="#" class="cancel">申请退款</a><a href="#" class="sure">确认游玩</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+                html+='<span class="blue">已支付</span><span class="orange">已确认</span></p>';
+            }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CANCELED){
+                html+='<p><a href="#" class="cancel"></a><a href="#" class="sure"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+                html+='<span class="blue">已取消</span><span class="orange"></span></p>';
+            }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_REFUND_WAIT){
+                html+='<p><a href="#" class="cancel"></a><a href="#" class="sure"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+                html+='<span class="blue">等待退款</span><span class="orange"></span></p>';
+            }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_REFUND_SUCCESS){
+                html+='<p><a href="#" class="cancel"></a><a href="#" class="sure"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+                html+='<span class="blue">退款成功</span><span class="orange"></span></p>';
+            }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PLAY_SUCCESS||orderInfo.status==OrderStatus.USER_ORDER_STATUS_PLAY_FINISH){
+                html+='<p><a href="#" class="cancel">去评价</a><a href="#" class="sure">分享</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+                html+='<span class="blue">已完成</span><span class="orange"></span></p>';
+            }
+            html+='</div>';
+        }
+        return html;
+    }
+
+    /**
+     * 获取随友可接收的订单
+     */
+    function getUnConfirmOrderByPublisher()
+    {
+        $.ajax({
+            url :'/user-order/get-un-confirm-order',
+            type:'post',
+            data:{
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip("获取可接受随游订单失败");
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    $("#unConfirmList").html(buildUnConfirmList(data.data,1));
+                }else{
+                    Main.showTip("获取可接受随游订单失败");
+                }
+            }
+        });
+    }
+
+    /**
+     * 构建可接受订单
+     * @param list
+     * @returns {string}
+     */
+    function buildUnConfirmList(list)
+    {
+        var html="";
+        if(list==""||list.length==0){
+            return html;
+        }
+        for(var i=0;i<list.length;i++){
+            var orderInfo=list[i];
+            var travelInfo=orderInfo.tripJsonInfo;
+            travelInfo=eval("("+travelInfo+")");
+            var serviceInfo=orderInfo.serviceInfo;
+            serviceInfo=eval("("+serviceInfo+")");
+
+            html+='<div class="orderList clearfix">';
+            html+='<dl class="order clearfix">';
+            html+='<dt class="title">';
+            html+='<span>'+Main.convertOrderDateToShow(orderInfo.createTime)+'</span><span>申请随游</span><span>开始时间</span><span>申请游客</span><span>出行时间</span><span>人数</span><span>附加服务</span>';
+            html+='</dt>';
+            html+='<dd>';
+            html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"></span>';
+            html+='<span>'+travelInfo.info.title+'</span>';
+            html+='<span>'+Main.convertTimePicker(orderInfo.startTime,2)+'</span>';
+            html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'" width="40" height="40"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+            html+='<span>'+orderInfo.beginDate+'</span>';
+            html+='<span>'+orderInfo.personCount+'</span>';
+            html+='<span>';
+            if(serviceInfo!=''&&serviceInfo.length>0){
+                for(var j=0;j<serviceInfo.length;j++){
+                    var service=serviceInfo[j];
+                    html+=service.title+'<b>'+service.money+'</b>';
+                    if(service.type==tripServiceTypePeople){
+                        html+='/人';
+                    }else{
+                        html+='/次';
+                    }
+                    html+='<br>';
+                }
+            }
+            html+='</span>';
+            html+='</dd>';
+            html+='</dl>';
+            html+='<p><a href="javascript:publisherIgnoreOrder('+orderInfo.orderId+');" class="cancel">忽略</a><a href="javascript:publisherConfirmOrder('+orderInfo.orderId+');" class="sure">接受</a></p>';
             html+='</div>';
         }
         return html;
@@ -813,11 +913,77 @@
     }
 
 
+    /**
+     * 确认用户订单
+     * @param orderId
+     */
+    function publisherConfirmOrder(orderId)
+    {
+        if(orderId==''){
+            return;
+        }
+        $.ajax({
+            url :'/user-order/publisher-confirm-order',
+            type:'post',
+            data:{
+                orderId:orderId,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip("抢单失败");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    Main.showTip("抢单成功");
+                    getUnConfirmOrderByPublisher();
+                }else{
+                    Main.showTip("抢单失败");
+                }
+            }
+        });
+    }
+
+    /**
+     * 忽略用户订单
+     * @param orderId
+     */
+    function publisherIgnoreOrder(orderId)
+    {
+        if(orderId==''){
+            return;
+        }
+        $.ajax({
+            url :'/user-order/publisher-ignore-order',
+            type:'post',
+            data:{
+                orderId:orderId,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip("忽略订单失败");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    getUnConfirmOrderByPublisher();
+                }else{
+                    Main.showTip("忽略订单失败");
+                }
+            }
+        });
+    }
 
 
+    /**
+     * 删除随游
+     * @param tripId
+     */
     function deleteTravelTrip(tripId)
     {
         alert(tripId);
     }
+
+
 
 </script>

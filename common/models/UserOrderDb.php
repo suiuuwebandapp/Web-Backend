@@ -15,9 +15,11 @@ use common\entity\DestinationInfo;
 use common\entity\DestinationScenic;
 use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
+use common\entity\UserOrderPublisherIgnore;
 use yii\db\mssql\PDO;
 
-class UserOrderDb extends ProxyDb{
+class UserOrderDb extends ProxyDb
+{
 
     public function addUserOrderInfo(UserOrderInfo $userOrderInfo)
     {
@@ -34,7 +36,7 @@ class UserOrderDb extends ProxyDb{
             )
 
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":orderNumber", $userOrderInfo->orderNumber, PDO::PARAM_STR);
         $command->bindParam(":userId", $userOrderInfo->userId, PDO::PARAM_STR);
         $command->bindParam(":tripId", $userOrderInfo->tripId, PDO::PARAM_INT);
@@ -62,16 +64,16 @@ class UserOrderDb extends ProxyDb{
         $sql = sprintf("
             INSERT  INTO user_order_publisher
             (
-              publisherId,orderId,createTime,finshTime,isFinished
+              publisherId,orderId,createTime,isFinished
             )
             VALUES
             (
-              publisherId,orderId,now(),NULL,FALSE
+              publisherId,orderId,now(),FALSE
             )
 
         ");
 
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":publisherId", $userOrderPublisher->publisherId, PDO::PARAM_STR);
         $command->bindParam(":orderId", $userOrderPublisher->orderId, PDO::PARAM_STR);
 
@@ -85,14 +87,14 @@ class UserOrderDb extends ProxyDb{
      * @param $status
      * @throws \yii\db\Exception
      */
-    public function changeOrderStatus($orderId,$status)
+    public function changeOrderStatus($orderId, $status)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             UPDATE user_order_info SET
             status=:status
             WHERE orderId=:orderId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":orderId", $orderId, PDO::PARAM_STR);
         $command->bindParam(":status", $status, PDO::PARAM_INT);
 
@@ -107,12 +109,12 @@ class UserOrderDb extends ProxyDb{
      */
     public function findOrderByOrderNumber($orderNumber)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM user_order_info
             WHERE orderNumber=:orderNumber
 
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":orderNumber", $orderNumber, PDO::PARAM_STR);
 
         return $command->queryOne();
@@ -125,12 +127,12 @@ class UserOrderDb extends ProxyDb{
      */
     public function findOrderById($orderId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM user_order_info
 
             WHERE orderId=:orderId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":orderId", $orderId, PDO::PARAM_STR);
 
         return $command->queryOne();
@@ -144,7 +146,7 @@ class UserOrderDb extends ProxyDb{
      */
     public function getUnFinishOrderList($userSign)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT uoi.*, ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
             ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
             FROM user_order_info uoi
@@ -152,10 +154,10 @@ class UserOrderDb extends ProxyDb{
             LEFT JOIN user_publisher up  ON up.userPublisherId=uop.publisherId
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             WHERE isDel=FALSE AND uoi.userId=:userId
-            AND uoi.status!=".UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS."
-            AND uoi.status!=".UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH."
+            AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . "
+            AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
 
         return $command->queryAll();
@@ -168,7 +170,7 @@ class UserOrderDb extends ProxyDb{
      */
     public function getFinishOrderList($userSign)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT uoi.*, ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
             ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
             FROM user_order_info uoi
@@ -176,11 +178,66 @@ class UserOrderDb extends ProxyDb{
             LEFT JOIN user_publisher up  ON up.userPublisherId=uop.publisherId
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             WHERE isDel=FALSE AND uoi.userId=:userId
-            AND uoi.status==".UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS."
-            AND uoi.status==".UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH."
+            AND uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . "
+            AND uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
+
+        return $command->queryAll();
+    }
+
+
+    /**
+     * 添加忽略
+     * @param UserOrderPublisherIgnore $userOrderPublisherIgnore
+     * @throws \yii\db\Exception
+     */
+    public function addUserOrderPublisherIgnore(UserOrderPublisherIgnore $userOrderPublisherIgnore)
+    {
+        $sql = sprintf("
+            INSERT INTO user_order_publisher_ignore
+            (
+              orderId,publisherId
+            )
+            VALUES
+            (
+               :orderId,:publisherId
+            )
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":orderId", $userOrderPublisherIgnore->orderId, PDO::PARAM_INT);
+        $command->bindParam(":publisherId", $userOrderPublisherIgnore->publisherId, PDO::PARAM_INT);
+
+        $command->execute();
+    }
+
+
+    /**
+     * 获取等待加入的随游(未确认)
+     * @param $publisherId
+     * @return array
+     */
+    public function getUnConfirmOrderByPublisher($publisherId)
+    {
+
+        $sql = sprintf("
+            SELECT uoi.*,ttp.publisherId,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
+            FROM user_order_info uoi
+            LEFT JOIN travel_trip_publisher ttp ON ttp.tripId=uoi.tripId
+            LEFT JOIN user_base ub ON ub.userSign=uoi.userId
+
+            WHERE uoi.status=:status AND ttp.publisherId=:publisherId AND orderId NOT IN
+            (
+              SELECT orderId FROM user_order_publisher_ignore WHERE publisherId=:publisherId
+            )
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindValue(":status", UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS, PDO::PARAM_INT);
+        $command->bindParam(":publisherId", $publisherId, PDO::PARAM_INT);
 
         return $command->queryAll();
     }

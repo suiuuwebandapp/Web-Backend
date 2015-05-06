@@ -530,6 +530,24 @@ class TravelTripDb extends ProxyDb{
 
     }
 
+    /**
+     * 获取申请详情
+     * @param $applyId
+     * @return array|bool
+     */
+    public function findTravelTripApplyById($applyId)
+    {
+        $sql=sprintf("
+            SELECT * FROM travel_trip_apply
+            WHERE applyId=:applyId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":applyId", $applyId, PDO::PARAM_INT);
+        return $command->queryOne();
+    }
+
+
 
     /**
      * 改变申请加入随游状态
@@ -669,6 +687,30 @@ class TravelTripDb extends ProxyDb{
         return $this->findListBySql();
     }
 
+
+    /**
+     * 获取随友申请加入列表
+     * @param $tripId
+     * @return array
+     */
+    public function getPublisherApplyList($tripId)
+    {
+        $sql=sprintf("
+            SELECT up.*,tta.* ,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
+            FROM user_publisher up
+            LEFT JOIN user_base ub ON ub.userSign=up.userId
+            LEFT JOIN travel_trip_apply tta ON tta.publisherId=up.userPublisherId
+            WHERE tta.tripId=:tripId AND tta.status=:status
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->bindValue(":status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT, PDO::PARAM_INT);
+
+        return $command->queryAll();
+    }
 
 
 

@@ -13,6 +13,7 @@ namespace frontend\services;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripPublisher;
+use common\entity\TravelTripService;
 use common\entity\UserAttention;
 use common\models\BaseDb;
 use common\models\TravelTripDb;
@@ -216,6 +217,8 @@ class TripService extends BaseDb{
 
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
         return $tripInfo;
 
@@ -245,6 +248,8 @@ class TripService extends BaseDb{
 
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
         return $tripInfo;
     }
@@ -271,6 +276,8 @@ class TripService extends BaseDb{
 
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
         return $scenicList;
     }
@@ -295,6 +302,8 @@ class TripService extends BaseDb{
             $this->tripTravelDb->changeTravelStatus($tripId,$status);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
     }
 
@@ -315,6 +324,8 @@ class TripService extends BaseDb{
             $userPublisher=$this->tripTravelDb->getTravelTripPublisherById($publisherId);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
         return $userPublisher;
     }
@@ -334,6 +345,8 @@ class TripService extends BaseDb{
             $this->tripTravelDb->addTravelTripApply($travelTripApply);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
     }
 
@@ -356,6 +369,8 @@ class TripService extends BaseDb{
             $this->tripTravelDb->changeTravelTripApplyStatus($applyId,$status);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
     }
 
@@ -378,6 +393,8 @@ class TripService extends BaseDb{
             $this->tripTravelDb->getTelTripApplyList($tripId,$status);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
     }
 
@@ -399,6 +416,8 @@ class TripService extends BaseDb{
             $this->tripTravelDb->deleteTravelTripPublisher($travelTripPublisher);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
     }
 
@@ -422,6 +441,8 @@ class TripService extends BaseDb{
             return $this->tripTravelDb->getMyTripList($createPublisherId);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
         }
     }
 
@@ -444,6 +465,108 @@ class TripService extends BaseDb{
             return $this->tripTravelDb->getMyJoinTripList($publisherId);
         }catch (Exception $e){
             throw $e;
+        }finally {
+            $this->closeLink();
+        }
+    }
+
+
+    /**
+     * 获取随友申请列表
+     * @param $tripId
+     * @return array|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getPublisherApplyList($tripId)
+    {
+        if(empty($tripId))
+        {
+            throw new Exception("TripId Is Not Allow Empty");
+        }
+        $list=null;
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $list=$this->tripTravelDb->getPublisherApplyList($tripId);
+        }catch (Exception $e){
+            throw $e;
+        }finally {
+            $this->closeLink();
+        }
+        return $list;
+    }
+
+
+    /**
+     * 通过随友申请加入随游
+     * @param $applyId
+     * @param $publisherId
+     * @param $currentPublisherId
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function agreePublisherApply($applyId,$publisherId,$currentPublisherId)
+    {
+        if(empty($applyId))
+        {
+            throw new Exception("ApplyId Is Not Allow Empty");
+        }
+        if(empty($publisherId))
+        {
+            throw new Exception("PublisherId Is Not Allow Empty");
+        }
+        $conn = $this->getConnection();
+        $tran=$conn->beginTransaction();
+        try{
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $travelTripPublisher=new TravelTripPublisher();
+            $applyInfo=$this->tripTravelDb->findTravelTripApplyById($applyId);
+            $travelInfo=$this->tripTravelDb->findTravelTripById($applyInfo['tripId']);
+            if($travelInfo['createPublisherId']!=$currentPublisherId){
+                throw new Exception("No Power To Agree Apply");
+            }
+            $travelTripPublisher->tripId=$applyInfo['tripId'];
+            $travelTripPublisher->tripPublisherId=$publisherId;
+
+            $this->tripTravelDb->addTravelTripPublisher($travelTripPublisher);//添加随游与随友关联
+            $this->tripTravelDb->changeTravelTripApplyStatus($applyId,TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_AGREE);//同意申请
+            $this->commit($tran);
+        }catch (Exception $e){
+            $this->rollback($tran);
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+
+    /**
+     * 拒绝随友加入随游的申请
+     * @param $applyId
+     * @param $currentPublisherId
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function opposePublisherApply($applyId,$currentPublisherId)
+    {
+        if(empty($applyId))
+        {
+            throw new Exception("ApplyId Is Not Allow Empty");
+        }
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $applyInfo=$this->tripTravelDb->findTravelTripApplyById($applyId);
+            $travelInfo=$this->tripTravelDb->findTravelTripById($applyInfo['tripId']);
+            if($travelInfo['createPublisherId']!=$currentPublisherId){
+                throw new Exception("No Power To Agree Apply");
+            }
+            $this->tripTravelDb->changeTravelTripApplyStatus($applyId,TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_OPPOSE);//同意申请
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
         }
     }
 }

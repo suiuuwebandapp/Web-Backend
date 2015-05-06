@@ -177,6 +177,11 @@ class UserOrderController extends  CController{
     }
 
 
+    /**
+     * 获取用户未完成的订单
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionGetUnFinishOrder()
     {
         try{
@@ -184,11 +189,13 @@ class UserOrderController extends  CController{
             $list=$this->userOrderService->getUnFinishOrderList($userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            throw $e;
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
+    /**
+     * 获取用户已完成的订单
+     */
     public function actionGetFinishOrder()
     {
         try{
@@ -199,6 +206,56 @@ class UserOrderController extends  CController{
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
+    /**
+     * 获取未确认的订单（根据随友Id）
+     */
+    public function actionGetUnConfirmOrder()
+    {
+        try{
+            $publisherId=$this->userPublisherObj->userPublisherId;
+            $list=$this->userOrderService->getUnConfirmOrderByPublisher($publisherId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
+    /**
+     * 确认订单
+     */
+    public function actionPublisherConfirmOrder()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+
+        try{
+            $publisherId=$this->userPublisherObj->userPublisherId;
+            $this->userOrderService->publisherConfirmOrder($orderId,$publisherId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e) {
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+    /**
+     * 忽略订单
+     */
+    public function actionPublisherIgnoreOrder()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+
+        try{
+            $publisherId=$this->userPublisherObj->userPublisherId;
+            $this->userOrderService->publisherIgnoreOrder($orderId,$publisherId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e) {
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
+    }
+
+
 
 
 }

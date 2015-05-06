@@ -9,6 +9,7 @@
 
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <style type="text/css">
 
@@ -182,7 +183,7 @@
 
                             <div class="out-p clearfix">
                                 <a href="/access/connect-weibo" class="logo-icon icon01"></a>
-                                <a href="#" class="logo-icon icon02"></a>
+                                <a href="/access/connect-wechat" class="logo-icon icon02"></a>
                                 <a href="/access/connect-qq" class="logo-icon icon03"></a>
                             </div>
                         </div>
@@ -205,6 +206,7 @@
         initEmailTimer();
         initPhoneRegister();
     });
+
     function initEmailTimer()
     {
         emailTimer=window.setInterval(function(){
