@@ -186,6 +186,30 @@ class UserBaseDb extends ProxyDb
         return $command->queryOne();
     }
 
+    /**
+     * 根据UserSign获取用户基本信息
+     * @param $userSign
+     * @return array|bool
+     */
+    public function findBaseInfoBySign($userSign)
+    {
+        $sql = sprintf("
+            SELECT ub.nickname,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,
+            ub.isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,ub.profession,co.cname AS countryCname,
+            co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname
+            FROM user_base ub
+            LEFT JOIN country AS co ON co.id=ub.countryId
+            LEFT JOIN city AS ci ON ci.id=ub.cityId
+            WHERE userSign=:userSign AND status=:status
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        $command->bindValue(":status", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
+
+        return $command->queryOne();
+
+    }
+
 
     /**
      * 根据openId 接入 类型获取用户Id

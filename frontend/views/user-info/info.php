@@ -151,7 +151,6 @@
     <div class="tab-div myEmail TabCon clearfix" style="display:block">
         <ul class="emailNav recTit">
             <li><a href="#"  class="active">私信</a></li>
-            <li><a href="#">写信</a></li>
             <li><a href="#">设置</a></li>
         </ul>
         <div class="emailCon past01 slideRec" style="display:block;">
@@ -218,21 +217,6 @@
                     <div class="write"><input type="text" class="txt"><input type="button" class="btn" value="发送"></div>
                 </div>
             </div>
-        </div>
-        <div class="emailCon past02 slideRec">
-            <div class="con">
-                <p>收件人</p>
-                <input type="text" placeholder="可同时给5个人发送私信，用户名之间用分号隔开">
-                <textarea></textarea>
-                <p>验证码</p>
-                <div class="yanzheng">
-                    <input type="text" class="text1"><img src="/assets/images/code.png" class="codePic">
-                    <input type="button" value="换一个" class="change">
-                    <input type="button" value="发送" class="btn">
-                </div>
-
-            </div>
-
         </div>
         <div class="emailCon past03 slideRec">
             <div class="con clearfix">
@@ -713,8 +697,32 @@
         initSelect();
 
 
-
+        initMessageSession();
     });
+
+
+    function initMessageSession(){
+        $.ajax({
+            url :'/user-message/message-session-list',
+            type:'post',
+            data:{},
+            beforeSend:function(){
+            },
+            error:function(){
+                Main.showTip("获取私信列表失败");
+            },
+            success:function(data){
+                alert(data);
+                data=eval("("+data+")");
+                if(data.status==1){
+
+
+                }else{
+                    Main.showTip("获取私信列表失败");
+                }
+            }
+        });
+    }
 
     function updateUserInfo(){
         var sex=$('input:radio[name="sex"]:checked').val();

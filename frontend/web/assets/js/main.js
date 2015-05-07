@@ -187,7 +187,73 @@ var Main = function() {
                 result="刚刚";
 
             return result;
+        },
+        showSendMessage:function(userSign){
+
+            $.ajax({
+                url :'/user-info/find-user-info',
+                type:'post',
+                data:{
+                    userSign:$.trim(userSign)
+                },
+                error:function(){
+                    Main.showTip("获取用户基本信息失败");
+                },
+                success:function(data){
+                    data=eval("("+data+")");
+                    if(data.status==1){
+                        var userInfo=data.data;
+                        $("#show_message_sex").html(userInfo.sex);
+                        $("#show_message_receiverId").val(userSign);
+                        $("#show_message_headImg").attr("src",userInfo.headImg);
+                        $("#show_message_city").html(userInfo.cityName);
+                        $("#show_message_nickname").html(userInfo.nickname);
+                        $("#show_message_age").html(userInfo.birthday);
+
+                        $("#showMessageDiv").show();
+                        $("#myMask").show();
+
+                    }else{
+                        Main.showTip("获取用户基本信息失败");
+                    }
+                }
+            });
+        },
+        showScreenSendMessage:function(){
+            var receiveId=$("#show_message_receiverId").val();
+            var content=$("#sendMessageContent").val();
+            if($.trim(receiveId)==''){
+                Main.showTip("选择发送人有误");
+                return;
+            }
+            if($.trim(content)==''){
+                Main.showTip("请输入发送内容");
+                return;
+            }
+            $.ajax({
+                url :'/user-message/add-user-message',
+                type:'post',
+                data:{
+                    receiveId:$.trim(receiveId),
+                    content:$.trim(content)
+                },
+                error:function(){
+                    Main.showTip("发送消息失败");
+                },
+                success:function(data){
+                    data=eval("("+data+")");
+                    if(data.status==1){
+                        Main.showTip("发送消息成功");
+                        $("#showMessageDiv").hide();
+                        $("#myMask").hide();
+                        $("#sendMessageForm")[0].reset();
+                    }else{
+                        Main.showTip("发送消息失败");
+                    }
+                }
+            });
         }
+
 
 
 

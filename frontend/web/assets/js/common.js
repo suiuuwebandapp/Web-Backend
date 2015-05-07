@@ -35,7 +35,6 @@ $(function(){
 })
 
 
-
 /*----导航效果----*/
 
 
@@ -47,7 +46,9 @@ $(function(){
 		}else{
 			$('.nav-out,.header').css('box-shadow','none')
 		}
-
+		
+		
+        
     });
 	
 
@@ -58,14 +59,14 @@ $(function(){
 
 
 $(function(){
-	$('.nav-out .nav-right ol li:eq(1)>a').click(function(e) {
+	$('.nav-out .nav-right ol .zhuces a').click(function(e) {
         $('#zhuce-main').toggle();
-        $('.nav-out .nav-right ol li:eq(2)').children('#denglu-main').css('display','none');
+        $('.nav-out .nav-right ol .logins').children('#denglu-main').css('display','none');
         $('#zhuce-main02').css('display','none');
     });
-	$('.nav-out .nav-right ol li:eq(2)>a').click(function(e) {
+	$('.nav-out .nav-right ol .logins a').click(function(e) {
         $('#denglu-main').toggle();
-        $('.nav-out .nav-right ol li:eq(1)').children('#zhuce-main,#zhuce-main02').css('display','none');
+        $('.nav-out .nav-right ol .zhuces').children('#zhuce-main,#zhuce-main02').css('display','none');
 		
     });
 	
@@ -130,7 +131,8 @@ $(function(){
 $(function(){
 	$('.header-right .search-btn').click(function(e) {
 		if($('.header-right .search').width()==0){
-			$('.header-right .search,.header-right .search input.text-xqy').animate({width:135},500);
+			$('.header-right .search input.text-xqy').animate({width:135},500);
+			$('.header-right .search').animate({width:155},500);
         }else{
 			$('.header-right .search,.header-right .search input.text-xqy').animate({width:0},500);
         }
@@ -143,7 +145,8 @@ $(function(){
 $(function(){
 	$('.nav-right .search-btn').click(function(e) {
 		if($('.nav-right .search').width()==0){
-			$('.nav-right .search,.nav-right .search input.text-xqy').animate({width:135},500);
+			$('.nav-right .search input.text-xqy').animate({width:135},500);
+			$('.nav-right .search').animate({width:155},500);
         }else{
 			$('.nav-right .search,.nav-right .search input.text-xqy').animate({width:0},500);
         }
@@ -261,6 +264,21 @@ $(function(){
 	
 
 })
+/*-----完成页满屏显示----*/
+$(function(){
+	var h=$(window).height();
+	var w=$(window).width();
+	$('.mask').height(h).width(w);
+	$('.mask').click(function(e) {
+        $(this).css('display','none')
+        $('.screens').css('display','none')
+    });
+	
+
+})
+
+
+
 
 
 

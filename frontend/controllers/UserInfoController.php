@@ -11,6 +11,7 @@ namespace frontend\controllers;
 
 
 use common\components\Common;
+use common\components\DateUtils;
 use common\entity\UserBase;
 use frontend\components\Page;
 use frontend\services\CountryService;
@@ -38,6 +39,29 @@ class UserInfoController extends CController{
         return $this->render("info",[
             'countryList'=>$countryList
         ]);
+    }
+
+    public function actionFindUserInfo()
+    {
+        $userSign=\Yii::$app->request->post("userSign");
+        if(empty($userSign)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户"));
+            return;
+        }
+        try{
+            $userInfo=$this->userBaseService->findBaseInfoBySign($userSign);
+            if($userInfo->sex==UserBase::USER_SEX_MALE){
+                $userInfo->sex='男';
+            }else if($userInfo->sex==UserBase::USER_SEX_FEMALE){
+                $userInfo->sex='女';
+            }else{
+                $userInfo->sex='保密';
+            }
+            $userInfo->birthday=DateUtils::convertBirthdayToAge($userInfo->birthday);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userInfo));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
     }
 
 
@@ -86,7 +110,6 @@ class UserInfoController extends CController{
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
 
         }catch (Exception $e) {
-            throw $e;
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
 

@@ -51,9 +51,10 @@ class DateUtils {
         if(empty($birthday)||$birthday=='0000-00-00'){
             return "保密";
         }
-        $nowYear=date('Y',time());
-        $birYear=date('Y',strtotime($birthday));
-        return $nowYear-$birYear;
+        //$nowYear=date('Y',time());
+        $birYear=date('y',strtotime($birthday));
+        return $birYear[0]."0后";
+        //return $nowYear-$birYear;
     }
 
 

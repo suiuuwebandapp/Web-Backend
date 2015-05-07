@@ -697,7 +697,7 @@ class TravelTripDb extends ProxyDb{
     {
         $sql=sprintf("
             SELECT up.*,tta.* ,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
+            ub.profession,ub.school,ub.intro,ub.info,ub.cityId,ub.countryId,ub.travelCount
             FROM user_publisher up
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             LEFT JOIN travel_trip_apply tta ON tta.publisherId=up.userPublisherId

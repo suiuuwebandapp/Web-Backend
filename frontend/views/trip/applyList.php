@@ -45,16 +45,21 @@
         <?php if($applyList!=null){ ?>
 
             <?php foreach($applyList as $apply){ ?>
+                    <?php
+                        $sex='';
+                        if($apply['sex']==\common\entity\UserBase::USER_SEX_MALE){$sex='男';}elseif($apply['sex']==\common\entity\UserBase::USER_SEX_FEMALE){$sex='女';}else{$sex='保密';}
+                        $age=\common\components\DateUtils::convertBirthdayToAge($apply['birthday']);
+                    ?>
                 <div class="lists" id="apply_div_<?=$apply['applyId']?>"">
                     <img src="<?=$apply['headImg']?>" width="66" height="66" alt="">
                     <ul>
                         <li><?=$apply['nickname']?></li>
-                        <li>性别:<b><?php if($apply['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($apply['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></li>
-                        <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($apply['birthday'])?></b></li>
+                        <li>性别:<b><?=$sex?></b></li>
+                        <li>年龄:<b><?=$age?></b></li>
                         <li>职业:<b><?=$apply['profession']?></b></li>
                         <li>随游次数:<b><?=$apply['travelCount']?></b></li>
                         <li class="last">
-                            <a href="javascript:;"><img src="/assets/images/xf.fw.png" alt=""></a>
+                            <a href="javascript:;" onclick="Main.showSendMessage('<?=$apply['userId']?>');"><img src="/assets/images/xf.fw.png" alt=""></a>
                             <p><?=str_replace("\n","</br>",$apply['info']);?></p>
                         </li>
                     </ul>

@@ -53,3 +53,28 @@
 
 </div>
 <!-----footer--end---->
+
+
+<!-----------邮件弹层--------------->
+<div class="mask" id="myMask"></div>
+<div id="showMessageDiv" class="smessages screens" style="display: none">
+    <form id="sendMessageForm">
+        <input id="show_message_receiverId" type="hidden"/>
+        <div class="top">
+            <div class="ss"><a href="#" class="userPic"><img id="show_message_headImg" src="/assets/images/5.png" class="pic"></a> <span class="name" id="show_message_nickname">irrt95</span></div>
+            <p>性别: <b id="show_message_sex">女</b> <b id="show_message_age">90后</b> <b id="show_message_city">德国慕尼黑</b></p>
+        </div>
+        <textarea id="sendMessageContent"></textarea>
+        <a href="javascript:;" class="btn" onclick="Main.showScreenSendMessage()">发送</a>
+    </form>
+</div>
+<!-----------取消订单弹层--------------->
+<div id="showOrderDiv" class="scancelTip screens" style="display: none">
+    <p>随游非常认真地对待随友取消订单</p>
+    <p>我们强烈建议您不要取消订单，因为取消预定会给其他用户造成很大不便。</p>
+    <p>请在随游网站上主动联系预订者，解释您取消订单的原因</p>
+    <textarea>请填写取消原因</textarea>
+    <p class="blue">点击确认后订单将会立即取消，随游的工作人员会在稍后联系您</p>
+    <a href="###" class="btn">确认取消</a>
+
+</div>
