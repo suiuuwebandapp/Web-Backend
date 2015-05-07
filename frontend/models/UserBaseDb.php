@@ -170,7 +170,8 @@ class UserBaseDb extends ProxyDb
     public function findByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,isPublisher
+            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,
+            registerTime,lastLoginTime,userSign,isPublisher,cityId,countryId,lon,lat,profession
             FROM user_base WHERE userSign=:userSign
         ");
         if ($status != null) {
@@ -267,7 +268,7 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
-        $command->bindParam(":countryId", $userBase->countryid, PDO::PARAM_INT);
+        $command->bindParam(":countryId", $userBase->countryId, PDO::PARAM_INT);
         $command->bindParam(":cityId", $userBase->cityId, PDO::PARAM_INT);
         $command->bindParam(":lon", $userBase->lon, PDO::PARAM_STR);
         $command->bindParam(":lat", $userBase->lat, PDO::PARAM_STR);
@@ -317,4 +318,6 @@ class UserBaseDb extends ProxyDb
 
         $command->execute();
     }
+
+
 }

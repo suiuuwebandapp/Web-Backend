@@ -687,5 +687,31 @@ class TripController extends CController
     }
 
 
+    /**
+     * 删除随游
+     */
+    public function actionDeleteTrip()
+    {
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+
+        if(empty($tripId)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty"));
+            return;
+        }
+
+        try{
+            $info=$this->tripService->getTravelTripById($tripId);
+            if($info->createPublisherId!=$this->userPublisherObj->userPublisherId){
+                throw new Exception("您只能删除自己的随游哦~");
+            }
+            $this->tripService->changeTripStatus($tripId,TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
+    }
+
+
 
 }

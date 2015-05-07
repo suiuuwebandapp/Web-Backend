@@ -10,6 +10,7 @@
 namespace frontend\controllers;
 
 
+use common\entity\UserBase;
 use frontend\services\CountryService;
 use common\components\Code;
 use common\components\OssUpload;
@@ -33,6 +34,58 @@ class UserInfoController extends CController{
         return $this->render("info",[
             'countryList'=>$countryList
         ]);
+    }
+
+
+    public function actionUpdateUserInfo()
+    {
+        $userId = $this->userObj->userId;
+        $sex = trim(\Yii::$app->request->post('sex',UserBase::USER_SEX_SECRET));
+        $nickname = trim(\Yii::$app->request->post('nickname'));
+        $birthday = trim(\Yii::$app->request->post('birthday'));
+        $intro = trim(\Yii::$app->request->post('intro'));
+        $info = trim(\Yii::$app->request->post('info'));
+        $countryId = \Yii::$app->request->post('countryId');
+        $cityId = \Yii::$app->request->post('cityId');
+        $lon = \Yii::$app->request->post('lon');
+        $lat = \Yii::$app->request->post('lat');
+        $profession = trim(\Yii::$app->request->post('profession'));
+
+        if(empty($nickname)||strlen($nickname)>30){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"昵称格式不正确"));
+            return;
+        }
+        if(empty($countryId)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地国家"));
+            return;
+        }
+        if(empty($cityId)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地城市"));
+            return;
+        }
+        try{
+            $userInfo=$this->userBaseService->findUserById($userId);
+            $userInfo->sex=$sex;
+            $userInfo->nickname=$nickname;
+            $userInfo->birthday=$birthday;
+            $userInfo->intro=$intro;
+            $userInfo->info=$info;
+            $userInfo->countryId=$countryId;
+            $userInfo->cityId=$cityId;
+            $userInfo->lon=$lon;
+            $userInfo->lat=$lat;
+            $userInfo->profession=$profession;
+
+            $this->userBaseService->updateUserBase($userInfo);
+            $this->refreshUserInfo();
+
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+
+        }catch (Exception $e) {
+            throw $e;
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
     }
 
 

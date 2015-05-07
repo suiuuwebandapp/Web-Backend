@@ -51,6 +51,10 @@ class UnCController extends Controller{
             if(isset($currentUser)){
                 $this->userObj=$currentUser;
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
+            }else{
+                $countrySer=new CountryService();
+                $this->countryList=$countrySer->getCountryList();
+                $this->areaCode='0086';
             }
         }else{
             $countrySer=new CountryService();

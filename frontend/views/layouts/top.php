@@ -79,7 +79,9 @@
                         <div class="my-suiuu">
                             <span class="jiao"></span>
                             <ul>
+                                <?php if(true||$this->context->userObj->isPublisher){?>
                                 <li class="bg1"><a href="/user-info?tripManager">我的随游</a></li>
+                                <?php } ?>
                                 <li class="bg2"><a href="/user-info?myOrderManager">我的订单</a></li>
                                 <li class="bg3"><a href="/user-info?userInfo">个人中心</a></li>
                                 <li class="bg4"><a href="/login/logout">安全退出</a></li>
@@ -117,6 +119,7 @@
                             <p class="m-20"><label>国家</label>
                                 <select id="codeId_top" name="countryIds" class="areaCodeSelect_top" required>
                                 <option value=""></option>
+                                <?php if($this->context->countryList!=null){ ?>
                                 <?php foreach ($this->context->countryList as $c) { ?>
                                     <?php if(empty($c['areaCode'])){continue;} ?>
                                     <?php if ($c['areaCode'] == $this->context->areaCode) { ?>
@@ -125,7 +128,7 @@
                                     <?php } else { ?>
                                         <option value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
                                     <?php } ?>
-
+                                <?php } ?>
                                 <?php } ?>
                             </select></p>
                             <p class="m-20"><label>手机号</label><input id="phone_top" type="text" value="" maxlength="30"></p>
@@ -137,7 +140,7 @@
                             <a href="javascript:;" class="btn01" id="phoneRegister">注 册</a>
                             <div class="out-p clearfix">
                                 <a href="/access/connect-weibo" class="logo-icon icon01"></a>
-                                <a href="#" class="logo-icon icon02"></a>
+                                <a href="/access/connect-wechat" class="logo-icon icon02"></a>
                                 <a href="/access/connect-qq" class="logo-icon icon03"></a>
                             </div>
 

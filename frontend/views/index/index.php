@@ -165,7 +165,7 @@
                     var trip,html="";
                     for(var i=0;i<list.length;i++){
                         trip=list[i];
-                        html+='<li><img src="'+trip.titleImg+'" alt="">';
+                        html+='<li><div class="box"><img src="'+trip.titleImg+'" alt="" width="284px" height="260px"></div>';
                         html+='<a href="/view-trip/info?trip='+trip.tripId+'"><div class="zhezhao">';
                         html+='<p>'+trip.intro+'</p>';
                         html+='<p class="pingjia">评价';
@@ -179,7 +179,6 @@
                         html+='<p class="user01"><img src="'+trip.headImg+'" alt="" width="40" height="40"><font>'+trip.nickname+'</font></p>';
                         html+='<h4>'+trip.title+'</h4>';
                         html+='</li>';
-
                     }
                     $("#ul1").append(html);
                 }else{

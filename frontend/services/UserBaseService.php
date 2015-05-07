@@ -211,6 +211,28 @@ class UserBaseService extends BaseDb
     }
 
     /**
+     * 查找用户根据Id
+     * @param $userId
+     * @return mixed|null
+     * @throws Exception
+     */
+    public function findUserById($userId)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result = $this->userBaseDb->findById($userId,UserBase::USER_STATUS_NORMAL);
+            $userBase=$this->arrayCastObject($result,UserBase::class);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
+
+    /**
      * 查找用户（根据手机）
      * @param $phone
      * @return mixed|null
@@ -414,7 +436,21 @@ class UserBaseService extends BaseDb
             $this->userBaseDb = new UserBaseDb($conn);
             $this->userBaseDb->uploadHeadImg($userId,$headImg);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
+    public function updateUserBase(UserBase $userBase)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $this->userBaseDb->updateUserBase($userBase);
+        } catch (Exception $e) {
+            throw $e;
         } finally {
             $this->closeLink();
         }

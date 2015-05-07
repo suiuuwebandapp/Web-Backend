@@ -6,7 +6,6 @@
  * Time : 下午7:19
  * Email: zhangxinmailvip@foxmail.com
  */
-
 ?>
 
 <link rel="stylesheet" type="text/css" href="/assets/plugins/imgAreaSelect/css/imgareaselect-default.css" />
@@ -76,6 +75,38 @@
         font-size: 14px;
         color: dimgray;
         text-align: center;
+    }
+
+    .sycon .myInformation .past01 .wdzl .wdzl-xx span{
+        float: left;
+        width: 100px;
+    }
+    .sycon .myInformation .past02 .wdzl .wdzl-xx span{
+        float: left;
+        width: 100px;
+    }
+    .form_tip{
+        font-size: 14px;
+        padding-left: 20px;
+        color: red;
+        display: inline-block !important;
+        text-align: right !important;
+        float: right !important;
+        width: 200px !important;
+    }
+    .sycon .myInformation .past01 .wdzl .wdzl-xx .select2-arrow{
+        width: 20px !important;
+    }
+    .sycon .myInformation .past01 .wdzl .wdzl-xx .select2-chosen{
+        width: 300px;
+    }
+    .sycon .myInformation .past02 .wdzl .wdzl-xx .phone-select .select2-arrow{
+        width: 20px !important;
+    }
+    .sycon .myInformation .past02 .wdzl input.phone{
+        height: 39px !important;
+        margin-left: 20px;
+        width: 210px;
     }
 </style>
 <input type="hidden" id="lon"/>
@@ -445,13 +476,13 @@
                 <div id="reQueue" class="queue"></div>
                 <div class="wdzl-img clearfix">
                     <div class="p_photo1" style="width:122px;height:122px;overflow:hidden;text-align: center;overflow: hidden;margin: auto;border-radius:360px">
-                        <img src="/assets/images/3.png" alt="" width="122px" height="122px" style="border-radius:0px"/>
+                        <img src="<?=$this->context->userObj->headImg ?>" alt="" width="122px" height="122px" style="border-radius:0px"/>
                     </div>
                     <div class="p_photo2"  style="width:66px;height:66px;overflow:hidden;text-align: center;overflow: hidden;margin: auto;border-radius:360px;margin-top: 20px;margin-left: 20px;">
-                        <img src="/assets/images/4.png" alt="" width="66px" height="66px" style="border-radius:0px">
+                        <img src="<?=$this->context->userObj->headImg ?>" alt="" width="66px" height="66px" style="border-radius:0px">
                     </div>
                     <div class="p_photo3"  style="width:40px;height:40px;overflow:hidden;text-align: center;overflow: hidden;margin: auto;border-radius:360px;margin-top: 35px;margin-left: 20px;">
-                        <img src="/assets/images/5.png" alt="" width="40px" height="40px" style="border-radius:0px;">
+                        <img src="<?=$this->context->userObj->headImg ?>" alt="" width="40px" height="40px" style="border-radius:0px;">
                     </div>
                 </div>
                 <div class="radio">
@@ -468,19 +499,20 @@
                     </div>
                 </div>
                 <div class="wdzl-xx">
-                    <span>昵称:</span>
+                    <p><span>昵称:</span><span class="form_tip" id="nicknameTip"></span></p>
                     <input type="text" id="nickname" value="<?=$this->context->userObj->nickname?>" class="wdzj-text">
-                    <span>生日:</span>
+                    <p><span>生日:</span><span class="form_tip" id="birthdayTip"></span></p>
                     <input type="text" value="<?=$this->context->userObj->birthday=='0000-00-00'?'1990-01-01':$this->context->userObj->birthday;?>" id="birthday" class="wdzj-text">
-                    <span>个性签名:</span>
+                    <p><span>个性签名:</span><span class="form_tip" id="introTip"></span></p>
                     <input type="text" id="intro" value="<?=$this->context->userObj->intro?>" class="wdzj-text">
-                    <span>常住地:</span>
+                    <p><span>常住地:</span><span class="form_tip" id="cityTip"></span></p>
                     <div>
                         <select id="countryId" name="country" class="select2" required placeholder="国家">
                             <option value=""></option>
                             <?php foreach ($countryList as $c) { ?>
-                                <option value="<?= $c['id'] ?>"><?= $c['cname'] . "/" . $c['ename'] ?></option>
-
+                                <option value="<?= $c['id'] ?>"
+                                    <?php  if($c['id']==$this->context->userObj->countryId){echo "selected";} ?>
+                                    >  <?= $c['cname'] . "/" . $c['ename'] ?></option>
                             <?php } ?>
                         </select>
                         <select id="cityId" name="city" class="select2" required placeholder="城市"></select>
@@ -488,19 +520,19 @@
                     <div class="map">
                         <iframe id="mapFrame" name="mapFrame" src="/google-map/to-map" width="350px" height="330px;" frameborder="0" scrolling="no"></iframe>
                     </div>
-                    <span>职业:</span>
+                    <p><span>职业:</span><span class="form_tip" id="nicknameTip"></span></p>
                     <div class="shenfen">
-                        <input type="radio" value="" id="shenfen01" name="profession">
+                        <input type="radio" value="持证导游" id="shenfen01" name="profession">
                         <label for="shenfen01">持证导游</label>
-                        <input type="radio" value="" id="shenfen02" name="profession">
+                        <input type="radio" value="业余导游" id="shenfen02" name="profession">
                         <label for="shenfen02">业余导游</label>
-                        <input type="radio" value="" id="shenfen03" name="profession">
+                        <input type="radio" value="学生" id="shenfen03" name="profession">
                         <label for="shenfen03">学生</label>
-                        <input type="radio" value="" id="shenfen04" name="profession">
+                        <input type="radio" value="旅游爱好者" id="shenfen04" name="profession">
                         <label for="shenfen04">旅游爱好者</label>
-                        <input type="radio" value="" id="shenfen05" name="profession">
+                        <input type="radio" value="其他" id="shenfen05" name="profession">
                         <label for="shenfen05">其他</label>
-                        <input type="text" class="other">
+                        <input type="text" class="other" id="other">
 
                         <!----显示隐藏的其他输入框------>
                         <script type="text/javascript">
@@ -518,7 +550,7 @@
 
                         </script>
                     </div>
-                    <span>个人简介:</span>
+                    <p><span>个人简介:</span><span class="form_tip" id="infoTip"></span></p>
                     <textarea class="textarea" id="info"><?=$this->context->userObj->info?></textarea>
                     <a href="javascript:;" id="updateInfoBtn"  class="surebtn">保存修改</a>
                 </div>
@@ -527,39 +559,46 @@
         <div class="InformationCon past02 myCon">
             <div class="wdzl clearfix">
                 <div class="wdzl-xx">
-                    <span>手机号验证:</span>
+                    <p><span>手机号验证:</span><span id="phoneTip" class="form_tip"></span></p>
+                    <div style="clear: both"></div>
                     <div class="phone-select">
                         <div class="sect">
-                            <select data-enabled="false">
-                                <option value="zg" class=" selected">区号</option>
-                                <option value="mg">0345</option>
-                                <option value="hg">3456</option>
-                                <option value="zg">6777</option>
-                                <option value="mg">7777</option>
-                                <option value="hg">7754</option>
+                            <select id="codeId" name="countryIds" class="areaCodeSelect" required>
+                                <option value=""></option>
+                                <?php foreach ($countryList as $c) { ?>
+                                    <?php if(empty($c['areaCode'])){continue;} ?>
+                                    <?php if ($c['areaCode'] == $this->context->userObj->areaCode) { ?>
+                                        <option selected
+                                                value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
+                                    <?php } else { ?>
+                                        <option value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
+                                    <?php } ?>
+
+                                <?php } ?>
                             </select>
                         </div>
-                        <input type="text" value="" class="phone fl" >
+                        <input id="phone" type="text" value="<?= $this->context->userObj->phone?>" class="phone fl" >
                     </div>
                     <p class="p1">
                         <span class="fl">输入验证码</span>
-                        <input type="text" class="text fl">
-                        <input type="button" value="获取验证码" class="btn fl">
+                        <input type="text" class="text fl"  maxlength="6" id="code">
+                        <input type="button" value="获取验证码" class="btn fl" id="getCode">
                     </p>
-                    <span></span>
-                    <span>邮箱验证:</span>
+                    <p><span>邮箱验证:</span><span id="emailTip" class="form_tip"></span></p>
                     <p class="p1 p2">
                         <span class="fl">输入邮箱</span>
-                        <input type="text" class="text fl">
-                        <input type="button" value="邮件获取验证码" class="btn fl">
+                        <input type="text" class="text fl" value="<?= $this->context->userObj->email?>">
+                        <input type="button" value="邮箱验证" class="btn fl">
                     </p>
-                    <span>实名认证</span>
+                    <div style="clear: both"></div>
+                    <p><span>实名认证</span><span class="form_tip"></span></p>
+                    <div style="clear: both"></div>
                     <div class="sel-pic">
                         <input  class="sect" type="button" value="上传护照照片"/>
                         <input  class="btn sure" type="button" value="上传"/>
                     </div>
-                    <span>更多认证</span>
-                    <span></span>
+                    <div style="clear: both"></div>
+                    <p><span>更多认证</span><span class="form_tip"></span></p>
                     <div class="moreRen">
                         <ul>
                             <li><b class="icon sina"></b><input class="active" type="button" value="关联"></li>
@@ -567,8 +606,9 @@
                             <li><b class="icon qq"></b><input type="button" value="关联"></li>
                         </ul>
                     </div>
-                    <span></span>
-                    <a href="#"  class="surebtn">保存修改</a>
+                    <div style="clear: both"></div>
+                    <p><a href="#"  class="surebtn">保存修改</a></p>
+
                 </div>
             </div>
         </div>
@@ -619,8 +659,13 @@
     var containerDivWidth=300;
     var imgAreaSelectApi;
 
+    var userProfession='<?=$this->context->userObj->profession?>';
     var userSex='<?=$this->context->userObj->sex?>';
+    var cityId='<?=$this->context->userObj->cityId; ?>';
 
+
+    var phoneTime = 0;
+    var phoneTimer;
 
     $(document).ready(function(){
 
@@ -657,12 +702,20 @@
             updateUserInfo();
         });
 
+        //绑定发送验证码事件
+        $("#getCode").bind("click", function () {
+            sendTravelCode();
+        });
+
         getUnFinishList();
         initUploadImg();
         initTab();
         initUserInfo();
         initDatePicker();
         initSelect();
+
+
+
     });
 
     function updateUserInfo(){
@@ -675,19 +728,56 @@
         var cityId=$("#cityId").val();
         var lon=$("#lon").val();
         var lat=$("#lat").val();
-        var sex=$('input:radio[name="sex"]:checked').val();
+        var profession=$("input:radio[name='profession']:checked").val();
+        if(profession=='其他'){
+            profession=$("#ther").val();
+        }
+        if(nickname==''){
 
-        var profession=$("input[type='radio'][name='profession']").val();
+        }
+        if($.trim(nickname)==''||$.trim(nickname)>30){
+            $("#nicknameTip").html("昵称格式不正确");
+            return;
+        }
+        if($.trim(countryId)==''){
+            $("#cityTip").html("请选择居住地国家");
+            return;
+        }
+        if($.trim(cityId)==''||$.trim(nickname)>30){
+            $("#cityTip").html("请选择居住地城市");
+            return;
+        }
 
-        alert(sex);
-        alert(nickname);
-        alert(birthday);
-        alert(intro);
-        alert(info);
-        alert(countryId);
-        alert(cityId);
-        alert(profession);
-
+        $.ajax({
+            url :'/user-info/update-user-info',
+            type:'post',
+            data:{
+                sex:sex,
+                nickname:nickname,
+                birthday:birthday,
+                intro:intro,
+                info:info,
+                countryId:countryId,
+                cityId:cityId,
+                lon:lon,
+                lat:lat,
+                profession:profession
+            },
+            beforeSend:function(){
+            },
+            error:function(){
+                Main.showTip("更新用户信息失败");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                     Main.showTip("跟新用户信息成功");
+                    window.location.href=window.location.href;
+                }else{
+                    Main.showTip("更新用户信息失败");
+                }
+            }
+        });
 
 
 
@@ -748,6 +838,15 @@
                 findCityInfo(search);
             }
         });
+        $("#countryId").change();
+
+        //初始化区号选择
+        $(".areaCodeSelect").select2({
+            'width':'130px',
+            formatNoMatches: function () {
+                return "暂无匹配";
+            }
+        });
     }
     function initDatePicker(){
         $('#birthday').datetimepicker({
@@ -785,7 +884,7 @@
 
     function initUserInfo()
     {
-        alert("init");
+        //init sex
         if(userSex==0){
             $("input:radio[name='sex'][value=0]").attr("checked",true);
             $("#rado2").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
@@ -796,7 +895,23 @@
             $("input:radio[name='sex'][value=2]").attr("checked",true);
             $("#rad03").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
         }
-        //init sex
+
+        if(userProfession=='持证导游'){
+            $("input:radio[name='profession'][value='持证导游']").attr("checked",true);
+            $("#shenfen01").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }else if(userProfession=='业余导游'){
+            $("input:radio[name='profession'][value='业余导游']").attr("checked",true);
+            $("#shenfen02").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }else if(userProfession=='学生'){
+            $("input:radio[name='profession'][value='学生']").attr("checked",true);
+            $("#shenfen03").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }else if(userProfession=='旅游爱好者'){
+            $("input:radio[name='profession'][value='旅游爱好者']").attr("checked",true);
+            $("#shenfen04").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }else{
+            $("input:radio[name='profession'][value='其他']").attr("checked",true);
+            $("#shenfen05").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }
 
     }
 
@@ -1059,7 +1174,7 @@
             var count=tripInfo.count==null?'':tripInfo.count;
             if(count!=''){ count='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a><b>'+count+'</b>'};
             html+='<div class="orderList clearfix">';
-            html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+')">';
+            html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+',this)">';
             html+=' <dl class="order clearfix">';
             html+='   <dt class="title">';
             html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';
@@ -1432,9 +1547,29 @@
      * 删除随游
      * @param tripId
      */
-    function deleteTravelTrip(tripId)
+    function deleteTravelTrip(tripId,obj)
     {
-        alert(tripId);
+        $.ajax({
+            url :'/trip/delete-trip',
+            type:'post',
+            data:{
+                tripId:tripId,
+                _csrf: $('input[name="_csrf"]').val()
+
+            },
+            error:function(){
+               Main.showTip("删除随游失败");
+            },
+            success:function(data){
+                var datas=eval('('+data+')');
+                if(datas.status==1){
+                    Main.showTip("删除随游成功");
+                    $(obj).parent("div").remove();
+                }else{
+                    Main.showTip("删除随游失败");
+                }
+            }
+        });
     }
 
     //级联获取城市列表
@@ -1468,11 +1603,88 @@
                         html+='<option value="'+city.id+'">'+city.cname+"/"+city.ename+'</option>';
                     }
                     $("#cityId").append(html);
+                    if(cityId!=""){
+                        $("#cityId").val(cityId).trigger("change");
+                    }
                 }else{
                     $("#cityTip").html("获取城市列表失败");
                 }
             }
         });
+    }
+
+    /**
+     * 发送手机验证码
+     */
+    function sendTravelCode() {
+        //TODO 验证手机有效性
+        var phone = $("#phone").val();
+        var areaCode = $("#codeId").val();
+
+        if (phone == "") {
+            $("#phoneTip").html("请输入有效的手机号");
+            return;
+        } else {
+            $("#phoneTip").html("");
+        }
+        $.ajax({
+            url: '/index/send-travel-code',
+            type: 'post',
+            data: {
+                phone: phone,
+                areaCode: areaCode,
+                _csrf: $('input[name="_csrf"]').val()
+
+            },
+            beforeSend: function () {
+                $("#getCode").val("正在发送...");
+            },
+            error: function () {
+                $("#getCode").val("发送失败...");
+            },
+            success: function (data) {
+                var datas = eval('(' + data + ')');
+                if (datas.status == 1) {
+                    $("#getCode").val("发送成功");
+                    phoneTime = 60;
+                    initPhoneTimer();
+                } else {
+                    $("#getCode").val("发送失败...");
+                    $("#phoneTip").html(datas.data);
+                }
+            }
+        });
+    }
+
+    function initPhoneTimer() {
+        phoneTimer = window.setInterval(function () {
+            if (phoneTime > 0) {
+                phoneTime--;
+                initPhoneTime();
+            } else {
+                window.clearInterval(phoneTimer);
+                initPhoneTime();
+            }
+        }, 1000);
+    }
+
+    function initPhoneTime() {
+
+        if (phoneTime != "" && phoneTime > 0) {
+            $("#getCode").val(+phoneTime + "秒后重新发送");
+            $("#getCode").attr("disabled", "disabled");
+
+            $("#getCode").css("background", "gray");
+            $("#getCode").unbind("click");
+        } else {
+            $("#getCode").val("获取验证码");
+            $("#getCode").removeAttr("disabled");
+            $("#getCode").css("background", "#ff7a4d");
+            $("#getCode").unbind("click");
+            $("#getCode").bind("click", function () {
+                sendTravelCode();
+            });
+        }
     }
 
 
