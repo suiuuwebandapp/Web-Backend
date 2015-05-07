@@ -25,7 +25,7 @@ class TravelTripComment{
     /**
      * @var 评论内容
      */
-    public $content;
+    public $content='';
     /**
      * @var 相对id
      */
@@ -54,5 +54,9 @@ class TravelTripComment{
     /**
      * @var评论的标题变色部分
      */
-    public $rTitle;
+    public $rTitle='';
+    /**
+     * @var相对用户
+     */
+    public $rUserSign;
 }

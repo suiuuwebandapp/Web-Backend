@@ -309,66 +309,29 @@
     <h2 class="title">热门推荐</h2>
     <div class="sylx-list h400">
         <ul>
+            <?php foreach($rTravel as $trip){?>
             <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
+                <a href="/view-trip/info?trip=<?php echo $trip['tripId'];?>"><img src="<?php echo $trip['titleImg'];?>" alt=""></a>
+                <p class="posi"><img src="<?php echo $trip['headImg'];?>" alt=""><span><?php echo $trip['nickname'];?></span></p>
                 <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
+                    <h4><?php echo $trip['title'];?></h4>
+                    <p>评论&nbsp;
+                        <?php for($i=0;$i<5;$i++){
+                            $n=intval($trip['score']/2);
+                            if($n<=$i)
+                            {
+                                echo '<span><img src="/assets/images/start2.fw.png" alt=""></span>';
+
+                            }else{
+                                echo '<span><img src="/assets/images/start1.fw.png" alt=""></span>';
+                            }
+                        }?>
                     </p>
-                    <font>总价:<b>800</b></font>
+                    <font>总价:<b><?php echo $trip['basePrice'];?></b></font>
 
                 </div>
             </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
+            <?php }?>
         </ul>
     </div>
 </div>
@@ -440,27 +403,27 @@
                         '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="'+trip.titleImg+'" alt=""></a>' +
                         '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
                         '<div><h4>'+trip.title+'</h4><p>评论&nbsp;';
-                        if(trip.headImg>=2){
+                        if(trip.score>=2){
                             html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
                         }else{
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
                         }
-                        if(trip.headImg>=4){
+                        if(trip.score>=4){
                             html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
                         }else{
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
                         }
-                        if(trip.headImg>=6){
+                        if(trip.score>=6){
                             html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
                         }else{
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
                         }
-                        if(trip.headImg>=8){
+                        if(trip.score>=8){
                             html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
                         }else{
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
                         }
-                        if(trip.headImg>=10){
+                        if(trip.score>=10){
                             html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
                         }else{
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';

@@ -42,9 +42,21 @@ class ViewTripController extends UnCController{
     public function actionList()
     {
         $tagList = TagUtil::getInstance()->getTagList();
+        $cPage=\Yii::$app->request->post('cPage');
+        if(empty($cPage)||$cPage<1)
+        {
+            $cPage=1;
+        }
 
+        $numb=4;
+        $page=new Page();
+        $page->currentPage=$cPage;
+        $page->pageSize=$numb;
+        $page->startRow = (($page->currentPage - 1) * $page->pageSize);
+        $recommendTravel =$this->AttentionService->getRecommendTravel($page);
         return $this->render("list",[
-            'tagList' => $tagList
+            'tagList' => $tagList,
+            'rTravel'=>$recommendTravel['data']
         ]);
     }
 
@@ -175,7 +187,10 @@ class ViewTripController extends UnCController{
         try{
             $cPage=\Yii::$app->request->post('cPage');
             $tripId=\Yii::$app->request->post('tripId');
-
+            if(empty($cPage)||$cPage<1)
+            {
+                $cPage=1;
+            }
             $numb=5;
             $page=new Page();
             $page->currentPage=$cPage;
@@ -218,9 +233,10 @@ class ViewTripController extends UnCController{
             $content = \Yii::$app->request->post('content');
             $rId= \Yii::$app->request->post('rId');
             $rTitle= \Yii::$app->request->post('rTitle');
+            $rUserSign= \Yii::$app->request->post('rSign');
             if(empty($tripId)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知随游'));}
             if(empty($content)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法发布空评论'));}
-            $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle);
+            $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle,$rUserSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
             }catch (Exception $e){
         echo json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));
@@ -242,6 +258,43 @@ class ViewTripController extends UnCController{
         {
             $error=$e->getMessage();
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
+    public function actionGetUserComment()
+    {
+        try{
+            $cPage=\Yii::$app->request->post('cPage');
+            if(empty($cPage)||$cPage<1)
+            {
+                $cPage=1;
+            }
+            $numb=5;
+            $page=new Page();
+            $page->currentPage=$cPage;
+            $page->pageSize=$numb;
+            $page->startRow = (($page->currentPage - 1) * $page->pageSize);
+            if(empty($this->userObj))
+            {
+                $userSign='';
+            }else
+            {
+                $userSign=$this->userObj->userSign;
+            }
+
+            $rst= $this->tripCommentSer->getCommentTripList($page,$userSign);
+            $str='';
+            $totalCount=$rst['msg']->totalCount;
+            if(intval($totalCount)!=0)
+            {
+
+                $count=intval($totalCount);
+                $str=Common::pageHtml($cPage,$numb,$count);
+            }
+            //
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$str));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
         }
     }
 }

@@ -118,20 +118,26 @@ class Common{
                     $str.= '<li class="active"><a page="'.$i.'" href="javascript:;">'.$i.'</a></li>';
                 }else
                 {
-                    if($nowPage-$i>=2 && $i != 1)
-                    {
-                        $str .= '<li ><a href="javascript:;">...</a></li>';
-                        $i = $nowPage-1;
-                    }
-                    else
-                    {
-                        if($i >=$nowPage+7 && $i != $count)
-                        {
-                            $str .= '<li ><a href="javascript:;">...</a></li>';
-                            $i = $count;
-                        }
+                    if($i == 1||$i == $count){
                         $str .= '<li ><a page="'.$i.'" href="javascript:;">'.$i.'</a></li>';
+                    }else{
+                       
+                        if($nowPage-$i>=2)
+                        {
+                            $i = $nowPage-1;
+                        }
+                        else
+                        {
+                            if($i >=$nowPage+8)
+                            {
+                                $str .= '<li ><a href="javascript:;">...</a></li>';
+                                $i = $count;
+                            }
+                            $str .= '<li ><a page="'.$i.'" href="javascript:;">'.$i.'</a></li>';
+                        }
                     }
+
+
 
                 }
             }

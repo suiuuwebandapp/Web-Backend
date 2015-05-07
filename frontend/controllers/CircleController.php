@@ -244,7 +244,9 @@ class CircleController extends AController{
             $CircleCommentEntity->articleId = \Yii::$app->request->post('articleId');
             $CircleCommentEntity->content = \Yii::$app->request->post('content');
             $CircleCommentEntity->relativeCommentId = \Yii::$app->request->post('rId');
+
             $relativeUserSign = \Yii::$app->request->post('rUserSign');
+            $CircleCommentEntity->rUserSign=$relativeUserSign;
             $isReply = \Yii::$app->request->post('reply');
             $isAt = \Yii::$app->request->post('at');//是否艾特@
             if(empty($CircleCommentEntity->articleId))

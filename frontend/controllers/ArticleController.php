@@ -96,6 +96,7 @@ class ArticleController extends UnCController{
             $content = \Yii::$app->request->post('content');
             $rId= \Yii::$app->request->post('rId');
             $rTitle= \Yii::$app->request->post('rTitle');
+            $rSign= \Yii::$app->request->post('rSign');
             if(empty($userSign))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'登陆之后才能评论'));
@@ -106,7 +107,7 @@ class ArticleController extends UnCController{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法评论未知文章'));
                 exit;
             }
-            $this->aritcleSer->addArticleComment($userSign,$content,$rId,$articleId,$rTitle);
+            $this->aritcleSer->addArticleComment($userSign,$content,$rId,$articleId,$rTitle,$rSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e)
         {

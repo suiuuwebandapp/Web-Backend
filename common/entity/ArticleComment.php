@@ -47,4 +47,8 @@ class ArticleComment{
      * @var相对的内容标题
      */
     public $rTitle;
+    /**
+     * @var相对用户
+     */
+    public $rUserSign;
 }

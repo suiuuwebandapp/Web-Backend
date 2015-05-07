@@ -32,9 +32,9 @@
                 </ul>
             </div>
             <div class="header-right fr">
-                <p class="search"><input type="text" value="" class="text-xqy"></p>
+                <!--<p class="search"><input type="text" value="" class="text-xqy"></p>-->
                 <ul>
-                    <li><a href="#" class="search-btn"></a></li>
+                    <!--<li><a href="#" class="search-btn"></a></li>-->
                     <li class="xitong" id="suiuu-btn1"><a href="javascript:;"></a>
 
                         <div class="xit-sz">
@@ -89,6 +89,7 @@
                         </div>
                     </li>
                 </ul>
+                <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy"></p><a href="#" class="search-btn"></a></div>
             </div>
         </div>
     </div>
@@ -109,10 +110,10 @@
                 </ul>
             </div>
             <div class="nav-right">
-                <p class="search"><input type="text" value="" class="text-xqy"></p>
+               <!-- <p class="search"><input type="text" value="" class="text-xqy"></p>-->
                 <ol>
-                    <li><a href="#" class="search-btn"></a></li>
-                    <li><a href="javascript:;" id="zhuce">注册</a>
+                    <!--<li><a href="#" class="search-btn"></a></li>-->
+                    <li class="zhuces"><a href="javascript:;" id="zhuce">注册</a>
 
                         <div id="zhuce-main">
                             <a href="#" class="tab-title tab-title01">邮箱注册</a>
@@ -190,6 +191,7 @@
                         </div>
                     </li>
                 </ol>
+                <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy"></p><a href="#" class="search-btn"></a></div>
             </div>
         </div>
     </div>

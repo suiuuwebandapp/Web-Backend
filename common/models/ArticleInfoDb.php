@@ -200,22 +200,23 @@ class ArticleInfoDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO article_comment
             (
-             userSign,content,replayCommentId,supportCount,opposeCount,cTime,articleId,rTitle
+             userSign,content,replayCommentId,supportCount,opposeCount,cTime,articleId,rTitle,rUserSign
             )
             VALUES
             (
-              :userSign,:content,:replayCommentId,:supportCount,:opposeCount,now(),:articleId,:rTitle
+              :userSign,:content,:replayCommentId,:supportCount,:opposeCount,now(),:articleId,:rTitle,:rUserSign
             )
         ");
 
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign", $articleComment->userSign, PDO::PARAM_STR);
         $command->bindParam(":content", $articleComment->content, PDO::PARAM_STR);
-        $command->bindParam(":replayCommentId", $articleComment->relativeCommentId, PDO::PARAM_INT);
+        $command->bindParam(":replayCommentId", $articleComment->replayCommentId, PDO::PARAM_INT);
         $command->bindParam(":supportCount", $articleComment->supportCount, PDO::PARAM_INT);
         $command->bindParam(":opposeCount", $articleComment->opposeCount, PDO::PARAM_INT);
         $command->bindParam(":articleId",$articleComment->articleId, PDO::PARAM_INT);
         $command->bindParam(":rTitle",$articleComment->rTitle, PDO::PARAM_INT);
+        $command->bindParam(":rUserSign", $articleComment->rUserSign, PDO::PARAM_STR);
         $command->execute();
     }
 

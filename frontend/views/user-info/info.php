@@ -141,8 +141,8 @@
     <!-----------con-nav-------------->
     <ul class="con-nav synav">
         <li><a href="#"  class="active">收件箱</a></li>
-        <li><a href="#">发言</a></li>
-        <li><a href="#">收藏</a></li>
+        <li><a href="javascript:;" id="myComment">发言</a></li>
+        <li><a href="javascript:;" id="myCollect">收藏</a></li>
         <li><a href="#" id="myOrderManager">我的预定</a></li>
         <li><a href="#" id="tripManager">随游管理</a></li>
         <li><a href="#" id="userInfo">个人资料</a></li>
@@ -266,15 +266,9 @@
     </div>
     <!-------------TabCon2-发言------------->
     <div class="tab-div huifu TabCon clearfix">
-        <div class="huifu-top">
-            <img src="" alt="" class="pic">
-            <div class="picright">
-                <h4>京都奈良公园一日游</h4>
-                <p class="xing"><img alt="" src="/assets/images/start2.fw.png"><img alt="" src="/assets/images/start2.fw.png"><img alt="" src="/assets/images/start2.fw.png"><img alt="" src="/assets/images/start1.fw.png"><img alt="" src="/assets/images/start1.fw.png"></p>
-            </div>
-        </div>
+
         <div class="huifu-list">
-            <ul>
+            <ul id="commentList_51">
                 <li>
                     <div class="userPic">
                         <a href="#"><img alt="" src="/assets/images/1.png"></a>
@@ -287,6 +281,7 @@
                     </div>
                     <p>日本都有什么旅游景点？</p>
                     <b>13:50</b>
+                    <p class="detail">关&nbsp;于&nbsp;:&nbsp;<a href="">京都奈良公园一日游</a></p>
                 </li>
                 <li>
                     <div class="userPic">
@@ -315,21 +310,15 @@
                     <b>13:50</b>
                 </li>
             </ul>
+            <ol id="spage"></ol>
         </div>
     </div>
 
     <!-------------TabCon3-收藏------------->
 
     <div class="tab-div shoucang TabCon clearfix">
-        <ul class="clearfix">
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
+        <ul class="clearfix" id="myCollectList">
+
             <li>
                 <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
                 <div class="userPic">
@@ -689,6 +678,12 @@
             $("#tripManager").parent("li").hide();
         }
 
+        $("#myComment").bind("click",function(){
+            initMyComment(1);
+        });
+        $("#myCollect").bind("click",function(){
+            initCollect();
+        });
 
         $("#unFinishOrderManager").bind("click",function(){
             getUnFinishList();
@@ -1690,6 +1685,102 @@
                 sendTravelCode();
             });
         }
+    }
+
+
+    function initCollect()
+    {
+        $.ajax({
+            url: "/user-info/get-collection-travel",
+            type: "post",
+            data:{
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip('得到收藏异常');
+            },
+            success: function(data){
+                var result=eval("("+data+")");
+                if(result.status==1){
+                  var l =  result.data.data.length;
+                    $('#myCollectList').html('');
+
+                    var str ='';
+                    for(var i=0;i<l;i++)
+                    {
+                        var rst= result.data.data[i];
+                        str+=' <li>';
+                        str+='  <a href="/view-trip/info?trip='+rst.tripId+'"><img src="'+rst.titleImg+'" alt=""></a>';
+                        str+='<div class="userPic">';
+                        str+='<a href="#"><img src="'+rst.headImg+'" alt=""></a>';
+                        str+='<span>'+rst.nickname+'</span>';
+                        str+='</div>';
+                        str+='<p>'+rst.title+'</p>';
+                        str+='</li>';
+
+                    }
+                    $('#myCollectList').append(str);
+                }else{
+                    Main.showTip('得到收藏异常');
+                }
+            }
+        });
+    }
+
+    function initMyComment(page)
+    {
+        $.ajax({
+            url: "/user-info/get-comment",
+            type: "post",
+            data:{
+                cPage:page,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip('得到收藏异常');
+            },
+            success: function(data){
+                var result=eval("("+data+")");
+                if(result.status==1){
+                    var l =  result.data.data.length;
+                    $('#commentList_51').html('');
+
+                    var str ='';
+                    for(var i=0;i<l;i++)
+                    {
+                        var rst= result.data.data[i];
+                        str+='<li>';
+                        str+='<div class="userPic">';
+                        str+='<a href="#"><img alt="" src="'+rst.headImg+'"></a>';
+                        str+='<span>'+rst.nickname+'</span>';
+                        str+='</div>';
+                        if(rst.rnickname!=null){
+                        str+='<span>回复</span>';
+                        str+='<div class="userPic">';
+                        str+=' <a href="#"><img alt="" src="'+rst.rheadImg+'"></a>';
+                        str+=' <span>'+rst.rnickname+'</span>';
+                        str+='</div>';
+                        }
+                        str+='<p>'+rst.content+'</p>';
+                        str+='<b>'+rst.cTime+'</b>';
+                        str+='<p class="detail">关&nbsp;于&nbsp;:&nbsp;<a href="">'+rst.title+'</a></p>';
+                        str+='</li>';
+
+                    }
+                    $('#commentList_51').append(str);
+                    $('#spage').html('');
+                    $('#spage').append(result.message);
+
+                    $("#spage li a").click(function() {
+                        var page=$(this).attr('page');
+                        initMyComment(page);
+                    });
+                }else{
+                    Main.showTip('得到收藏异常');
+                }
+            }
+        });
+
     }
 
 

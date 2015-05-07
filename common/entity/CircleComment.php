@@ -51,4 +51,8 @@ class CircleComment{
      * @var针对文章id
      */
     public $articleId;
+    /**
+     * @var相对用户
+     */
+    public $rUserSign;
 }

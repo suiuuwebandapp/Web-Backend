@@ -10,10 +10,14 @@
 namespace frontend\controllers;
 
 
+use common\components\Common;
 use common\entity\UserBase;
+use frontend\components\Page;
 use frontend\services\CountryService;
 use common\components\Code;
 use common\components\OssUpload;
+use frontend\services\TravelTripCommentService;
+use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
 
@@ -173,6 +177,65 @@ class UserInfoController extends CController{
 
         } catch (Exception $e) {
             echo json_encode(Code::statusDataReturn(Code::FAIL, $e));
+        }
+    }
+
+    //得到收藏随游
+    public function  actionGetCollectionTravel()
+    {
+
+        try {
+            if(empty($this->userObj))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
+                return;
+            }
+            $page = new Page(\Yii::$app->request);
+            $userSign = $this->userObj->userSign;
+            $AttentionService =new UserAttentionService();
+            $data = $AttentionService->getUserCollectionTravel($userSign, $page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+        }
+    }
+
+
+    //发言
+    public function actionGetComment()
+    {
+        try {
+            if(empty($this->userObj))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才有发言'));
+                return;
+            }
+            $cPage=\Yii::$app->request->post('cPage');
+            if(empty($cPage)||$cPage<1)
+            {
+                $cPage=1;
+            }
+            $numb=2;
+            $page=new Page();
+            $page->currentPage=$cPage;
+            $page->pageSize=$numb;
+            $page->startRow = (($page->currentPage - 1) * $page->pageSize);
+            $userSign = $this->userObj->userSign;
+            $travelSer =new TravelTripCommentService();
+            $rst = $travelSer->getCommentTripList($page,$userSign);
+            $str='';
+            $totalCount=$rst['msg']->totalCount;
+            if(intval($totalCount)!=0)
+            {
+
+                $count=intval($totalCount);
+                $str=Common::pageHtml($cPage,$numb,$count);
+            }
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $rst,$str));
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
         }
     }
 

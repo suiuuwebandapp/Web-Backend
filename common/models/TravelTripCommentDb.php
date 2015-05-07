@@ -25,22 +25,24 @@ class TravelTripCommentDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO travel_trip_comment
             (
-             userSign,content,replayCommentId,supportCount,opposeCount,cTime,tripId,isTravel
+             userSign,content,rTitle,replayCommentId,supportCount,opposeCount,cTime,tripId,isTravel,rUserSign
             )
             VALUES
             (
-              :userSign,:content,:replayCommentId,:supportCount,:opposeCount,now(),:tripId,:isTravel
+              :userSign,:content,:rTitle,:replayCommentId,:supportCount,:opposeCount,now(),:tripId,:isTravel,:rUserSign
             )
         ");
 
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign", $TravelTripComment->userSign, PDO::PARAM_STR);
         $command->bindParam(":content", $TravelTripComment->content, PDO::PARAM_STR);
+        $command->bindParam(":rTitle", $TravelTripComment->rTitle, PDO::PARAM_STR);
         $command->bindParam(":replayCommentId", $TravelTripComment->replayCommentId, PDO::PARAM_INT);
         $command->bindParam(":supportCount", $TravelTripComment->supportCount, PDO::PARAM_INT);
         $command->bindParam(":opposeCount", $TravelTripComment->opposeCount, PDO::PARAM_INT);
         $command->bindParam(":tripId",$TravelTripComment->tripId, PDO::PARAM_INT);
         $command->bindParam(":isTravel",$TravelTripComment->isTravel, PDO::PARAM_INT);
+        $command->bindParam(":rUserSign", $TravelTripComment->rUserSign, PDO::PARAM_STR);
 
         $command->execute();
 
@@ -66,7 +68,7 @@ class TravelTripCommentDb extends ProxyDb
     }
 
 
-    /**得到评论列表8代表相对类型为目的地评论支持或反对 status 1 支持 2是反对
+    /**得到评论列表10代表相对类型为随游评论支持或反对 status 1 支持 2是反对
      * @param $tripId
      * @param $userSign
      * @param $page
@@ -158,4 +160,33 @@ WHERE a.userSign=:userSign  GROUP BY a.tripId
         return $this->find($page);
     }
 
+    //根据用户和随游得到评论
+    public function getCommentUserAndTrip($page,$userSign,$tripId)
+    {
+        $sql=sprintf("
+        FROM travel_trip_comment a
+WHERE a.userSign=:userSign AND a.tripId=:tripId
+        ");
+        $this->setParam("userSign", $userSign);
+        $this->setParam("tripId", $tripId);
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
+    //根据用户得到评论
+    public function getCommentByUser($page,$userSign)
+    {
+        $sql=sprintf("
+         FROM travel_trip_comment a
+         LEFT JOIN user_base d ON d.userSign =a.userSign
+        LEFT JOIN travel_trip b ON a.tripId=b.tripId
+        LEFT JOIN user_base c ON c.userSign=a.rUserSign
+        WHERE a.userSign = :userSign OR a.rUserSign=:rSign ORDER BY a.commentId DESC
+        ");
+        $this->setParam("userSign", $userSign);
+        $this->setParam("rSign", $userSign);
+        $this->setSelectInfo('a.*,b.title,c.nickname as rnickname,c.headImg as rheadImg,d.nickname,d.headImg');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
 }

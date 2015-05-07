@@ -77,7 +77,7 @@
 
 
         </ul>
-        <ol id="tanchu_page">
+        <ol id="spage">
         </ol>
     </div>
     <div class="zhuanlan-text">
@@ -118,7 +118,7 @@
 var rid=0;
 var articleId=0;
 var page=1;
-
+var rSign='';
     function showOld(id)
     {
         articleId=id;
@@ -181,7 +181,7 @@ function getComment(page)
                 var l =obj.data.comment.length;
                 if(l==0)
                 {
-                    str='快来抢沙发';
+                    str='<li><p>tripId</p></li>';
                 }
                 for(var i=0;i<l;i++)
                 {
@@ -205,15 +205,15 @@ function getComment(page)
                     str+=r;
                     str+="</b>";
                     str+=' '+obj.data.comment[i].content;
-                    str+="</p><div class='fr resp'><a href='javascript:;' onclick='sumbmitZan("+obj.data.comment[i].commentId+","+"this)' class='picon zan "+c+"'></a><a href='#pllist' id='"+obj.data.comment[i].commentId+"' class='picon huifu' onclick='reply(this)'></a>";
+                    str+="</p><div class='fr resp'><a href='javascript:;' onclick='sumbmitZan("+obj.data.comment[i].commentId+","+"this)' class='picon zan "+c+"'></a><a href='#pllist'  rSign='"+obj.data.comment[i].userSign+"'  id='"+obj.data.comment[i].commentId+"' class='picon huifu' onclick='reply(this)'></a>";
                     str+="</div></li>";
                 }
                 $('#tanchu_pl').append(str);
 
-                $('#tanchu_page').html('');
-                $('#tanchu_page').append(obj.message);
+                $('#spage').html('');
+                $('#spage').append(obj.message);
 
-                $("#tanchu_page li a").click(function() {
+                $("#spage li a").click(function() {
                    var page=$(this).attr('page');
                     getComment(page);
                 });
@@ -229,6 +229,7 @@ function getComment(page)
     function reply(obj)
     {
         rid=$(obj).attr('id');
+        rSign=$(obj).attr('rSign');
         var t=$(obj).parent("div").prev().prev().find("span").html();
         $("#pinglun").val('@'+t+'   :');
 
@@ -255,6 +256,7 @@ function getComment(page)
                 content: content,
                 rTitle: t,
                 rId: rid,
+                rSign:rSign,
                 _csrf: $('input[name="_csrf"]').val()
             },
             beforeSend: function () {

@@ -100,7 +100,7 @@ class ArticleService extends BaseDb
      * @param $articleId
      * @throws Exception
      */
-    public function addArticleComment($userSing,$content,$relativeCommentId,$articleId,$rTitle)
+    public function addArticleComment($userSing,$content,$relativeCommentId,$articleId,$rTitle,$rSign)
     {
         try {
             $conn = $this->getConnection();
@@ -109,8 +109,9 @@ class ArticleService extends BaseDb
             $commentEntity->articleId=$articleId;
             $commentEntity->userSign=$userSing;
             $commentEntity->content=$content;
-            $commentEntity->relativeCommentId=$relativeCommentId;
+            $commentEntity->replayCommentId=$relativeCommentId;
             $commentEntity->rTitle=$rTitle;
+            $commentEntity->rUserSign=$rSign;
             $this->articleDb->addArticleComment($commentEntity);
         } catch (Exception $e) {
             throw new Exception('添加评论异常',Code::FAIL,$e);

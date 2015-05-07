@@ -265,11 +265,11 @@ ORDER BY b.beginDate DESC
         $sql = sprintf("
             INSERT INTO circle_article_comment
             (
-             userSign,content,relativeCommentId,supportCount,opposeCount,cTime,cStatus,cLastTime,articleId
+             userSign,content,relativeCommentId,supportCount,opposeCount,cTime,cStatus,cLastTime,articleId,rUserSign
             )
             VALUES
             (
-              :userSign,:content,:relativeCommentId,:supportCount,:opposeCount,now(),:cStatus,now(),:articleId
+              :userSign,:content,:relativeCommentId,:supportCount,:opposeCount,now(),:cStatus,now(),:articleId,:rUserSign
             )
         ");
 
@@ -281,6 +281,7 @@ ORDER BY b.beginDate DESC
         $command->bindParam(":opposeCount", $CircleCommentEntity->opposeCount, PDO::PARAM_INT);
         $command->bindValue(":cStatus", CircleComment::COMMENT_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindValue(":articleId",$CircleCommentEntity->articleId, PDO::PARAM_INT);
+        $command->bindParam(":rUserSign", $CircleCommentEntity->rUserSign, PDO::PARAM_STR);
         $command->execute();
         return $this->getConnection()->lastInsertID;
     }

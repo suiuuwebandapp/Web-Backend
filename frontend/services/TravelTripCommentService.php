@@ -40,7 +40,7 @@ class TravelTripCommentService extends BaseDb
         }
     }
 
-    public function addComment($userSign,$content,$replayCommentId,$tripId,$rTitle)
+    public function addComment($userSign,$content,$replayCommentId,$tripId,$rTitle,$rUserSign)
     {
         try {
             $conn = $this->getConnection();
@@ -59,6 +59,7 @@ class TravelTripCommentService extends BaseDb
             {
                 $comment->isTravel=TravelTripComment::TYPE_IS_TRAVEL_Y;
             }
+            $comment->rUserSign=$rUserSign;
             //得到是否玩过暂未修改
             $this->TravelTripCommentDb->addTripComment($comment);
         } catch (Exception $e) {
@@ -99,6 +100,21 @@ class TravelTripCommentService extends BaseDb
             }
         } catch (Exception $e) {
             throw new Exception('添加点赞异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
+    public function getCommentTripList($page,$userSign)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->TravelTripCommentDb = new TravelTripCommentDb($conn);
+            $TripList=$this->TravelTripCommentDb->getCommentByUser($page,$userSign);
+            return array('data'=>$TripList->getList(),'msg'=>$TripList);
+        } catch (Exception $e) {
+            throw new Exception('查询发言异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

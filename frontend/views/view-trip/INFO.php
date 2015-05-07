@@ -195,7 +195,7 @@
                 <div class="zhuanlan-web">
                     <ul id="tanchu_pl">
                     </ul>
-                    <ol id="tanchu_page">
+                    <ol id="spage">
                     </ol>
                 </div>
                 <div class="zhuanlan-text">
@@ -595,6 +595,7 @@
     var rid=0;
     var tripId=$("#tripId").val();
     var page=1;
+    var rSign='';
     function getComment(page)
     {
         $.ajax({
@@ -639,15 +640,15 @@
                         str+=r;
                         str+="</b>";
                         str+=' '+obj.data[i].content;
-                        str+="</p><div class='fr resp'><a href='javascript:;' onclick='sumbmitZan("+obj.data[i].commentId+","+"this)' class='picon zan "+c+"'></a><a href='#pllist' id='"+obj.data[i].commentId+"' class='picon huifu' onclick='reply(this)'></a>";
+                        str+="</p><div class='fr resp'><a href='javascript:;' onclick='sumbmitZan("+obj.data[i].commentId+","+"this)' class='picon zan "+c+"'></a><a href='#pllist' rSign='"+obj.data[i].userSign+"' id='"+obj.data[i].commentId+"' class='picon huifu' onclick='reply(this)'></a>";
                         str+="</div></li>";
                     }
                     $('#tanchu_pl').append(str);
 
-                    $('#tanchu_page').html('');
-                    $('#tanchu_page').append(obj.message);
+                    $('#spage').html('');
+                    $('#spage').append(obj.message);
 
-                    $("#tanchu_page li a").click(function() {
+                    $("#spage li a").click(function() {
                         var page=$(this).attr('page');
                         getComment(page);
                     });
@@ -663,6 +664,7 @@
     function reply(obj)
     {
         rid=$(obj).attr('id');
+        rSign=$(obj).attr('rSign');
         var t=$(obj).parent("div").prev().prev().find("span").html();
         $("#pinglun").val('@'+t+'   :');
 
@@ -690,6 +692,7 @@
                 content: content,
                 rTitle: t,
                 rId: rid,
+                rSign:rSign,
                 _csrf: $('input[name="_csrf"]').val()
             },
             beforeSend: function () {
