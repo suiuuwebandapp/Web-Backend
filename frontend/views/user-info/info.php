@@ -108,6 +108,9 @@
         margin-left: 20px;
         width: 210px;
     }
+    .validate{
+        background-color:  #73b9ff !important;
+    }
 </style>
 <input type="hidden" id="lon"/>
 <input type="hidden" id="lat"/>
@@ -580,9 +583,9 @@
                         <input id="phone" type="text" value="<?= $this->context->userObj->phone?>" class="phone fl" >
                     </div>
                     <p class="p1">
-                        <span class="fl">输入验证码</span>
                         <input type="text" class="text fl"  maxlength="6" id="code">
                         <input type="button" value="获取验证码" class="btn fl" id="getCode">
+                        <input type="button" value="立即验证" class="btn validate" id="validatePhone">
                     </p>
                     <p><span>邮箱验证:</span><span id="emailTip" class="form_tip"></span></p>
                     <p class="p1 p2">
@@ -730,7 +733,7 @@
         var lat=$("#lat").val();
         var profession=$("input:radio[name='profession']:checked").val();
         if(profession=='其他'){
-            profession=$("#ther").val();
+            profession=$("#other").val();
         }
         if(nickname==''){
 
@@ -911,6 +914,8 @@
         }else{
             $("input:radio[name='profession'][value='其他']").attr("checked",true);
             $("#shenfen05").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+            $("#other").val(userProfession);
+            $("#other").show();
         }
 
     }
@@ -1174,7 +1179,7 @@
             var count=tripInfo.count==null?'':tripInfo.count;
             if(count!=''){ count='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a><b>'+count+'</b>'};
             html+='<div class="orderList clearfix">';
-            html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+',this)">';
+            html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="('+tripInfo.tripId+',this)">';
             html+=' <dl class="order clearfix">';
             html+='   <dt class="title">';
             html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';

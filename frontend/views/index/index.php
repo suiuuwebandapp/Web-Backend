@@ -165,6 +165,10 @@
                     var trip,html="";
                     for(var i=0;i<list.length;i++){
                         trip=list[i];
+                        var title=trip.title;
+                        if(title.length>13){
+                            title=title.substring(0,13)+"...";
+                        }
                         html+='<li><div class="box"><img src="'+trip.titleImg+'" alt="" width="284px" height="260px"></div>';
                         html+='<a href="/view-trip/info?trip='+trip.tripId+'"><div class="zhezhao">';
                         html+='<p>'+trip.intro+'</p>';
@@ -177,7 +181,7 @@
                         html+='<span>基础价格：<b>'+trip.basePrice+'</b></span></p>';
                         html+='</div></a>';
                         html+='<p class="user01"><img src="'+trip.headImg+'" alt="" width="40" height="40"><font>'+trip.nickname+'</font></p>';
-                        html+='<h4>'+trip.title+'</h4>';
+                        html+='<h4>'+title+'</h4>';
                         html+='</li>';
                     }
                     $("#ul1").append(html);

@@ -742,7 +742,7 @@
         $("#scenicTip").html("");
         var lon=$(obj).attr("lon");
         var lat=$(obj).attr("lat");
-        alert("load");
+
         if(lon==''||lat==''){
             findScenicInfo(obj);
         }
