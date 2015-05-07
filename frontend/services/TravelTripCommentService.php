@@ -51,6 +51,15 @@ class TravelTripCommentService extends BaseDb
             $comment->content=$content;
             $comment->replayCommentId=$replayCommentId;
             $comment->rTitle=$rTitle;
+            $rst = $this->TravelTripCommentDb->getTravelOrderByUserSign($userSign,$tripId);
+            if(empty($rst)||$rst==false)
+            {
+                $comment->isTravel=TravelTripComment::TYPE_IS_TRAVEL_N;
+            }else
+            {
+                $comment->isTravel=TravelTripComment::TYPE_IS_TRAVEL_Y;
+            }
+            //得到是否玩过暂未修改
             $this->TravelTripCommentDb->addTripComment($comment);
         } catch (Exception $e) {
             throw new Exception('获取评论异常',Code::FAIL,$e);

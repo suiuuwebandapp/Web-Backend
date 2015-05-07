@@ -9,6 +9,7 @@
 namespace frontend\models;
 
 
+use common\entity\UserOrderInfo;
 use common\models\ProxyDb;
 use common\entity\CircleArticle;
 use common\entity\UserBase;
@@ -143,6 +144,33 @@ class CircleDb extends ProxyDb
         $this->setParam("aStatus", CircleArticle::ARTICLE_STATUS_NORMAL);
         $this->setSelectInfo('a.cId,a.cAddrId,a.aTitle,a.aImg,a.aCmtCount,a.aSupportCount,a.articleId');
 
+        $this->setSql($sql);
+
+        return $this->find($page);
+    }
+
+    /**
+     * 查找参与的随游根据用户sign
+     * @param $userSign
+     * @param $page
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getTravelListByUserSign($userSign,$page)
+    {
+        $this->clearParam();
+        $sql=sprintf("
+         FROM travel_trip a
+LEFT JOIN user_order_info b ON a.tripId  = b.tripId
+LEFT JOIN user_publisher p ON a.createPublisherId=p.userPublisherId
+LEFT JOIN user_base c ON p.userId=c.userSign
+WHERE b.userId=:userSign AND a.`status`=1 AND c.`status`=1 AND (b.`status`= :successStatus OR b.`status`= :finishStatus)
+ORDER BY b.beginDate DESC
+        ");
+        $this->setParam("userSign", $userSign);
+        $this->setParam("successStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
+        $this->setParam("finishStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH);
+        $this->setSelectInfo('a.tripId,a.score,c.nickname,c.headImg,a.title,a.titleImg');
         $this->setSql($sql);
         return $this->find($page);
     }

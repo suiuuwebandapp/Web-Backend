@@ -9,6 +9,7 @@ namespace common\models;
 
 use common\entity\TravelTripComment;
 use common\entity\UserAttention;
+use common\entity\UserOrderInfo;
 use yii\db\mssql\PDO;
 
 class TravelTripCommentDb extends ProxyDb
@@ -119,4 +120,42 @@ WHERE a.tripId=:tripId AND c.`status`=1 ORDER BY a.commentId DESC
         $command->bindParam(":commentId", $Comment->commentId, PDO::PARAM_INT);
         return $command->execute();
     }
+
+    /**根据随游和用户 得到用户有没有游玩过
+     * @param $userSign
+     * @param $tripId
+     * @return array|bool
+     */
+    public function getTravelOrderByUserSign($userSign,$tripId)
+    {
+        $sql = sprintf("
+       SELECT * FROM user_order_info b WHERE b.userId=:userSign AND b.tripId=:tripId  AND (b.`status`= :successStatus OR b.`status`= :finishStatus)
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindValue(":successStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS, PDO::PARAM_INT);
+        $command->bindValue(":finishStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_INT);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        return $command->queryOne();
+    }
+
+    /**得到在那些随游里发言
+     * @param $page
+     * @param $userSign
+     * @return \backend\components\Page|null
+     */
+    public function getCommentTripId($page,$userSign)
+    {
+        $sql=sprintf("
+        FROM travel_trip_comment a
+LEFT JOIN travel_trip b ON a.tripId=b.tripId
+WHERE a.userSign=:userSign  GROUP BY a.tripId
+        ");
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('b.title,b.titleImg,b.tripId,b.score');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
 }

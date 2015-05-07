@@ -50,6 +50,11 @@ class ProxyDb extends Connection {
         $this->paramArray[$key]=$value;
     }
 
+    public function clearParam()
+    {
+        $this->paramArray=array();
+    }
+
 
     public function getTableName(){
         return $this->tableName;

@@ -9,7 +9,11 @@ namespace common\entity;
 
 class TravelTripComment{
 
+
     const TYPE_SUPPORT=1;
+
+    const TYPE_IS_TRAVEL_Y=1;//已经有玩过
+    const TYPE_IS_TRAVEL_N=2;//尚未游玩
     /**
      * @var 评论id
      */

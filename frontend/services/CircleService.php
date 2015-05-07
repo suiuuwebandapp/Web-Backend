@@ -134,7 +134,7 @@ class CircleService extends BaseDb
             $rst =  $this->userAttentionDb->getAttentionResult($attention);
             if(!empty($data)){
                 $data['attentionId']='';
-                $data['commentList']='';
+                $data['commentList']=array();
                 if($rst!=false)
                 {
                     $data['attentionId'] = $rst['attentionId'];
@@ -412,7 +412,7 @@ class CircleService extends BaseDb
             $data['attentionRst']=array();
             if(!empty($attRst)&&$attRst!=false)
             {
-                $data['attentionRst']=$attRst;
+                $data['attentionRst']=array($attRst);
             }
             $AttArr= $this->userAttentionDb->getAttentionCount($userSign);
             $data['AttentionNumb']='0';
@@ -422,10 +422,39 @@ class CircleService extends BaseDb
             }
             $articleList=$this->CircleDb->getArticleListByUserSign($userSign,$page);
             $data['articleList'] = $articleList->getList();
-            $data['msg'] = $articleList;
-            return $this->unifyReturn($data);
+            $travelList = $this->CircleDb->getTravelListByUserSign($userSign,$page);
+            $data['travelList'] = $travelList->getList();
+
+            return $data;
         } catch (Exception $e) {
-            throw new Exception('查询用户主页异常',Code::FAIL,$e);
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+     public function getArticleListByUserSign($userSign,$page)
+     {
+         try {
+             $conn = $this->getConnection();
+             $this->CircleDb = new CircleDb($conn);
+             $data=$this->CircleDb->getArticleListByUserSign($userSign,$page);
+             return $this->unifyReturn(array('data'=>$data->getList(),'msg'=>$data));
+         } catch (Exception $e) {
+             throw new Exception('查询圈子文章评论异常',Code::FAIL,$e);
+         } finally {
+             $this->closeLink();
+         }
+     }
+    public function getTravelListByUserSign($userSign,$page)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->CircleDb = new CircleDb($conn);
+            $data=$this->CircleDb->getTravelListByUserSign($userSign,$page);
+            return $this->unifyReturn(array('data'=>$data->getList(),'msg'=>$data));
+        } catch (Exception $e) {
+            throw new Exception('查询圈子文章评论异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

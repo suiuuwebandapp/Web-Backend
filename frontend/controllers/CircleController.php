@@ -314,7 +314,6 @@ class CircleController extends AController{
         try{
             $userSign=\Yii::$app->request->post('userSign');
             $page = new Page(\Yii::$app->request);
-            //$userSign='7f11453d3ed03159808e5c8ee850f1db';
             $mySign=$this->userObj->userSign;
             if(empty($userSign))
             {
@@ -330,6 +329,37 @@ class CircleController extends AController{
         }
     }
 
+    //得到参与随游列表
+    public function actionGetTravelListByUserSign()
+    {
+        $this->loginValid();
+        try{
+            $userSign = $this->userObj->userSign;
+            $page = new Page(\Yii::$app->request);
+            $data =$this->CircleService->getTravelListByUserSign($userSign,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+    //得到用户的帖子
+    public function actionGetArticleListByUserSign()
+    {
+        $this->loginValid();
+        try{
+            $userSign = $this->userObj->userSign;
+            $page = new Page(\Yii::$app->request);
+
+            $data =$this->CircleService->getArticleListByUserSign($userSign,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
     public function actionTest()
     {
         $now = date('Y-m-d H:i:s', time());
