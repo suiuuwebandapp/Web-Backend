@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link href="css/imgareaselect-default.css" media="screen" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="js/jquery.min.js" ></script>
+<script type="text/javascript" src="js/jquery.imgareaselect.js" ></script>
+<script type="text/javascript" src="js/xuanzhuan.base.src.js" ></script>
+</head>
+<body>
+<style>
+div.preview_div{overflow:hidden;margin:auto;}
+div.p_photo_l{width:155px;height:155px;}
+div.p_photo_m{width:80px;height:80px;}
+div.p_photo_s{width:32px;height:32px;}
+.upload{
+	float:left;
+}
+.preview{
+	float:left;
+}
+</style>
+<!--主体内容开始-->
+<article class="w">
+	<div class="mtb15px clearfix">
+		
+		<section class="upload">
+            <fieldset style="width:300px;height:300px;text-algin:center;padding:0px;" id="image_fileset">
+				<img id='img_origin' src="pic.png" style="max-width:300px;max-height:300px;margin-top:40px;margin-bottom:40px;overflow:hidden"/>
+			</fieldset>
+			<button onclick="xuanzhuan(-1)">-90°</button>
+			<button onclick="xuanzhuan(1)">90°</button>
+            <form id='coordinates_form' action="/profile/upload-photo/save" method="post">
+                <input type='hidden' name='x' class='x' value='0'/>
+                <input type='hidden' name='y' class='y' value='0'/>
+                <input type='hidden' name='w' class='w' value='0'/>
+                <input type='hidden' name='h' class='h' value='0'/>
+				<input type='hidden' name='rotate' class='rotate' value='0'/>
+            </form>
+		</section>
+		<aside class="preview">
+			<figure>
+				<div class='preview_div p_photo_l'><img src="pic.png" class="nophoto_l" id="nophoto_l"/></div>
+				<figcaption>请注意中小尺寸头像是否清晰</figcaption>
+			</figure>
+		</aside>
+	</div>
+</article>
+<!--主体内容结束-->
+<script>
+
+var rotateCount=0;
+var imgAreaSelectApi;
+$(document).ready(function(){
+	//构造imgAreaSelectApi
+	imgAreaSelectApi = $('#img_origin').imgAreaSelect({
+		instance : true,	// true，返回一个imgAreaSelect绑定到的图像的实例，可以使用api方法
+		onSelectChange : preview,	// 改变选区时的回调函数
+		handles : true,	// true，调整手柄则会显示在选择区域内
+		fadeSpeed:200,
+		resizable : true
+	});
+	imgAreaSelectApi.setRotate(0);
+	
+	//加载时触发的默认选区
+	$('#img_origin').load(function(){
+		var form = $('#coordinates_form');
+		
+		//获取 x、y、w、h的值
+		var left = parseInt(form.children('.x').val());	
+		var top = parseInt(form.children('.y').val());
+		var width = parseInt(form.children('.w').val());
+		var height = parseInt(form.children('.h').val());
+		
+		//imgAreaSelectApi 就是图像img_origin的实例 上边instance已解释
+		//setSelection(),设置选区的坐标
+		//update(),更新
+		imgAreaSelectApi.setSelection(left, top, left+width, top+height);
+		imgAreaSelectApi.update();
+	});
+	
+	//preview方法 img图片参数，selection选区参数
+	function preview(img, selection){
+		$('div.preview_div img').attr('src',"pic.png");
+		
+		var form = $('#coordinates_form');	
+		//重新设置x、y、w、h的值
+		form.children('.x').val(selection.x1);
+		form.children('.y').val(selection.y1);
+		form.children('.w').val(selection.x2-selection.x1);
+		form.children('.h').val(selection.y2-selection.y1);
+		form.children('.rotate').val(imgAreaSelectApi.getRotate());
+		preview_photo('p_photo_l', selection);
+	}
+	
+	//preview_photo()方法 左一的图片调整（与选区的图片显示一致）
+	//div_class是对应div的class
+	function preview_photo(div_class, selection){
+		var div = $('div.'+div_class);
+		
+		//获取div的宽度与高度
+		var width = div.outerWidth();
+		var height = div.outerHeight();
+
+		var scaleX = width/selection.width;
+		var scaleY = height/selection.height;
+	
+		div.find('img').css({
+			width : Math.round(scaleX * $('#img_origin').outerWidth())+'px',
+			height : Math.round(scaleY * $('#img_origin').outerHeight())+'px',
+			marginLeft : '-'+Math.round(scaleX * selection.x1)+'px',
+			marginTop : '-'+Math.round(scaleY * selection.y1)+'px'
+		});		
+	}
+	
+});
+function xuanzhuan(count){
+	rotateCount=count+rotateCount;
+	var du=((rotateCount)%4)*90;
+	rotate(document.getElementById("image_fileset"), du);
+	rotate($('div.preview_div').get(0),du);
+	imgAreaSelectApi.setRotate(du);
+	imgAreaSelectApi.update();
+}
+</script>	
+</body>
+</html>

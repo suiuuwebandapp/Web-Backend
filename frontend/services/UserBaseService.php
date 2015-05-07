@@ -406,4 +406,18 @@ class UserBaseService extends BaseDb
         return $userBase;
     }
 
+
+    public function updateUserHeadImg($userId,$headImg)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $this->userBaseDb->uploadHeadImg($userId,$headImg);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
 }

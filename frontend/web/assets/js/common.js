@@ -6,7 +6,7 @@
 /*-----登录注册checkUI-----*/
 
 $(function(){
-		$('input[type=checkbox]').prop('checked','')
+		//$('input[type=checkbox]').prop('checked','')
 		$('input[type=checkbox]').click(function(e) {
 			if( $(this).prop("checked")){
 				$(this).next('label').css('background-position','0 -157px')
@@ -22,7 +22,7 @@ $(function(){
 /*-----Radio--UI-----*/
 
 $(function(){
-		$('input[type=radio]').prop('checked','')
+		//$('input[type=radio]').prop('checked','')
 		$('input[type=radio]').click(function(e) {
 			if( $(this).prop("checked")){
 				$(this).next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
@@ -33,6 +33,7 @@ $(function(){
 			
         });
 })
+
 
 
 /*----导航效果----*/
@@ -46,9 +47,7 @@ $(function(){
 		}else{
 			$('.nav-out,.header').css('box-shadow','none')
 		}
-		
-		
-        
+
     });
 	
 

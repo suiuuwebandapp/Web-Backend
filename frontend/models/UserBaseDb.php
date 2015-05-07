@@ -31,12 +31,12 @@ class UserBaseDb extends ProxyDb
             (
               nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,
 
-              headImg,hobby,profession,school,intro,info,travelCount,userSign,status,isPublisher
+              headImg,hobby,profession,school,intro,info,travelCount,userSign,status,isPublisher,countryId,cityId,lon,lat
             )
             VALUES
             (
               :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,
-              :headImg,:hobby,:profession,:school,:intro,:info,0,:userSign,:status,:isPublisher
+              :headImg,:hobby,:profession,:school,:intro,:info,0,:userSign,:status,:isPublisher,:countryId,:cityId,:lon,:lat
             )
         ");
 
@@ -60,6 +60,10 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
         $command->bindParam(":status", $userBase->status, PDO::PARAM_INT);
         $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
+        $command->bindParam(":countryId", $userBase->countryid, PDO::PARAM_INT);
+        $command->bindParam(":cityId", $userBase->cityId, PDO::PARAM_INT);
+        $command->bindParam(":lon", $userBase->lon, PDO::PARAM_STR);
+        $command->bindParam(":lat", $userBase->lat, PDO::PARAM_STR);
 
 
         return $command->execute();
@@ -242,8 +246,8 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             UPDATE user_base SET
             nickname=:nickname,phone=:phone,areaCode=:areaCode,email=:email,lastLoginIp=:lastLoginIp,sex=:sex,profession=:profession,
-            birthday=:birthday,headImg=:headImg,hobby=:hobby,school=:school,intro=:intro,info=:info,isPublisher=:isPublisher
-
+            birthday=:birthday,headImg=:headImg,hobby=:hobby,school=:school,intro=:intro,info=:info,isPublisher=:isPublisher,
+            countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat
             WHERE userId=:userId
         ");
 
@@ -263,7 +267,10 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
-
+        $command->bindParam(":countryId", $userBase->countryid, PDO::PARAM_INT);
+        $command->bindParam(":cityId", $userBase->cityId, PDO::PARAM_INT);
+        $command->bindParam(":lon", $userBase->lon, PDO::PARAM_STR);
+        $command->bindParam(":lat", $userBase->lat, PDO::PARAM_STR);
         $command->bindParam(":userId", $userBase->userId, PDO::PARAM_INT);
 
         return $command->execute();
@@ -279,7 +286,7 @@ class UserBaseDb extends ProxyDb
     {
         $sql = sprintf("
             UPDATE user_base SET
-           password=:password
+            password=:password
             WHERE userId=:userId
         ");
 
@@ -288,5 +295,26 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":userId", $userBase->userId, PDO::PARAM_INT);
 
         return $command->execute();
+    }
+
+
+    /**
+     * 更新用户头像
+     * @param $userId
+     * @param $headImg
+     */
+    public function uploadHeadImg($userId,$headImg)
+    {
+        $sql = sprintf("
+            UPDATE user_base SET
+            headImg=:headImg
+            WHERE userId=:userId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":headImg", $headImg, PDO::PARAM_STR);
+        $command->bindParam(":userId", $userId, PDO::PARAM_INT);
+
+        $command->execute();
     }
 }

@@ -8,7 +8,79 @@
  */
 
 ?>
-<script type="text/javascript" src="/assets/js/myTab.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/assets/plugins/imgAreaSelect/css/imgareaselect-default.css" />
+<link rel="stylesheet" type="text/css" href="/assets/plugins/jquery-uploadifive/uploadifive.css">
+<link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
+
+<style>
+    .queue{
+        display: none;
+    }
+    #uploadifive-reImg{
+        display: none;
+    }
+    .sycon .myInformation .past01 .wdzl .sel-pic{
+        width: 300px;
+        height: 300px;
+        text-align: center;
+        max-width: 300px;
+        max-height: 300px;
+    }
+    .sycon .myInformation .past01 .wdzl .sel-pic .sect{
+        height: 300px;
+        line-height: 300px;
+    }
+    .p_photo1,.p_photo2,.p_photo3{
+        float: left;
+    }
+
+
+    .datetimepicker .prev{
+        background-image: url('/assets/images/day_left.png');
+        width:20px;
+        height: 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+        padding:0;
+    }
+    .datetimepicker .next{
+        background-image: url('/assets/images/day_right.png');
+        width:20px;
+        height: 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+        padding:0;
+    }
+    .datetimepicker th ,td{
+        padding: 3px 5px;
+    }
+    .datetimepicker table{
+        margin-top: 10px;
+    }
+
+    .select2-container .select2-choice {
+        background-color: #eee;
+        border-radius: 0px;
+        font-size: 14px;
+        color: dimgray;
+    }
+    .select2-drop {
+        font-size: 14px;
+    }
+    .select2-highlighted {
+        background-color: #eee;
+    }
+    .select2-no-results {
+        font-size: 14px;
+        color: dimgray;
+        text-align: center;
+    }
+</style>
+<input type="hidden" id="lon"/>
+<input type="hidden" id="lat"/>
+
 <!--------------header-end-------------->
 <!------------banner----------------->
 <div class="syTop">
@@ -18,14 +90,14 @@
         </div>
     </div>
     <div class="user w1200">
-        <a href="#" class="userPic"><img src="<?=$this->context->userObj->headImg ?>" width="122px" alt=""></a>
-        <span><?=$this->context->userObj->intro ?></span>
+        <a href="#" class="userPic"><img src="<?=$this->context->userObj->headImg ?>" width="120px" alt=""></a>
+        <span><?=$this->context->userObj->nickname ?></span>
         <p><?=$this->context->userObj->intro ?></p>
         <ul>
-            <li>姓名:<b>小A</b></li>
             <li>性别:<b><?php if($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></li>
             <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($this->context->userObj->birthday)?></b></li>
             <li>城市:<b>北京</b></li>
+            <li>职业:<b><?=$this->context->userObj->profession;?></b></li>
         </ul>
     </div>
 </div>
@@ -39,7 +111,7 @@
         <li><a href="#">收藏</a></li>
         <li><a href="#" id="myOrderManager">我的预定</a></li>
         <li><a href="#" id="tripManager">随游管理</a></li>
-        <li><a href="#">个人资料</a></li>
+        <li><a href="#" id="userInfo">个人资料</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
     <div class="tab-div myEmail TabCon clearfix" style="display:block">
@@ -353,68 +425,80 @@
             <li><a href="#">账号设置</a></li>
         </ul>
         <div class="InformationCon past01 myCon" style="display:block;">
+            <form id='coordinates_form' method="post">
+                <input type='hidden' id="img_x" name='x' class='x' value='0'/>
+                <input type='hidden' id="img_y" name='y' class='y' value='0'/>
+                <input type='hidden' id="img_w" name='w' class='w' value='0'/>
+                <input type='hidden' id="img_h" name='h' class='h' value='0'/>
+                <input type='hidden' id="img_rotate" name='rotate' class='rotate' value='0'/>
+                <input type="hidden" id="img_src" name="src" value=""/>
+            </form>
+
             <div class="wdzl clearfix">
-                <div class="sel-pic">
-                    <input  class="sect" type="button" value="点击上传照片"/>
-                    <input  class="btn sure" type="button" value="确定"/>
-                    <input  class="btn cancel" type="button" value="取消"/>
+                <div class="sel-pic" id="crop_container">
+                    <input type="file" id="reImg" />
+                    <img id="img_origin" style="display: none" border="0"/>
+                    <input id="uploadBtn"  class="sect" type="button" value="点击上传照片"/>
+                    <input id="uploadImgConfirm"  class="btn sure" type="button" value="确定"/>
+                    <input id="uploadImgCancle" class="btn cancel" type="button" value="取消"/>
                 </div>
+                <div id="reQueue" class="queue"></div>
                 <div class="wdzl-img clearfix">
-                    <img src="/assets/images/3.png" alt="">
-                    <img src="/assets/images/4.png" alt="" class="m27">
-                    <img src="/assets/images/5.png" alt="" class="m40">
-                    <input type="button" value="上传" class="wdzl-btn">
+                    <div class="p_photo1" style="width:122px;height:122px;overflow:hidden;text-align: center;overflow: hidden;margin: auto;border-radius:360px">
+                        <img src="/assets/images/3.png" alt="" width="122px" height="122px" style="border-radius:0px"/>
+                    </div>
+                    <div class="p_photo2"  style="width:66px;height:66px;overflow:hidden;text-align: center;overflow: hidden;margin: auto;border-radius:360px;margin-top: 20px;margin-left: 20px;">
+                        <img src="/assets/images/4.png" alt="" width="66px" height="66px" style="border-radius:0px">
+                    </div>
+                    <div class="p_photo3"  style="width:40px;height:40px;overflow:hidden;text-align: center;overflow: hidden;margin: auto;border-radius:360px;margin-top: 35px;margin-left: 20px;">
+                        <img src="/assets/images/5.png" alt="" width="40px" height="40px" style="border-radius:0px;">
+                    </div>
                 </div>
                 <div class="radio">
                     <span>性别：</span>
                     <div class="sexs">
                         <form name="form1" method="post" action="">
-                            <input type="radio" value="man" id="rad01" name="sex">
+                            <input type="radio" value="1" id="rad01" name="sex">
                             <label for="rad01">男</label>
-                            <input type="radio" value="woman" id="rad02" name="sex">
+                            <input type="radio" value="0" id="rad02" name="sex">
                             <label for="rad02">女</label>
-                            <input type="radio" value="woman" id="rad03" name="sex">
+                            <input type="radio" value="2" id="rad03" name="sex" >
                             <label for="rad03">保密</label>
                         </form>
                     </div>
                 </div>
                 <div class="wdzl-xx">
                     <span>昵称:</span>
-                    <input type="text" value="" class="wdzj-text">
-                    <span>日期:</span>
-                    <input type="text" value="" class="wdzj-text">
+                    <input type="text" id="nickname" value="<?=$this->context->userObj->nickname?>" class="wdzj-text">
+                    <span>生日:</span>
+                    <input type="text" value="<?=$this->context->userObj->birthday=='0000-00-00'?'1990-01-01':$this->context->userObj->birthday;?>" id="birthday" class="wdzj-text">
                     <span>个性签名:</span>
-                    <input type="text" value="" class="wdzj-text">
+                    <input type="text" id="intro" value="<?=$this->context->userObj->intro?>" class="wdzj-text">
                     <span>常住地:</span>
                     <div>
-                        <select data-enabled="false">
-                            <option value="zg">国家</option>
-                            <option value="mg">美国</option>
-                            <option value="hg">韩国</option>
-                            <option value="zg">国家</option>
-                            <option value="mg">美国</option>
-                            <option value="hg">韩国</option>
+                        <select id="countryId" name="country" class="select2" required placeholder="国家">
+                            <option value=""></option>
+                            <?php foreach ($countryList as $c) { ?>
+                                <option value="<?= $c['id'] ?>"><?= $c['cname'] . "/" . $c['ename'] ?></option>
+
+                            <?php } ?>
                         </select>
-                        <select data-enabled="false">
-                            <option value="zg">城市</option>
-                            <option value="">洛杉矶</option>
-                            <option value="">首尔</option>
-                        </select>
+                        <select id="cityId" name="city" class="select2" required placeholder="城市"></select>
                     </div>
                     <div class="map">
-                        <img src="/assets/images/map-pic.png">
+                        <iframe id="mapFrame" name="mapFrame" src="/google-map/to-map" width="350px" height="330px;" frameborder="0" scrolling="no"></iframe>
                     </div>
-                    <span>身份:</span>
+                    <span>职业:</span>
                     <div class="shenfen">
-                        <input type="radio" value="" id="shenfen01" name="sex">
+                        <input type="radio" value="" id="shenfen01" name="profession">
                         <label for="shenfen01">持证导游</label>
-                        <input type="radio" value="" id="shenfen02" name="sex">
+                        <input type="radio" value="" id="shenfen02" name="profession">
                         <label for="shenfen02">业余导游</label>
-                        <input type="radio" value="" id="shenfen03" name="sex">
+                        <input type="radio" value="" id="shenfen03" name="profession">
                         <label for="shenfen03">学生</label>
-                        <input type="radio" value="" id="shenfen04" name="sex">
+                        <input type="radio" value="" id="shenfen04" name="profession">
                         <label for="shenfen04">旅游爱好者</label>
-                        <input type="radio" value="" id="shenfen05" name="sex">
+                        <input type="radio" value="" id="shenfen05" name="profession">
                         <label for="shenfen05">其他</label>
                         <input type="text" class="other">
 
@@ -434,28 +518,9 @@
 
                         </script>
                     </div>
-                    <span>手机号验证:</span>
-                    <div class="phone-select">
-                        <div class="sect">
-                            <select data-enabled="false">
-                                <option value="zg" class=" selected">区号</option>
-                                <option value="mg">0345</option>
-                                <option value="hg">3456</option>
-                                <option value="zg">6777</option>
-                                <option value="mg">7777</option>
-                                <option value="hg">7754</option>
-                            </select>
-                        </div>
-                        <input type="text" value="" class="phone fl" >
-                    </div>
-                    <p class="p1">
-                        <span class="fl">输入验证码</span>
-                        <input type="text" class="text fl">
-                        <input type="button" value="获取验证码" class="btn fl">
-                    </p>
                     <span>个人简介:</span>
-                    <textarea class="textarea"></textarea>
-                    <a href="#"  class="surebtn">保存修改</a>
+                    <textarea class="textarea" id="info"><?=$this->context->userObj->info?></textarea>
+                    <a href="javascript:;" id="updateInfoBtn"  class="surebtn">保存修改</a>
                 </div>
             </div>
         </div>
@@ -481,8 +546,6 @@
                         <input type="text" class="text fl">
                         <input type="button" value="获取验证码" class="btn fl">
                     </p>
-                    <span>个人简介:</span>
-                    <textarea class="textarea"></textarea>
                     <span></span>
                     <span>邮箱验证:</span>
                     <p class="p1 p2">
@@ -520,16 +583,6 @@
                     <span>确认密码:</span>
                     <input type="password">
                     <span></span>
-                    <p class="Mtitle">支付设置</p>
-                    <span></span>
-                    <div class="moreRen">
-                        <ul>
-                            <li><b class="icon zfb"></b><input class="active" type="button" value="关联"></li>
-                            <li><b class="icon weixin"></b><input type="button" value="关联"></li>
-                            <li><b class="icon sina"></b><input type="button" value="关联"></li>
-                        </ul>
-                    </div>
-                    <span></span>
                     <span></span>
                     <p class="Mtitle">收款设置</p>
                     <span></span>
@@ -550,16 +603,28 @@
 
 </div>
 <!-----------个人中心-end--------------->
+<script type="text/javascript" src="/assets/js/myTab.js"></script>
+<script type="text/javascript" src="/assets/plugins/imgAreaSelect/js/jquery.imgareaselect.js" ></script>
+<script type="text/javascript" src="/assets/plugins/jquery-uploadifive/jquery.uploadifive.min.js"></script>
+<script type="text/javascript" src="/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" ></script>
+<script type="text/javascript" src="/assets/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
+<script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 
 <script type="text/javascript">
     var tripServiceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT?>';
     var tripServiceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?>';
     var isPublisher=<?=$this->context->userObj->isPublisher?'true':'false';?>;
+
+    var rotateCount=0;
+    var containerDivWidth=300;
+    var imgAreaSelectApi;
+
+    var userSex='<?=$this->context->userObj->sex?>';
+
+
     $(document).ready(function(){
+
         if(isPublisher){
-            $("#tripManager").bind("click",function(){
-                getUnConfirmOrderByPublisher();
-            });
             $("#myTripManager").bind("click",function(){
                 getMyTripList();
             });
@@ -570,13 +635,13 @@
                 getUnConfirmOrderByPublisher();
             });
 
+            getUnConfirmOrderByPublisher();
+
         }else{
             $("#tripManager").parent("li").hide();
         }
-        
-        $("#myOrderManager").bind("click",function(){
-            getUnFinishList();
-        });
+
+
         $("#unFinishOrderManager").bind("click",function(){
             getUnFinishList();
         });
@@ -584,8 +649,372 @@
             getFinishList();
         });
 
+        $(".con-nav li").bind("click",function(){
+            resetUploadHeadImg();
+        });
+
+        $("#updateInfoBtn").bind("click",function(){
+            updateUserInfo();
+        });
+
+        getUnFinishList();
+        initUploadImg();
+        initTab();
+        initUserInfo();
+        initDatePicker();
+        initSelect();
+    });
+
+    function updateUserInfo(){
+        var sex=$('input:radio[name="sex"]:checked').val();
+        var nickname=$("#nickname").val();
+        var birthday=$("#birthday").val();
+        var intro=$("#intro").val();
+        var info=$("#info").val();
+        var countryId=$("#countryId").val();
+        var cityId=$("#cityId").val();
+        var lon=$("#lon").val();
+        var lat=$("#lat").val();
+        var sex=$('input:radio[name="sex"]:checked').val();
+
+        var profession=$("input[type='radio'][name='profession']").val();
+
+        alert(sex);
+        alert(nickname);
+        alert(birthday);
+        alert(intro);
+        alert(info);
+        alert(countryId);
+        alert(cityId);
+        alert(profession);
+
+
+
+
+    }
+    //获取地区详情
+    function findCityInfo(obj) {
+        var name=$(obj).val();
+        if(name==""){
+            return;
+        }
+        $.ajax({
+            url :'/google-map/search-map-info?search='+name,
+            type:'get',
+            data:{},
+            beforeSend:function(){
+            },
+            error:function(){
+                Main.showTip("获取地区坐标失败,未知系统异常");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    $("#lon").attr("lon",data.data.lng);
+                    $("#lat").attr("lat",data.data.lat);
+
+                    window.frames['mapFrame'].setMapSite(data.data.lng,data.data.lat);
+                }else{
+                    Main.showTip("获取地区坐标失败,未知系统异常");
+                }
+            }
+        });
+    }
+
+    function initSelect(){
+        //初始化国家，城市
+        $(".select2").select2({
+            'width':'350px',
+            containerCss: {
+                'margin-bottom':'20px'
+            },
+            formatNoMatches: function () {
+                return "暂无匹配数据";
+            }
+        });
+
+
+        //绑定获取城市列表
+        $("#countryId").on("change", function () {
+            $("#countryTip").html("");
+            getCityList();
+        });
+        $("#cityId").on("change", function () {
+            if($("#cityId").val()!=""){
+                $("#cityTip").html("");
+            }
+            var search=$("#cityId").find("option:selected").text();
+            if(search!=''){
+                findCityInfo(search);
+            }
+        });
+    }
+    function initDatePicker(){
+        $('#birthday').datetimepicker({
+            language:  'zh-CN',
+            autoclose:1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+            format:'yyyy-mm-dd',
+            weekStart: 1
+        });
+        $(".datetimepicker").hide();
+
+
+        $('#birthday').unbind("focus");
+
+        $("#birthday").bind("focus",function(){
+            var top=$("#birthday").offset().top;
+            var left=$("#birthday").offset().left;
+            $(".datetimepicker").css({
+                'top':top+40,
+                'left':left,
+                'position':'absolute',
+                'background-color':'white',
+                'border':'1px solid gray',
+                'font-size':'14px'
+            });
+            $(".datetimepicker").show();
+        });
+
+        $(".table-condensed tbody").bind("click",function(){
+            $(".datetimepicker").hide();
+        });
+    }
+
+    function initUserInfo()
+    {
+        alert("init");
+        if(userSex==0){
+            $("input:radio[name='sex'][value=0]").attr("checked",true);
+            $("#rado2").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }else if(userSex==1){
+            $("input:radio[name='sex'][value=1]").attr("checked",true);
+            $("#rad01").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }else{
+            $("input:radio[name='sex'][value=2]").attr("checked",true);
+            $("#rad03").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        }
+        //init sex
+
+    }
+
+    function initTab(){
+        var href=window.location.href;
+        var tabId='';
+        if(href.indexOf("?")!=-1){
+            tabId=href.substring(href.indexOf("?")+1,href.length);
+            $("#"+tabId).click();
+        }
+    }
+
+    //初始化上传插件
+    function initUploadImg(){
+
+        $('#reImg').uploadifive({
+            'auto': true,
+            'queueID': 'reQueue',
+            'uploadScript': '/upload/upload-head-img',
+            'multi': false,
+            'dnd': false,
+            'onUpload':function(){
+                $("#uploadBtn").val("正在上传，请稍后");
+            },
+            'onUploadComplete': function (file, data) {
+                var datas = eval('(' + data + ')');
+                if (datas.status == 1) {
+                    $("#uploadBtn").val("上传成功！");
+                    $("#img_src").val(datas.data);
+                    $("#img_origin").attr("src",datas.data);
+                    $(".p_photo1 img").attr("src",datas.data);
+                    $(".p_photo2 img").attr("src",datas.data);
+                    $(".p_photo3 img").attr("src",datas.data);
+
+                    $("#img_origin").show();
+                    $("#uploadBtn").hide();
+                    initImgAreaSelect("#img_origin");
+                } else {
+                    $("#uploadBtn").val("上传失败，请重试");
+                }
+            }
+        });
+        $("#uploadBtn").bind("click",function(){
+            $("#uploadifive-reImg input[type='file'][id!='titleImgFile']").last().click();
+        });
+        $("#uploadImgConfirm").bind("click",function(){
+            selectImg();
+        });
+        $("#uploadImgCancle").bind("click",function(){
+            resetUploadHeadImg();
+        });
+
+    }
+
+    function resetUploadHeadImg(){
+        removeImgAreaSelect();
+        $("#uploadBtn").val("点击上传图片");
+        $("#uploadBtn").show();
+        $("#img_origin").hide();
+        $("#img_origin").attr("src","");
+        $("#img_src").val();
+    }
+
+    function selectImg(){
+        var x=$("#img_x").val();
+        var y=$("#img_y").val();
+        var w=$("#img_w").val();
+        var h=$("#img_h").val();
+        var rotate=$("#img_rotate").val();
+        var imgSrc=$("#img_src").val();
+        if(imgSrc==""){
+            Main.showTip("您还没有选择图片哦！");
+            return;
+        }
+        if(w==0||h==0){
+            Main.showTip("请正确选择图片！");
+            return;
+        }
+        if(isNaN(w)||isNaN(h)){
+            Main.showTip("请正确选择图片！");
+            return;
+        }
+        $.ajax({
+            url: "/user-info/change-user-head-img",
+            type: "post",
+            data:{
+                "x":x,
+                "y":y,
+                "w":w,
+                "h":h,
+                "rotate":rotate,
+                "src":imgSrc,
+                "pWidth":$("#img_origin").width(),
+                "pHeight":$("#img_origin").height()
+            },
+            error:function(){
+                alert("上传头像异常，请刷新重试！");
+            },
+            success: function(data){
+                var result=eval("("+data+")");
+                if(result.status==1){
+                    $(".userPic img").attr("src",result.data);
+                    resetUploadHeadImg();
+                }else{
+                    alert("上传头像异常，请刷新重试！");
+                }
+            }
+        });
+    }
+    function resetImg(){
+        imgAreaSelectApi.update();
+    }
+
+    function removeImgAreaSelect(){
+        imgAreaSelectApi.cancelSelection();
+    }
+    function initImgAreaSelect(imgObj){
+        imgAreaSelectApi = $(imgObj).imgAreaSelect({
+            instance : true,	// true，返回一个imgAreaSelect绑定到的图像的实例，可以使用api方法
+            onSelectChange : preview,	// 改变选区时的回调函数
+            handles : true,	// true，调整手柄则会显示在选择区域内
+            fadeSpeed:200,
+            resizable : true,
+            aspectRatio:"1:1"
+
+        });
+        imgAreaSelectApi.setRotate(0);
+        resetRotate();
+    }
+
+    $('#img_origin').load(function(){
+        var form = $('#coordinates_form');
+
+        //获取 x、y、w、h的值
+        var left = parseInt(form.children('.x').val());
+        var top = parseInt(form.children('.y').val());
+        var width = parseInt(form.children('.w').val());
+        var height = parseInt(form.children('.h').val());
+
+        //imgAreaSelectApi 就是图像img_origin的实例 上边instance已解释
+        //setSelection(),设置选区的坐标
+        //update(),更新
+        imgAreaSelectApi.setSelection(left, top, left+width, top+height);
+        imgAreaSelectApi.update();
+
+        //图片居中
+        var imgWidth=$("#img_origin").width();
+        var imgHeight=$("#img_origin").height();
+        $("#img_origin").css("margin","0")
+        if(imgWidth<containerDivWidth&&imgHeight<containerDivWidth){
+            if(imgWidth>imgHeight){
+                $("#img_origin").width(containerDivWidth);
+            }else{
+                $("#img_origin").height(containerDivWidth);
+            }
+        }
+        imgWidth=$("#img_origin").width();
+        imgHeight=$("#img_origin").height();
+
+        if(imgWidth>=imgHeight){
+            var padding=(imgWidth-imgHeight)/2;
+            $("#img_origin").css("margin-top",padding);
+            imgAreaSelectApi.setSelection((imgWidth/2)-(imgHeight/4), (imgHeight/2)-(imgHeight/4), (imgWidth/2)+(imgHeight/4), (imgHeight/2)+(imgHeight/4), true);
+        }
+        if(imgHeight>imgWidth){
+            var padding=(imgHeight-imgWidth)/2;
+            $("#img_origin").css("margin-left",padding);
+            imgAreaSelectApi.setSelection((imgHeight/2)-(imgWidth/4)-padding, (imgHeight/2)-(imgWidth/4), (imgHeight/2)+(imgWidth/4)-padding, (imgHeight/2)+(imgWidth/4), true);
+        }
+
+
+        imgAreaSelectApi.setOptions({ show: true });
+
+        imgAreaSelectApi.update();
+        preview($("#img_origin"),imgAreaSelectApi.getSelection());
 
     });
+
+    function preview(img, selection){
+
+        var form = $('#coordinates_form');
+        //重新设置x、y、w、h的值
+        form.children('.x').val(selection.x1);
+        form.children('.y').val(selection.y1);
+        form.children('.w').val(selection.x2-selection.x1);
+        form.children('.h').val(selection.y2-selection.y1);
+        form.children('.rotate').val(imgAreaSelectApi.getRotate());
+        preview_photo('p_photo1', selection);
+        preview_photo('p_photo2', selection);
+        preview_photo('p_photo3', selection);
+
+
+    }
+    function preview_photo(div_class, selection){
+        var div = $('div.'+div_class);
+
+        //获取div的宽度与高度
+        var width = div.outerWidth();
+        var height = div.outerHeight();
+        var scaleX = width/selection.width;
+        var scaleY = height/selection.height;
+
+        div.find('img').css({
+            width : Math.round(scaleX * $('#img_origin').outerWidth())+'px',
+            height : Math.round(scaleY * $('#img_origin').outerHeight())+'px',
+            marginLeft : '-'+Math.round(scaleX * selection.x1)+'px',
+            marginTop : '-'+Math.round(scaleY * selection.y1)+'px'
+        });
+    }
+
+    function resetRotate(){
+        rotateCount=0;
+        var du=0;
+        rotate(document.getElementById("crop_container"), du);
+        rotate(document.getElementById("p_photo"),du);
+        imgAreaSelectApi.setRotate(du);
+        imgAreaSelectApi.update();
+    }
 
 
     /**
@@ -1006,6 +1435,44 @@
     function deleteTravelTrip(tripId)
     {
         alert(tripId);
+    }
+
+    //级联获取城市列表
+    function  getCityList(){
+        var countryId=$("#countryId").val();
+        if(countryId==""){
+            return;
+        }
+        $("#countryTip").html("");
+        $("#cityId").empty();
+
+        $("#cityId").append("<option value=''></option>");
+        $("#cityId").val("").trigger("change");
+        $.ajax({
+            url :'/country/find-city-list',
+            type:'post',
+            data:{
+                countryId:countryId,
+                _csrf: $('input[name="_csrf"]').val()
+
+            },
+            error:function(){
+                $("#cityTip").html("获取城市列表失败");
+            },
+            success:function(data){
+                var datas=eval('('+data+')');
+                if(datas.status==1){
+                    var html = "";
+                    for(var i=0;i<datas.data.length;i++){
+                        var city=datas.data[i];
+                        html+='<option value="'+city.id+'">'+city.cname+"/"+city.ename+'</option>';
+                    }
+                    $("#cityId").append(html);
+                }else{
+                    $("#cityTip").html("获取城市列表失败");
+                }
+            }
+        });
     }
 
 

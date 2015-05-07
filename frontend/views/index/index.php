@@ -13,6 +13,7 @@
 </script>
 
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
+
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 
 <style type="text/css">

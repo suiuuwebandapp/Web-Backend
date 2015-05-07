@@ -183,8 +183,8 @@ class UserOrderDb extends ProxyDb
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
-
-        return $command->queryAll();
+        $rst=$command->queryAll();
+        return $rst;
     }
 
 

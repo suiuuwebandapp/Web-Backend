@@ -19,22 +19,22 @@
         </div>
         <dl class="fl middle">
             <dt>公司信息</dt>
-            <dd><a href="#">关于随游</a></dd>
-            <dd><a href="#">服务协议</a></dd>
-            <dd><a href="#">联系我们</a></dd>
+            <dd><a href="/static?about-aboutSuiuu">关于随游</a></dd>
+            <dd><a href="/static?about-services">服务协议</a></dd>
+            <dd><a href="/static?about-concatUs">联系我们</a></dd>
             <dd><a href="http://www.jobtong.com/e/15004">加入我们</a></dd>
         </dl>
         <dl class="fl ">
             <dt>帮助中心</dt>
             <dd><a href="#">帮助</a></dd>
-            <dd><a href="#">反馈</a></dd>
-            <dd><a href="#">使用流程</a></dd>
-            <dd><a href="#">退款政策</a></dd>
+            <dd><a href="/static?help-feedback">反馈</a></dd>
+            <dd><a href="/static?help-useFlow">使用流程</a></dd>
+            <dd><a href="/static?help-refundPolicy">退款政策</a></dd>
         </dl>
         <dl class="fl ">
             <dt>声明</dt>
-            <dd><a href="#">版权声明</a></dd>
-            <dd><a href="#">免责声明</a></dd>
+            <dd><a href="/static?statement-copyright">版权声明</a></dd>
+            <dd><a href="/static?statement-disclaimer">免责声明</a></dd>
         </dl>
         <dl class="fl ">
             <dt>随游移动端</dt>

@@ -6,10 +6,8 @@
  * Time : 下午2:35
  * Email: zhangxinmailvip@foxmail.com
  */
-
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
-<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <style type="text/css">
 
@@ -81,10 +79,10 @@
                         <div class="my-suiuu">
                             <span class="jiao"></span>
                             <ul>
-                                <li class="bg1"><a href="javascript:;">我的随游</a></li>
-                                <li class="bg2"><a href="javascript:;">我的订单</a></li>
-                                <li class="bg3"><a href="zhanghao_shezhi.html">账号设置</a></li>
-                                <li class="bg4"><a href="/login/logout">注销账号</a></li>
+                                <li class="bg1"><a href="/user-info?tripManager">我的随游</a></li>
+                                <li class="bg2"><a href="/user-info?myOrderManager">我的订单</a></li>
+                                <li class="bg3"><a href="/user-info?userInfo">个人中心</a></li>
+                                <li class="bg4"><a href="/login/logout">安全退出</a></li>
                             </ul>
                         </div>
                     </li>

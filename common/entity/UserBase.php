@@ -109,4 +109,13 @@ class UserBase {
      */
     public $isPublisher;
 
+
+    public $countryId;
+
+    public $cityId;
+
+    public $lon;
+
+    public $lat;
+
 }
