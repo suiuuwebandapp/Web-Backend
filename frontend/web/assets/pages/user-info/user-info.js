@@ -1556,8 +1556,8 @@ function initMyComment(page){
                 $('#spage').html('');
                 $('#spage').append(result.message);
 
-                $("#spage li a").click(function() {
-                    var page=$(this).attr('page');
+                $("#spage li").click(function() {
+                    var page=$(this).find('a').attr('page');
                     initMyComment(page);
                 });
             }else{

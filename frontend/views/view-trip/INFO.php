@@ -651,8 +651,8 @@
                     $('#spage').html('');
                     $('#spage').append(obj.message);
 
-                    $("#spage li a").click(function() {
-                        var page=$(this).attr('page');
+                    $("#spage li").click(function() {
+                        var page=$(this).find('a').attr('page');
                         getComment(page);
                     });
 

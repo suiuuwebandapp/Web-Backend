@@ -147,7 +147,6 @@ class AppLoginController extends Controller{
     {
         $areaCode=\Yii::$app->request->post('areaCode');
         $phone=\Yii::$app->request->post('phone');
-        $phone='18611517517';
         if(empty($phone))
         {
             echo json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
@@ -234,9 +233,10 @@ class AppLoginController extends Controller{
     public function actionAppLogin()
     {
 
-
         $username=\Yii::$app->request->post('username');
         $password=\Yii::$app->request->post('password');
+        /*$username='519414839@qq.com';
+        $password='qwe123';*/
         $error="";
         $code=\Yii::$app->request->post('validateCode');//验证码
         $errorCount=0;
@@ -322,7 +322,7 @@ class AppLoginController extends Controller{
     {
         //验证用户是否登录
         $appSign=\Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
-        $currentUser=json_decode(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION.$appSign));
+        $currentUser=json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION.$appSign)));
         if(empty($currentUser))
         {
             echo json_encode(Code::statusDataReturn(Code::UN_LOGIN));
@@ -343,6 +343,18 @@ class AppLoginController extends Controller{
     public function actionTest()
     {
         echo  md5('1');
+    }
+
+    private function ob2ar($obj) {
+        if(is_object($obj)) {
+            $obj = (array)$obj;
+            $obj = $this->ob2ar($obj);
+        } elseif(is_array($obj)) {
+            foreach($obj as $key => $value) {
+                $obj[$key] = $this->ob2ar($value);
+            }
+        }
+        return $obj;
     }
 
 

@@ -29,6 +29,8 @@ class AppTravelController extends AController
 
     public function actionTest()
     {
+       // $this->loginValid();
+       // var_dump($this->userObj);
     }
     //得到随游列表 根据筛选条件
     public function actionGetTravelList()
@@ -204,4 +206,6 @@ class AppTravelController extends AController
         }
         return $data;
     }
+
+
 }
