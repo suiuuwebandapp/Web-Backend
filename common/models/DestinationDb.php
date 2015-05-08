@@ -317,4 +317,38 @@ class DestinationDb extends ProxyDb{
         $command->execute();
     }
 
+
+    /**
+     * 获取目的地所有国家Id
+     * @return array
+     */
+    public function getDesCountryIds()
+    {
+        $sql = sprintf("
+            SELECT DISTINCT GROUP_CONCAT(countryId) AS countryIds from destination_info
+
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        return $command->queryOne();
+    }
+
+    /**
+     * 获取目的地城市
+     * @return array
+     */
+    public function getDesCityIds()
+    {
+        $sql = sprintf("
+            SELECT DISTINCT GROUP_CONCAT(cityId) AS cityIds from destination_info
+
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        return $command->queryOne();
+    }
+
+
+
+
 }

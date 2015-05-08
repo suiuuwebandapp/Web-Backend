@@ -2,9 +2,10 @@
  * Created by suiuu on 15/5/7.
  */
 
-
+//第一页消息列表
+var currentPageMessageSessionKeyList=[];
+var messageSessionTimer;
 $(document).ready(function(){
-
     if(isPublisher){
         $("#myTripManager").bind("click",function(){
             getMyTripList();
@@ -59,6 +60,9 @@ $(document).ready(function(){
     $("#getCode").bind("click", function () {
         sendTravelCode();
     });
+    $("#sendMessageBtn").bind("click",function(){
+        sendUserMessage();
+    });
 
     getUnFinishList();
     initUploadImg();
@@ -67,11 +71,11 @@ $(document).ready(function(){
     initDatePicker();
     initSelect();
 
-
     initMessageSession();
 });
 
 /**
+<<<<<<< Updated upstream
  *
  *
  */
@@ -121,6 +125,10 @@ function initUpdatePassword()
     });
 }
 
+/**
+ * 初始化用户私信会话列表
+ */
+
 function initMessageSession(){
     $.ajax({
         url :'/user-message/message-session-list',
@@ -132,11 +140,78 @@ function initMessageSession(){
             Main.showTip("获取私信列表失败");
         },
         success:function(data){
-            alert(data);
             data=eval("("+data+")");
             if(data.status==1){
+                buildMessageSessionHtml(data.data);
+            }else{
+                Main.showTip("获取私信列表失败");
+            }
+            //初始化完成之后，调用定时器
+            initUserMessageSessionTimer();
+        }
+    });
+}
 
 
+/**
+ * 初始化会话列表定时器
+ */
+function initUserMessageSessionTimer(){
+    messageSessionTimer=window.setInterval(function(){
+        getUserUnReadMessageSession();
+    },5000);
+}
+
+/**
+ * 根据返回List构建私信会话HTML
+ * @param list
+ */
+function buildMessageSessionHtml(list){
+    if(list==''||list.length==0){
+        return;
+    }
+    $("#messageInfoDiv ul").html("");//清空
+    var html='',tempSession='',content='';
+    for(var i=0;i<list.length;i++){
+        tempSession=list[i];
+        content=tempSession.lastContentInfo;
+        currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+        if(content.length>50){
+            content=content.substring(0,50)+"...";
+        }
+        var isNew='';
+        if(tempSession.isRead!=1){
+            isNew='class="new"';
+        }
+        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+tempSession.headImg+'",this)>';
+        html+='<div class="people"><img src="'+tempSession.headImg+'"><span>'+tempSession.nickname+'</span></div>';
+        html+='<p class="words">'+content+'</p>';
+        html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
+        html+='</li>';
+    }
+    $("#messageSessionDiv ul").html(html);
+}
+
+/**
+ * 获取用户未读私信会话
+ */
+function getUserUnReadMessageSession(){
+    $.ajax({
+        url :'/user-message/un-read-message-session-list',
+        type:'post',
+        data:{},
+        beforeSend:function(){
+        },
+        error:function(){
+            Main.showTip("获取私信列表失败");
+        },
+        success:function(data){
+            data=eval("("+data+")");
+            if(data.status==1){
+                rebuildMessageSessionList(data.data);
+               // $("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
+                //$(obj).removeClass("new");
+                //buildMessageSessionInfo(data.data)
             }else{
                 Main.showTip("获取私信列表失败");
             }
@@ -144,6 +219,160 @@ function initMessageSession(){
     });
 }
 
+
+function rebuildMessageSessionList(list){
+    if(list==''||list.length==0){
+        return;
+    }
+    //将查出数据翻转，循环时候，末尾的先放置头部，依次循环
+    list=list.reverse();
+    var content='',tempSession='';
+    for(var i=0;i<list.length;i++){
+        var html=''
+        tempSession=list[i];
+        //如果未读会话已经存在，那么置顶 ，移除当前  如果不存在，那么置顶 移除最后一个
+        var index=currentPageMessageSessionKeyList.indexOf(tempSession.sessionKey);
+        if(index!=-1){
+            currentPageMessageSessionKeyList.splice(index,1);
+            currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+            $("#messageSessionDiv ul li[sessionKey='"+tempSession.sessionKey+"']").remove();
+        }else{
+            var last=currentPageMessageSessionKeyList.pop();
+            $("#messageSessionDiv ul li[sessionKey='"+last+"']").remove();
+            currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+        }
+        content=tempSession.lastContentInfo;
+        currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+        if(content.length>50){
+            content=content.substring(0,50)+"...";
+        }
+        var isNew='';
+        if(tempSession.isRead!=1){
+            isNew='class="new"';
+        }
+        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+tempSession.headImg+'",this)>';
+        html+='<div class="people"><img src="'+tempSession.headImg+'"><span>'+tempSession.nickname+'</span></div>';
+        html+='<p class="words">'+content+'</p>';
+        html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
+        html+='</li>';
+        //将消息放置顶部
+        $("#messageSessionDiv ul").prepend(html);
+    }
+
+
+}
+
+/**
+ * 获取私信会话详情
+ * @param sessionKey
+ * @param receiveHeadImg
+ * @param obj
+ */
+function showMessageSessionInfo(sessionKey,receiveHeadImg,obj){
+    $.ajax({
+        url :'/user-message/message-session-info',
+        type:'post',
+        data:{
+            sessionKey:sessionKey
+        },
+        beforeSend:function(){
+        },
+        error:function(){
+            Main.showTip("获取私信列表失败");
+        },
+        success:function(data){
+            data=eval("("+data+")");
+            if(data.status==1){
+                $("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
+                $(obj).removeClass("new");
+                buildMessageSessionInfo(data.data)
+            }else{
+                Main.showTip("获取私信列表失败");
+            }
+        }
+    });
+}
+
+/**
+ * 发送私信消息
+ */
+function sendUserMessage(){
+    var receiveId=$("#messageInfoDiv").attr("receiveId");
+    var content=$("#messageContent").val();
+
+    if($.trim(receiveId)==''){
+        Main.showTip("选择发送人有误");
+        return;
+    }
+    if($.trim(content)==''){
+        Main.showTip("请输入发送内容");
+        return;
+    }
+
+    $.ajax({
+        url :'/user-message/add-user-message',
+        type:'post',
+        data:{
+            receiveId:$.trim(receiveId),
+            content:$.trim(content)
+        },
+        error:function(){
+            Main.showTip("发送消息失败");
+        },
+        success:function(data){
+            data=eval("("+data+")");
+            if(data.status==1){
+                var html='';
+                html+='<li class="you clearfix">';
+                html+='<img src="'+userHeadImg+'">';
+                html+=' <p>'+content+'</p>';
+                html+='</li>';
+                $("#messageInfoDiv ul").append(html);
+                $("#messageContent").val("");
+            }else{
+                Main.showTip("发送消息失败");
+            }
+        }
+    });
+}
+
+/**
+ * 构建私信会话详情HTML
+ * @param list
+ */
+function buildMessageSessionInfo(list){
+    if(list==''||list.length==0){
+        return;
+    }
+    var receiveHeadImg=$("#messageInfoDiv").attr("receiveHeadImg");
+    $("#messageInfoDiv ul").html("");//清空
+    var html='',tempMessage='',receiveId='';
+    for(var i=0;i<list.length;i++){
+        tempMessage=list[i];
+        //如果自己是发送人
+        if(tempMessage.senderId==userSign){
+            receiveId=tempMessage.receiveId;
+            html+='<li class="you clearfix">';
+            html+='<img src="'+userHeadImg+'">';
+            html+=' <p>'+tempMessage.content+'</p>';
+            html+='</li>';
+        }else{
+            receiveId=tempMessage.senderId;
+            html+='<li class="zuo clearfix">';
+            html+='<img src="'+receiveHeadImg+'">';
+            html+=' <p>'+tempMessage.content+'</p>';
+            html+='</li>';
+        }
+
+    }
+    $("#messageInfoDiv").attr("receiveId",receiveId);
+    $("#messageInfoDiv").show();
+    $("#messageInfoDiv ul").html(html);
+}
+
+/**
+ * 更新用户基本资料
+ */
 function updateUserInfo(){
     var sex=$('input:radio[name="sex"]:checked').val();
     var nickname=$("#nickname").val();
@@ -208,7 +437,11 @@ function updateUserInfo(){
 
 
 }
-//获取地区详情
+
+/**
+ * 获取地区详情
+ * @param obj
+ */
 function findCityInfo(obj) {
     var name=$(obj).val();
     if(name==""){
@@ -237,6 +470,9 @@ function findCityInfo(obj) {
     });
 }
 
+/**
+ * 初始化Select2 (国家，城市)
+ */
 function initSelect(){
     //初始化国家，城市
     $(".select2").select2({
@@ -274,6 +510,10 @@ function initSelect(){
         }
     });
 }
+
+/**
+ * 初始化日期选择器（生日）
+ */
 function initDatePicker(){
     $('#birthday').datetimepicker({
         language:  'zh-CN',
@@ -308,8 +548,10 @@ function initDatePicker(){
     });
 }
 
-function initUserInfo()
-{
+/**
+ * 初始化用户基本信息
+ */
+function initUserInfo(){
     //init sex
     if(userSex==0){
         $("input:radio[name='sex'][value='0']").attr("checked",true);
@@ -343,6 +585,9 @@ function initUserInfo()
 
 }
 
+/**
+ * 初始化TAB选择触发事件
+ */
 function initTab(){
     var href=window.location.href;
     var tabId='';
@@ -352,7 +597,9 @@ function initTab(){
     }
 }
 
-//初始化上传插件
+/**
+ * 初始化上传插件
+ */
 function initUploadImg(){
 
     $('#reImg').uploadifive({
@@ -394,6 +641,9 @@ function initUploadImg(){
 
 }
 
+/**
+ * 重置上传头像插件
+ */
 function resetUploadHeadImg(){
     removeImgAreaSelect();
     $("#uploadBtn").val("点击上传图片");
@@ -403,6 +653,9 @@ function resetUploadHeadImg(){
     $("#img_src").val();
 }
 
+/**
+ * 上传头像选择IMG（截头像）
+ */
 function selectImg(){
     var x=$("#img_x").val();
     var y=$("#img_y").val();
@@ -449,13 +702,25 @@ function selectImg(){
         }
     });
 }
+
+/**
+ * 重置截头像插件
+ */
 function resetImg(){
     imgAreaSelectApi.update();
 }
 
+/**
+ * 移除截图选择器
+ */
 function removeImgAreaSelect(){
     imgAreaSelectApi.cancelSelection();
 }
+
+/**
+ * 初始化头像截取插件
+ * @param imgObj
+ */
 function initImgAreaSelect(imgObj){
     imgAreaSelectApi = $(imgObj).imgAreaSelect({
         instance : true,	// true，返回一个imgAreaSelect绑定到的图像的实例，可以使用api方法
@@ -470,6 +735,9 @@ function initImgAreaSelect(imgObj){
     resetRotate();
 }
 
+/**
+ * 图片加载完成触发事件
+ */
 $('#img_origin').load(function(){
     var form = $('#coordinates_form');
 
@@ -518,6 +786,11 @@ $('#img_origin').load(function(){
 
 });
 
+/**
+ * 上传完成预览事件
+ * @param img
+ * @param selection
+ */
 function preview(img, selection){
 
     var form = $('#coordinates_form');
@@ -533,6 +806,12 @@ function preview(img, selection){
 
 
 }
+
+/**
+ * 用户拖动头像内容，生成预览图
+ * @param div_class
+ * @param selection
+ */
 function preview_photo(div_class, selection){
     var div = $('div.'+div_class);
 
@@ -550,6 +829,9 @@ function preview_photo(div_class, selection){
     });
 }
 
+/**
+ * 重置旋转（暂时没有旋转功能）
+ */
 function resetRotate(){
     rotateCount=0;
     var du=0;
@@ -563,8 +845,7 @@ function resetRotate(){
 /**
  * 获取我的随游
  */
-function getMyTripList()
-{
+function getMyTripList(){
     $.ajax({
         url :'/trip/my-trip-list',
         type:'post',
@@ -591,8 +872,7 @@ function getMyTripList()
  * @param tripList
  * @returns {string}
  */
-function buildMyTripHtml(tripList)
-{
+function buildMyTripHtml(tripList){
     if(tripList==''||tripList.length==0){
         return '';
     }
@@ -630,8 +910,7 @@ function buildMyTripHtml(tripList)
 /**
  * 获取我加入的随游
  */
-function getMyJoinTripList()
-{
+function getMyJoinTripList(){
     $.ajax({
         url :'/trip/my-join-trip-list',
         type:'post',
@@ -658,8 +937,7 @@ function getMyJoinTripList()
  * @param tripList
  * @returns {string}
  */
-function buildMyJoinTripHtml(tripList)
-{
+function buildMyJoinTripHtml(tripList){
     if(tripList==''||tripList.length==0){
         return '';
     }
@@ -697,8 +975,7 @@ function buildMyJoinTripHtml(tripList)
 /**
  * 获取用户未完成的订单
  */
-function getUnFinishList()
-{
+function getUnFinishList(){
     $.ajax({
         url :'/user-order/get-un-finish-order',
         type:'post',
@@ -723,8 +1000,7 @@ function getUnFinishList()
 /**
  * 获取用户已完成的订单
  */
-function getFinishList()
-{
+function getFinishList(){
     $.ajax({
         url :'/user-order/get-finish-order',
         type:'post',
@@ -752,8 +1028,7 @@ function getFinishList()
  * @param type
  * @returns {string}
  */
-function buildOrderList(list,type)
-{
+function buildOrderList(list,type){
     var html="";
     if(list==""||list.length==0){
         return html;
@@ -832,8 +1107,7 @@ function buildOrderList(list,type)
 /**
  * 获取随友可接收的订单
  */
-function getUnConfirmOrderByPublisher()
-{
+function getUnConfirmOrderByPublisher(){
     $.ajax({
         url :'/user-order/get-un-confirm-order',
         type:'post',
@@ -860,8 +1134,7 @@ function getUnConfirmOrderByPublisher()
  * @param list
  * @returns {string}
  */
-function buildUnConfirmList(list)
-{
+function buildUnConfirmList(list){
     var html="";
     if(list==""||list.length==0){
         return html;
@@ -908,13 +1181,11 @@ function buildUnConfirmList(list)
 
 }
 
-
 /**
  * 确认用户订单
  * @param orderId
  */
-function publisherConfirmOrder(orderId)
-{
+function publisherConfirmOrder(orderId){
     if(orderId==''){
         return;
     }
@@ -944,8 +1215,7 @@ function publisherConfirmOrder(orderId)
  * 忽略用户订单
  * @param orderId
  */
-function publisherIgnoreOrder(orderId)
-{
+function publisherIgnoreOrder(orderId){
     if(orderId==''){
         return;
     }
@@ -975,8 +1245,7 @@ function publisherIgnoreOrder(orderId)
  * 删除随游
  * @param tripId
  */
-function deleteTravelTrip(tripId,obj)
-{
+function deleteTravelTrip(tripId,obj){
     $.ajax({
         url :'/trip/delete-trip',
         type:'post',
@@ -1000,7 +1269,9 @@ function deleteTravelTrip(tripId,obj)
     });
 }
 
-//级联获取城市列表
+/**
+ * 级联获取城市列表
+ */
 function  getCityList(){
     var countryId=$("#countryId").val();
     if(countryId==""){
@@ -1159,6 +1430,10 @@ function initValidateEmail_info()
         }
     });
 }
+/**
+ * 初始化手机验证计时器
+ */
+
 function initPhoneTimer() {
     phoneTimer = window.setInterval(function () {
         if (phoneTime > 0) {
@@ -1171,6 +1446,9 @@ function initPhoneTimer() {
     }, 1000);
 }
 
+/**
+ * 初始化手机计时
+ */
 function initPhoneTime() {
 
     if (phoneTime != "" && phoneTime > 0) {
@@ -1190,9 +1468,10 @@ function initPhoneTime() {
     }
 }
 
-
-function initCollect()
-{
+/**
+ * 初始化用户收藏
+ */
+function initCollect(){
     $.ajax({
         url: "/user-info/get-collection-travel",
         type: "post",
@@ -1230,8 +1509,11 @@ function initCollect()
     });
 }
 
-function initMyComment(page)
-{
+/**
+ * 初始化用户评论
+ * @param page
+ */
+function initMyComment(page){
     $.ajax({
         url: "/user-info/get-comment",
         type: "post",

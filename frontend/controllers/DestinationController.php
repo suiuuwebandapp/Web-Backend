@@ -11,7 +11,9 @@ namespace frontend\controllers;
 
 
 use backend\components\Page;
+use backend\components\TableResult;
 use common\components\Code;
+use common\components\PageResult;
 use frontend\services\CountryService;
 use frontend\services\DestinationService;
 use yii\base\Exception;
@@ -30,9 +32,20 @@ class DestinationController extends UnCController{
     {
         $countryService = new CountryService();
         $countryList = $countryService->getCountryList();
-
+        $destinationService=new DestinationService();
+        $ccList=$destinationService->getDesCountryAndCity();
+        $countryArr='';$cityArr='';
+        if(!empty($ccList['countryList']['countryIds'])){
+            $countryArr=explode(",",$ccList['countryList']['countryIds']);
+        }
+        if(!empty($ccList['cityList']['cityIds'])){
+            $cityArr=explode(",",$ccList['cityList']['cityIds']);
+        }
         return $this->render("list",[
             'countryList' => $countryList,
+            'countryArr'=>$countryArr,
+            'cityArr'=>$cityArr
+
         ]);
     }
 
@@ -51,14 +64,19 @@ class DestinationController extends UnCController{
     {
         $countryId=\Yii::$app->request->post("countryId");
         $cityId=\Yii::$app->request->post("cityId");
+        $p=\Yii::$app->request->post("p",1);
 
-        $page=new Page();
-        $page->showAll=true;
 
         try{
+            $page=new Page();
+            $page->pageSize=10;
+            $page->setCurrentPage($p);
+
             $destinationService=new DestinationService();
-            $rst=$destinationService->getList($page,null,$countryId,$cityId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst->getList()));
+            $page=$destinationService->getList($page,null,$countryId,$cityId);
+            $pageResult=new PageResult($page);
+
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$pageResult));
         }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL,"获取目的地列表失败"));
         }

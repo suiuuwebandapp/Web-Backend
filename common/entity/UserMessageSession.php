@@ -14,9 +14,9 @@ class UserMessageSession {
 
     public $sessionId;
 
-    public $userOne;
+    public $senderId;
 
-    public $userTwo;
+    public $receiveId;
 
     public $sessionKey;
 

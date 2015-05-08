@@ -27,17 +27,18 @@ class UserMessageDb extends ProxyDb
         $sql=sprintf("
             INSERT INTO user_message
             (
-              sessionKey,receiveId,senderId,content,sendTime,isRead
+              sessionKeyOne,sessionKeyTwo,receiveId,senderId,content,sendTime,isRead
             )
             VALUES
             (
-              :sessionKey,:receiveId,:senderId,:content,now(),FALSE
+              :sessionKeyOne,:sessionKeyTwo,:receiveId,:senderId,:content,now(),FALSE
             )
         ");
 
         $command=$this->getConnection()->createCommand($sql);
 
-        $command->bindParam(":sessionKey", $userMessage->sessionKey, PDO::PARAM_STR);
+        $command->bindParam(":sessionKeyOne", $userMessage->sessionKeyOne, PDO::PARAM_STR);
+        $command->bindParam(":sessionKeyTwo", $userMessage->sessionKeyTwo, PDO::PARAM_STR);
         $command->bindParam(":receiveId", $userMessage->receiveId, PDO::PARAM_STR);
         $command->bindParam(":senderId", $userMessage->senderId, PDO::PARAM_STR);
         $command->bindParam(":content", $userMessage->content, PDO::PARAM_STR);
@@ -75,19 +76,20 @@ class UserMessageDb extends ProxyDb
         $sql=sprintf("
             INSERT INTO user_message_session
             (
-              sessionKey,userOne,userTwo,lastConcatTime,lastContentInfo,isRead
+              sessionKey,senderId,receiveId,lastConcatTime,lastContentInfo,isRead
             )
             VALUES
             (
-              :sessionKey,:userOne,:userTwo,now(),:lastContentInfo,FALSE
+              :sessionKey,:senderId,:receiveId,now(),:lastContentInfo,:isRead
             )
         ");
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":sessionKey", $userMessageSession->sessionKey, PDO::PARAM_STR);
         $command->bindParam(":lastContentInfo", $userMessageSession->lastContentInfo, PDO::PARAM_STR);
-        $command->bindParam(":userOne", $userMessageSession->userOne, PDO::PARAM_STR);
-        $command->bindParam(":userTwo", $userMessageSession->userTwo, PDO::PARAM_STR);
+        $command->bindParam(":senderId", $userMessageSession->senderId, PDO::PARAM_STR);
+        $command->bindParam(":receiveId", $userMessageSession->receiveId, PDO::PARAM_STR);
+        $command->bindParam(":isRead", $userMessageSession->isRead, PDO::PARAM_INT);
 
         $command->execute();
     }
@@ -97,20 +99,22 @@ class UserMessageDb extends ProxyDb
      * 更新用户session详情
      * @param $sessionKey
      * @param $content
+     * @param $isRead
      * @throws \yii\db\Exception
      */
-    public function updateUserMessageSession($sessionKey,$content)
+    public function updateUserMessageSession($sessionKey,$content,$isRead)
     {
 
         $sql=sprintf("
           UPDATE user_message_session SET
-          lastConcatTime=now(),lastContentInfo=:lastContentInfo,isRead=FALSE
+          lastConcatTime=now(),lastContentInfo=:lastContentInfo,isRead=:isRead
           WHERE sessionKey=:sessionKey
         ");
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":sessionKey", $sessionKey, PDO::PARAM_STR);
         $command->bindParam(":lastContentInfo", $content, PDO::PARAM_STR);
+        $command->bindParam(":isRead", $isRead, PDO::PARAM_INT);
 
         $command->execute();
     }
@@ -119,30 +123,31 @@ class UserMessageDb extends ProxyDb
     /**
      * 获取用户会话列表
      * @param $userSign
+     * @param null $isRead
      * @return array
      */
-    public function getUserMessageSessionByUserSign($userSign)
+    public function getUserMessageSessionByUserSign($userSign,$isRead=null)
     {
         $sql=sprintf("
             SELECT DISTINCT ub.nickname,ub.headImg,s.* FROM
             (
-                SELECT sessionId,sessionKey,userTwo as userId,lastConcatTime,lastContentInfo,isRead
+                SELECT sessionId,sessionKey,receiveId as userId,lastConcatTime,lastContentInfo,isRead
                 FROM user_message_session
-                WHERE userOne=:userSign
-                UNION
-                SELECT sessionId,sessionKey,userOne as userId,lastConcatTime,lastContentInfo,isRead
-                FROM user_message_session
-                WHERE userTwo=:userSign
+                WHERE receiveId=:userSign
             )
             AS s
             LEFT JOIN user_base ub ON ub.userSign=s.userId
-            ORDER BY s.lastConcatTime
         ");
+        if(isset($isRead)){
+            $sql.=" WHERE s.isRead=:isRead ";
+        }
+        $sql.=" ORDER BY s.lastConcatTime ";
 
         $command=$this->getConnection()->createCommand($sql);
-
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-
+        if(isset($isRead)){
+            $command->bindParam(":isRead", $isRead, PDO::PARAM_INT);
+        }
         return $command->queryAll();
     }
 
@@ -157,15 +162,55 @@ class UserMessageDb extends ProxyDb
     {
         $sql=sprintf("
             SELECT * FROM user_message
-            WHERE sessionKey=:sessionKey AND  (senderId=:userId OR receiverId=:userId)
+            WHERE ( sessionKeyOne=:sessionKey OR sessionKeyTwo=:sessionKey ) AND  (senderId=:userId OR receiveId=:userId)
         ");
         $command=$this->getConnection()->createCommand($sql);
 
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
         $command->bindParam(":sessionKey", $sessionKey, PDO::PARAM_STR);
         return $command->queryAll();
-
     }
+
+    /**
+     * 更新已读
+     * @param $sessionKey
+     * @throws \yii\db\Exception
+     */
+    public function updateUserMessageSessionRead($sessionKey)
+    {
+        $sql=sprintf("
+          UPDATE user_message_session SET
+          isRead=TRUE
+          WHERE sessionKey=:sessionKey
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":sessionKey", $sessionKey, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
+    /**
+     * 更新已读
+     * @param $sessionKey
+     * @param $userSign
+     * @throws \yii\db\Exception
+     */
+    public function updateUserMessageRead($sessionKey,$userSign)
+    {
+        $sql=sprintf("
+          UPDATE user_message SET
+          isRead=TRUE,readTime=now()
+          WHERE  ( sessionKeyOne=:sessionKey OR sessionKeyTwo=:sessionKey ) AND isRead=FALSE  AND receiveId=:userId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":sessionKey", $sessionKey, PDO::PARAM_STR);
+        $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
 
 
 }

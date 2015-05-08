@@ -14,7 +14,9 @@ class UserMessage {
 
     public $messageId;
 
-    public $sessionKey;
+    public $sessionKeyOne;
+
+    public $sessionKeyTwo;
 
     public $receiveId;
 

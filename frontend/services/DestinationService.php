@@ -60,4 +60,30 @@ class DestinationService extends BaseDb{
         }
         return $desInfo;
     }
+
+
+    /**
+     * 获取目前存在的国家和目的地Id
+     * @return mixed
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getDesCountryAndCity()
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->destinationDb=new DestinationDb($conn);
+            $cityList=$this->destinationDb->getDesCityIds();
+            $countryList=$this->destinationDb->getDesCountryIds();
+            $result['cityList']=$cityList;
+            $result['countryList']=$countryList;
+            return $result;
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
 }

@@ -60,61 +60,9 @@
 
     <p class="title">热门</p>
     <ul id="ul1">
-        <li><img src="/assets/images/lvyou.png" alt="">
-            <div class="zhezhao">
-                <p>rytut剪辑剪辑剪辑剪辑</p>
-                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                    <span>总价：<b>800</b></span></p>
-            </div>
-            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
-        <li><img src="/assets/images/lvyou.png" alt="">
-            <div class="zhezhao">
-                <p>rytut剪辑剪辑剪辑剪辑</p>
-                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                    <span>总价：<b>800</b></span></p>
-            </div>
-            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
-        <li><img src="/assets/images/lvyou.png" alt="">
-            <div class="zhezhao">
-                <p>rytut剪辑剪辑剪辑剪辑</p>
-                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                    <span>总价：<b>800</b></span></p>
-            </div>
-            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
-        <li><img src="/assets/images/lvyou.png" alt="">
-            <div class="zhezhao">
-                <p>rytut剪辑剪辑剪辑剪辑</p>
-                <p class="pingjia">评价<img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                    <span>总价：<b>800</b></span></p>
-            </div>
-            <p class="user01"><img src="/assets/images/1.png" alt=""><font>xiaolehuo</font></p>
-            <h4>日本京都奈良公园一日游</h4>
-        </li>
     </ul>
 </div>
-<a href="#"  class="btn8">显示更多</a>
+<a href="javascript:;"  class="btn8" id="showTripMore">显示更多</a>
 
 <!--list结束-->
 <!--index-tuijian begin-->
@@ -134,17 +82,20 @@
 <!--index-tuijian end-->
 
 
-
 <script type="text/javascript">
+    var currentPage=1;
     $(document).ready(function(){
         loadTrip();
+        $("#showTripMore").bind("click",function(){
+            loadTrip();
+        });
     });
     function loadTrip(){
-        var tripId=$("#tripId").val();
         $.ajax({
             url :'/view-trip/get-trip-list',
             type:'post',
             data:{
+                p:currentPage,
                 _csrf: $('input[name="_csrf"]').val()
             },
             beforeSend:function(){
@@ -158,10 +109,7 @@
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
-                    var list=data.data;
-                    if(list.length==0){
-                       return;
-                    }
+                    var list=data.data.result;
                     var trip,html="";
                     for(var i=0;i<list.length;i++){
                         trip=list[i];
@@ -185,6 +133,12 @@
                         html+='</li>';
                     }
                     $("#ul1").append(html);
+                    if(data.data.totalPage==currentPage){
+                        $("#showTripMore").html("暂无更多");
+                        $("#showTripMore").unbind("click");
+                        return;
+                    }
+                    currentPage++;
                 }else{
                     Main.showTip("获取随游失败");
                 }

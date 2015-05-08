@@ -27,4 +27,5 @@ class TableResult
         $this->data=$data;
     }
 
+
 }

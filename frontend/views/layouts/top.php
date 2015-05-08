@@ -32,11 +32,8 @@
                 </ul>
             </div>
             <div class="header-right fr">
-                <!--<p class="search"><input type="text" value="" class="text-xqy"></p>-->
                 <ul>
-                    <!--<li><a href="#" class="search-btn"></a></li>-->
                     <li class="xitong" id="suiuu-btn1"><a href="javascript:;"></a>
-
                         <div class="xit-sz">
                             <span class="jiao"></span>
                             <ol>
@@ -110,9 +107,7 @@
                 </ul>
             </div>
             <div class="nav-right">
-               <!-- <p class="search"><input type="text" value="" class="text-xqy"></p>-->
                 <ol>
-                    <!--<li><a href="#" class="search-btn"></a></li>-->
                     <li class="zhuces"><a href="javascript:;" id="zhuce">注册</a>
 
                         <div id="zhuce-main">
@@ -165,7 +160,7 @@
                             </div>
                         </div>
                     </li>
-                    <li><a href="javascript:;" id="denglu">登录</a>
+                    <li class="logins"><a href="javascript:;" id="denglu">登录</a>
 
                         <div id="denglu-main">
                             <p><label>邮箱/手机号</label><input type="text" value="" id="username"> </p>

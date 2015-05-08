@@ -11,8 +11,10 @@ namespace frontend\controllers;
 
 
 use backend\components\Page;
+use backend\components\TableResult;
 use common\components\Code;
 use common\components\Common;
+use common\components\PageResult;
 use common\components\TagUtil;
 use common\entity\TravelTripComment;
 use common\entity\UserAttention;
@@ -161,21 +163,24 @@ class ViewTripController extends UnCController{
             $startPrice=$priceArr[0];
             $endPrice=$priceArr[1];
         }
-
+        if(empty($c)){
+            $c=1;
+        }
         try{
             $page=new Page();
-            $page->currentPage=$c;
-            $page->showAll=true;
-
+            $page->pageSize=16;
+            $page->setCurrentPage($c);
             $this->tripService=new TripService();
             //查询基本
-            $rst= $this->tripService->getList($page,$title,null,null,$peopleCount,$startPrice,$endPrice,$tag);
-            //查询类似推荐
+            $page= $this->tripService->getList($page,$title,null,null,$peopleCount,$startPrice,$endPrice,$tag);
 
             //查询热门推荐
-
             //
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst->getList()));
+            $pageHtml=Common::pageHtml($page->currentPage,$page->pageSize,$page->totalCount);
+            $pageResult=new PageResult($page);
+            $pageResult->pageHtml=$pageHtml;
+
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$pageResult));
         }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL,"获取随游列表失败"));
         }

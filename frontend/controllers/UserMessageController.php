@@ -71,7 +71,34 @@ class UserMessageController extends  CController{
             $list=$this->userMessageService->getUserMessageSessionList($userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            throw $e;
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+    public function actionUnReadMessageSessionList()
+    {
+        try{
+            $userSign=$this->userObj->userSign;
+            $list=$this->userMessageService->getUnReadMessageSessionList($userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
+    /**
+     * 获取会话详情
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionMessageSessionInfo(){
+        $sessionKey=trim(\Yii::$app->request->post("sessionKey"));
+        try{
+            $userSign=$this->userObj->userSign;
+            $list=$this->userMessageService->getUserMessageSessionInfo($userSign,$sessionKey);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }

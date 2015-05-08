@@ -251,7 +251,6 @@ class UserInfoController extends CController{
             $totalCount=$rst['msg']->totalCount;
             if(intval($totalCount)!=0)
             {
-
                 $count=intval($totalCount);
                 $str=Common::pageHtml($cPage,$numb,$count);
             }

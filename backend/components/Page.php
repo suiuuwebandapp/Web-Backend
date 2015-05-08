@@ -71,6 +71,13 @@ class Page
     }
 
 
+    public function setCurrentPage($page)
+    {
+        $this->currentPage=$page;
+        $this->startRow = (($this->currentPage - 1) * $this->pageSize);
+    }
+
+
     public function getList(){
         return $this->list;
     }

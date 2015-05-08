@@ -19,7 +19,6 @@
 
 <script type="text/javascript" src="/assets/js/UI/jquery-ui.js"></script>
 
-
 <!--sylx-->
 <div class="sylx w1200">
     <div class="sylx-serch">
@@ -47,264 +46,13 @@
     </div>
     <div class="sylx-list" id="trip_base_list">
         <ul>
-            <li>
-                <a href="suiyou_xiangqing.html"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
 
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
         </ul>
         <div class="sylx-page">
-            <ul>
-                <li><a href="javascript:;">首页</a></li>
-                <li><a href="javascript:;">1</a></li>
-                <li><a href="javascript:;">2</a></li>
-                <li><a href="javascript:;">3</a></li>
-                <li><a href="javascript:;">4</a></li>
-                <li><a href="javascript:;">5</a></li>
-                <li><a href="javascript:;">6</a></li>
-                <li><a href="javascript:;">尾页</a></li>
-            </ul>
+            <ol id="spage">
+
+            </ol>
         </div>
-    </div>
-    <h2 class="title">类似推荐</h2>
-    <div class="sylx-list h400">
-        <ul>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/a1.fw.png" alt=""></a>
-                <p class="posi"><img src="/assets/images/1.png" alt=""><span>xiaolehuo</span></p>
-                <div>
-                    <h4>日本京都奈良公园一日游</h4>
-                    <p>评论&nbsp;<span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start2.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                        <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                    </p>
-                    <font>总价:<b>800</b></font>
-
-                </div>
-            </li>
-        </ul>
     </div>
     <h2 class="title">热门推荐</h2>
     <div class="sylx-list h400">
@@ -337,9 +85,8 @@
 </div>
 <!--sylx-->
 
-
-<script type="text/javascript">
-
+i<script type="text/javascript">
+    var currentPage=1;
 
     /*-----随游-价格区间拖动条----*/
     $(function() {
@@ -359,8 +106,10 @@
     $(document).ready(function(){
         searchTip();
         $("#searchBtn").bind("click",function(){
+            currentPage=1;
             searchTip();
         });
+
     });
 
 
@@ -375,6 +124,7 @@
             url :'/view-trip/get-trip-list',
             type:'post',
             data:{
+                p:currentPage,
                 title:title,
                 peopleCount:peopleCount,
                 tag:tag,
@@ -392,17 +142,22 @@
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
-                    var list=data.data;
+                    var list=data.data.result;
                     if(list.length==0){
                         return;
                     }
                     var trip,html="";
                     for(var i=0;i<list.length;i++){
                         trip=list[i];
+                        var title=trip.title;
+                        if(title.length>13){
+                            title=title.substring(0,13)+"...";
+                        }
+
                         html+='<li>' +
                         '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="'+trip.titleImg+'" alt=""></a>' +
                         '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
-                        '<div><h4>'+trip.title+'</h4><p>评论&nbsp;';
+                        '<div><h4>'+title+'</h4><p>评论&nbsp;';
                         if(trip.score>=2){
                             html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
                         }else{
@@ -429,11 +184,15 @@
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
                         }
 
-
                         html+='</p><font>总价:<b>'+trip.basePrice+'</b></font></div></li>';
-
                     }
-                    $("#trip_base_list ul").append(html);
+                    $("#trip_base_list ul").html(html);
+                    $("#spage").html(data.data.pageHtml);
+                    $("#spage li a").bind("click",function(){
+                        currentPage=$(this).attr("page");
+                        searchTip();
+                    });
+
                 }else{
                     Main.showTip("获取随游失败");
                 }

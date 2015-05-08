@@ -184,8 +184,10 @@
                         <li><a href="#pinglun">评论</a></li>
                         <li></li>
                         <li id="fenxiang"><a href="###">分享</a>
-                            <div id="other-line">
-                                <a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a>
+                            <div id="other-line" class="bdsharebuttonbox" data-tag="share_1">
+                                <a href="#" class="icon sina" data-cmd="tsina"></a>
+                                <a href="#" class="icon wei" data-cmd="weixin"></a>
+                                <a href="#" class="icon qq" data-cmd="qzone"></a>
 
                             </div>
                         </li>
@@ -292,6 +294,7 @@
         </div>
     </div>
 </div>
+
 
 <script type="text/javascript">
 
@@ -756,4 +759,20 @@
             }
         });
     }
+
+
+    window._bd_share_config = {
+        common : {
+            bdText : '随游网-<?=$travelInfo['info']['intro']?>',
+            bdDesc : '随游网-<?=htmlentities($travelInfo['info']['title'])?>',
+            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip?trip='.$travelInfo['info']['tripId'];?>',
+            bdPic : '<?=$travelInfo['info']['titleImg']?>'
+        },
+        share : [{
+            "bdSize" : 16
+        }]
+    }
+
+    //以下为js加载部分
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
 </script>

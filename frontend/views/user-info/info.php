@@ -154,38 +154,8 @@
             <li><a href="#">设置</a></li>
         </ul>
         <div class="emailCon past01 slideRec" style="display:block;">
-            <div class="left">
+            <div class="left" id="messageSessionDiv">
                 <ul>
-                    <li>
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <p class="words">日本京都有什么旅游景点</p>
-                        <b class="datas">15：30</b>
-                    </li>
-                    <li>
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <p class="words">日本京都有什么旅游景点</p>
-                        <b class="datas">15：30</b>
-                    </li>
-                    <li>
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <p class="words">日本京都有什么旅游景点</p>
-                        <b class="datas">15：30</b>
-                    </li>
-                    <li>
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <p class="words">日本京都有什么旅游景点</p>
-                        <b class="datas">15：30</b>
-                    </li>
-                    <li>
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <p class="words">日本京都有什么旅游景点</p>
-                        <b class="datas">15：30</b>
-                    </li>
-                    <li>
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <p class="words">日本京都有什么旅游景点</p>
-                        <b class="datas">15：30</b>
-                    </li>
                 </ul>
                 <div class="pages">
                     <ol>
@@ -198,23 +168,11 @@
                     </ol>
                 </div>
             </div>
-            <div class="right">
+            <div class="right" id="messageInfoDiv">
                 <div class="con">
                     <ul>
-                        <li class="zuo clearfix">
-                            <img src="/assets/images/1.png">
-                            <p>示聊天天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内</p>
-                        </li>
-                        <li class="you clearfix">
-                            <img src="/assets/images/1.png">
-                            <p>示聊天内容此处处显示聊天内容天内</p>
-                        </li>
-                        <li class="zuo clearfix">
-                            <img src="/assets/images/1.png">
-                            <p>示聊天天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此处显示聊天内容此内容此此处显示聊天内容此处显示聊天内容此处显示聊天内</p>
-                        </li>
                     </ul>
-                    <div class="write"><input type="text" class="txt"><input type="button" class="btn" value="发送"></div>
+                    <div class="write"><input type="text" class="txt" id="messageContent"><input type="button" class="btn" value="发送" id="sendMessageBtn"></div>
                 </div>
             </div>
         </div>
@@ -370,26 +328,6 @@
         <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList">
         </div>
         <div class="myOder pastOder innerCon" id="finishList">
-            <div class="orderList clearfix">
-                <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish">
-                <dl class="order clearfix">
-                    <dt class="title">
-                        <span>3小时前</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>
-                    </dt>
-                    <dd>
-                        <span class="pic"><img src="/assets/images/2.png"></span>
-                        <span>日本京都奈良公园一日游秀公园...</span>
-                        <span>9:00AM</span>
-                        <span><a href="#" class="user"><img src="/assets/images/1.png" ></a><a href="#" class="message"><b>xiao</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>
-                        <span>567890053</span>
-                        <span>2015.3.14</span>
-                        <span>2</span>
-                        <span>接机<b>300</b><br>租车<b>500</b></span>
-                    </dd>
-                </dl>
-                <p><a href="#" class="cancel">评论</a><a href="#" class="sure">分享</a>
-                    <span>总价：<b>8000</b></span><span class="blue">已确认</span></p>
-            </div>
 
         </div>
     </div>
@@ -405,22 +343,6 @@
         <div class="myOder past02 tabCon" id="myTripList">
         </div>
         <div class="myOder past03 tabCon" id="myJoinTripList">
-            <div class="orderList clearfix">
-                <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish">
-                <dl class="order clearfix">
-                    <dt class="title">
-                        <span>15.4.20发布</span><span>随游</span><span>随游时间</span><span>最多接待人数</span><span>附加服务</span>
-                    </dt>
-                    <dd>
-                        <span class="pic"><img src="/assets/images/2.png"></span>
-                        <span>日本京都奈良公园一日游秀公园...</span>
-                        <span>9:00AM</span>
-                        <span>3</span>
-                        <span>接机<b></b><br>租车<b></b></span>
-                    </dd>
-                </dl>
-                <p><a href="#" class="cancel">离开随游</a></p>
-            </div>
         </div>
     </div>
 
@@ -639,8 +561,8 @@
     var userProfession='<?=$this->context->userObj->profession?>';
     var userSex='<?=$this->context->userObj->sex?>';
     var cityId='<?=$this->context->userObj->cityId; ?>';
-
-
+    var userHeadImg='<?=$this->context->userObj->headImg; ?>';
+    var userSign='<?=$this->context->userObj->userSign; ?>';
     var phoneTime = 0;
     var phoneTimer;
 
