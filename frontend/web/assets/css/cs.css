@@ -773,11 +773,13 @@ transition:transform 1s ease-in-out;
 .sycon .myEmail .past01 .right{ display:none; width:50%; float:left; _display:inline;background:#eee; margin-top:10px; }
 .sycon .myEmail .past01 .right .con{ padding:10px; }
 .sycon .myEmail .past01 .right .con ul{ height:535px;overflow-y:scroll; }
-.sycon .myEmail .past01 .right .con li{ margin-bottom:20px;}
-.sycon .myEmail .past01 .right .con .zuo img,.sycon .myEmail .past01 .right .con .zuo p{ float:left; text-align:left}
+.sycon .myEmail .past01 .right .con li{ margin-bottom:20px;width:346px;}
+.sycon .myEmail .past01 .right .con li.zuo{ float:left;}
+.sycon .myEmail .past01 .right .con li.you{ float:right;}
 .sycon .myEmail .past01 .right .con .you img,.sycon .myEmail .past01 .right .con .you p{ float:right; text-align:left;}
 .sycon .myEmail .past01 .right .con .zuo img,.sycon .myEmail .past01 .right .con .you img{ width:40px; height:40px; border-radius:50%;}
-.sycon .myEmail .past01 .right .con .zuo p,.sycon .myEmail .past01 .right .con .you p{ width:340px; word-break:break-all; border-radius:10px; padding:10px; line-height:21px; background:#DBDBEB; margin:0 15px; position:relative;}
+.sycon .myEmail .past01 .right .con .zuo img,.sycon .myEmail .past01 .right .con .zuo p{ float:left; text-align:left}
+.sycon .myEmail .past01 .right .con .zuo p,.sycon .myEmail .past01 .right .con .you p{  word-break:break-all; border-radius:10px; padding:10px; line-height:21px; background:#DBDBEB; margin:0 15px; position:relative; max-width:245px;}
 .sycon .myEmail .past01 .right .con .you p{ background:#73b9ff; color:#fff;}
 .sycon .myEmail .past01 .right .con .zuo p:before,.sycon .myEmail .past01 .right .con .you p:before{ height:0; width:0; content:""; border:16px solid transparent; border-width:10px 20px; position:absolute; top:5px;}
 .sycon .myEmail .past01 .right .con .zuo p:before{ left:-35px;border-right-color:#DBDBEB;}
@@ -1453,7 +1455,7 @@ transition:transform 1s ease-in-out;
 
 
 /*------------分页----------*/
-#spage{ width:550px; line-height:30px; height:30px; margin:15px auto;}
+#spage{ width:770px; line-height:30px; height:30px; margin:15px auto;}
 #spage li{ padding-top:0; width:58px; height:30px; line-height:30px; text-align:center; float:left; border:none;}
 #spage li a{ display:block; width:58px; height:30px; color:#858585;}
 #spage li a:hover{color:#FFEA86;}

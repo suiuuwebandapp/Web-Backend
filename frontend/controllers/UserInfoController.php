@@ -239,7 +239,7 @@ class UserInfoController extends CController{
             {
                 $cPage=1;
             }
-            $numb=2;
+            $numb=5;
             $page=new Page();
             $page->currentPage=$cPage;
             $page->pageSize=$numb;
