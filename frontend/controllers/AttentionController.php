@@ -176,7 +176,49 @@ class AttentionController extends AController
             $error=$e->getMessage();
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
         }
-}
+    }
+
+    //随游点赞
+    public function actionAddPraiseTravel()
+    {
+        $this->loginValid();
+        try{
+            $travelId= \Yii::$app->request->post('travelId');
+            if(empty($travelId))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'点赞信息不能为空'));
+                return;
+            }
+            $userSign = $this->userObj->userSign;
+            $data= $this->AttentionService->CreatePraiseToTravel($travelId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+    //圈子文章点赞
+    public function actionAddPraiseCircleArticle()
+    {
+        $this->loginValid();
+        try{
+            $articleId= \Yii::$app->request->post('articleId');
+            if(empty($articleId))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'点赞信息不能为空'));
+                return;
+            }
+            $userSign = $this->userObj->userSign;
+            $data= $this->AttentionService->CreatePraiseToCircleArticle($articleId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
+
     //删除
     public function actionDeleteAttention()
     {

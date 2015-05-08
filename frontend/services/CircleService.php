@@ -132,12 +132,23 @@ class CircleService extends BaseDb
             $attention->relativeId = $articleId;
             $attention->userSign = $userSign;
             $rst =  $this->userAttentionDb->getAttentionResult($attention);
+
+            $praise= new UserAttention();
+            $praise->relativeType = UserAttention::TYPE_PRAISE_FOR_CIRCLE_ARTICLE;
+            $praise->relativeId = $articleId;
+            $praise->userSign = $userSign;
+            $rstPraise =  $this->userAttentionDb->getAttentionResult($attention);
             if(!empty($data)){
                 $data['attentionId']='';
                 $data['commentList']=array();
+                $data['praise']='';
                 if($rst!=false)
                 {
                     $data['attentionId'] = $rst['attentionId'];
+                }
+                if($rstPraise!=false)
+                {
+                    $data['praise'] = $rstPraise['attentionId'];
                 }
                 if($data!=false)
                 {

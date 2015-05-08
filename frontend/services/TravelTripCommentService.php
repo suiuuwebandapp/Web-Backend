@@ -63,7 +63,7 @@ class TravelTripCommentService extends BaseDb
             //得到是否玩过暂未修改
             $this->TravelTripCommentDb->addTripComment($comment);
         } catch (Exception $e) {
-            throw new Exception('获取评论异常',Code::FAIL,$e);
+            throw new Exception('添加评论异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

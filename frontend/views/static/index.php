@@ -168,8 +168,8 @@
         </ul>
         <div class="rightCon tabCon clearfix" style="display:block;">
             <p>写下您要反馈给我们的信息</p>
-            <textarea></textarea>
-            <p class="btnbar"><a href="###" class="btn">确认</a></p>
+            <textarea id="feedback_sta"></textarea>
+            <p class="btnbar"><a href="javascript:;" class="btn" id="sendFeedback">确认</a></p>
 
         </div>
         <div class="rightCon tabCon clearfix">
@@ -269,7 +269,9 @@
 <!------------helpCon-end--------------->
 <script>
     $(document).ready(function(){
-
+        $("#sendFeedback").bind("click",function(){
+            sendFeedback();
+        });
         initTab();
     });
 
@@ -283,6 +285,34 @@
             $("#"+tabArr[0]).click();
             $("#"+tabArr[1]).click();
         }
+    }
+    function sendFeedback()
+    {
+        var content =$('#feedback_sta').val();
+        if(content=='')
+        {
+            Main.showTip('请输入反馈后提交');
+            return;
+        }
+        $.ajax({
+            url: "/user-feedback/web-create-feedback",
+            type: "post",
+            data:{
+                content:content,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                Main.showTip('反馈异常');
+            },
+            success: function(data){
+                var result=eval("("+data+")");
+                if(result.status==1){
+                    Main.showTip('反馈成功，感谢您的反馈');
+                }else{
+                    Main.showTip(result.data);
+                }
+            }
+        });
     }
 
 </script>

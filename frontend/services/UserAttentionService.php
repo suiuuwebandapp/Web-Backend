@@ -166,6 +166,68 @@ class UserAttentionService extends BaseDb
     }
 
     /**
+     * 添加圈子点赞
+     * @param $articleId //文章id
+     * @param $userSign,//收藏用户
+     * @throws Exception
+     * @return int
+     */
+    public function CreatePraiseToCircleArticle($articleId,$userSign)
+    {
+
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $attention =new UserAttention();
+            $attention->relativeType=UserAttention::TYPE_PRAISE_FOR_CIRCLE_ARTICLE;
+            $attention->relativeId=$articleId;
+            $attention->userSign = $userSign;
+            $result = $this->AttentionDb->getAttentionResult($attention);
+            if(empty($result)||$result==false)
+            {
+                return $this->AttentionDb ->addUserAttention($articleId,UserAttention::TYPE_PRAISE_FOR_CIRCLE_ARTICLE,$userSign);
+            }else{
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'已经点赞无需继续点赞'));
+                exit;
+            }
+        } catch (Exception $e) {
+            throw new Exception('添加圈子点赞异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+    /**
+     * 添加随游点赞
+     * @param $travelId //随游id
+     * @param $userSign,//收藏用户
+     * @throws Exception
+     * @return int
+     */
+    public function CreatePraiseToTravel($travelId,$userSign)
+    {
+
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $attention =new UserAttention();
+            $attention->relativeType=UserAttention::TYPE_PRAISE_FOR_TRAVEL;
+            $attention->relativeId=$travelId;
+            $attention->userSign = $userSign;
+            $result = $this->AttentionDb->getAttentionResult($attention);
+            if(empty($result)||$result==false)
+            {
+                return $this->AttentionDb ->addUserAttention($travelId,UserAttention::TYPE_PRAISE_FOR_TRAVEL,$userSign);
+            }else{
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'已经点赞无需继续点赞'));
+                exit;
+            }
+        } catch (Exception $e) {
+            throw new Exception('添加随游点赞异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+    /**
      * 取消关注收藏
      * @param $rId 相对id
      * @param $userSign 用户

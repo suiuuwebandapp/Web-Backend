@@ -78,7 +78,7 @@ class AppTravelController extends AController
             $countryId=Yii::$app->request->post('countryId');
             $cityName=Yii::$app->request->post('cityName');
             $countryService = new CountryService();
-            $cityList = $countryService->getCityList(336,$cityName);
+            $cityList = $countryService->getCityList($countryId,$cityName);
             //$tagList = TagUtil::getInstance()->getTagList();
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$cityList));
         }catch (Exception $e)
@@ -127,7 +127,10 @@ class AppTravelController extends AController
             $cPage=\Yii::$app->request->post('cPage');
             $tripId=\Yii::$app->request->post('tripId');
             $numb=\Yii::$app->request->post('numb');
-
+            if(empty($cPage)||$cPage<1)
+            {
+                $cPage=1;
+            }
             $page=new Page();
             $page->currentPage=$cPage;
             $page->pageSize=$numb;
@@ -158,9 +161,10 @@ class AppTravelController extends AController
             $content = \Yii::$app->request->post('content');
             $rId= \Yii::$app->request->post('rId');
             $rTitle= \Yii::$app->request->post('rTitle');
+            $rSign= \Yii::$app->request->post('rSign');
             if(empty($tripId)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知随游'));}
             if(empty($content)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法发布空评论'));}
-            $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle);
+            $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle,$rSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));

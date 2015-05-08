@@ -106,44 +106,39 @@ class Common{
             $count=floor($allCount/$pageCount)+1;
         }
 
+        $bo=true;
         if($count>1){
         //$str.='<ol>';
-        if($nowPage>1)
-        {
-            $str.='<li><a  page="'.($nowPage-1).'" href="javascript:;">上一页</a></li>';
-        }
+            if($nowPage>1)
+            {
+                $str.='<li><a  page="'.($nowPage-1).'" href="javascript:;">上一页</a></li>';
+            }
             for($i=1;$i<$count+1;$i++)
             {
                 if($nowPage==$i){
                     $str.= '<li class="active"><a page="'.$i.'" href="javascript:;">'.$i.'</a></li>';
                 }else
                 {
-                    if($i == 1||$i == $count){
-                        $str .= '<li ><a page="'.$i.'" href="javascript:;">'.$i.'</a></li>';
-                    }else{
-                       
-                        if($nowPage-$i>=2)
-                        {
-                            $i = $nowPage-1;
-                        }
-                        else
-                        {
-                            if($i >=$nowPage+8)
-                            {
-                                $str .= '<li ><a href="javascript:;">...</a></li>';
-                                $i = $count;
-                            }
-                            $str .= '<li ><a page="'.$i.'" href="javascript:;">'.$i.'</a></li>';
-                        }
+                    if($nowPage-$i>=2 && $i != 1)
+                    {
+                        $str .= '<li ><a href="javascript:;">...</a></li>';
+                        $i = $nowPage-1;
                     }
-
-
+                    else
+                    {
+                        if($i >=$nowPage+7 && $i != $count)
+                        {
+                            $str .= '<li ><a href="javascript:;">...</a></li>';
+                            $i = $count;
+                        }
+                        $str .= '<li ><a page="'.$i.'" href="javascript:;">'.$i.'</a></li>';
+                    }
 
                 }
             }
-        if($nowPage<$count){$str.='<li><a  page="'.($nowPage+1).'" href="javascript:;">下一页</a></li>';}
-        //$str.='</ol>';
-            }
+            if($nowPage<$count){$str.='<li><a  page="'.($nowPage+1).'" href="javascript:;">下一页</a></li>';}
+            //$str.='</ol>';
+        }
         return $str;
     }
 }

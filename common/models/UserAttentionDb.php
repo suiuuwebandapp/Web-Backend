@@ -213,7 +213,7 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
         $sql=sprintf("
             FROM user_base a
             LEFT JOIN user_attention b ON a.userSign = b.userSign
-            WHERE b.relativeType=:relativeType AND b.relativeId=:userId
+            WHERE b.relativeType=:relativeType AND b.relativeId=:userId AND b.status=1
         ");
         $this->setParam("relativeType", UserAttention::TYPE_FOR_USER);
         $this->setParam("userId", $userId);
@@ -234,7 +234,7 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
         $sql=sprintf("
             SELECT COUNT(*) as numb  FROM user_base a
             LEFT JOIN user_attention b ON a.userSign = b.userSign
-            WHERE b.relativeType=:relativeType AND b.relativeId=:userId
+            WHERE b.relativeType=:relativeType AND b.relativeId=:userId AND b.status=1;
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userId, PDO::PARAM_STR);
