@@ -24,6 +24,7 @@ class RecommendListDb extends ProxyDb
      */
     public function getRecommendCircleArticle($page)
     {
+        $this->clearParam();
         $sql=sprintf("
         FROM circle_article b
             LEFT JOIN user_base a ON a.userSign=b.aCreateUserSign
@@ -47,6 +48,7 @@ class RecommendListDb extends ProxyDb
      */
     public function getRecommendTravel($page)
     {
+        $this->clearParam();
         $sql=sprintf("
         FROM travel_trip a
 LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
@@ -69,6 +71,7 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
      */
     public function getRecommendUser($page)
     {
+        $this->clearParam();
         $sql=sprintf("
         FROM user_base a
             LEFT JOIN recommend_list r ON r.relativeId=a.userId
@@ -95,7 +98,7 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
      */
     public function getRecommendCircle($page)
     {
-
+        $this->clearParam();
         $sql=sprintf("
         FROM recommend_list a LEFT JOIN sys_circle_sort b ON a.relativeId=b.cId
 WHERE a.relativeType=:relativeType AND a.`status`=:rStatus
@@ -117,7 +120,7 @@ WHERE a.relativeType=:relativeType AND a.`status`=:rStatus
      */
     public function getAttentionCircleDynamicTheme($userSign,$page)
     {
-
+        $this->clearParam();
         $sql=sprintf("
         FROM (   SELECT b.aTitle,b.articleId,b.aImg,s.cpic,s.cName,b.cId FROM (SELECT * FROM  user_attention l WHERE l.userSign=:userSign AND l.status=1 AND l.relativeType=4) c
 LEFT JOIN (SELECT a.aImg,a.cId,a.aTitle,a.articleId,a.aStatus,a.aCreateUserSign FROM circle_article a
@@ -142,7 +145,7 @@ GROUP BY b.cId ORDER BY b.articleId DESC  )as ss
      */
     public function getAttentionCircleDynamicAddr($userSign,$page)
     {
-
+        $this->clearParam();
         $sql=sprintf("
        FROM (   SELECT b.aTitle,b.articleId,b.aImg,s.cpic,s.cName,b.cAddrId as cId FROM (SELECT * FROM  user_attention l WHERE l.userSign=:userSign AND l.status=1 AND l.relativeType=4) c
 LEFT JOIN (SELECT a.aImg,a.cAddrId,a.aTitle,a.articleId,a.aStatus,a.aCreateUserSign FROM circle_article a
@@ -167,7 +170,7 @@ GROUP BY b.cAddrId ORDER BY b.articleId DESC )as ss
      */
     public function getAttentionUserDynamic($userSign,$page)
     {
-
+        $this->clearParam();
         $sql=sprintf("
         FROM ( SELECT * FROM (
 SELECT a.aImg,a.aTitle,a.articleId,a.aStatus,f.headImg,f.nickname,f.userSign,a.aContent FROM circle_article a

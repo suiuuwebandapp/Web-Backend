@@ -68,4 +68,12 @@ class UnCController extends Controller{
         }
         parent::__construct($id, $module);
     }
+
+    public function refreshUserInfo()
+    {
+        $this->__userBaseService=new UserBaseService();
+        $currentUser=$this->__userBaseService->findUserByUserSign($this->userObj->userSign);
+        $this->userObj=$currentUser;
+        \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
+    }
 }

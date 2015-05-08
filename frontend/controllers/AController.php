@@ -47,7 +47,7 @@ class AController extends Controller{
         }*/
         parent::__construct($id, $module);
     }
-    public function loginValid($bo=false,$isApp=true)
+    public function loginValid($bo=true,$isApp=true)
     {
         if($isApp) {
             if ($bo) {

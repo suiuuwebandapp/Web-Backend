@@ -24,7 +24,7 @@ class RecommendList {
     const TYPE_FOR_TRAVEL = 3;
 
     /**
-     * 推荐类型为随游
+     * 推荐类型为圈子
      */
     const TYPE_FOR_CIRCLE = 4;
     /**

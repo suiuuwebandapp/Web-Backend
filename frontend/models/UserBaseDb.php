@@ -187,6 +187,29 @@ class UserBaseDb extends ProxyDb
     }
 
     /**
+     * 查找用户（根据用户标示）
+     * @param $userSign
+     * @param null $status
+     * @return array|bool
+     */
+    public function findPasswordByUserSign($userSign, $status = null)
+    {
+        $sql = sprintf("
+            SELECT *
+            FROM user_base WHERE userSign=:userSign
+        ");
+        if ($status != null) {
+            $sql .= " AND status=:status";
+        }
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        if ($status != null) {
+            $command->bindParam(":status", $status, PDO::PARAM_INT);
+        }
+
+        return $command->queryOne();
+    }
+    /**
      * 根据UserSign获取用户基本信息
      * @param $userSign
      * @return array|bool
@@ -210,7 +233,29 @@ class UserBaseDb extends ProxyDb
 
     }
 
+    /**
+     * 查找用户（根据用户标示）
+     * @param $userSign
+     * @param null $status
+     * @return array|bool
+     */
+    public function findBaseAllBySign($userSign, $status = 1)
+    {
+        $sql = sprintf("
+            SELECT *
+            FROM user_base WHERE userSign=:userSign
+        ");
+        if ($status != null) {
+            $sql .= " AND status=:status";
+        }
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        if ($status != null) {
+            $command->bindParam(":status", $status, PDO::PARAM_INT);
+        }
 
+        return $command->queryOne();
+    }
     /**
      * 根据openId 接入 类型获取用户Id
      * @param $openId
@@ -312,12 +357,12 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             UPDATE user_base SET
             password=:password
-            WHERE userId=:userId
+            WHERE userSign=:userSign
         ");
 
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":password", $userBase->password, PDO::PARAM_STR);
-        $command->bindParam(":userId", $userBase->userId, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_INT);
 
         return $command->execute();
     }
@@ -342,6 +387,7 @@ class UserBaseDb extends ProxyDb
 
         $command->execute();
     }
+
 
 
 }

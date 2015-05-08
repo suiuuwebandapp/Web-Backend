@@ -277,6 +277,27 @@ class UserBaseService extends BaseDb
     }
 
     /**
+     * 查找用户（根据userSign）
+     * @param $userSign
+     * @return mixed|null
+     * @throws Exception
+     */
+    public function findPasswordByUserSign($userSign)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result = $this->userBaseDb->findPasswordByUserSign($userSign,UserBase::USER_STATUS_NORMAL);
+            $userBase=$this->arrayCastObject($result,UserBase::class);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
+    /**
      * 获取用户基本信息
      * @param $userSign
      * @return mixed|null
@@ -298,6 +319,27 @@ class UserBaseService extends BaseDb
         return $userBase;
     }
 
+    /**
+     * 获取用户所有信息
+     * @param $userSign
+     * @return mixed|null
+     * @throws Exception
+     */
+    public function findBaseAllBySign($userSign)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result = $this->userBaseDb->findBaseAllBySign($userSign);
+            $userBase=$this->arrayCastObject($result,UserBase::class);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
 
     /**
      * 密码加密方法
@@ -415,15 +457,26 @@ class UserBaseService extends BaseDb
         return false;
     }
 
+    /**
+     * 验证密码
+     * @param $phone
+     * @param $userId
+     * @return bool
+     * @throws Exception
+     */
+    public function validatePassword($password,$p)
+    {
+      return $p==$this->encryptPassword($password);
+    }
 
-    public function updatePassword($userId,$password)
+    public function updatePassword($userSign,$password)
     {
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $userBase =new UserBase();
             $userBase->password = $this->encryptPassword($password);
-            $userBase->userId=$userId;
+            $userBase->userSign=$userSign;
            return $this->userBaseDb->updatePassword($userBase);
 
         }catch (Exception $e) {

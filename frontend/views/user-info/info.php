@@ -556,15 +556,23 @@
                         <input id="phone" type="text" value="<?= $this->context->userObj->phone?>" class="phone fl" >
                     </div>
                     <p class="p1">
-                        <input type="text" class="text fl"  maxlength="6" id="code">
+                        <input type="text" class="text fl"  maxlength="6" id="code_p">
                         <input type="button" value="获取验证码" class="btn fl" id="getCode">
-                        <input type="button" value="立即验证" class="btn validate" id="validatePhone">
+                        <?php if($this->context->userObj->phone){?>
+                        <input type="button" value="立即修改" class="btn validate" id="validatePhone">
+                        <?php  }else{?>
+                            <input type="button" value="立即验证" class="btn validate" id="validatePhone">
+                        <?php  }?>
                     </p>
                     <p><span>邮箱验证:</span><span id="emailTip" class="form_tip"></span></p>
                     <p class="p1 p2">
                         <span class="fl">输入邮箱</span>
-                        <input type="text" class="text fl" value="<?= $this->context->userObj->email?>">
-                        <input type="button" value="邮箱验证" class="btn fl">
+                        <input type="text" class="text fl" id="email_info" value="<?= $this->context->userObj->email?>">
+                        <?php if($this->context->userObj->email){?>
+                            <input type="button" value="修改" class="btn fl" id="validateEmail_info">
+                        <?php  }else{?>
+                            <input type="button" value="邮箱验证" class="btn fl" id="validateEmail_info">
+                        <?php  }?>
                     </p>
                     <div style="clear: both"></div>
                     <p><span>实名认证</span><span class="form_tip"></span></p>
@@ -593,11 +601,11 @@
                 <div class="wdzl-xx">
                     <p class="Mtitle">密码设置</p>
                     <span>旧密码:</span>
-                    <input type="password">
+                    <input type="password" id="oPassword_user_info">
                     <span>新密码:</span>
-                    <input type="password">
+                    <input type="password" id="password_user_info">
                     <span>确认密码:</span>
-                    <input type="password">
+                    <input type="password" id="qPassword_user_info">
                     <span></span>
                     <span></span>
                     <p class="Mtitle">收款设置</p>
@@ -611,7 +619,7 @@
 
                     </div>
                     <span></span>
-                    <a href="#"  class="surebtn">保存修改</a>
+                    <a href="javascript:;"  class="surebtn" id="password_update_info">保存修改</a>
                 </div>
             </div>
         </div>

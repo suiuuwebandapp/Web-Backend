@@ -22,6 +22,17 @@ $(document).ready(function(){
         $("#tripManager").parent("li").hide();
     }
 
+
+    $("#validatePhone").bind("click",function(){
+        initValidatePhone();
+    });
+    $("#validateEmail_info").bind("click",function(){
+        initValidateEmail_info();
+    });
+
+    $("#password_update_info").bind("click",function(){
+        initUpdatePassword();
+    });
     $("#myComment").bind("click",function(){
         initMyComment(1);
     });
@@ -60,6 +71,55 @@ $(document).ready(function(){
     initMessageSession();
 });
 
+/**
+ *
+ *
+ */
+function initUpdatePassword()
+{
+    var password = $('#password_user_info').val();
+    var qPassword = $('#qPassword_user_info').val();
+    var oPassword = $('#oPassword_user_info').val();
+    if(oPassword=='')
+    {
+        Main.showTip("请输入旧密码");
+        return;
+    }
+    if(password=='')
+    {
+        Main.showTip("请输入新密码");
+        return;
+    }
+    if(qPassword=='')
+    {
+        Main.showTip("请输入确认密码");
+        return;
+    }
+    $.ajax({
+        url :'/user-info/update-password',
+        type:'post',
+        data:{
+            oPassword:oPassword,
+            password:password,
+            qPassword:qPassword,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        beforeSend:function(){
+        },
+        error:function(){
+            Main.showTip("更新密码异常");
+        },
+        success:function(data){
+
+            data=eval("("+data+")");
+            if(data.status==1){
+                Main.showTip(data.data);
+            }else{
+                Main.showTip(data.data);
+            }
+        }
+    });
+}
 
 function initMessageSession(){
     $.ajax({
@@ -1024,6 +1084,81 @@ function sendTravelCode() {
     });
 }
 
+function initValidatePhone()
+{
+    //TODO 验证手机
+    var phone = $("#phone").val();
+    var areaCode = $("#codeId").val();
+    var code_p = $("#code_p").val();
+    if (phone == "") {
+        $("#phoneTip").html("请输入有效的手机号");
+        return;
+    } else {
+        $("#phoneTip").html("");
+    }
+    $.ajax({
+        url: '/index/validate-phone',
+        type: 'post',
+        data: {
+            phone: phone,
+            areaCode: areaCode,
+            code:code_p,
+            _csrf: $('input[name="_csrf"]').val()
+
+        },
+        beforeSend: function () {
+
+        },
+        error: function () {
+            Main.showTip('验证失败');
+        },
+        success: function (data) {
+            var datas = eval('(' + data + ')');
+            if (datas.status == 1) {
+                Main.showTip('验证成功');
+                $("#phone").val('');
+                $("#code_p").val('');
+                $("#validatePhone").val('立即修改');
+
+            } else {
+                Main.showTip(datas.data);
+            }
+        }
+    });
+}
+//验证邮箱
+function initValidateEmail_info()
+{
+    var email = $("#email_info").val();
+
+    if (email == "") {
+        Main.showTip('邮箱不能为空');
+        return;
+    }
+    $.ajax({
+        url: '/index/send-validate-mail',
+        type: 'post',
+        data: {
+            mail: email,
+            _csrf: $('input[name="_csrf"]').val()
+
+        },
+        beforeSend: function () {
+
+        },
+        error: function () {
+            Main.showTip('验证失败');
+        },
+        success: function (data) {
+            var datas = eval('(' + data + ')');
+            if (datas.status == 1) {
+                Main.showTip(datas.data);
+            } else {
+                Main.showTip(datas.data);
+            }
+        }
+    });
+}
 function initPhoneTimer() {
     phoneTimer = window.setInterval(function () {
         if (phoneTime > 0) {

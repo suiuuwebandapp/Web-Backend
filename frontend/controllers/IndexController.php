@@ -224,7 +224,7 @@ class IndexController extends UnCController
                 $error='未发现该用户';
                 return json_encode(Code::statusDataReturn(Code::FAIL,$error));
             }
-            $r=$this->userBaseService->updatePassword($rst->userId,$password);
+            $r=$this->userBaseService->updatePassword($rst->userSign,$password);
             if($r==1)
             {
                 Yii::$app->session->set(Code::USER_NAME_SESSION,'');
@@ -675,7 +675,112 @@ class IndexController extends UnCController
         echo json_encode($rst);
     }
 
+    //验证手机
+    public function actionValidatePhone()
+    {
 
+        $phone=trim(\Yii::$app->request->post("phone", ""));
+        $code=trim(\Yii::$app->request->post("code", ""));
+        if(empty($phone)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的手机号"));
+        }
+        if(empty($code)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的验证码"));
+        }
+        $rCode =\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
+        if($code===$rCode)
+        {
+            $userBase=null;
+            if($this->userObj==null){
+                $userBase=new UserBase();
+            }else{
+                $userBase= clone $this->userObj;
+            }
+
+            $rst=$this->userBaseService->findBaseAllBySign($userBase->userSign);
+            if(empty($rst)||$rst==false)
+            {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的用户"));
+            }
+            $rst->phone=$phone;
+            $this->userBaseService->updateUserBase($rst);
+            $this->refreshUserInfo();
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, "验证成功"));
+        }else{
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "验证码错误"));
+        }
+    }
+
+    public function actionValidateMail()
+    {
+        $email = \Yii::$app->request->get('e');//用户输入的邮箱
+        $sign = \Yii::$app->request->get('p');//用户sign
+        $code = \Yii::$app->request->get('c');//加密
+
+        $valCode = $this->getEmailCode($email, $sign);
+        $userSign = $this->getDecryptPassword($sign);
+
+        if ($code != $valCode) {
+            return $this->redirect(['/result', 'result' => '无效的链接地址！！']);
+        }
+        try {
+            $rstUser=$this->userBaseService->findBaseAllBySign($userSign);
+            if(empty($rstUser)||$rstUser==false)
+            {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的用户"));
+            }
+            $rstUser->email=$email;
+            $this->userBaseService->updateUserBase($rstUser);
+            $this->refreshUserInfo();
+        } catch (Exception $e) {
+            //return $this->redirect(['/result', 'result' => '邮箱认证失败:'.$e->getMessage()]);
+            return $this->redirect(['/result', 'result' => '验证邮箱失败！']);
+        }
+        return $this->redirect(['/result', 'result' => '验证成功']);
+
+    }
+
+    public function actionSendValidateMail()
+    {
+        $mail=trim(\Yii::$app->request->post("mail", ""));
+        if(empty($mail)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的邮箱"));
+        }
+        $count = Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX .$mail );
+        if ($count > Code::MAX_SEND_COUNT) {
+            return json_encode(Code::statusDataReturn(Code::FAIL, '发送次数过多24小时后将继续发送'));
+        } else {
+            //判断邮箱是否已经注册
+            $userBase = $this->userBaseService->findUserByEmail($mail);
+            if (!empty($userBase)) {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_EMAIL_EXIST));
+                return;
+            }
+            $userBase=null;
+            if($this->userObj==null){
+                $userBase=new UserBase();
+            }else{
+                $userBase= clone $this->userObj;
+            }
+            $rstUser=$this->userBaseService->findBaseInfoBySign($userBase->userSign);
+            if(empty($rstUser)||$rstUser==false)
+            {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的用户"));
+            }
+
+            $enPwd = $this->getEncryptPassword($userBase->userSign);
+            $code = $this->getEmailCode($mail, $enPwd);
+            $url = \Yii::$app->params['base_dir'] . '/index/validate-mail?e=' . $mail . '&p=' . $enPwd . '&c=' . $code;
+            //最终发送的地址内容
+            $rst = Mail::sendValidateMail($mail, $url);
+            //
+            if ($rst['status'] == Code::SUCCESS) {
+                echo json_encode(Code::statusDataReturn(Code::SUCCESS, '发送成功'));
+            } else {
+                echo json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
+            }
+        }
+    }
     /**
      * 注册随友
      */

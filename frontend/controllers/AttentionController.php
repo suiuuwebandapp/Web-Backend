@@ -304,13 +304,25 @@ class AttentionController extends AController
     {
         $this->loginValid(false);
         try{
-            $page = new Page();//得到所有的  个数在里面定义
+            $page1 = new Page();//得到所有的  个数在里面定义
+            $page1->pageSize=6;
+            $page2 = new Page();//得到所有的  个数在里面定义
+            $page2->pageSize=2;
+            $page3 = new Page();//得到所有的  个数在里面定义
+            $page3->pageSize=2;
+            $page4 = new Page();//得到所有的  个数在里面定义
+            $number = \Yii::$app->request->post('n');
+            if(empty($number))
+            {
+                $number=2;
+            }
+            $page4->pageSize=$number;
             $userSign = $this->userObj->userSign;
             $data= array();
-            $data['circleDynamic'] = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
-            $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page,3);
-            $data['recommendUser'] =$this->AttentionService->getRecommendUser($page);
-            $data['recommendTravel'] =$this->AttentionService->getRecommendTravel($page);
+            $data['circleDynamic'] = $this->AttentionService->getAttentionCircleDynamic($userSign,$page1);
+            $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page2);
+            $data['recommendUser'] =$this->AttentionService->getRecommendUser($page3);
+            $data['recommendTravel'] =$this->AttentionService->getRecommendTravel($page4);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {

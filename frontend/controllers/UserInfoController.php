@@ -262,4 +262,43 @@ class UserInfoController extends CController{
         }
     }
 
+    public function actionUpdatePassword()
+    {
+        try {
+            if(empty($this->userObj))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才可以修改密码'));
+                return;
+            }
+            $userSign = $this->userObj->userSign;
+            $password=\Yii::$app->request->post('password');
+            $qPassword=\Yii::$app->request->post('qPassword');
+            $oPassword=\Yii::$app->request->post('oPassword');
+            if(empty($oPassword)){ return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'旧密码不能为空'));}
+            if(empty($password)){ return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'新密码不能为空'));}
+            if($password!=$qPassword)
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'两次密码不统一'));
+                return;
+            }
+            $rst=$this->userBaseService->findPasswordByUserSign($userSign);
+            if(empty($rst)||$rst==false)
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未找到用户'));
+                return;
+            }
+            if(!$this->userBaseService->validatePassword($oPassword,$rst->password))
+            {
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'旧密码不正确'));
+                return;
+            }
+            $r=$this->userBaseService->updatePassword($userSign,$password);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'修改成功'));
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+        }
+
+    }
+
 }
