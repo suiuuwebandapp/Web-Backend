@@ -111,6 +111,11 @@
     .validate{
         background-color:  #73b9ff !important;
     }
+
+    .sycon .mySuiyou .orderList .rubbish{
+        top: 5px;
+        right: 5px;
+    }
 </style>
 <input type="hidden" id="lon"/>
 <input type="hidden" id="lat"/>
@@ -366,7 +371,7 @@
             <div class="wdzl clearfix">
                 <div class="sel-pic" id="crop_container">
                     <input type="file" id="reImg" />
-                    <img id="img_origin" style="display: none" border="0"/>
+                    <img id="img_origin" style="display: none;max-height: 300px;max-width: 300px" border="0"/>
                     <input id="uploadBtn"  class="sect" type="button" value="点击上传照片"/>
                     <input id="uploadImgConfirm"  class="btn sure" type="button" value="确定"/>
                     <input id="uploadImgCancle" class="btn cancel" type="button" value="取消"/>
@@ -553,10 +558,6 @@
     var tripServiceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT?>';
     var tripServiceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?>';
     var isPublisher=<?=$this->context->userObj->isPublisher?'true':'false';?>;
-
-    var rotateCount=0;
-    var containerDivWidth=300;
-    var imgAreaSelectApi;
 
     var userProfession='<?=$this->context->userObj->profession?>';
     var userSex='<?=$this->context->userObj->sex?>';

@@ -628,6 +628,7 @@
             selectTab(5);
             return;
         }
+
         $.ajax({
             url :'/trip/update-trip',
             type:'post',

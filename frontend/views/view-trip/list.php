@@ -48,11 +48,8 @@
         <ul>
 
         </ul>
-        <div class="sylx-page">
-            <ol id="spage">
-
-            </ol>
-        </div>
+        <ol id="spage">
+        </ol>
     </div>
     <h2 class="title">热门推荐</h2>
     <div class="sylx-list h400">

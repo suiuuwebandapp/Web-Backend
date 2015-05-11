@@ -5,6 +5,12 @@
 //第一页消息列表
 var currentPageMessageSessionKeyList=[];
 var messageSessionTimer;
+
+var rotate;
+var rotateCount=0;
+var containerDivWidth=300;
+var imgAreaSelectApi;
+
 $(document).ready(function(){
     if(isPublisher){
         $("#myTripManager").bind("click",function(){
@@ -741,7 +747,6 @@ function removeImgAreaSelect(){
  * @param imgObj
  */
 function initImgAreaSelect(imgObj){
-    alert(imgAreaSelectApi);
     imgAreaSelectApi = $(imgObj).imgAreaSelect({
         instance : true,	// true，返回一个imgAreaSelect绑定到的图像的实例，可以使用api方法
         onSelectChange : preview,	// 改变选区时的回调函数
@@ -786,6 +791,9 @@ $('#img_origin').load(function(){
     }
     imgWidth=$("#img_origin").width();
     imgHeight=$("#img_origin").height();
+
+    alert(imgWidth);
+    alert(imgHeight);
 
     if(imgWidth>=imgHeight){
         var padding=(imgWidth-imgHeight)/2;

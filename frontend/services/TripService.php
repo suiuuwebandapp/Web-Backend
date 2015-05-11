@@ -127,34 +127,34 @@ class TripService extends BaseDb{
             $this->tripTravelDb->updateTravelTrip($travelTrip);
             //删除 ，添加
             if($scenicList!=null){
+                $this->tripTravelDb->deleteTravelTripScenicBytripId($travelTrip->tripId);
                 foreach($scenicList as $scenic)
                 {
                     $scenic->tripId=$travelTrip->tripId;
-                    $this->tripTravelDb->deleteTravelTripScenicBytripId($travelTrip->tripId);
                     $this->tripTravelDb->addTravelTripScenic($scenic);
                 }
             }
             if($picList!=null){
+                $this->tripTravelDb->deleteTravelTripPicBytripId($travelTrip->tripId);
                 foreach($picList as $pic)
                 {
                     $pic->tripId=$travelTrip->tripId;
-                    $this->tripTravelDb->deleteTravelTripPicBytripId($travelTrip->tripId);
                     $this->tripTravelDb->addTravelTripPicture($pic);
                 }
             }
             if($priceList!=null){
+                $this->tripTravelDb->deleteTravelTripPriceBytripId($travelTrip->tripId);
                 foreach($priceList as $price)
                 {
                     $price->tripId=$travelTrip->tripId;
-                    $this->tripTravelDb->deleteTravelTripPriceBytripId($travelTrip->tripId);
                     $this->tripTravelDb->addTravelTripPrice($price);
                 }
             }
             if($serviceList!=null){
+                $this->tripTravelDb->deleteTravelTripServiceBytripId($travelTrip->tripId);
                 foreach($serviceList as $service)
                 {
                     $service->tripId=$travelTrip->tripId;
-                    $this->tripTravelDb->deleteTravelTripServiceBytripId($travelTrip->tripId);
                     $this->tripTravelDb->addTravelTripService($service);
                 }
             }

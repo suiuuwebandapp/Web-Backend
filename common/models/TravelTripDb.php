@@ -368,7 +368,7 @@ class TravelTripDb extends ProxyDb{
     {
         $sql=sprintf("
             SELECT  ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,t.* FROM travel_trip_publisher t
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,t.* FROM travel_trip_publisher t
             LEFT JOIN user_publisher up ON up.userPublisherId=t.publisherId
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             WHERE t.tripId=:tripId
@@ -703,14 +703,13 @@ class TravelTripDb extends ProxyDb{
             FROM user_publisher up
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             LEFT JOIN travel_trip_apply tta ON tta.publisherId=up.userPublisherId
-            WHERE tta.tripId=:tripId AND tta.status=:status AND t.status=:tripStatus
+            WHERE tta.tripId=:tripId AND tta.status=:status
         ");
 
         $command=$this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->bindValue(":status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT, PDO::PARAM_INT);
-        $command->bindValue(":tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
 
         return $command->queryAll();
     }

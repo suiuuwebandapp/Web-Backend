@@ -134,7 +134,7 @@
                     <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">
                         <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
                         <ul class="clearfix">
-                            <li class="li01"><?=$publisherInfo['nickname'];?><img src="/assets/images/xf.fw.png" width="18" height="12">
+                            <li class="li01"><?=$publisherInfo['nickname'];?><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$publisherInfo['userSign']?>')">
                                 <br>性别:<b><?php if($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b>
                             </li>
                             <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($publisherInfo['birthday']);?></b></li>
@@ -183,11 +183,11 @@
                     <ol>
                         <li><a href="#pinglun">评论</a></li>
                         <li></li>
-                        <li id="fenxiang"><a href="###">分享</a>
+                        <li id="fenxiang"><a href="javascript:;">分享</a>
                             <div id="other-line" class="bdsharebuttonbox" data-tag="share_1">
-                                <a href="#" class="icon sina" data-cmd="tsina"></a>
-                                <a href="#" class="icon wei" data-cmd="weixin"></a>
-                                <a href="#" class="icon qq" data-cmd="qzone"></a>
+                                <a href="javascript:;" class="icon sina" data-cmd="tsina"></a>
+                                <a href="javascript:;" class="icon wei" data-cmd="weixin"></a>
+                                <a href="javascript:;" class="icon qq" data-cmd="qzone"></a>
 
                             </div>
                         </li>
@@ -766,9 +766,9 @@
 
     window._bd_share_config = {
         common : {
-            bdText : '随游网-<?=$travelInfo['info']['intro']?>',
-            bdDesc : '随游网-<?=htmlentities($travelInfo['info']['title'])?>',
-            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip='.$travelInfo['info']['tripId'];?>',
+            bdText : '随游网-<?=htmlspecialchars($travelInfo['info']['intro'])?>',
+            bdDesc : '随游网-<?=htmlspecialchars($travelInfo['info']['title'])?>',
+            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip='.$travelInfo['info']['tripId'];?>&',
             bdPic : '<?=$travelInfo['info']['titleImg']?>'
         },
         share : [{
