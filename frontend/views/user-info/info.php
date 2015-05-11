@@ -129,7 +129,7 @@
         </div>
     </div>
     <div class="user w1200">
-        <a href="#" class="userPic"><img src="<?=$this->context->userObj->headImg ?>" width="120px" alt=""></a>
+        <a href="javascript:;" class="userPic"><img src="<?=$this->context->userObj->headImg ?>" width="120px" alt=""></a>
         <span><?=$this->context->userObj->nickname ?></span>
         <p><?=$this->context->userObj->intro ?></p>
         <ul>
@@ -145,18 +145,18 @@
 <div class="sycon w1200 clearfix">
     <!-----------con-nav-------------->
     <ul class="con-nav synav">
-        <li><a href="#"  class="active" id="myMessage">收件箱</a></li>
+        <li><a href="javascript:;"  class="active" id="myMessage">收件箱</a></li>
         <li><a href="javascript:;" id="myComment">发言</a></li>
         <li><a href="javascript:;" id="myCollect">收藏</a></li>
-        <li><a href="#" id="myOrderManager">我的预定</a></li>
-        <li><a href="#" id="tripManager">随游管理</a></li>
-        <li><a href="#" id="userInfo">个人资料</a></li>
+        <li><a href="javascript:;" id="myOrderManager">我的预定</a></li>
+        <li><a href="javascript:;#" id="tripManager">随游管理</a></li>
+        <li><a href="javascript:;" id="userInfo">个人资料</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
     <div class="tab-div myEmail TabCon clearfix" style="display:block">
         <ul class="emailNav recTit">
-            <li><a href="#"  class="active">私信</a></li>
-            <li><a href="#">设置</a></li>
+            <li><a href="javascript:;"  class="active">私信</a></li>
+            <li><a href="javascript:;">设置</a></li>
         </ul>
         <div class="emailCon past01 slideRec" style="display:block;">
             <div class="left" id="messageSessionDiv">
@@ -216,46 +216,6 @@
 
         <div class="huifu-list">
             <ul id="commentList_51">
-                <li>
-                    <div class="userPic">
-                        <a href="#"><img alt="" src="/assets/images/1.png"></a>
-                        <span>xiaoleho</span>
-                    </div>
-                    <span>回复</span>
-                    <div class="userPic">
-                        <a href="#"><img alt="" src="/assets/images/1.png"></a>
-                        <span>xiaoleho</span>
-                    </div>
-                    <p>日本都有什么旅游景点？</p>
-                    <b>13:50</b>
-                    <p class="detail">关&nbsp;于&nbsp;:&nbsp;<a href="">京都奈良公园一日游</a></p>
-                </li>
-                <li>
-                    <div class="userPic">
-                        <a href="#"><img alt="" src="/assets/images/1.png"></a>
-                        <span>xiaoleho</span>
-                    </div>
-                    <span>回复</span>
-                    <div class="userPic">
-                        <a href="#"><img alt="" src="/assets/images/1.png"></a>
-                        <span>xiaoleho</span>
-                    </div>
-                    <p>日本都有什么旅游景点？</p>
-                    <b>13:50</b>
-                </li>
-                <li>
-                    <div class="userPic">
-                        <a href="#"><img alt="" src="/assets/images/1.png"></a>
-                        <span>xiaoleho</span>
-                    </div>
-                    <span>回复</span>
-                    <div class="userPic">
-                        <a href="#"><img alt="" src="/assets/images/1.png"></a>
-                        <span>xiaoleho</span>
-                    </div>
-                    <p>日本都有什么旅游景点？</p>
-                    <b>13:50</b>
-                </li>
             </ul>
             <ol id="spage"></ol>
         </div>
@@ -265,63 +225,6 @@
 
     <div class="tab-div shoucang TabCon clearfix">
         <ul class="clearfix" id="myCollectList">
-
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
-            <li>
-                <a href="javascript:;"><img src="/assets/images/grsc1.fw.png" alt=""></a>
-                <div class="userPic">
-                    <a href="#"><img src="/assets/images/1.png" alt=""></a>
-                    <span>xiaoleho</span>
-                </div>
-                <p>日本京都奈良公园一日游</p>
-            </li>
         </ul>
     </div>
     <!-------------TabCon4-我的预定------------->

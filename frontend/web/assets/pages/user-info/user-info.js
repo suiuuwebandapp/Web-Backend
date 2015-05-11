@@ -206,9 +206,6 @@ function getUserUnReadMessageSession(){
         data:{},
         beforeSend:function(){
         },
-        error:function(){
-            Main.showTip("获取私信列表失败");
-        },
         success:function(data){
             data=eval("("+data+")");
             if(data.status==1){
@@ -467,8 +464,7 @@ function updateUserInfo(){
  * 获取地区详情
  * @param obj
  */
-function findCityInfo(obj) {
-    var name=$(obj).val();
+function findCityInfo(name) {
     if(name==""){
         return;
     }
@@ -522,6 +518,9 @@ function initSelect(){
         }
         var search=$("#cityId").find("option:selected").text();
         if(search!=''){
+            if(search.indexOf("/")!=-1){
+                search=search.split("/")[0];
+            }
             findCityInfo(search);
         }
     });
@@ -757,7 +756,7 @@ function initImgAreaSelect(imgObj){
 
     });
     imgAreaSelectApi.setRotate(0);
-    resetRotate();
+    //resetRotate();
 }
 
 /**
