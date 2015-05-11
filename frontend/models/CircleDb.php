@@ -9,6 +9,7 @@
 namespace frontend\models;
 
 
+use common\entity\AllTotalize;
 use common\entity\UserOrderInfo;
 use common\models\ProxyDb;
 use common\entity\CircleArticle;
@@ -164,13 +165,17 @@ class CircleDb extends ProxyDb
 LEFT JOIN user_order_info b ON a.tripId  = b.tripId
 LEFT JOIN user_publisher p ON a.createPublisherId=p.userPublisherId
 LEFT JOIN user_base c ON p.userId=c.userSign
+LEFT JOIN (SELECT * FROM all_totalize WHERE tType=:tType) e ON e.rId=a.tripId
+LEFT JOIN(SELECT * FROM all_totalize WHERE tType=:ftType) f ON f.rId=a.tripId
 WHERE b.userId=:userSign AND a.`status`=1 AND c.`status`=1 AND (b.`status`= :successStatus OR b.`status`= :finishStatus)
 ORDER BY b.beginDate DESC
         ");
         $this->setParam("userSign", $userSign);
         $this->setParam("successStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
         $this->setParam("finishStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH);
-        $this->setSelectInfo('a.tripId,a.score,c.nickname,c.headImg,a.title,a.titleImg');
+        $this->setParam("tType", AllTotalize::TYPE_COMMENT_FOR_TRIP);
+        $this->setParam("ftType", AllTotalize::TYPE_COLLECT_FOR_TRIP);
+        $this->setSelectInfo('a.tripId,a.score,c.nickname,c.headImg,a.title,a.titleImg,e.totalize as cmtCount,f.totalize as collectCount');
         $this->setSql($sql);
         return $this->find($page);
     }

@@ -55,8 +55,21 @@ class AController extends Controller{
                     exit;
                 }
             } else {
-                $this->userObj = new UserBase();
-                $this->userObj->userSign = '';
+                $appSign = \Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
+                $currentUser = json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION . $appSign)));
+                if (isset($currentUser)) {
+                    if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
+                        $this->userObj=new UserBase();
+                        $this->userObj->userSign='';
+                        exit;
+                    } else {
+                        $this->userObj = $currentUser;
+                    }
+                }else
+                {
+                    $this->userObj=new UserBase();
+                    $this->userObj->userSign='';
+                }
             }
         }else
         {

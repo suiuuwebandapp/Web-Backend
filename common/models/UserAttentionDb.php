@@ -42,9 +42,11 @@ class UserAttentionDb extends ProxyDb
         return $this->getConnection()->lastInsertID;
     }
 
-    /**
-     * 取消关注
+    /** 取消关注
      * @param $attentionId
+     * @param $userSign
+     * @return int
+     * @throws \yii\db\Exception
      */
     public function deleteUserAttention($attentionId,$userSign)
     {
@@ -55,7 +57,7 @@ class UserAttentionDb extends ProxyDb
         $command->bindValue(":status", UserAttention::ATTENTION_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":attentionId", $attentionId, PDO::PARAM_INT);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        $command->execute();
+        return $command->execute();
     }
     /**
      * 查找关注圈子文章  //暂时没用到
@@ -151,6 +153,21 @@ class UserAttentionDb extends ProxyDb
             $command->bindValue(":attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL, PDO::PARAM_INT);
         }
 
+        return $command->queryOne();
+    }
+    /**
+     * 得到关注结果
+     * @param $id
+     * @return array
+     */
+    public function getAttentionResultById($id)
+    {
+        $sql=sprintf("
+           SELECT attentionId,relativeId,relativeType,status,addTime,userSign FROM  user_attention
+            WHERE attentionId=:attentionId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":attentionId", $id, PDO::PARAM_INT);
         return $command->queryOne();
     }
     /**

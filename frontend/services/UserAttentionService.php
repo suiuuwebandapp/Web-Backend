@@ -9,6 +9,7 @@ namespace frontend\services;
 
 use common\components\Code;
 use common\components\Common;
+use common\entity\AllTotalize;
 use common\entity\UserAttention;
 use common\entity\UserBase;
 use common\entity\UserMessageRemind;
@@ -87,9 +88,8 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
-                $rstId = $this->AttentionDb ->addUserAttention($rId,UserAttention::TYPE_FOR_USER,$userSign);
+                $rstId = $this->AttentionDb ->addUserAttention($rId,UserAttention::TYPE_FOR_USER,$cUserSign);
                 $this->remindDb->addUserMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign);
-
                 return $rstId;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注无需继续关注'));
@@ -153,6 +153,11 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
+                $totalize=new AllTotalize();
+                $totalize->tType=AllTotalize::TYPE_COLLECT_FOR_TRIP;
+                $totalize->rId=$travelId;
+                $allTotalizeSer=new AllTotalizeService();
+                $allTotalizeSer->updateTotalize($totalize,true);
                return $this->AttentionDb ->addUserAttention($travelId,UserAttention::TYPE_COLLECT_FOR_TRAVEL,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经收藏无需继续收藏'));
@@ -238,9 +243,27 @@ class UserAttentionService extends BaseDb
         try {
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
-            $this->AttentionDb->deleteUserAttention($rId, $userSign);
+            $rst=$this->AttentionDb->deleteUserAttention($rId, $userSign);
+            if($rst==1){
+                $rest=$this->AttentionDb->getAttentionResultById($rId);
+                if($rest==false||empty($rest))
+                {
+                    throw new Exception('取消收藏关注操作异常',Code::FAIL);
+                }
+                $totalize=new AllTotalize();
+                switch($rest['relativeType'])
+                {
+                    case UserAttention::TYPE_COLLECT_FOR_TRAVEL:
+                        $totalize->tType=AllTotalize::TYPE_COLLECT_FOR_TRIP;
+                        $totalize->rId=$rest['relativeId'];
+                        $allTotalizeSer=new AllTotalizeService();
+                        $allTotalizeSer->updateTotalize($totalize,false);
+                        break;
+                }
+
+            }
         } catch (Exception $e) {
-            throw new Exception('收藏关注操作异常',Code::FAIL,$e);
+            throw new Exception('取消收藏关注操作异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

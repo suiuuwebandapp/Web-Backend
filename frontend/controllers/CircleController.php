@@ -315,8 +315,10 @@ class CircleController extends AController{
         $this->loginValid(false);
         try{
             $userSign=\Yii::$app->request->post('userSign');
+            //$userSign='085963dc0af031709b032725e3ef18f5';
             $page = new Page(\Yii::$app->request);
             $mySign=$this->userObj->userSign;
+            //$mySign='5787a571910e3352a76c753776e1b8f4';
             if(empty($userSign))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'无法得到未知用户主页'));
@@ -389,8 +391,7 @@ class CircleController extends AController{
                 exit;
             }
             $data=$this->CircleService->getArticleInfoById($articleId,$userSign,$page);
-            var_dump($data);exit;
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+            return $this->renderPartial('info',['data'=> $data,'pr'=>Yii::$app->params['app_circle_article_img']]);
         }catch (Exception $e)
         {
             $error=$e->getMessage();

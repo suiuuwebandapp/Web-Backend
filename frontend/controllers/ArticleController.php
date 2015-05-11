@@ -29,6 +29,7 @@ class ArticleController extends UnCController{
     public function actionIndex()
     {
 
+
         $page=Yii::$app->request->get('page');
         $numb =Yii::$app->request->get('numb');
         $page=new Page();
@@ -41,7 +42,7 @@ class ArticleController extends UnCController{
         if($page->currentPage<2){
         array_shift($data['old']->list);
         }
-        return $this->renderPartial('index',['oldList'=> $data['old']->list,'onList'=>$data['on']]);
+        return $this->render('index',['oldList'=> $data['old']->list,'onList'=>$data['on']]);
     }
 
     public function actionGetArticleInfo()
