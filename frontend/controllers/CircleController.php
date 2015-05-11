@@ -364,8 +364,37 @@ class CircleController extends AController{
     }
     public function actionTest()
     {
-        $now = date('Y-m-d H:i:s', time());
-        echo strtotime($now);
+        $str='519414839@qq.com';
+        $arr= explode('@',$str);
+        echo substr($arr[0],0,4).'*****'.$arr[1];
+        $str1='18611517517';
+        echo substr($str1,0,4).'*****'.substr($str1,-2);
+    }
+
+
+
+    public function actionWebInfo()
+    {
+        $this->loginValid(false);
+
+        try{
+            $articleId=\Yii::$app->request->post('articleId');
+            $page = new Page();
+            $page->startRow=0;
+            $page->pageSize=4;
+            $userSign=$this->userObj->userSign;
+            if(empty($articleId))
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知文章'));
+                exit;
+            }
+            $data=$this->CircleService->getArticleInfoById($articleId,$userSign,$page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
     }
 
 }

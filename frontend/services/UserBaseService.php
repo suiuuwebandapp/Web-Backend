@@ -365,14 +365,18 @@ class UserBaseService extends BaseDb
 
         if($userAccess==null){
             $userBase->sex=UserBase::USER_SEX_SECRET;
-            $userBase->headImg='';
+            $userBase->headImg='/assets/images/user_default.png';
 
             if(!empty($userBase->email)){
                 $userBase->phone=null;
-                $userBase->nickname=$userBase->email;
+                $str=$userBase->email;
+                $arr= explode('@',$str);
+                $userBase->nickname= substr($arr[0],0,4).'*****'.$arr[1];
             }else{
                 $userBase->email=null;
-                $userBase->nickname=$userBase->phone;
+                $str1=$userBase->phone;
+                $userBase->nickname=substr($str1,0,4).'*****'.substr($str1,-2);
+
             }
         }
 
