@@ -12,7 +12,7 @@ namespace frontend\interfaces;
 use common\components\Code;
 use yii\base\Exception;
 
-require_once('../../vendor/access/API/qqConnectApi.php');
+require_once('../../vendor/access/API/qqConnectAPI.php');
 
 class TencentInterface {
 

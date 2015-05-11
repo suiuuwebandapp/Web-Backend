@@ -48,7 +48,7 @@
         <li class="banner01"></li>
     </ul>
     <div class="serch">
-        <input type="text" value="" class="text1" id="search">
+        <input type="text" value="" class="text1" id="search" placeholder="请输入您想去的国家或城市">
         <input type="button" value="搜索" class="btn1" id="searchBtn">
     </div>
 </div>
