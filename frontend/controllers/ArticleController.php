@@ -41,7 +41,7 @@ class ArticleController extends UnCController{
         if($page->currentPage<2){
         array_shift($data['old']->list);
         }
-        return $this->render('index',['oldList'=> $data['old']->list,'onList'=>$data['on']]);
+        return $this->renderPartial('index',['oldList'=> $data['old']->list,'onList'=>$data['on']]);
     }
 
     public function actionGetArticleInfo()

@@ -241,11 +241,11 @@ class IndexController extends UnCController
     }
     public function actionGetCode()
     {
-
+//phpinfo();exit;
         //\Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,'9527');
-        /*$ValidateCode=new ValidateCode();
+        $ValidateCode=new ValidateCode();
         $ValidateCode->doimg();
-        \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,$ValidateCode->getCode());*/
+        \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,$ValidateCode->getCode());
     }
 
     /**
@@ -985,7 +985,6 @@ class IndexController extends UnCController
         }
 
         $jsonInfo=json_decode($jsonInfo,true);
-        var_dump($jsonInfo);exit;
         $userBase=$jsonInfo['userBase'];
         $userPublisher=$jsonInfo['userPublisher'];
         $userBase=$this->userBaseService->arrayCastObject($userBase,UserBase::class);
