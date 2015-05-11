@@ -4,46 +4,6 @@
     <meta charset="utf-8">
     <title>专栏</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <script src="/assets/js/move.js"></script>
-    <script>
-        function findInArr(arr,n){
-            for(var i = 0; i < arr.length; i++){
-                if(arr[i] == n){
-                    return true;
-                }
-            }
-            return false;
-        }
-        function getByClass(oParent,sClass){
-            var aEle = oParent.getElementsByTagName("*");
-            var ret = [];
-            for(var i = 0; i < aEle.length; i++){
-
-                var aTmp = aEle[i].className.split(" ");//["box","fl"]
-                if(findInArr(aTmp,sClass) ){
-                    ret.push(aEle[i]);
-                }
-            }
-            return ret;
-        }
-        window.onload=function(){
-            /*zl tanchu*/
-            var oImg=document.getElementById('img');
-            var oTan=document.getElementById('tanchu-main');
-            var oMask=document.getElementById('mask');
-            var wHeight=document.documentElement.clientHeight||document.body.clientHeight;
-            var hWidth=document.documentElement.clientWidth||document.body.clientWidth;
-            oMask.style.width=hWidth+'px';
-            oMask.style.height=wHeight+'px';
-            oMask.onclick=function(){
-                this.style.display="none";
-                oTan.style.display="none";
-
-            };
-            /*zl tanchu*/
-        };
-
-    </script>
     <style type="text/css">
         $("body").css("background","#eeeeee");
     </style>
@@ -52,7 +12,7 @@
 
 <div class="mask" id="mask"></div>
 <!--tanchu Begin-->
-<div class="tanchu-main" id="tanchu-main">
+<div class="tanchu-main screens" id="tanchu-main">
     <div id="content_t">
 
 
@@ -93,7 +53,7 @@
 </div>
 <!--tanchu End-->
 <!--zl Begin-->
-<div class="zl-banner clearfix" id="img" onclick="showOld(<?php $id=isset($onList['articleId'])?$onList['articleId']:0;echo $id; ?>)">
+<div class="zl-banner tanchuBtn clearfix" id="img" onclick="showOld(<?php $id=isset($onList['articleId'])?$onList['articleId']:0;echo $id; ?>)">
     <div class="con w1200 clearfix">
         <h3 class="data"><?php if(empty($onList)){echo '暂无最新专栏';}else{$str=isset($onList['title'])?$onList['title']:'';echo $str;}?></h3>
         <h4 class="tit"><?php if(empty($onList)){echo '暂无最新专栏';}else{$str=isset($onList['name'])?$onList['name']:'';echo $str;}?></h4>

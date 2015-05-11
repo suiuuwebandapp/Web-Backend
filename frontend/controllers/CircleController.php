@@ -378,7 +378,7 @@ class CircleController extends AController{
         $this->loginValid(false);
 
         try{
-            $articleId=\Yii::$app->request->post('articleId');
+            $articleId=\Yii::$app->request->get('infoId');
             $page = new Page();
             $page->startRow=0;
             $page->pageSize=4;
@@ -389,6 +389,7 @@ class CircleController extends AController{
                 exit;
             }
             $data=$this->CircleService->getArticleInfoById($articleId,$userSign,$page);
+            var_dump($data);exit;
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e)
         {

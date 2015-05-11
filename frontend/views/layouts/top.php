@@ -104,7 +104,7 @@
                                 <?php } ?>
                             </select></p>
                             <p class="m-20"><label>手机号</label><input id="phone_top" type="text" value="" maxlength="30"></p>
-                            <p><label>密码</label><input id="phone_password_top" type="text" value=""></p>
+                            <p><label>密码</label><input id="phone_password_top" type="password" value=""></p>
                             <p class="shuaxin"><input type="text" value="" id="phoneCode_top"><font><a href="javascript:;" id="getCodePhoneRegister">获取验证码</a></font></p>
                             <p class="zidong"><a href="javascript:;" class="xieyi">网站注册协议</a>
                                 <input type="checkbox" id="zhuce-check01">

@@ -61,10 +61,14 @@ class ArticleController extends UnCController{
     public function actionGetArticleComment()
     {
         try {
+            $userSign=null;
+            if(!empty($this->userObj)){
+                $userSign =$this->userObj->userSign;
+            }
             $id=Yii::$app->request->post('id');
             $page=Yii::$app->request->post('page');
             $numb =Yii::$app->request->post('numb');
-            $userSign=$this->userObj->userSign;
+
             if(empty($page))
             {
                 $page = 1;
@@ -90,7 +94,11 @@ class ArticleController extends UnCController{
     public function actionAddArticleComment()
     {
         try {
-            $userSign =$this->userObj->userSign;
+            $userSign=null;
+            if(!empty($this->userObj)){
+                $userSign =$this->userObj->userSign;
+            }
+
 
             $articleId = \Yii::$app->request->post('articleId');
             $content = \Yii::$app->request->post('content');
@@ -119,7 +127,11 @@ class ArticleController extends UnCController{
     public function actionAddSupport()
     {
         try {
-            $userSign =$this->userObj->userSign;
+            $userSign=null;
+            if(!empty($this->userObj)){
+                $userSign =$this->userObj->userSign;
+            }
+
             if(empty($userSign))
             {
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'登陆之后才能点赞'));
