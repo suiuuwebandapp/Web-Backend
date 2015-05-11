@@ -12,8 +12,10 @@ use frontend\components\Page;
 use common\components\Code;
 use common\components\TagUtil;
 use frontend\services\CountryService;
+use frontend\services\PublisherService;
 use frontend\services\TravelTripCommentService;
 use frontend\services\TripService;
+use frontend\services\UserBaseService;
 use yii\base\Exception;
 use Yii;
 class AppTravelController extends AController
@@ -112,7 +114,19 @@ class AppTravelController extends AController
         try{
             $userSign=$this->userObj->userSign;
             $trId=Yii::$app->request->post('trId');
+            //$trId=70;
             $data=$this->travelSer->getTravelTripInfoById($trId,$userSign);
+            $tripInfo=$data['info'];
+            $userService=new UserBaseService();
+            $publisherService=new PublisherService();
+            $tripPublisherId=$tripInfo['createPublisherId'];
+            $createPublisherId=$publisherService->findById($tripPublisherId);
+            if(empty($createPublisherId)){
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知的随友'));
+                exit;
+            }
+            $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
+            $data['userInfo']=$createUserInfo;
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$this->unifyReturn($data)));
         }catch (Exception $e)
         {

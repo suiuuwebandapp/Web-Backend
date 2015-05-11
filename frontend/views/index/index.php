@@ -62,7 +62,7 @@
     <ul id="ul1">
     </ul>
 </div>
-<a href="javascript:;"  class="btn8" id="showTripMore">显示更多</a>
+<a href="/view-trip/list"  class="btn8" id="showTripMore">显示更多</a>
 
 <!--list结束-->
 <!--index-tuijian begin-->
@@ -77,7 +77,7 @@
         <li><a href="/view-trip/list#~search=伦敦"><img src="/assets/images/index/07.png"></a><span>伦敦</span></li>
     </ul>
 </div>
-<a href="#"  class="btn8">显示更多</a>
+<a href="/destination/list"  class="btn8">显示更多</a>
 
 <!--index-tuijian end-->
 
@@ -86,9 +86,9 @@
     var currentPage=1;
     $(document).ready(function(){
         loadTrip();
-        $("#showTripMore").bind("click",function(){
+        /*$("#showTripMore").bind("click",function(){
             loadTrip();
-        });
+        });*/
         $("#searchBtn").bind("click",function(){
             tripSearch();
         });
@@ -100,7 +100,7 @@
     }
     function loadTrip(){
         $.ajax({
-            url :'/view-trip/get-trip-list',
+            url :'/view-trip/get-recommend-trip',
             type:'post',
             data:{
                 p:currentPage,
@@ -117,7 +117,7 @@
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
-                    var list=data.data.result;
+                    var list=data.data.data;
                     var trip,html="";
                     for(var i=0;i<list.length;i++){
                         trip=list[i];
@@ -141,10 +141,11 @@
                         html+='</li>';
                     }
                     $("#ul1").append(html);
+                    return;
                     if(data.data.totalPage==currentPage){
                         $("#showTripMore").html("暂无更多");
                         $("#showTripMore").unbind("click");
-                        return;
+
                     }
                     currentPage++;
                 }else{

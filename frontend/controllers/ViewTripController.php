@@ -62,6 +62,27 @@ class ViewTripController extends UnCController{
         ]);
     }
 
+    public function actionGetRecommendTrip()
+    {
+        try{
+            $cPage=\Yii::$app->request->post('p');
+            if(empty($cPage)||$cPage<1)
+            {
+                $cPage=1;
+            }
+            $numb=4;
+            $page=new Page();
+            $page->currentPage=$cPage;
+            $page->pageSize=$numb;
+            $page->startRow = (($page->currentPage - 1) * $page->pageSize);
+            $recommendTravel =$this->AttentionService->getRecommendTravel($page);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$recommendTravel));
+         }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
 
     /**
      * 跳转到详情页面

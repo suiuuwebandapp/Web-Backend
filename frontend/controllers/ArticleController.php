@@ -33,11 +33,15 @@ class ArticleController extends UnCController{
         $numb =Yii::$app->request->get('numb');
         $page=new Page();
         $page->showAll=true;
+        $page->sortName='articleId';
+        $page->sortType='DESC';
         $select='title,titleImg,name,articleId';
         //ArticleInfo::ARTICLE_STATUS_ONLINE
         $data= $this->aritcleSer->getArticleList($page,null,ArticleInfo::ARTICLE_STATUS_ONLINE,$select);
-
-        return $this->render('index',['oldList'=>$data['old']->list,'onList'=>$data['on']]);
+        if($page->currentPage<2){
+        array_shift($data['old']->list);
+        }
+        return $this->render('index',['oldList'=> $data['old']->list,'onList'=>$data['on']]);
     }
 
     public function actionGetArticleInfo()
