@@ -792,9 +792,6 @@ $('#img_origin').load(function(){
     imgWidth=$("#img_origin").width();
     imgHeight=$("#img_origin").height();
 
-    alert(imgWidth);
-    alert(imgHeight);
-
     if(imgWidth>=imgHeight){
         var padding=(imgWidth-imgHeight)/2;
         $("#img_origin").css("margin-top",padding);
