@@ -40,31 +40,7 @@
                                 <li class="sx">私信</li>
                                 <li class="xtxx">系统消息</li>
                             </ol>
-                            <ul>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
-                                <li><img src="/assets/images/1.png"><span>昵称</span>
-
-                                    <p>给您发了私信</p></li>
+                            <ul id="unReadUserMessageList">
                             </ul>
                         </div>
                     </li>
@@ -198,12 +174,64 @@
 
 
 <script type="text/javascript">
+    var isLogin="<?=isset($this->context->userObj)?1:0?>";
     var emailTime="<?= array_key_exists('emailTime',$this->params)?$this->params['emailTime']:0;?>";
     var emailTimer;
     $(document).ready(function(){
         initEmailTimer();
         initPhoneRegister();
+        //如果用户登录了，查询是否有新私信
+        if(isLogin=="true"){
+            initUserMessageInfoList();
+            window.setInterval(function(){
+                initUserMessageInfoList();
+            },5000);
+        }
+
     });
+
+
+    function initUserMessageInfoList()
+    {
+        $.ajax({
+            type: 'post',
+            url: '/user-message/un-read-message-info-list',
+            data: {
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                alert("error");
+            },
+            success: function (data) {
+                var datas=eval('('+data+')');
+                if(datas.status==1){
+                    buildUserMessageListHtml(datas.data);
+                }else{
+
+                }
+            }
+        });
+    }
+
+    function buildUserMessageListHtml(list)
+    {
+        if(list==""||list.length==0){
+            return;
+        }
+        var html="",messageInfo="",nickname="";
+        for(var i=0;i<list.length;i++){
+            messageInfo=list[i];
+            nickname=messageInfo.nickname;
+            if(nickname.length>5){
+                nickname=nickname.substring(0,5);
+            }
+            html+='<a style="width: 240px;height: 40px" href="/user-info?myMessage"><li><img src="'+messageInfo.headImg+'"><span>'+nickname+'</span>';
+            html+='<p>给您发了私信</p>';
+            html+='</li></a>';
+        }
+        $("#unReadUserMessageList").html(html);
+
+    }
 
     function initEmailTimer()
     {

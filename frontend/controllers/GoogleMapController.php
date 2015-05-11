@@ -15,7 +15,7 @@ use common\components\GoogleMap;
 use frontend\services\TripService;
 use yii\base\Exception;
 
-class GoogleMapController extends CController{
+class GoogleMapController extends UnCController{
 
 
     public $layout=false;

@@ -131,7 +131,7 @@ class UserMessageDb extends ProxyDb
         $sql=sprintf("
             SELECT DISTINCT ub.nickname,ub.headImg,s.* FROM
             (
-                SELECT sessionId,sessionKey,receiveId as userId,lastConcatTime,lastContentInfo,isRead
+                SELECT sessionId,sessionKey,senderId as userId,lastConcatTime,lastContentInfo,isRead
                 FROM user_message_session
                 WHERE receiveId=:userSign
             )
@@ -202,6 +202,31 @@ class UserMessageDb extends ProxyDb
           UPDATE user_message SET
           isRead=TRUE,readTime=now()
           WHERE  ( sessionKeyOne=:sessionKey OR sessionKeyTwo=:sessionKey ) AND isRead=FALSE  AND receiveId=:userId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":sessionKey", $sessionKey, PDO::PARAM_STR);
+        $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
+
+    /**
+     * 获取用户未读信息条数
+     * @param $userSign
+     * @param $count
+     * @throws \yii\db\Exception
+     */
+    public function getUnReadMessageInfoList($userSign,$count)
+    {
+        $sql=sprintf("
+          SELECT um.*,ub.nickname,ub.headImg FROM user_message um
+          LEFT JOIN user_base ON um.receiveId=ub.userSign
+          WHERE isRead=FALSE AND um.receiverId=:userId
+          ORDER BY um.sendTime DESC
+          LIMIT 0,".$count."
+
         ");
 
         $command=$this->getConnection()->createCommand($sql);

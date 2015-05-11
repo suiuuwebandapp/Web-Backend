@@ -146,6 +146,25 @@ class UserMessageService extends BaseDb
         }
     }
 
+    /**
+     * 获悉用户未读消息列表详情
+     * @param $userSign
+     * @param $count
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getUnReadMessageInfoList($userSign,$count)
+    {
+        try{
+            $conn=$this->getConnection();
+            $this->userMessageDb=new UserMessageDb($conn);
+            return $this->userMessageDb->getUnReadMessageInfoList($userSign,$count);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 
 
     /**
@@ -164,6 +183,9 @@ class UserMessageService extends BaseDb
             return md5($receiveId.$senderId);
         }
     }
+
+
+
 
 
 

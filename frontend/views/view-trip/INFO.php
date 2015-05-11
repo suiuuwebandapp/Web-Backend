@@ -403,7 +403,10 @@
         //绑定移除
         $("#publisherList div a").bind("click",function(){
             var tripPublisherId=$(this).attr("tripPublisherId");
-            var tripId=$("tripId").val()
+            var tripId=$("tripId").val();
+            if(!confirm("确认要删除随友的申请吗？")){
+                return;
+            }
             $.ajax({
                 url :'/trip/remove-publisher',
                 type:'post',
@@ -765,7 +768,7 @@
         common : {
             bdText : '随游网-<?=$travelInfo['info']['intro']?>',
             bdDesc : '随游网-<?=htmlentities($travelInfo['info']['title'])?>',
-            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip?trip='.$travelInfo['info']['tripId'];?>',
+            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip='.$travelInfo['info']['tripId'];?>',
             bdPic : '<?=$travelInfo['info']['titleImg']?>'
         },
         share : [{

@@ -75,9 +75,7 @@ $(document).ready(function(){
 });
 
 /**
-<<<<<<< Updated upstream
- *
- *
+ *  初始化修改密码
  */
 function initUpdatePassword()
 {
@@ -220,6 +218,10 @@ function getUserUnReadMessageSession(){
 }
 
 
+/**
+ * 重新构建消息会话列表
+ * @param list
+ */
 function rebuildMessageSessionList(list){
     if(list==''||list.length==0){
         return;
@@ -255,6 +257,22 @@ function rebuildMessageSessionList(list){
         html+='<p class="words">'+content+'</p>';
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
         html+='</li>';
+
+        //如果是最后一个，判断这条消息是不是跟左侧的详情Key一致，如果一致，那么直接追加到消息详情页
+        if(i==list.length-1){
+            var infoSessionKey=$("#messageInfoDiv").attr("sessionKey");
+            var receiveHeadImg=$("#messageInfoDiv").attr("receiveHeadImg");
+            if(infoSessionKey==tempSession.sessionKey){
+                if($("#messageInfoDiv ul li").last().attr("autoFlag")!="true"){
+                    var infoHtml='';
+                    infoHtml+='<li class="you clearfix" autoFlag="true">';
+                    infoHtml+='<img src="'+receiveHeadImg+'">';
+                    infoHtml+=' <p>'+content+'</p>';
+                    infoHtml+='</li>';
+                    $("#messageInfoDiv ul").append(infoHtml);
+                }
+            }
+        }
         //将消息放置顶部
         $("#messageSessionDiv ul").prepend(html);
     }
@@ -285,7 +303,7 @@ function showMessageSessionInfo(sessionKey,receiveHeadImg,obj){
             if(data.status==1){
                 $("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
                 $(obj).removeClass("new");
-                buildMessageSessionInfo(data.data)
+                buildMessageSessionInfo(data.data,sessionKey)
             }else{
                 Main.showTip("获取私信列表失败");
             }
@@ -340,7 +358,7 @@ function sendUserMessage(){
  * 构建私信会话详情HTML
  * @param list
  */
-function buildMessageSessionInfo(list){
+function buildMessageSessionInfo(list,sessionKey){
     if(list==''||list.length==0){
         return;
     }
@@ -352,13 +370,13 @@ function buildMessageSessionInfo(list){
         //如果自己是发送人
         if(tempMessage.senderId==userSign){
             receiveId=tempMessage.receiveId;
-            html+='<li class="you clearfix">';
+            html+='<li class="you clearfix" mid="'+tempMessage.messageId+'">';
             html+='<img src="'+userHeadImg+'">';
             html+=' <p>'+tempMessage.content+'</p>';
             html+='</li>';
         }else{
             receiveId=tempMessage.senderId;
-            html+='<li class="zuo clearfix">';
+            html+='<li class="zuo clearfix" mid="'+tempMessage.messageId+'">';
             html+='<img src="'+receiveHeadImg+'">';
             html+=' <p>'+tempMessage.content+'</p>';
             html+='</li>';
@@ -366,6 +384,7 @@ function buildMessageSessionInfo(list){
 
     }
     $("#messageInfoDiv").attr("receiveId",receiveId);
+    $("#messageInfoDiv").attr("sessionKey",sessionKey);
     $("#messageInfoDiv").show();
     $("#messageInfoDiv ul").html(html);
 }
@@ -722,6 +741,7 @@ function removeImgAreaSelect(){
  * @param imgObj
  */
 function initImgAreaSelect(imgObj){
+    alert(imgAreaSelectApi);
     imgAreaSelectApi = $(imgObj).imgAreaSelect({
         instance : true,	// true，返回一个imgAreaSelect绑定到的图像的实例，可以使用api方法
         onSelectChange : preview,	// 改变选区时的回调函数
@@ -880,16 +900,20 @@ function buildMyTripHtml(tripList){
     for(var i=0;i<tripList.length;i++){
         tripInfo=tripList[i];
         var count=tripInfo.count==null?'':tripInfo.count;
+        var info=tripInfo.info;
+        if(info.length>100){
+            info=info.substring(0,100)+"...";
+        }
         if(count!=''){ count='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a><b>'+count+'</b>'};
         html+='<div class="orderList clearfix">';
-        html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="('+tripInfo.tripId+',this)">';
+        html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+',this)">';
         html+=' <dl class="order clearfix">';
         html+='   <dt class="title">';
         html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';
         html+='   </dt>';
         html+='   <dd>';
         html+='       <span class="pic"><img src="'+tripInfo.titleImg+'"></span>';
-        html+='       <span>'+tripInfo.info+'</span>';
+        html+='       <span>'+info+'</span>';
         html+='       <span>'+tripInfo.startTime+'</span>';
         html+='       <span>';
         if(tripInfo.names!=''&&tripInfo.names!=null){
@@ -1246,6 +1270,9 @@ function publisherIgnoreOrder(orderId){
  * @param tripId
  */
 function deleteTravelTrip(tripId,obj){
+    if(!confirm("确定要删除随游吗？")){
+        return;
+    }
     $.ajax({
         url :'/trip/delete-trip',
         type:'post',

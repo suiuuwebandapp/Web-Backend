@@ -103,5 +103,20 @@ class UserMessageController extends  CController{
         }
     }
 
+    /**
+     * 获取用户当前未读消息列表
+     */
+    public function actionUnReadMessageInfoList()
+    {
+        try{
+            $userSign=$this->userObj->userSign;
+            $list=$this->userMessageService->getUnReadMessageSessionList($userSign,7);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
 
 }

@@ -106,6 +106,11 @@
 <!-------随友注册------>
 <div class="syRegister">
     <form id="validateForm">
+        <div>
+            <span>昵称:</span><span id="nicknameTip" class="form_tip"></span>
+            <input type="text" id="nickname" name="nickname" value="<?= $nickname ?>" class="syzcy-text" maxlength="10" required>
+
+        </div>
         <input id="userCardFront" type="hidden">
         <div>
             <span>邮箱:</span><span id="emailTip" class="form_tip"></span>
@@ -295,6 +300,9 @@
             focusCleanup: true,
             ignore: 'ignore',
             rules: {
+                nickname: {
+                    required: true
+                },
                 email: {
                     required: true,
                     email: true
@@ -316,6 +324,9 @@
                 }
             },
             messages: {
+                nickname: {
+                    required: "请输入您的昵称"
+                },
                 email: {
                     required: "请输入Email地址",
                     email: "请输入正确的email地址"

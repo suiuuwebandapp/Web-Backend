@@ -140,7 +140,7 @@
 <div class="sycon w1200 clearfix">
     <!-----------con-nav-------------->
     <ul class="con-nav synav">
-        <li><a href="#"  class="active">收件箱</a></li>
+        <li><a href="#"  class="active" id="myMessage">收件箱</a></li>
         <li><a href="javascript:;" id="myComment">发言</a></li>
         <li><a href="javascript:;" id="myCollect">收藏</a></li>
         <li><a href="#" id="myOrderManager">我的预定</a></li>

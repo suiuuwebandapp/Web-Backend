@@ -610,11 +610,13 @@ class IndexController extends UnCController
             $email = "";
             $phone = "";
             $areaCode = "";
+            $nickname="";
             $countryService = new CountryService();
             $countryList=$countryService->getCountryList();
             if (isset($this->userObj)) {
                 $email = $this->userObj->email;
                 $phone = $this->userObj->phone;
+                $nickname=$this->userObj->nickname;
             }
             if ($areaCode == "") {
                 $areaCode = "+86";
@@ -623,6 +625,7 @@ class IndexController extends UnCController
                 'email' => $email,
                 'phone' => $phone,
                 'areaCode' => $areaCode,
+                'nickname'=>$nickname,
                 'countryList'=>$countryList
             ]);
         }
@@ -786,6 +789,7 @@ class IndexController extends UnCController
      */
     public function actionRegisterPublisher()
     {
+        $nickname = trim(\Yii::$app->request->post("nickname", ""));
         $email = trim(\Yii::$app->request->post("email", ""));
         $userCard = trim(\Yii::$app->request->post("userCard", ""));
         $password = trim(\Yii::$app->request->post("password", ""));
@@ -796,7 +800,10 @@ class IndexController extends UnCController
         $phone = trim(\Yii::$app->request->post("phone", ""));
         $code = trim(\Yii::$app->request->post("code", ""));
 
-
+        if (empty($nickname)) {
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "昵称不能为空"));
+            return;
+        }
         if (empty($email)) {
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "邮箱不能为空"));
             return;
@@ -840,6 +847,7 @@ class IndexController extends UnCController
         }else{
             $userBase= clone $this->userObj;
         }
+        $userBase->nickname=$nickname;
         $userPublisher=new UserPublisher();
         $userPublisher->countryId=$countryId;
         $userPublisher->cityId=$cityId;

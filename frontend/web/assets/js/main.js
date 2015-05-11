@@ -1,6 +1,11 @@
 /**
  * Created by suiuu on 15/4/24.
  */
+
+
+/**
+ * 构造上传预览插件
+ */
 jQuery.fn.extend({
     uploadPreview: function (opts) {
         var _self = this,
@@ -62,6 +67,20 @@ jQuery.fn.extend({
         })
     }
 });
+/**
+ * 构造 Replace All 方法
+ * @param reallyDo
+ * @param replaceWith
+ * @param ignoreCase
+ * @returns {string|*}
+ */
+String.prototype.replaceAll = function(reallyDo, replaceWith, ignoreCase) {
+    if (!RegExp.prototype.isPrototypeOf(reallyDo)) {
+        return this.replace(new RegExp(reallyDo, (ignoreCase ? "gi": "g")), replaceWith);
+    } else {
+        return this.replace(reallyDo, replaceWith);
+    }
+}
 
 
 var Main = function() {
@@ -98,6 +117,9 @@ var Main = function() {
          * @returns {*}
          */
         formatDate :function(strDate,format){
+            if(strDate==''||strDate==undefined){
+                return '';
+            }
             var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,
             function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');
             var o = {

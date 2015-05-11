@@ -638,10 +638,11 @@ class TravelTripDb extends ProxyDb{
             )
             AS service
             ON service.tripId=t.tripId
-            WHERE t.createPublisherId=:createPublisherId
+            WHERE t.createPublisherId=:createPublisherId AND t.status=:tripStatus
         ");
         $this->setParam("createPublisherId",$createPublisherId);
         $this->setParam("status",TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
+        $this->setParam("tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
 
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");
@@ -676,10 +677,11 @@ class TravelTripDb extends ProxyDb{
 				SELECT tripId  FROM travel_trip_publisher
 				WHERE publisherId =:publisherId
 			)
-			AND t.createPublisherId!=:publisherId
+			AND t.createPublisherId!=:publisherId  AND t.status=:tripStatus
         ");
         $this->setParam("publisherId",$publisherId);
         $this->setParam("status",TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
+        $this->setParam("tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
 
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");
@@ -701,13 +703,14 @@ class TravelTripDb extends ProxyDb{
             FROM user_publisher up
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             LEFT JOIN travel_trip_apply tta ON tta.publisherId=up.userPublisherId
-            WHERE tta.tripId=:tripId AND tta.status=:status
+            WHERE tta.tripId=:tripId AND tta.status=:status AND t.status=:tripStatus
         ");
 
         $command=$this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->bindValue(":status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT, PDO::PARAM_INT);
+        $command->bindValue(":tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
 
         return $command->queryAll();
     }

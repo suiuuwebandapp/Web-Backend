@@ -551,20 +551,20 @@ class TripController extends CController
         $tripPublisherId=trim(\Yii::$app->request->post("tripPublisherId", ""));
 
         if(empty($tripId)){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty");
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty"));
             return;
         }
         if(empty($tripPublisherId)){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR,"TripPublisherId Is Not Allow Empty");
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripPublisherId Is Not Allow Empty"));
             return;
         }
         $tripInfo=$this->tripService->getTravelTripById($tripId);
         if(!isset($tripInfo)){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR);
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR));
             return;
         }
         if($tripInfo->createPublisherId!=$this->userPublisherObj->userPublisherId){
-            echo Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid User Power");
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid User Power"));
             return;
         }
         try{
@@ -573,9 +573,9 @@ class TripController extends CController
             $travelTripPublisher->tripPublisherId;
 
             $this->tripService->deleteTravelTriPublisher($travelTripPublisher);
-            echo Code::statusDataReturn(Code::SUCCESS);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo Code::statusDataReturn(Code::FAIL);
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
         return;
     }
@@ -707,6 +707,7 @@ class TripController extends CController
             $this->tripService->changeTripStatus($tripId,TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            throw $e;
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
 

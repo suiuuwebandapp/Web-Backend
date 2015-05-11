@@ -104,6 +104,7 @@ i<script type="text/javascript">
     });
 
     $(document).ready(function(){
+        initSearchInfo();
         searchTip();
         $("#searchBtn").bind("click",function(){
             currentPage=1;
@@ -111,6 +112,18 @@ i<script type="text/javascript">
         });
 
     });
+
+    function initSearchInfo(){
+        var href=window.location.href;
+        var searchKey="#~search=";
+        if(href.indexOf(searchKey)==-1){
+            return;
+        }
+        var searchInfo=href.substring(href.indexOf(searchKey)+searchKey.length,href.length);
+        $("#search").val(searchInfo);
+
+
+    }
 
 
 
@@ -142,8 +155,11 @@ i<script type="text/javascript">
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
+                    $("#trip_base_list ul").html("");
                     var list=data.data.result;
                     if(list.length==0){
+                        $("#trip_base_list ul").html("<div style='text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>")
+                        $("#spage").html("");
                         return;
                     }
                     var trip,html="";

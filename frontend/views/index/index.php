@@ -48,8 +48,8 @@
         <li class="banner01"></li>
     </ul>
     <div class="serch">
-        <input type="text" value="" class="text1">
-        <input type="button" value="搜索" class="btn1">
+        <input type="text" value="" class="text1" id="search">
+        <input type="button" value="搜索" class="btn1" id="searchBtn">
     </div>
 </div>
 <!--banner结束-->
@@ -68,13 +68,13 @@
 <!--index-tuijian begin-->
 <div class="index-tuijian w1200 clearfix">
     <ul class="countrys">
-        <li><a href="javascript:;"><img src="/assets/images/index/01.png"></a><span>济州岛</span></li>
-        <li><a href="javascript:;"><img src="/assets/images/index/02.png"></a><span>巴黎</span></li>
-        <li><a href="javascript:;"><img src="/assets/images/index/03.png"></a><span>圣母院</span></li>
-        <li><a href="javascript:;"><img src="/assets/images/index/04.png"></a><span>台北</span></li>
-        <li><a href="javascript:;"><img src="/assets/images/index/05.png"></a><span>芬兰</span></li>
-        <li><a href="javascript:;"><img src="/assets/images/index/06.png"></a><span>巴黎</span></li>
-        <li><a href="javascript:;"><img src="/assets/images/index/07.png"></a><span>伦敦</span></li>
+        <li><a href="/view-trip/list#~search=济州岛"><img src="/assets/images/index/01.png"></a><span>济州岛</span></li>
+        <li><a href="/view-trip/list#~search=巴黎"><img src="/assets/images/index/02.png"></a><span>巴黎</span></li>
+        <li><a href="/view-trip/list#~search=圣母院"><img src="/assets/images/index/03.png"></a><span>圣母院</span></li>
+        <li><a href="/view-trip/list#~search=台北"><img src="/assets/images/index/04.png"></a><span>台北</span></li>
+        <li><a href="/view-trip/list#~search=芬兰"><img src="/assets/images/index/05.png"></a><span>芬兰</span></li>
+        <li><a href="/view-trip/list#~search=巴黎"><img src="/assets/images/index/06.png"></a><span>巴黎</span></li>
+        <li><a href="/view-trip/list#~search=伦敦"><img src="/assets/images/index/07.png"></a><span>伦敦</span></li>
     </ul>
 </div>
 <a href="#"  class="btn8">显示更多</a>
@@ -89,7 +89,15 @@
         $("#showTripMore").bind("click",function(){
             loadTrip();
         });
+        $("#searchBtn").bind("click",function(){
+            tripSearch();
+        });
     });
+
+    function tripSearch(){
+        var searchInfo=$("#search").val();
+        window.location.href="/view-trip/list#~search="+searchInfo;
+    }
     function loadTrip(){
         $.ajax({
             url :'/view-trip/get-trip-list',
