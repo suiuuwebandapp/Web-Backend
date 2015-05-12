@@ -31,7 +31,7 @@
             <input type="text" id="peopleCount"><a href="#" class="icon add"></a>
         </p>
         <p class="p2 clearfix" id="tagList"><label>类型:</label>
-            <span class="active">全部</span>
+
             <?php foreach($tagList as $tag){ ?>
             <span><?=$tag?></span>
             <?php }?>
@@ -83,6 +83,18 @@
 <!--sylx-->
 
 i<script type="text/javascript">
+    $(function(){
+        $('.sylx .sylx-xiangxi .p2 span').click(function(e) {
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+            }else{
+                $(this).addClass('active');
+            }
+            searchTip();
+        });
+
+    });
+
     var currentPage=1;
 
     /*-----随游-价格区间拖动条----*/
@@ -127,7 +139,17 @@ i<script type="text/javascript">
     function searchTip(){
         var title=$("#search").val();
         var peopleCount=$("#peopleCount").val();
-        var tag=$("#tagList span[class='active']").html();
+        var tagList="";
+        $("#tagList span[class='active']").each(function(){
+            if(tagList=='')
+            {
+                tagList+=$(this).html();
+            }else
+            {
+                tagList+=',';
+                tagList+=$(this).html();
+            }
+        });
         var amount=$("#amount").val();
 
         $.ajax({
@@ -137,7 +159,7 @@ i<script type="text/javascript">
                 p:currentPage,
                 title:title,
                 peopleCount:peopleCount,
-                tag:tag,
+                tag:tagList,
                 amount:amount,
                 _csrf: $('input[name="_csrf"]').val()
             },
@@ -146,7 +168,7 @@ i<script type="text/javascript">
             },
             error:function(){
                 //hide load
-                Main.showTip("发布随游失败");
+                Main.showTip("获取随游失败");
             },
             success:function(data){
                 //hide load

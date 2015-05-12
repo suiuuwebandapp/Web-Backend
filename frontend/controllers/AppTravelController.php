@@ -8,6 +8,7 @@
 namespace frontend\controllers;
 
 use common\entity\TravelTripComment;
+use common\entity\UserBase;
 use frontend\components\Page;
 use common\components\Code;
 use common\components\TagUtil;
@@ -200,6 +201,8 @@ class AppTravelController extends AController
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
         }
     }
+
+
     private function ob2ar($obj) {
         $obj=$this->unifyReturn($obj);
         if(is_object($obj)) {

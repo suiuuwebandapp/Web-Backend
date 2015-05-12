@@ -9,7 +9,6 @@ namespace frontend\controllers;
 
 
 use backend\services\CountryService;
-use backend\services\SysUserService;
 use common\components\Code;
 use common\components\Aes;
 use common\entity\UserBase;
@@ -56,12 +55,12 @@ class AController extends Controller{
                 }
             } else {
                 $appSign = \Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
+                //$appSign='6wE3hviwUVUcV6amFN0mODP1N8Yn95fly8oIznYYw+x/LIL/s1ygug==';
                 $currentUser = json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION . $appSign)));
                 if (isset($currentUser)) {
                     if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
                         $this->userObj=new UserBase();
                         $this->userObj->userSign='';
-                        exit;
                     } else {
                         $this->userObj = $currentUser;
                     }
@@ -85,7 +84,7 @@ class AController extends Controller{
             }else if(!isset($currentUser)&&!empty($cookieSign)){
                 $aes=new Aes();
                 $userSign=$aes->decrypt($cookieSign,$enPassword,$enDigit);
-                $this->__userBaseService=new SysUserService();
+                $this->__userBaseService=new UserBaseService();
                 $currentUser=$this->__userBaseService->findUserByUserSign($userSign);
                 if(isset($currentUser)){
                     $this->userObj=$currentUser;
@@ -106,6 +105,18 @@ class AController extends Controller{
                 $this->userPublisherObj=$userPublisherObj;
             }
         }
+    }
+
+    public function appRefreshUserInfo()
+    {
+        $this->userService=new UserBaseService();
+        $currentUser=$this->userService->findUserByUserSign($this->userObj->userSign);
+        $this->userObj=$currentUser;
+        $enPassword = \Yii::$app->params['encryptPassword'];
+        $enDigit = \Yii::$app->params['encryptDigit'];
+        $aes=new Aes();
+        $sysSign=$aes->encrypt( $this->userObj->userSign,$enPassword,$enDigit);
+        \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($this->userObj));
     }
     
 

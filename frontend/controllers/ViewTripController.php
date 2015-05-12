@@ -208,6 +208,26 @@ class ViewTripController extends UnCController{
         return;
     }
 
+    public function actionAddRedisTag()
+    {
+        $c=\Yii::$app->request->post("p");
+        $title=\Yii::$app->request->post("title");
+        $peopleCount=\Yii::$app->request->post("peopleCount");
+        $amount=\Yii::$app->request->post("amount");
+        $tag=\Yii::$app->request->post("tag");
+        $page=new Page();
+        $page->showAll=true;
+        $page= $this->tripService->getList($page,$title,null,null,$peopleCount,'','',$tag);
+        $arr=$page->getList();
+        foreach($arr as $val)
+        {
+            $i=intval($val['tripId']);
+            $tag=$val['tags'];
+            $t=TagUtil::getInstance();
+            $t->updateTagValList(explode(',',stripslashes($tag)),$i);
+        }
+
+    }
     public function actionGetCommentList()
     {
         try{
@@ -245,6 +265,8 @@ class ViewTripController extends UnCController{
             echo json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
         }
     }
+
+
 
     public function actionAddComment()
     {

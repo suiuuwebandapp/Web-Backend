@@ -19,7 +19,7 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-redis": "~2.0",
-        "yiisoft/yii2-sphinx": "~2.0.0"
+        "yiisoft/yii2-sphinx": "~2.0"
 
     },
     "require-dev": {

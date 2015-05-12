@@ -68,6 +68,7 @@ class Code
     const USER_REGISTER_PHONE_TIMER='U_R_P_T';//用户注册手机时间控制
 
 
+    const TRAVEL_TRIP_TAG_PREFIX='T_T_T_P';
     const USER_COMMENT_SUPPORT='USER_COMMENT_SUPPORT';
 
 

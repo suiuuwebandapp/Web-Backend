@@ -246,12 +246,17 @@ $(function(){
 
 
 /*-----随游-类型选择----*/
-$(function(){
+/*$(function(){
 	$('.sylx .sylx-xiangxi .p2 span').click(function(e) {
-        $(this).addClass('active').siblings().removeClass('active');
+		if($(this).hasClass('active')){
+			 $(this).removeClass('active');
+			}else{
+			 $(this).addClass('active');
+		}
+		
     });
 
-})
+})*/
 
 
 /*-----完成页满屏显示----*/
@@ -278,11 +283,14 @@ $(function(){
 })
 
 /*-----弹出浮层-----*/
-/*$(function(){
-    $('.tanchuBtn,.tanchu-list ul li').click(function(e) {
+/*$(function(){ 
+	$('.tanchuBtn,.tanchu-list ul li').click(function(e) {
         $('.mask,.tanchu-main').css('display','block')
     });
-})*/
+
+})
+
+*/
 
 
 

@@ -54,27 +54,26 @@ class AllTotalizeService extends BaseDb
             $this->allTotalizeDb = new AllTotalizeDb($conn);
             $totalizeEntity=$this->allTotalizeDb->findTotalize($totalize);
             if(empty($totalizeEntity)||$totalizeEntity==false){
-                $nTotalize=new AllTotalize();
-                return $this->allTotalizeDb->addTotalize($nTotalize);
+                return $this->allTotalizeDb->addTotalize($totalize);
             }
             $nTotalize =new AllTotalize();
             if($isAdd)
             {
-                $n=$totalizeEntity->totalize;
+                $n=$totalizeEntity['totalize'];
                 $n++;
                 $nTotalize->totalize=$n;
-                $nTotalize->tType=$totalizeEntity->tType;
-                $nTotalize->rId=$totalizeEntity->rId;
+                $nTotalize->tType=$totalizeEntity['tType'];
+                $nTotalize->rId=$totalizeEntity['rId'];
             }else
             {
-                $n=$totalizeEntity->totalize;
+                $n=$totalizeEntity['totalize'];
                 $n--;
                 if($n<1){
                     $n=0;
                 }
                 $nTotalize->totalize=$n;
-                $nTotalize->tType=$totalizeEntity->tType;
-                $nTotalize->rId=$totalizeEntity->rId;
+                $nTotalize->tType=$totalizeEntity['tType'];
+                $nTotalize->rId=$totalizeEntity['rId'];
             }
             $this->allTotalizeDb->updateTotalize($nTotalize);
         } catch (Exception $e) {

@@ -60,9 +60,10 @@ class TravelTripDb extends ProxyDb{
             $sql.=" AND t.basePrice<=:endPrice ";
             $this->setParam("endPrice",$endPrice);
         }
-        if(!empty($tag)&&$tag!="全部"){
-            $sql.=" AND t.tags like :tag ";
-            $this->setParam("tag","%".$tag."%");
+        if(!empty($tag)){
+            $sql.=" AND t.tripId IN (";
+            $sql.=$tag;
+            $sql.=")";
         }
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename ");

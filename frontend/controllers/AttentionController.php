@@ -299,37 +299,7 @@ class AttentionController extends AController
         }
     }
 
-    //得到首页列表
-    public function actionGetIndexList()
-    {
-        $this->loginValid(false);
-        try{
-            $page1 = new Page();//得到所有的  个数在里面定义
-            $page1->pageSize=6;
-            $page2 = new Page();//得到所有的  个数在里面定义
-            $page2->pageSize=2;
-            $page3 = new Page();//得到所有的  个数在里面定义
-            $page3->pageSize=2;
-            $page4 = new Page();//得到所有的  个数在里面定义
-            $number = \Yii::$app->request->post('n');
-            if(empty($number))
-            {
-                $number=2;
-            }
-            $page4->pageSize=$number;
-            $userSign = $this->userObj->userSign;
-            $data= array();
-            $data['circleDynamic'] = $this->AttentionService->getAttentionCircleDynamic($userSign,$page1);
-            $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page2);
-            $data['recommendUser'] =$this->AttentionService->getRecommendUser($page3);
-            $data['recommendTravel'] =$this->AttentionService->getRecommendTravel($page4);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
-        }
-    }
+
 
     //得到粉丝
     public function actionGetFans()

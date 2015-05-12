@@ -254,6 +254,7 @@ class UserAttentionService extends BaseDb
                 switch($rest['relativeType'])
                 {
                     case UserAttention::TYPE_COLLECT_FOR_TRAVEL:
+
                         $totalize->tType=AllTotalize::TYPE_COLLECT_FOR_TRIP;
                         $totalize->rId=$rest['relativeId'];
                         $allTotalizeSer=new AllTotalizeService();

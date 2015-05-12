@@ -90,33 +90,6 @@ class Query extends \yii\db\Query
      * @var array query options for the call snippet.
      */
     public $snippetOptions;
-    /**
-     * @var array facet search specifications.
-     * For example:
-     *
-     * ~~~php
-     * [
-     *     'group_id',
-     *     'brand_id' => [
-     *         'order' => ['COUNT(*)' => SORT_ASC],
-     *     ],
-     *     'price' => [
-     *         'select' => 'INTERVAL(price,200,400,600,800) AS price_seg',
-     *         'order' => ['FACET()' => SORT_ASC],
-     *     ],
-     * ]
-     * ~~~
-     *
-     * You need to use [[search()]] method in order to fetch facet results.
-     */
-    public $facets = [];
-    /**
-     * @var boolean|string|Expression whether to automatically perform 'SHOW META' query against main one.
-     * You may set this value to be string or [[Expression]] instance, in this case its value will be used
-     * as 'LIKE' condition for 'SHOW META' statement.
-     * You need to use [[search()]] method in order to fetch 'meta' results.
-     */
-    public $showMeta;
 
     /**
      * @var Connection the Sphinx connection used to generate the SQL statements.
@@ -189,62 +162,6 @@ class Query extends \yii\db\Query
         }
 
         return $row;
-    }
-
-    /**
-     * Executes the query and returns the complete search result including e.g. hits, facets.
-     * @param Connection $db the Sphinx connection used to generate the SQL statement.
-     * @return array the query results.
-     */
-    public function search($db = null)
-    {
-        $command = $this->createCommand($db);
-        $dataReader = $command->query();
-        $rows = $this->populate($dataReader->readAll());
-
-        $facets = [];
-        foreach ($this->facets as $facetKey => $facetValue) {
-            $dataReader->nextResult();
-            $rawFacetResults = $dataReader->readAll();
-
-            if (is_numeric($facetKey)) {
-                $facet = [
-                    'name' => $facetValue,
-                    'value' => $facetValue,
-                    'count' => 'count(*)',
-                ];
-            } else {
-                $facet = array_merge(
-                    [
-                        'name' => $facetKey,
-                        'value' => $facetKey,
-                        'count' => 'count(*)',
-                    ],
-                    $facetValue
-                );
-            }
-
-            foreach ($rawFacetResults as $rawFacetResult) {
-                $rawFacetResult['value'] = $rawFacetResult[$facet['value']];
-                $rawFacetResult['count'] = $rawFacetResult[$facet['count']];
-                $facets[$facet['name']][] = $rawFacetResult;
-            }
-        }
-
-        $meta = [];
-        if (!empty($this->showMeta)) {
-            $dataReader->nextResult();
-            $rawMetaResults = $dataReader->readAll();
-            foreach ($rawMetaResults as $rawMetaResult) {
-                $meta[$rawMetaResult['Variable_name']] = $rawMetaResult['Value'];
-            }
-        }
-
-        return [
-            'hits' => $rows,
-            'facets' => $facets,
-            'meta' => $meta,
-        ];
     }
 
     /**
@@ -366,44 +283,6 @@ class Query extends \yii\db\Query
             $this->within = array_merge($this->within, $columns);
         }
 
-        return $this;
-    }
-
-    /**
-     * Sets FACET part of the query.
-     * @param array $facets facet specifications.
-     * @return static the query object itself
-     */
-    public function facets($facets)
-    {
-        $this->facets = $facets;
-        return $this;
-    }
-
-    /**
-     * Adds additional FACET part of the query.
-     * @param array $facets facet specifications.
-     * @return static the query object itself
-     */
-    public function addFacets($facets)
-    {
-        if (is_array($this->facets)) {
-            $this->facets = array_merge($this->facets, $facets);
-        } else {
-            $this->facets = $facets;
-        }
-        return $this;
-    }
-
-    /**
-     * Sets whether to automatically perform 'SHOW META' for the search query.
-     * @param boolean|string|Expression $showMeta whether to automatically perform 'SHOW META'
-     * @return static the query object itself
-     * @see showMeta
-     */
-    public function showMeta($showMeta)
-    {
-        $this->showMeta = $showMeta;
         return $this;
     }
 

@@ -206,6 +206,7 @@ class TripController extends CController
         }
 
 
+
         $tripStartTime = DateUtils::convertTimePicker($beginTime, 1);
         $tripEndTime = DateUtils::convertTimePicker($endTime, 1);
         $userPublisherId = $this->userPublisherObj->userPublisherId;
@@ -277,6 +278,8 @@ class TripController extends CController
 
         try {
             $travelTrip=$this->tripService->addTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $travelTripPublisher, $tripServiceList);
+            $t=TagUtil::getInstance();
+            $t->updateTagValList($tagList,$travelTrip['tripId']);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
             echo json_encode(Code::statusDataReturn(Code::FAIL));
@@ -412,7 +415,8 @@ class TripController extends CController
         $travelTrip->endTime = $tripEndTime;
         $travelTrip->createPublisherId = $userPublisherId;
         $travelTrip->tags = implode(",", $tagList);
-
+        $t=TagUtil::getInstance();
+        $t->updateTagValList($tagList,$tripId);
 
         //设置景区列表
         foreach ($scenicList as $scenic) {
