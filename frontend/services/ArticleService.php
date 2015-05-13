@@ -45,6 +45,31 @@ class ArticleService extends BaseDb
             $this->closeLink();
         }
     }
+
+    /**
+     * 全文检索文章
+     * @param Page $page
+     * @param $articleIds
+     * @return Page|null
+     * @throws Exception
+     */
+    public function getArticleListBySearch(Page $page,$articleIds)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->articleDb = new ArticleInfoDb($conn);
+            return $this->articleDb->getListBySearch($page,$articleIds);
+        } catch (Exception $e) {
+            throw new Exception('查询目的地列表异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
+
+
+
     /**
      * 目的地详情
      * @param $id 目的地id

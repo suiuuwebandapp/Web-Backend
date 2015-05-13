@@ -38,11 +38,11 @@ class WeChat {
     //const EncodingAESKey_b='qriyBwOVeMt96BBQtfFqLl4wGvHEcD01pFmTNRUCDXW';
 
     /**
-     * 正式号与上面的不可共存
+     * 正式号
      */
-    const APP_ID = 'wx3eab0649ef2e6e75';
-    const APP_SECRET = 'fc6b207f046e0c5f895742ae2bc01d6a';
-    const EncodingAESKey='fOvWTkBaVuum038EBumW7PeknRNkgNNxIWSdYtDJgEN';
+    const APP_ID = 'wxe7a1b295cc37081e';
+    const APP_SECRET = '8eeae1bbbedbe6f9cbd7545ef3afea6e';
+    const EncodingAESKey='I3w9EcOsLlLuujVyvJJ5T7L4Fco7P7LiHPg8vJGmVYf';
     /*
      * 模板id
      * */
@@ -135,6 +135,27 @@ class WeChat {
      * 事件-点击 菜单点击事件
      */
     const EVENT_CLICK = 'CLICK';
+
+    //普通消息
+    const TEXT_TPL= "<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[%s]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                        <FuncFlag>0</FuncFlag>
+                        </xml>";
+    //图文消息
+    const MSG_TPL = "<xml>
+                                    <ToUserName><![CDATA[%s]]></ToUserName>
+                                    <FromUserName><![CDATA[%s]]></FromUserName>
+                                    <CreateTime>%s</CreateTime>
+                                    <MsgType><![CDATA[%s]]></MsgType>
+                                    <ArticleCount>%d</ArticleCount>
+                                    <Articles>
+                                    %s
+                                    </Articles>
+                                    </xml> ";
 
 
     /**

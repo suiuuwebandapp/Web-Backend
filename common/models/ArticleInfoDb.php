@@ -47,6 +47,25 @@ class ArticleInfoDb extends ProxyDb
         return $this->find($page);
     }
 
+
+    /**
+     * 全文检索
+     * @param Page $page
+     * @param $articleIds
+     * @return Page|null
+     */
+    public function getListBySearch(Page $page,$articleIds)
+    {
+        $sql=sprintf("
+            FROM article_info WHERE 1=1
+        ");
+
+        $sql.=" AND articleId in (".$articleIds.")";
+
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
     /**
      * 添加专栏文章
      * @param ArticleInfo $articleInfo

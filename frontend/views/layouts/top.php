@@ -62,7 +62,7 @@
                         </div>
                     </li>
                 </ul>
-                <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy"></p><a href="#" class="search-btn"></a></div>
+                <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy" id="search-ipt"></p><a href="javascript:;" class="search-btn"></a></div>
             </div>
         </div>
     </div>
@@ -188,6 +188,12 @@
             },5000);
         }
 
+        $(".search-btn").bind("click",function(){
+            var search=$("#search-ipt").val();
+            if(search!=""){
+                window.location.href="/search?s="+search;
+            }
+        });
     });
 
 

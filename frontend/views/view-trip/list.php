@@ -83,6 +83,7 @@
 <!--sylx-->
 
 i<script type="text/javascript">
+    var currentPage=1;
     $(function(){
         $('.sylx .sylx-xiangxi .p2 span').click(function(e) {
             if($(this).hasClass('active')){
@@ -90,12 +91,11 @@ i<script type="text/javascript">
             }else{
                 $(this).addClass('active');
             }
+            currentPage=1;
             searchTip();
         });
 
     });
-
-    var currentPage=1;
 
     /*-----随游-价格区间拖动条----*/
     $(function() {

@@ -62,9 +62,9 @@ class TagUtil
             $tagVd = json_decode(\Yii::$app->redis->get(Code::TRAVEL_TRIP_TAG_PREFIX . md5($vald)), true);
             if (!empty($tagVd)) {
                 $rst = array_search($tripId, $tagVd);
-                if ($rst) {
+                if ($rst!==false) {
                     $nArr = array_splice($tagVd, $rst, 1);
-                    \Yii::$app->redis->set(Code::TRAVEL_TRIP_TAG_PREFIX . md5($vald), json_encode($nArr));
+                    \Yii::$app->redis->set(Code::TRAVEL_TRIP_TAG_PREFIX . md5($vald), json_encode($tagVd));
                 }
             }
         }

@@ -445,14 +445,14 @@ class UserBaseService extends BaseDb
 
     /**
      * 验证邮箱是否存在
-     * @param $phone
+     * @param $email
      * @param $userId
      * @return bool
      * @throws Exception
      */
-    public function validateEmailExist($phone,$userId)
+    public function validateEmailExist($email,$userId)
     {
-        $userInfo=$this->findUserByPhone($phone);
+        $userInfo=$this->findUserByEmail($email);
         if($userInfo!=null){
             if($userInfo->userId!=$userId){
                 return true;
@@ -463,10 +463,9 @@ class UserBaseService extends BaseDb
 
     /**
      * 验证密码
-     * @param $phone
-     * @param $userId
+     * @param $password
+     * @param $p
      * @return bool
-     * @throws Exception
      */
     public function validatePassword($password,$p)
     {

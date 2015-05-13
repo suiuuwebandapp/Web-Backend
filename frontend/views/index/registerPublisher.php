@@ -540,6 +540,7 @@
 
     function createPublisher() {
 
+        var nickname=$("#nickname").val();
         var email = $("#email").val();
         var cardImgFront = $("#userCardFront").val();
         var password = $("#password").val();
@@ -569,6 +570,7 @@
             url :'/index/register-publisher',
             type:'post',
             data:{
+                nickname:nickname,
                 email:email,
                 userCard:cardImgFront,
                 password:password,

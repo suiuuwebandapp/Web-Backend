@@ -90,6 +90,20 @@ class TripController extends CController
     }
 
 
+    public function actionTest()
+    {
+        /*$t=TagUtil::getInstance();
+        $tagVd = json_decode(\Yii::$app->redis->get(Code::TRAVEL_TRIP_TAG_PREFIX . md5('购物')), true);
+        if (!empty($tagVd)) {
+            $rst = array_search(1, $tagVd);
+            var_dump($rst!==false);
+            if ($rst!==false) {
+                $nArr = array_splice($tagVd, 0, 2);
+                var_dump( $tagVd);
+            }
+        }*/
+
+    }
     /**
      * 编辑随游
      * @return string|\yii\web\Response
@@ -415,8 +429,7 @@ class TripController extends CController
         $travelTrip->endTime = $tripEndTime;
         $travelTrip->createPublisherId = $userPublisherId;
         $travelTrip->tags = implode(",", $tagList);
-        $t=TagUtil::getInstance();
-        $t->updateTagValList($tagList,$tripId);
+
 
         //设置景区列表
         foreach ($scenicList as $scenic) {
@@ -455,6 +468,8 @@ class TripController extends CController
 
         try {
             $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList);
+            $t=TagUtil::getInstance();
+            $t->updateTagValList($tagList,$travelTrip['tripId']);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
             echo json_encode(Code::statusDataReturn(Code::FAIL));

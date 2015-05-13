@@ -60,13 +60,40 @@ class TravelTripDb extends ProxyDb{
             $sql.=" AND t.basePrice<=:endPrice ";
             $this->setParam("endPrice",$endPrice);
         }
-        if(!empty($tag)){
-            $sql.=" AND t.tripId IN (";
-            $sql.=$tag;
-            $sql.=")";
+        if(!empty($tag)&&$tag!="全部"){
+            $sql.=" AND t.tags like :tag ";
+            $this->setParam("tag","%".$tag."%");
         }
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename ");
+
+        return $this->find($page);
+    }
+
+
+    /**
+     * 全文检索根据列表
+     * @param $page
+     * @param $tripIds
+     * @return \backend\components\Page|null
+     */
+    public function getListBySearch($page,$tripIds)
+    {
+
+        $sql=sprintf("
+            FROM travel_trip AS t
+            LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
+            LEFT JOIN user_base AS u ON uo.userId=u.userSign
+            LEFT JOIN country AS c ON c.id=t.countryId
+            LEFT JOIN city AS ci ON ci.id=t.cityId
+            WHERE 1=1
+        ");
+
+        $sql.=" AND t.tripId in (".$tripIds.")";
+
+        $this->setSql($sql);
+        $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename ");
+
 
         return $this->find($page);
     }

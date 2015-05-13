@@ -251,10 +251,10 @@
                                 <div class="sect">
                                     <select name="" id="tripKind" data-enabled="false" class="serviceSelect">
                                         <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR?>"
-                                            <?php if($travelInfo['info']['travelTimeType']==0){ echo "selected"; } ?>
+                                            <?php if($travelInfo['info']['travelTimeType']==1){ echo "selected"; } ?>
                                             >小时</option>
                                         <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TIME_TYPE_DAY?>"
-                                            <?php if($travelInfo['info']['travelTimeType']==1){ echo "selected"; } ?>
+                                            <?php if($travelInfo['info']['travelTimeType']==0){ echo "selected"; } ?>
                                             >天</option>
                                     </select>
                                 </div>
@@ -511,7 +511,6 @@
 
 
         var error = false;
-
 
 
         //TAB 1验证

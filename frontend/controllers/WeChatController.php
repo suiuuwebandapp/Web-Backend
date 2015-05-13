@@ -17,6 +17,8 @@ use common\components\Common;
 class WeChatController extends Controller
 {
 
+    public $enableCsrfValidation=false;
+    public $layout=false;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
@@ -39,19 +41,41 @@ class WeChatController extends Controller
         }
     }
 
+    //todo @test
+    public function actionTest()
+    {
+        $str='<xml>
+    <ToUserName><![CDATA[gh_ddba3bfc5646]]></ToUserName>
+    <FromUserName><![CDATA[oGfdst0AA7SAThQlEscjbHjbbzp8]]></FromUserName>
+    <CreateTime>1431495037</CreateTime>
+    <MsgType><![CDATA[text]]></MsgType>
+    <Content><![CDATA[看看]]></Content>
+    <MsgId>6148224368506986380</MsgId>
+    <Encrypt><![CDATA[VPT1g1xvD8cfmldGRQ4mZ6dmovffK8VOjFdq/4IuSfDMhxPK3MeHTpqZfJ4JIu0rig+W4AAmqI7PIiu/sxPLKurJM1/H7e/F5x4XeEIxWzwDBzQX0Y8paxuiz9/tfS5Zm7hl76945DM7sX+sS80D3xEo/xAb/aIfVcQEaCXFjFlTK1VAJKMrSyGxC9sfGKzxg3w5nh+ZKoY5ZZRvLveUEJ16iiWONwzOTOP0OiDNrv3E2kT8ynNAGUpNa8EpUO5kK5GdDMhBiB3mtSq2v+TiIRhOkIhTUgfW4cpoxo5nUIkVsKp895/X/4VtX42LZ7z+6pjxX5JHvqcGL+LeblP5j2x2aBe+K1YuGk8Z1qixyHDddN4bZpoMQPQ3i93EAo/iWholwR9hZmGl598qrSF+/Wp1i77EfHumLS/tBEwIQxQ=]]></Encrypt>
+</xml>';
+        list($fromUsername, $toUsername, $keyword, $msgType, $objEvent, $objEventKey, $Label, $Location_X, $Location_Y, $Scale) = $this->getXmlMsg($str);
+        $date_H = date("H");
+        $date_I = date("i");
+        $time = time();
+        $msgType_text = WeChat::MSGTYPE_TEXT;
+        $msgType_news = WeChat::MSGTYPE_NEWS;
+        $msgType_dkf = WeChat::MSGTYPE_DKF;
+        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 'test');
+    }
 
     /**
      * 接收--文本
      */
     public function actionResponseMsg()
     {
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+
+		$postStr = isset($GLOBALS["HTTP_RAW_POST_DATA"])?$GLOBALS["HTTP_RAW_POST_DATA"]:file_get_contents("php://input");
 
         if (!empty($postStr)) {
 
             list($fromUsername, $toUsername, $keyword, $msgType, $objEvent, $objEventKey, $Label, $Location_X, $Location_Y, $Scale) = $this->getXmlMsg($postStr);
 
-            $logText = sprintf($this->HINT_LOGIN_TXT, $fromUsername);
+            //$logText = sprintf($this->HINT_LOGIN_TXT, $fromUsername);
 
             $date_H = date("H");
             $date_I = date("i");
@@ -59,6 +83,7 @@ class WeChatController extends Controller
             $msgType_text = WeChat::MSGTYPE_TEXT;
             $msgType_news = WeChat::MSGTYPE_NEWS;
             $msgType_dkf = WeChat::MSGTYPE_DKF;
+
             //关注的
             if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_SUBSCRIBE) {
 
@@ -87,7 +112,7 @@ class WeChatController extends Controller
 
                 }
                 $this->getWechatUserInfo($fromUsername, true); //关注的时候抓取用户信息
-                $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, 'test');
+                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 'test');
             } else if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_LOCATION) {
                 //报告地理位置
                 //$this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, "欢迎关注巴别鱼");
@@ -103,33 +128,21 @@ class WeChatController extends Controller
                 //关于用户发送消息的
 
                 if (!empty($keyword)) {
-                    $rst = $this->WeChatSer->getUserType($fromUsername);
-                    $type_v = 0;
-                    $time_v = 0;
-                    if ($rst['status'] == Code::SUCCESS) {
-                        $rstData = $rst['data'];
-                        $type_v = $rstData['vType'];
-                        $time_v = $rstData['vTime'];
-                    }
-                    if ($time - $time_v > WeChat::TIME_PAST) {
-                        $timePast = false;
-                    } else {
-                        $timePast = true;
-                    }
+
 
                     if ($keyword == '0') {
-                        //$this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, self::MAP_TXT_MORE);
+
                     }elseif($keyword=1){
-                        $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, 1);
+                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 1);
                     }
                     else {
                         if (
                             ($date_H == WeChat::TIME_OUT && $date_I >= WeChat::TIME_OUT_I) ||
                             ($date_H > WeChat::TIME_OUT)
                         ) {
-                            $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, WeChat::TIME_OUT_STRING);
+                            $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::TIME_OUT_STRING);
                         }else{
-                            $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_dkf,'1');
+                            $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_dkf,'1qwe');
                             //$this->actionSendMsg($fromUsername, $keyword);
                         }
 
@@ -144,12 +157,6 @@ class WeChatController extends Controller
     }
 
 
-
-    private  function curlHandlePost($url,$data=null, $header = null, $type = 'POST')
-    {
-        $c=new Common();
-        return $c->CurlHandel($url,$data=null, $header = null, $type = 'POST');
-    }
 
     /**获取用户信息
      * @param $openId 用户id
@@ -220,20 +227,20 @@ class WeChatController extends Controller
 
     /**
      * 发送图文消息
-     * @param $maptextTpl
+     * @param $msgTpl
      * @param $fromUsername
      * @param $toUsername
      * @param $time
      * @param $msgType_news
      * @param $rstData
      */
-    private function mapMsgTxt($maptextTpl, $fromUsername, $toUsername, $time, $msgType_news, $rstData)
+    private function mapMsgTxt($msgTpl, $fromUsername, $toUsername, $time, $msgType_news, $rstData)
     {
-        $resultStr = sprintf($maptextTpl, $fromUsername, $toUsername, $time, $msgType_news, $rstData['message'], $rstData['data']);
+        $resultStr = sprintf($msgTpl, $fromUsername, $toUsername, $time, $msgType_news, $rstData['message'], $rstData['data']);
         $encrypt_type = (isset($_GET['encrypt_type']) && ($_GET['encrypt_type'] == 'aes')) ? "aes" : "raw";
         if($encrypt_type=='aes'){
-            $timeStamp  =Yii::$app->request->get("timestamp");
-            $nonce=Yii::$app->request->get("nonce");
+            $timeStamp  =Yii::$app->request->post("timestamp");
+            $nonce=Yii::$app->request->post("nonce");
             $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChat::EncodingAESKey, WeChat::APP_ID);
             $encryptMsg = ''; //加密后的密文
             $errCode = $pc->encryptMsg($resultStr, $timeStamp, $nonce, $encryptMsg);
@@ -278,6 +285,7 @@ class WeChatController extends Controller
 
     private function xmlToArr($xml)
     {
+
         $postObj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
         $fromUsername = isset($postObj->FromUserName) ? $postObj->FromUserName : '';
         $toUsername = isset($postObj->ToUserName) ? $postObj->ToUserName : '';
