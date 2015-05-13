@@ -162,7 +162,7 @@
                         </div>
                     </li>
                 </ol>
-                <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy"></p><a href="#" class="search-btn"></a></div>
+                <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy" id="search-ipt"></p><a href="javascript:;" class="search-btn"></a></div>
             </div>
         </div>
     </div>
