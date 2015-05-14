@@ -22,7 +22,7 @@
         <ol>
             <li><a href="#pinglun">评论</a></li>
             <li></li>
-            <li id="fenxiang"><a href="###">分享</a>
+            <li id="fenxiang"><a href="javascript:;">分享</a>
                 <div id="other-line">
                     <a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a>
 
@@ -34,8 +34,6 @@
     </div>
     <div class="zhuanlan-web">
         <ul id="tanchu_pl">
-
-
         </ul>
         <ol id="spage">
         </ol>
@@ -279,4 +277,11 @@ function getComment(page)
             }
         });
     }
+$(document).ready(function(){
+    var id="<?php echo $aId?>";
+    if(id!=''){
+        showOld(id);
+    }
+
+});
 </script>

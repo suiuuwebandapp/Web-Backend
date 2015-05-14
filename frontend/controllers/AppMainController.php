@@ -75,7 +75,7 @@ class AppMainController extends AController
 
             $userService->updateUserBase($userInfo);
             $this->appRefreshUserInfo();
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userInfo));
         }catch (Exception $e) {
             echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
         }

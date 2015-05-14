@@ -43,7 +43,7 @@
         <div class="fr right">
             <ul>
                 <li class="fl"><a href="#" class="icon sina"></a><img src="/assets/images/weiboCoda.png" width="110" height="110" class="weiboCoda"></li>
-                <li class="fl"><a href="#" class="icon weixin"></a><img src="/assets/images/weixinCoda.png" width="110" height="110" class="weixinCoda"></li>
+                <li class="fl" id="wei"><a href="#" class="icon weixin"></a><img src="/assets/images/weixinCoda.png" width="110" height="110" class="weixinCoda"></li>
             </ul>
 
         </div>

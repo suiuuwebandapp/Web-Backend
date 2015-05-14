@@ -8,8 +8,16 @@
  */
 namespace frontend\services;
 
+use common\components\Code;
+use common\components\Common;
 use common\entity\WeChat;
-class WeChatService{
+use common\entity\WeChatUserInfo;
+use common\models\WeChatDb;
+use yii;
+use common\models\BaseDb;
+use yii\base\Exception;
+
+class WeChatService extends BaseDb{
 
     private $strItemRemain="";
     private $numbItemRemain=0;
@@ -18,20 +26,14 @@ class WeChatService{
                     <Description><![CDATA[查看更多信息请输入“更多”]]></Description>
                     <PicUrl><![CDATA[]]></PicUrl>
                     </item>';
+    public $baseUrl='';
+    public $weChatDb;
     function __construct()
     {
+        $this->baseUrl=Yii::$app->params['weChatUrl'];
 
     }
 
-
-    public function sendTemplateMessage($access_token,$toUser,$backUrl,$userName,$cmName,$date,$remark)
-    {
-
-        $url = WeChat::MESSAGE_SEN_TEMPLATE . $access_token;
-        $templateId=WeChat::TEMPLATE_ID_FOR_RESERVE;
-        $rst = curlHandlePost($url, $this->getTemplate($toUser,$templateId,$backUrl,$userName,$cmName,$date,$remark));
-        return $rst;
-    }
 
     /**
      * 创建菜单
@@ -43,68 +45,67 @@ class WeChatService{
         $string = '{
                     "button":[
                     {
-                      "name":"test1",
+                      "name":"预定",
                        "sub_button":[
                         {
                            "type":"view",
-                           "name":"test1-1",
+                           "name":"定制",
                            "url":"%s"
                         },
                        {
                           "type":"view",
-                           "name":"test1-2",
+                           "name":"订单管理",
                            "url":"%s"
                         }]
                     },
                     {
-                      "name":"test2",
+                      "name":"精彩活动",
                        "sub_button":[
                        {
                            "type":"click",
-                           "name":"test2-1",
-                           "key":"EVENT_KEY_TEST2-1"
+                           "name":"活动",
+                           "key":"EVENT_KEY_ACTIVE"
                         },
                         {
-                           "type":"view",
-                           "name":"我是学霸",
-                           "url":"http://mp.weixin.qq.com/s?__biz=MjM5NzMyODM1NA==&mid=203174585&idx=4&sn=4ae8afa2b78c9be98dd2a58930923f9f#rd"
+                           "type":"click",
+                           "name":"专栏",
+                           "key":"EVENT_KEY_ACTIVE"
                         }
                        ]
                     },
                     {
-                      "name":"鱼部落",
+                      "name":"加入随游",
                        "sub_button":[
                         {
-                           "type":"click",
-                           "name":"最新活动",
-                           "key":"EVENT_KEY_TEST3-1"
+                           "type":"view",
+                           "name":"当地人申请",
+                           "url":"https://jinshuju.net/f/GWbYtm"
                         },
                         {
-                            "type":"view",
-                           "name":"鱼社区",
-                           "url":"http://m.wsq.qq.com/262926839"
+                           "type":"view",
+                           "name":"加入公测",
+                           "url":"https://jinshuju.net/f/M7mEkb"
                         }]
                     }
                     ]
                     }';
         $url_1 ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
         $app_id = WeChat::APP_ID;
-        $url_test1_1  ="http://".Yii::app()->params['vsinsHost'] ."/vsins/getCode/actionType/11";//购课放在了第一位
-        $url_test1_2 ="http://".Yii::app()->params['vsinsHost'] ."/vsins/getCode/actionType/12";
+        $url_test1_1  =  $this->baseUrl."/we-chat/get-code?actionType=11";//购课放在了第一位
+        $url_test1_2 =  $this->baseUrl ."/we-chat/get-code?actionType=12";
         $url_test1_1_s=sprintf($url_1,$app_id,urlencode($url_test1_1));
         $url_test1_2_s=sprintf($url_1,$app_id,urlencode($url_test1_2));
         $data      = sprintf($string,$url_test1_1_s,$url_test1_2_s);
-        $rstInfo   = curlHandlePost($url, $data);
-
+        $rstInfo   = $this->CurlHandel($url,$data);
         $json_data = json_decode($rstInfo['data']);
-
         return  $json_data;
 
     }
 
 
 
-    public function getVsinsInfo($type)
+
+    public function getVsinsInfo($type,$imageHost)
     {
         $strItem   = '';
         $countItem = 0;
@@ -122,7 +123,7 @@ class WeChatService{
                     $strItem .= '<item>
                     <Title><![CDATA[' . $value['title'] . ']]></Title>
                     <Description><![CDATA[' . $value['abstract'] . ']]></Description>
-                    <PicUrl><![CDATA[' . Yii::app()->params['image_dir_host'] . $value['picurl'] . ']]></PicUrl>
+                    <PicUrl><![CDATA[' . $imageHost . $value['picurl'] . ']]></PicUrl>
                     <Url><![CDATA[' . $rstBodyUrl . ']]></Url>
                     </item>|';
                 }
@@ -167,15 +168,23 @@ class WeChatService{
     public function sendMessage($toUsername, $keyword, $access_token)
     {
         $url         = WeChat::MESSAGE_SEND_LINK . $access_token;
-        $thisUser    = WeChat::ADMIN_ID_W;
+        $thisUser    = WeChat::ADMIN_ID_J;
         $thisContent = '通知:[' . $toUsername . ']发送的消息为[' . $keyword . ']';
 
         $str       = '{"touser": "%s", "msgtype": "%s", "text": {"content": "%s"}}';
         $data      = sprintf($str, $thisUser, WeChat::MSGTYPE_TEXT, $thisContent);
-        $rstInfo   = curlHandlePost($url, $data);
+        $rstInfo   = $this->CurlHandel($url, $data);
         $json_data = json_decode($rstInfo['data']);
 
         return $json_data;
+    }
+
+    public function sendTemplateMessage($access_token,$toUser,$backUrl,$userName,$cmName,$date,$remark)
+    {
+        $url = WeChat::MESSAGE_SEN_TEMPLATE . $access_token;
+        $templateId=WeChat::TEMPLATE_ID_FOR_RESERVE;
+        $rst = $this->CurlHandel($url, $this->getTemplate($toUser,$templateId,$backUrl,$userName,$cmName,$date,$remark));
+        return $rst;
     }
     /**
      * 获取内容链接
@@ -186,23 +195,10 @@ class WeChatService{
     {
         if (is_numeric($id)) {
 
-            return Yii::app()->params['url'] . "/Vsins/GetInfoCont/id/" . $id;
+            return  $this->baseUrl . "/we-chat/get-info-cont/id/" . $id;
         } else {
 
-            return 'http://wechatapp01.sinaapp.com/52easy/index.php';
-        }
-    }
-    /**
-     * 获取二维码连接
-     * @param $wid
-     * @return string
-     */
-    private function getCodeLink($uId)
-    {
-        if (!empty($uId)) {
-            return Yii::app()->params['url'] . "/Vsins/AttionZ/uId/".$uId;
-        } else {
-            return 'http://wechatapp01.sinaapp.com/52easy/index.php';
+            return   $this->baseUrl;
         }
     }
 
@@ -233,6 +229,111 @@ class WeChatService{
                         }
                     }';
         return sprintf($json,$toUser,$templateId,$backUrl,$userName,$cmName,$date,$remark);
+    }
+
+
+    public function getUserInfo(WeChatUserInfo $weChatUserInfo)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->weChatDb=new WeChatDb($conn);
+            return $this->weChatDb->findWeChatUserInfo($weChatUserInfo);
+        } catch (Exception $e) {
+            throw new Exception('得到用户信息异常', Code::FAIL, $e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    /**
+     * 插入用户
+     * @param $arr
+     * @return int
+     * @throws Exception
+     */
+    public function insertWeChatInfo($arr)
+    {
+        try {
+            $weChatUserInfo=$this->arr2WeChatUserInfo($arr);
+            if($weChatUserInfo->openId=='')
+            {
+               throw new Exception('添加用户信息异常', Code::FAIL);
+            }
+            $conn = $this->getConnection();
+            $this->weChatDb=new WeChatDb($conn);
+            return $this->weChatDb->addWeChatUserInfo($weChatUserInfo);
+        } catch (Exception $e) {
+            throw new Exception('添加用户信息异常', Code::FAIL, $e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+    /**
+     * 更新用户数据
+     * @param $arr
+     * @param $userSign
+     * @return int
+     * @throws Exception
+     */
+    public function upDateWeChatInfo($arr,$userSign)
+    {
+        try {
+            $weChatUserInfoOld =new WeChatUserInfo();
+            $weChatUserInfoOld->userSign=$userSign;
+            $weChatUserInfo=$this->arr2WeChatUserInfo($arr,$weChatUserInfoOld);
+            if($weChatUserInfo->openId=='')
+            {
+                throw new Exception('更新用户信息异常', Code::FAIL);
+            }
+            $conn = $this->getConnection();
+            $this->weChatDb=new WeChatDb($conn);
+            return $this->weChatDb->updateWeChatUserInfo($weChatUserInfo);
+        } catch (Exception $e) {
+            throw new Exception('更新用户信息异常', Code::FAIL, $e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
+    private function arr2WeChatUserInfo($arr,WeChatUserInfo $weChatUserInfoOld=null)
+    {
+
+        if(empty($weChatUserInfoOld))
+        {
+            $weChatUserInfo =new WeChatUserInfo();
+        }else
+        {
+            $weChatUserInfo =$weChatUserInfoOld;
+        }
+        $weChatUserInfo->openId=isset($arr['openid'])?$arr['openid']:'';
+        $weChatUserInfo->v_nickname=isset($arr['nickname'])?$arr['nickname']:'';
+        $weChatUserInfo->v_sex=isset($arr['sex'])?$arr['sex']:0;
+        $weChatUserInfo->v_language=isset($arr['language'])?$arr['language']:'';
+        $weChatUserInfo->v_city=isset($arr['city'])?$arr['city']:'';
+        $weChatUserInfo->v_province=isset($arr['province'])?$arr['province']:'';
+        $weChatUserInfo->v_country=isset($arr['country'])?$arr['country']:'';
+        $weChatUserInfo->v_headimgurl=isset($arr['headimgurl'])?$arr['headimgurl']:'';
+        $weChatUserInfo->v_subscribe_time=isset($arr['subscribe_time'])?$arr['subscribe_time']:1382694957;
+        $weChatUserInfo->unionID=isset($arr['unionid'])?$arr['unionid']:'';
+        $weChatUserInfo->v_remark=isset($arr['remark'])?$arr['remark']:'';
+        $weChatUserInfo->v_groupid=isset($arr['groupid'])?$arr['groupid']:0;
+        return $weChatUserInfo;
+    }
+    private function curlHandel($url,$data)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if (!empty($data)){
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return Code::statusDataReturn(Code::SUCCESS,$output);
     }
 
 }

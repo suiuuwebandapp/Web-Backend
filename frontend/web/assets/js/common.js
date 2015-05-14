@@ -59,12 +59,12 @@ $(function(){
 
 
 $(function(){
-	$('.nav-out .nav-right ol .zhuces a').click(function(e) {
+	$('.nav-out .nav-right ol .zhuces #zhuce').click(function(e) {
         $('#zhuce-main').toggle();
         $('.nav-out .nav-right ol .logins').children('#denglu-main').css('display','none');
         $('#zhuce-main02').css('display','none');
     });
-	$('.nav-out .nav-right ol .logins a').click(function(e) {
+	$('.nav-out .nav-right ol .logins #denglu').click(function(e) {
         $('#denglu-main').toggle();
         $('.nav-out .nav-right ol .zhuces').children('#zhuce-main,#zhuce-main02').css('display','none');
 		
@@ -256,8 +256,8 @@ $(function(){
 		
     });
 
-})*/
-
+})
+*/
 
 /*-----完成页满屏显示----*/
 $(function(){

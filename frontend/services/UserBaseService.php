@@ -129,7 +129,7 @@ class UserBaseService extends BaseDb
                 if($userInfo!=false&&$userInfo['userId']!=$userBase->userId) throw new Exception(Code::USER_EMAIL_EXIST);
 
             }else{
-                $userInfo=$this->userBaseDb->findByPhone($userBase->phones);
+                $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
                 if($userInfo!=false&&$userInfo['userId']!=$userBase->userId) throw new Exception(Code::USER_PHONE_EXIST);
             }
             if($userPublisher!=null){
@@ -137,6 +137,14 @@ class UserBaseService extends BaseDb
                 $userBase->isPublisher=true;
                 $userPublisher->userId=$userBase->userSign;
                 $userPublisherDb->addPublisher($userPublisher);
+            }
+            $im=new Easemob(\Yii::$app->params['imConfig']);
+            $options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
+            $imRes=$im->updateNickname($options);
+            $arrRes=json_decode($imRes,true);
+            if(isset($arrRes['error']))
+            {
+                throw new Exception('修改环信昵称错误');
             }
             //添加顺序不要移动
             $this->userBaseDb->updateUserBase($userBase);
@@ -365,7 +373,7 @@ class UserBaseService extends BaseDb
 
         if($userAccess==null){
             $userBase->sex=UserBase::USER_SEX_SECRET;
-            $userBase->headImg='/assets/images/user_default.png';
+            $userBase->headImg=\Yii::$app->params["base_dir"].'/assets/images/user_default.png';
 
             if(!empty($userBase->email)){
                 $userBase->phone=null;
@@ -524,6 +532,14 @@ class UserBaseService extends BaseDb
     public function updateUserBase(UserBase $userBase)
     {
         try {
+            $im=new Easemob(\Yii::$app->params['imConfig']);
+            $options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
+            $imRes=$im->updateNickname($options);
+            $arrRes=json_decode($imRes,true);
+            if(isset($arrRes['error']))
+            {
+                throw new Exception('修改环信昵称错误');
+            }
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $this->userBaseDb->updateUserBase($userBase);

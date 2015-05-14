@@ -251,6 +251,19 @@ class Easemob {
 		$result = $this->postCurl ( $url, '', $header, $type = "GET" );
 		return $result;
 	}
+
+    /**
+     * @param $options['username']
+     * @param $options['nickname']
+     * @return mixed
+     */
+   public function updateNickname($options) {
+       $url = $this->url . "users/" . $options ['username'];
+       $access_token = $this->getToken ();
+       $header [] = 'Authorization: Bearer ' . $access_token;
+       $result = $this->postCurl ( $url, $options, $header, $type = 'PUT');
+       return $result;
+   }
 	/**
 	 * 删除群组
 	 *

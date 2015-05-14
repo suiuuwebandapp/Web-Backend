@@ -154,7 +154,7 @@
                 title=title.replaceAll(keywords[j],"<b style='color: red'>"+keywords[j]+"</b>");
                 name=name.replaceAll(keywords[j],"<b style='color: red'>"+keywords[j]+"</b>");
             }
-            html+='<a href="/article?aId="'+article.articleId+' target="_blank"><li>';
+            html+='<a href="/article?id="'+article.articleId+' target="_blank"><li>';
             html+='<img src="'+article.titleImg+'" alt="" width="284px" height="260px">';
             html+='<div>';
             html+='<h4>'+title+'</h4>';

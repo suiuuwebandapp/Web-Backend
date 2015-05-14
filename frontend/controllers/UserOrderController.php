@@ -48,9 +48,6 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '无效的订单号']);
         }
         $orderInfo=$this->userOrderService->findOrderByOrderNumber($orderNumber);
-        if(empty($orderInfo)){
-            return $this->redirect(['/result', 'result' => '无效的订单号']);
-        }
         return $this->render("info",[
            'orderInfo'=> $orderInfo
         ]);
@@ -149,7 +146,7 @@ class UserOrderController extends  CController{
             $userOrderInfo->tripId=$tripInfo['tripId'];
             $userOrderInfo->userId=$this->userObj->userSign;
             $userOrderInfo->beginDate=$beginDate;
-            $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,1);
+            $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,2);
             $userOrderInfo->personCount=$peopleCount;
             $userOrderInfo->serviceInfo=$serviceInfo;
             $userOrderInfo->basePrice=$basePrice;
@@ -165,7 +162,6 @@ class UserOrderController extends  CController{
                 'orderNumber'=>$userOrderInfo->orderNumber
             ]);
         }catch (Exception $e){
-            throw $e;
             return $this->redirect(['/result', 'result' => '系统未知异常']);
         }
     }

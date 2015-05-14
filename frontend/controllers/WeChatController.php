@@ -9,6 +9,8 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\wx\WXBizMsgCrypt;
+use common\entity\WeChatUserInfo;
+use frontend\services\WeChatService;
 use yii\web\Controller;
 use yii;
 use common\entity\WeChat;
@@ -17,12 +19,16 @@ use common\components\Common;
 class WeChatController extends Controller
 {
 
+
+
+
     public $enableCsrfValidation=false;
     public $layout=false;
+    public $weChatSer;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
-
+        $this->weChatSer=new WeChatService();
     }
 
     public function actionValid()
@@ -44,23 +50,7 @@ class WeChatController extends Controller
     //todo @test
     public function actionTest()
     {
-        $str='<xml>
-    <ToUserName><![CDATA[gh_ddba3bfc5646]]></ToUserName>
-    <FromUserName><![CDATA[oGfdst0AA7SAThQlEscjbHjbbzp8]]></FromUserName>
-    <CreateTime>1431495037</CreateTime>
-    <MsgType><![CDATA[text]]></MsgType>
-    <Content><![CDATA[看看]]></Content>
-    <MsgId>6148224368506986380</MsgId>
-    <Encrypt><![CDATA[VPT1g1xvD8cfmldGRQ4mZ6dmovffK8VOjFdq/4IuSfDMhxPK3MeHTpqZfJ4JIu0rig+W4AAmqI7PIiu/sxPLKurJM1/H7e/F5x4XeEIxWzwDBzQX0Y8paxuiz9/tfS5Zm7hl76945DM7sX+sS80D3xEo/xAb/aIfVcQEaCXFjFlTK1VAJKMrSyGxC9sfGKzxg3w5nh+ZKoY5ZZRvLveUEJ16iiWONwzOTOP0OiDNrv3E2kT8ynNAGUpNa8EpUO5kK5GdDMhBiB3mtSq2v+TiIRhOkIhTUgfW4cpoxo5nUIkVsKp895/X/4VtX42LZ7z+6pjxX5JHvqcGL+LeblP5j2x2aBe+K1YuGk8Z1qixyHDddN4bZpoMQPQ3i93EAo/iWholwR9hZmGl598qrSF+/Wp1i77EfHumLS/tBEwIQxQ=]]></Encrypt>
-</xml>';
-        list($fromUsername, $toUsername, $keyword, $msgType, $objEvent, $objEventKey, $Label, $Location_X, $Location_Y, $Scale) = $this->getXmlMsg($str);
-        $date_H = date("H");
-        $date_I = date("i");
-        $time = time();
-        $msgType_text = WeChat::MSGTYPE_TEXT;
-        $msgType_news = WeChat::MSGTYPE_NEWS;
-        $msgType_dkf = WeChat::MSGTYPE_DKF;
-        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 'test');
+        //var_dump( $this->getWechatUserInfo('oGfdst0AA7SAThQlEscjbHjbbzp8', true)); //关注的时候抓取用户信息
     }
 
     /**
@@ -112,18 +102,21 @@ class WeChatController extends Controller
 
                 }
                 $this->getWechatUserInfo($fromUsername, true); //关注的时候抓取用户信息
-                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 'test');
+                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::ATTENTION_REPLY_STR);
             } else if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_LOCATION) {
                 //报告地理位置
                 //$this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, "欢迎关注巴别鱼");
             } else if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_CLICK) {
-
+                //click 事件
+                switch ($objEventKey) {
+                    case WeChat::EVENT_CLICK_KEY_ACTIVE: //21
+                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
+                        break;
+                    default :
+                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
+                }
             } else if ($msgType == WeChat::MSGTYPE_LOCATION) {
-
                 //发送位置签到
-
-
-
             } else {
                 //关于用户发送消息的
 
@@ -142,7 +135,7 @@ class WeChatController extends Controller
                         ) {
                             $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::TIME_OUT_STRING);
                         }else{
-                            $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_dkf,'1qwe');
+                            //$this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_dkf,'');
                             //$this->actionSendMsg($fromUsername, $keyword);
                         }
 
@@ -155,8 +148,67 @@ class WeChatController extends Controller
             exit;
         }
     }
+    /*
+       * 获取code
+       * */
+    public function actionGetCode()
+    {
+        if (!$this->is_weixin()) {
+            $this->showNoWx();
+            exit;
+        }
+        //$actionType 菜单的选择如11表示第一列第一个 12 第一列第二个
 
+        $openId = '';
+        $actionType = '';
+        $userSign = '';
+        if (isset($_GET['code'])) {
+            $code = $_GET['code'];
+            $url = sprintf(WeChat::GET_OAUTH2_OPENID, WeChat::APP_ID, WeChat::APP_SECRET, $code);
+            $rst = Common::CurlHandel($url);
+            if ($rst['status'] == Code::SUCCESS) {
+                $rstJson = json_decode($rst['data']);
+                $openId = $rstJson->openid;
+                $weChatUserInfo=new WeChatUserInfo();
+                $weChatUserInfo->openId=$openId;
+                $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
+                Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
+            } else {
+                $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'请联系管理员 电话：400-808-5050','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                exit;
+            }
+        } else {
+            $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'请联系管理员 电话：400-808-5050','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            exit;
+        }
+        if (isset($_GET['actionType'])) {
+            $actionType = $_GET['actionType'];
+        } else {
+            $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'请联系管理员 电话：400-808-5050','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            exit;
+        }
+        switch ($actionType) {
+            case "11":
+                $url = Yii::$app->params['base_dir']. "/we-chat-order-list";
+                header("location: " . $url);
+                break;
+            case "12":
+                $url = Yii::$app->params['base_dir']. "/we-chat-order-list/order-manage";
+                header("location: " . $url);
+                break;
+            default:
+                $url = Yii::$app->params['base_dir'];
+                header("location: " . $url);;
+                break;
+        }
 
+        exit;
+    }
+
+    public function actionBinding()
+    {
+
+    }
 
     /**获取用户信息
      * @param $openId 用户id
@@ -171,17 +223,18 @@ class WeChatController extends Controller
         $url = WeChat::GET_USER_INFO . $access_token . "&openid=" . $openId . "&lang=zh_CN";
 
         $rst =  Common::CurlHandel($url);
-
         if ($rst['status'] == Code::SUCCESS) {
-            $rstJson = json_decode($rst['data']);
-
-            if (isset($rstJson->nickname)) {
+            $rstJson = json_decode($rst['data'],true);
+            if (isset($rstJson['nickname'])) {
                 if ($isSave) {
-                    $WeChatRst = $this->vSer->getUserInfo($openId, null);
-                    if ($WeChatRst['status'] == Code::SUCCESS) {
+                    $weChatUserInfo=new WeChatUserInfo();
+                    $weChatUserInfo->openId=$openId;
+                    $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
+                    if (!empty($WeChatRst)) {
+                        $this->weChatSer->upDateWeChatInfo($rstJson,$WeChatRst['userSign']);
                      //可以改成更新信息。但是没法判断用户是否更新了
                     } else {
-                        $this->WeChatSer->insertWeChatInfo($rstJson->openid, $rstJson->nickname, $rstJson->sex, $rstJson->city, $rstJson->country, $rstJson->province, $rstJson->language, $rstJson->headimgurl, $rstJson->subscribe_time);
+                        $this->weChatSer->insertWeChatInfo($rstJson);
                     }
                 }
                 return Code::statusDataReturn(Code::SUCCESS, $rstJson);
@@ -343,22 +396,23 @@ class WeChatController extends Controller
      */
     private function readToken()
     {
-
         //调用计划任务设置的Token
         $access_token = Yii::$app->redis->get(WeChat::TOKEN_FILE_NAME);
-
         if (empty($access_token)) {
             $this->actionGetToken();
             $access_token = Yii::$app->redis->get(WeChat::TOKEN_FILE_NAME);
 
             //创建菜单  只有当token 为空的时候,又重写创建的时候,再重写创建菜单
-            $this->WeChatSer->createMenuInfo($access_token);
+            $this->weChatSer->createMenuInfo($access_token);
         }
-
         return $access_token;
-
     }
 
+    public function actionCreateMenu()
+    {
+        $access_token =$this->readToken();
+        $obj=$this->weChatSer->createMenuInfo($access_token);
+    }
     /**
      * 获取token校验信息
      * @return mixed
@@ -373,11 +427,10 @@ class WeChatController extends Controller
         $rst =  Common::CurlHandel($url);
         if ($rst['status'] == Code::SUCCESS) {
             $rstJson = json_decode($rst['data']);
-
             if (isset($rstJson->access_token)) {
                 Yii::$app->redis->set(WeChat::TOKEN_FILE_NAME,$rstJson->access_token);
+                \Yii::$app->redis->expire(WeChat::TOKEN_FILE_NAME,$rstJson->expires_in);
             } else {
-
                 $file_str = '错误发生时间：[' . date('Y-m-d H:i:s') . ']错误内容:{' . $rst['data'] . '}';
                 $this->write_to_log(WeChat::LOG_XXX_NAME, $file_str);
                 exit;
@@ -388,6 +441,7 @@ class WeChatController extends Controller
 
     private function is_weixin()
     {
+        return true;
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false) {
             return true;
         }

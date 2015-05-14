@@ -26,7 +26,14 @@ class WeChat {
     /**
      * 下班后，对用户消息自动回复的语句。
      */
-    const TIME_OUT_STRING = '对于我们没有及时回复您，表示歉意！对于您想要了解的问题，您也可以拨打我们的电话';
+    const TIME_OUT_STRING = '对于我们没有及时回复您，表示歉意！对于您想要了解的问题，您也可以拨打我们的电话010-58483692';
+    /**
+     * click事件
+     */
+    const EVENT_CLICK_KEY_ACTIVE='EVENT_KEY_ACTIVE';
+    const MSG_TXT_NO='暂无消息';
+    const ATTENTION_REPLY_STR='祝贺你迈出了开始一场说走就走旅行的第一步--关注随游！[亲亲][亲亲]我们相信旅行从分享开始，而你的旅行马上就从这里开始啦[勾引] 欢迎随时吐槽，打字不爽就致电010-58483692，小游一直在这里等你哦';
+    //const AUTO_RETURN_STR="您的消息我们已经收到";
 
     /*---------------------------------------------------*/
 
@@ -62,7 +69,7 @@ class WeChat {
      *
      */
 
-    const TEMPLATE_REMARK='巴别鱼国际教育祝你学习愉快!';
+    const TEMPLATE_REMARK='!';
 
 
 
@@ -156,6 +163,7 @@ class WeChat {
                                     %s
                                     </Articles>
                                     </xml> ";
+
 
 
     /**

@@ -15,9 +15,9 @@
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
-
+<script type="text/javascript" src="/assets/js/jquery.SuperSlide.2.1.1.js"></script>
 <style type="text/css">
-    .select2-container .select2-choice {
+    .select2-container .select2-choice {jquery.SuperSlide.2.1.1.js
         background-color: #eee;
         border-radius: 0px;
         font-size: 13px;
@@ -45,11 +45,47 @@
 <!--banner开始-->
 <div class="index-banner">
     <ul class="banners">
-        <li class="banner01"></li>
+        <li class="banner01">
+            <div class="w1200 clearfix">
+                <p class="p1">随游</p>
+                <p class="p2">让分享成为一种旅行方式</p>
+            </div>
+        </li>
+        <li class="banner02">
+            <div class="w1200 clearfix">
+                <p class="p1">微信新添定制功能</p>
+                <p class="p2">助你任性出游<a href="#wei">关注随游</a></p>
+
+
+            </div>
+        </li>
+        <li class="banner03">
+            <div class="w1200 clearfix">
+                <p class="p1">去意大利吧</p>
+                <p class="p2">边吃提拉米苏边看世博会</p>
+
+            </div>
+
+        </li>
+        <li class="banner04">
+            <div class="w1200 clearfix">
+                <p class="p0"><img src="/assets/images/index/b4-wenzi.png" width="411" height="172"></p>
+
+
+            </div>
+        </li>
     </ul>
-    <div class="serch">
-        <input type="text" value="" class="text1" id="search" placeholder="请输入您想去的国家或城市">
-        <input type="button" value="搜索" class="btn1" id="searchBtn">
+    <div class="banner-btn">
+        <a class="prev" href="javascript:void(0);"></a>
+        <a class="next" href="javascript:void(0);"></a>
+    </div>
+    <!--    <div class="hd"><ul></ul></div>    -->
+
+    <div class="serch-out">
+        <div class="serch">
+            <input type="text" value="" class="text1">
+            <input type="button" value="搜索" class="btn1">
+        </div>
     </div>
 </div>
 <!--banner结束-->
@@ -81,8 +117,30 @@
 
 <!--index-tuijian end-->
 
-
 <script type="text/javascript">
+    $(document).ready(function(){
+
+        $(".prev,.next").hover(function(){
+            $(this).stop(true,false).fadeTo("show",1);
+        },function(){
+            $(this).stop(true,false).fadeTo("show",1);
+        });
+
+        $(".index-banner").slide({
+            //titCell:".hd ul",
+            mainCell:".banners",
+            effect:"fold",
+            interTime:3500,
+            delayTime:500,
+            autoPlay:true,
+            autoPage:true,
+            trigger:"click"
+        });
+
+    });
+</script>
+<script type="text/javascript">
+
     var currentPage=1;
     $(document).ready(function(){
         loadTrip();

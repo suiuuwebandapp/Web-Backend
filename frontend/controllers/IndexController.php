@@ -56,6 +56,17 @@ class IndexController extends UnCController
 
     public function actionTest()
     {
+       /* for($i=0;$i<300;$i++)
+        {
+            $userBase = new UserBase();
+            $userBase->email = 'test'.$i."@qq.com";
+            $userBase->password = 'qwe123';
+            //$this->userBaseService->addUser($userBase);
+            $str=$userBase->email.'|'.'qwe123';
+            echo $str;
+            echo "<br>";
+        }*/
+
 
     }
 
@@ -124,8 +135,13 @@ class IndexController extends UnCController
                 //设置验证码 和 有效时长
                \Yii::$app->redis->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, $code);
                Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
-               $smsUtils = new SmsUtils();
-               $rst = $smsUtils->sendMessage($username,$areaCode, $code,SmsUtils::SEND_MESSAGE_TYPE_PASSWORD);
+               $rst = null;
+               if ($areaCode == "0086" || $areaCode == "+86") {
+                   $smsUtils = new SmsUtils();
+                   $rst = $smsUtils->sendPasswordSMS($username, $code);
+               } else {
+
+               }
                if(!empty($rst))
                {
                    echo json_encode(Code::statusDataReturn(Code::SUCCESS));
@@ -436,9 +452,13 @@ class IndexController extends UnCController
             //分割可能会有问题，测试阶段
             \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE, $phone . "-" . $areaCode . "-" . $code. "-" . $password);
             //调用发送短信接口 测试默认为成功
-            $smsUtils = new SmsUtils();
-            $rst = $smsUtils->sendMessage($phone, $areaCode,$code,SmsUtils::SEND_MESSAGE_TYPE_REGISTER);
+            $rst=array();
+            if ($areaCode == "0086" || $areaCode == "+86") {
+                $smsUtils = new SmsUtils();
+                $rst = $smsUtils->sendRegisterSMS($phone, $code);
+            } else {
 
+            }
             if ($rst['status'] == Code::SUCCESS) {
                 //设置手机定时器，控制发送频率
                 Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
@@ -660,9 +680,13 @@ class IndexController extends UnCController
         Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
         Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
 
-        $smsUtils = new SmsUtils();
-        $rst = $smsUtils->sendMessage($phone, $areaCode,$code,SmsUtils::SEND_MESSAGE_TYPE_REGISTER);
+        $rst = null;
+        if ($areaCode == "0086" || $areaCode == "+86") {
+            $smsUtils = new SmsUtils();
+            $rst = $smsUtils->sendRegisterSMS($phone, $code);
+        } else {
 
+        }
         echo json_encode($rst);
     }
 

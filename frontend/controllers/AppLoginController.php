@@ -171,8 +171,13 @@ class AppLoginController extends Controller{
         \Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
         \Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
 
-        $smsUtils = new SmsUtils();
-        $rst = $smsUtils->sendMessage($phone,$areaCode, $code,SmsUtils::SEND_MESSAGE_TYPE_PASSWORD);
+        $rst = null;
+        if ($areaCode == "0086" || $areaCode == "+86") {
+            $smsUtils = new SmsUtils();
+            $rst = $smsUtils->sendPasswordSMS($phone, $code);
+        } else {
+
+        }
         echo json_encode($rst);
 
 
