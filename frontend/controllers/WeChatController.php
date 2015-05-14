@@ -50,6 +50,10 @@ class WeChatController extends Controller
     //todo @test
     public function actionTest()
     {
+        $time = time();
+        $date = date("y-m-d H-i-s",$time);
+        $date_I = date("i");
+        echo $date;
         //var_dump( $this->getWechatUserInfo('oGfdst0AA7SAThQlEscjbHjbbzp8', true)); //关注的时候抓取用户信息
     }
 
@@ -66,10 +70,10 @@ class WeChatController extends Controller
             list($fromUsername, $toUsername, $keyword, $msgType, $objEvent, $objEventKey, $Label, $Location_X, $Location_Y, $Scale) = $this->getXmlMsg($postStr);
 
             //$logText = sprintf($this->HINT_LOGIN_TXT, $fromUsername);
-
-            $date_H = date("H");
-            $date_I = date("i");
             $time = time();
+            $date_H = date("H",$time);
+            $date_I = date("i",$time);
+
             $msgType_text = WeChat::MSGTYPE_TEXT;
             $msgType_news = WeChat::MSGTYPE_NEWS;
             $msgType_dkf = WeChat::MSGTYPE_DKF;
@@ -125,7 +129,7 @@ class WeChatController extends Controller
 
                     if ($keyword == '0') {
 
-                    }elseif($keyword=1){
+                    }elseif($keyword==1){
                         $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 1);
                     }
                     else {
@@ -135,6 +139,7 @@ class WeChatController extends Controller
                         ) {
                             $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::TIME_OUT_STRING);
                         }else{
+                            //$this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::ATTENTION_REPLY_STR);
                             //$this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_dkf,'');
                             //$this->actionSendMsg($fromUsername, $keyword);
                         }
@@ -412,6 +417,7 @@ class WeChatController extends Controller
     {
         $access_token =$this->readToken();
         $obj=$this->weChatSer->createMenuInfo($access_token);
+        var_dump($obj);
     }
     /**
      * 获取token校验信息
