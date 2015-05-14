@@ -40,6 +40,6 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
                 </span>
             </dd>
         </dl>
-        <p><a href="#" class="btn">结算</a><span>总价：<b><?=$orderInfo->totalPrice?></b></span></p>
+        <p><a href="/pay" target="_blank" class="btn">结算</a><span>总价：<b><?=$orderInfo->totalPrice?></b></span></p>
     </div>
 </div>

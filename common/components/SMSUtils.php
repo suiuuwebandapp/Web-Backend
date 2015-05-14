@@ -17,6 +17,16 @@ include_once("../../vendor/sms/SDK/CCPRestSDK.php");
 class SmsUtils
 {
 
+    /**
+     * 注册
+     */
+    const SEND_MESSAGE_TYPE_REGISTER=1;
+
+    /**
+     * 忘记密码
+     */
+    const SEND_MESSAGE_TYPE_PASSWORD=2;
+
     //主帐号
     private $accountSid;
 
@@ -41,6 +51,13 @@ class SmsUtils
     //验证码有效期
     private $validateTime;
 
+
+
+    private $foreignUsername;
+
+    private $foreignPassword;
+
+
     public function __construct()
     {
         $this->accountSid = \Yii::$app->params['sms_account_sid'];
@@ -49,6 +66,9 @@ class SmsUtils
         $this->serverIP = \Yii::$app->params['sms_account_server_ip'];
         $this->serverPort = \Yii::$app->params['sms_account_server_port'];
         $this->softVersion = \Yii::$app->params['sms_account_soft_version'];
+
+        $this->foreignUsername=\Yii::$app->params['sms_foreign_username'];
+        $this->foreignPassword=\Yii::$app->params['sms_foreign_password'];
 
         $this->validateTime = Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME / 60;//将秒转换为分钟
 
@@ -62,15 +82,22 @@ class SmsUtils
      * 发送模板短信
      * @param 手机号码集合 $to 手机号码集合 $to ,用英文逗号分开
      * @param $code
+     * @param $type
      * @return array|void
      */
-    public function sendRegisterSMS($to, $code)
+    private function sendChinaSMS($to, $code,$type)
     {
         // $datas 格式为数组 例如：array('Marry','Alon')，如不需替换请填 null
         try {
             $datas = [$code, $this->validateTime];
             //param 模板Id $tempId (测试为1)
-            $tempId = 1;
+            $tempId=1;
+            if($type==self::SEND_MESSAGE_TYPE_REGISTER){
+                $tempId = 1;
+            }else if($type==self::SEND_MESSAGE_TYPE_PASSWORD){
+                $tempId = 1;
+            }
+
             // 发送模板短信
             $result = $this->rest->sendTemplateSMS($to, $datas, $tempId);
             if ($result == NULL) {
@@ -88,38 +115,117 @@ class SmsUtils
         }
 
     }
+
+
     /**
-     * 发送找回密码短信
-     * @param 手机号码集合 $to 手机号码集合 $to ,用英文逗号分开
+     * 海外验证码发送
+     * @param $phone
+     * @param $areaCode
      * @param $code
-     * @return array|void
+     * @param $type
+     * @return array
      */
-    public function sendPasswordSMS($to, $code)
+    private function sendForeignMessage($phone,$areaCode,$code,$type)
     {
-        // $datas 格式为数组 例如：array('Marry','Alon')，如不需替换请填 null
-        try {
-            $datas = [$code, $this->validateTime];
-            //param 模板Id $tempId (测试为1)
-            $tempId = 1;
-            // 发送模板短信
-            $result = $this->rest->sendTemplateSMS($to, $datas, $tempId);
-            if ($result == NULL) {
-                return Code::statusDataReturn(Code::FAIL, "result error!");
+        $message="";
+        if($type==self::SEND_MESSAGE_TYPE_REGISTER){
+            $message ="Thank you for registering with Suiuu, your verification code is ".$code;
+        }else if($type==self::SEND_MESSAGE_TYPE_PASSWORD){
+            $message ="Password Code Is ".$code;
+        }
+        $data = array (
+            'src' => $this->foreignUsername, // 用户名   与登录用户名相同
+            'pwd' => $this->foreignPassword, // 你的密码 与登录用户密码相同
+            'ServiceID' => 'SEND',
+            'dest' => $areaCode.$phone, // 你的目的号码 手机号码之间必须用英文逗号分割,最后一个手机号后不加逗号, 群发时一次最多可以同时提交100个号码
+            'codec' => '3', // 编码  8 (BigEndianUnicode)是中文、韩文、日文等 ，3 (ISO-8859-1)是英文、拉丁文0:(ASCII)
+            'msg' => $this->encodeHexStr(3,$message)
+        );
+        try{
+            $uri = "http://210.51.190.233:8085/mt/mt3.ashx";
+            $ch = curl_init();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );
+            curl_setopt ( $ch, CURLOPT_POST, 1 );
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );
+
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            if($return>0){
+                return Code::statusDataReturn(Code::SUCCESS);
+            }else{
+                return Code::statusDataReturn(Code::FAIL,$return);
             }
-            if ($result->statusCode != 0) {
-                return Code::statusDataReturn(Code::FAIL, $result->statusMsg);
-            } else {
-                // 获取返回信息
-                $smsMessage = $result->TemplateSMS;
-                return Code::statusDataReturn(Code::SUCCESS,'success');
+        }catch (Exception $e){
+            return Code::statusDataReturn(Code::FAIL,$e);
+        }
+
+
+
+
+
+    }
+
+    /**
+     * 编码
+     * @param $dataCoding
+     * @param $realStr
+     * @return string
+     */
+    private function encodeHexStr($dataCoding, $realStr){
+
+        if ($dataCoding == 15)
+        {
+            return strtoupper(bin2hex(iconv('UTF-8', 'GBK', $realStr)));
+        }
+        else if ($dataCoding == 3)
+        {
+            return strtoupper(bin2hex(iconv('UTF-8', 'ISO-8859-1', $realStr)));
+        }
+        else if ($dataCoding == 8)
+        {
+            return strtoupper(bin2hex(iconv('UTF-8', 'UCS-2', $realStr)));
+        }
+        else
+        {
+            return strtoupper(bin2hex(iconv('UTF-8', 'ASCII', $realStr)));
+        }
+    }
+
+
+    /**
+     * 发送短信统一入口
+     * @param $phone
+     * @param $areaCode
+     * @param $code
+     * @param $type
+     * @return array|void
+     * @throws Exception
+     */
+    public function sendMessage($phone,$areaCode,$code,$type)
+    {
+        try{
+            if(empty($phone)){
+                throw new Exception("Phone Is Not Allow Empty");
             }
-        } catch (Exception $e) {
-            return Code::statusDataReturn(Code::FAIL, $e->getName());
+            if(empty($areaCode)){
+                throw new Exception("AreaCode Is Not Allow Empty");
+            }
+            if(empty($code)){
+                throw new Exception("Code Is Not Allow Empty");
+            }
+
+            $areaCode=trim(str_replace("+","",$areaCode));
+            if($areaCode=='0086'||$areaCode=='86'){
+                return $this->sendChinaSMS($phone,$code,$type);
+            }else{
+                return $this->sendForeignMessage($phone,$areaCode,$code,$type);
+            }
+        }catch (Exception $e){
+            return Code::statusDataReturn(Code::FAIL,$e);
         }
 
     }
-    //Demo调用
-    //sendTemplateSMS("手机号码","内容数据","模板Id");
-
 }
 
