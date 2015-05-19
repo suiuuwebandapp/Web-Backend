@@ -303,7 +303,7 @@ class ViewTripController extends UnCController{
         try {
             if(empty($this->userObj))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再发布评论'));
+                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再点赞'));
                 return;
             }
             $userSign =$this->userObj->userSign;

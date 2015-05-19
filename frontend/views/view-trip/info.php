@@ -722,7 +722,7 @@
             Main.showTip('已经点赞');
             return;
         }
-        $(obj).attr('class','picon zan active');
+        $(obj).addClass('active');
         $.ajax({
             type: 'post',
             url: '/view-trip/add-support',
@@ -738,16 +738,15 @@
                 Main.showTip("系统异常。。。");
             },
             success: function (data) {
-                var obj=eval('('+data+')');
-                if(obj.status==1)
+                var data=eval('('+data+')');
+                if(data.status==1)
                 {
-
                     //Main.showTip("发表成功。。。");
                     getComment(page);
                 }else
                 {
-                    Main.showTip(obj.data);
-                    $(obj).attr('class','picon zan');
+                    Main.showTip(data.data);
+                    $(obj).removeClass('active');
 
                 }
             }
