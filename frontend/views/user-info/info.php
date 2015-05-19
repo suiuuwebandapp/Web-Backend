@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" />
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 
-<style>
+<style type="text/css">
     .queue{
         display: none;
     }
@@ -116,6 +116,14 @@
         top: 5px;
         right: 5px;
     }
+
+    .no_result{
+        margin-top: 50px;
+    }
+    .shield_btn{
+        font-size: 12px;
+        padding-left:16px;
+    }
 </style>
 <input type="hidden" id="lon"/>
 <input type="hidden" id="lat"/>
@@ -149,14 +157,14 @@
         <li><a href="javascript:;" id="myComment">发言</a></li>
         <li><a href="javascript:;" id="myCollect">收藏</a></li>
         <li><a href="javascript:;" id="myOrderManager">我的预定</a></li>
-        <li><a href="javascript:;#" id="tripManager">随游管理</a></li>
+        <li><a href="javascript:;" id="tripManager">随游管理</a></li>
         <li><a href="javascript:;" id="userInfo">个人资料</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
     <div class="tab-div myEmail TabCon clearfix" style="display:block">
         <ul class="emailNav recTit">
             <li><a href="javascript:;"  class="active">私信</a></li>
-            <li><a href="javascript:;">设置</a></li>
+            <li><a href="javascript:;" id="userMessageSetting">设置</a></li>
         </ul>
         <div class="emailCon past01 slideRec" style="display:block;">
             <div class="left" id="messageSessionDiv">
@@ -183,30 +191,28 @@
         </div>
         <div class="emailCon past03 slideRec">
             <div class="con clearfix">
-
-                <h2>屏蔽设置</h2>
-                <div class="sets">
-                    <input type="text" class="text1" placeholder="输入要屏蔽人的用户名/昵称">
-                    <input type="button" value="屏蔽" class="btn">
-                </div>
                 <p>被屏蔽用户</p>
-                <div class="setd">
-                    <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                    <input type="button" value="取消屏蔽" class="btn">
-                </div>
-                <div class="setd">
-                    <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                    <input type="button" value="取消屏蔽" class="btn">
-                </div>
-                <div class="setd">
-                    <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                    <input type="button" value="取消屏蔽" class="btn">
+                <div id="">
+                    <div class="setd">
+                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
+                        <input type="button" value="取消屏蔽" class="btn">
+                    </div>
+                    <div class="setd">
+                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
+                        <input type="button" value="取消屏蔽" class="btn">
+                    </div>
+                    <div class="setd">
+                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
+                        <input type="button" value="取消屏蔽" class="btn">
+                    </div>
                 </div>
                 <h2>隐私设置</h2>
-                <input type="radio" id="all" name="s">
-                <label for="all">所有人都可以给我发私信（不包括你屏蔽的用户）</label>
-                <input type="radio" id="None" name="s">
-                <label for="None">不接受任何人的收信（选择此项后，您依然可以收到系统自动发送的通知私信）</label>
+                <input type="radio" id="user_message_setting_all" name="user_message_setting_status"
+                       value="<?=\common\entity\UserMessageSetting::USER_MESSAGE_SETTING_STATUS_ALLOW_ALL?>" style="opacity: 0;float: left">
+                <label for="user_message_setting_all">所有人都可以给我发私信（不包括你屏蔽的用户）</label>
+                <input type="radio" id="user_message_setting_none" name="user_message_setting_status"
+                       value="<?=\common\entity\UserMessageSetting::USER_MESSAGE_SETTING_STATUS_REFUSE_ALL?>" style="opacity: 0;float: left">
+                <label for="user_message_setting_none">不接受任何人的收信（选择此项后，您依然可以收到系统自动发送的通知私信）</label>
             </div>
 
         </div>
@@ -220,9 +226,7 @@
             <ol id="spage"></ol>
         </div>
     </div>
-
     <!-------------TabCon3-收藏------------->
-
     <div class="tab-div shoucang TabCon clearfix">
         <ul class="clearfix" id="myCollectList">
         </ul>
@@ -242,16 +246,21 @@
     <!-------------TabCon5-随游管理------------->
     <div class="tab-div mySuiyou TabCon clearfix">
         <ul class="myOderNav tabTitle">
-            <li><a href="#" class="active" id="unConfirmOrderManager">随游订单</a></li>
-            <li><a href="#" id="myTripManager">我的随游</a></li>
-            <li><a href="#" id="myJoinTripManager">我加入的随游</a></li>
+            <li><a href="javascript:;" class="active" id="unConfirmOrderManager">待接订单</a></li>
+            <li><a href="javascript:;" id="myPublisherOrder">随游订单</a></li>
+            <li><a href="javascript:;" id="myTripManager">我的随游</a></li>
+            <li><a href="javascript:;" id="myJoinTripManager">我加入的随游</a></li>
         </ul>
         <div class="myOder past01 tabCon" style="display:block;" id="unConfirmList">
         </div>
-        <div class="myOder past02 tabCon" id="myTripList">
+        <div class="myOder past02 tabCon" id="myPublisherOrderList">
         </div>
-        <div class="myOder past03 tabCon" id="myJoinTripList">
+        <div class="myOder past03 tabCon" id="myTripList">
         </div>
+        <div class="myOder past04 tabCon" id="myJoinTripList">
+        </div>
+
+
     </div>
 
     <!-------------TabCon6-个人资料------------>
@@ -347,13 +356,10 @@
                                     if($('.wdzl .shenfen #shenfen05').prop("checked")){
                                         $('.wdzl .shenfen input.other').css('display','block')
                                     }else{
-
                                         $('.wdzl .shenfen input.other').css('display','none')
-
                                     }
                                 });
-                            })
-
+                            });
                         </script>
                     </div>
                     <p><span>个人简介:</span><span class="form_tip" id="infoTip"></span></p>

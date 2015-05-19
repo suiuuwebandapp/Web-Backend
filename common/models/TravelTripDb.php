@@ -56,7 +56,19 @@ class TravelTripDb extends ProxyDb{
 
     }
 
-
+    /**
+     * 获取随游列表
+     * @param $page
+     * @param $title
+     * @param $countryId
+     * @param $cityId
+     * @param $peopleCount
+     * @param $startPrice
+     * @param $endPrice
+     * @param $tag
+     * @param $status
+     * @return Page|null
+     */
     public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$status)
     {
 
@@ -103,7 +115,6 @@ class TravelTripDb extends ProxyDb{
 
         return $this->find($page);
     }
-
 
     /**
      * 全文检索根据列表
@@ -178,7 +189,6 @@ class TravelTripDb extends ProxyDb{
         $command->execute();
     }
 
-
     /**
      * 修改随游
      * @param TravelTrip $travelTrip
@@ -220,7 +230,6 @@ class TravelTripDb extends ProxyDb{
         $command->execute();
     }
 
-
     /**
      * 改变随游状态
      * @param $tripId
@@ -258,7 +267,6 @@ class TravelTripDb extends ProxyDb{
 
         return $command->queryOne();
     }
-
 
     /**
      * 添加随游照片
@@ -318,7 +326,6 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":tripId", $tripId);
         return $command->queryAll();
     }
-
 
     /**
      * 添加随游阶梯价格
@@ -380,7 +387,6 @@ class TravelTripDb extends ProxyDb{
         return $command->queryAll();
     }
 
-
     /**
      * 添加随游中的随友关联
      * @param TravelTripPublisher $travelTripPublisher
@@ -404,6 +410,7 @@ class TravelTripDb extends ProxyDb{
 
         $command->execute();
     }
+
     /**
      * 根据随游批量删除随友关联
      * @param $tripId
@@ -440,7 +447,6 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryAll();
     }
-
 
     /**
      * 添加随游中景区
@@ -502,7 +508,6 @@ class TravelTripDb extends ProxyDb{
         return $command->queryAll();
     }
 
-
     /**
      * 添加随游中的专项服务
      * @param TravelTripService $travelTripService
@@ -563,7 +568,6 @@ class TravelTripDb extends ProxyDb{
         return $command->queryAll();
     }
 
-
     /**
      * 添加随游申请
      * @param TravelTripApply $travelTripApply
@@ -608,8 +612,6 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":applyId", $applyId, PDO::PARAM_INT);
         return $command->queryOne();
     }
-
-
 
     /**
      * 改变申请加入随游状态
@@ -656,7 +658,6 @@ class TravelTripDb extends ProxyDb{
         $this->findListBySql();
     }
 
-
     /**
      * 删除随友关联
      * @param TravelTripPublisher $travelTripPublisher
@@ -676,7 +677,6 @@ class TravelTripDb extends ProxyDb{
 
         $command->execute();
     }
-
 
     /**
      * 获取我的随游列表
@@ -751,7 +751,6 @@ class TravelTripDb extends ProxyDb{
         return $this->findListBySql();
     }
 
-
     /**
      * 获取随友申请加入列表
      * @param $tripId
@@ -774,6 +773,14 @@ class TravelTripDb extends ProxyDb{
         $command->bindValue(":status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT, PDO::PARAM_INT);
 
         return $command->queryAll();
+    }
+
+
+    public function getPublisherOrderList($publisherId)
+    {
+        $sql=sprintf("
+            SELECT * FROM
+        ");
     }
 
 

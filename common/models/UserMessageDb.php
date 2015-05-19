@@ -12,6 +12,7 @@ namespace common\models;
 
 use common\entity\UserMessage;
 use common\entity\UserMessageSession;
+use common\entity\UserMessageSetting;
 use yii\db\mssql\PDO;
 
 class UserMessageDb extends ProxyDb
@@ -234,6 +235,75 @@ class UserMessageDb extends ProxyDb
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
 
         $command->execute();
+    }
+
+
+    /**
+     * 添加用户消息设置
+     * @param UserMessageSetting $userMessageSetting
+     * @throws \yii\db\Exception
+     */
+    public function addUserMessageSetting(UserMessageSetting $userMessageSetting)
+    {
+        $sql=sprintf("
+            INSERT INTO user_message_setting
+            (
+              userId,status,shieldIds
+            )
+            VALUES
+            (
+              :userId,:status,:shieldIds
+            )
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userId", $userMessageSetting->userId, PDO::PARAM_STR);
+        $command->bindParam(":status", $userMessageSetting->status, PDO::PARAM_INT);
+        $command->bindParam(":shieldIds", $userMessageSetting->shieldIds, PDO::PARAM_STR);
+
+        $command->execute();
+
+    }
+
+
+    /**
+     * 更新用户消息设置
+     * @param UserMessageSetting $userMessageSetting
+     * @throws \yii\db\Exception
+     */
+    public function updateUserMessageSetting(UserMessageSetting $userMessageSetting)
+    {
+        $sql=sprintf("
+            UPDATE user_message_setting SET
+            status=:status,shieldIds=:shieldIds
+            WHERE userId=:userId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userId", $userMessageSetting->userId, PDO::PARAM_STR);
+        $command->bindParam(":status", $userMessageSetting->status, PDO::PARAM_INT);
+        $command->bindParam(":shieldIds", $userMessageSetting->shieldIds, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
+
+    /**
+     * 获取用户消息设置列表
+     * @param $userId
+     * @throws \yii\db\Exception
+     */
+    public function findUserMessageSettingByUserId($userId)
+    {
+        $sql=sprintf("
+            SELECT * FROM user_message_setting
+            WHERE userId=:userId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userId", $userId, PDO::PARAM_STR);
+
+        return $command->queryOne();
+
     }
 
 

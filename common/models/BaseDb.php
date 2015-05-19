@@ -58,4 +58,9 @@ class BaseDb {
         }
     }
 
+    public function getLastInsertId()
+    {
+        $this->getConnection()->lastInsertIDn;
+    }
+
 }

@@ -12,8 +12,10 @@ namespace frontend\services;
 
 use common\entity\UserMessage;
 use common\entity\UserMessageSession;
+use common\entity\UserMessageSetting;
 use common\models\BaseDb;
 use common\models\UserMessageDb;
+use frontend\models\UserBaseDb;
 use yii\base\Exception;
 
 class UserMessageService extends BaseDb
@@ -185,9 +187,135 @@ class UserMessageService extends BaseDb
     }
 
 
+    /**
+     * 获取用户系统消息设置
+     * @param $userId
+     * @return array|bool|UserMessageSetting|mixed|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function findUserMessageSettingByUserId($userId)
+    {
+        if(empty($userId)){
+            throw new Exception("Invalid UserId");
+        }
+        $messageSetting=null;
+        try{
+            $conn=$this->getConnection();
+            $this->userMessageDb=new UserMessageDb($conn);
+            //判断是否存在消息设置，如果没有，添加默认
+            $messageSetting=$this->userMessageDb->findUserMessageSettingByUserId($userId);
+            $messageSetting=$this->arrayCastObject($messageSetting,UserMessageSetting::class);
+            if($messageSetting==null){
+                $messageSetting=new UserMessageSetting();
+                $messageSetting->userId=$userId;
+                $messageSetting->shieldIds="";
+                $messageSetting->status=UserMessageSetting::USER_MESSAGE_SETTING_STATUS_ALLOW_ALL;//默认接收所有消息
+                $this->userMessageDb->addUserMessageSetting($messageSetting);
+                $messageSetting->settingId=$this->getLastInsertId();
+            }
+            $userBaseDb=new UserBaseDb($conn);
+            if(!empty($messageSetting->shieldIds)){
+                $shieldArr=explode(",",$messageSetting->shieldIds);
+                $shieldIds="'".implode("','",$shieldArr)."'";
+                $userBaseList=$userBaseDb->getUserBaseByUserIds($shieldIds);
+                $messageSetting->setUserBaseList($userBaseList);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $messageSetting;
+    }
 
 
+    /**
+     * 更新用户设置
+     * @param UserMessageSetting $userMessageSetting
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function updateUserMessageSetting(UserMessageSetting $userMessageSetting)
+    {
+        try{
+            $conn=$this->getConnection();
+            $this->userMessageDb=new UserMessageDb($conn);
+            $this->userMessageDb->updateUserMessageSetting($userMessageSetting);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 
 
+    /**
+     * 添加用户屏蔽
+     * @param $userId
+     * @param $shieldId
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function addUserMessageShield($userId,$shieldId)
+    {
+        if(empty($userId)){
+            throw new Exception("Invalid UserId");
+        }
+        if(empty($shieldId)){
+            throw new Exception("Invalid ShieldId");
+        }
+        try{
+            $messageSetting=$this->findUserMessageSettingByUserId($userId);
+            $shieldIds=$messageSetting->shieldIds;
+            $shieldIdArr=explode(",",$shieldIds);
+            if(!in_array($shieldId,$shieldIdArr)){
+                $shieldIdArr[]=$shieldId;
+                $shieldIds=implode(",",$shieldIdArr);
+                $conn=$this->getConnection();
+                $this->userMessageDb=new UserMessageDb($conn);
+                $messageSetting->shieldIds=$shieldIds;
+                $this->userMessageDb->updateUserMessageSetting($messageSetting);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    /**
+     * 删除用户屏蔽
+     * @param $userId
+     * @param $shieldId
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function deleteUserMessageShield($userId,$shieldId)
+    {
+        if(empty($userId)){
+            throw new Exception("Invalid UserId");
+        }
+        if(empty($shieldId)){
+            throw new Exception("Invalid ShieldId");
+        }
+        try{
+            $messageSetting=$this->findUserMessageSettingByUserId($userId);
+            $shieldIds=$messageSetting->shieldIds;
+            $shieldIdArr=explode(",",$shieldIds);
+            if(in_array($shieldId,$shieldIdArr)){
+                $shieldIdArr=array_splice($shieldIdArr,array_search($shieldIdArr,$shieldId));
+                $shieldIds=implode(",",$shieldIdArr);
+                $conn=$this->getConnection();
+                $this->userMessageDb=new UserMessageDb($conn);
+                $messageSetting->shieldIds=$shieldIds;
+                $this->userMessageDb->updateUserMessageSetting($messageSetting);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 
 }

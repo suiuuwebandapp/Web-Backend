@@ -75,6 +75,9 @@ class UserMessageController extends  CController{
         }
     }
 
+    /**
+     * 获取用户未读消息会话
+     */
     public function actionUnReadMessageSessionList()
     {
         try{
@@ -118,5 +121,34 @@ class UserMessageController extends  CController{
     }
 
 
+    /**
+     * 获取用户消息设定
+     */
+    public function actionFindUserMessageSetting()
+    {
+        try{
+            $userSign=$this->userObj->userSign;
+            $userMessageSetting=$this->userMessageService->findUserMessageSettingByUserId($userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userMessageSetting));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
 
+    /**
+     * 更新用户私信设置
+     */
+    public function actionUpdateUserMessageStatus()
+    {
+        $status=\Yii::$app->getRequest()->post("status");
+        $userSign=$this->userObj->userSign;
+        try{
+            $userMessageSetting=$this->userMessageService->findUserMessageSettingByUserId($userSign);
+            $userMessageSetting->status=$status;
+            $this->userMessageService->updateUserMessageSetting($userMessageSetting);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
 }

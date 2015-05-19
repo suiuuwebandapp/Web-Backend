@@ -160,7 +160,6 @@ class UserBaseDb extends ProxyDb
         return $command->queryOne();
     }
 
-
     /**
      * 查找用户（根据用户标示）
      * @param $userSign
@@ -209,6 +208,7 @@ class UserBaseDb extends ProxyDb
 
         return $command->queryOne();
     }
+
     /**
      * 根据UserSign获取用户基本信息
      * @param $userSign
@@ -256,6 +256,7 @@ class UserBaseDb extends ProxyDb
 
         return $command->queryOne();
     }
+
     /**
      * 根据openId 接入 类型获取用户Id
      * @param $openId
@@ -277,7 +278,6 @@ class UserBaseDb extends ProxyDb
 
         return $command->queryOne();
     }
-
 
     /**
      * 添加用户接入关联
@@ -303,7 +303,6 @@ class UserBaseDb extends ProxyDb
 
         $command->execute();
     }
-
 
     /**
      * 更新用户基本信息
@@ -367,7 +366,6 @@ class UserBaseDb extends ProxyDb
         return $command->execute();
     }
 
-
     /**
      * 更新用户头像
      * @param $userId
@@ -386,6 +384,25 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":userId", $userId, PDO::PARAM_INT);
 
         $command->execute();
+    }
+
+    /**
+     * 批量查找用户基本信息
+     * @param $userIds
+     */
+    public function getUserBaseByUserIds($userIds)
+    {
+        $sql=sprintf("
+            SELECT nickname,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,userSign,isPublisher,
+            cityId,countryId,lon,lat,profession
+            FROM user_base
+            WHERE userSign in (".$userIds.");
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+
+        $command->queryAll();
+
     }
 
 
