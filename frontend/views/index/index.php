@@ -83,8 +83,8 @@
 
     <div class="serch-out">
         <div class="serch">
-            <input type="text" value="" class="text1">
-            <input type="button" value="搜索" class="btn1">
+            <input type="text" value="" class="text1" id="search">
+            <input type="button" value="搜索" class="btn1"  id="searchBtn">
         </div>
     </div>
 </div>
