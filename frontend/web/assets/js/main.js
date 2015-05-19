@@ -293,7 +293,9 @@ var OrderStatus= {
     'USER_ORDER_STATUS_REFUND_WAIT': 4,
     'USER_ORDER_STATUS_REFUND_SUCCESS': 5,
     'USER_ORDER_STATUS_PLAY_SUCCESS': 6,
-    'USER_ORDER_STATUS_PLAY_FINISH': 7
+    'USER_ORDER_STATUS_PLAY_FINISH': 7,
+    'USER_ORDER_STATUS_REFUND_VERIFY':8,
+    'USER_ORDER_STATUS_REFUND_FAIL':9
 };
 
 /*******************************************************************************

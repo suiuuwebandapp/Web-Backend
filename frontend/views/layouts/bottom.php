@@ -73,8 +73,16 @@
     <p>随游非常认真地对待随友取消订单</p>
     <p>我们强烈建议您不要取消订单，因为取消预定会给其他用户造成很大不便。</p>
     <p>请在随游网站上主动联系预订者，解释您取消订单的原因</p>
-    <textarea>请填写取消原因</textarea>
+    <input id="show_message_cancel_order_id" type="hidden"/>
+    <textarea placeholder="请填写取消原因" id="show_order_message"></textarea>
     <p class="blue">点击确认后订单将会立即取消，随游的工作人员会在稍后联系您</p>
-    <a href="###" class="btn">确认取消</a>
-
+    <a href="javascript" class="btn">确认取消</a>
+</div>
+<!-----------取消订单弹层--------------->
+<div id="showRefundDiv" class="scancelTip screens" style="display: none">
+    <p>请填写您的退款原因</p>
+    <input id="show_message_refund_order_id" type="hidden"/>
+    <textarea placeholder="请填写退款原因" id="show_refund_message"></textarea>
+    <p class="blue">点击确认后请耐心等待审核，随游的工作人员会在稍后同您联系</p>
+    <a href="javascript:refundOrderByMessage();" class="btn">提交申请</a>
 </div>

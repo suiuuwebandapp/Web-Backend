@@ -81,7 +81,7 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '起始时间不正确']);
             return;
         }
-        if(strtotime($beginDate)<strtotime(date('y-M-d'),time())){
+        if(strtotime($beginDate)<time()){
             return $this->redirect(['/result', 'result' => '无效的出行日期']);
         }
         if(strtotime($beginDate)==strtotime(date('y-M-d'),time())){
@@ -100,7 +100,7 @@ class UserOrderController extends  CController{
 
             $orderTripInfoJson=json_encode($travelInfo);//订单详情
             $selectServiceList=[];//附加服务list
-            $servicePrice="";//附加服务价格
+            $servicePrice=0;//附加服务价格
             $basePrice=$tripInfo['basePrice'];
 
 
@@ -255,6 +255,113 @@ class UserOrderController extends  CController{
 
     }
 
+
+    /**
+     * 尚未接单情况，直接取消订单
+     * @return string
+     */
+    public function actionCancelOrder()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+
+        try{
+            $orderInfo=$this->userOrderService->findOrderByOrderId($orderId);
+            if(empty($orderInfo)){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+            }
+            if($orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"该订单目前无法直接取消"));
+            }
+            if($orderInfo->userId!=$this->userObj->userSign){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"您没有权限取消此订单"));
+            }
+            $this->userOrderService->changeOrderStatus($orderInfo->orderNumber,UserOrderInfo::USER_ORDER_STATUS_CANCELED);
+
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,"取消订单失败"));
+        }
+
+    }
+
+
+    /**
+     * 订单申请退款
+     * @return string
+     */
+    public function actionRefundOrder()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+
+        try{
+            $orderInfo=$this->userOrderService->findOrderByOrderId($orderId);
+            if(empty($orderInfo)){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+            }
+            if($orderInfo->userId!=$this->userObj->userSign){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"您没有权限申请退款"));
+            }
+            if($orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"订单暂时无法申请退款"));
+            }
+            $this->userOrderService->changeOrderStatus($orderInfo->orderNumber,UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT);
+
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
+        }
+    }
+
+    /**
+     * 订单在已接单情况下申请退款
+     * @return string
+     */
+    public function actionRefundOrderByMessage()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+        $message=trim(\Yii::$app->request->post("message", ""));
+
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($message)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请填写退款申请"));
+        }
+
+        try{
+            $this->userOrderService->userRefundOrder($this->userObj->userSign,$orderId,$message);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
+        }
+    }
+
+
+    /**
+     * 用户删除订单
+     * @return string
+     */
+    public function actionDeleteOrder()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        try{
+            $this->userOrderService->deleteOrderInfo($this->userObj->userSign,$orderId);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
+        }
+    }
 
 
 

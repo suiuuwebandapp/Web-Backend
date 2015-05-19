@@ -71,6 +71,8 @@ class Code
     const TRAVEL_TRIP_TAG_PREFIX='T_T_T_P';
     const USER_COMMENT_SUPPORT='USER_COMMENT_SUPPORT';
 
+    const USER_ORDER_PAY_STATS='U_O_P_S';//用户订单支付状态 1.完成 0.未完成
+
 
     /**
      * 异常信息（后台）

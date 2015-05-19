@@ -301,7 +301,7 @@ class IndexController extends UnCController
                 }
             }
 
-        } else if (empty($username) || strlen($username) > 20 || strlen($username) < 5) {
+        } else if (empty($username) || strlen($username) > 50 || strlen($username) < 5) {
             $errors[] = "用户名格式不正确";
         } else if (empty($password) || strlen($password) > 20 || strlen($password) < 5) {
             $errors[] = "密码格式不正确";

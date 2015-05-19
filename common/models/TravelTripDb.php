@@ -10,6 +10,7 @@
 namespace common\models;
 
 
+use backend\components\Page;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripPicture;
@@ -21,6 +22,39 @@ use yii\db\mssql\PDO;
 
 class TravelTripDb extends ProxyDb{
 
+
+    /**
+     * 获取推荐随游
+     * @param Page $page
+     * @param $countryId
+     * @param $cityId
+     * @return Page|null
+     */
+    public function getRelateRecommendTrip(Page $page,$countryId,$cityId)
+    {
+        $sql=sprintf("
+            FROM travel_trip
+            WHERE 1=1
+        ");
+        $sql.=" AND status=:status";
+        $this->setParam("status",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+        if(!empty($countryId)&&!empty($cityId)){
+            $sql.=" AND (countryId =:countryId or cityId=:cityId) ";
+            $this->setParam("cityId",$cityId);
+            $this->setParam("countryId",$countryId);
+        }else if(!empty($countryId)){
+
+            $sql.=" AND countryId =:countryId";
+            $this->setParam("countryId",$countryId);
+        }else if(!empty($cityId)){
+            $sql.=" AND cityId =:cityId";
+            $this->setParam("cityId",$cityId);
+        }
+
+        $this->setSql($sql);
+        return $this->find($page);
+
+    }
 
 
     public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$status)

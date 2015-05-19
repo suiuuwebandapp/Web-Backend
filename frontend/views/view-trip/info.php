@@ -127,10 +127,11 @@
                 </div>
             </div>
 
-            <?php if($isOwner){?>
+            <?php if($isOwner&&count($travelInfo['publisherList'])>1){?>
             <div class="newsLists clearfix" id="publisherList">
                 <h2 class="title">随游处理</h2>
                 <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
+                    <?php if($publisherInfo['publisherId']==$travelInfo['info']['createPublisherId']){continue;} ?>
                     <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">
                         <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
                         <ul class="clearfix">
@@ -252,45 +253,23 @@
             <p>基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
             <input id="toBuy" type="button" value="购买路线" class="web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
             <input id="toApply" type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-            <div class="web-tuijian">
-                <h4>日本京都奈良公园一日游</h4>
-                <img src="/assets/images/23.png" alt="" class="pic">
-                <p class="xing">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                </p>
-                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
-                <span>总价:<a>1234345</a></span>
-            </div>
-            <div class="web-tuijian">
-                <h4>日本京都奈良公园一日游</h4>
-                <img src="/assets/images/23.png" alt="" class="pic">
-                <p class="xing">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                </p>
-                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
-                <span>总价:<a>1234345</a></span>
-            </div><div class="web-tuijian">
-                <h4>日本京都奈良公园一日游</h4>
-                <img src="/assets/images/23.png" alt="" class="pic">
-                <p class="xing">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start1.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                    <img src="/assets/images/start2.fw.png" width="13" height="13">
-                </p>
-                <div>奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽奈良公园位于街的东边，东西长4公里、南北宽</div>
-                <span>总价:<a>1234345</a></span>
-            </div>
-
+            <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
+                <?php foreach ($relateRecommend as $trip) {?>
+                <div class="web-tuijian">
+                    <h4><?=strlen($trip['title']>10?substr($trip['title'],0,10)."...":$trip['title'])?></h4>
+                    <img src="<?=$trip['titleImg']?>" alt="" class="pic">
+                    <p class="xing">
+                        <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                        <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                        <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                        <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                        <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                    </p>
+                    <div><?=strlen($trip['intro']>50?substr($trip['intro'],0,50)."...":$trip['intro'])?></div>
+                    <span>基础价格：<a><?=$trip['basePrice']?></a> 人/次</span>
+                </div>
+                <?php } ?>
+            <?php } ?>
         </div>
     </div>
 </div>
@@ -311,6 +290,7 @@
     var serviceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE;?>';
     var userPublisherId='<?= $this->context->userPublisherObj!=null?$this->context->userPublisherObj->userPublisherId:''?>';
     var userId='<?= $this->context->userObj!=null?$this->context->userObj->userSign:''?>';
+    var isOwner='<?=$isOwner;?>';
     $(document).ready(function(){
         $('#startTime').timepicki({
             format_output: function(tim, mini, meri) {
@@ -352,8 +332,14 @@
             }
             $("html,body").animate({scrollTop: $("#buyTrip").offset().top-30}, 500);
         });
+        if(isOwner==1){
 
+        }
         $("#addOrder").bind("click",function(){
+            if(isOwner==1){
+                Main.showTip("您无法购买自己的随游哦~");
+                return;
+            }
             var peopleCount=$("#peopleCount").val();
             var tripId=$("#tripId").val();
             var beginDate=$("#beginTime").val();
@@ -478,6 +464,7 @@
 
         var tripTime=$("#tripTime").val();
         var allPrice=0;
+        var stepPriceFlag=false;
 
         if(peopleCount==''||peopleCount==0){
             return;
@@ -491,16 +478,21 @@
             return;
         }
         //判断有没有阶梯价格
-        var stepPriceList=eval("("+stepPriceJson+")");
+        var stepPriceList=[];
+        if(stepPriceJson!=''){
+            stepPriceList=eval("("+stepPriceJson+")");
+        }
         if(stepPriceList.length>0){
             for(var i=0;i<stepPriceList.length;i++){
                 var stepPrice=stepPriceList[i];
                 if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
                     allPrice=parseInt(stepPrice['price'])*peopleCount;
+                    stepPriceFlag=true;
                     break;
                 }
             }
-        }else{
+        }
+        if(!stepPriceFlag){
             allPrice=basePrice*peopleCount;
         }
         //判断有没有附加服务
@@ -515,7 +507,6 @@
                 }
             }
         });
-
         $("#allPrice").html(allPrice);
     }
 

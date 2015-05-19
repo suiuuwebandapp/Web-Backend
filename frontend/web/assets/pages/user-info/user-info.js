@@ -1069,7 +1069,7 @@ function buildOrderList(list,type){
         serviceInfo=eval("("+serviceInfo+")");
         html+='<div class="orderList clearfix">';
         if(type==1){
-            html+='<img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish">'
+            html+='<img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteOrderInfo('+orderInfo.orderId+')">';
         }
         html+='<dl class="order clearfix">';
         html+='<dt class="title">';
@@ -1106,26 +1106,33 @@ function buildOrderList(list,type){
         html+='</dd>';
         html+='</dl>';
         if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PAY_WAIT){
-            html+='<p><a href="#" class="cancel">取消订单</a><a href="#" class="sure">支付</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<p><a href="javascript:cancelOrder('+orderInfo.orderId+');" class="cancel">取消订单</a><a href="/user-order/info?orderNumber='+orderInfo.orderNumber+'" class="sure">支付</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">待支付</span><span class="orange"></span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PAY_SUCCESS) {
-            html+='<p><a href="#" class="cancel">取消订单</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            //判断是否超过随游时长
+            html+='<p><a href="javascript:refundOrder('+orderInfo.orderId+');" class="cancel">申请退款</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">已支付</span><span class="orange">待接单</span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CONFIRM){
-            html+='<p><a href="#" class="cancel">申请退款</a><a href="#" class="sure">确认游玩</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<p><a href="javascript:showRefundWindow('+orderInfo.orderId+');" class="cancel">申请退款</a><a href="#" class="sure">确认游玩</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">已支付</span><span class="orange">已确认</span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CANCELED){
-            html+='<p><a href="#" class="cancel"></a><a href="#" class="sure"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
-            html+='<span class="blue">已取消</span><span class="orange"></span></p>';
+            html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<span class="blue">已取消</span><span class="orange">订单关闭</span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_REFUND_WAIT){
-            html+='<p><a href="#" class="cancel"></a><a href="#" class="sure"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">等待退款</span><span class="orange"></span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_REFUND_SUCCESS){
-            html+='<p><a href="#" class="cancel"></a><a href="#" class="sure"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">退款成功</span><span class="orange"></span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PLAY_SUCCESS||orderInfo.status==OrderStatus.USER_ORDER_STATUS_PLAY_FINISH){
             html+='<p><a href="#" class="cancel">去评价</a><a href="#" class="sure">分享</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">已完成</span><span class="orange"></span></p>';
+        }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_REFUND_VERIFY){
+            html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<span class="blue">退款审核中</span><span class="orange"></span></p>';
+        }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_REFUND_SUCCESS){
+            html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<span class="blue">已退款</span><span class="orange"></span></p>';
         }
         html+='</div>';
     }
@@ -1596,5 +1603,156 @@ function initMyComment(page){
             }
         }
     });
+}
 
+/**
+ * 用户取消订单
+ * @param orderId
+ */
+function cancelOrder(orderId){
+    if(!confirm("确定取消订单吗？")){
+        return;
+    }
+    if(orderId==''){
+        Main.showTip("无效的订单");
+        return;
+    }
+    $.ajax({
+        url: "/user-order/cancel-order",
+        type: "post",
+        data:{
+            orderId:orderId,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip('取消订单异常');
+        },
+        success: function(data){
+            var result=eval("("+data+")");
+            if(result.status==1){
+                Main.showTip('取消订单成功');
+                getUnFinishList();
+            }else{
+                Main.showTip('取消订单异常');
+            }
+        }
+    });
+}
+/**
+ * 未接单情况下直接申请退款
+ * @param orderId
+ */
+function refundOrder(orderId){
+    if(!confirm("确定申请退款吗？")){
+        return;
+    }
+    if(orderId==''){
+        Main.showTip("无效的订单");
+        return;
+    }
+    $.ajax({
+        url: "/user-order/refund-order",
+        type: "post",
+        data:{
+            orderId:orderId,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip('申请退款异常');
+        },
+        success: function(data){
+            var result=eval("("+data+")");
+            if(result.status==1){
+                Main.showTip('申请退款成功，请耐心等待审核');
+                getUnFinishList();
+            }else{
+                Main.showTip('申请退款异常');
+            }
+        }
+    });
+}
+
+/**
+ * 弹出退款申请窗口
+ * @param orderId
+ */
+function showRefundWindow(orderId){
+    if(orderId==''){
+        Main.showTip("无效的订单");
+        return;
+    }
+    $("#show_message_refund_order_id").val(orderId);
+    $("#show_refund_message").html("");
+    $("#showRefundDiv").show();
+    $("#myMask").show();
+}
+
+
+/**
+ * 已接单情况下填写退款申请退款
+ */
+function refundOrderByMessage(){
+    var message=$("#show_refund_message").val();
+    var orderId=$("#show_message_refund_order_id").val();
+    if(message==''){
+        Main.showTip("请填写退款申请");
+        return;
+    }
+    if(orderId==''){
+        Main.showTip("无效的订单");
+        return;
+    }
+
+    $.ajax({
+        url: "/user-order/refund-order-by-message",
+        type: "post",
+        data:{
+            orderId:orderId,
+            message:message,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip('取消订单异常');
+        },
+        success: function(data){
+            var result=eval("("+data+")");
+            if(result.status==1){
+                Main.showTip('取消订单成功');
+                $("#showRefundDiv").hide();
+                $("#myMask").hide();
+                getUnFinishList();
+            }else{
+                Main.showTip('取消订单异常');
+            }
+        }
+    });
+}
+
+
+
+function deleteOrderInfo(orderId){
+    if(!confirm("确定要删除订单吗？")){
+        return;
+    }
+    $.ajax({
+        url :'/user-order/delete-order',
+        type:'post',
+        data:{
+            orderId:orderId,
+            _csrf: $('input[name="_csrf"]').val()
+
+        },
+        error:function(){
+            Main.showTip("删除订单失败");
+        },
+        success:function(data){
+            var datas=eval('('+data+')');
+            if(datas.status==1){
+                Main.showTip("删除订单成功");
+                getFinishList();
+            }else{
+                Main.showTip("删除订单失败");
+            }
+        }
+    });
 }

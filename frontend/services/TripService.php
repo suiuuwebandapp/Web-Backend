@@ -591,4 +591,28 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
     }
+
+
+    /**
+     * 获取推荐随游
+     * @param Page $page
+     * @param $countryId
+     * @param $cityId
+     * @return Page|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getRelateRecommendTrip(Page $page,$countryId,$cityId)
+    {
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $page=$this->tripTravelDb->getRelateRecommendTrip($page,$countryId,$cityId);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $page;
+    }
 }

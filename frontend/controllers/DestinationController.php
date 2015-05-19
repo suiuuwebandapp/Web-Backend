@@ -16,6 +16,7 @@ use common\components\Code;
 use common\components\PageResult;
 use frontend\services\CountryService;
 use frontend\services\DestinationService;
+use frontend\services\TripService;
 use yii\base\Exception;
 
 class DestinationController extends UnCController{
@@ -54,8 +55,16 @@ class DestinationController extends UnCController{
         $desId=\Yii::$app->request->get("des");
         $destinationService=new DestinationService();
         $rst=$destinationService->findInfoById($desId);
+        $tripService=new TripService();
+        $recommendPage=new Page();
+        $recommendPage->pageSize=3;
+        $recommendPage->sortName="score";
+        $recommendPage->sortType="DESC";
+        $recommendPage=$tripService->getRelateRecommendTrip($recommendPage,$rst['info']['countryId'],$rst['info']['cityId']);
+
         return $this->render("info",[
-            'desInfo'=>$rst
+            'desInfo'=>$rst,
+            'relateRecommend'=>$recommendPage->getList()
         ]);
     }
 

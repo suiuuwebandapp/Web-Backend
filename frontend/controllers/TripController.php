@@ -253,7 +253,7 @@ class TripController extends CController
 
         //默认把发布人加入随游关联
         $travelTripPublisher = new TravelTripPublisher();
-        $travelTripPublisher->tripPublisherId = $userPublisherId;
+        $travelTripPublisher->publisherIdw = $userPublisherId;
 
         //设置景区列表
         foreach ($scenicList as $scenic) {

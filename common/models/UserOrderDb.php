@@ -111,7 +111,7 @@ class UserOrderDb extends ProxyDb
     {
         $sql = sprintf("
             SELECT * FROM user_order_info
-            WHERE orderNumber=:orderNumber
+            WHERE orderNumber=:orderNumber AND isDel=FALSE
 
         ");
         $command = $this->getConnection()->createCommand($sql);
@@ -178,8 +178,10 @@ class UserOrderDb extends ProxyDb
             LEFT JOIN user_publisher up  ON up.userPublisherId=uop.publisherId
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             WHERE isDel=FALSE AND uoi.userId=:userId
-            AND uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . "
-            AND uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
+            AND
+            (
+              uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . " OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
+            )
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
@@ -229,10 +231,11 @@ class UserOrderDb extends ProxyDb
             LEFT JOIN travel_trip_publisher ttp ON ttp.tripId=uoi.tripId
             LEFT JOIN user_base ub ON ub.userSign=uoi.userId
 
-            WHERE uoi.status=:status AND ttp.publisherId=:publisherId AND orderId NOT IN
+            WHERE uoi.isDel=FALSE AND uoi.status=:status AND ttp.publisherId=:publisherId AND orderId NOT IN
             (
               SELECT orderId FROM user_order_publisher_ignore WHERE publisherId=:publisherId
             )
+            AND CONCAT(uoi.beginDate,' ',uoi.startTime)>now()
         ");
 
         $command = $this->getConnection()->createCommand($sql);
@@ -240,6 +243,25 @@ class UserOrderDb extends ProxyDb
         $command->bindParam(":publisherId", $publisherId, PDO::PARAM_INT);
 
         return $command->queryAll();
+    }
+
+
+    /**
+     * 伪删除订单
+     * @param $orderId
+     * @throws \yii\db\Exception
+     */
+    public function deleteOrderInfo($orderId)
+    {
+        $sql = sprintf("
+            UPDATE user_order_info SET
+            isDel=TRUE
+            WHERE orderId=:orderId
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":orderId", $orderId, PDO::PARAM_INT);
+
+        $command->execute();
     }
 
 }

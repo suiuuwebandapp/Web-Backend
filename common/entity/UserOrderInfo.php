@@ -20,6 +20,8 @@ class UserOrderInfo {
     const USER_ORDER_STATUS_REFUND_SUCCESS=5;//退款成功
     const USER_ORDER_STATUS_PLAY_SUCCESS=6;//游玩结束 待付款给随友
     const USER_ORDER_STATUS_PLAY_FINISH=7;//结束，已经付款给随友
+    const USER_ORDER_STATUS_REFUND_VERIFY=8;//退款审核中
+    const USER_ORDER_STATUS_REFUND_FAIL=9;//退款审核失败
 
     public $orderId;
 

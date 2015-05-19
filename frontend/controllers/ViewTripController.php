@@ -94,6 +94,13 @@ class ViewTripController extends UnCController{
     {
         $tripId=\Yii::$app->request->get("trip");
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
+
+        $recommendPage=new Page();
+        $recommendPage->pageSize=3;
+        $recommendPage->sortName="score";
+        $recommendPage->sortType="DESC";
+        $recommendPage=$this->tripService->getRelateRecommendTrip($recommendPage,$travelInfo['info']['countryId'],$travelInfo['info']['cityId']);
+
         $tripInfo=$travelInfo['info'];
         $userService=new UserBaseService();
         $publisherService=new PublisherService();
@@ -115,7 +122,8 @@ class ViewTripController extends UnCController{
             'travelInfo'=>$travelInfo,
             'createUserInfo'=>$createUserInfo,
             'createPublisherInfo'=>$createPublisherId,
-            'attention'=>$rst
+            'attention'=>$rst,
+            'relateRecommend'=>$recommendPage->getList()
         ]);
     }
 

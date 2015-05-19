@@ -40,42 +40,22 @@
                     <a href="javascript:;"><img src="<?= $scenic['titleImg'] ?>" alt=""/></a>
                     <div class="show-posi"><?= $scenic['intro'] ?></div>
                     <div class="mdd-tuijian">
-                        <div>
-                            <a href="suiyou_xiangqing.html"><img src="/assets/images/mdd4.fw.png" alt=""/></a>
-                            <h4>小熊博物馆</h4>
-                            <p>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                            </p>
-                            <font>总价:<a>800</a></font>
-                        </div>
-                        <div>
-                            <a href="#"><img src="/assets/images/mdd4.fw.png" alt=""/></a>
-                            <h4>小熊博物馆</h4>
-                            <p>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                            </p>
-                            <font>总价:<a>800</a></font>
-                        </div>
-                        <div>
-                            <a href="#"><img src="/assets/images/mdd4.fw.png" alt=""/></a>
-                            <h4>小熊博物馆</h4>
-                            <p>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                                <span><img src="/assets/images/start1.fw.png" alt=""></span>
-                            </p>
-                            <font>总价:<a>800</a></font>
-                        </div>
+                        <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
+                            <?php foreach ($relateRecommend as $trip) {?>
+                                <div>
+                                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="<?=$trip['titleImg']?>" alt=""/></a>
+                                    <h4><?=strlen($trip['title']>5?substr($trip['title'],0,5)."...":$trip['title'])?></h4>
+                                    <p>
+                                        <span><img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13"></span>
+                                        <span><img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13"></span>
+                                        <span><img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13"></span>
+                                        <span><img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13"></span>
+                                        <span><img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13"></span>
+                                    </p>
+                                    <font><a><?=$trip['basePrice']?></a> 人/次</font>
+                                </div>
+                            <?php } ?>
+                        <?php } ?>
                     </div>
                 </div><!--show1 end-->
             <?php } ?>
