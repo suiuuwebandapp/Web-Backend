@@ -68,7 +68,6 @@ class UserPublisherDb extends ProxyDb
 
         $command = $this->getConnection()->createCommand($sql);
 
-        $command->bindParam(":userId", $userPublisher->userId, PDO::PARAM_STR);
         $command->bindParam(":countryId", $userPublisher->countryId, PDO::PARAM_INT);
         $command->bindParam(":cityId", $userPublisher->cityId, PDO::PARAM_INT);
         $command->bindParam(":lon", $userPublisher->lon, PDO::PARAM_STR);

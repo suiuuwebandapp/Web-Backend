@@ -255,19 +255,19 @@
             <input id="toApply" type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
             <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
                 <?php foreach ($relateRecommend as $trip) {?>
-                <div class="web-tuijian">
-                    <h4><?=strlen($trip['title']>10?substr($trip['title'],0,10)."...":$trip['title'])?></h4>
-                    <img src="<?=$trip['titleImg']?>" alt="" class="pic">
-                    <p class="xing">
-                        <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                        <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                        <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                        <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                        <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                    </p>
-                    <div><?=strlen($trip['intro']>50?substr($trip['intro'],0,50)."...":$trip['intro'])?></div>
-                    <span>基础价格：<a><?=$trip['basePrice']?></a> 人/次</span>
-                </div>
+                    <div class="web-tuijian" style="cursor: pointer" onclick="javascript:window.location.href='/view-trip/info?trip=<?=$trip['tripId']?>'">
+                        <h4><?=strlen($trip['title'])>10?mb_substr($trip['title'],0,10,'UTF-8')."...":$trip['title']?></h4>
+                        <img src="<?=$trip['titleImg']?>" alt="" class="pic">
+                        <p class="xing">
+                            <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                        </p>
+                        <div><?=strlen($trip['intro'])>50?mb_substr($trip['intro'],0,50,'UTF-8')."...":$trip['intro']?></div>
+                        <span>基础价格：<a><?=$trip['basePrice']?></a> 人/次</span>
+                    </div>
                 <?php } ?>
             <?php } ?>
         </div>

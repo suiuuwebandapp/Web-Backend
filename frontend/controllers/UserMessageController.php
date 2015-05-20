@@ -35,8 +35,6 @@ class UserMessageController extends  CController{
         $receiveId=trim(\Yii::$app->request->post("receiveId"));
         $content=trim(\Yii::$app->request->post("content"));
 
-        //判断黑白名单
-
         if(empty($receiveId)){
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ReceiveId Is Not Allow Empty"));
             return;
@@ -45,6 +43,8 @@ class UserMessageController extends  CController{
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Content Is Not Allow Empty"));
             return;
         }
+
+        //判断黑白名单
 
         $userMessage=new UserMessage();
         $userMessage->senderId=$senderId;
@@ -71,6 +71,7 @@ class UserMessageController extends  CController{
             $list=$this->userMessageService->getUserMessageSessionList($userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
+            throw $e;
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
@@ -138,7 +139,7 @@ class UserMessageController extends  CController{
     /**
      * 更新用户私信设置
      */
-    public function actionUpdateUserMessageStatus()
+    public function actionUpdateMessageSettingStatus()
     {
         $status=\Yii::$app->getRequest()->post("status");
         $userSign=$this->userObj->userSign;
@@ -146,6 +147,37 @@ class UserMessageController extends  CController{
             $userMessageSetting=$this->userMessageService->findUserMessageSettingByUserId($userSign);
             $userMessageSetting->status=$status;
             $this->userMessageService->updateUserMessageSetting($userMessageSetting);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
+    /**
+     * 添加用户屏蔽
+     */
+    public function actionAddUserMessageShield()
+    {
+        $shieldId=\Yii::$app->getRequest()->post("shieldId");
+        $userSign=$this->userObj->userSign;
+        try{
+            $this->userMessageService->addUserMessageShield($userSign,$shieldId);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+    /**
+     * 移除用户屏蔽
+     */
+    public function actionDeleteUserMessageShield()
+    {
+        $shieldId=\Yii::$app->getRequest()->post("shieldId");
+        $userSign=$this->userObj->userSign;
+        try{
+            $this->userMessageService->deleteUserMessageShield($userSign,$shieldId);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL));

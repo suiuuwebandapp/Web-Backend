@@ -776,13 +776,4 @@ class TravelTripDb extends ProxyDb{
     }
 
 
-    public function getPublisherOrderList($publisherId)
-    {
-        $sql=sprintf("
-            SELECT * FROM
-        ");
-    }
-
-
-
 }

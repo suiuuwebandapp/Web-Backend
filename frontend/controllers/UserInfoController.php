@@ -35,9 +35,11 @@ class UserInfoController extends CController{
     {
         $countryService = new CountryService();
         $countryList = $countryService->getCountryList();
+        $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
 
         return $this->render("info",[
-            'countryList'=>$countryList
+            'countryList'=>$countryList,
+            'userPublisher'=>$userPublisher
         ]);
     }
 

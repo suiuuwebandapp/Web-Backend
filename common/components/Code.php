@@ -73,6 +73,8 @@ class Code
 
     const USER_ORDER_PAY_STATS='U_O_P_S';//用户订单支付状态 1.完成 0.未完成
 
+    const USER_SYSTEM_MESSAGE_ID='SYSTEM_MESSAGE';//系统消息KEY
+
 
     /**
      * 异常信息（后台）

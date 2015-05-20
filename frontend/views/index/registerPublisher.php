@@ -62,7 +62,7 @@
     }
     .upload_tip {
         font-size: 12px;
-        padding-left: 25px;
+        text-align: center;
     }
 
     .imgPic {
@@ -102,6 +102,13 @@
 
 
 </style>
+
+<?php
+    $idCardImg="";
+    if(!empty($userPublisher)&&!empty($userPublisher->idCardImg)){
+        $idCardImg=$userPublisher->idCardImg;
+    }
+?>
 <!--初始化select-->
 <!-------随友注册------>
 <div class="syRegister">
@@ -111,7 +118,7 @@
             <input type="text" id="nickname" name="nickname" value="<?= $nickname ?>" class="syzcy-text" maxlength="10" required>
 
         </div>
-        <input id="userCardFront" type="hidden">
+        <input id="userCardFront" type="hidden" value="<?=$idCardImg?>">
         <div>
             <span>邮箱:</span><span id="emailTip" class="form_tip"></span>
             <input type="text" id="email" name="email" value="<?= $email ?>" class="syzcy-text" maxlength="50" required>
@@ -144,7 +151,7 @@
         <div>
             <span id="cardTip" class="form_tip"></span>
             <div id="divCardFront" class="imgPic">
-                <img src="" id="imgFront" style="display: none" class="showImg"/>
+                <img src="<?=$idCardImg?>" id="imgFront" style="display: none" class="showImg"/>
 
                 <p class="p_chose_card_front">点击上传护照</p>
             </div>
@@ -260,6 +267,12 @@
             var file = $("#uploadifive-fileCardFront input[type='file']").last();
             $(file).click();
         });
+        if($("#imgFront").attr("src")!=''){
+            $(".p_chose_card_front").hide();
+            $("#imgFront").show();
+            $("#uploadAll").hide();
+            $(".upload_tip").html("您已经提交过护照信息，无需再次提交");
+        }
         //绑定上传事件
         $("#uploadAll").bind("click", function () {
             uploadAll();
@@ -381,6 +394,22 @@
                 }
 
             },
+            onSelect:function(){
+                $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
+                    Img: "imgFront",
+                    Width: 120,
+                    Height: 120,
+                    ImgType: [
+                        "jpeg", "jpg", "png"
+                    ], Callback: function () {
+                        $("#imgFront").show();
+                        $("#imgFront").unbind("click");
+                        $("#imgFront").bind("click", function () {
+                            $(".p_chose_card_front").click();
+                        });
+                    }
+                });
+            },
             onInit: function () {
                 //初始化预览图片
                 $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
@@ -394,20 +423,6 @@
                         $("#imgFront").unbind("click");
                         $("#imgFront").bind("click", function () {
                             $(".p_chose_card_front").click();
-                        });
-                        $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
-                            Img: "imgFront",
-                            Width: 120,
-                            Height: 120,
-                            ImgType: [
-                                "jpeg", "jpg", "png"
-                            ], Callback: function () {
-                                $("#imgFront").show();
-                                $("#imgFront").unbind("click");
-                                $("#imgFront").bind("click", function () {
-                                    $(".p_chose_card_front").click();
-                                });
-                            }
                         });
                     }
                 });
