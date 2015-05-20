@@ -37,7 +37,7 @@
             </dl>
         </div>
     </div>
-    <div class="newTip" style="display: none">
+    <div class="newTip">
         <input type="button" value="申请消息">
         <span>2</span>
     </div>

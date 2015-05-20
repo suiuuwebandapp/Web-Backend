@@ -22,9 +22,6 @@ $(document).ready(function(){
         $("#unConfirmOrderManager").bind("click",function(){
             getUnConfirmOrderByPublisher();
         });
-        $("#myPublisherOrder").bind("click",function(){
-            getPublisherOrderList();
-        });
 
         getUnConfirmOrderByPublisher();
 
@@ -72,108 +69,22 @@ $(document).ready(function(){
     $("#sendMessageBtn").bind("click",function(){
         sendUserMessage();
     });
-    $("#userMessageSetting").bind("click",function(){
-        initUserMessageSetting();
-    });
-    $("input:radio[name='user_message_setting_status']").bind("change",function(){
-       updateUserMessageSetting();
-    });
-
-    //初始化上传身份证等功能
-    $(".p_chose_card_front").bind("click", function () {
-        $("#uploadAll").val("上 传");
-        $("#userCardFront").val("");
-        var file = $("#uploadifive-fileCardFront input[type='file']").last();
-        $(file).click();
-    });
-    if($("#imgFront").attr("src")!=''){
-        $(".p_chose_card_front").hide();
-        $("#imgFront").show();
-        $("#imgFront").bind("click",function(){
-            $(".p_chose_card_front").click();
-        });
-    }
-
-    //绑定上传事件
-    $("#uploadAll").bind("click", function () {
-        uploadAll();
-    });
 
     getUnFinishList();
     initUploadImg();
     initTab();
+    initUserInfo();
     initDatePicker();
     initSelect();
+
     initMessageSession();
-    initUserInfo();
-    initUploadfive();
-
-
 });
-
-function initUploadfive(){
-    $('#fileCardFront').uploadifive({
-        'auto': false,
-        'queueID': 'frontQueue',
-        'uploadScript': '/upload/upload-card-img-by-user',
-        'multi': false,
-        'dnd': false,
-        'onUploadComplete': function (file, data) {
-            var datas = eval('(' + data + ')');
-            if (datas.status == 1) {
-                $("#userCardFront").val(datas.data);
-                $("#cardTip").html("");
-                $("#uploadAll").val("上传成功！");
-            } else {
-                $("#uploadAll").val("上传失败，请稍后重试。。。");
-            }
-
-        },
-        onSelect:function(){
-            $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
-                Img: "imgFront",
-                Width: 120,
-                Height: 120,
-                ImgType: [
-                    "jpeg", "jpg", "png"
-                ], Callback: function () {
-                    $("#imgFront").show();
-                    $(".p_chose_card_front").hide();
-                    $("#imgFront").unbind("click");
-                    $("#imgFront").bind("click", function () {
-                        $(".p_chose_card_front").click();
-                    });
-                }
-            });
-        },
-        onInit: function () {
-            //初始化预览图片
-            $("#uploadifive-fileCardFront input[type='file']").uploadPreview({
-                Img: "imgFront",
-                Width: 120,
-                Height: 120,
-                ImgType: [
-                    "jpeg", "jpg", "png"
-                ], Callback: function () {
-                    $("#imgFront").show();
-                    $(".p_chose_card_front").hide();
-                    $("#imgFront").unbind("click");
-                    $("#imgFront").bind("click", function () {
-                        $(".p_chose_card_front").click();
-                    });
-                }
-            });
-        }
-    });
-}
-
-
-
 
 /**
  *  初始化修改密码
  */
-function initUpdatePassword(){
+function initUpdatePassword()
+{
     var password = $('#password_user_info').val();
     var qPassword = $('#qPassword_user_info').val();
     var oPassword = $('#oPassword_user_info').val();
@@ -222,9 +133,6 @@ function initUpdatePassword(){
  * 初始化用户私信会话列表
  */
 
-/**
- * 初始化用户消息会话
- */
 function initMessageSession(){
     $.ajax({
         url :'/user-message/message-session-list',
@@ -248,14 +156,11 @@ function initMessageSession(){
     });
 }
 
+
 /**
  * 初始化会话列表定时器
  */
 function initUserMessageSessionTimer(){
-    try{
-        window.clearInterval(messageSessionTimer);
-    }catch(e){
-    }
     messageSessionTimer=window.setInterval(function(){
         getUserUnReadMessageSession();
     },5000);
@@ -266,12 +171,10 @@ function initUserMessageSessionTimer(){
  * @param list
  */
 function buildMessageSessionHtml(list){
-    $("#messageSessionDiv ul").html("");
-    $("#messageInfoDiv ul").html("");//清空
-
     if(list==''||list.length==0){
         return;
     }
+    $("#messageInfoDiv ul").html("");//清空
     var html='',tempSession='',content='';
     for(var i=0;i<list.length;i++){
         tempSession=list[i];
@@ -287,7 +190,6 @@ function buildMessageSessionHtml(list){
         html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+tempSession.headImg+'",this)>';
         html+='<div class="people"><img src="'+tempSession.headImg+'"><span>'+tempSession.nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
-        html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.userId+'\')">屏蔽</b>';
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
         html+='</li>';
     }
@@ -317,6 +219,7 @@ function getUserUnReadMessageSession(){
         }
     });
 }
+
 
 /**
  * 重新构建消息会话列表
@@ -506,7 +409,10 @@ function updateUserInfo(){
     if(profession=='其他'){
         profession=$("#other").val();
     }
-    if($.trim(nickname)==''||($.trim(nickname)).length>30){
+    if(nickname==''){
+
+    }
+    if($.trim(nickname)==''||$.trim(nickname)>30){
         $("#nicknameTip").html("昵称格式不正确");
         return;
     }
@@ -514,7 +420,7 @@ function updateUserInfo(){
         $("#cityTip").html("请选择居住地国家");
         return;
     }
-    if($.trim(cityId)==''){
+    if($.trim(cityId)==''||$.trim(nickname)>30){
         $("#cityTip").html("请选择居住地城市");
         return;
     }
@@ -615,7 +521,7 @@ function initSelect(){
             if(search.indexOf("/")!=-1){
                 search=search.split("/")[0];
             }
-            //findCityInfo(search);
+            findCityInfo(search);
         }
     });
     $("#countryId").change();
@@ -672,30 +578,30 @@ function initDatePicker(){
 function initUserInfo(){
     //init sex
     if(userSex==0){
-        $("input:radio[name='sex'][value='0']").prop("checked",true);
+        $("input:radio[name='sex'][value='0']").attr("checked",true);
         $("#rado2").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }else if(userSex==1){
-        $("input:radio[name='sex'][value='1']").prop("checked",true);
+        $("input:radio[name='sex'][value='1']").attr("checked",true);
         $("#rad01").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }else{
-        $("input:radio[name='sex'][value='2']").prop("checked",true);
+        $("input:radio[name='sex'][value='2']").attr("checked",true);
         $("#rad03").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }
 
     if(userProfession=='持证导游'){
-        $("input:radio[name='profession'][value='持证导游']").prop("checked",true);
+        $("input:radio[name='profession'][value='持证导游']").attr("checked",true);
         $("#shenfen01").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }else if(userProfession=='业余导游'){
-        $("input:radio[name='profession'][value='业余导游']").prop("checked",true);
+        $("input:radio[name='profession'][value='业余导游']").attr("checked",true);
         $("#shenfen02").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }else if(userProfession=='学生'){
-        $("input:radio[name='profession'][value='学生']").prop("checked",true);
+        $("input:radio[name='profession'][value='学生']").attr("checked",true);
         $("#shenfen03").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }else if(userProfession=='旅游爱好者'){
-        $("input:radio[name='profession'][value='旅游爱好者']").prop("checked",true);
+        $("input:radio[name='profession'][value='旅游爱好者']").attr("checked",true);
         $("#shenfen04").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }else{
-        $("input:radio[name='profession'][value='其他']").prop("checked",true);
+        $("input:radio[name='profession'][value='其他']").attr("checked",true);
         $("#shenfen05").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
         $("#other").val(userProfession);
         $("#other").show();
@@ -708,9 +614,6 @@ function initUserInfo(){
  */
 function initTab(){
     var href=window.location.href;
-    if(href.endWith("#")){
-        href=href.substring(0,href.length-1);
-    }
     var tabId='';
     if(href.indexOf("?")!=-1){
         tabId=href.substring(href.indexOf("?")+1,href.length);
@@ -962,6 +865,7 @@ function resetRotate(){
     imgAreaSelectApi.update();
 }
 
+
 /**
  * 获取我的随游
  */
@@ -994,8 +898,7 @@ function getMyTripList(){
  */
 function buildMyTripHtml(tripList){
     if(tripList==''||tripList.length==0){
-        html="<p class='no_result'><a>您还没有发布过随游哦~</a></p>";
-        return html;
+        return '';
     }
     var tripInfo,html='';
     for(var i=0;i<tripList.length;i++){
@@ -1064,8 +967,7 @@ function getMyJoinTripList(){
  */
 function buildMyJoinTripHtml(tripList){
     if(tripList==''||tripList.length==0){
-        html="<p class='no_result'><a>您还没有申请加入过随游哦~</a></p>";
-        return html;
+        return '';
     }
     var tripInfo,html='';
     for(var i=0;i<tripList.length;i++){
@@ -1096,6 +998,7 @@ function buildMyJoinTripHtml(tripList){
     }
     return html;
 }
+
 
 /**
  * 获取用户未完成的订单
@@ -1156,7 +1059,6 @@ function getFinishList(){
 function buildOrderList(list,type){
     var html="";
     if(list==""||list.length==0){
-        html="<p class='no_result'><a>暂时没有找到您的订单哦~</a></p>";
         return html;
     }
     for(var i=0;i<list.length;i++){
@@ -1238,84 +1140,6 @@ function buildOrderList(list,type){
 }
 
 /**
- * 获取随友订单列表
- */
-function getPublisherOrderList(){
-    $.ajax({
-        url :'/user-order/get-publisher-order-list',
-        type:'post',
-        data:{
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            Main.showTip("获取随友订单失败");
-        },
-        success:function(data){
-            //hide load
-            data=eval("("+data+")");
-            if(data.status==1){
-                $("#myPublisherOrderList").html(buildPublisherOrderList(data.data));
-            }else{
-                Main.showTip("获取随友订单失败");
-            }
-        }
-    });
-}
-
-/**
- * 构建随友订单列表
- * @param list
- * @returns {string}
- */
-function buildPublisherOrderList(list){
-    var html="";
-    if(list==""||list.length==0){
-        html="<p class='no_result'><a>您暂时还没有随游订单哦~</a></p>";
-        return html;
-    }
-    for(var i=0;i<list.length;i++){
-        var orderInfo=list[i];
-        var travelInfo=orderInfo.tripJsonInfo;
-        travelInfo=eval("("+travelInfo+")");
-        var serviceInfo=orderInfo.serviceInfo;
-        serviceInfo=eval("("+serviceInfo+")");
-
-        html+='<div class="orderList clearfix">';
-        html+='<dl class="order clearfix">';
-        html+='<dt class="title">';
-        html+='<span>'+Main.convertOrderDateToShow(orderInfo.createTime)+'</span><span>申请随游</span><span>开始时间</span><span>申请游客</span><span>出行时间</span><span>人数</span><span>附加服务</span>';
-        html+='</dt>';
-        html+='<dd>';
-        html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"/></span>';
-        html+='<span>'+travelInfo.info.title+'</span>';
-        html+='<span>'+Main.convertTimePicker(orderInfo.startTime,2)+'</span>';
-        html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'" width="50" height="50"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
-        html+='<span>'+orderInfo.beginDate+'</span>';
-        html+='<span>'+orderInfo.personCount+'</span>';
-        html+='<span>';
-        if(serviceInfo!=''&&serviceInfo.length>0){
-            for(var j=0;j<serviceInfo.length;j++){
-                var service=serviceInfo[j];
-                html+=service.title+'<b>'+service.money+'</b>';
-                if(service.type==tripServiceTypePeople){
-                    html+='/人';
-                }else{
-                    html+='/次';
-                }
-                html+='<br>';
-            }
-        }
-        html+='</span>';
-        html+='</dd>';
-        html+='</dl>';
-        html+='<p><a href="javascript:showCancelWindow('+orderInfo.orderId+');" class="cancel">取消订单</a></p>';
-        html+='</div>';
-    }
-    return html;
-
-}
-
-/**
  * 获取随友可接收的订单
  */
 function getUnConfirmOrderByPublisher(){
@@ -1348,7 +1172,6 @@ function getUnConfirmOrderByPublisher(){
 function buildUnConfirmList(list){
     var html="";
     if(list==""||list.length==0){
-        html="<p class='no_result'><a>暂时没有可接的订单哦~</a></p>";
         return html;
     }
     for(var i=0;i<list.length;i++){
@@ -1451,6 +1274,7 @@ function publisherIgnoreOrder(orderId){
         }
     });
 }
+
 
 /**
  * 删除随游
@@ -1569,10 +1393,8 @@ function sendTravelCode() {
     });
 }
 
-/**
- * 初始化验证手机
- */
-function initValidatePhone(){
+function initValidatePhone()
+{
     //TODO 验证手机
     var phone = $("#phone").val();
     var areaCode = $("#codeId").val();
@@ -1613,11 +1435,9 @@ function initValidatePhone(){
         }
     });
 }
-
-/**
- * 验证邮箱
- */
-function initValidateEmail_info(){
+//验证邮箱
+function initValidateEmail_info()
+{
     var email = $("#email_info").val();
 
     if (email == "") {
@@ -1648,10 +1468,10 @@ function initValidateEmail_info(){
         }
     });
 }
-
 /**
  * 初始化手机验证计时器
  */
+
 function initPhoneTimer() {
     phoneTimer = window.setInterval(function () {
         if (phoneTime > 0) {
@@ -1779,7 +1599,7 @@ function initMyComment(page){
                     initMyComment(page);
                 });
             }else{
-                Main.showTip('获取我的发言异常');
+                Main.showTip('得到收藏异常');
             }
         }
     });
@@ -1818,50 +1638,6 @@ function cancelOrder(orderId){
         }
     });
 }
-
-/**
- * 随友取消订单
- * @param orderId
- */
-function publisherCancelOrder(){
-    if(!confirm("确定取消订单吗？")){
-        return;
-    }
-    var orderId=$("#show_message_cancel_order_id").val();
-    var message=$("#show_order_message").val();
-    if(orderId==''){
-        Main.showTip("无效的订单");
-        return;
-    }
-    if(message==''){
-        Main.showTip("请输入退款原因");
-        return;
-    }
-    $.ajax({
-        url: "/user-order/publisher-cancel-order",
-        type: "post",
-        data:{
-            orderId:orderId,
-            message:message,
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            Main.showTip('取消订单异常');
-        },
-        success: function(data){
-            var result=eval("("+data+")");
-            if(result.status==1){
-                Main.showTip('取消订单成功');
-                getPublisherOrderList();
-                $("#showOrderDiv").hide();
-                $("#myMask").hide();
-            }else{
-                Main.showTip('取消订单异常');
-            }
-        }
-    });
-}
-
 /**
  * 未接单情况下直接申请退款
  * @param orderId
@@ -1911,6 +1687,7 @@ function showRefundWindow(orderId){
     $("#myMask").show();
 }
 
+
 /**
  * 已接单情况下填写退款申请退款
  */
@@ -1951,10 +1728,8 @@ function refundOrderByMessage(){
     });
 }
 
-/**
- * 删除订单
- * @param orderId
- */
+
+
 function deleteOrderInfo(orderId){
     if(!confirm("确定要删除订单吗？")){
         return;
@@ -1980,157 +1755,4 @@ function deleteOrderInfo(orderId){
             }
         }
     });
-}
-
-/**
- * 初始化用户私信消息设置
- */
-function initUserMessageSetting(){
-    $.ajax({
-        url :'/user-message/find-user-message-setting',
-        type:'post',
-        data:{
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            Main.showTip("获取用户私信设置失败");
-        },
-        success:function(data){
-            var datas=eval('('+data+')');
-            if(datas.status==1){
-                buildUserMessageSetting(datas.data);
-            }else{
-                Main.showTip("获取用户私信设置失败");
-            }
-        }
-    });
-}
-
-/**
- * 构建用户消息设置
- * @param userMessageSetting
- */
-function buildUserMessageSetting(userMessageSetting){
-    if(userMessageSetting.status==1){
-        $("input:radio[name='user_message_setting_status'][value='1']").prop("checked",true);
-        $("#user_message_setting_all").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
-    }else if(userMessageSetting.status==2){
-        $("input:radio[name='sex'][value='2']").prop("checked",true);
-        $("#user_message_setting_none").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
-    }
-    if(userMessageSetting.shieldIds!=''){
-        var html='',userBase='';
-        for(var i=0;i<userMessageSetting.userBaseList.length;i++){
-            userBase=userMessageSetting.userBaseList[i];
-            html+='<div class="setd">';
-            html+='<div class="people"><img src="'+userBase.headImg+'"><span>'+userBase.nickname+'</span></div>';
-            html+='<input type="button" value="取消屏蔽" class="btn" onclick="deleteUserMessageShield(\''+userBase.userSign+'\')">';
-            html+='</div>';
-        }
-        $("#messageShieldList").html(html);
-        $("#user_message_setting_title").show();
-        $("#messageShieldList").show();
-    }else{
-        $("#user_message_setting_title").hide();
-        $("#messageShieldList").hide();
-    }
-}
-
-/**
- * 更新用户私信设置
- */
-function updateUserMessageSetting(){
-    var status=$("input:radio[name='user_message_setting_status']:checked").val();
-    $.ajax({
-        url :'/user-message/update-message-setting-status',
-        type:'post',
-        data:{
-            status:status,
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            Main.showTip("更新私信设置失败");
-        },
-        success:function(data){
-            var datas=eval('('+data+')');
-            if(datas.status==1){
-                initMessageSession();
-            }else{
-                Main.showTip("更新私信设置失败");
-            }
-        }
-    });
-}
-
-/**
- * 添加用户屏蔽
- * @param userId
- */
-function addUserMessageShield(userId){
-    $.ajax({
-        url :'/user-message/add-user-message-shield',
-        type:'post',
-        data:{
-            shieldId:userId,
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            Main.showTip("添加屏蔽失败");
-        },
-        success:function(data){
-            var datas=eval('('+data+')');
-            if(datas.status==1){
-                initMessageSession();
-            }else{
-                Main.showTip("添加屏蔽失败");
-            }
-        }
-    });
-}
-
-/**
- * 删除用户屏蔽
- */
-function deleteUserMessageShield(userId){
-    $.ajax({
-        url :'/user-message/delete-user-message-shield',
-        type:'post',
-        data:{
-            shieldId:userId,
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            Main.showTip("取消屏蔽失败");
-        },
-        success:function(data){
-            var datas=eval('('+data+')');
-            if(datas.status==1){
-                initUserMessageSetting();
-                initMessageSession();
-            }else{
-                Main.showTip("取消屏蔽失败");
-            }
-        }
-    });
-}
-
-
-function showCancelWindow(orderId){
-    if(orderId==''){
-        Main.showTip("无效的订单");
-        return;
-    }
-    $("#show_message_cancel_order_id").val(orderId);
-    $("#show_order_message").html("");
-    $("#showOrderDiv").show();
-    $("#myMask").show();
-}
-
-function uploadAll() {
-    if ($("#imgFront").attr("src") == "") {
-        Main.showTip("请选择护照图片");
-        return;
-    }
-    $('#fileCardFront').uploadifive('upload');
-    $("#uploadAll").val("正在上传，请稍后...");
 }

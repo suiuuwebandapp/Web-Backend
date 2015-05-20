@@ -45,7 +45,7 @@ class WeChatDb extends ProxyDb{
 
     public function findWeChatUserInfo(WeChatUserInfo $weChatUserInfo){
         $sql = sprintf("
-           SELECT a.openId,a.unionID,b.* FROM wechat_user_info a
+           SELECT a.openId,a.unionID,a.v_nickname,b.* FROM wechat_user_info a
            LEFT JOIN user_base b ON a.userSign=b.userSign
             WHERE 1=1
         ");
@@ -81,14 +81,15 @@ class WeChatDb extends ProxyDb{
     public function updateWeChatUserInfo(WeChatUserInfo $weChatUserInfo){
         $sql = sprintf("
             UPDATE wechat_user_info SET
-            userSign=:userSign,unionID=:unionID,v_nickname=:v_nickname,v_sex=:v_sex,v_city=:v_city,v_country=:v_country,
+            v_nickname=:v_nickname,v_sex=:v_sex,v_city=:v_city,v_country=:v_country,
             v_province=:v_province,v_language=:v_language,v_headimgurl=:v_headimgurl,v_subscribe_time=:v_subscribe_time,v_remark=:v_remark,v_groupid=:v_groupid
             WHERE openId=:openId
         ");
+        //userSign=:userSign,unionID=:unionID,
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":openId", $weChatUserInfo->openId, PDO::PARAM_STR);
-        $command->bindParam(":userSign", $weChatUserInfo->userSign, PDO::PARAM_STR);
-        $command->bindParam(":unionID", $weChatUserInfo->unionID, PDO::PARAM_STR);
+        //$command->bindParam(":userSign", $weChatUserInfo->userSign, PDO::PARAM_STR);
+        //$command->bindParam(":unionID", $weChatUserInfo->unionID, PDO::PARAM_STR);
         $command->bindParam(":v_nickname", $weChatUserInfo->v_nickname, PDO::PARAM_STR);
         $command->bindParam(":v_sex", $weChatUserInfo->v_sex, PDO::PARAM_INT);
         $command->bindParam(":v_city", $weChatUserInfo->v_city, PDO::PARAM_STR);
@@ -101,4 +102,19 @@ class WeChatDb extends ProxyDb{
         $command->bindParam(":v_groupid", $weChatUserInfo->v_groupid, PDO::PARAM_INT);
         return $command->execute();
     }
+
+    public function bindingWeChatByUnionID(WeChatUserInfo $weChatUserInfo)
+    {
+        $sql = sprintf("
+            UPDATE wechat_user_info SET
+           userSign=:userSign
+            WHERE unionID=:unionID
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $weChatUserInfo->userSign, PDO::PARAM_STR);
+        $command->bindParam(":unionID", $weChatUserInfo->unionID, PDO::PARAM_STR);
+        return $command->execute();
+    }
+
+
 }

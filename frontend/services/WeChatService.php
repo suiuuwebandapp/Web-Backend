@@ -10,6 +10,7 @@ namespace frontend\services;
 
 use common\components\Code;
 use common\components\Common;
+use common\entity\UserAccess;
 use common\entity\WeChat;
 use common\entity\WeChatUserInfo;
 use common\models\WeChatDb;
@@ -259,6 +260,12 @@ class WeChatService extends BaseDb{
             {
                throw new Exception('添加用户信息异常', Code::FAIL);
             }
+            $userBaseSer=new UserBaseService();
+            $userBase=$userBaseSer->findUserAccessByOpenIdAndType($weChatUserInfo->unionID,UserAccess::ACCESS_TYPE_WECHAT);
+            if(!empty($userBase))
+            {
+                $weChatUserInfo->userSign=$userBase->userSign;
+            }
             $conn = $this->getConnection();
             $this->weChatDb=new WeChatDb($conn);
             return $this->weChatDb->addWeChatUserInfo($weChatUserInfo);
@@ -295,6 +302,21 @@ class WeChatService extends BaseDb{
         }
     }
 
+    public function bindingWeChatByUnionID($userSign,$unionID)
+    {
+        try {
+            $weChatUserInfo =new WeChatUserInfo();
+            $weChatUserInfo->userSign=$userSign;
+            $weChatUserInfo->unionID=$unionID;
+            $conn = $this->getConnection();
+            $this->weChatDb=new WeChatDb($conn);
+            return $this->weChatDb->bindingWeChatByUnionID($weChatUserInfo);
+        } catch (Exception $e) {
+            throw new Exception('更新用户信息异常', Code::FAIL, $e);
+        } finally {
+            $this->closeLink();
+        }
+    }
 
     private function arr2WeChatUserInfo($arr,WeChatUserInfo $weChatUserInfoOld=null)
     {
@@ -314,7 +336,7 @@ class WeChatService extends BaseDb{
         $weChatUserInfo->v_province=isset($arr['province'])?$arr['province']:'';
         $weChatUserInfo->v_country=isset($arr['country'])?$arr['country']:'';
         $weChatUserInfo->v_headimgurl=isset($arr['headimgurl'])?$arr['headimgurl']:'';
-        $weChatUserInfo->v_subscribe_time=isset($arr['subscribe_time'])?$arr['subscribe_time']:1382694957;
+        $weChatUserInfo->v_subscribe_time=isset($arr['subscribe_time'])?$arr['subscribe_time']:0;
         $weChatUserInfo->unionID=isset($arr['unionid'])?$arr['unionid']:'';
         $weChatUserInfo->v_remark=isset($arr['remark'])?$arr['remark']:'';
         $weChatUserInfo->v_groupid=isset($arr['groupid'])?$arr['groupid']:0;

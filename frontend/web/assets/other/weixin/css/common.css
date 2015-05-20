@@ -1,8 +1,8 @@
 @charset "utf-8";
 /* CSS Document */
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,aside,blockquote,th,td,span,i,b{margin:0;padding:0; list-style:none; border:none; color:#858585;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,aside,blockquote,th,td,span,i,b{margin:0;padding:0; list-style:none; border:none; color:#858585;font-family:"Microsoft YaHei","黑体"; font-weight:normal;}
 *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
-html{width:100%;margin:0 auto;font-size:16px;font-family:"Microsoft YaHei","黑体";}
+html{width:100%;margin:0 auto;font-family:"Microsoft YaHei","黑体";}
 body{font-family:"Microsoft YaHei","黑体";-webkit-text-size-adjust:100%;text-size-adjust:100%; color:#858585;}
 h1,h2,h3,h4,h5,h6{font-weight:normal;font-size:100%;}
 em,i{font-style:normal;}

@@ -15,9 +15,8 @@ use common\components\Aes;
 use common\components\Code;
 use frontend\services\CountryService;
 use frontend\services\UserBaseService;
-use yii\web\Controller;
 
-class UnCController extends Controller{
+class UnCController extends SController{
 
     public $userObj=null;
     public $userPublisherObj=null;
@@ -76,4 +75,7 @@ class UnCController extends Controller{
         $this->userObj=$currentUser;
         \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
     }
+
+
+
 }

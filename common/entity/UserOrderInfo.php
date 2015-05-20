@@ -22,7 +22,6 @@ class UserOrderInfo {
     const USER_ORDER_STATUS_PLAY_FINISH=7;//结束，已经付款给随友
     const USER_ORDER_STATUS_REFUND_VERIFY=8;//退款审核中
     const USER_ORDER_STATUS_REFUND_FAIL=9;//退款审核失败
-    const USER_ORDER_STATUS_PUBLISHER_CANCEL=10;//随友取消订单
 
     public $orderId;
 

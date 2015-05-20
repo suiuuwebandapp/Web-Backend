@@ -12,10 +12,8 @@ namespace frontend\services;
 
 use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
-use common\entity\UserOrderPublisherCancel;
 use common\entity\UserOrderPublisherIgnore;
 use common\entity\UserOrderRefundApply;
-use common\entity\UserPublisher;
 use common\models\BaseDb;
 use common\models\TravelTripDb;
 use common\models\UserOrderDb;
@@ -397,117 +395,6 @@ class UserOrderService extends BaseDb
             }
             $this->userOrderDb->deleteOrderInfo($orderId);
         }catch (Exception $e){
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-    }
-
-    /**
-     * 获取随友已接单列表
-     * @param $publisherId
-     * @return array|null
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function getPublisherOrderList($publisherId)
-    {
-        if(empty($publisherId)){
-            throw new Exception("PublisherId Is Not Allow Empty");
-        }
-        $list=null;
-        try{
-            $conn = $this->getConnection();
-            $this->userOrderDb=new UserOrderDb($conn);
-            $list=$this->userOrderDb->getPublisherOrderList($publisherId);
-        }catch (Exception $e){
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-        return $list;
-    }
-
-
-    /**
-     * 根据订单获取随友信息
-     * @param $orderId
-     * @return array|bool|null
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function findPublisherByOrderId($orderId)
-    {
-        if(empty($orderId)){
-            throw new Exception("OrderId Is Not Allow Empty");
-        }
-        $userPublisher=null;
-        try{
-            $conn = $this->getConnection();
-            $this->userOrderDb=new UserOrderDb($conn);
-            $userPublisher=$this->userOrderDb->findPublisherByOrderId($orderId);
-            $userPublisher=$this->arrayCastObject($userPublisher,UserPublisher::class);
-        }catch (Exception $e){
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-        return $userPublisher;
-    }
-
-
-    /**
-     * 随友取消订单
-     * @param $publisherId
-     * @param $orderId
-     * @param $message
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function publisherCancelOrder($publisherId,$orderId,$message)
-    {
-        if(empty($orderId)){
-            throw new Exception("OrderId Is Not Allow Empty");
-        }
-        if(empty($publisherId)){
-            throw new Exception("OrderId Is Not Allow Empty");
-        }
-        if(empty($message)){
-            throw new Exception("Message Is Not Allow Empty");
-        }
-
-        $orderInfo=$this->findOrderByOrderId($orderId);
-        $userPublisher=$this->findPublisherByOrderId($orderId);
-
-        if(empty($orderInfo)){
-           throw new Exception("Invalid OrderId");
-        }
-        if($orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_CONFIRM){
-            throw new Exception("Invalid Order Status");
-        }
-        if(empty($userPublisher)){
-            throw new Exception("Invalid Publisher");
-        }
-        if($userPublisher->userPublisherId!=$publisherId){
-            throw new Exception("Invalid Publisher Power");
-        }
-        $conn = $this->getConnection();
-        $tran=$conn->beginTransaction();
-        try{
-            $this->userOrderDb=new UserOrderDb($conn);
-            $userPublisher=$this->userOrderDb->findPublisherByOrderId($orderId);
-            $userOrderPublisherCancel=new UserOrderPublisherCancel();
-            $userOrderPublisherCancel->orderId=$orderId;
-            $userOrderPublisherCancel->publisherId=$publisherId;
-            $userOrderPublisherCancel->content=$message;
-            $userOrderPublisherCancel->status=UserOrderPublisherCancel::USER_ORDER_PUBLISHER_CANCEL_STATUS_WAIT;
-            //TODO 判断时间限制
-            $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL);
-            $this->userOrderDb->addUserOrderPublisherCancel($userOrderPublisherCancel);
-            $this->arrayCastObject($userPublisher,UserPublisher::class);
-            $this->commit($tran);
-        }catch (Exception $e){
-            $this->rollback($tran);
             throw $e;
         }finally{
             $this->closeLink();

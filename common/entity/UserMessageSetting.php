@@ -44,6 +44,16 @@ class UserMessageSetting {
     /**
      * @var屏蔽用户的基本信息列表
      */
-    public $userBaseList;
+    public $userBaseMap;
 
+
+    public function setUserBaseList ($userBaseList){
+        $map=[];
+        if($userBaseList!=null&&count($userBaseList)>0){
+            foreach($userBaseList as $userBase){
+                $map[$userBase['userSign']]=$userBase;
+            }
+        }
+        $this->userBaseMap=$map;
+    }
 }

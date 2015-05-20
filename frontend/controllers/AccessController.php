@@ -17,6 +17,7 @@ use frontend\interfaces\TencentInterface;
 use frontend\interfaces\WechatInterface;
 use frontend\interfaces\WeiboInterface;
 use frontend\services\UserBaseService;
+use frontend\services\WeChatService;
 use yii\base\Exception;
 use yii\web\Controller;
 
@@ -176,6 +177,11 @@ class AccessController extends Controller
             $userAccess->type=$type;
             $userBase=$this->userBaseService->addUser($userBase,$userAccess);
             \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
+            if($type==UserAccess::ACCESS_TYPE_WECHAT)
+            {
+                $weChatSer=new WeChatService();
+                $weChatSer->bindingWeChatByUnionID($userBase->userSign,$openId);
+            }
 
         }catch (Exception $e){
             return Code::statusDataReturn(Code::FAIL,$e->getName());

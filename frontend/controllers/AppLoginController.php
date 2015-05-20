@@ -21,7 +21,7 @@ use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\web\Controller;
 
-class AppLoginController extends Controller{
+class AppLoginController extends SController{
 
     private $userBaseService;
     public $enableCsrfValidation=false;
@@ -164,7 +164,7 @@ class AppLoginController extends Controller{
         }
         $code = $this->randomPhoneCode();
         //设置验证码 和 有效时长
-        \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, $code);
+        \Yii::$app->redis->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, $code);
         \Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
 
         //设置验证码次数时效
@@ -179,10 +179,6 @@ class AppLoginController extends Controller{
 
         }
         echo json_encode($rst);
-
-
-
-
     }
     public function actionAppRegister()
     {
@@ -199,7 +195,7 @@ class AppLoginController extends Controller{
         {
             echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不一致'));
         }
-        $rCode=\Yii::$app->session->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
+        $rCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
         if(empty($rCode)||$rCode!=$code)
         {
             echo json_encode(Code::statusDataReturn(Code::FAIL,'验证码不正确'));
@@ -334,7 +330,7 @@ class AppLoginController extends Controller{
 
     public function actionGetCode()
     {
-        return;
+
         $ValidateCode=new ValidateCode();
         $ValidateCode->doimg();
         \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,$ValidateCode->getCode());

@@ -15,7 +15,7 @@ use frontend\services\UserBaseService;
 use yii\web\Controller;
 use yii;
 
-class WController extends Controller {
+class WController extends SController {
 
     public $userObj=null;
     public $userPublisherObj=null;
@@ -26,10 +26,9 @@ class WController extends Controller {
 
     public function __construct($id, $module = null)
     {
-
         parent::__construct($id, $module);
     }
-    public function loginValid($bo=true)
+    public function loginValid($db=true,$bo=true)
     {
 
             if ($bo) {
@@ -44,7 +43,14 @@ class WController extends Controller {
                         echo json_encode(Code::statusDataReturn(Code::FAIL, "用户已经被删除"));
                         exit;
                     } else {
+                        if($db)
+                        {
+                            if(empty($this->userObj->userSign)){
+                              return $this->redirect('/we-chat/binding');
+                            }
+                        }
                         $this->userObj = $currentUser;
+
                     }
                 } else {
                     echo json_encode(Code::statusDataReturn(Code::UN_LOGIN, '登陆已过期请重新登陆'));

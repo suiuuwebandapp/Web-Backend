@@ -7,6 +7,7 @@ use common\entity\UserOrderInfo;
 use common\entity\UserPayRecord;
 use common\pay\alipay\create\AlipayCreateApi;
 use common\pay\alipay\send\AlipaySendApi;
+use common\pay\wxpay\NativeDynamicQrcode;
 use frontend\services\UserOrderService;
 use frontend\services\UserPayService;
 use yii\base\Exception;
@@ -50,6 +51,10 @@ class PayController extends CController{
         }
         if($payType==UserPayRecord::PAY_RECORD_TYPE_ALIPAY){
             $alipayCreateApi->createOrder($orderInfo,$this->userObj);
+        }elseif($payType==UserPayRecord::PAY_RECORD_TYPE_WXPAY){
+            $wxpay = new NativeDynamicQrcode();
+            $rst = $wxpay->createCode($orderInfo);
+            return json_encode($rst);
         }else{
             return $this->redirect(['/result', 'result' => '无效的支付方式']);
         }

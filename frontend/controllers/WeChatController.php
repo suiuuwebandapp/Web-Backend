@@ -9,14 +9,18 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\wx\WXBizMsgCrypt;
+use common\entity\UserBase;
 use common\entity\WeChatUserInfo;
+use common\pay\wxpay\NativeDynamicQrcode;
+use frontend\services\CountryService;
+use frontend\services\UserBaseService;
 use frontend\services\WeChatService;
 use yii\web\Controller;
 use yii;
 use common\entity\WeChat;
 use common\components\Common;
 
-class WeChatController extends Controller
+class WeChatController extends SController
 {
 
 
@@ -50,10 +54,7 @@ class WeChatController extends Controller
     //todo @test
     public function actionTest()
     {
-        $time = time();
-        $date = date("y-m-d H-i-s",$time);
-        $date_I = date("i");
-        echo $date;
+
         //var_dump( $this->getWechatUserInfo('oGfdst0AA7SAThQlEscjbHjbbzp8', true)); //关注的时候抓取用户信息
     }
 
@@ -179,17 +180,17 @@ class WeChatController extends Controller
                 $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
                 Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
             } else {
-                $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'请联系管理员 电话：400-808-5050','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 exit;
             }
         } else {
-            $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'请联系管理员 电话：400-808-5050','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'请联系管理员 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         if (isset($_GET['actionType'])) {
             $actionType = $_GET['actionType'];
         } else {
-            $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'请联系管理员 电话：400-808-5050','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'请联系管理员 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         switch ($actionType) {
@@ -210,10 +211,92 @@ class WeChatController extends Controller
         exit;
     }
 
+    public function actionBindingMain()
+    {
+        return $this->renderPartial('bindingMain');
+    }
+
     public function actionBinding()
     {
+        if (!$this->is_weixin()) {
+            $this->showNoWx();
+            exit;
+        }
+        $userInfo=json_decode(Yii::$app->session->get(Yii::$app->params['weChatSign']));
+        if(isset($userInfo->openId))
+        {
+            if($_POST)
+            {
+
+            }else
+            {
+                return $this->renderPartial('binding');
+            }
+
+        }else
+        {
+            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+        }
 
     }
+
+    public function actionRegister()
+    {
+
+        if (!$this->is_weixin()) {
+            $this->showNoWx();
+            exit;
+        }
+        $userInfo=json_decode(Yii::$app->session->get(Yii::$app->params['weChatSign']));
+        if(isset($userInfo->openId))
+        {
+            if($_POST)
+            {
+                $phone=\Yii::$app->request->post('phone');
+                $password=\Yii::$app->request->post('password');
+                $cPassword=\Yii::$app->request->post('cPassword');
+                $code=\Yii::$app->request->post('validateCode');//验证码
+                if(empty($password))
+                {
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不能为空'));
+                }
+                if($cPassword!=$password)
+                {
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不一致'));
+                }
+                $rCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
+                if(empty($rCode)||$rCode!=$code)
+                {
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,'验证码不正确'));
+                }
+                $userBase=new UserBase();
+                $userBase->nickname=$userInfo->v_nickname;
+                $userBase->password=$password;
+                $userBase->phone=$phone;
+                $userBaseService = new UserBaseService();
+                $user=$userBaseService->addUser($userBase);
+                $this->weChatSer->bindingWeChatByUnionID($user->userSign,$userInfo->unionID);
+                return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
+            }else
+            {
+                $c=Yii::$app->request->get('c');
+                $n=Yii::$app->request->get('n');
+                return $this->renderPartial('register',['c'=>$c,'n'=>$n]);
+            }
+        }else
+        {
+            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+        }
+
+    }
+
+    public function actionShowCountry()
+    {
+        $countrySer=new CountryService();
+        $list = $countrySer->getCountryList();
+        return $this->renderPartial('country',['list'=>$list]);
+    }
+
 
     /**获取用户信息
      * @param $openId 用户id
@@ -239,6 +322,7 @@ class WeChatController extends Controller
                         $this->weChatSer->upDateWeChatInfo($rstJson,$WeChatRst['userSign']);
                      //可以改成更新信息。但是没法判断用户是否更新了
                     } else {
+
                         $this->weChatSer->insertWeChatInfo($rstJson);
                     }
                 }

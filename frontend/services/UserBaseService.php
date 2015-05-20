@@ -136,11 +136,7 @@ class UserBaseService extends BaseDb
                 $userPublisherDb=new UserPublisherDb($conn);
                 $userBase->isPublisher=true;
                 $userPublisher->userId=$userBase->userSign;
-                if(empty($userPublisher->userPublisherId)){
-                    $userPublisherDb->addPublisher($userPublisher);
-                }else{
-                    $userPublisherDb->updateUserPublisher($userPublisher);
-                }
+                $userPublisherDb->addPublisher($userPublisher);
             }
             $im=new Easemob(\Yii::$app->params['imConfig']);
             $options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
@@ -547,45 +543,6 @@ class UserBaseService extends BaseDb
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $this->userBaseDb->updateUserBase($userBase);
-        } catch (Exception $e) {
-            throw $e;
-        } finally {
-            $this->closeLink();
-        }
-    }
-
-
-    /**
-     * 添加随友信息
-     * @param UserPublisher $userPublisher
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function addUserPublisher(UserPublisher $userPublisher)
-    {
-        try {
-            $conn = $this->getConnection();
-            $userPublisherDb = new UserPublisherDb($conn);
-            $userPublisherDb->addPublisher($userPublisher);
-        } catch (Exception $e) {
-            throw $e;
-        } finally {
-            $this->closeLink();
-        }
-    }
-
-    /**
-     * 更新随游信息
-     * @param UserPublisher $userPublisher
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function updateUserPublisher(UserPublisher $userPublisher)
-    {
-        try {
-            $conn = $this->getConnection();
-            $userPublisherDb = new UserPublisherDb($conn);
-            $userPublisherDb->updateUserPublisher($userPublisher);
         } catch (Exception $e) {
             throw $e;
         } finally {

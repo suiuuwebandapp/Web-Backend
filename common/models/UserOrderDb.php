@@ -15,7 +15,6 @@ use common\entity\DestinationInfo;
 use common\entity\DestinationScenic;
 use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
-use common\entity\UserOrderPublisherCancel;
 use common\entity\UserOrderPublisherIgnore;
 use yii\db\mssql\PDO;
 
@@ -69,7 +68,7 @@ class UserOrderDb extends ProxyDb
             )
             VALUES
             (
-              :publisherId,:orderId,now(),FALSE
+              publisherId,orderId,now(),FALSE
             )
 
         ");
@@ -264,89 +263,5 @@ class UserOrderDb extends ProxyDb
 
         $command->execute();
     }
-
-    /**
-     * 获取随友的订单
-     * @param $publisherId
-     * @return array
-     */
-    public function getPublisherOrderList($publisherId)
-    {
-        $sql=sprintf("
-            SELECT uoi.*,ttp.publisherId,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
-            FROM user_order_info uoi
-            LEFT JOIN travel_trip_publisher ttp ON ttp.tripId=uoi.tripId
-            LEFT JOIN user_base ub ON ub.userSign=uoi.userId
-            WHERE uoi.isDel=FALSE AND uoi.orderId IN
-            (
-              SELECT orderId FROM user_order_publisher
-              WHERE publisherId=:publisherId
-            )
-            AND ttp.publisherId IS NOT NULL
-            AND uoi.status IN
-            (".
-            UserOrderInfo::USER_ORDER_STATUS_CONFIRM.",".
-            UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS.",".
-            UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH
-
-            .")
-        ");
-
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":publisherId",$publisherId);
-
-        return $command->queryAll();
-    }
-
-
-    /**
-     * 根据订单号，获取随友信息
-     * @param $orderId
-     * @return array|bool
-     */
-    public function findPublisherByOrderId($orderId)
-    {
-        $sql=sprintf("
-            SELECT * FROM user_publisher
-            WHERE userPublisherId=
-            (
-              SELECT publisherId FROM user_order_publisher WHERE orderId=:orderId
-            )
-        ");
-        $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":orderId",$orderId);
-        return $command->queryOne();
-    }
-
-
-    /**
-     * 添加随友取消订单
-     * @param UserOrderPublisherCancel $userOrderPublisherCancel
-     * @throws \yii\db\Exception
-     */
-    public function addUserOrderPublisherCancel(UserOrderPublisherCancel $userOrderPublisherCancel)
-    {
-        $sql = sprintf("
-            INSERT INTO user_order_publisher_cancel
-            (
-              orderId,publisherId,cancelTime,content,status
-            )
-            VALUES
-            (
-               :orderId,:publisherId,now(),:content,:status
-            )
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":orderId", $userOrderPublisherCancel->orderId, PDO::PARAM_INT);
-        $command->bindParam(":publisherId", $userOrderPublisherCancel->publisherId, PDO::PARAM_INT);
-        $command->bindParam(":content", $userOrderPublisherCancel->content, PDO::PARAM_STR);
-        $command->bindParam(":status", $userOrderPublisherCancel->status, PDO::PARAM_INT);
-
-        $command->execute();
-    }
-
-
 
 }

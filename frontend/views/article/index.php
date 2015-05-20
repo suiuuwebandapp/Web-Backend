@@ -138,7 +138,7 @@ function getComment(page)
                 var l =obj.data.comment.length;
                 if(l==0)
                 {
-                    str='<li><p>tripId</p></li>';
+                    str='<li><p>暂无评论</p></li>';
                 }
                 for(var i=0;i<l;i++)
                 {

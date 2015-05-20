@@ -15,7 +15,7 @@ use frontend\services\UserBaseService;
 use yii\web\Controller;
 
 
-class CController extends Controller{
+class CController extends SController{
 
     public $userObj=null;
     public $userPublisherObj=null;

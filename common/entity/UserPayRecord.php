@@ -13,6 +13,7 @@ namespace common\entity;
 class UserPayRecord {
 
     const PAY_RECORD_TYPE_ALIPAY=1;
+    const PAY_RECORD_TYPE_WXPAY=2;
 
     public $payId;
 

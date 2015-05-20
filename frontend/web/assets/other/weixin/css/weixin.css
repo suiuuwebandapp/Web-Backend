@@ -1,19 +1,98 @@
 @charset "utf-8";
 /* CSS Document */
 
-body{ background:#f5f5f5;}
-nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6e6e6e; display:block; color:#fff; font-size:1rem;}
+body{ background:#eee;font-size:0.85rem;}
+nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6e6e6e; display:block; color:#fff; font-size:1rem; max-width:640px;margin:0 auto }
 .con{ padding:0 1%; max-width:640px; margin:0 auto;}
+.bgwhite{ background:#fff;}
 
 /*-----------注册-------------*/
 .Registered .lists li{ position:relative;  }
-.Registered .lists li label{ font-size:0.85rem; width:100%; margin-top:0.4rem; display:block; }
+.Registered .lists li label{ font-size:0.85rem; width:100%; margin-top:0.8rem; display:block; }
 .Registered .lists li input{ background:#fff; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
 .Registered .lists li .country{ background:#fff url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
 .Registered .lists li .code{ font-size:0.85rem; position:absolute; right:0.8rem; bottom:0.8rem; color:#FF7F00; text-decoration:none;}
 .Registered .lists li .code:hover{ text-decoration:underline;}
-.Registered .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:1.8rem auto; text-decoration:none;}
+.Registered .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:1.8rem auto 0; text-decoration:none;}
 .Registered .btn:hover{ text-decoration:underline;}
+
+
+/*-----------绑定-------------*/
+.bangding .lists li{ position:relative;  }
+.bangding .lists li label{ font-size:0.85rem; width:100%; margin-top:0.8rem; display:block; }
+.bangding .lists li input{ background:#fff; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.bangding .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:1.8rem auto 0; text-decoration:none;}
+.bangding .btn:hover{ text-decoration:underline;}
+
+
+
+/*-----------随游-账号登录/绑定-------------*/
+.sy_zh .box{ position:relative; padding:0.9rem 0.8rem 1.5rem; background:#fff;margin-top:0.5rem;   }
+.sy_zh .box .logo{ width:4.6rem;display:block; margin:0 auto; }
+.sy_zh .box p{ text-indent:2em; line-height:1.2rem; }
+
+
+
+.sy_zh .box .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:1.8rem auto 0; text-decoration:none;}
+.sy_zh .box .btn:hover{ text-decoration:underline;}
+
+
+/*-----------随游-订单-----------*/
+.sy_order .box{ position:relative; padding:0.9rem 0.8rem 3rem; background:#fff;margin-top:0.5rem;  }
+.sy_order .box .top{ border-bottom:1px solid #ddd; padding-bottom:20px; }
+.sy_order .box .top .left{ float:left;  width:30%;  }
+.sy_order .box .top .right{ float:left; width:60%;  }
+.sy_order .box .top .left .user{ position:relative; width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
+.sy_order .box .top .left .user img{ width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
+.sy_order .box .top .left .user .name{ position:absolute; top:1rem; left:2.7rem; width:11rem; }
+.sy_order .box .email{ position:absolute; height:1.3rem; width:1.6rem; display:block;  top:0.7rem; right:0.7rem; background:url(../images/email.png) no-repeat center center; background-size:1.57rem 1.21rem; }
+.sy_order .box .top p{  line-height:1.2rem; margin-top:10px; }
+.sy_order .box .down{ position:relative;}
+.sy_order .box .down p{  line-height:1.2rem; margin-top:10px; }
+.sy_order .box .money{ color:#FF8000; font-size:1rem; position:absolute;  bottom:0.7rem; right:5rem;}
+.sy_order .box .btn{ text-decoration:none; position:absolute;  bottom:0.7rem; right:0.7rem;text-align:center; color:#fff; background:#FF8000; display:block; width:3.9rem; height:1.78rem; line-height:1.78rem;}
+.sy_order .box .btn:hover{ text-decoration:underline; }
+		/*------fixed------*/
+.order_pay{ position:fixed;  bottom:0; left:0;  box-shadow:0 0 4px rgba(0,0,0,0.4);  height:0; width:100%; background:rgba(0,0,0,0.9); overflow:hidden; }
+.order_pay p{ text-align:center; color:#fff; margin-top:0.6rem; }
+.order_pay .select{ width:10rem; margin:1.5rem auto 0;}
+.order_pay .select .zfb{ float:left; height:3rem; width:3rem; display:block; background:url(../images/icon01.png) no-repeat center 0; background-size:2.14rem 5.78rem; margin:0 1rem; }
+.order_pay .select .wei{ float:left; height:3rem; width:3rem; display:block; background:url(../images/icon01.png) no-repeat center -3.5rem; background-size:2.14rem 5.78rem; margin:0 1rem; }
+.order_pay .btn{ position:absolute;bottom:0.7rem; right:0.7rem; color:#fff; font-size:0.85rem; text-decoration:none; }
+.order_pay .btn:hover{  text-decoration:underline;  }
+
+
+/*-----------随游-填写需求01-------------*/
+.sy_need01 .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
+.sy_need01 p{ text-align:center; }
+.sy_need01 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
+.sy_need01 .btn:hover{ text-decoration:underline;}
+
+/*-----------随游-填写需求02-------------*/
+.sy_need02 .selet{ width:100%;display:block; height:2.7rem; border:1px solid #ddd; line-height:2.7rem; font-size:0.85rem; color:#858585; text-decoration:none; padding:0 0.5rem; background:#fff url(../images/go.png) no-repeat 98% center; background-size:0.53rem 0.85rem; margin:0.28rem auto; }
+.sy_need02 p{ margin-top:10px; }
+.sy_need02 .row{ display:table; width:100%; height:2.7rem; line-height:2.7rem; background:#fff; padding:0 0.5rem;  }
+.sy_need02 .row .add{ display:table-cell; width:2rem; background:url(../images/add.png) no-repeat center center; background-size:1.78rem 1.71rem;  }
+.sy_need02 .row .text{ text-align:center; display:table-cell; height:2.7rem; line-height:2.7rem; font-size:1rem; width:100%; margin:0 auto;  }
+.sy_need02 .row .minus{ display:table-cell; width:2rem;  background:url(../images/minus.png) no-repeat center center; background-size:1.78rem 0.35rem;border-right:1px solid #ddd;  }
+.sy_need02 .sdate{ width:100%; height:2.7rem; line-height:2.7rem; font-size:0.85rem; background:#fff; padding:0 0.5rem; margin-bottom:10px;  }
+.sy_need02 textarea{ width:100%; padding:0 0.5rem;  line-height:0.85rem; font-size:0.85rem; height:8.2rem; background:#fff; border:1px solid #ddd;}
+.sy_need02 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:20px auto; text-decoration:none;}
+.sy_need02 .btn:hover{ text-decoration:underline;}
+
+
+/*-----------成功页-------------*/
+.finish .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
+.finish p{ text-align:center; }
+
+/*-----------国家-------------*/
+.country{ position:relative;}
+.country .navbars{ font-size:0.85rem; width:1.6rem; position:fixed; right:0; top:5rem; z-index:9; }
+.country .navbars a{ color:#FFAB00; font-size:0.85rem; text-decoration:none; line-height:0.85rem; }
+.country .search{ height:2.7rem; width:100%; display:block; background:#fff url(../images/top-search.png) no-repeat 0.17rem center; background-size:1.142rem 1.07rem; font-size:0.85rem; margin:0.28rem auto; padding:0 1.25rem; border:1px solid #ddd; }
+.country .lists dt{ height:1.5rem;width:100%; display:block; background:#eee;  font-size:0.85rem; line-height:1.5rem; padding:0 0.5rem;}
+.country .lists dd{ height:2.5rem; border-bottom:1px solid #ddd; width:100%; display:block; background:#fff;  font-size:0.85rem; line-height:2.5rem; padding:0 0.5rem;}
+
 
 
 

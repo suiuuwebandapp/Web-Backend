@@ -79,6 +79,10 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
     </div>
     <?php } ?>
 </div>
+<div align="center" id="qrcode">
+
+</div>
+<script src="/assets/other/weixin/js/qrcode.js"></script>
 
 
 <script type="text/javascript">
@@ -92,8 +96,7 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
                 Main.showTip("请选择支付方式");
                 return;
             }else if(payType==2){
-                Main.showTip("微信支付暂未开通，请您选择其他支付方式");
-                return;
+                wxPay(orderNumber);
             }else if(payType==1){
                 window.open("/pay?number="+orderNumber+"&type=1");
                 interval=window.setInterval(function(){
@@ -106,6 +109,38 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
 
     });
 
+    function wxPay(orderNumber)
+    {
+        $.ajax({
+            type:"get",
+            url:"/pay?number="+orderNumber+"&type=2",
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    var url = data.data;
+                    //参数1表示图像大小，取值范围1-10；参数2表示质量，取值范围'L','M','Q','H'
+                    var qr = qrcode(10, 'M');
+                    qr.addData(url);
+                    qr.make();
+                    var wording=document.createElement('p');
+                    wording.innerHTML = "扫我，扫我";
+                    var code=document.createElement('DIV');
+                    code.innerHTML = qr.createImgTag();
+                    var element=document.getElementById("qrcode");
+                    element.appendChild(wording);
+                    element.appendChild(code);
+                    interval=window.setInterval(function(){
+                        getStatus();
+                    },2000);
+                }else
+                {
+                    alert(data.data);
+                }
+            }
+
+        });
+
+    }
     /**
      * 获取订单状态
      */
