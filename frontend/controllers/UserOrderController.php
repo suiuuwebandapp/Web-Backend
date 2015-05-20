@@ -53,7 +53,6 @@ class UserOrderController extends  CController{
         ]);
     }
 
-
     /**
      * 添加用户订单
      * @return void|\yii\web\Response
@@ -166,7 +165,6 @@ class UserOrderController extends  CController{
         }
     }
 
-
     public function actionToPay()
     {
         //跳转到选择支付页面 暂时用支付宝
@@ -175,7 +173,6 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '无效的订单编号']);
         }
     }
-
 
     /**
      * 获取用户未完成的订单
@@ -228,9 +225,14 @@ class UserOrderController extends  CController{
     public function actionPublisherConfirmOrder()
     {
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
-
+        $publisherId=$this->userPublisherObj->userPublisherId;
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($publisherId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友信息"));
+        }
         try{
-            $publisherId=$this->userPublisherObj->userPublisherId;
             $this->userOrderService->publisherConfirmOrder($orderId,$publisherId);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e) {
@@ -244,9 +246,15 @@ class UserOrderController extends  CController{
     public function actionPublisherIgnoreOrder()
     {
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
+        $publisherId=$this->userPublisherObj->userPublisherId;
 
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($publisherId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友信息"));
+        }
         try{
-            $publisherId=$this->userPublisherObj->userPublisherId;
             $this->userOrderService->publisherIgnoreOrder($orderId,$publisherId);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e) {
@@ -254,7 +262,6 @@ class UserOrderController extends  CController{
         }
 
     }
-
 
     /**
      * 尚未接单情况，直接取消订单
@@ -286,7 +293,6 @@ class UserOrderController extends  CController{
         }
 
     }
-
 
     /**
      * 订单申请退款
@@ -361,6 +367,54 @@ class UserOrderController extends  CController{
         }catch (Exception $e){
             return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
         }
+    }
+
+    /**
+     * 获取随友订单
+     * @return string
+     */
+    public function actionGetPublisherOrderList()
+    {
+        $publisherId=$this->userPublisherObj->userPublisherId;
+        if(empty($publisherId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友信息"));
+        }
+        try{
+            $list=$this->userOrderService->getPublisherOrderList($publisherId);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
+            throw $e;
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取随友订单失败"));
+        }
+    }
+
+
+    /**
+     * 随友取消订单
+     * @return string
+     */
+    public function actionPublisherCancelOrder()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+        $message=trim(\Yii::$app->request->post("message", ""));
+        $publisherId=$this->userPublisherObj->userPublisherId;
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($message)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请输入取消原因"));
+        }
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友信息"));
+        }
+
+        try{
+            $this->userOrderService->publisherCancelOrder($publisherId,$orderId,$message);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,"取消订单失败"));
+        }
+
     }
 
 

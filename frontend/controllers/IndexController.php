@@ -56,8 +56,21 @@ class IndexController extends UnCController
 
     public function actionTest()
     {
+       /* for($i=0;$i<300;$i++)
+        {
+            $userBase = new UserBase();
+            $userBase->email = 'test'.$i."@qq.com";
+            $userBase->password = 'qwe123';
+            //$this->userBaseService->addUser($userBase);
+            $str=$userBase->email.'|'.'qwe123';
+            echo $str;
+            echo "<br>";
+        }*/
+
 
     }
+
+
     public function actionPasswordSendCode()
     {
         if(!isset($_POST['username']))
@@ -612,6 +625,8 @@ class IndexController extends UnCController
             $nickname="";
             $countryService = new CountryService();
             $countryList=$countryService->getCountryList();
+            $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+
             if (isset($this->userObj)) {
                 $email = $this->userObj->email;
                 $phone = $this->userObj->phone;
@@ -625,7 +640,8 @@ class IndexController extends UnCController
                 'phone' => $phone,
                 'areaCode' => $areaCode,
                 'nickname'=>$nickname,
-                'countryList'=>$countryList
+                'countryList'=>$countryList,
+                'userPublisher'=>$userPublisher
             ]);
         }
     }
@@ -677,7 +693,12 @@ class IndexController extends UnCController
         echo json_encode($rst);
     }
 
-    //验证手机
+    /**
+     * 验证手机
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionValidatePhone()
     {
 
@@ -713,6 +734,11 @@ class IndexController extends UnCController
         }
     }
 
+
+    /**
+     * 验证邮箱
+     * @return string|yii\web\Response
+     */
     public function actionValidateMail()
     {
         $email = \Yii::$app->request->get('e');//用户输入的邮箱
@@ -742,6 +768,12 @@ class IndexController extends UnCController
 
     }
 
+    /**
+     * 发送验证邮件
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionSendValidateMail()
     {
         $mail=trim(\Yii::$app->request->post("mail", ""));
@@ -843,15 +875,21 @@ class IndexController extends UnCController
         $userBase=null;
         if($this->userObj==null){
             $userBase=new UserBase();
+            $userPublisher=new UserPublisher();
         }else{
             $userBase= clone $this->userObj;
+            $userPublisher=$this->userBaseService->findUserPublisherByUserSign($userBase->userSign);
         }
         $userBase->nickname=$nickname;
-        $userPublisher=new UserPublisher();
+
         $userPublisher->countryId=$countryId;
         $userPublisher->cityId=$cityId;
         $userPublisher->idCardImg=$userCard;
         $userPublisher->kind=UserPublisher::USER_PUBLISHER_CARD_KIND_PASSPORT;
+        $userBase->countryId=$countryId;
+        $userBase->cityId=$cityId;
+        $userBase->profession='';
+
 
         $rst=null;
 
@@ -999,12 +1037,10 @@ class IndexController extends UnCController
 
             return $this->redirect('/index/reg-pub-success');
         }catch (Exception $e){
+            throw $e;
             return $this->redirect(['/result', 'result' => '邮箱认证失败:'.$e->getMessage()]);
 
         }
-
-
-
     }
 
     /**

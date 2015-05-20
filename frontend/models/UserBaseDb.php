@@ -389,6 +389,7 @@ class UserBaseDb extends ProxyDb
     /**
      * 批量查找用户基本信息
      * @param $userIds
+     * @return array
      */
     public function getUserBaseByUserIds($userIds)
     {
@@ -401,7 +402,7 @@ class UserBaseDb extends ProxyDb
 
         $command = $this->getConnection()->createCommand($sql);
 
-        $command->queryAll();
+        return $command->queryAll();
 
     }
 

@@ -10,6 +10,7 @@
 namespace common\models;
 
 
+use common\components\Code;
 use common\entity\UserMessage;
 use common\entity\UserMessageSession;
 use common\entity\UserMessageSetting;
@@ -125,9 +126,11 @@ class UserMessageDb extends ProxyDb
      * 获取用户会话列表
      * @param $userSign
      * @param null $isRead
+     * @param null $unReadList
+     * @param $status
      * @return array
      */
-    public function getUserMessageSessionByUserSign($userSign,$isRead=null)
+    public function getUserMessageSessionByUserSign($userSign,$isRead=null,$unReadList=null,$status)
     {
         $sql=sprintf("
             SELECT DISTINCT ub.nickname,ub.headImg,s.* FROM
@@ -138,11 +141,18 @@ class UserMessageDb extends ProxyDb
             )
             AS s
             LEFT JOIN user_base ub ON ub.userSign=s.userId
+            WHERE 1=1
         ");
         if(isset($isRead)){
-            $sql.=" WHERE s.isRead=:isRead ";
+            $sql.=" AND s.isRead=:isRead ";
         }
-        $sql.=" ORDER BY s.lastConcatTime ";
+        if($status==UserMessageSetting::USER_MESSAGE_SETTING_STATUS_ALLOW_ALL){
+            if(!empty($unReadList)){
+                $sql.=" AND s.userId NOT IN (".$unReadList.")";
+            }
+        }else{
+            $sql.=" AND s.userId='".Code::USER_SYSTEM_MESSAGE_ID."' ";
+        }
 
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
@@ -291,6 +301,7 @@ class UserMessageDb extends ProxyDb
     /**
      * 获取用户消息设置列表
      * @param $userId
+     * @return array|bool
      * @throws \yii\db\Exception
      */
     public function findUserMessageSettingByUserId($userId)

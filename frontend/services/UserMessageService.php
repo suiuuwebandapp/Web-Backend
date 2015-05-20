@@ -92,7 +92,13 @@ class UserMessageService extends BaseDb
         try{
             $conn=$this->getConnection();
             $this->userMessageDb=new UserMessageDb($conn);
-            return $this->userMessageDb->getUserMessageSessionByUserSign($userSign);
+            $messageSetting=$this->userMessageDb->findUserMessageSettingByUserId($userSign);
+            $shieldIds='';
+            if(!empty($messageSetting['shieldIds'])){
+                $shieldArr=explode(",",$messageSetting['shieldIds']);
+                $shieldIds="'".implode("','",$shieldArr)."'";
+            }
+            return $this->userMessageDb->getUserMessageSessionByUserSign($userSign,null,$shieldIds,$messageSetting['status']);
         }catch (Exception $e){
             throw $e;
         }finally{
@@ -112,7 +118,13 @@ class UserMessageService extends BaseDb
         try{
             $conn=$this->getConnection();
             $this->userMessageDb=new UserMessageDb($conn);
-            return $this->userMessageDb->getUserMessageSessionByUserSign($userSign,0);
+            $messageSetting=$this->userMessageDb->findUserMessageSettingByUserId($userSign);
+            $shieldIds='';
+            if(!empty($messageSetting['shieldIds'])){
+                $shieldArr=explode(",",$messageSetting['shieldIds']);
+                $shieldIds="'".implode("','",$shieldArr)."'";
+            }
+            return $this->userMessageDb->getUserMessageSessionByUserSign($userSign,0,$shieldIds,$messageSetting['status']);
         }catch (Exception $e){
             throw $e;
         }finally{
@@ -219,7 +231,7 @@ class UserMessageService extends BaseDb
                 $shieldArr=explode(",",$messageSetting->shieldIds);
                 $shieldIds="'".implode("','",$shieldArr)."'";
                 $userBaseList=$userBaseDb->getUserBaseByUserIds($shieldIds);
-                $messageSetting->setUserBaseList($userBaseList);
+                $messageSetting->userBaseList=$userBaseList;
             }
         }catch (Exception $e){
             throw $e;
@@ -268,7 +280,10 @@ class UserMessageService extends BaseDb
         try{
             $messageSetting=$this->findUserMessageSettingByUserId($userId);
             $shieldIds=$messageSetting->shieldIds;
-            $shieldIdArr=explode(",",$shieldIds);
+            $shieldIdArr=[];
+            if($shieldIds!=''){
+                $shieldIdArr=explode(",",$shieldIds);
+            }
             if(!in_array($shieldId,$shieldIdArr)){
                 $shieldIdArr[]=$shieldId;
                 $shieldIds=implode(",",$shieldIdArr);
@@ -304,7 +319,7 @@ class UserMessageService extends BaseDb
             $shieldIds=$messageSetting->shieldIds;
             $shieldIdArr=explode(",",$shieldIds);
             if(in_array($shieldId,$shieldIdArr)){
-                $shieldIdArr=array_splice($shieldIdArr,array_search($shieldIdArr,$shieldId));
+                array_splice($shieldIdArr,array_search($shieldId,$shieldIdArr));
                 $shieldIds=implode(",",$shieldIdArr);
                 $conn=$this->getConnection();
                 $this->userMessageDb=new UserMessageDb($conn);

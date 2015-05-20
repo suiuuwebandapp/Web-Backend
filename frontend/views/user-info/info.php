@@ -123,8 +123,54 @@
     .shield_btn{
         font-size: 12px;
         padding-left:16px;
+        cursor: pointer;
+    }
+
+    .p_chose_card_front {
+        height: 210px;
+        width: 350px;
+        text-align: center;
+        line-height: 210px;
+    }
+    .upload_tip {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .imgPic {
+        cursor: pointer;
+        height: 210px;
+        width: 350px;
+    }
+
+    .showImg {
+        height: 210px;
+        width: 350px;
+    }
+
+    #uploadifive-fileCardFront {
+        display: none;
+    }
+    .queue {
+        display: none;
+    }
+
+    .sel-pic{
+        background: none;
+    }
+    .sycon .myInformation .past02 .wdzl .card_upload{
+        background: #ff7a4d !important;
+        padding-left: 0px !important;
+        color: white;
     }
 </style>
+
+<?php
+    $idCardImg="";
+    if(!empty($userPublisher)&&!empty($userPublisher->idCardImg)){
+        $idCardImg=$userPublisher->idCardImg;
+    }
+?>
 <input type="hidden" id="lon"/>
 <input type="hidden" id="lat"/>
 
@@ -170,7 +216,7 @@
             <div class="left" id="messageSessionDiv">
                 <ul>
                 </ul>
-                <div class="pages">
+                <div class="pages" style="display: none">
                     <ol>
                         <li>1</li>
                         <li>2</li>
@@ -191,20 +237,8 @@
         </div>
         <div class="emailCon past03 slideRec">
             <div class="con clearfix">
-                <p>被屏蔽用户</p>
-                <div id="">
-                    <div class="setd">
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <input type="button" value="取消屏蔽" class="btn">
-                    </div>
-                    <div class="setd">
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <input type="button" value="取消屏蔽" class="btn">
-                    </div>
-                    <div class="setd">
-                        <div class="people"><img src="/assets/images/1.png"><span>dengling</span></div>
-                        <input type="button" value="取消屏蔽" class="btn">
-                    </div>
+                <p id="user_message_setting_title">被屏蔽用户</p>
+                <div id="messageShieldList">
                 </div>
                 <h2>隐私设置</h2>
                 <input type="radio" id="user_message_setting_all" name="user_message_setting_status"
@@ -253,11 +287,11 @@
         </ul>
         <div class="myOder past01 tabCon" style="display:block;" id="unConfirmList">
         </div>
-        <div class="myOder past02 tabCon" id="myPublisherOrderList">
+        <div class="myOder past01 tabCon" id="myPublisherOrderList">
         </div>
-        <div class="myOder past03 tabCon" id="myTripList">
+        <div class="myOder past02 tabCon" id="myTripList">
         </div>
-        <div class="myOder past04 tabCon" id="myJoinTripList">
+        <div class="myOder past03 tabCon" id="myJoinTripList">
         </div>
 
 
@@ -411,12 +445,20 @@
                         <?php  }?>
                     </p>
                     <div style="clear: both"></div>
-                    <p><span>实名认证</span><span class="form_tip"></span></p>
+                    <p><span>实名认证</span><span id="cardTip" class="form_tip"></span></p>
                     <div style="clear: both"></div>
                     <div class="sel-pic">
-                        <input  class="sect" type="button" value="上传护照照片"/>
-                        <input  class="btn sure" type="button" value="上传"/>
+                        <div id="divCardFront" class="imgPic">
+                            <img src="<?=$idCardImg?>" id="imgFront" style="display: none" class="showImg"/>
+                            <p class="p_chose_card_front">点击上传护照</p>
+                        </div>
+                        <input id="fileCardFront" type="file"/>
+                        <div id="frontQueue" class="queue"></div>
                     </div>
+                    <p class="upload_tip">上传文件大小不能大于1M,支持格式png、jpg、jpeg</p>
+                    <br/>
+                    <input type="button" value="上 传" class="btn sure card_upload" id="uploadAll">
+                    <br/>
                     <div style="clear: both"></div>
                     <p><span>更多认证</span><span class="form_tip"></span></p>
                     <div class="moreRen">
@@ -427,7 +469,7 @@
                         </ul>
                     </div>
                     <div style="clear: both"></div>
-                    <p><a href="#"  class="surebtn">保存修改</a></p>
+                    <p style="display: none"><a href="#"  class="surebtn">保存修改</a></p>
 
                 </div>
             </div>
@@ -452,7 +494,6 @@
                             <li><b class="icon weixin"></b><input type="button" value="关联"></li>
                             <li><b class="icon sina"></b><input type="button" value="关联"></li>
                         </ul>
-
                     </div>
                     <span></span>
                     <a href="javascript:;"  class="surebtn" id="password_update_info">保存修改</a>

@@ -12,7 +12,9 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\OssUpload;
+use common\entity\UserPublisher;
 use frontend\services\UploadService;
+use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\web\Controller;
 
@@ -65,6 +67,40 @@ class UploadController extends Controller{
             echo json_encode(['status']);
         }else{
             $result=$this->uploadService->uploadOssFile($_FILES['Filedata'],$this->maxHeadImgSize,$this->headImgTypes,OssUpload::OSS_SUIUU_CARD_DIR);
+            return json_encode($result);
+        }
+    }
+
+    public function actionUploadCardImgByUser()
+    {
+        if(!array_key_exists('Filedata',$_FILES)){
+            echo json_encode(['status']);
+        }else{
+            $result=$this->uploadService->uploadOssFile($_FILES['Filedata'],$this->maxHeadImgSize,$this->headImgTypes,OssUpload::OSS_SUIUU_CARD_DIR);
+            if($result['status']==Code::SUCCESS){
+                $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
+
+                try{
+                    if($currentUser!=null){
+                        $userBaseService=new UserBaseService();
+                        $userPublisher=$userBaseService->findUserPublisherByUserSign($currentUser->userSign);
+                        if($userPublisher==null){
+                            $userPublisher=new UserPublisher();
+                            $userPublisher->userId=$currentUser->userSign;
+                            $userPublisher->idCardImg=$result['data'];
+                            $userBaseService->addUserPublisher($userPublisher);
+                        }else{
+                            $userPublisher->idCardImg=$result['data'];
+                            $userBaseService->updateUserPublisher($userPublisher);
+                        }
+
+                    }else{
+                        $result=Code::statusDataReturn(Code::FAIL);
+                    }
+                }catch (Exception $e){
+                    $result=Code::statusDataReturn(Code::FAIL);
+                }
+            }
             return json_encode($result);
         }
     }
