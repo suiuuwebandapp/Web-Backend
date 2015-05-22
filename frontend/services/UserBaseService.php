@@ -2,6 +2,7 @@
 namespace frontend\services;
 
 use common\components\Code;
+use common\components\SysMessageUtils;
 use common\components\Validate;
 use common\entity\UserAccess;
 use common\entity\UserPublisher;
@@ -97,6 +98,9 @@ class UserBaseService extends BaseDb
                 $userBase=$this->arrayCastObject($userBase,UserBase::class);
             }
             $this->commit($tran);
+
+            $sysMessageUtil=new SysMessageUtils();
+            $sysMessageUtil->sendUserRegisterUserInfoMessage($userBase->userSign);
         } catch (Exception $e) {
             $this->rollback($tran);
             throw $e;
@@ -509,6 +513,22 @@ class UserBaseService extends BaseDb
             $conn = $this->getConnection();
             $userPublisherDb=new UserPublisherDb($conn);
             $result=$userPublisherDb->findUserPublisherByUserId($userSign);
+            $userBase=$this->arrayCastObject($result,UserPublisher::class);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
+
+    public function findUserPublisherByPublisherId($publisherId)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $userPublisherDb=new UserPublisherDb($conn);
+            $result=$userPublisherDb->findUserPublisherById($publisherId);
             $userBase=$this->arrayCastObject($result,UserPublisher::class);
         } catch (Exception $e) {
             throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);

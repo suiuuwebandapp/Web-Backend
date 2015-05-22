@@ -154,12 +154,12 @@ class TravelTripDb extends ProxyDb{
             INSERT INTO travel_trip
             (
               createPublisherId,createTime,title,titleImg,countryId,cityId,lon,lat,basePrice,maxUserCount,isAirplane,
-              isHotel,score,startTime,endTime,travelTime,travelTimeType,intro,info,tags,status
+              isHotel,score,tripCount,startTime,endTime,travelTime,travelTimeType,intro,info,tags,status
             )
             VALUES
             (
               :createPublisherId,now(),:title,:titleImg,:countryId,:cityId,:lon,:lat,:basePrice,:maxUserCount,:isAirplane,
-              :isHotel,:score,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status
+              :isHotel,:score,0,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status
             )
         ");
 
@@ -199,7 +199,7 @@ class TravelTripDb extends ProxyDb{
         $sql = sprintf("
             UPDATE travel_trip SET
             title=:title,titleImg=:titleImg,countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,basePrice=:basePrice,
-            maxUserCount=:maxUserCount,isAirplane=:isAirplane,isHotel=:isHotel,score=:score,startTime=:startTime,
+            maxUserCount=:maxUserCount,isAirplane=:isAirplane,isHotel=:isHotel,score=:score,tripCount=:tripCount,startTime=:startTime,
             endTime=:endTime,travelTime=:travelTime,travelTimeType=:travelTimeType,intro=:intro,info=:info,tags=:tags,
             status=:status
             WHERE tripId=:tripId
@@ -216,6 +216,7 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":isAirplane", $travelTrip->isAirplane, PDO::PARAM_INT);
         $command->bindParam(":isHotel", $travelTrip->isHotel, PDO::PARAM_INT);
         $command->bindParam(":score", $travelTrip->score, PDO::PARAM_STR);
+        $command->bindParam(":tripCount", $travelTrip->tripCount, PDO::PARAM_INT);
         $command->bindParam(":startTime", $travelTrip->startTime, PDO::PARAM_STR);
         $command->bindParam(":endTime", $travelTrip->endTime, PDO::PARAM_STR);
         $command->bindParam(":travelTime", $travelTrip->travelTime, PDO::PARAM_STR);
@@ -667,7 +668,7 @@ class TravelTripDb extends ProxyDb{
     {
         $sql=sprintf("
             DELETE FROM travel_trip_publisher
-            WHERE tripId=:tripId AND tripPublisherId:tripPublisherId
+            WHERE tripId=:tripId AND tripPublisherId=:tripPublisherId
         ");
 
         $command=$this->getConnection()->createCommand($sql);
@@ -775,14 +776,46 @@ class TravelTripDb extends ProxyDb{
         return $command->queryAll();
     }
 
-
-    public function getPublisherOrderList($publisherId)
+    /**
+     * 添加随游被参与次数
+     * @param $tripId
+     * @throws \yii\db\Exception
+     */
+    public function addTravelTripCount($tripId)
     {
-        $sql=sprintf("
-            SELECT * FROM
+        $sql = sprintf("
+            UPDATE travel_trip SET
+            tripCount=tripCount+1
+            WHERE tripId=:tripId
         ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+
+        $command->execute();
     }
 
 
+    /**
+     * 获取是否有申请正在等待审核
+     * @param $tripId
+     * @param $publisherId
+     * @return array|bool
+     */
+    public function findTravelTripApplyByTripIdAndUser($tripId,$publisherId)
+    {
+        $sql=sprintf("
+            SELECT * FROM travel_trip_apply
+            WHERE tripId=:tripId AND publisherId=:publisherId AND status=:status
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->bindParam(":publisherId", $publisherId, PDO::PARAM_INT);
+        $command->bindValue(":status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT, PDO::PARAM_INT);
+
+        return $command->queryOne();
+    }
 
 }

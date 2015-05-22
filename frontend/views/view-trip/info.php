@@ -215,6 +215,8 @@
                     <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
                     <span><?=$createUserInfo->nickname;?></span>
                 </div>
+                <a href="javascript:;" onclick="Main.showSendMessage('<?=$createUserInfo->userSign?>');"><img src="/assets/images/xf.fw.png" alt="" style="float: right;margin-right: 45px;"></a>
+
                 <p><?=$createUserInfo->intro;?></p>
             </div>
             <div class="pf">
@@ -389,7 +391,7 @@
         //绑定移除
         $("#publisherList div a").bind("click",function(){
             var tripPublisherId=$(this).attr("tripPublisherId");
-            var tripId=$("tripId").val();
+            var tripId=$("#tripId").val();
             if(!confirm("确认要删除随友的申请吗？")){
                 return;
             }

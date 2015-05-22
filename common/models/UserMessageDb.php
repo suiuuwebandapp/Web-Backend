@@ -29,11 +29,11 @@ class UserMessageDb extends ProxyDb
         $sql=sprintf("
             INSERT INTO user_message
             (
-              sessionKeyOne,sessionKeyTwo,receiveId,senderId,content,sendTime,isRead
+              sessionKeyOne,sessionKeyTwo,receiveId,senderId,url,content,sendTime,isRead
             )
             VALUES
             (
-              :sessionKeyOne,:sessionKeyTwo,:receiveId,:senderId,:content,now(),FALSE
+              :sessionKeyOne,:sessionKeyTwo,:receiveId,:senderId,:url,:content,now(),FALSE
             )
         ");
 
@@ -44,6 +44,7 @@ class UserMessageDb extends ProxyDb
         $command->bindParam(":receiveId", $userMessage->receiveId, PDO::PARAM_STR);
         $command->bindParam(":senderId", $userMessage->senderId, PDO::PARAM_STR);
         $command->bindParam(":content", $userMessage->content, PDO::PARAM_STR);
+        $command->bindParam(":url", $userMessage->url, PDO::PARAM_STR);
 
         $command->execute();
     }
@@ -153,12 +154,32 @@ class UserMessageDb extends ProxyDb
         }else{
             $sql.=" AND s.userId='".Code::USER_SYSTEM_MESSAGE_ID."' ";
         }
-
+        $sql.=" ORDER BY s.isRead,s.lastConcatTime DESC ";
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
         if(isset($isRead)){
             $command->bindParam(":isRead", $isRead, PDO::PARAM_INT);
         }
+        return $command->queryAll();
+    }
+
+
+    /**
+     * 获取未读系统小心详情
+     * @param $userSign
+     * @return array
+     */
+    public function getUnReadSystemMessageList($userSign)
+    {
+        $sql=sprintf("
+            SELECT * FROM user_message
+            WHERE isRead=False AND senderId=:senderId AND receiveId=:receiveId
+            ORDER BY sendTime DESC
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":receiveId", $userSign, PDO::PARAM_STR);
+        $command->bindValue(":senderId", Code::USER_SYSTEM_MESSAGE_ID, PDO::PARAM_STR);
+
         return $command->queryAll();
     }
 
@@ -218,6 +239,27 @@ class UserMessageDb extends ProxyDb
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":sessionKey", $sessionKey, PDO::PARAM_STR);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
+    /**
+     * 更新系统消息已读
+     * @param $messageId
+     * @param $userSign
+     * @throws \yii\db\Exception
+     */
+    public function updateSystemMessageRead($messageId,$userSign)
+    {
+        $sql=sprintf("
+          UPDATE user_message SET
+          isRead=TRUE,readTime=now()
+          WHERE isRead=FALSE  AND messageId=:messageId AND  receiveId=:receiveId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":messageId", $messageId, PDO::PARAM_INT);
+        $command->bindParam(":receiveId", $userSign, PDO::PARAM_STR);
 
         $command->execute();
     }
