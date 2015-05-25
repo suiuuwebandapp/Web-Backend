@@ -614,7 +614,7 @@ class IndexController extends UnCController
     public function actionCreateTravel()
     {
         //判断用户是否是随友，不是的话，跳转到随游注册页面
-        if (!(isset($this->userObj) && $this->userObj->isPublisher)) {
+        if ((isset($this->userObj) && $this->userObj->isPublisher)) {
             return $this->redirect("/trip/new-trip");
         } else {
 

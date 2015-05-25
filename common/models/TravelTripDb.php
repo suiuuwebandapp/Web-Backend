@@ -95,7 +95,7 @@ class TravelTripDb extends ProxyDb{
             $this->setParam("cityId",$cityId);
         }
         if(!empty($peopleCount)&&$peopleCount!=0){
-            $sql.=" AND t.maxUserCount<=:peopleCount ";
+            $sql.=" AND t.maxUserCount>=:peopleCount ";
             $this->setParam("peopleCount",$peopleCount);
         }
         if(!empty($startPrice)){
@@ -439,7 +439,8 @@ class TravelTripDb extends ProxyDb{
     {
         $sql=sprintf("
             SELECT  ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,t.* FROM travel_trip_publisher t
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,t.*
+            FROM travel_trip_publisher t
             LEFT JOIN user_publisher up ON up.userPublisherId=t.publisherId
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             WHERE t.tripId=:tripId

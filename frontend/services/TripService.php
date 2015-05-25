@@ -612,7 +612,7 @@ class TripService extends BaseDb{
                 throw new Exception("No Power To Agree Apply");
             }
             $travelTripPublisher->tripId=$applyInfo['tripId'];
-            $travelTripPublisher->tripPublisherId=$publisherId;
+            $travelTripPublisher->publisherId=$publisherId;
 
             $this->tripTravelDb->addTravelTripPublisher($travelTripPublisher);//添加随游与随友关联
             $this->tripTravelDb->changeTravelTripApplyStatus($applyId,TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_AGREE);//同意申请

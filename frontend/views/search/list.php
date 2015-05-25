@@ -154,7 +154,7 @@
                 title=title.replaceAll(keywords[j],"<b style='color: red'>"+keywords[j]+"</b>");
                 name=name.replaceAll(keywords[j],"<b style='color: red'>"+keywords[j]+"</b>");
             }
-            html+='<a href="/article?id="'+article.articleId+' target="_blank"><li>';
+            html+='<a href="/article?id='+article.articleId+'" target="_blank"><li>';
             html+='<img src="'+article.titleImg+'" alt="" width="284px" height="260px">';
             html+='<div>';
             html+='<h4>'+title+'</h4>';
@@ -205,11 +205,31 @@
             html+='<a target="_blank" href="/view-trip/info?trip='+trip.tripId+'"><div class="zhezhao">';
             html+='<p>'+intro+'</p>';
             html+='<p class="pingjia">评价';
-            html+='<img src="/assets/images/start1.fw.png" width="13" height="13">';
-            html+='<img src="/assets/images/start1.fw.png" width="13" height="13">';
-            html+='<img src="/assets/images/start1.fw.png" width="13" height="13">';
-            html+='<img src="/assets/images/start2.fw.png" width="13" height="13">';
-            html+='<img src="/assets/images/start2.fw.png" width="13" height="13">';
+            if(trip.score>=2){
+                html+='<img src="/assets/images/start1.fw.png" alt="">';
+            }else{
+                html+='<img src="/assets/images/start2.fw.png" alt="">';
+            }
+            if(trip.score>=4){
+                html+='<img src="/assets/images/start1.fw.png" alt="">';
+            }else{
+                html+='<img src="/assets/images/start2.fw.png" alt="">';
+            }
+            if(trip.score>=6){
+                html+='<img src="/assets/images/start1.fw.png" alt="">';
+            }else{
+                html+='<img src="/assets/images/start2.fw.png" alt="">';
+            }
+            if(trip.score>=8){
+                html+='<img src="/assets/images/start1.fw.png" alt="">';
+            }else{
+                html+='<img src="/assets/images/start2.fw.png" alt="">';
+            }
+            if(trip.score>=10){
+                html+='<img src="/assets/images/start1.fw.png" alt="">';
+            }else{
+                html+='<img src="/assets/images/start2.fw.png" alt="">';
+            }
             html+='<span>基础价格：<b>'+trip.basePrice+'</b></span></p>';
             html+='</div></a>';
             html+='<p class="user01"><img src="'+trip.headImg+'" alt="" width="40" height="40"><font>'+trip.nickname+'</font></p>';

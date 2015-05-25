@@ -150,7 +150,7 @@ class UserOrderDb extends ProxyDb
     {
         $sql = sprintf("
             SELECT uoi.*, ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign
             FROM user_order_info uoi
             LEFT JOIN user_order_publisher uop ON uop.orderId=uoi.orderId
             LEFT JOIN user_publisher up  ON up.userPublisherId=uop.publisherId
@@ -158,6 +158,10 @@ class UserOrderDb extends ProxyDb
             WHERE isDel=FALSE AND uoi.userId=:userId
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . "
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
+            AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_CANCELED . "
+            AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL . "
+
+
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
@@ -174,7 +178,7 @@ class UserOrderDb extends ProxyDb
     {
         $sql = sprintf("
             SELECT uoi.*, ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,uoc.orderCommentId AS isComment
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,uoc.orderCommentId AS isComment
             FROM user_order_info uoi
             LEFT JOIN user_order_publisher uop ON uop.orderId=uoi.orderId
             LEFT JOIN user_publisher up  ON up.userPublisherId=uop.publisherId
@@ -183,7 +187,11 @@ class UserOrderDb extends ProxyDb
             WHERE isDel=FALSE AND uoi.userId=:userId
             AND
             (
-              uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . " OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
+              uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . "
+              OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
+              OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_CANCELED . "
+              OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL . "
+
             )
         ");
         $command = $this->getConnection()->createCommand($sql);

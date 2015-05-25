@@ -79,7 +79,7 @@
     <!--nav begin-->
     <div class="nav-out">
         <div class="nav-content w1200 clearfix">
-            <h2 class="logo"><a href="#"><img src="/assets/images/nav-ico.png" width="120" height="42"></a></h2>
+            <h2 class="logo"><a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/nav-ico.png" width="120" height="42"></a></h2>
 
             <div class="nav">
                 <ul>
@@ -197,6 +197,11 @@
         $("#userpassword").keypress(function(e){
             if(e.keyCode==13){
                $("#login-check").click();
+            }
+        });
+        $("#search-ipt").keypress(function(e){
+            if(e.keyCode==13){
+                $(".search-btn").click();
             }
         });
 

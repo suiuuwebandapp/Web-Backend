@@ -35,7 +35,12 @@ var Main = function() {
                 return true;
             }
         },
-        /**
+        getRequestParam:function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        },
+    /**
          * yyyy-MM-dd hh:mm:ss
          * @param strDate
          * @param format

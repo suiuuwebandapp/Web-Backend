@@ -125,13 +125,13 @@
 <!--index-tuijian begin-->
 <div class="index-tuijian w1200 clearfix">
     <ul class="countrys">
-        <li><a href="/view-trip/list#~search=济州岛"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/01.jpg"></a><span>济州岛</span></li>
-        <li><a href="/view-trip/list#~search=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/02.jpg"></a><span>巴黎</span></li>
-        <li><a href="/view-trip/list#~search=圣母院"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/03.jpg"></a><span>圣母院</span></li>
-        <li><a href="/view-trip/list#~search=台北"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/04.jpg"></a><span>台北</span></li>
-        <li><a href="/view-trip/list#~search=芬兰"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/05.jpg"></a><span>芬兰</span></li>
-        <li><a href="/view-trip/list#~search=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/06.jpg"></a><span>巴黎</span></li>
-        <li><a href="/view-trip/list#~search=伦敦"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/07.jpg"></a><span>伦敦</span></li>
+        <li><a href="/view-trip/list?s=济州岛"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/01.jpg"></a><span>济州岛</span></li>
+        <li><a href="/view-trip/list?s=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/02.jpg"></a><span>巴黎</span></li>
+        <li><a href="/view-trip/list?s=圣母院"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/03.jpg"></a><span>圣母院</span></li>
+        <li><a href="/view-trip/list?s=台北"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/04.jpg"></a><span>台北</span></li>
+        <li><a href="/view-trip/list?s=芬兰"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/05.jpg"></a><span>芬兰</span></li>
+        <li><a href="/view-trip/list?s=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/06.jpg"></a><span>巴黎</span></li>
+        <li><a href="/view-trip/list?s=伦敦"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/07.jpg"></a><span>伦敦</span></li>
     </ul>
 </div>
 <a href="/destination/list"  class="btn8">显示更多</a>
@@ -175,7 +175,7 @@
 
     function tripSearch(){
         var searchInfo=$("#search").val();
-        window.location.href="/view-trip/list#~search="+searchInfo;
+        window.location.href="/view-trip/list?s="+searchInfo;
     }
     function loadTrip(){
         $.ajax({

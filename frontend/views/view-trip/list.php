@@ -190,12 +190,8 @@ i<script type="text/javascript">
     });
 
     function initSearchInfo(){
-        var href=window.location.href;
-        var searchKey="#~search=";
-        if(href.indexOf(searchKey)==-1){
-            return;
-        }
-        var searchInfo=href.substring(href.indexOf(searchKey)+searchKey.length,href.length);
+        var searchInfo=Main.getRequestParam("s")
+        if(searchInfo==null){searchInfo="";}
         $("#search").val(searchInfo);
     }
 

@@ -43,6 +43,7 @@ class ViewTripController extends UnCController{
 
     public function actionList()
     {
+        $search=\Yii::$app->request->get("s",null);
         //查询热门推荐
         $tagList = TagUtil::getInstance()->getTagList();
         $page=new Page();
@@ -55,7 +56,7 @@ class ViewTripController extends UnCController{
         $tripPage->pageSize=16;
         $tripPage->setCurrentPage(1);
         $this->tripService=new TripService();
-        $tripPage= $this->tripService->getList($tripPage,null,null,null,null,null,null,null);
+        $tripPage= $this->tripService->getList($tripPage,$search,null,null,null,null,null,null);
         $pageHtml=Common::pageHtml($tripPage->currentPage,$tripPage->pageSize,$tripPage->totalCount);
         $pageResult=new PageResult($tripPage);
         $pageResult->pageHtml=$pageHtml;
