@@ -118,5 +118,17 @@ class WeChatOrderListService extends BaseDb{
             $this->closeLink();
         }
     }
+    public function updateOrderStatus($orderNumber,$status,$userSign)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->weChatOrderListDb=new WeChatOrderListDb($conn);
+            return $this->weChatOrderListDb->updateOrderStatus($orderNumber,$status,$userSign);
+        } catch (Exception $e) {
+            throw new Exception('变更订单状态异常', Code::FAIL, $e);
+        } finally {
+            $this->closeLink();
+        }
+    }
 
 }

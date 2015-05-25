@@ -162,4 +162,26 @@ WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
         $command->bindParam(":money", $money, PDO::PARAM_STR);
         return $command->execute();
     }
+
+    public function updateOrderStatus($wOrderNumber,$status,$userSign)
+    {
+        $sql = sprintf("
+           UPDATE wechat_order_list SET
+            wStatus=:wStatus,wLastTime=now()
+            WHERE wOrderNumber=:wOrderNumber
+        ");
+        if(!empty($userSign))
+        {
+            $sql.=' AND wUserSign=:wUserSign';
+        }
+
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wStatus", $status, PDO::PARAM_INT);
+        $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
+        if(!empty($userSign))
+        {
+            $command->bindParam(":wUserSign", $userSign, PDO::PARAM_STR);
+        }
+        return $command->execute();
+    }
 }

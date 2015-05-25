@@ -44,7 +44,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .sy_order .box .top .right{ float:right; width:60%;  }
 .sy_order .box .top .left .user{ position:relative; width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
 .sy_order .box .top .left .user img{ width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
-.sy_order .box .top .left .user .name{ position:absolute; top:0; left:2.7rem; width:5rem; }
+.sy_order .box .top .left .user .name{ word-break:break-all; position:absolute; top:0; left:2.7rem; width:5rem; }
 .sy_order .box .top .left .email{ position:absolute; height:1.3rem; width:1.6rem; display:block;  top:3rem; right:1rem; background:url(../images/email.png) no-repeat center center; background-size:1.57rem 1.21rem; }
 .sy_order .box .delete{ position:absolute; height:41px; width:41px; display:block;  top:0.7rem; right:0.7rem; background:url(../images/delet02.png) no-repeat center center;  }
 

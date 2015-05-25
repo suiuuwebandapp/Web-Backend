@@ -46,7 +46,7 @@
      <?php }else{ ?>
             <div class="box clearfix">
                 <div class="top clearfix">
-                    <?php if($val['wStatus']!=\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
+                    <?php if($val['wStatus']!=\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS&&$val['wStatus']!=\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
                     <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
                     <?php }?>
                     <div class="left"><a href="#" class="user"><img src="<?php echo $val['headImg']?>" class="logo"><span class="name"><?php echo $val['nickName'];?></span></a></div>
@@ -66,9 +66,11 @@
                 </div>
                 <b class="money"><?php $val['wMoney']?></b>
                 <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
-                    <a href="javascript:;" class="btn payback">申请退款</a>
+                    <a href="javascript:;" class="btn payback" onclick="applyRefund('<?php echo $val['wOrderNumber']?>')">申请退款</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
                     <a href="javascript:;" class="btn pay" onclick="callpay('<?php echo $val['wOrderNumber']?>')">支付</a>
+                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
+                    <a href="javascript:;" class="btn finish">退款中</a>
                 <?php }else{?>
                     <a href="javascript:;" class="btn finish">已结束</a>
                 <?php }?>
@@ -102,6 +104,30 @@
                 if(data.status==1){
                     alert(data.data);
                     setTimeout(function(){location.reload()},1000);
+                }else if(data.status==-3){
+                    window.location.href=data.data;
+                }else{
+                    alert(data.data);
+                }
+            }
+        });
+    }
+
+    function applyRefund(orderNumber)
+    {
+        $.ajax({
+            url :'/we-chat-order-list/apply-refund',
+            type:'post',
+            data:{
+                orderNumber:orderNumber
+            },
+            error:function(){
+                alert("申请退款异常");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    location.reload();
                 }else if(data.status==-3){
                     window.location.href=data.data;
                 }else{

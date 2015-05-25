@@ -362,11 +362,11 @@ class WeChatController extends SController
             return $this->renderPartial('jspay',['jsApiParameters'=>$jsApiParameters['data']]);
         }else
         {
-            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
         }catch (Exception $e)
         {
-            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
     }
     /**获取用户信息

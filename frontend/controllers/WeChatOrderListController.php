@@ -130,9 +130,9 @@ class WeChatOrderListController extends WController {
     }
     public function actionOrderManage()
     {
-        /*$this->loginValid(false);
-        $userSign=$this->userObj->userSign;*/
-        $userSign="085963dc0af031709b032725e3ef18f5";
+        $this->loginValid(false);
+        $userSign=$this->userObj->userSign;
+        //$userSign="085963dc0af031709b032725e3ef18f5";
         if(empty($userSign))
         {
             return $this->renderPartial('noOrder');
@@ -165,6 +165,29 @@ class WeChatOrderListController extends WController {
             return json_encode(Code::statusDataReturn(Code::SUCCESS, "删除成功"));
         }else{
             return json_encode(Code::statusDataReturn(Code::FAIL, "删除异常"));
+        }
+    }
+
+    public function actionApplyRefund()
+    {
+        $this->loginValidJson();
+        $userSign=$this->userObj->userSign;
+        $orderNumber=Yii::$app->request->post('orderNumber');
+        //$userSign="085963dc0af031709b032725e3ef18f5";
+        if(empty($userSign))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "用户名不能为空"));
+        }
+        if(empty($orderNumber))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单号不能为空"));
+        }
+        $data = $this->orderListSer->updateOrderStatus($orderNumber,WeChatOrderList::STATUS_APPLY_REFUND,$userSign);
+        if($data==1)
+        {
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, "成功"));
+        }else{
+            return json_encode(Code::statusDataReturn(Code::FAIL, "异常"));
         }
     }
     public function actionOrderSuccess()
