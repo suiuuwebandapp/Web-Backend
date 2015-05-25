@@ -43,22 +43,27 @@ class ViewTripController extends UnCController{
 
     public function actionList()
     {
+        //查询热门推荐
         $tagList = TagUtil::getInstance()->getTagList();
-        $cPage=\Yii::$app->request->post('cPage');
-        if(empty($cPage)||$cPage<1)
-        {
-            $cPage=1;
-        }
-
-        $numb=4;
         $page=new Page();
-        $page->currentPage=$cPage;
-        $page->pageSize=$numb;
-        $page->startRow = (($page->currentPage - 1) * $page->pageSize);
+        $page->setCurrentPage(1);
+        $page->pageSize=4;
+
         $recommendTravel =$this->AttentionService->getRecommendTravel($page);
+        //查询基本
+        $tripPage=new Page();
+        $tripPage->pageSize=16;
+        $tripPage->setCurrentPage(1);
+        $this->tripService=new TripService();
+        $tripPage= $this->tripService->getList($tripPage,null,null,null,null,null,null,null);
+        $pageHtml=Common::pageHtml($tripPage->currentPage,$tripPage->pageSize,$tripPage->totalCount);
+        $pageResult=new PageResult($tripPage);
+        $pageResult->pageHtml=$pageHtml;
+
         return $this->render("list",[
             'tagList' => $tagList,
-            'rTravel'=>$recommendTravel['data']
+            'rTravel'=>$recommendTravel['data'],
+            'pageResult'=>$pageResult
         ]);
     }
 

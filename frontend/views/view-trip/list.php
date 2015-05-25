@@ -18,6 +18,7 @@
 
 
 <script type="text/javascript" src="/assets/js/UI/jquery-ui.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.lazyload.min.js"></script>
 
 <!--sylx-->
 <div class="sylx w1200">
@@ -48,9 +49,32 @@
     </div>
     <div class="sylx-list" id="trip_base_list">
         <ul>
-
+            <?php if($pageResult->result!=null&&count($pageResult->result)>0){ ?>
+                <?php foreach($pageResult->result as $trip){?>
+                    <li>
+                        <a href="/view-trip/info?trip=<?=$trip['tripId']?>">
+                            <img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" >
+                        </a>
+                        <p class="posi">
+                            <img src="<?=$trip['headImg'] ?>" alt="">
+                            <span><?=$trip['nickname']?></span>
+                        </p>
+                        <div>
+                            <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
+                            <p>评论&nbsp;
+                                <span><img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                                <span><img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                                <span><img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span
+                                <span><img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                                <span><img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                            </p><font>基础价格：<b><?= $trip['basePrice'] ?></b></font>
+                        </div>
+                    </li>
+                <?php } ?>
+            <?php }?>
         </ul>
         <ol id="spage">
+            <?= $pageResult->pageHtml?>
         </ol>
     </div>
     <h2 class="title">热门推荐</h2>
@@ -58,7 +82,9 @@
         <ul>
             <?php foreach($rTravel as $trip){?>
             <li>
-                <a href="/view-trip/info?trip=<?php echo $trip['tripId'];?>"><img src="<?php echo $trip['titleImg'];?>" alt=""></a>
+                <a href="/view-trip/info?trip=<?php echo $trip['tripId'];?>">
+                    <img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" >
+                </a>
                 <p class="posi"><img src="<?php echo $trip['headImg'];?>" alt=""><span><?php echo $trip['nickname'];?></span></p>
                 <div>
                     <h4><?php echo $trip['title'];?></h4>
@@ -74,8 +100,7 @@
                             }
                         }?>
                     </p>
-                    <font>总价:<b><?php echo $trip['basePrice'];?></b></font>
-
+                    <font>基础价格：<b><?php echo $trip['basePrice'];?></b></font>
                 </div>
             </li>
             <?php }?>
@@ -116,8 +141,17 @@ i<script type="text/javascript">
     });
 
     $(document).ready(function(){
+        $("img").lazyload({
+            placeholder : "/assets/images/grey.jpg", //加载图片前的占位图片
+            effect      : "fadeIn" //加载图片使用的效果(淡入)
+        });
         initSearchInfo();
-        searchTip();
+        //searchTip();
+        //init page click
+        $("#spage li a").bind("click",function(){
+            currentPage=$(this).attr("page");
+            searchTip();
+        });
         $("#searchBtn").bind("click",function(){
             currentPage=1;
             searchTip();
@@ -163,11 +197,15 @@ i<script type="text/javascript">
         }
         var searchInfo=href.substring(href.indexOf(searchKey)+searchKey.length,href.length);
         $("#search").val(searchInfo);
-
-
     }
 
-
+    function scrollList()
+    {
+        var scroll_offset=$("#trip_base_list").offset();
+        $("body,html").animate({
+            scrollTop:scroll_offset.top-50
+        },800);
+    }
 
     function searchTip(){
         var title=$("#search").val();
@@ -207,6 +245,7 @@ i<script type="text/javascript">
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
+                    scrollList();
                     $("#trip_base_list ul").html("");
                     var list=data.data.result;
                     if(list.length==0){
@@ -223,7 +262,7 @@ i<script type="text/javascript">
                         }
 
                         html+='<li>' +
-                        '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="'+trip.titleImg+'" alt=""></a>' +
+                        '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="/assets/images/grey.jpg" data-original="'+trip.titleImg+'" alt=""></a>' +
                         '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
                         '<div><h4>'+title+'</h4><p>评论&nbsp;';
                         if(trip.score>=2){
@@ -252,13 +291,17 @@ i<script type="text/javascript">
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
                         }
 
-                        html+='</p><font>总价:<b>'+trip.basePrice+'</b></font></div></li>';
+                        html+='</p><font>基础价格：<b>'+trip.basePrice+'</b></font></div></li>';
                     }
                     $("#trip_base_list ul").html(html);
                     $("#spage").html(data.data.pageHtml);
                     $("#spage li a").bind("click",function(){
                         currentPage=$(this).attr("page");
                         searchTip();
+                    });
+                    $("img").lazyload({
+                        placeholder : "/assets/images/grey.jpg", //加载图片前的占位图片
+                        effect      : "fadeIn" //加载图片使用的效果(淡入)
                     });
 
                 }else{

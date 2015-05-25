@@ -65,7 +65,7 @@
         </li>
         <li class="banner04">
             <div class="w1200 clearfix">
-                <p class="p0"><img src="<?=Yii::$app->params[''] ?>/assets/images/index/b4-wenzi.png" width="411" height="172"></p>
+                <p class="p0"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/b4-wenzi.png" width="411" height="172"></p>
             </div>
         </li>
     </ul>
@@ -125,13 +125,13 @@
 <!--index-tuijian begin-->
 <div class="index-tuijian w1200 clearfix">
     <ul class="countrys">
-        <li><a href="/view-trip/list#~search=济州岛"><img src="/assets/images/index/01.png"></a><span>济州岛</span></li>
-        <li><a href="/view-trip/list#~search=巴黎"><img src="/assets/images/index/02.png"></a><span>巴黎</span></li>
-        <li><a href="/view-trip/list#~search=圣母院"><img src="/assets/images/index/03.png"></a><span>圣母院</span></li>
-        <li><a href="/view-trip/list#~search=台北"><img src="/assets/images/index/04.png"></a><span>台北</span></li>
-        <li><a href="/view-trip/list#~search=芬兰"><img src="/assets/images/index/05.png"></a><span>芬兰</span></li>
-        <li><a href="/view-trip/list#~search=巴黎"><img src="/assets/images/index/06.png"></a><span>巴黎</span></li>
-        <li><a href="/view-trip/list#~search=伦敦"><img src="/assets/images/index/07.png"></a><span>伦敦</span></li>
+        <li><a href="/view-trip/list#~search=济州岛"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/01.jpg"></a><span>济州岛</span></li>
+        <li><a href="/view-trip/list#~search=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/02.jpg"></a><span>巴黎</span></li>
+        <li><a href="/view-trip/list#~search=圣母院"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/03.jpg"></a><span>圣母院</span></li>
+        <li><a href="/view-trip/list#~search=台北"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/04.jpg"></a><span>台北</span></li>
+        <li><a href="/view-trip/list#~search=芬兰"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/05.jpg"></a><span>芬兰</span></li>
+        <li><a href="/view-trip/list#~search=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/06.jpg"></a><span>巴黎</span></li>
+        <li><a href="/view-trip/list#~search=伦敦"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/07.jpg"></a><span>伦敦</span></li>
     </ul>
 </div>
 <a href="/destination/list"  class="btn8">显示更多</a>

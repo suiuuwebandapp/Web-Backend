@@ -128,11 +128,11 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 /*---index con----*/
 .index-banner{ width:100%; height:600px; margin:-70px auto 0px; position:relative;}
 .index-banner .banners{ width:100%; height:600px; overflow:hidden;}
-.index-banner .banners li{ float:left; width:100%; height:600px; overflow:hidden;}
-.index-banner .banners .banner01{ background:url(../images/index/banner01.jpg) no-repeat center 0;}
-.index-banner .banners .banner02{ background:url(../images/index/banner02.jpg) no-repeat center 0;}
-.index-banner .banners .banner03{ background:url(../images/index/banner03.jpg) no-repeat center 0;}
-.index-banner .banners .banner04{ background:url(../images/index/banner04.jpg) no-repeat center 0;}
+.index-banner .banners li{ float:left; width:100%; height:600px; overflow:hidden; }
+.index-banner .banners .banner01{ background:url(http://image.suiuu.com/suiuu_index/banner01.jpg) no-repeat center 0;background-size:100% 100%;}
+.index-banner .banners .banner02{ background:url(http://image.suiuu.com/suiuu_index/banner02.jpg) no-repeat center 0;background-size:100% 100%;}
+.index-banner .banners .banner03{background:url(http://image.suiuu.com/suiuu_index/banner03.jpg) no-repeat center 0;background-size:100% 100%;}
+.index-banner .banners .banner04{ background:url(http://image.suiuu.com/suiuu_index/banner04.jpg) no-repeat center 0;background-size:100% 100%;}
 .index-banner .banner-btn{position:absolute;top:330px; width:100%;}
 .index-banner .banner-btn a{display:block;width:40px;height:48px;position:absolute;top:0;}
 .index-banner .banner-btn a.prev{left:20px; background:url(../images/index/bannerbtn.png) no-repeat 0 0;} 
@@ -181,10 +181,10 @@ transition:all 0.4s ease-in-out;
 }
 #ul1 li:hover div.zhezhao{ height:260px; opacity:1;}
 #ul1 li div.zhezhao p{ position:relative; color:#ddd; font-size:14px; text-indent:2em; margin:15px}
-#ul1 li div.zhezhao .pingjia{ position:absolute; bottom:10px; right:10px;margin:0;}
+#ul1 li div.zhezhao .pingjia{ width:90%; position:absolute; bottom:10px; right:10px;margin:0;}
 #ul1 li div.zhezhao .pingjia img{ margin:0 2px;}
 #ul1 li div.zhezhao .pingjia span b{ color:#ff794c; font-size:16px;}
-#ul1 li div.zhezhao .pingjia span{ margin-left:5px;}
+#ul1 li div.zhezhao .pingjia span{ margin-left:5px; display:block;}
 
 .index-tuijian{ height:645px; overflow:hidden;}
 .index-tuijian .countrys{ position:relative; height:645px;}
@@ -1071,7 +1071,7 @@ transition:transform 1s ease-in-out;
 .sylx-list ul li div h4{width:285px; height:40px; line-height:40px; text-align:center;}
 .sylx-list ul li div p{ padding-left:58px;}
 .sylx-list ul li div span{ width:14px; height:14px; }
-.sylx-list ul li div font{ text-align:center; display:block; float:right;  width:110px;}
+.sylx-list ul li div font{ text-align:right; display:block; float:right; margin-right:15px; }
 .sylx-list ul li div font b{color:#FFA54C;}
 
 .sylx-lstj{ height:450px; overflow:hidden;}
@@ -1333,7 +1333,7 @@ transition:transform 1s ease-in-out;
 
 
 /*--------------专栏-----------*/
-.zl-banner{ width:100%; height:600px; position:relative; background:url(../images/mdd3.fw.png) no-repeat fixed center 0; background-size:100% 600px; margin:0px auto;}
+.zl-banner{ width:100%; height:600px; position:relative; background:url(http://image.suiuu.com/suiuu_index/mdd3.fw.jpg) no-repeat fixed center 0; background-size:100% 600px; margin:0px auto;}
 .zl-banner .con{ height:600px;}
 .zl-banner .data{ font-size:36px; margin-top:430px; color:#fff; padding:0 50px; }
 .zl-banner .tit{ font-size:30px; margin-top:30px; color:#fff; padding:0 50px;}
@@ -1349,7 +1349,7 @@ transition:transform 1s ease-in-out;
 
 		/*----专栏弹出层----*/
 .mask{ background:rgba(0,0,0,.78); position:fixed; top:0;left:0; z-index:5; display:none; }
-.tanchu-main{width:874px; height:auto; overflow:hidden; background:#FFF; position:absolute; left:50%; top:0px; margin-left:-437px; display:none;z-index:66; padding-bottom:30px;}
+.tanchu-main{width:874px; height:auto; overflow:hidden; background:#FFF; position:absolute; left:50%; top:0px; margin-left:-437px; display:none;z-index:66; padding-bottom:30px; padding-top:110px;}
 .tanchu-main img{  width:100%; height:411px;}
 .tanchu-main p{ padding:10px 49px; line-height:24px;}
 
