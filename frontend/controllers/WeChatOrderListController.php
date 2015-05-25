@@ -173,7 +173,8 @@ class WeChatOrderListController extends WController {
         $this->loginValidJson();
         $userSign=$this->userObj->userSign;
         $orderNumber=Yii::$app->request->post('orderNumber');
-        //$userSign="085963dc0af031709b032725e3ef18f5";
+        /*$userSign="085963dc0af031709b032725e3ef18f5";
+        $orderNumber='wx2015052154555548';*/
         if(empty($userSign))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "用户名不能为空"));
@@ -181,6 +182,15 @@ class WeChatOrderListController extends WController {
         if(empty($orderNumber))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "订单号不能为空"));
+        }
+        $orderInfo = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+        if(empty($orderInfo))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "未找到该订单"));
+        }
+        if($orderInfo['wStatus']!=WeChatOrderList::STATUS_PAY_SUCCESS)
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "未支付订单或游玩过该订单"));
         }
         $data = $this->orderListSer->updateOrderStatus($orderNumber,WeChatOrderList::STATUS_APPLY_REFUND,$userSign);
         if($data==1)
@@ -192,7 +202,7 @@ class WeChatOrderListController extends WController {
     }
     public function actionOrderSuccess()
     {
-        return $this->renderPartial('orderSuccess');
+        return $this->renderPartial('orderSuccess',['str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
     }
     public function actionBinding()
     {

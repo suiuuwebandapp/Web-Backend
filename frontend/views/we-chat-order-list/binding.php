@@ -10,7 +10,6 @@
 </head>
 
 <body>
-<nav>随游-账号登录/绑定</nav>
 <div class="con sy_zh clearfix">
     <div class="box">
         <img src="/assets/other/weixin/images/logo01.png" class="logo">

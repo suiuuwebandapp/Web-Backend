@@ -10,7 +10,6 @@
 </head>
 
 <body>
-<nav>随游-账号登录/绑定</nav>
 <div class="con sy_zh clearfix">
     <div class="box">
         <p>您可以使用此微信账号登录网站及安卓app查看更多精彩

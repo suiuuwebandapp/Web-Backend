@@ -10,7 +10,6 @@
 </head>
 
 <body class="bgwhite">
-<nav>随游-填写需求</nav>
 <div class="con sy_need01 clearfix">
     <img src="/assets/other/weixin/images/logo02.png" class="logo">
     <p><?php if(isset($str1)){echo $str1;}?></p>

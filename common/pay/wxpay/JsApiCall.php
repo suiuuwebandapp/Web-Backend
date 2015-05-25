@@ -14,6 +14,7 @@ use common\entity\WeChatOrderList;
 use common\entity\WeChatUserInfo;
 use frontend\services\WeChatOrderListService;
 use frontend\services\WeChatService;
+use yii\base\Exception;
 
 class JsApiCall {
 
@@ -124,9 +125,16 @@ class JsApiCall {
 //$unifiedOrder->setParameter("openid","XXXX");//用户标识
 //$unifiedOrder->setParameter("product_id","XXXX");//商品ID
 
-        $prepay_id = $unifiedOrder->getPrepayId();
+
+            $prepay_id = $unifiedOrder->getPrepayId();
+            if($prepay_id===0)
+            {
+                return  Code::statusDataReturn(Code::FAIL,"支付异常请重试");
+            }
 //=========步骤3：使用jsapi调起支付============
-        $jsApi->setPrepayId($prepay_id);
+            $jsApi->setPrepayId($prepay_id);
+
+
 
         $jsApiParameters = $jsApi->getParameters();
          return Code::statusDataReturn(Code::SUCCESS,$jsApiParameters);

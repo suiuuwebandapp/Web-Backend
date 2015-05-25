@@ -11,7 +11,6 @@
 </head>
 
 <body>
-<nav>注册</nav>
 <div class="con Registered clearfix">
     <form action="/we-chat/register" method="post" id="wechat_register">
     <ul class="lists clearfix">

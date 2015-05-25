@@ -45,7 +45,6 @@
 </head>
 
 <body>
-<nav>随游-填写需求</nav>
 <div class="con sy_need02 clearfix">
     <a href="/we-chat/show-country?rUrl=/we-chat-order-list/order-view" id="site" class="selet" areaCode="<?php echo $c?>" ><?php echo $n;?></a>
     <p>出游人数</p>

@@ -13,7 +13,8 @@
 <div class="con sy_zh clearfix">
     <div class="box">
         <img src="/assets/other/weixin/images/logo01.png" class="logo">
-        <p>感谢您对随游的信任，我们将会在48小时之内与您取得联系，您也可以在 随游服务号“我的随游-个人中心”板块查看您所提交需求的最新动态。</p>
+        <p>感谢您对随游的信任，我们将会在48小时之内与您取得联系，您也可以在 随游服务号“预定-订单管理”板块查看您所提交需求的最新动态。</p>
+        <a href="<?php echo $url;?>" class="btn"><?php if(isset($str2)){echo $str2;}?></a>
     </div>
 
 </div>

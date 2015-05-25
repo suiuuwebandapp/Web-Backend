@@ -11,7 +11,6 @@
 </head>
 
 <body>
-<nav>国家</nav>
 <div class="con country clearfix" id="country_list_all">
     <div class="navbars">
         <ul class="check">

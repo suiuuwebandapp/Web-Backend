@@ -160,6 +160,10 @@ class WeChatController extends SController
             $rst = Common::CurlHandel($url);
             if ($rst['status'] == Code::SUCCESS) {
                 $rstJson = json_decode($rst['data']);
+                if(!isset($rstJson->openid)){
+                    return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                    exit;
+                }
                 $openId = $rstJson->openid;
                 $weChatUserInfo=new WeChatUserInfo();
                 $weChatUserInfo->openId=$openId;
@@ -175,17 +179,17 @@ class WeChatController extends SController
                 }
 
             } else {
-                return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 exit;
             }
         } else {
-            return $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'请重试 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         if (isset($_GET['actionType'])) {
             $actionType = $_GET['actionType'];
         } else {
-            return $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'请重试 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         switch ($actionType) {
@@ -227,17 +231,17 @@ class WeChatController extends SController
                 $password=\Yii::$app->request->post('password');
                 if(empty($username))
                 {
-                    return $this->renderPartial('errorHint', array('str1'=>'用户名不能为空','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                    return $this->renderPartial('errorHint', array('str1'=>'用户名不能为空','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 }
                 if(empty($password))
                 {
-                    return $this->renderPartial('errorHint', array('str1'=>'密码不能为空','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                    return $this->renderPartial('errorHint', array('str1'=>'密码不能为空','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 }
                 $userBaseService = new UserBaseService();
                 $userBase = $userBaseService->findUserByUserNameAndPwd($username,$password);
                 if(empty($userBase)||$userBase==false)
                 {
-                    return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                    return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 }else
                 {
                     $this->weChatSer->bindingWeChatByUnionID($userBase->userSign,$userInfo->unionID);
@@ -250,7 +254,7 @@ class WeChatController extends SController
             }
         }else
         {
-            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
 
     }
@@ -308,7 +312,7 @@ class WeChatController extends SController
     public function actionError()
     {
         $str=Yii::$app->request->get('str');
-        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>'请重试 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
     }
     public function actionAccess()
     {
@@ -330,11 +334,11 @@ class WeChatController extends SController
                 return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
             }else
             {
-                return $this->renderPartial('errorHint', array('str1'=>'微信登陆错误'.$rst['data'],'str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                return $this->renderPartial('errorHint', array('str1'=>'微信登陆错误'.$rst['data'],'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             }
         }else
         {
-            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
     }
 
@@ -362,11 +366,11 @@ class WeChatController extends SController
             return $this->renderPartial('jspay',['jsApiParameters'=>$jsApiParameters['data']]);
         }else
         {
-            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
         }catch (Exception $e)
         {
-            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
     }
     /**获取用户信息
