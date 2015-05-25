@@ -221,7 +221,11 @@ class ViewTripController extends UnCController{
         return;
     }
 
-    public function actionAddRedisTag()
+    /**初始化redis Tag
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionInitRedisTag()
     {
         $c=\Yii::$app->request->post("p");
         $title=\Yii::$app->request->post("title");
