@@ -1,5 +1,6 @@
 <?php
 return [
+    'suiuu_image_url'=>'http://image.suiuu.com',
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
