@@ -55,23 +55,17 @@
             <div class="w1200 clearfix">
                 <p class="p1">微信新添定制功能</p>
                 <p class="p2">助你任性出游<a href="#wei">关注随游</a></p>
-
-
             </div>
         </li>
         <li class="banner03">
             <div class="w1200 clearfix">
                 <p class="p1">去意大利吧</p>
                 <p class="p2">边吃提拉米苏边看世博会</p>
-
             </div>
-
         </li>
         <li class="banner04">
             <div class="w1200 clearfix">
-                <p class="p0"><img src="/assets/images/index/b4-wenzi.png" width="411" height="172"></p>
-
-
+                <p class="p0"><img src="<?=Yii::$app->params[''] ?>/assets/images/index/b4-wenzi.png" width="411" height="172"></p>
             </div>
         </li>
     </ul>

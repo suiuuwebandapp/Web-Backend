@@ -48,7 +48,7 @@
             <option value=""></option>
             <?php foreach ($countryList as $c) { ?>
                 <?php
-w                if(!in_array($c['id'],$countryArr)){
+                if(!in_array($c['id'],$countryArr)){
                     continue;
                 }
                 ?>
