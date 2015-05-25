@@ -48,6 +48,8 @@ class TravelTrip {
 
     public $score;
 
+    public $tripCount;
+
     public $startTime;
 
     public $endTime;

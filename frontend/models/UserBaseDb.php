@@ -407,5 +407,19 @@ class UserBaseDb extends ProxyDb
     }
 
 
+    public function addUserTravelCount($userSign){
+        $sql = sprintf("
+            UPDATE user_base SET
+            travelCount=travelCount+1
+            WHERE userSign=:userSign
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
+
 
 }

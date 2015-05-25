@@ -9,12 +9,16 @@
 
 namespace frontend\controllers;
 
-
+use common\components\SMSUtils;
 use common\components\Code;
 use common\components\DateUtils;
+use common\components\SysMessageUtils;
 use common\entity\TravelTripService;
+use common\entity\UserMessage;
+use common\entity\UserOrderComment;
 use common\entity\UserOrderInfo;
 use frontend\services\TripService;
+use frontend\services\UserMessageService;
 use frontend\services\UserOrderService;
 use yii\base\Exception;
 
@@ -28,7 +32,6 @@ class UserOrderController extends  CController{
         $this->userOrderService = new UserOrderService();
         parent::__construct($id, $module);
     }
-
 
     public function actionList()
     {
@@ -102,9 +105,6 @@ class UserOrderController extends  CController{
             $servicePrice=0;//附加服务价格
             $basePrice=$tripInfo['basePrice'];
 
-
-
-
             if($peopleCount>$tripInfo['maxUserCount']){
                 echo Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
                 return;
@@ -145,7 +145,7 @@ class UserOrderController extends  CController{
             $userOrderInfo->tripId=$tripInfo['tripId'];
             $userOrderInfo->userId=$this->userObj->userSign;
             $userOrderInfo->beginDate=$beginDate;
-            $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,2);
+            $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,1);
             $userOrderInfo->personCount=$peopleCount;
             $userOrderInfo->serviceInfo=$serviceInfo;
             $userOrderInfo->basePrice=$basePrice;
@@ -155,8 +155,9 @@ class UserOrderController extends  CController{
             $userOrderInfo->status=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT;//默认订单状态，待支付
             $userOrderInfo->orderNumber=Code::createOrderNumber();
             $this->userOrderService->addUserOrder($userOrderInfo);
-
-            //$tripPublisherList 循环发送消息
+            //给随友发送消息
+            $sysMessageUtils=new SysMessageUtils();
+            $sysMessageUtils->sendNewOrderMessage($tripPublisherList,$userOrderInfo->orderNumber);
             return $this->redirect(["/user-order/info",
                 'orderNumber'=>$userOrderInfo->orderNumber
             ]);
@@ -217,7 +218,6 @@ class UserOrderController extends  CController{
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
-
 
     /**
      * 确认订单
@@ -295,7 +295,7 @@ class UserOrderController extends  CController{
     }
 
     /**
-     * 订单申请退款
+     * 订单申请退款 未接单状态
      * @return string
      */
     public function actionRefundOrder()
@@ -318,7 +318,6 @@ class UserOrderController extends  CController{
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"订单暂时无法申请退款"));
             }
             $this->userOrderService->changeOrderStatus($orderInfo->orderNumber,UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT);
-
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
@@ -349,7 +348,6 @@ class UserOrderController extends  CController{
         }
     }
 
-
     /**
      * 用户删除订单
      * @return string
@@ -365,7 +363,7 @@ class UserOrderController extends  CController{
             $this->userOrderService->deleteOrderInfo($this->userObj->userSign,$orderId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
+            return json_encode(Code::statusDataReturn(Code::FAIL,"删除订单失败"));
         }
     }
 
@@ -383,11 +381,9 @@ class UserOrderController extends  CController{
             $list=$this->userOrderService->getPublisherOrderList($publisherId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            throw $e;
             return json_encode(Code::statusDataReturn(Code::FAIL,"获取随友订单失败"));
         }
     }
-
 
     /**
      * 随友取消订单
@@ -410,13 +406,143 @@ class UserOrderController extends  CController{
 
         try{
             $this->userOrderService->publisherCancelOrder($publisherId,$orderId,$message);
+
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             return json_encode(Code::statusDataReturn(Code::FAIL,"取消订单失败"));
         }
-
     }
 
+    /**
+     * 用户确认游玩
+     * @return string
+     */
+    public function actionUserConfirmPlay()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        try{
+            $orderInfo=$this->userOrderService->findOrderByOrderId($orderId);
+            if($orderInfo==null){
+                throw new Exception("Invalid Order Id");
+            }
+            $this->userOrderService->userConfirmPlay($orderId,$this->userObj->userSign);
+            $userPublisher=$this->userOrderService->findPublisherByOrderId($orderId);
+            if($userPublisher==null){
+                throw new Exception("Invalid Publisher");
+            }
+            //给随友发送消息
+            $sysMessageUtils=new SysMessageUtils();
+            $sysMessageUtils->sendUserConfirmPlayMessage($userPublisher->userId,$orderInfo->orderNumber);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,"确认游玩失败"));
+        }
+    }
+
+    /**
+     * 跳转到评论页面
+     * @return string|\yii\web\Response
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionToComment()
+    {
+        $orderId=trim(\Yii::$app->request->get("orderId", ""));
+        if(empty($orderId)){
+            return $this->redirect(['/result', 'result' => '无效的订单号']);
+        }
+        //判断订单是否已经评论，
+        $tempComment=$this->userOrderService->findUserOrderCommentByOrderId($orderId);
+        $orderInfo=$this->userOrderService->findOrderByOrderId($orderId);
+        if(!isset($orderInfo)){
+            return $this->redirect(['/result', 'result' => '无效的订单号']);
+        }
+        if(isset($tempComment)){
+            return $this->redirect(['/result', 'result' => '您已经评论过了']);
+        }
+        if($orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS&&$orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){
+            return $this->redirect(['/result', 'result' => '此订单暂时不能评价']);
+        }
+        if($orderInfo->isDel){
+            return $this->redirect(['/result', 'result' => '无效的订单号']);
+        }
+        $orderPublisher=$this->userOrderService->findPublisherByOrderId($orderId);
+        if(!isset($orderPublisher)){
+            return $this->redirect(['/result', 'result' => '无效的随友信息']);
+        }
+        $publisherInfo=$this->userBaseService->findUserPublisherByPublisherId($orderPublisher->userPublisherId);
+        $publisherUserInfo=$this->userBaseService->findUserByUserSign($orderPublisher->userId);
+        $tripService=new TripService();
+        $tripInfo=$tripService->getTravelTripById($orderInfo->tripId);
+
+        return $this->render("comment",[
+            'userPublisher'=>$orderPublisher,
+            'publisherInfo'=>$publisherInfo,
+            'publisherUserInfo'=>$publisherUserInfo,
+            'tripInfo'=>$tripInfo,
+            'orderId'=>$orderId
+        ]);
+    }
+
+    /**
+     * 添加评论
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionAddComment()
+    {
+        $orderId=trim(\Yii::$app->request->post("orderId", ""));
+        $content=\Yii::$app->request->post("content","");
+        $tripScore=\Yii::$app->request->post("tripScore","");
+        $publisherScore=\Yii::$app->request->post("publisherScore","");
+
+        if(empty($orderId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($content)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的评价"));
+        }
+        if($tripScore==0){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随游评分"));
+        }
+        if($publisherScore==0){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友评分"));
+        }
+
+        //判断订单是否已经评论，
+        $tempComment=$this->userOrderService->findUserOrderCommentByOrderId($orderId);
+        if(isset($tempComment)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"您已经评论过了"));
+        }
+        $userOrderInfo=$this->userOrderService->findOrderByOrderId($orderId);
+        $orderPublisher=$this->userOrderService->findPublisherByOrderId($orderId);
+        if(empty($userOrderInfo)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($orderPublisher)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友信息"));
+        }
+
+        $userOrderComment=new UserOrderComment();
+        $userOrderComment->userId=$this->userObj->userSign;
+        $userOrderComment->tripId=$userOrderInfo->tripId;
+        $userOrderComment->orderId=$orderId;
+        $userOrderComment->publisherId=$orderPublisher->userPublisherId;
+        $userOrderComment->tripScore=$tripScore;
+        $userOrderComment->publisherScore=$publisherScore;
+        $userOrderComment->content=$content;
+        try{
+            $this->userOrderService->addUserOrderComment($userOrderComment);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
+    }
 
 
 }

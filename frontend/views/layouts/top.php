@@ -17,6 +17,12 @@
     /*input:-webkit-autofill {
         -webkit-box-shadow: 0 0 0px 1000px #858585 inset;
     }*/
+    #unReadSystemMessageList p{
+        width: 240px;
+    }
+    #unReadSystemMessageList a{
+        height: auto;
+    }
 </style>
 <?php if (isset($this->context->userObj)) { ?>
     <!--header开始-->
@@ -37,10 +43,12 @@
                         <div class="xit-sz">
                             <span class="jiao"></span>
                             <ol>
-                                <li class="sx">私信</li>
-                                <li class="xtxx">系统消息</li>
+                                <li class="sx active" id="userMessageLiBtn">私信</li>
+                                <li class="xtxx" id="sysMessageLiBtn">系统消息</li>
                             </ol>
                             <ul id="unReadUserMessageList">
+                            </ul>
+                            <ul id="unReadSystemMessageList" style="display: none">
                             </ul>
                         </div>
                     </li>
@@ -177,15 +185,29 @@
     var isLogin="<?=isset($this->context->userObj)?1:0?>";
     var emailTime="<?= array_key_exists('emailTime',$this->params)?$this->params['emailTime']:0;?>";
     var emailTimer;
+    var topMessageInterval;
+    var user_message_count=0;
+    var sys_message_count=0;
     $(document).ready(function(){
         initEmailTimer();
         initPhoneRegister();
+        initDocumentClick();
+        initTopMessage();
+
+        $("#userpassword").keypress(function(e){
+            if(e.keyCode==13){
+               $("#login-check").click();
+            }
+        });
+
+    });
+    function initTopMessage(){
         //如果用户登录了，查询是否有新私信
-        if(isLogin=="true"){
+        if(isLogin==1){
             initUserMessageInfoList();
-            window.setInterval(function(){
+            topMessageInterval=window.setInterval(function(){
                 initUserMessageInfoList();
-            },5000);
+            },10000);
         }
 
         $(".search-btn").bind("click",function(){
@@ -194,7 +216,56 @@
                 window.location.href="/search?s="+search;
             }
         });
-    });
+
+
+        $("#userMessageLiBtn").bind("click",function(){
+            $("#userMessageLiBtn").addClass("active");
+            $("#sysMessageLiBtn").removeClass("active");
+            $("#unReadUserMessageList").show();
+            $("#unReadSystemMessageList").hide();
+        });
+
+        $("#sysMessageLiBtn").bind("click",function(){
+            $("#userMessageLiBtn").removeClass("active");
+            $("#sysMessageLiBtn").addClass("active");
+            $("#unReadUserMessageList").hide();
+            $("#unReadSystemMessageList").show();
+        });
+    }
+
+    function initDocumentClick(){
+        $(document).bind("click",function(e){
+            var target = $(e.target);
+            if(target.closest("#suiuu-btn1").length != 1){
+                if(target.closest(".xit-sz").length == 0){
+                    $(".xit-sz").hide();
+                }
+            }
+            if(target.closest("#suiuu-btn2").length != 1){
+                if(target.closest(".my-suiuu").length == 0){
+                    $(".my-suiuu").hide();
+                }
+            }
+
+
+            if(target.closest("#zhuce").length != 1){
+                if(target.closest("#zhuce-main").length == 0&&target.closest("#zhuce-main02").length == 0){
+                    $("#zhuce-main").hide();
+                    $("#zhuce-main02").hide();
+                }
+            }
+
+            if(target.closest("#denglu").length != 1){
+                if(target.closest("#denglu-main").length == 0){
+                    $("#denglu-main").hide();
+                }
+            }
+
+        });
+    }
+
+
+
 
 
     function initUserMessageInfoList()
@@ -206,37 +277,112 @@
                 _csrf: $('input[name="_csrf"]').val()
             },
             error:function(){
-                alert("error");
+                window.clearInterval(topMessageInterval);
             },
             success: function (data) {
                 var datas=eval('('+data+')');
                 if(datas.status==1){
-                    buildUserMessageListHtml(datas.data);
+                    sys_message_count=0;
+                    user_message_count=0;
+                    buildUserMessageListHtml(datas.data['userList']);
+                    buildSysMessageListHtml(datas.data['sysList']);
+                    initTopMessageSelect();
                 }else{
 
                 }
             }
         });
     }
+    function buildSysMessageListHtml(list)
+    {
+        if(list==""||list.length==0){
+            $("#unReadSystemMessageList").html('<li><p style="text-align: center">暂无系统消息</p></li>');
+            return;
+        }
+        var sysHtml="",messageInfo="",nickname="";
+        for(var i=0;i<list.length;i++){
+            if(i==7){
+                break;
+            }
+            messageInfo=list[i];
+            var content=messageInfo.content;
+            if(content.length>12){
+                content=content.substring(0,12)+"...";
+            }
+            sysHtml+='<li onclick="changeSystemMessageRead('+messageInfo.messageId+',\''+messageInfo.url+'\')">';
+            sysHtml+='<p>'+content+'</p>';
+            sysHtml+='</li>';
+            sys_message_count++;
+        }
+        $("#unReadSystemMessageList").html(sysHtml);
+    }
+    function initTopMessageSelect(){
+
+        if(sys_message_count>0){
+            $("#suiuu-btn1").addClass("active");
+            $("#sysMessageLiBtn").click();
+        }
+        if(user_message_count>0){
+            $("#suiuu-btn1").addClass("active");
+            $("#userMessageLiBtn").click();
+
+        }
+    }
 
     function buildUserMessageListHtml(list)
     {
         if(list==""||list.length==0){
+            $("#unReadUserMessageList").html('<li><p style="text-align: center;width: 240px">暂无私信消息</p></li>');
             return;
         }
-        var html="",messageInfo="",nickname="";
+        var userHtml="",messageInfo="",nickname="";
         for(var i=0;i<list.length;i++){
-            messageInfo=list[i];
-            nickname=messageInfo.nickname;
-            if(nickname.length>5){
-                nickname=nickname.substring(0,5);
+            if(i==7){
+                break;
             }
-            html+='<a style="width: 240px;height: 40px" href="/user-info?myMessage"><li><img src="'+messageInfo.headImg+'"><span>'+nickname+'</span>';
-            html+='<p>给您发了私信</p>';
-            html+='</li></a>';
-        }
-        $("#unReadUserMessageList").html(html);
+            messageInfo=list[i];
+            if(messageInfo.userId!=SystemMessage.userId){
+                nickname=messageInfo.nickname;
+                if(nickname.length>5){
+                    nickname=nickname.substring(0,5);
+                }
+                userHtml+='<li><a style="width: 240px;height: 40px" href="/user-info?myMessage"><img src="'+messageInfo.headImg+'"><span>'+nickname+'</span>';
+                userHtml+='<p>给您发了私信</p>';
+                userHtml+='</a></li>';
+                user_message_count++;
 
+            }
+        }
+        if(userHtml==""){
+            userHtml='<li><p style="text-align: center;width: 240px">暂无私信消息</p></li>';
+        }
+        $("#unReadUserMessageList").html(userHtml);
+    }
+
+    function changeSystemMessageRead(messageId,url){
+        $.ajax({
+            type: 'post',
+            url: '/user-message/change-system-message-read',
+            data: {
+                messageId:messageId,
+                _csrf: $('input[name="_csrf"]').val()
+            },
+            error:function(){
+                window.clearInterval(topMessageInterval);
+            },
+            success: function (data) {
+                var datas=eval('('+data+')');
+                if(datas.status==1){
+                    if(url!=""){
+                        window.location.href=url;
+                    }else{
+                        window.location.href="/user-info?myMessage";
+                    }
+                }else{
+
+                }
+            }
+        });
     }
 
     function initEmailTimer()
@@ -385,7 +531,12 @@
                 var obj=eval('('+data+')');
                 if(obj.status==1)
                 {
-                    window.location.reload();
+                    if(window.location.href.indexOf("result?result=")==-1){
+                        window.location.reload();
+                    }else{
+                        window.location.href="/";
+                    }
+
                 }else
                 {$('.gt_refresh_button')[0].click();
                     Main.showTip(obj.data);
@@ -502,7 +653,11 @@
                     if(obj.status==1)
                     {
                         Main.showTip("注册成功即将跳转");
-                        setTimeout(function(){ window.location.reload();},500)
+                        if(window.location.href.indexOf("result?result=")==-1){
+                            window.location.reload();
+                        }else{
+                            window.location.href="/";
+                        }
                     }else
                     {
                         Main.showTip(obj.data);

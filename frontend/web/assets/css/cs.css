@@ -306,18 +306,21 @@ transition:all 0.4s ease-in-out;
 .header-right ul li{ float:left; height:70px;}
 .header-right ul li img{ width:36px; height:36px; border-radius:360px; margin-top:17px; display:block; float:left; }
 .header-right ul li.xitong{ width:36px; height:70px; position:relative;line-height:70px; background:url(../images/navarr.png) no-repeat 0px 0px;margin-top:15px;}
+.header-right ul li.xitong.active{ background-position:-124px 0px;}
 .header-right ul li.xitong a{ display:block; width:36px; height:70px; }
 .header-right ul li.name{line-height:70px; margin-left:10px;}
 .header-right ul li.name img.w20{ height:7px; width:14px; overflow:hidden; margin-top:31px;-webkit-transition:0.5s;-moz-transition:0.5s;-ms-transition:0.5s;}
 .header-right ul li.name:hover img.w20{transform:rotate(180deg);-webkit-transform:rotate(180deg);-ms-transform:rotate(180deg);-moz-transform:rotate(180deg);}
 .header-right ul li a{ padding:0px 6px; float:left;}
 
-.xit-sz{ border-radius:10px; width:240px; height:auto;position:absolute; right:-11px; top:60px; background:rgba(0,0,0,0.8); padding:10px;  display:none;}
-.jiao{ border:20px solid; border-color:transparent transparent rgba(0,0,0,0.7) transparent; position:absolute; right:10px; top:-40px;}
+.xit-sz{ border-radius:10px; width:240px; height:auto;position:absolute; right:-11px; top:74px; background:rgba(0,0,0,0.8); padding:10px;  display:none;}
+.jiao{ border:20px solid; border-color:transparent transparent rgba(0,0,0,0.8) transparent; position:absolute; right:10px; top:-40px;}
 .xit-sz ol{ width:240px; line-height:30px; height:30px; border-bottom:1px solid #999;}
 .xit-sz ol li{ float:left; height:30px; text-align:center;}
 .xit-sz ol li.sx{ background:url(../images/ico3.png) no-repeat 6px 6px; padding-left:5px; width:114px; border-right:1px solid #999; }
+.xit-sz ol li.sx.active{ background-position:-249px 6px; color:#ffeb81 }
 .xit-sz ol li.xtxx{background:url(../images/ico3.png) no-repeat 4px -34px; padding-left:5px; width:115px;}
+.xit-sz ol li.xtxx.active{ background-position:-256px -34px;color:#ffeb81;}
 .xit-sz ul{width:240px; height:auto; }
 .xit-sz ul li{ height:30px; line-height:30px; margin:5px 0px;}
 .xit-sz ul li:hover{color:#ffeb81;}
@@ -325,15 +328,20 @@ transition:all 0.4s ease-in-out;
 .xit-sz ul li span{ width:80px; height:30px; line-height:30px; display:block; float:left; overflow:hidden;}
 .xit-sz ul li p{ width:112px; height:30px; line-height:30px; margin-left:10px; overflow:hidden; float:left;}
 
-.my-suiuu{ display:none; width:118px; height:140px; position:absolute; right:10px; top:74px; background:rgba(0,0,0,0.8); border-radius:6px; }
+.my-suiuu{ display:none; width:118px; height:140px; position:absolute; right:10px; top:90px; background:rgba(0,0,0,0.8); border-radius:6px; }
 .my-suiuu ul{width:118px; height:140px;}
 .my-suiuu ul li{ width:88px; height:30px; line-height:30px; margin-top:4px; padding-left:30px;}
 .my-suiuu ul li.bg1{ background:url(../images/ico3.png) no-repeat 8px -72px;}
-.my-suiuu ul li.bg2{ background:url(../images/ico3.png) no-repeat 12px -108px;}
-.my-suiuu ul li.bg3{ background:url(../images/ico3.png) no-repeat 12px -142px;}
-.my-suiuu ul li.bg4{ background:url(../images/ico3.png) no-repeat 12px -182px;}
+.my-suiuu ul li.bg1:hover,.my-suiuu ul li.bg1.active{ background-position:-249px -72px;}
+.my-suiuu ul li.bg2{ background:url(../images/ico3.png) no-repeat 8px -108px;}
+.my-suiuu ul li.bg2:hover,.my-suiuu ul li.bg2.active{ background-position:-256px -108px;}
+.my-suiuu ul li.bg3{ background:url(../images/ico3.png) no-repeat 8px -146px;}
+.my-suiuu ul li.bg3:hover,.my-suiuu ul li.bg3.active{ background-position:-255px -147px;}
+.my-suiuu ul li.bg4{ background:url(../images/ico3.png) no-repeat 8px -182px;}
+.my-suiuu ul li.bg4:hover,.my-suiuu ul li.bg4.active{ background-position:-256px -182px;}
 .my-suiuu ul li a{width:88px; height:30px; display:block;}
 .my-suiuu ul li a:hover{ color:#ffeb81;}
+.my-suiuu ul li.active a{ color:#ffeb81;}
 /*------------header--end-------------*/
 
 /*------------加入随友申请-------------*/
@@ -363,7 +371,6 @@ transition:all 0.4s ease-in-out;
 .accountSet p span{ display:block;}
 .accountSet .p1{ height:36px; }
 .accountSet p .change{ font-size:18px; color:#858585; }
-
 .accountSet p .code{ width:140px; height:36px; line-height:36px; margin:0; float:left;}
 .accountSet p .code-pic{ width:140px; height:36px; float:left; }
 .accountSet p .change{height:36px; line-height:36px;  float:right;}
@@ -437,6 +444,18 @@ transition:all 0.4s ease-in-out;
 #checkOut .finish .weixin{ background-position:0 -252px;;}
 #checkOut .finish .sina{ background-position:0 -85px;;}
 #checkOut .finish .btn{ height:36px; line-height:36px; width:95px; display:block; background:#97CBFF; color:#FFEB80; font-size:16px; position:absolute; right:0; bottom:0; text-align:center;}
+
+
+.wzhifu{ display:none; width:880px; height:520px; padding:20px; background:#fff;  position:fixed; z-index:999; top:100px; left:50%; margin-left:-460px; border:1px solid #ddd;}
+.wzhifu h2{ font-size:20px; }
+.wzhifu .left{ margin-left:120px; margin-top:20px; float:left;}
+.wzhifu .left .weiP{ width:300px; height:300px; display:block; border:1px solid #ddd;}
+.wzhifu .left .weiP img{ width:300px; height:300px; display:block;}
+.wzhifu .left .tip{ width:180px; height:44px; background:#FF7674 url(../images/icon-red.fw.png) no-repeat 60px center; padding:8px 0 8px 120px; margin-top:20px;}
+.wzhifu .left .tip span{  color:#fff; font-size:16px; font-weight:bold;}
+.wzhifu .right{ float:left; margin-left:50px; _display:inline;}
+.wzhifu .back{ color:#1EABF0; font-size:16px; margin-top:40px; display:block;}
+
 /*------------结算--end-------------*/
 
 
@@ -1507,8 +1526,8 @@ transition:transform 1s ease-in-out;
 /*-----------取消订单弹层-------------*/
 .scancelTip{ width:590px; height:330px; background:#fff; padding:20px;  font-size:16px; position:fixed; left:50%; margin-left:-295px; top:100px; z-index:99; display:none;}
 .scancelTip textarea{ width:100%; height:170px; background:#eee; margin:10px 0;}
-#cancelTip .blue{ color:#73b9ff; font-size:18px;}
-#cancelTip .btn{ display:block; position:absolute; bottom:0; right:0; width:80px; height:36px; line-height:36px; color:#ffeb79; background:#73b9ff; text-align:center;}
+.scancelTip .blue{ color:#73b9ff; font-size:18px;}
+.scancelTip .btn{ display:block; position:absolute; bottom:0; right:0; width:80px; height:36px; line-height:36px; color:#ffeb79; background:#73b9ff; text-align:center;}
 
 
 

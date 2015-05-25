@@ -114,8 +114,31 @@ class UserMessageController extends  CController{
     {
         try{
             $userSign=$this->userObj->userSign;
-            $list=$this->userMessageService->getUnReadMessageSessionList($userSign,7);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            $list=$this->userMessageService->getUnReadMessageSessionList($userSign);
+            $sysList=$this->userMessageService->getUnReadSystemMessageList($userSign);
+            $rst=[];
+            $rst['userList']=$list;
+            $rst['sysList']=$sysList;
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
+        }catch (Exception $e){
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+    /**
+     * 更新系统消息已读
+     */
+    public function actionChangeSystemMessageRead()
+    {
+        $messageId=trim(\Yii::$app->request->post("messageId"));
+
+        if(empty($messageId)){
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的消息"));
+        }
+        try{
+            $userSign=$this->userObj->userSign;
+            $userMessageSetting=$this->userMessageService->changeSystemMessageRead($messageId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userMessageSetting));
         }catch (Exception $e){
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }

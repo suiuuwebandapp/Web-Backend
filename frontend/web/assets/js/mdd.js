@@ -89,7 +89,7 @@ window.onload=function(){
 
 $(document).ready(function(e) {
 	
-
+/*登录注册*/
 	var oMdd=document.getElementById('mdd-btn');
 	var oBtn=oMdd.getElementsByTagName('li');
 	var oBox=document.getElementById('mdd-right-box');
