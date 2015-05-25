@@ -4,8 +4,8 @@ return [
     'name'=>'随游',
     'version'=>'beat 1.0',
     'copyright'=>' 2015 &copy; Suiuu. Admin Dashboard Template.',
-    'language'=>'zh-CN',
-    'sourceLanguage'=>'zh-CN',
+    'language'=>'zh-cn',
+    'sourceLanguage'=>'zh-cn',
     'defaultController'=>'index',
     'charset'=>'utf-8',
 
@@ -17,6 +17,7 @@ return [
     'www_suiuu_sign'=>'www_suiuu_sign',
     //app
     'app_suiuu_sign'=>'app_suiuu_sign',
+    'app_circle_article_img'=>'http://image.suiuu.com/suiuu_content',
     //Cookie
     'suiuu_sign'=> 'suiuu_sign',
     'cookie_domain' => '/',
@@ -43,6 +44,12 @@ return [
     /**
      * 微信配置
      */
+
+    //微信url
+    'weChatUrl'=>'http://test.suiuu.com',
+    'weChatSign'=>'weChatSign',
+    'weChatOpenId'=>'weChatOpenId',
+    //token
     'token_weChat'=>'suiuu9527',
     //////////////////////////////
     //access（第三方接入）
@@ -57,6 +64,7 @@ return [
     'qq_app_id'=>'101206430',
     'qq_app_key'=>'a80bf172ce9c35c3822363af5b38c741',
     'qq_callback'=>'http://www.suiuu.com/access/qq-login',
+
 
     //缓存
     'redis'=>[
