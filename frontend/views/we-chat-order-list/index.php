@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-US">
+<html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -105,7 +105,7 @@
         </div>
         <div class="down">
             <a href="tel:010-58483692"></a>
-            <a href="#"></a>
+            <a href="/we-chat-order-list/order-view"></a>
             <a href="#"></a>
 
 

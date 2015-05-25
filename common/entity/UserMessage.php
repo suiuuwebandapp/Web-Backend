@@ -22,8 +22,6 @@ class UserMessage {
 
     public $senderId;
 
-    public $url;
-
     public $content;
 
     public $sendTime;

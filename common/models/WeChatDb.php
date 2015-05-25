@@ -19,11 +19,11 @@ class WeChatDb extends ProxyDb{
         $sql = sprintf("
             INSERT INTO wechat_user_info
             (
-             openId,userSign,unionID,v_nickname,v_sex,v_city,v_country,v_province,v_language,v_headimgurl,v_subscribe_time,v_remark,v_groupid
+             openId,userSign,unionID,v_nickname,v_sex,v_city,v_country,v_province,v_language,v_headimgurl,v_subscribe_time,v_remark,v_groupid,v_createTime
             )
             VALUES
             (
-               :openId,:userSign,:unionID,:v_nickname,:v_sex,:v_city,:v_country,:v_province,:v_language,:v_headimgurl,:v_subscribe_time,:v_remark,:v_groupid
+               :openId,:userSign,:unionID,:v_nickname,:v_sex,:v_city,:v_country,:v_province,:v_language,:v_headimgurl,:v_subscribe_time,:v_remark,:v_groupid,now()
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -45,7 +45,7 @@ class WeChatDb extends ProxyDb{
 
     public function findWeChatUserInfo(WeChatUserInfo $weChatUserInfo){
         $sql = sprintf("
-           SELECT a.openId,a.unionID,a.v_nickname,b.* FROM wechat_user_info a
+           SELECT a.openId,a.unionID,a.v_nickname,a.v_sex,a.v_headimgurl,b.* FROM wechat_user_info a
            LEFT JOIN user_base b ON a.userSign=b.userSign
             WHERE 1=1
         ");

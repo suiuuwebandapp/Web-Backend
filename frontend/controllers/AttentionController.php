@@ -231,8 +231,13 @@ class AttentionController extends AController
                 return;
             }
             $userSign = $this->userObj->userSign;
-            $this->AttentionService->deleteAttention($attentionId,$userSign);
+            $rst = $this->AttentionService->deleteAttention($attentionId,$userSign);
+            if($rst==1){
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            }else
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'fail'));
+            }
         }catch (Exception $e)
         {
             $error=$e->getMessage();

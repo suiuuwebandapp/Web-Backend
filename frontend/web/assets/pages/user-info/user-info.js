@@ -167,6 +167,9 @@ function initUploadfive(){
     });
 }
 
+
+
+
 /**
  *  初始化修改密码
  */
@@ -274,12 +277,6 @@ function buildMessageSessionHtml(list){
         tempSession=list[i];
         content=tempSession.lastContentInfo;
         currentPageMessageSessionKeyList.push(tempSession.sessionKey);
-        var nickname=tempSession.nickname;
-        var headImg=tempSession.headImg;
-        if(tempSession.userId==SystemMessage.userId){
-            nickname=SystemMessage.nickname;
-            headImg=SystemMessage.headImg;
-        }
         if(content.length>50){
             content=content.substring(0,50)+"...";
         }
@@ -287,12 +284,10 @@ function buildMessageSessionHtml(list){
         if(tempSession.isRead!=1){
             isNew='class="new"';
         }
-        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
-        html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
+        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+tempSession.headImg+'",this)>';
+        html+='<div class="people"><img src="'+tempSession.headImg+'"><span>'+tempSession.nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
-        if(tempSession.userId!=SystemMessage.userId){
-            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.userId+'\')">屏蔽</b>';
-        }
+        html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.userId+'\')">屏蔽</b>';
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
         html+='</li>';
     }
@@ -348,12 +343,6 @@ function rebuildMessageSessionList(list){
             $("#messageSessionDiv ul li[sessionKey='"+last+"']").remove();
             currentPageMessageSessionKeyList.push(tempSession.sessionKey);
         }
-        var nickname=tempSession.nickname;
-        var headImg=tempSession.headImg;
-        if(tempSession.userId==SystemMessage.userId){
-            nickname=SystemMessage.nickname;
-            headImg=SystemMessage.headImg;
-        }
         content=tempSession.lastContentInfo;
         currentPageMessageSessionKeyList.push(tempSession.sessionKey);
         if(content.length>50){
@@ -363,8 +352,8 @@ function rebuildMessageSessionList(list){
         if(tempSession.isRead!=1){
             isNew='class="new"';
         }
-        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
-        html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
+        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+tempSession.headImg+'",this)>';
+        html+='<div class="people"><img src="'+tempSession.headImg+'"><span>'+tempSession.nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
         html+='</li>';
@@ -478,30 +467,21 @@ function buildMessageSessionInfo(list,sessionKey){
     var html='',tempMessage='',receiveId='';
     for(var i=0;i<list.length;i++){
         tempMessage=list[i];
-        var content=tempMessage.content;
-        if(Main.isNotEmpty(tempMessage.url)){
-            content='<a href="'+tempMessage.url+'">'+content+'</a>';
-        }
         //如果自己是发送人
         if(tempMessage.senderId==userSign){
             receiveId=tempMessage.receiveId;
             html+='<li class="you clearfix" mid="'+tempMessage.messageId+'">';
             html+='<img src="'+userHeadImg+'">';
-            html+=' <p>'+content+'</p>';
+            html+=' <p>'+tempMessage.content+'</p>';
             html+='</li>';
         }else{
             receiveId=tempMessage.senderId;
             html+='<li class="zuo clearfix" mid="'+tempMessage.messageId+'">';
             html+='<img src="'+receiveHeadImg+'">';
-            html+=' <p>'+content+'</p>';
+            html+=' <p>'+tempMessage.content+'</p>';
             html+='</li>';
         }
 
-    }
-    if(tempMessage.senderId==SystemMessage.userId||tempMessage.receiveId==SystemMessage.userId){
-        $("#write_div").hide();
-    }else{
-        $("#write_div").show();
     }
     $("#messageInfoDiv").attr("receiveId",receiveId);
     $("#messageInfoDiv").attr("sessionKey",sessionKey);
@@ -1194,14 +1174,14 @@ function buildOrderList(list,type){
         html+='<span>'+Main.convertOrderDateToShow(orderInfo.createTime)+'</span><span>随游</span><span>开始时间</span><span>随友</span><span>随友电话</span><span>出行日期</span><span>人数</span><span>单项服务</span>';
         html+='</dt>';
         html+='<dd>';
-        html+='<span class="pic"><a href="/view-trip/info?trip='+travelInfo.info.tripId+'"><img src="'+travelInfo.info.titleImg+'"></a></span>';
-        html+='<a href="/view-trip/info?trip='+travelInfo.info.tripId+'"><span>'+travelInfo.info.title+'</span></a>';
+        html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"></span>';
+        html+='<span>'+travelInfo.info.title+'</span>';
         html+='<span>'+Main.convertTimePicker(orderInfo.startTime,2)+'</span>';
         if(orderInfo.phone==''||orderInfo.phone==null){
             html+='<span>未接单</span>';
             html+='<span>未接单</span>';
         }else{
-            html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'" ></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+            html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'"  width="40" height="40"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
             html+='<span>'+orderInfo.phone+'</span>';
         }
 
@@ -1223,7 +1203,6 @@ function buildOrderList(list,type){
         html+='</span>';
         html+='</dd>';
         html+='</dl>';
-        html+='<p class="order_list_number">订单号：'+orderInfo.orderNumber+'</p>';
         if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PAY_WAIT){
             html+='<p><a href="javascript:cancelOrder('+orderInfo.orderId+');" class="cancel">取消订单</a><a href="/user-order/info?orderNumber='+orderInfo.orderNumber+'" class="sure">支付</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">待支付</span><span class="orange"></span></p>';
@@ -1232,7 +1211,7 @@ function buildOrderList(list,type){
             html+='<p><a href="javascript:refundOrder('+orderInfo.orderId+');" class="cancel">申请退款</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">已支付</span><span class="orange">待接单</span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CONFIRM){
-            html+='<p><a href="javascript:showRefundWindow('+orderInfo.orderId+');" class="cancel">申请退款</a><a href="javascript:userConfirmOrder('+orderInfo.orderId+')" class="sure">确认游玩</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<p><a href="javascript:showRefundWindow('+orderInfo.orderId+');" class="cancel">申请退款</a><a href="#" class="sure">确认游玩</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">已支付</span><span class="orange">已确认</span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CANCELED){
             html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
@@ -1244,12 +1223,7 @@ function buildOrderList(list,type){
             html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">退款成功</span><span class="orange"></span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_PLAY_SUCCESS||orderInfo.status==OrderStatus.USER_ORDER_STATUS_PLAY_FINISH){
-            html+='<p>';
-            if(orderInfo.isComment==null||orderInfo.isComment=="null"){
-                html+='<a href="/user-order/to-comment?orderId='+orderInfo.orderId+'" class="cancel">去评价</a>';
-            }
-            html+='<a href="#" class="sure">分享</a>';
-            html+='<span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
+            html+='<p><a href="#" class="cancel">去评价</a><a href="#" class="sure">分享</a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
             html+='<span class="blue">已完成</span><span class="orange"></span></p>';
         }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_REFUND_VERIFY){
             html+='<p><a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a><span>总价：<b>'+orderInfo.totalPrice+'</b></span>';
@@ -1393,7 +1367,7 @@ function buildUnConfirmList(list){
         html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"></span>';
         html+='<span>'+travelInfo.info.title+'</span>';
         html+='<span>'+Main.convertTimePicker(orderInfo.startTime,2)+'</span>';
-        html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+        html+='<span><a href="#" class="user"><img src="'+orderInfo.headImg+'" width="40" height="40"></a><a href="#" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
         html+='<span>'+orderInfo.beginDate+'</span>';
         html+='<span>'+orderInfo.personCount+'</span>';
         html+='<span>';
@@ -2140,44 +2114,7 @@ function deleteUserMessageShield(userId){
     });
 }
 
-/**
- * 用户确认游玩
- * @param orderId
- */
-function userConfirmOrder(orderId){
-    if(orderId==''){
-        return;
-    }
-    if(!confirm("提示：\n    确认游玩后系统将会给随友打款\n    之后订单将无法取消或申请退款\n    请谨慎操作!")){
-        return;
-    }
-    $.ajax({
-        url :'/user-order/user-confirm-play',
-        type:'post',
-        data:{
-            orderId:orderId,
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            Main.showTip("确认游玩失败");
-        },
-        success:function(data){
-            data=eval("("+data+")");
-            if(data.status==1){
-                Main.showTip("确认游玩成功");
-                getFinishList();
-            }else{
-                Main.showTip("确认游玩失败");
-            }
-        }
-    });
-}
 
-
-/**
- * 填出取消订单窗口
- * @param orderId
- */
 function showCancelWindow(orderId){
     if(orderId==''){
         Main.showTip("无效的订单");
@@ -2189,9 +2126,6 @@ function showCancelWindow(orderId){
     $("#myMask").show();
 }
 
-/**
- * 个人中心，上传护照
- */
 function uploadAll() {
     if ($("#imgFront").attr("src") == "") {
         Main.showTip("请选择护照图片");

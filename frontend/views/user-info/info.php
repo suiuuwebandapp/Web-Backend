@@ -163,11 +163,6 @@
         padding-left: 0px !important;
         color: white;
     }
-
-    .order_list_number{
-        float: left;
-        padding-left: 20px;
-    }
 </style>
 
 <?php
@@ -236,7 +231,7 @@
                 <div class="con">
                     <ul>
                     </ul>
-                    <div class="write" id="write_div"><input type="text" class="txt" id="messageContent"><input type="button" class="btn" value="发送" id="sendMessageBtn"></div>
+                    <div class="write"><input type="text" class="txt" id="messageContent"><input type="button" class="btn" value="发送" id="sendMessageBtn"></div>
                 </div>
             </div>
         </div>

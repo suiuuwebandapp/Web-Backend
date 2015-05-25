@@ -28,7 +28,7 @@ class WController extends SController {
     {
         parent::__construct($id, $module);
     }
-    public function loginValid($db=true,$bo=true)
+    public function loginValid($bd=true,$bo=true)
     {
 
             if ($bo) {
@@ -39,28 +39,18 @@ class WController extends SController {
                     $currentUser=json_decode($session);
                 }
                  if (isset($currentUser)) {
-                    if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
-                        echo json_encode(Code::statusDataReturn(Code::FAIL, "用户已经被删除"));
-                        exit;
-                    } else {
-                        if($db)
-                        {
-                            if(empty($this->userObj->userSign)){
-                              return $this->redirect('/we-chat/binding');
-                            }
+                     if($bd)
+                     {
+                        if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
+                            return $this->redirect('/we-chat/binding-main');
                         }
-                        $this->userObj = $currentUser;
-
                     }
+                     $this->userObj = $currentUser;
                 } else {
-                    echo json_encode(Code::statusDataReturn(Code::UN_LOGIN, '登陆已过期请重新登陆'));
-                    exit;
+                     return $this->redirect('/we-chat/error?str="登陆已经过期请重新打开"');
+
                 }
-                if($currentUser->isPublisher){
-                    if($this->userBaseService==null)$this->userBaseService=new UserBaseService();
-                    $userPublisherObj=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
-                    $this->userPublisherObj=$userPublisherObj;
-                }
+
             }else {
                 $currentUser=\Yii::$app->session->get(Yii::$app->params['weChatSign']);
                 if (isset($currentUser)) {
@@ -76,6 +66,45 @@ class WController extends SController {
                     $this->userObj->userSign='';
                 }
             }
+
+    }
+    public function loginValidJson($bd=true,$bo=true)
+    {
+        if ($bo) {
+            //验证用户是否登录
+            $session=\Yii::$app->session->get(Yii::$app->params['weChatSign']);
+            if(!empty($session))
+            {
+                $currentUser=json_decode($session);
+            }
+            if (isset($currentUser)) {
+                if($bd)
+                {
+                    if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
+                        echo json_encode(Code::statusDataReturn(Code::UN_LOGIN, '/we-chat/binding-main'));
+                        exit;
+                    }
+                }
+                $this->userObj = $currentUser;
+            } else {
+                echo json_encode(Code::statusDataReturn(Code::FAIL, '无效的用户'));
+                exit;
+            }
+        }else {
+            $currentUser=\Yii::$app->session->get(Yii::$app->params['weChatSign']);
+            if (isset($currentUser)) {
+                if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
+                    $this->userObj=new UserBase();
+                    $this->userObj->userSign='';
+                } else {
+                    $this->userObj = $currentUser;
+                }
+            }else
+            {
+                $this->userObj=new UserBase();
+                $this->userObj->userSign='';
+            }
+        }
 
     }
     public function appRefreshUserInfo()

@@ -10,12 +10,6 @@
 namespace frontend\services;
 
 
-use common\components\Code;
-use common\components\SysMessageUtils;
-use common\entity\TravelTrip;
-use common\entity\TravelTripComment;
-use common\entity\UserMessage;
-use common\entity\UserOrderComment;
 use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
 use common\entity\UserOrderPublisherCancel;
@@ -23,12 +17,9 @@ use common\entity\UserOrderPublisherIgnore;
 use common\entity\UserOrderRefundApply;
 use common\entity\UserPublisher;
 use common\models\BaseDb;
-use common\models\TravelTripCommentDb;
 use common\models\TravelTripDb;
 use common\models\UserOrderDb;
 use common\models\UserOrderRefundDb;
-use frontend\models\UserBaseDb;
-use frontend\models\UserPublisherDb;
 use yii\base\Exception;
 
 class UserOrderService extends BaseDb
@@ -55,6 +46,7 @@ class UserOrderService extends BaseDb
             $this->closeLink();
         }
     }
+
 
     /**
      * 根据订单号获取订单详情
@@ -201,7 +193,6 @@ class UserOrderService extends BaseDb
             $this->userOrderDb=new UserOrderDb($conn);
             $travelTripDb=new TravelTripDb($conn);
             $orderInfo=$this->userOrderDb->findOrderById($orderId);
-            $publisherUserSign="";
             if($orderInfo['isDel']){
                 throw new Exception("Invalid Order Info");
             }
@@ -214,7 +205,6 @@ class UserOrderService extends BaseDb
             $publisherList=$travelTripDb->getTravelTripPublisherList($orderInfo['tripId']);
             foreach($publisherList as $publisher){
                 if($publisher['publisherId']==$publisherId){
-                    $publisherUserSign=$publisher['userSign'];
                     $publisherFlag=true;
                     break;
                 }
@@ -227,10 +217,6 @@ class UserOrderService extends BaseDb
             if(strtotime($orderTime)<time()){
                 throw new Exception("Invalid Order Times");
             }
-            //随友不能自己接自己的订单
-            if($publisherUserSign==$orderInfo['userId']){
-                throw new Exception("Publisher Not Allow Equals User");
-            }
 
             $userOrderPublisher=new UserOrderPublisher();
             $userOrderPublisher->orderId=$orderId;
@@ -240,9 +226,6 @@ class UserOrderService extends BaseDb
             $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_CONFIRM);//改变订单状态
 
             $this->commit($tran);
-            //随友确认订单，给用户发送消息提醒
-            $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendPublisherConfirmOrderMessage($orderInfo['userId'],$orderInfo['orderNumber']);
         }catch (Exception $e){
             $this->rollback($tran);
             throw $e;
@@ -523,11 +506,6 @@ class UserOrderService extends BaseDb
             $this->userOrderDb->addUserOrderPublisherCancel($userOrderPublisherCancel);
             $this->arrayCastObject($userPublisher,UserPublisher::class);
             $this->commit($tran);
-
-            //给随友发送消息
-            $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendPublisherCancelOrderMessage($orderInfo->userId,$orderInfo->orderNumber);
-
         }catch (Exception $e){
             $this->rollback($tran);
             throw $e;
@@ -535,135 +513,6 @@ class UserOrderService extends BaseDb
             $this->closeLink();
         }
     }
-
-
-    /**
-     * 用户确认游玩
-     * @param $orderId
-     * @param $userSign
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function userConfirmPlay($orderId,$userSign)
-    {
-        if(empty($orderId)){
-            throw new Exception("OrderId Is Not Allow Empty");
-        }
-        $orderInfo=$this->findOrderByOrderId($orderId);
-        if($orderInfo==null){
-            throw new Exception("Invalid Order Id");
-        }
-        //1.判断状态是否可以确认游玩（如果状态不是确认订单状态，那么抛出异常）
-        if($orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_CONFIRM){
-            throw new Exception("Invalid Order Status");
-        }
-        if($orderInfo->userId!=$userSign){
-            throw new Exception("Invalid User");
-        }
-        $userPublisher=$this->findPublisherByOrderId($orderId);
-        if($userPublisher==null){
-            throw new Exception("Invalid Publisher");
-        }
-        $conn = $this->getConnection();
-        $tran = $conn->beginTransaction();
-        try{
-            $this->userOrderDb=new UserOrderDb($conn);
-            $userBaseDb=new UserBaseDb($conn);
-            $userPublisherDb=new UserPublisherDb($conn);
-            $tripDb=new TravelTripDb($conn);
-            //2.更新用户游玩次数
-            $userBaseDb->addUserTravelCount($userSign);
-            //3.更新随友带队次数
-            $userPublisherDb->addPublisherLeadCount($userPublisher->userPublisherId);
-            //4.更新随游次数
-            $tripDb->addTravelTripCount($orderInfo->tripId);
-            //5.改变订单状态为确认游玩
-            $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
-            $this->commit($tran);
-        }catch (Exception $e){
-            $this->rollback($tran);
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-    }
-
-    /**
-     * 根据订单获取订单评论
-     * @param $orderId
-     * @return array|bool|mixed|null
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function findUserOrderCommentByOrderId($orderId)
-    {
-        if(empty($orderId)){
-            throw new Exception("OrderId Is Not Allow Empty");
-        }
-        $userOrderComment=null;
-        try{
-            $conn = $this->getConnection();
-            $this->userOrderDb=new UserOrderDb($conn);
-            $userOrderComment=$this->userOrderDb->findUserOrderCommentByOrderId($orderId);
-            $userOrderComment=$this->arrayCastObject($userOrderComment,UserPublisher::class);
-        }catch (Exception $e){
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-        return $userOrderComment;
-    }
-
-    /**
-     * 添加用户订单评论
-     * @param UserOrderComment $userOrderComment
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function addUserOrderComment(UserOrderComment $userOrderComment)
-    {
-
-        $conn = $this->getConnection();
-        $tran=$conn->beginTransaction();
-        try{
-
-            $this->userOrderDb=new UserOrderDb($conn);
-            $userPublisherDb=new UserPublisherDb($conn);
-            $travelTripDb=new TravelTripDb($conn);
-            $tripCommentDb=new TravelTripCommentDb($conn);
-            //修改随游评分
-            $tripInfo=$travelTripDb->findTravelTripById($userOrderComment->tripId);
-            $tripInfo=$this->arrayCastObject($tripInfo,TravelTrip::class);
-            $allScore=$tripInfo->score*($tripInfo->tripCount-1)+$userOrderComment->tripScore;
-            $nowScore=$allScore/($tripInfo->tripCount);
-            $tripInfo->score=$nowScore;
-            $travelTripDb->updateTravelTrip($tripInfo);
-            //修改随友评分
-            $userPublisher=$userPublisherDb->findUserPublisherById($userOrderComment->publisherId);
-            $userPublisher=$this->arrayCastObject($userPublisher,UserPublisher::class);
-            $allScore=$userPublisher->score*($userPublisher->leadCount-1)+$userOrderComment->publisherScore;
-            $nowScore=$allScore/($userPublisher->leadCount);
-            $userPublisher->score=$nowScore;
-            $userPublisherDb->updateUserPublisher($userPublisher);
-            //添加评论信息
-            $tripComment=new TravelTripComment();
-            $tripComment->isTravel=TRUE;
-            $tripComment->content=$userOrderComment->content;
-            $tripComment->userSign=$userOrderComment->userId;
-            $tripComment->tripId=$userOrderComment->tripId;
-            $tripCommentDb->addTripComment($tripComment);
-
-            $this->userOrderDb->addUserOrderComment($userOrderComment);
-            $this->commit($tran);
-        }catch (Exception $e){
-            $this->rollback($tran);
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-    }
-
-
 
 
 }

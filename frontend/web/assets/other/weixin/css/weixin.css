@@ -40,18 +40,27 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 /*-----------随游-订单-----------*/
 .sy_order .box{ position:relative; padding:0.9rem 0.8rem 3rem; background:#fff;margin-top:0.5rem;  }
 .sy_order .box .top{ border-bottom:1px solid #ddd; padding-bottom:20px; }
-.sy_order .box .top .left{ float:left;  width:30%;  }
-.sy_order .box .top .right{ float:left; width:60%;  }
+.sy_order .box .top .left{ float:left;  width:30%; position:relative; height:4rem; }
+.sy_order .box .top .right{ float:right; width:60%;  }
 .sy_order .box .top .left .user{ position:relative; width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
 .sy_order .box .top .left .user img{ width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
-.sy_order .box .top .left .user .name{ position:absolute; top:1rem; left:2.7rem; width:11rem; }
-.sy_order .box .email{ position:absolute; height:1.3rem; width:1.6rem; display:block;  top:0.7rem; right:0.7rem; background:url(../images/email.png) no-repeat center center; background-size:1.57rem 1.21rem; }
+.sy_order .box .top .left .user .name{ position:absolute; top:0; left:2.7rem; width:5rem; }
+.sy_order .box .top .left .email{ position:absolute; height:1.3rem; width:1.6rem; display:block;  top:3rem; right:1rem; background:url(../images/email.png) no-repeat center center; background-size:1.57rem 1.21rem; }
+.sy_order .box .delete{ position:absolute; height:41px; width:41px; display:block;  top:0.7rem; right:0.7rem; background:url(../images/delet02.png) no-repeat center center;  }
+
+
+
+
 .sy_order .box .top p{  line-height:1.2rem; margin-top:10px; }
 .sy_order .box .down{ position:relative;}
 .sy_order .box .down p{  line-height:1.2rem; margin-top:10px; }
 .sy_order .box .money{ color:#FF8000; font-size:1rem; position:absolute;  bottom:0.7rem; right:5rem;}
 .sy_order .box .btn{ text-decoration:none; position:absolute;  bottom:0.7rem; right:0.7rem;text-align:center; color:#fff; background:#FF8000; display:block; width:3.9rem; height:1.78rem; line-height:1.78rem;}
 .sy_order .box .btn:hover{ text-decoration:underline; }
+.sy_order .box .payback{ background:#73B9FF;}
+.sy_order .box .paying{ background:#A8A8B7;}
+.sy_order .box .finish{ background:#A8A8B7;}
+
 		/*------fixed------*/
 .order_pay{ position:fixed;  bottom:0; left:0;  box-shadow:0 0 4px rgba(0,0,0,0.4);  height:0; width:100%; background:rgba(0,0,0,0.9); overflow:hidden; }
 .order_pay p{ text-align:center; color:#fff; margin-top:0.6rem; }
@@ -60,6 +69,29 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .order_pay .select .wei{ float:left; height:3rem; width:3rem; display:block; background:url(../images/icon01.png) no-repeat center -3.5rem; background-size:2.14rem 5.78rem; margin:0 1rem; }
 .order_pay .btn{ position:absolute;bottom:0.7rem; right:0.7rem; color:#fff; font-size:0.85rem; text-decoration:none; }
 .order_pay .btn:hover{  text-decoration:underline;  }
+
+
+/*-----------新信件-----------*/
+.new_email{ position:relative;margin-top:0.5rem;  }
+.new_email .top{ padding-bottom:20px; background:#fff; padding:0.9rem 0.8rem; }
+.new_email .top .left{ float:left;  width:30%;  }
+.new_email .top .right{ float:left; width:60%;  }
+.new_email .top .left .user{ position:relative; width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
+.new_email .top .left .user img{ width:2.58rem; height:2.58rem; border-radius:50%;display:block; }
+.new_email .top .left .user .name{ position:absolute; top:1rem; left:2.7rem; width:11rem; }
+.new_email .top p{  line-height:1.2rem; margin-top:10px; }
+.new_email .talk{ background:#eee; margin-top:10px; margin-bottom:3rem; height:22rem;overflow-y:scroll;}
+.new_email .talk li{ margin-bottom:10px;}
+.new_email .talk .zuo .pic{ height:1.6rem; width:1.6rem; border-radius:50%; display:block; float:left; margin-right:0.5rem; }
+.new_email .talk .you .pic{ margin-left:0.5rem; height:1.6rem; width:1.6rem; border-radius:50%; display:block; float:right; }
+.new_email .talk .zuo .p1{word-break:break-all;  float:left; border-radius:5px; max-width:60%; position:relative; padding:0.4rem; background:#dbdbeb; position:relative;}
+.new_email .talk .you .p1{word-break:break-all;  float:right; border-radius:5px; max-width:60%;  background:#73b9ff; color:#fff;padding:0.4rem; position:relative;}
+.new_email .talk .you .p1:before{ height:0; width:0; content:""; border:0.57rem solid transparent; border-width:0.35rem 0.71rem; position:absolute; top:5px;right:-1.25rem;border-left-color:#73b9ff; }
+.new_email .talk .zuo .p1:before{  height:0; width:0; content:""; border:0.57rem solid transparent; border-width:0.35rem 0.71rem; position:absolute; top:5px;left:-1.25rem;border-right-color:#DBDBEB;}
+.new_email .pass{ background:#fff; height:2.5rem; padding:0.5rem 1.5rem; width:100%; position:fixed; bottom:0; left:0; }
+.new_email .pass .text{ height:1.5rem; line-height:1.5rem;padding:0 0.5rem; width:60%; display:block; float:right; background:#eee; }
+.new_email .pass .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; margin-left:10px; float:right; display:block; width:3.5rem; height:1.5rem; line-height:1.5rem; text-align:center; text-decoration:none;}
+.new_email .pass .btn:hover{ text-decoration:underline;}
 
 
 /*-----------随游-填写需求01-------------*/

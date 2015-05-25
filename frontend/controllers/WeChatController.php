@@ -9,12 +9,17 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\wx\WXBizMsgCrypt;
+use common\entity\UserAccess;
 use common\entity\UserBase;
 use common\entity\WeChatUserInfo;
+use common\pay\wxpay\JsApiCall;
 use common\pay\wxpay\NativeDynamicQrcode;
 use frontend\services\CountryService;
 use frontend\services\UserBaseService;
+use frontend\services\WeChatNewsListService;
+use frontend\services\WeChatOrderListService;
 use frontend\services\WeChatService;
+use yii\base\Exception;
 use yii\web\Controller;
 use yii;
 use common\entity\WeChat;
@@ -29,10 +34,12 @@ class WeChatController extends SController
     public $enableCsrfValidation=false;
     public $layout=false;
     public $weChatSer;
+    public $newsListSer;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
         $this->weChatSer=new WeChatService();
+        $this->newsListSer = new WeChatNewsListService();
     }
 
     public function actionValid()
@@ -69,7 +76,6 @@ class WeChatController extends SController
         if (!empty($postStr)) {
 
             list($fromUsername, $toUsername, $keyword, $msgType, $objEvent, $objEventKey, $Label, $Location_X, $Location_Y, $Scale) = $this->getXmlMsg($postStr);
-
             //$logText = sprintf($this->HINT_LOGIN_TXT, $fromUsername);
             $time = time();
             $date_H = date("H",$time);
@@ -81,31 +87,6 @@ class WeChatController extends SController
 
             //关注的
             if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_SUBSCRIBE) {
-
-
-                if (!empty($objEventKey)) {
-                  /*  $WeChatRst = $this->WeChatSer->getUserInfo($fromUsername, null);
-                    if ($WeChatRst['status'] == Code::SUCCESS) {
-                        $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, "欢迎再次关注巴别鱼");
-                    } else {
-                        $ThisUId = intval(substr($objEventKey, 8));
-                        $pointNumb = 0;
-                        if($ThisUId>1000){
-                            //好友推荐关注 改成了临时二维码需要重新测试
-                            $this->pointInterface->addPoint(Point::POINT_EVENT_WECHAT_FRIEND_ATTENTION, intval($ThisUId), "推荐好友关注获得积分");
-                            $this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, "欢迎关注巴别鱼,由于你的帮助好友已经获得积分");
-                            $pointRet = $this->pointInterface->getPointEventById(Point::POINT_EVENT_WECHAT_FRIEND_ATTENTION);
-                            if ($pointRet['status'] == Code::SUCCESS) {
-                                $pointE = $pointRet['data'];
-                                $pointNumb = $pointE->pointEventPoint;
-                            }
-                        }
-                        //插入推荐数据
-                        $this->WeChatSer->insertWeChatRecommend($ThisUId, $fromUsername, self::RECOMMEND_TYPE_ATTENTION, $pointNumb);
-
-                    }*/
-
-                }
                 $this->getWechatUserInfo($fromUsername, true); //关注的时候抓取用户信息
                 $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::ATTENTION_REPLY_STR);
             } else if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_LOCATION) {
@@ -115,7 +96,12 @@ class WeChatController extends SController
                 //click 事件
                 switch ($objEventKey) {
                     case WeChat::EVENT_CLICK_KEY_ACTIVE: //21
-                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
+                        $data = $this->newsListSer->findNewsById(1);
+                        if(!empty($data)){
+                        $this->msgHandle($fromUsername, $toUsername, $time, $data);
+                        }else{
+                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO."1");
+                        }
                         break;
                     default :
                         $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
@@ -178,32 +164,41 @@ class WeChatController extends SController
                 $weChatUserInfo=new WeChatUserInfo();
                 $weChatUserInfo->openId=$openId;
                 $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
-                Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
+                if (!empty($WeChatRst)) {
+                    Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
+                } else {
+                    $this->weChatSer->insertWeChatInfo(json_decode($rst['data'],true));
+                    $weChatUserInfo=new WeChatUserInfo();
+                    $weChatUserInfo->openId=$openId;
+                    $WeChatRstN = $this->weChatSer->getUserInfo($weChatUserInfo);
+                    Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRstN));
+                }
+
             } else {
-                return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 exit;
             }
         } else {
-            return $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'请联系管理员 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'请重试 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         if (isset($_GET['actionType'])) {
             $actionType = $_GET['actionType'];
         } else {
-            return $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'请联系管理员 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'请重试 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         switch ($actionType) {
             case "11":
-                $url = Yii::$app->params['base_dir']. "/we-chat-order-list";
+                $url = Yii::$app->params['weChatUrl']. "/we-chat-order-list";
                 header("location: " . $url);
                 break;
             case "12":
-                $url = Yii::$app->params['base_dir']. "/we-chat-order-list/order-manage";
+                $url = Yii::$app->params['weChatUrl']. "/we-chat-order-list/order-manage";
                 header("location: " . $url);
                 break;
             default:
-                $url = Yii::$app->params['base_dir'];
+                $url = Yii::$app->params['weChatUrl'];
                 header("location: " . $url);;
                 break;
         }
@@ -218,6 +213,7 @@ class WeChatController extends SController
 
     public function actionBinding()
     {
+
         if (!$this->is_weixin()) {
             $this->showNoWx();
             exit;
@@ -227,15 +223,34 @@ class WeChatController extends SController
         {
             if($_POST)
             {
-
+                $username=\Yii::$app->request->post('username');
+                $password=\Yii::$app->request->post('password');
+                if(empty($username))
+                {
+                    return $this->renderPartial('errorHint', array('str1'=>'用户名不能为空','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                }
+                if(empty($password))
+                {
+                    return $this->renderPartial('errorHint', array('str1'=>'密码不能为空','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                }
+                $userBaseService = new UserBaseService();
+                $userBase = $userBaseService->findUserByUserNameAndPwd($username,$password);
+                if(empty($userBase)||$userBase==false)
+                {
+                    return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                }else
+                {
+                    $this->weChatSer->bindingWeChatByUnionID($userBase->userSign,$userInfo->unionID);
+                    $this->wRefresh($userInfo->openId);
+                    return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
+                }
             }else
             {
                 return $this->renderPartial('binding');
             }
-
         }else
         {
-            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请重试','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
 
     }
@@ -258,16 +273,16 @@ class WeChatController extends SController
                 $code=\Yii::$app->request->post('validateCode');//验证码
                 if(empty($password))
                 {
-                    echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不能为空'));
+                    return $this->renderPartial('errorHint', array('str1'=>'密码不能为空','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 }
                 if($cPassword!=$password)
                 {
-                    echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不一致'));
+                    return $this->renderPartial('errorHint', array('str1'=>'密码不一致','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 }
                 $rCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
                 if(empty($rCode)||$rCode!=$code)
                 {
-                    echo json_encode(Code::statusDataReturn(Code::FAIL,'验证码不正确'));
+                    return $this->renderPartial('errorHint', array('str1'=>'验证码不正确','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 }
                 $userBase=new UserBase();
                 $userBase->nickname=$userInfo->v_nickname;
@@ -276,6 +291,7 @@ class WeChatController extends SController
                 $userBaseService = new UserBaseService();
                 $user=$userBaseService->addUser($userBase);
                 $this->weChatSer->bindingWeChatByUnionID($user->userSign,$userInfo->unionID);
+                $this->wRefresh($userInfo->openId);
                 return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
             }else
             {
@@ -289,15 +305,70 @@ class WeChatController extends SController
         }
 
     }
+    public function actionError()
+    {
+        $str=Yii::$app->request->get('str');
+        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>'请重试 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+    }
+    public function actionAccess()
+    {
+        if (!$this->is_weixin()) {
+            $this->showNoWx();
+            exit;
+        }
+        $userInfo=json_decode(Yii::$app->session->get(Yii::$app->params['weChatSign']));
+        if(isset($userInfo->openId))
+        {
+            $sex=UserBase::USER_SEX_FEMALE;
+            if($userInfo->v_sex==1){
+                $sex=UserBase::USER_SEX_MALE;
+            }
+            $rst=$this->accessLogin($userInfo->unionID,UserAccess::ACCESS_TYPE_WECHAT,$userInfo->v_nickname,$sex,$userInfo->v_headimgurl);
+            if($rst['status']==Code::SUCCESS)
+            {
+              $this->wRefresh($userInfo->openId);
+                return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
+            }else
+            {
+                return $this->renderPartial('errorHint', array('str1'=>'微信登陆错误'.$rst['data'],'str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            }
+        }else
+        {
+            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+        }
+    }
 
     public function actionShowCountry()
     {
+        $rUrl=Yii::$app->request->get('rUrl');
         $countrySer=new CountryService();
         $list = $countrySer->getCountryList();
-        return $this->renderPartial('country',['list'=>$list]);
+        return $this->renderPartial('country',['list'=>$list,'rUrl'=>$rUrl]);
     }
 
 
+    public function actionWxpayJs()
+    {
+        try{
+        $orderNumber=Yii::$app->request->get('n');
+        $type=1;//1支付类型为定制
+        $wxpay = new JsApiCall();
+        $jsApiParameters=$wxpay->createCode($orderNumber,$type);
+        /*echo json_encode($jsApiParameters);
+        exit;*/
+
+        if($jsApiParameters['status']==Code::SUCCESS)
+        {
+            return $this->renderPartial('jspay',['jsApiParameters'=>$jsApiParameters['data']]);
+        }else
+        {
+            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+        }
+        }catch (Exception $e)
+        {
+            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+        }
+    }
     /**获取用户信息
      * @param $openId 用户id
      * @param $isSave 是否保存
@@ -322,7 +393,6 @@ class WeChatController extends SController
                         $this->weChatSer->upDateWeChatInfo($rstJson,$WeChatRst['userSign']);
                      //可以改成更新信息。但是没法判断用户是否更新了
                     } else {
-
                         $this->weChatSer->insertWeChatInfo($rstJson);
                     }
                 }
@@ -335,6 +405,20 @@ class WeChatController extends SController
             }
         }
         return Code::statusDataReturn(Code::FAIL);
+    }
+    private function msgHandle( $fromUsername, $toUsername, $time, $rst,$bak=null)
+    {
+            if (empty($rst['data'])) {
+                if(empty($bak))
+                {
+                    $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_TEXT, WeChat::MSG_TXT_NO);
+                }else
+                {
+                    $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_TEXT, $bak);
+                }
+            } else {
+                $this->mapMsgTxt(WeChat::MSG_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_NEWS, $rst);
+            }
     }
 
     /**
@@ -526,6 +610,78 @@ class WeChatController extends SController
                 exit;
             }
         }
+    }
+
+
+    private function accessLogin($openId,$type,$nickname,$sex,$headImg)
+    {
+        $userBaseService=new UserBaseService();
+        $userBase=$userBaseService->findUserAccessByOpenIdAndType($openId,$type);
+
+        if($userBase!=null){
+            if($userBase->status!=UserBase::USER_STATUS_NORMAL){
+                return Code::statusDataReturn(Code::FAIL,"User Status Is Disabled");
+            }else{
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
+                return Code::statusDataReturn(Code::SUCCESS,$userBase);
+            }
+        }
+        if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid Sex Value");
+        }
+        if($type!=UserAccess::ACCESS_TYPE_QQ&&$type!=UserAccess::ACCESS_TYPE_WECHAT&&$type!=UserAccess::ACCESS_TYPE_SINA_WEIBO){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid Type Value");
+        }
+        $userBase=null;
+        try{
+            $userBase=new UserBase();
+            $userBase->nickname=$nickname;
+            $userBase->headImg=$headImg;
+            $userBase->sex=$sex;
+
+            $userAccess=new UserAccess();
+            $userAccess->openId=$openId;
+            $userAccess->type=$type;
+            $userBase=$userBaseService->addUser($userBase,$userAccess);
+            if($type==UserAccess::ACCESS_TYPE_WECHAT)
+            {
+                $weChatSer=new WeChatService();
+                $weChatSer->bindingWeChatByUnionID($userBase->userSign,$openId);
+
+            }
+
+        }catch (Exception $e){
+            return Code::statusDataReturn(Code::FAIL,$e->getName());
+        }
+        return Code::statusDataReturn(Code::SUCCESS,$userBase);
+    }
+
+    private function wRefresh($openId)
+    {
+        $weChatUserInfo=new WeChatUserInfo();
+        $weChatUserInfo->openId=$openId;
+        $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
+        $userSign = $WeChatRst['userSign'];
+        $WeChatOrderSer=new WeChatOrderListService();
+        $WeChatOrderSer->updateOrderUserSign($openId,$userSign);
+        Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
+
+    }
+
+    public function actionGetNewsInfo()
+    {
+
+        $id = Yii::$app->request->get("id");
+
+        $rstData = $this->newsListSer->getNewsInfoForId($id);
+        if (!empty($rstData)) {
+
+            if (empty($rstData['nContent'])) {
+                header("location: " . $rstData['nUrl']);
+                exit;
+            }
+        }
+        $this->render('newsInfo', array('data' => $rstData));
     }
 
 

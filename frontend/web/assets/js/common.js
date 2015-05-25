@@ -158,13 +158,13 @@ $(function(){
 
 /*-----header弹框效果-----*/
 $(function(){
-	$('.header-right .xitong>a').click(function(e) {
-        $('.xit-sz').toggle();
+	$('.header-right .xitong').click(function(e) {
+        $(this).children('.xit-sz').toggle();
         $('.header-right .name').children('.my-suiuu').css('display','none');
     });
 
-	$('.header-right .name>a').click(function(e) {
-        $('.my-suiuu').toggle();
+	$('.header-right .name').click(function(e) {
+        $(this).children('.my-suiuu').toggle();
         $('.header-right .xitong').children('.xit-sz').css('display','none');
     });
 

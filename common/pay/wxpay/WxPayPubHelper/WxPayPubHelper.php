@@ -819,7 +819,7 @@ class JsApi_pub extends Common_util_pub
         //初始化curl
        	$ch = curl_init();
 		//设置超时
-		curl_setopt($ch, CURLOP_TIMEOUT, $this->curl_timeout);
+		curl_setopt($ch, CURLOPT_TIMEOUT, $this->curl_timeout);
 		curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
         curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);
@@ -830,7 +830,7 @@ class JsApi_pub extends Common_util_pub
 		curl_close($ch);
 		//取出openid
 		$data = json_decode($res,true);
-		$this->openid = $data['openid'];
+		$this->openid = isset($data['openid'])?$data['openid']:'';
 		return $this->openid;
 	}
 

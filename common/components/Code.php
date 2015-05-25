@@ -209,6 +209,9 @@ class Code
     {
         return date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
     }
-
+    public static function createWxOrderNumber()
+    {
+        return 'wx'.date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    }
 
 }

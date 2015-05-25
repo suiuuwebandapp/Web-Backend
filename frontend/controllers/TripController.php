@@ -57,6 +57,7 @@ class TripController extends CController
         ]);
     }
 
+
     /**
      * 预览页面
      * @return string|\yii\web\Response
@@ -88,6 +89,7 @@ class TripController extends CController
         ]);
     }
 
+
     public function actionTest()
     {
         /*$t=TagUtil::getInstance();
@@ -102,7 +104,6 @@ class TripController extends CController
         }*/
 
     }
-
     /**
      * 编辑随游
      * @return string|\yii\web\Response
@@ -128,6 +129,7 @@ class TripController extends CController
             'tagList' => $tagList
         ]);
     }
+
 
     /**
      * 添加随游
@@ -298,6 +300,7 @@ class TripController extends CController
         }
 
     }
+
 
     /**
      * 更新随游
@@ -474,6 +477,7 @@ class TripController extends CController
 
     }
 
+
     /**
      * 发布随游
      */
@@ -496,6 +500,7 @@ class TripController extends CController
             echo json_encode(Code::statusDataReturn(Code::FAIL, "发布随游失败"));
         }
     }
+
 
     /**
      * 跳转随游申请页面
@@ -524,6 +529,7 @@ class TripController extends CController
         ]);
     }
 
+
     /**
      * 申请加入随游
      * @return \yii\web\Response
@@ -541,21 +547,17 @@ class TripController extends CController
         {
             return $this->redirect(['/result', 'result' => '找不到该随游']);
         }
-        $apply=$this->tripService->findTravelTripApplyByTripIdAndUser($tripId,$publisherId);
-        if(isset($apply)){
-            return $this->redirect(['/result', 'result' => '您已经有申请正在审核，请耐心等待回复']);
-        }
 
         $travelTripApply=new TravelTripApply();
         $travelTripApply->tripId=$tripId;
         $travelTripApply->publisherId=$publisherId;
         $travelTripApply->info=$info;
         $travelTripApply->status=TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT;
-
         $this->tripService->addTravelTripApply($travelTripApply);
 
         return $this->redirect(['/result', 'result' => '您的申请已经提交，请耐心等待审核']);
     }
+
 
     /**
      * 移除用户随游关联
@@ -586,8 +588,8 @@ class TripController extends CController
         }
         try{
             $travelTripPublisher=new TravelTripPublisher();
-            $travelTripPublisher->tripId=$tripId;
-            $travelTripPublisher->tripPublisherId=$tripPublisherId;
+            $travelTripPublisher->tripId;
+            $travelTripPublisher->tripPublisherId;
 
             $this->tripService->deleteTravelTriPublisher($travelTripPublisher);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
@@ -596,6 +598,7 @@ class TripController extends CController
         }
         return;
     }
+
 
     /**
      * 获取我的随游列表
@@ -631,6 +634,7 @@ class TripController extends CController
         }
     }
 
+
     /**
      * 跳转到申请列表页面
      * @return string|\yii\web\Response
@@ -654,6 +658,7 @@ class TripController extends CController
 
         }
     }
+
 
     /**
      * 同意随游申请
@@ -700,6 +705,7 @@ class TripController extends CController
         }
     }
 
+
     /**
      * 删除随游
      */
@@ -725,6 +731,7 @@ class TripController extends CController
         }
 
     }
+
 
 
 }

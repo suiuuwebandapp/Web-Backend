@@ -7,6 +7,7 @@ use common\entity\UserOrderInfo;
 use common\entity\UserPayRecord;
 use common\pay\alipay\create\AlipayCreateApi;
 use common\pay\alipay\send\AlipaySendApi;
+use common\pay\wxpay\JsApiCall;
 use common\pay\wxpay\NativeDynamicQrcode;
 use frontend\services\UserOrderService;
 use frontend\services\UserPayService;
@@ -47,7 +48,6 @@ class PayController extends CController{
         }
         if($orderInfo->userId!=$this->userObj->userSign){
             return $this->redirect(['/result', 'result' => '订单用户不匹配']);
-
         }
         if($payType==UserPayRecord::PAY_RECORD_TYPE_ALIPAY){
             $alipayCreateApi->createOrder($orderInfo,$this->userObj);
@@ -91,6 +91,7 @@ class PayController extends CController{
 
     public function actionSend()
     {
+
         $sendApi=new AlipaySendApi();
         $sendApi->alipaySend("2015051400001000880050824241");
     }
@@ -105,6 +106,8 @@ class PayController extends CController{
         echo 1111;
 
     }
+
+
 
 
 

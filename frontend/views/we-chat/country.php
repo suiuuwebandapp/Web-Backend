@@ -91,7 +91,7 @@
     {
         var code = $(obj).attr('areaCode');
         var name =  $(obj).html();
-        window.location.href='/we-chat/register?c='+code+"&n="+name;
+        window.location.href='<?php echo $rUrl;?>'+'?c='+code+"&n="+name;
     }
 
 </script>

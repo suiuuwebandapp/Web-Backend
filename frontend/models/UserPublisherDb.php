@@ -104,22 +104,6 @@ class UserPublisherDb extends ProxyDb
         return $command->queryOne();
     }
 
-    public function findUserBaseByPublisherId($userPublisherId)
-    {
-        $sql = sprintf("
-            SELECT ub.userId,ub.userSign,ub.nickname,ub.phone,ub.email,ub.areaCode FROM  user_base ub
-            LEFT JOIN user_publisher up  ON ub.userSign=up.userId
-            WHERE up.userPublisherId=:userPublisherId
-
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-
-        $command->bindParam(":userPublisherId", $userPublisherId, PDO::PARAM_INT);
-
-        return $command->queryOne();
-    }
-
     /**
      * 根据用户Id获取随友详情
      * @param $userId
@@ -139,43 +123,5 @@ class UserPublisherDb extends ProxyDb
         $command->bindParam(":userId", $userId, PDO::PARAM_STR);
 
         return $command->queryOne();
-    }
-
-    /**
-     * 增加随友带队次数
-     * @param $userPublisherId
-     * @throws \yii\db\Exception
-     */
-    public function addPublisherLeadCount($userPublisherId)
-    {
-        $sql = sprintf("
-            UPDATE user_publisher SET
-            leadCount=leadCount+1
-            WHERE userPublisherId=:userPublisherId
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userPublisherId", $userPublisherId, PDO::PARAM_INT);
-
-        $command->execute();
-    }
-
-    /**
-     * 增加随游线路数
-     * @param $userPublisherId
-     * @throws \yii\db\Exception
-     */
-    public function addPublisherTripCount($userPublisherId)
-    {
-        $sql = sprintf("
-            UPDATE user_publisher SET
-            tripCount=tripCount+1
-            WHERE $userPublisherId=:$userPublisherId
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userId", $userPublisherId, PDO::PARAM_STR);
-
-        $command->execute();
     }
 }

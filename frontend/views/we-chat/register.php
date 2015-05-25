@@ -42,11 +42,31 @@
 <script>
     function submit()
     {
+        if($('input[name=phone]').val()=="")
+        {
+            alert("手机号不能为空");
+            return ;
+        }
+        if($('input[name=validateCode]').val()=="")
+        {
+            alert("验证码不能为空");
+            return ;
+        }
+        if($('input[name=password]').val()=="")
+        {
+            alert("密码不能为空");
+            return ;
+        }
+        if($('input[name=cPassword]').val()=="")
+        {
+            alert("确认密码不能为空");
+            return ;
+        }
         $('#wechat_register').submit();
     }
     function toCountry()
     {
-        window.location.href='/we-chat/show-country';
+        window.location.href='/we-chat/show-country?rUrl=/we-chat/register';
     }
     function getCode()
     {

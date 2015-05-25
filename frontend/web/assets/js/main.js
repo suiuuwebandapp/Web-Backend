@@ -28,13 +28,6 @@ var Main = function() {
             }
             alert(temp);
         },
-        isNotEmpty:function(obj){
-            if(obj==null||obj=="null"||obj==""||obj==undefined){
-                return false;
-            }else{
-                return true;
-            }
-        },
         /**
          * yyyy-MM-dd hh:mm:ss
          * @param strDate
@@ -222,12 +215,6 @@ var OrderStatus= {
     'USER_ORDER_STATUS_REFUND_VERIFY':8,
     'USER_ORDER_STATUS_REFUND_FAIL':9
 };
-
-var SystemMessage={
-    'userId':'SYSTEM_MESSAGE',
-    'nickname':'系统消息',
-    'headImg':'/assets/images/user_default.png'
-}
 
 /*******************************************************************************
  * Usage

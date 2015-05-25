@@ -263,6 +263,7 @@ class UserAttentionService extends BaseDb
                 }
 
             }
+            return $rst;
         } catch (Exception $e) {
             throw new Exception('取消收藏关注操作异常',Code::FAIL,$e);
         } finally {

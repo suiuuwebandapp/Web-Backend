@@ -31,15 +31,18 @@ class WeChatOrderListController extends WController {
      */
     public function actionAddOrder()
     {
-        $this->loginValid();
+        $this->loginValidJson(false);
         $site=Yii::$app->request->post('site');
         $content=Yii::$app->request->post('content');
         $timeList=Yii::$app->request->post('timeList');
+        $userNumber=Yii::$app->request->post('userNumber');
+        $userPhone=Yii::$app->request->post('phone');
         $userSign=$this->userObj->userSign;
-        /*$site='北京';
-        $content='随意';
-        $timeList='2015-01-02,2015-15-25';
-        $userSign='abb760a0ea093d829f7916b2a7a9f3ce';*/
+        $openId=$this->userObj->openId;
+        if(empty($openId))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "无效的微信用户"));
+        }
         if(empty($site))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "订购地点不能为空"));
@@ -53,23 +56,41 @@ class WeChatOrderListController extends WController {
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "订购时间不能为空"));
         }
+        if(empty($userPhone))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "联系电话不能为空"));
+        }
+        if(empty($userNumber)||$userNumber<1)
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订购人数不能为空"));
+        }
+        $orderNumber=Code::createWxOrderNumber();
         $orderEntity=new WeChatOrderList();
         $orderEntity->wOrderSite=$site;
         $orderEntity->wOrderContent=$content;
         $orderEntity->wOrderTimeList=$timeList;
         $orderEntity->wUserSign=$userSign;
+        $orderEntity->wOrderNumber=$orderNumber;
+        $orderEntity->wUserNumber=$userNumber;
+        $orderEntity->wPhone=$userPhone;
+        $orderEntity->openId=$openId;
         $this->orderListSer->insertWeChatInfo($orderEntity);
+        if(empty($userSign))
+        {
+            return json_encode(Code::statusDataReturn(Code::UN_LOGIN, '/we-chat-order-list/binding'));
+        }
+        return json_encode(Code::statusDataReturn(Code::SUCCESS, '/we-chat-order-list/order-success'));
     }
+
 
     //得到用户订购列表
     public function actionGetUserOrderList()
     {
         try {
-            $this->loginValid();
+            $this->loginValidJson();
             $userSign=$this->userObj->userSign;
             $page = new Page(Yii::$app->request);
             $data = $this->orderListSer->getOrderListByUserSign($userSign,$page);
-            var_dump($data->getList());
         }catch (Exception $e)
         {
             $error=$e->getMessage();
@@ -81,7 +102,7 @@ class WeChatOrderListController extends WController {
     public function actionGetUserOrderInfo()
     {
         try {
-            $this->loginValid();
+            $this->loginValidJson();
             $id=Yii::$app->request->post('id');
             $userSign=$this->userObj->userSign;
             $data = $this->orderListSer->getOrderInfoById($id,$userSign);
@@ -97,9 +118,64 @@ class WeChatOrderListController extends WController {
         return $this->renderPartial('index');
     }
 
+    public function actionOrderView()
+    {
+        $c=Yii::$app->request->get('c');
+        $n=Yii::$app->request->get('n');
+        if(empty($n))
+        {
+            $n='目的地城市';
+        }
+        return $this->renderPartial('orderView',['c'=>$c,'n'=>$n]);
+    }
     public function actionOrderManage()
     {
-        return $this->renderPartial('index');
+        /*$this->loginValid(false);
+        $userSign=$this->userObj->userSign;*/
+        $userSign="085963dc0af031709b032725e3ef18f5";
+        if(empty($userSign))
+        {
+            return $this->renderPartial('noOrder');
+        }
+        $page = new Page(Yii::$app->request);
+        $data = $this->orderListSer->getOrderListByUserSign($userSign,$page);
+        if(empty($data->getList())){
+            return $this->renderPartial('noOrder');
+        }else{
+            return $this->renderPartial('orderList',['list'=>$data->getList()]);
+        }
     }
 
+    public function actionDeleteOrder()
+    {
+        $this->loginValidJson();
+        $orderNumber=Yii::$app->request->post('orderNumber');
+        $userSign=$this->userObj->userSign;
+        if(empty($userSign))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "用户名不能为空"));
+        }
+        if(empty($orderNumber))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单号不能为空"));
+        }
+        $data = $this->orderListSer->deleteOrder($orderNumber,$userSign);
+        if($data==1)
+        {
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, "删除成功"));
+        }else{
+            return json_encode(Code::statusDataReturn(Code::FAIL, "删除异常"));
+        }
+    }
+    public function actionOrderSuccess()
+    {
+        return $this->renderPartial('orderSuccess');
+    }
+    public function actionBinding()
+    {
+        return $this->renderPartial('binding');
+    }
+    public function actionTest()
+    {
+    }
 }

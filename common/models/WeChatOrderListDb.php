@@ -20,11 +20,11 @@ class WeChatOrderListDb extends ProxyDb{
         $sql = sprintf("
             INSERT INTO wechat_order_list
             (
-             wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeId,wRelativeSign,wRelativeType,wCreateTime,wLastTime
+             wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wCreateTime,wLastTime,wOrderNumber,wUserNumber,wPhone,openId,isDel
             )
             VALUES
             (
-            :wOrderSite,:wOrderTimeList,:wOrderContent,:wUserSign,:wStatus,:wRelativeId,:wRelativeSign,:wRelativeType,now(),now()
+            :wOrderSite,:wOrderTimeList,:wOrderContent,:wUserSign,:wStatus,now(),now(),:wOrderNumber,:wUserNumber,:wPhone,:openId,FALSE
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -33,15 +33,16 @@ class WeChatOrderListDb extends ProxyDb{
         $command->bindParam(":wOrderContent", $weChatOrderList->wOrderContent, PDO::PARAM_STR);
         $command->bindParam(":wUserSign", $weChatOrderList->wUserSign, PDO::PARAM_STR);
         $command->bindValue(":wStatus", WeChatOrderList::STATUS_NORMAL, PDO::PARAM_INT);
-        $command->bindParam(":wRelativeId", $weChatOrderList->wRelativeId, PDO::PARAM_INT);
-        $command->bindParam(":wRelativeSign", $weChatOrderList->wRelativeSign, PDO::PARAM_STR);
-        $command->bindParam(":wRelativeType", $weChatOrderList->wRelativeType, PDO::PARAM_INT);
+        $command->bindParam(":wOrderNumber", $weChatOrderList->wOrderNumber, PDO::PARAM_STR);
+        $command->bindParam(":wUserNumber", $weChatOrderList->wUserNumber, PDO::PARAM_INT);
+        $command->bindParam(":wPhone", $weChatOrderList->wPhone, PDO::PARAM_STR);
+        $command->bindParam(":openId", $weChatOrderList->openId, PDO::PARAM_STR);
         return $command->execute();
     }
 
     public function findWeChatOrderInfoById($wOrderId,$userSign){
         $sql = sprintf("
-           SELECT * FROM wechat_order_list WHERE wOrderId=:wOrderId
+           SELECT * FROM wechat_order_list WHERE wOrderId=:wOrderId AND isDel=FALSE
         ");
         if(!empty($userSign))
         {
@@ -56,23 +57,62 @@ class WeChatOrderListDb extends ProxyDb{
         return $command->queryOne();
     }
 
+    public function findWeChatOrderInfoByNumber($wOrderNumber,$userSign)
+    {
+        $sql = sprintf("
+           SELECT * FROM wechat_order_list WHERE wOrderNumber=:wOrderNumber AND isDel=FALSE
+        ");
+        if(!empty($userSign))
+        {
+            $sql.=' AND wUserSign=:wUserSign';
+        }
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
+        if(!empty($userSign))
+        {
+            $command->bindParam(":wUserSign", $userSign, PDO::PARAM_STR);
+        }
+        return $command->queryOne();
+    }
+
+    public function deleteOrder($wOrderNumber,$userSign)
+    {
+        $sql = sprintf("
+            UPDATE wechat_order_list SET
+            isDel=TRUE,wLastTime=now()
+            WHERE wOrderNumber=:wOrderNumber
+        ");
+        if(!empty($userSign))
+        {
+            $sql.=' AND wUserSign=:wUserSign';
+        }
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
+        if(!empty($userSign))
+        {
+            $command->bindParam(":wUserSign", $userSign, PDO::PARAM_STR);
+        }
+        return $command->execute();
+    }
+
     public function getWeChatOrderListByUserSign($userSign,$page)
     {
         $sql=sprintf("
         FROM wechat_order_list a
-WHERE a.wUserSign=:userSign  ORDER BY a.wOrderId DESC
+        LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
+WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
         ");
         $this->setParam("userSign", $userSign);
-        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeId,wRelativeSign,wRelativeType');
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,wMoney,wDetails');
         $this->setSql($sql);
         return $this->find($page);
     }
 
-    public function updateWeChatOrderInfo(WeChatOrderList $weChatOrderList){
+   /* public function updateWeChatOrderInfo(WeChatOrderList $weChatOrderList){
         $sql = sprintf("
             UPDATE wechat_order_list SET
             wOrderSite=:wOrderSite,wOrderTimeList=:wOrderTimeList,wOrderContent=:wOrderContent,
-            wStatus=:wStatus,wRelativeId=:wRelativeId,wRelativeSign=:wRelativeSign,wRelativeType=:wRelativeType,wLastTime=now()
+            wStatus=:wStatus,wRelativeSign=:wRelativeSign,wLastTime=now()
             WHERE wOrderId=:wOrderId
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -80,10 +120,46 @@ WHERE a.wUserSign=:userSign  ORDER BY a.wOrderId DESC
         $command->bindParam(":wOrderTimeList", $weChatOrderList->wOrderTimeList, PDO::PARAM_STR);
         $command->bindParam(":wOrderContent", $weChatOrderList->wOrderContent, PDO::PARAM_STR);
         $command->bindParam(":wStatus", $weChatOrderList->wStatus, PDO::PARAM_INT);
-        $command->bindParam(":wRelativeId", $weChatOrderList->wRelativeId, PDO::PARAM_INT);
         $command->bindParam(":wRelativeSign", $weChatOrderList->wRelativeSign, PDO::PARAM_STR);
-        $command->bindParam(":wRelativeType", $weChatOrderList->wRelativeType, PDO::PARAM_INT);
+        return $command->execute();
+    }*/
+
+    public function updateOrderUserSign($openId,$wUserSign)
+    {
+        $sql = sprintf("
+            UPDATE wechat_order_list SET
+            wUserSign=:wUserSign,wLastTime=now()
+            WHERE openId=:openId AND isDel=FALSE
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":openId", $openId, PDO::PARAM_STR);
+        $command->bindParam(":wUserSign", $wUserSign, PDO::PARAM_STR);
         return $command->execute();
     }
 
+    public function orderPayEnd($wOrderNumber)
+    {
+        $sql = sprintf("
+           UPDATE wechat_order_list SET
+            wStatus=:wStatus,wLastTime=now()
+            WHERE wOrderNumber=:wOrderNumber
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindValue(":wStatus", WeChatOrderList::STATUS_PAY_SUCCESS, PDO::PARAM_INT);
+        $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
+        return $command->execute();
+    }
+    public function addWxOrderPay($orderNumber,$payNumber,$type,$money)
+    {
+        $sql = sprintf("
+          INSERT INTO wechat_pay_record (orderNumber,payNumber,type,money,payTime)
+		VALUES (:orderNumber,:pNumber,:type,:money,NOW() )
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":orderNumber", $orderNumber, PDO::PARAM_STR);
+        $command->bindParam(":pNumber", $payNumber, PDO::PARAM_STR);
+        $command->bindParam(":type", $type, PDO::PARAM_INT);
+        $command->bindParam(":money", $money, PDO::PARAM_STR);
+        return $command->execute();
+    }
 }

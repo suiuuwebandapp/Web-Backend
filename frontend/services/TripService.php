@@ -11,18 +11,14 @@ namespace frontend\services;
 
 
 use backend\components\Page;
-use common\components\SysMessageUtils;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripPublisher;
 use common\entity\TravelTripService;
 use common\entity\UserAttention;
-use common\entity\UserBase;
 use common\models\BaseDb;
 use common\models\TravelTripDb;
 use common\models\UserAttentionDb;
-use frontend\models\UserBaseDb;
-use frontend\models\UserPublisherDb;
 use yii\base\Exception;
 
 class TripService extends BaseDb{
@@ -34,20 +30,6 @@ class TripService extends BaseDb{
 
     }
 
-    /**
-     * 获取随游列表
-     * @param $page
-     * @param $title
-     * @param $countryId
-     * @param $cityId
-     * @param $peopleCount
-     * @param $startPrice
-     * @param $endPrice
-     * @param $tag
-     * @return Page|null
-     * @throws Exception
-     * @throws \Exception
-     */
     public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag)
     {
         try {
@@ -82,6 +64,7 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
     }
+
 
     /**
      * 添加随游（事务）
@@ -143,6 +126,7 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
     }
+
 
     /**
      * 更新随游
@@ -259,33 +243,7 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
         return $tripInfo;
-    }
 
-    /**
-     * 根据随游获取随友详情
-     * @param $tripId
-     * @return array|null
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function getTravelTripPublisherList($tripId)
-    {
-        $travelTripList=null;
-        if(empty($tripId))
-        {
-            throw new Exception("TripId Is Not Allow Empty");
-        }
-        try{
-            $conn = $this->getConnection();
-            $this->tripTravelDb=new TravelTripDb($conn);
-            $travelTripList=$this->tripTravelDb->getTravelTripPublisherList($tripId);
-
-        }catch (Exception $e){
-            throw $e;
-        }finally {
-            $this->closeLink();
-        }
-        return $travelTripList;
     }
 
     /**
@@ -318,6 +276,7 @@ class TripService extends BaseDb{
         return $tripInfo;
     }
 
+
     /**
      * 获取景区列表
      * @param $tripId
@@ -345,6 +304,7 @@ class TripService extends BaseDb{
         return $scenicList;
     }
 
+
     /**
      * 改变随游状态
      * @param $tripId
@@ -358,25 +318,40 @@ class TripService extends BaseDb{
         {
             throw new Exception("TripId Is Not Allow Empty");
         }
-        $conn = $this->getConnection();
-        $tran = $conn->beginTransaction();
         try{
+            $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
             $this->tripTravelDb->changeTravelStatus($tripId,$status);
-            //如果是发布随游，那么添加随游发布者的线路数
-            if($status==TravelTrip::TRAVEL_TRIP_STATUS_NORMAL){
-                $publisherDb=new UserPublisherDb($conn);
-                $tripInfo=$this->tripTravelDb->findTravelTripById($tripId);
-                $publisherDb->addPublisherTripCount($tripInfo['createPublisherId']);
-            }
-            $this->commit($tran);
         }catch (Exception $e){
-            $this->rollback($tran);
             throw $e;
         }finally {
             $this->closeLink();
         }
     }
+
+
+    /**
+     * 根据随友Id获取详情
+     * @param $publisherId
+     * @return array|bool|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getTravelTripPublisherById($publisherId)
+    {
+        $userPublisher=null;
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $userPublisher=$this->tripTravelDb->getTravelTripPublisherById($publisherId);
+        }catch (Exception $e){
+            throw $e;
+        }finally {
+            $this->closeLink();
+        }
+        return $userPublisher;
+    }
+
 
     /**
      * 添加随游申请
@@ -390,12 +365,6 @@ class TripService extends BaseDb{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
             $this->tripTravelDb->addTravelTripApply($travelTripApply);
-            $tripInfo=$this->tripTravelDb->findTravelTripById($travelTripApply->tripId);
-            $publisherDb=new UserPublisherDb($conn);
-            $publisherUserInfo=$publisherDb->findUserBaseByPublisherId($tripInfo['createPublisherId']);
-            //给创建人发送申请消息
-            $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendUserJoinTripMessage($publisherUserInfo['userSign'],$tripInfo['tripId'],$tripInfo['title']);
         }catch (Exception $e){
             throw $e;
         }finally {
@@ -459,7 +428,7 @@ class TripService extends BaseDb{
      */
     public function deleteTravelTriPublisher(TravelTripPublisher $travelTripPublisher)
     {
-        if($travelTripPublisher==null)
+        if($travelTripPublisher!=null)
         {
             throw new Exception("TravelTripPublisher Is Not Allow Null");
         }
@@ -467,18 +436,13 @@ class TripService extends BaseDb{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
             $this->tripTravelDb->deleteTravelTripPublisher($travelTripPublisher);
-            $publisherDb=new UserPublisherDb($conn);
-            $publisherUserInfo=$publisherDb->findUserBaseByPublisherId($travelTripPublisher->publisherId);
-            $tripInfo=$this->tripTravelDb->findTravelTripById($travelTripPublisher->tripId);
-            //给被移除这发送消息提醒
-            $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendRemoveUserForTripMessage($publisherUserInfo['userSign'],$tripInfo['title']);
         }catch (Exception $e){
             throw $e;
         }finally {
             $this->closeLink();
         }
     }
+
 
     /**
      * 获取我的随游列表
@@ -528,6 +492,7 @@ class TripService extends BaseDb{
         }
     }
 
+
     /**
      * 获取随友申请列表
      * @param $tripId
@@ -554,6 +519,7 @@ class TripService extends BaseDb{
         return $list;
     }
 
+
     /**
      * 通过随友申请加入随游
      * @param $applyId
@@ -577,7 +543,6 @@ class TripService extends BaseDb{
         try{
             $this->tripTravelDb=new TravelTripDb($conn);
             $travelTripPublisher=new TravelTripPublisher();
-            $publisherDb=new UserPublisherDb($conn);
             $applyInfo=$this->tripTravelDb->findTravelTripApplyById($applyId);
             $travelInfo=$this->tripTravelDb->findTravelTripById($applyInfo['tripId']);
             if($travelInfo['createPublisherId']!=$currentPublisherId){
@@ -588,11 +553,7 @@ class TripService extends BaseDb{
 
             $this->tripTravelDb->addTravelTripPublisher($travelTripPublisher);//添加随游与随友关联
             $this->tripTravelDb->changeTravelTripApplyStatus($applyId,TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_AGREE);//同意申请
-            $publisherUserInfo=$publisherDb->findUserBaseByPublisherId($publisherId);
             $this->commit($tran);
-            //发送消息提醒
-            $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendAgreePublisherApplyMessage($publisherUserInfo['userSign'],$travelInfo['tripId'],$travelInfo['title']);
         }catch (Exception $e){
             $this->rollback($tran);
             throw $e;
@@ -600,6 +561,7 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
     }
+
 
     /**
      * 拒绝随友加入随游的申请
@@ -617,24 +579,19 @@ class TripService extends BaseDb{
         try{
             $conn = $this->getConnection();
             $this->tripTravelDb=new TravelTripDb($conn);
-            $publisherDb=new UserPublisherDb($conn);
-
             $applyInfo=$this->tripTravelDb->findTravelTripApplyById($applyId);
             $travelInfo=$this->tripTravelDb->findTravelTripById($applyInfo['tripId']);
             if($travelInfo['createPublisherId']!=$currentPublisherId){
                 throw new Exception("No Power To Agree Apply");
             }
-            $this->tripTravelDb->changeTravelTripApplyStatus($applyId,TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_OPPOSE);//拒绝申请
-            $publisherUserInfo=$publisherDb->findUserBaseByPublisherId($applyInfo['publisherId']);
-            //给申请人发送消息提醒
-            $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendOpposePublisherApplyMessage($publisherUserInfo['userSign'],$travelInfo['tripId'],$travelInfo['title']);
+            $this->tripTravelDb->changeTravelTripApplyStatus($applyId,TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_OPPOSE);//同意申请
         }catch (Exception $e){
             throw $e;
         }finally{
             $this->closeLink();
         }
     }
+
 
     /**
      * 获取推荐随游
@@ -657,30 +614,5 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
         return $page;
-    }
-
-
-    /**
-     * 获取是否有等待审核的相关随游
-     * @param $tripId
-     * @param $publisherId
-     * @return array|bool|null
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function findTravelTripApplyByTripIdAndUser($tripId,$publisherId)
-    {
-        $travelTripApply=null;
-        try{
-            $conn = $this->getConnection();
-            $this->tripTravelDb=new TravelTripDb($conn);
-            $travelTripApply=$this->tripTravelDb->findTravelTripApplyByTripIdAndUser($tripId,$publisherId);
-            $travelTripApply=$this->arrayCastObject($travelTripApply,TravelTripApply::class);
-        }catch (Exception $e){
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-        return $travelTripApply;
     }
 }

@@ -23,10 +23,8 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
                 <span>订单</span><span>随游</span><span>开始时间</span><span>坐标</span><span>随游时长</span><span>随友</span><span>出行日期</span><span>人数</span><span>单项服务</span>
             </dt>
             <dd>
-                <a target="_blank" href="/view-trip/info?trip=<?=$travelInfo['info']['tripId']?>">
-                    <span class="pic"><img src="<?=$travelInfo['info']['titleImg']?>"></span>
-                </a>
-                <a target="_blank" href="/view-trip/info?trip=<?=$travelInfo['info']['tripId']?>"><span><?=$travelInfo['info']['title']?></span></a>
+                <span class="pic"><img src="<?=$travelInfo['info']['titleImg']?>"></span>
+                <span><?=$travelInfo['info']['title']?></span>
                 <span><?=\common\components\DateUtils::convertTimePicker($orderInfo->startTime,2)?></span>
                 <span><?=$travelInfo['info']['countryCname']."-".$travelInfo['info']['cityCname']?></span>
                 <span>
@@ -66,7 +64,7 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
             </li>
 
         </ul>
-        <p>您将跳转到支付页面，完成交易后返回本页进行确认是否支付完成</p>
+        <p>您将跳转到支付宝支付页面，完成交易后返回本页进行确认</p>
         <a href="javascript:;" class="btn" id="pay">立即预定</a>
     </div>
     <div class="finish clearfix" style="display: none;" id="result">
@@ -81,37 +79,15 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
     </div>
     <?php } ?>
 </div>
-
-
 <div align="center" id="qrcode">
 
 </div>
-
-<div id="weixinPayWindow" class="wzhifu screens">
-    <h2>微信支付</h2>
-    <div class="con clearfix">
-        <div class="left">
-            <p class="weiP"></p>
-            <p class="tip">
-                <span>请使用微信扫一扫</span><br>
-                <span>扫描二维码支付</span>
-            </p>
-
-        </div>
-        <div class="right"><img src="/assets/images/phone.jpg" width="329" height="421"></div>
-    </div>
-    <a href="javascript:hideWxPay();" class="back"> &nbsp;< &nbsp;选择其他支付方式 </a>
-
-</div>
-
-
 <script src="/assets/other/weixin/js/qrcode.js"></script>
 
 
 <script type="text/javascript">
 
     var interval;
-    var isCreateWeixinPay=false;
     $(document).ready(function(){
         $("#pay").bind("click",function(){
             var payType=$("input:radio[name='payType']:checked").val();
@@ -132,43 +108,37 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
         });
 
     });
-    function hideWxPay()
-    {
-        $("#myMask").hide();
-        $("#weixinPayWindow").hide();
-    }
 
     function wxPay(orderNumber)
     {
-        if(isCreateWeixinPay){
-            $("#myMask").show();
-            $("#weixinPayWindow").show();
-        }else{
-            $.ajax({
-                type:"get",
-                url:"/pay?number="+orderNumber+"&type=2",
-                success:function(data){
-                    data=eval("("+data+")");
-                    if(data.status==1){
-                        var url = data.data;
-                        //参数1表示图像大小，取值范围1-10；参数2表示质量，取值范围'L','M','Q','H'
-                        var qr = qrcode(10, 'H');
-                        qr.addData(url);
-                        qr.make();
-                        $("#weixinPayWindow").find("p[class='weiP']").html(qr.createImgTag());
-                        $("#myMask").show();
-                        $("#weixinPayWindow").show();
-                        isCreateWeixinPay=true;
-                        interval=window.setInterval(function(){
-                            getStatus();
-                        },2000);
-                    }else
-                    {
-                        alert(data.data);
-                    }
+        $.ajax({
+            type:"get",
+            url:"/pay?number="+orderNumber+"&type=2",
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    var url = data.data;
+                    //参数1表示图像大小，取值范围1-10；参数2表示质量，取值范围'L','M','Q','H'
+                    var qr = qrcode(10, 'M');
+                    qr.addData(url);
+                    qr.make();
+                    var wording=document.createElement('p');
+                    wording.innerHTML = "扫我，扫我";
+                    var code=document.createElement('DIV');
+                    code.innerHTML = qr.createImgTag();
+                    var element=document.getElementById("qrcode");
+                    element.appendChild(wording);
+                    element.appendChild(code);
+                    interval=window.setInterval(function(){
+                        getStatus();
+                    },2000);
+                }else
+                {
+                    alert(data.data);
                 }
-            });
-        }
+            }
+
+        });
 
     }
     /**

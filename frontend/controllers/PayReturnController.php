@@ -18,6 +18,7 @@ use common\pay\alipay\send\AlipaySendApi;
 use common\pay\wxpay\Log_;
 use frontend\services\UserOrderService;
 use frontend\services\UserPayService;
+use frontend\services\WeChatOrderListService;
 use yii\base\Exception;
 use yii\web\Controller;
 
@@ -199,14 +200,23 @@ class PayReturnController extends Controller {
                 $arr = $notify->xmlToArray($xml);
                 if(!empty($arr))
                 {
-                //商户订单号
-                $out_trade_no = $arr['out_trade_no'];
-                //交易号
-                $trade_no = $arr['transaction_id'];
-                $userPayService=new UserPayService();
-                $userPayService->addUserPay($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_ALIPAY,UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS);
-                \Yii::$app->redis->set(Code::USER_ORDER_PAY_STATS.$out_trade_no,1);
-                \Yii::$app->redis->expire(Code::USER_ORDER_PAY_STATS.$out_trade_no,600);
+                    //商户订单号
+                    $out_trade_no = $arr['out_trade_no'];
+                    //交易号
+                    $trade_no = $arr['transaction_id'];
+                    if(isset($arr['attach'])&&$arr['attach']==1)
+                    {
+                        $money=$arr['total_fee']/100;
+                        //微信订定制
+                        $weChatOrderSer=new WeChatOrderListService();
+                        $weChatOrderSer->orderPayEnd($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_WXPAY,$money);
+                    }else
+                    {
+                    $userPayService=new UserPayService();
+                    $userPayService->addUserPay($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_WXPAY,UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS);
+                    \Yii::$app->redis->set(Code::USER_ORDER_PAY_STATS.$out_trade_no,1);
+                    \Yii::$app->redis->expire(Code::USER_ORDER_PAY_STATS.$out_trade_no,600);
+                    }
                 }
             }
 

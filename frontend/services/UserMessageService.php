@@ -10,7 +10,6 @@
 namespace frontend\services;
 
 
-use common\components\Code;
 use common\entity\UserMessage;
 use common\entity\UserMessageSession;
 use common\entity\UserMessageSetting;
@@ -35,10 +34,6 @@ class UserMessageService extends BaseDb
     {
         $conn=$this->getConnection();
         $tran=$conn->beginTransaction();
-        //系统不能作为消息的收信人
-        if($userMessage->receiveId==Code::USER_SYSTEM_MESSAGE_ID){
-            throw new Exception("Invalid User System Message");
-        }
         try{
 
             $senderKey=$this->getMessageSessionKey($userMessage->senderId,$userMessage->receiveId);
@@ -75,70 +70,6 @@ class UserMessageService extends BaseDb
             }
 
             $this->userMessageDb->addUserMessage($userMessage);
-            $this->commit($tran);
-        }catch (Exception $e){
-            $this->rollback($tran);
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-    }
-
-
-    /**
-     * 同时添加多条用户消息
-     * @param $messageList
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function addUserMessageList($messageList)
-    {
-        if($messageList=null&&count($messageList)==0){
-            return;
-        }
-        $conn=$this->getConnection();
-        $tran=$conn->beginTransaction();
-        $this->userMessageDb=new UserMessageDb($conn);
-
-        try{
-
-            foreach($messageList as $userMessage){
-                //系统不能作为消息的收信人
-                if($userMessage->receiveId==Code::USER_SYSTEM_MESSAGE_ID){
-                    throw new Exception("Invalid User System Message");
-                }
-                $senderKey=$this->getMessageSessionKey($userMessage->senderId,$userMessage->receiveId);
-                $receiveKey=$this->getMessageSessionKey($userMessage->receiveId,$userMessage->senderId);
-
-                $userMessage->sessionKeyOne=$senderKey;
-                $userMessage->sessionKeyTwo=$receiveKey;
-
-                $userMessageSession=$this->userMessageDb->findUserMessageSessionByKey($senderKey);
-                if($userMessageSession==null||$userMessageSession === false){
-                    $userMessageSession=new UserMessageSession();
-                    $userMessageSession->sessionKey=$senderKey;
-                    $userMessageSession->senderId=$userMessage->senderId;
-                    $userMessageSession->receiveId=$userMessage->receiveId;
-                    $userMessageSession->lastContentInfo=$userMessage->content;
-                    $userMessageSession->isRead=false;
-
-                    $userMessageSessionTwo=new UserMessageSession();
-                    $userMessageSessionTwo->sessionKey=$receiveKey;
-                    $userMessageSessionTwo->senderId=$userMessage->receiveId;
-                    $userMessageSessionTwo->receiveId=$userMessage->senderId;
-                    $userMessageSessionTwo->lastContentInfo=$userMessage->content;
-                    $userMessageSessionTwo->isRead=true;
-
-                    $this->userMessageDb->addUserMessageSession($userMessageSession);
-                    $this->userMessageDb->addUserMessageSession($userMessageSessionTwo);
-                }else{
-
-                    $this->userMessageDb->updateUserMessageSession($senderKey,$userMessage->content,false);
-                    $this->userMessageDb->updateUserMessageSession($receiveKey,$userMessage->content,true);
-                }
-
-                $this->userMessageDb->addUserMessage($userMessage);
-            }
             $this->commit($tran);
         }catch (Exception $e){
             $this->rollback($tran);
@@ -194,26 +125,6 @@ class UserMessageService extends BaseDb
                 $shieldIds="'".implode("','",$shieldArr)."'";
             }
             return $this->userMessageDb->getUserMessageSessionByUserSign($userSign,0,$shieldIds,$messageSetting['status']);
-        }catch (Exception $e){
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-    }
-
-    /**
-     * 获取未读系统消息
-     * @param $userSign
-     * @return array
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function getUnReadSystemMessageList($userSign)
-    {
-        try{
-            $conn=$this->getConnection();
-            $this->userMessageDb=new UserMessageDb($conn);
-            return $this->userMessageDb->getUnReadSystemMessageList($userSign);
         }catch (Exception $e){
             throw $e;
         }finally{
@@ -366,9 +277,6 @@ class UserMessageService extends BaseDb
         if(empty($shieldId)){
             throw new Exception("Invalid ShieldId");
         }
-        if($shieldId==Code::USER_SYSTEM_MESSAGE_ID){
-            throw new Exception("Invalid ShieldId System Message Id");
-        }
         try{
             $messageSetting=$this->findUserMessageSettingByUserId($userId);
             $shieldIds=$messageSetting->shieldIds;
@@ -418,31 +326,6 @@ class UserMessageService extends BaseDb
                 $messageSetting->shieldIds=$shieldIds;
                 $this->userMessageDb->updateUserMessageSetting($messageSetting);
             }
-        }catch (Exception $e){
-            throw $e;
-        }finally{
-            $this->closeLink();
-        }
-    }
-
-
-    /**
-     * 更新系统消息已读
-     * @param $messageId
-     * @param $userSign
-     * @throws Exception
-     * @throws \Exception
-     */
-    public function changeSystemMessageRead($messageId,$userSign)
-    {
-        if(empty($messageId)){
-            throw new Exception("Invalid MessageId");
-        }
-        try{
-            $conn=$this->getConnection();
-            $this->userMessageDb=new UserMessageDb($conn);
-            $this->userMessageDb->updateSystemMessageRead($messageId,$userSign);
-
         }catch (Exception $e){
             throw $e;
         }finally{

@@ -11,10 +11,12 @@ namespace common\entity;
 
 class WeChatOrderList{
 
-    const STATUS_PROCESSED = 2;//状态：已经处理
-    const STATUS_NORMAL = 1;//状态：下单
-    const STATUS_DISABLED = 0;//状态：删除
-
+    const STATUS_END = 4;//游玩结束
+    const STATUS_PAY_SUCCESS = 3;//状态：已支付
+    const STATUS_PROCESSED = 2;//状态：已经处理待支付
+    const STATUS_NORMAL = 1;//状态：下单 待支付
+    const IS_DEL_N = 0;//状态：未删除
+    const IS_DEL_Y = 1;//状态：删除
     /**
      * @var主键id
      */
@@ -40,17 +42,9 @@ class WeChatOrderList{
      */
     public $wStatus;
     /**
-     * @var相对id关联另外的主键
-     */
-    public $wRelativeId;
-    /**
      * @var相对用户 或指派给谁
      */
     public $wRelativeSign;
-    /**
-     * @var相对类型
-     */
-    public $wRelativeType;
     /**
      * @var创建时间
      */
@@ -59,4 +53,25 @@ class WeChatOrderList{
      * @var最后时间
      */
     public $wLastTime;
+    /**
+     * @var订单号
+     */
+    public $wOrderNumber;
+    /**
+     * @var订购人数
+     */
+    public $wUserNumber;
+
+    /**
+     * @var订单详情
+     */
+    public $wDetails;
+    /**
+     * @var联系电话
+     */
+    public $wPhone;
+    /**
+     * @var微信id
+     */
+    public $openId;
 }

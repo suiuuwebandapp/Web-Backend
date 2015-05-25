@@ -13,7 +13,6 @@ namespace common\models;
 use backend\components\Page;
 use common\entity\DestinationInfo;
 use common\entity\DestinationScenic;
-use common\entity\UserOrderComment;
 use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
 use common\entity\UserOrderPublisherCancel;
@@ -174,12 +173,11 @@ class UserOrderDb extends ProxyDb
     {
         $sql = sprintf("
             SELECT uoi.*, ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,uoc.orderCommentId AS isComment
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
             FROM user_order_info uoi
             LEFT JOIN user_order_publisher uop ON uop.orderId=uoi.orderId
             LEFT JOIN user_publisher up  ON up.userPublisherId=uop.publisherId
             LEFT JOIN user_base ub ON ub.userSign=up.userId
-            LEFT JOIN user_order_comment uoc ON uoc.orderId=uoi.orderId
             WHERE isDel=FALSE AND uoi.userId=:userId
             AND
             (
@@ -348,62 +346,6 @@ class UserOrderDb extends ProxyDb
 
         $command->execute();
     }
-
-
-    /**
-     * 添加评价
-     * @param UserOrderComment $userOrderComment
-     * @throws \yii\db\Exception
-     */
-    public function addUserOrderComment(UserOrderComment $userOrderComment)
-    {
-
-        $sql = sprintf("
-            INSERT INTO user_order_comment
-            (
-              tripId,userId,orderId,publisherId,content,commentTime,tripScore,publisherScore
-            )
-            VALUES
-            (
-              :tripId,:userId,:orderId,:publisherId,:content,now(),:tripScore,:publisherScore
-            )
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":tripId", $userOrderComment->tripId, PDO::PARAM_INT);
-        $command->bindParam(":userId", $userOrderComment->userId, PDO::PARAM_STR);
-        $command->bindParam(":orderId", $userOrderComment->orderId, PDO::PARAM_INT);
-        $command->bindParam(":publisherId", $userOrderComment->publisherId, PDO::PARAM_INT);
-        $command->bindParam(":content", $userOrderComment->content, PDO::PARAM_STR);
-        $command->bindParam(":tripScore", $userOrderComment->tripScore, PDO::PARAM_INT);
-        $command->bindParam(":publisherScore", $userOrderComment->tripScore, PDO::PARAM_INT);
-
-        $command->execute();
-    }
-
-
-    /**
-     * 根据订单用户 获取评价
-     * @param $orderId
-     * @return array|bool
-     */
-    public function findUserOrderCommentByOrderId($orderId)
-    {
-        $sql = sprintf("
-            SELECT * FROM  user_order_comment
-            WHERE orderId=:orderId
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":orderId", $orderId, PDO::PARAM_INT);
-
-        return $command->queryOne();
-    }
-
-
-    public function updatePublisherOrder()
-
-    {}
 
 
 
