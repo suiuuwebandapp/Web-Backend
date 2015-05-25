@@ -27,8 +27,10 @@
     </div>
     <div class="sylx-xiangxi clearfix">
         <p class="p1 clearfix">
-            <label>成员:</label><a href="#" class="icon jian"></a>
-            <input type="text" id="peopleCount"><a href="#" class="icon add"></a>
+            <label>成员:</label>
+            <a href="javascript:;" class="icon jian" id="subtract"></a>
+            <input type="text" id="peopleCount">
+            <a href="javascript:;" class="icon add" id="add"></a>
         </p>
         <p class="p2 clearfix" id="tagList"><label>类型:</label>
 
@@ -106,6 +108,7 @@ i<script type="text/javascript">
             values: [ 0, 10000 ],
             slide: function( event, ui ) {
                 $( "#amount" ).val( "￥" + ui.values[ 0 ] + " - ￥" + ui.values[ 1 ] );
+                searchTip();
             }
         });
         $( "#amount" ).val( "￥" + $( "#slider-range" ).slider( "values", 0 ) +
@@ -120,6 +123,36 @@ i<script type="text/javascript">
             searchTip();
         });
 
+        $("#add").bind("click",function(){
+            var peopleCount=$("#peopleCount").val();
+            if(Main.isNotEmpty(peopleCount)){
+                try{
+                    peopleCount=parseInt(peopleCount);
+                }catch(e){ peopleCount=0 }
+            }else{
+                peopleCount=0;
+            }
+            peopleCount++;
+            $("#peopleCount").val(peopleCount);
+            searchTip();
+        });
+        $("#subtract").bind("click",function(){
+            var peopleCount=$("#peopleCount").val();
+            if(Main.isNotEmpty(peopleCount)){
+                try{
+                    peopleCount=parseInt(peopleCount);
+                }catch(e){ peopleCount=0 }
+            }else{
+                peopleCount=0;
+            }
+            peopleCount--;
+            if(peopleCount<=0){
+                peopleCount="";
+            }
+            $("#peopleCount").val(peopleCount);
+
+            searchTip();
+        });
     });
 
     function initSearchInfo(){

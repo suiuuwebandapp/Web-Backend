@@ -96,6 +96,33 @@
 
     <p class="title">热门</p>
     <ul id="ul1">
+        <?php if($recommendTravel!=null){?>
+            <?php foreach($recommendTravel as $trip){?>
+                <li>
+                    <div class="box">
+                        <img src="<?=$trip['titleImg']?>" alt="" width="284px" height="260px">
+                    </div>
+                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>">
+                        <div class="zhezhao">
+                            <p><?=$trip['intro']?></p>
+                            <p class="pingjia">评价
+                                <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <span>基础价格：<b><?=floor($trip['basePrice'])?></b></span>
+                            </p>
+                        </div>
+                    </a>
+                    <p class="user01">
+                        <img src="<?=$trip['headImg'] ?>" alt="" width="40" height="40">
+                        <font><?=$trip['nickname']?></font>
+                    </p>
+                    <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
+                </li>
+            <?php } ?>
+        <?php } ?>
     </ul>
 </div>
 <a href="/view-trip/list"  class="btn8" id="showTripMore">显示更多</a>
@@ -143,7 +170,7 @@
 
     var currentPage=1;
     $(document).ready(function(){
-        loadTrip();
+        //loadTrip();
         /*$("#showTripMore").bind("click",function(){
             loadTrip();
         });*/

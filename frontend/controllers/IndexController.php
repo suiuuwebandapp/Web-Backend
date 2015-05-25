@@ -20,6 +20,7 @@ use common\entity\UserPublisher;
 use frontend\components\ValidateCode;
 use frontend\services\CountryService;
 use frontend\services\TripService;
+use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use common\components\Code;
 use vendor\geetest\GeetestLib;
@@ -51,7 +52,16 @@ class IndexController extends UnCController
 
         $view = \Yii::$app->view;
         $view->params['emailTime'] = $emailTime;
-        return $this->render('index');
+
+        $page=new Page();
+        $page->setCurrentPage(1);
+        $page->pageSize=4;
+        $attentionService=new UserAttentionService();
+        $recommendTravel =$attentionService->getRecommendTravel($page);
+
+        return $this->render('index',[
+            'recommendTravel'=>$recommendTravel['data']
+        ]);
     }
 
     public function actionTest()
@@ -249,7 +259,7 @@ class IndexController extends UnCController
     }
     public function actionGetCode()
     {
-//phpinfo();exit;
+        //phpinfo();exit;
         //\Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,'9527');
         $ValidateCode=new ValidateCode();
         $ValidateCode->doimg();

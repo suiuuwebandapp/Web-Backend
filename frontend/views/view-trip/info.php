@@ -257,6 +257,7 @@
             <input id="toApply" type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
             <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
                 <?php foreach ($relateRecommend as $trip) {?>
+                    <?php if($trip['tripId']==$travelInfo['info']['tripId']){continue;} ?>
                     <div class="web-tuijian" style="cursor: pointer" onclick="javascript:window.location.href='/view-trip/info?trip=<?=$trip['tripId']?>'">
                         <h4><?=strlen($trip['title'])>10?mb_substr($trip['title'],0,10,'UTF-8')."...":$trip['title']?></h4>
                         <img src="<?=$trip['titleImg']?>" alt="" class="pic">

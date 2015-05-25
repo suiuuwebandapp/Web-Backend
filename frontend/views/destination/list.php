@@ -48,7 +48,7 @@
             <option value=""></option>
             <?php foreach ($countryList as $c) { ?>
                 <?php
-                if(!in_array($c['id'],$countryArr)){
+w                if(!in_array($c['id'],$countryArr)){
                     continue;
                 }
                 ?>
@@ -61,7 +61,17 @@
  </div>
     <div class="fr mddsx-right" id="des_div">
         <ul>
+            <?php if($desList!=null&&count($desList)>0){ ?>
+                <?php foreach($desList as $des){ ?>
+                    <li>
+                        <a href="/destination/info?des=<?= $des['destinationId']?>">
+                            <img src="<?=$des['titleImg']?>" alt="" style="width:879px;height:400px;">
+                        </a>
+                        <p><font><?=$des['title']?></font><span><?=$des['intro']?></span></p>
+                    </li>
+                <?php } ?>
 
+            <?php } ?>
         </ul>
         <a class="more" href="javascript:;" id="showDesMore">加载更多</a>
     </div>
@@ -95,7 +105,7 @@
             getDesList(true);
         });
 
-        getDesList();
+        //getDesList();
         $("#showDesMore").bind("click",function(){
             getDesList();
         });

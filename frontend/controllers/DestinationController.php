@@ -42,10 +42,20 @@ class DestinationController extends UnCController{
         if(!empty($ccList['cityList']['cityIds'])){
             $cityArr=explode(",",$ccList['cityList']['cityIds']);
         }
+
+        //默认加载第一屏
+        $page=new Page();
+        $page->pageSize=10;
+        $page->setCurrentPage(1);
+
+        $destinationService=new DestinationService();
+        $page=$destinationService->getList($page,null,null,null);
+
         return $this->render("list",[
             'countryList' => $countryList,
             'countryArr'=>$countryArr,
-            'cityArr'=>$cityArr
+            'cityArr'=>$cityArr,
+            'desList'=>$page->getList()
 
         ]);
     }
