@@ -203,7 +203,7 @@ i<script type="text/javascript">
     {
         var scroll_offset=$("#trip_base_list").offset();
         $("body,html").animate({
-            scrollTop:scroll_offset.top-50
+            scrollTop:0
         },800);
     }
 
