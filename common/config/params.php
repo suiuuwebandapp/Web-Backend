@@ -22,6 +22,9 @@ return [
     'sms_account_server_port'=>'8883',
     'sms_account_soft_version'=>'2013-12-26',
 
+    'sms_foreign_username'=>'rodg2351',
+    'sms_foreign_password'=>'Suiuu123',
+
     //环信配置
     'imConfig'=>array(
         'client_id'=>'YXA6KyC-AN2REeSfRjnHRAcEug',

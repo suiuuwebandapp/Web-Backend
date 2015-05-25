@@ -12,7 +12,7 @@ namespace frontend\controllers;
 use backend\components\Page;
 use common\components\Aes;
 use common\components\Mail;
-use common\components\SmsUtils;
+use common\components\SMSUtils;
 use common\components\TagUtil;
 use common\components\Validate;
 use common\entity\UserBase;
@@ -33,9 +33,6 @@ class IndexController extends UnCController
 
 
     private $userBaseService;
-
-
-    public $test;
 
 
     public function __construct($id, $module = null)
@@ -119,7 +116,7 @@ class IndexController extends UnCController
                $time = strtotime($now);
                 $r = $this->getEncryptPassword($time);
                 $c = $this->getEmailCode($username,$r);
-                $url = \Yii::$app->params['base_dir'] . '/index/reset-password?r=' . $r.'&u='. $username.'&c='. $c;
+                $url = \Yii::$app->params['base_dir'] . '/index/reset-password?r=' . urlencode($r).'&u='. urlencode($username).'&c='. urlencode($c);
                 //最终发送的地址内容
                 $rst = Mail::sendPasswordMail($username, $url);
                 //
@@ -508,7 +505,7 @@ class IndexController extends UnCController
             }
             $enPwd = $this->getEncryptPassword($password);
             $code = $this->getEmailCode($email, $enPwd);
-            $url = \Yii::$app->params['base_dir'] . '/index/active?e=' . $email . '&p=' . $enPwd . '&c=' . $code;
+            $url = \Yii::$app->params['base_dir'] . '/index/active?e=' . urlencode($email) . '&p=' . urlencode($enPwd) . '&c=' . urlencode($code);
             //最终发送的地址内容
             $rst = Mail::sendRegisterMail($email, $url);
             //
@@ -802,7 +799,7 @@ class IndexController extends UnCController
 
             $enPwd = $this->getEncryptPassword($userBase->userSign);
             $code = $this->getEmailCode($mail, $enPwd);
-            $url = \Yii::$app->params['base_dir'] . '/index/validate-mail?e=' . $mail . '&p=' . $enPwd . '&c=' . $code;
+            $url = \Yii::$app->params['base_dir'] . '/index/validate-mail?e=' . urlencode($mail) . '&p=' . urlencode($enPwd) . '&c=' . urlencode($code);
             //最终发送的地址内容
             $rst = Mail::sendValidateMail($mail, $url);
             //
@@ -1088,7 +1085,7 @@ class IndexController extends UnCController
             $key=Code::getUUID();
             Yii::$app->redis->set($key,json_encode($userInfo));
             Yii::$app->redis->expire($key, Code::USER_EMAIL_VALIDATE_CODE_EXPIRE_TIME);
-            $link = \Yii::$app->params['base_dir'] . '/index/active-pub?c='.$key;
+            $link = \Yii::$app->params['base_dir'] . '/index/active-pub?c='.urlencode($key);
 
             return Mail::sendRegisterMail($userBase->email,$link);
         }catch (Exception $e){
