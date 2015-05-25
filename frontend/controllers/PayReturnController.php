@@ -37,7 +37,7 @@ class PayReturnController extends Controller {
         $alipayNotify = new AlipayNotify($alipay_config);
         $verify_result = $alipayNotify->verifyNotify();
 
-        logResult($verify_result);
+        //logResult($verify_result);
 
 
         if($verify_result) {//验证成功
@@ -58,7 +58,7 @@ class PayReturnController extends Controller {
             //交易状态
             $trade_status = $_POST['trade_status'];
 
-            logResult($trade_status);
+            //logResult($trade_status);
             if($_POST['trade_status'] == 'WAIT_BUYER_PAY') {
                 //该判断表示买家已在支付宝交易管理中产生了交易记录，但没有付款
 

@@ -52,7 +52,7 @@ class SysMessageUtils {
         foreach($tripPublisherList as $publisher){
             $userMessage=new UserMessage();
             $userMessage->senderId=Code::USER_SYSTEM_MESSAGE_ID;
-            $userMessage->receiveId=$publisher['userId'];
+            $userMessage->receiveId=$publisher['userSign'];
             $userMessage->content="您有新的可接随游订单，订单号：".$orderNumber.",点击查看详情";
             $userMessage->url="/user-info?tripManager";
 

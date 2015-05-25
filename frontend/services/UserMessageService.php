@@ -93,7 +93,7 @@ class UserMessageService extends BaseDb
      */
     public function addUserMessageList($messageList)
     {
-        if($messageList=null&&count($messageList)==0){
+        if($messageList==null&&count($messageList)==0){
             return;
         }
         $conn=$this->getConnection();

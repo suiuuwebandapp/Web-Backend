@@ -73,12 +73,13 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .nav-right ol li .float .gt_holder .gt_guide_tip a{ color:#858585; font-size:12px;}
 
 .nav-right .select2-container{ float:left;}
-.nav-right .select2-container .select2-choice{ background:none;color:#ddd;}
+.nav-right .select2-container .select2-choice{ background:none;color:#ddd; border:none;}
 .nav-right .select2-container .select2-choice:hover{ color:#ddd;}
 .nav-right .select2-container .select2-choice>.select2-chosen{ color:#ddd; }
 .nav-right .select2-container .select2-choice>.select2-chosen:hover{ color:#ddd; }
 .nav-right .select2-container .select2-choice>.select2-chosen{ color:#ddd; font-size:16px; height:36px; line-height:36px;}
 .nav-right .select2-container .select2-choice .select2-arrow{ border:none;}
+
 
 /* --------注册弹框-----*/
 #zhuce-main{ width:370px;color:#ddd; background:url(../images/index-zhu.png) no-repeat center 0; padding-top:85px; display:none; position:absolute; top:70px; right:28px;}
@@ -130,9 +131,9 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .index-banner .banners{ width:100%; height:600px; overflow:hidden;}
 .index-banner .banners li{ float:left; width:100%; height:600px; overflow:hidden; }
 .index-banner .banners .banner01{ background:url(http://image.suiuu.com/suiuu_index/banner01.jpg) no-repeat center 0;background-size:100% 100%;}
-.index-banner .banners .banner02{ background:url(http://image.suiuu.com/suiuu_index/banner02.jpg) no-repeat center 0;background-size:100% 100%;}
-.index-banner .banners .banner03{background:url(http://image.suiuu.com/suiuu_index/banner03.jpg) no-repeat center 0;background-size:100% 100%;}
-.index-banner .banners .banner04{ background:url(http://image.suiuu.com/suiuu_index/banner04.jpg) no-repeat center 0;background-size:100% 100%;}
+.index-banner .banners .banner02{ background:url(http://image.suiuu.com/suiuu_index/banner02.jpg) no-repeat center 0;background-size:100% 100%; display:none;}
+.index-banner .banners .banner03{background:url(http://image.suiuu.com/suiuu_index/banner03.jpg) no-repeat center 0;background-size:100% 100%;display:none;}
+.index-banner .banners .banner04{ background:url(http://image.suiuu.com/suiuu_index/banner04.jpg) no-repeat center 0;background-size:100% 100%;display:none;}
 .index-banner .banner-btn{position:absolute;top:330px; width:100%;}
 .index-banner .banner-btn a{display:block;width:40px;height:48px;position:absolute;top:0;}
 .index-banner .banner-btn a.prev{left:20px; background:url(../images/index/bannerbtn.png) no-repeat 0 0;} 
@@ -638,7 +639,14 @@ transition:transform 1s ease-in-out;
 .sycon .orderCon .orderList p span a{ float:left;  color:#FF7A4D; }
 .sycon .orderCon .orderList p span b{  color:#FF7A4D; }
 	
-	
+.sycon .orderCon .orderList #other-line{ text-align:center; display:none; margin-top:10px; position:absolute; bottom:-55px; right:10px; }
+.sycon .orderCon .orderList #other-line .icon{background:url("../images/footer-icon.png") no-repeat 0 0; height:44px; width:44px; display:inline-block; margin-right:25px;}
+.sycon .orderCon .orderList #other-line .sina{ background-position:0 0;}
+.sycon .orderCon .orderList #other-line .sina:hover{ background-position:0 -85px;}
+.sycon .orderCon .orderList #other-line .wei{ background-position:0 -168px;}
+.sycon .orderCon .orderList #other-line .wei:hover{ background-position:0 -252px;}
+.sycon .orderCon .orderList #other-line .qq{ background-position:0 -764px;}
+.sycon .orderCon .orderList #other-line .qq:hover{ background-position:0 -680px;}
 
     /*----TabCon5-随游管理---*/
 .sycon .mySuiyou{ background:#eee; padding:40px 0 20px;}
@@ -1468,9 +1476,9 @@ transition:transform 1s ease-in-out;
 .mddsx-right{ float:right; width:880px; height:auto; overflow:hidden;}
 .mddsx-right ul{ width:100%; height:auto; overflow:hidden;}
 .mddsx-right ul li{ width:880px; height:400px; position:relative; margin-top:20px;}
-.mddsx-right ul li p{padding:10px; width:860px;  background:rgba(0,0,0,.58); position:absolute; left:0px; bottom:0px;}
+.mddsx-right ul li p{padding:10px; width:860px;  background:rgba(0,0,0,0.7); position:absolute; left:0px; bottom:0px;}
 .mddsx-right ul li p font{ line-height:30px; font-size:22px; }
-.mddsx-right ul li p span{  line-height:24px;font-size:18px;}
+.mddsx-right ul li p span{  line-height:24px;font-size:18px; margin-top:10px;}
 .mddsx-right ul li p font,.mddsx-right ul li p span{display:block;  overflow:hidden; padding: 0px 10px;color:#ddd; }
 .mddsx .more{ color:#858585; width:100px; height:40px; margin:20px auto 0; line-height:40px; text-align:center; display:block; border:none; background:none; font-size:24px; }
 
