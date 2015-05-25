@@ -96,4 +96,27 @@ class CountryService extends BaseDb{
         return $page->getList();
     }
 
+    public function getCC($name)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->countryDb = new CountryDb($conn);
+            $countryId=$this->countryDb->getCountryByName($name);
+            if(!empty($countryId))
+            {
+                return array($countryId['id'],null);
+            }
+            $cityId=$this->countryDb->getCityByName($name);
+            if(!empty($cityId))
+            {
+                return array(null,$cityId['id']);
+            }
+            return array(null,null);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
 }

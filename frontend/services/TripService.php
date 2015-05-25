@@ -11,6 +11,7 @@ namespace frontend\services;
 
 
 use backend\components\Page;
+use common\components\Code;
 use common\components\SysMessageUtils;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
@@ -53,7 +54,27 @@ class TripService extends BaseDb{
         try {
             $conn = $this->getConnection();
             $this->tripTravelDb = new TravelTripDb($conn);
-            return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+            $tagStr='';
+            if(!empty($tag)&&$tag!='全部'){
+
+                $intersection=array();
+                $tagList=explode(',',$tag);
+                foreach($tagList as $val){
+                    $valArr=json_decode(\Yii::$app->redis->get(Code::TRAVEL_TRIP_TAG_PREFIX.md5($val)),true);
+                    if(empty($intersection)){
+                        $intersection= $valArr;
+                    }
+                    if(!empty($valArr)){
+                        $intersection=array_intersect($intersection,$valArr);
+                    }
+                }
+                if(!empty($intersection)){
+                    $tagStr=implode(',',$intersection);
+                }else{
+                    $tagStr='-1';
+                }
+            }
+            return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tagStr,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         } catch (Exception $e) {
             throw $e;
         } finally {

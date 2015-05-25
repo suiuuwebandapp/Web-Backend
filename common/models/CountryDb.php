@@ -253,4 +253,25 @@ class CountryDb extends ProxyDb{
 
     }
 
+    public function getCityByName($name)
+    {
+        $sql=sprintf("
+            SELECT * FROM city
+            WHERE cname like :name OR ename like :name;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":name",$name);
+        return $command->queryOne();
+    }
+    public function getCountryByName($name)
+    {
+        $sql=sprintf("
+            SELECT * FROM country
+            WHERE cname like :name OR ename like :name;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":name",$name);
+        return $command->queryOne();
+    }
+
 }
