@@ -7,6 +7,7 @@
  */
 namespace frontend\controllers;
 
+use common\components\Aes;
 use common\components\Code;
 use common\components\wx\WXBizMsgCrypt;
 use common\entity\UserAccess;

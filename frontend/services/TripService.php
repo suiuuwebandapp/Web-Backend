@@ -66,6 +66,12 @@ class TripService extends BaseDb{
                     }
                     if(!empty($valArr)){
                         $intersection=array_intersect($intersection,$valArr);
+                    }else{
+                        $intersection=array();
+                    }
+                    if(empty($intersection))
+                    {
+                        break;
                     }
                 }
                 if(!empty($intersection)){
@@ -74,6 +80,7 @@ class TripService extends BaseDb{
                     $tagStr='-1';
                 }
             }
+
             return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tagStr,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         } catch (Exception $e) {
             throw $e;
