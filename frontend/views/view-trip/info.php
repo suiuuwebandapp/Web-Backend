@@ -240,7 +240,7 @@
                         <li class="tit"><span>服务</span><span>价格</span><span>单位</span></li>
                         <?php foreach($travelInfo['serviceList'] as $service){  ?>
                             <li>
-                                <span><?=mb_strlen($service['title'],"UTF-8")>5?mb_substr(0,5,"UTF-8")."...":$service['title']?></span>
+                                <span title="<?=$service['title'];?>"><?=mb_strlen($service['title'],"UTF-8")>5?(mb_substr($service['title'],0,5,"UTF-8")."..."):$service['title']?></span>
                                 <span><b>¥<?=$service['money']?></b></span>
                                 <span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span>
                             </li>

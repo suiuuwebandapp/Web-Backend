@@ -270,6 +270,9 @@ class TripController extends CController
         //阶梯价格
         if(!empty($stepPriceList)){
             foreach ($stepPriceList as $step) {
+                if($step[1]==0){
+                    continue;
+                }
                 $tempPrice = new TravelTripPrice();
                 $tempPrice->minCount = $step[0];
                 $tempPrice->maxCount = $step[1];
@@ -445,6 +448,9 @@ class TripController extends CController
         //阶梯价格
         if(!empty($stepPriceList)){
             foreach ($stepPriceList as $step) {
+                if($step[1]==0){
+                    continue;
+                }
                 $tempPrice = new TravelTripPrice();
                 $tempPrice->minCount = $step[0];
                 $tempPrice->maxCount = $step[1];
