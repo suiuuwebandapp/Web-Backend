@@ -117,8 +117,9 @@ class WeChatController extends SController
                 if (!empty($keyword)) {
 
 
-                    if ($keyword == '0') {
-
+                    if ($keyword == '更新用户资料') {
+                        $this->getWechatUserInfo($fromUsername, true); //关注的时候抓取用户信息
+                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, '更新成功');
                     }elseif($keyword==1){
                         $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 1);
                     }
@@ -171,10 +172,10 @@ class WeChatController extends SController
                 $weChatUserInfo=new WeChatUserInfo();
                 $weChatUserInfo->openId=$openId;
                 $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
-                if (!empty($WeChatRst)) {
+                if (!empty($WeChatRst)&&!empty($WeChatRst['v_nickname'])) {
                     Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
                 } else {
-                    $this->weChatSer->insertWeChatInfo(json_decode($rst['data'],true));
+                    $this->getWechatUserInfo($openId, true); //关注的时候抓取用户信息
                     $weChatUserInfo=new WeChatUserInfo();
                     $weChatUserInfo->openId=$openId;
                     $WeChatRstN = $this->weChatSer->getUserInfo($weChatUserInfo);

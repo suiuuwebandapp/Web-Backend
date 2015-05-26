@@ -46,7 +46,8 @@
 
 <body>
 <div class="con sy_need02 clearfix">
-    <a href="/we-chat/show-country?rUrl=/we-chat-order-list/order-view" id="site" class="selet" areaCode="<?php echo $c?>" ><?php echo $n;?></a>
+    <input id="site" type="text" placeholder="目的地城市" class="selet">
+    <!--<a href="/we-chat/show-country?rUrl=/we-chat-order-list/order-view" id="site" class="selet" areaCode="<?php /*echo $c*/?>" ><?php /*echo $n;*/?></a>-->
     <p>出游人数</p>
     <div class="row">
         <a href="javascript:;" class="minus" onclick="updateNumber(false)"></a>
@@ -85,7 +86,7 @@
     }
     function submit()
     {
-        var site=$('#site').html();
+        var site=$('#site').val();
         var content=$('#content').val();
         var timeList=$('#dateList').val();
         var userNumber=$('#userNumber').val();

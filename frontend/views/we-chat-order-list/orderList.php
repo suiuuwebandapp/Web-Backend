@@ -66,7 +66,7 @@
                 </div>
                 <b class="money"><?php $val['wMoney']?></b>
                 <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
-                    <a href="javascript:;" class="btn payback" onclick="applyRefund('<?php echo $val['wOrderNumber']?>')">申请退款</a>
+                    <a href="/we-chat-order-list/show-refund?o=<?php echo $val['wOrderNumber']?>" class="btn payback">申请退款</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
                     <a href="javascript:;" class="btn pay" onclick="callpay('<?php echo $val['wOrderNumber']?>')">支付</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
@@ -113,29 +113,6 @@
         });
     }
 
-    function applyRefund(orderNumber)
-    {
-        $.ajax({
-            url :'/we-chat-order-list/apply-refund',
-            type:'post',
-            data:{
-                orderNumber:orderNumber
-            },
-            error:function(){
-                alert("申请退款异常");
-            },
-            success:function(data){
-                data=eval("("+data+")");
-                if(data.status==1){
-                    location.reload();
-                }else if(data.status==-3){
-                    window.location.href=data.data;
-                }else{
-                    alert(data.data);
-                }
-            }
-        });
-    }
 </script>
 <script type="text/javascript">
 var jsApiParameters;
@@ -147,7 +124,7 @@ var jsApiParameters;
             jsApiParameters,
             function(res){
                 WeixinJSBridge.log(res.err_msg);
-                alert(res.err_code+res.err_desc+res.err_msg);
+                //alert(res.err_code+res.err_desc+res.err_msg);
             }
         );
     }

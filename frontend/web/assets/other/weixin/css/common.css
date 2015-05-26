@@ -16,7 +16,7 @@ textarea::-moz-input-placeholder,
 textarea::-ms-input-placeholder,
 input::-webkit-input-placeholder,
 input::-moz-input-placeholder;
-input::-ms-input-placeholder{color:#bababa;}
+input::-ms-input-placeholder{color:#858585; }
 input:focus{outline-width:0;box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;-ms-box-shadow:none;box-shadow:none}
 .clearfix:before,.clearfix:after{content:"";display:table;}
 .clearfix:after{clear:both;}

@@ -101,14 +101,14 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .sy_need01 .btn:hover{ text-decoration:underline;}
 
 /*-----------随游-填写需求02-------------*/
-.sy_need02 .selet{ width:100%;display:block; height:2.7rem; border:1px solid #ddd; line-height:2.7rem; font-size:0.85rem; color:#858585; text-decoration:none; padding:0 0.5rem; background:#fff url(../images/go.png) no-repeat 98% center; background-size:0.53rem 0.85rem; margin:0.28rem auto; }
+.sy_need02 .selet{ width:100%;display:block; height:2.7rem; border:1px solid #ddd; line-height:2.7rem; font-size:0.85rem; color:#858585; text-decoration:none; padding:0 0.5rem; background:#fff; margin:0.28rem auto; }
 .sy_need02 p{ margin-top:10px; }
 .sy_need02 .row{ display:table; width:100%; height:2.7rem; line-height:2.7rem; background:#fff; padding:0 0.5rem;  }
 .sy_need02 .row .add{ display:table-cell; width:2rem; background:url(../images/add.png) no-repeat center center; background-size:1.78rem 1.71rem;  }
 .sy_need02 .row .text{ text-align:center; display:table-cell; height:2.7rem; line-height:2.7rem; font-size:1rem; width:100%; margin:0 auto;  }
 .sy_need02 .row .minus{ display:table-cell; width:2rem;  background:url(../images/minus.png) no-repeat center center; background-size:1.78rem 0.35rem;border-right:1px solid #ddd;  }
 .sy_need02 .sdate{ width:100%; height:2.7rem; line-height:2.7rem; font-size:0.85rem; background:#fff; padding:0 0.5rem; margin-bottom:10px;  }
-.sy_need02 textarea{ width:100%; padding:0 0.5rem;  line-height:0.85rem; font-size:0.85rem; height:8.2rem; background:#fff; border:1px solid #ddd;}
+.sy_need02 textarea{ width:100%; padding:0.5rem;  line-height:0.85rem; font-size:0.85rem; height:8.2rem; background:#fff; border:1px solid #ddd;}
 .sy_need02 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:20px auto; text-decoration:none;}
 .sy_need02 .btn:hover{ text-decoration:underline;}
 
@@ -126,10 +126,23 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .country .lists dd{ height:2.5rem; border-bottom:1px solid #ddd; width:100%; display:block; background:#fff;  font-size:0.85rem; line-height:2.5rem; padding:0 0.5rem;}
 
 
+/*----------申请退款------------*/
+.Remoney .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
+.Remoney p{ text-align:center; }
+.Remoney label{ font-size:0.85rem; width:100%; margin-top:1rem; display:block; }
+.Remoney input{ background:#fff; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.Remoney textarea{ width:100%; padding:0.5rem;  line-height:0.85rem; font-size:0.85rem; height:8.2rem; background:#fff; border:1px solid #ddd;}
+
+.Remoney .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:7rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
+.Remoney .btn:hover{ text-decoration:underline;}
 
 
+/*----------申请退款02------------*/
+.Remoney02 .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
+.Remoney02 p{ text-align:center; }
 
-
+.Remoney02 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:7rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
+.Remoney02 .btn:hover{ text-decoration:underline;}
 
 
 

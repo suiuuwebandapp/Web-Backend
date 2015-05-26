@@ -11,8 +11,10 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\entity\WeChatOrderList;
+use common\entity\WeChatOrderRefund;
 use frontend\components\Page;
 use frontend\services\WeChatOrderListService;
+use frontend\services\WeChatOrderRefundService;
 use yii;
 use yii\base\Exception;
 class WeChatOrderListController extends WController {
@@ -173,8 +175,13 @@ class WeChatOrderListController extends WController {
         $this->loginValidJson();
         $userSign=$this->userObj->userSign;
         $orderNumber=Yii::$app->request->post('orderNumber');
-        /*$userSign="085963dc0af031709b032725e3ef18f5";
-        $orderNumber='wx2015052154555548';*/
+        $refundReason=Yii::$app->request->post('refundReason');
+        $phone=Yii::$app->request->post('phone');
+
+       /* $userSign="085963dc0af031709b032725e3ef18f5";
+        $orderNumber='wx2015052152515398';
+        $refundReason="asd";
+        $phone="132";*/
         if(empty($userSign))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "用户名不能为空"));
@@ -182,6 +189,14 @@ class WeChatOrderListController extends WController {
         if(empty($orderNumber))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "订单号不能为空"));
+        }
+         if(empty($refundReason))
+         {
+             return json_encode(Code::statusDataReturn(Code::FAIL, "退款理由不能为空"));
+         }
+        if(empty($phone))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "确认手机不能为空"));
         }
         $orderInfo = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
         if(empty($orderInfo))
@@ -191,6 +206,26 @@ class WeChatOrderListController extends WController {
         if($orderInfo['wStatus']!=WeChatOrderList::STATUS_PAY_SUCCESS)
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "未支付订单或游玩过该订单"));
+        }
+        if($orderInfo['wPhone']!=$phone)
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "手机号不是该订单手机号"));
+        }
+        $orderRefundSer = new WeChatOrderRefundService();
+        $rfInfo=$orderRefundSer->findRefundInfoByOrderNumber($orderNumber);
+        if(empty($rfInfo)||$rfInfo==false)
+        {}else
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "该订单已申请退款"));
+        }
+        $refundEntity=new WeChatOrderRefund();
+        $refundEntity->userSign=$userSign;
+        $refundEntity->orderNumber=$orderNumber;
+        $refundEntity->refundReason=$refundReason;
+        $rst = $orderRefundSer->insertWeChatInfo($refundEntity);
+        if($rst !=1)
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "异常"));
         }
         $data = $this->orderListSer->updateOrderStatus($orderNumber,WeChatOrderList::STATUS_APPLY_REFUND,$userSign);
         if($data==1)
@@ -204,10 +239,21 @@ class WeChatOrderListController extends WController {
     {
         return $this->renderPartial('orderSuccess',['str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
     }
+    public function actionRefundSuccess()
+    {
+        return $this->renderPartial('refundSuccess',['str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
+    }
     public function actionBinding()
     {
         return $this->renderPartial('binding');
     }
+
+    public function actionShowRefund()
+    {
+        $orderNumber=Yii::$app->request->get('o');
+        return $this->renderPartial('applyRefund',['orderNumber'=>$orderNumber]);
+    }
+
     public function actionTest()
     {
     }
