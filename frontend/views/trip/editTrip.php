@@ -183,6 +183,15 @@
                                 <?php }?>
                             <?php
                             }
+                        }else{
+                    ?>
+                            <p>
+                                <input type="text" value="" class="step_people"><em>人至</em>
+                                <input type="text" value="" class="step_people"><em>人</em>
+                                <input type="text" value="" class="step_price"><em>RMB</em>
+                                <a href="javascript:;" id="addStepPrice" class="add"></a>
+                            </p>
+                    <?php
                         }
                     ?>
                     </div>
@@ -193,41 +202,47 @@
                     <div class="creat clearfix">
                         <dl id="stepDl">
                             <dt><span>服务</span><span>价格</span><span>单位</span></dt>
-                            <?php
-
-                                if($travelInfo['serviceList']!=null){
-                                    foreach($travelInfo['serviceList'] as $key=> $scenic){
-                                        if($key==0){
-                            ?>
+                            <?php if($travelInfo['serviceList']!=null){?>
+                                <?php  foreach($travelInfo['serviceList'] as $key=> $scenic){ ?>
+                                    <?php if($key==0){ ?>
+                                        <dd style="z-index:14">
+                                            <input type="text" value="<?=$scenic['title']?>" class="m0-input">
+                                            <input type="text" value="<?=$scenic['money']?>" class="service_price_step">
+                                            <div class="sect">
+                                                <select name="" class="serviceSelect">
+                                                    <option value="1"  <?php if($scenic['type']==1){ echo "selected"; } ?>>一人</option>
+                                                    <option value="0"  <?php if($scenic['type']==0){ echo "selected"; } ?>>一次</option>
+                                                </select>
+                                            </div>
+                                            <a id="addServicePrice" href="javascript:;" class="add"></a>
+                                        </dd>
+                                    <?php }else{?>
+                                        <dd style="z-index:11">
+                                            <input type="text" value="<?=$scenic['title']?>" class="m0-input">
+                                            <input type="text" value="<?=$scenic['money']?>" class="service_price_step">
+                                            <div class="sect">
+                                                <select name="" class="serviceSelect">
+                                                    <option value="1"  <?php if($scenic['type']==1){ echo "selected"; } ?>>一人</option>
+                                                    <option value="0"  <?php if($scenic['type']==0){ echo "selected"; } ?>>一次</option>
+                                                </select>
+                                            </div>
+                                            <a href="javascript:;" onclick="removeServicePrice(this)" class="jian"></a>
+                                        </dd>
+                                    <?php }?>
+                                <?php }?>
+                            <?php }else{ ?>
                                 <dd style="z-index:14">
-                                    <input type="text" value="<?=$scenic['title']?>" class="m0-input">
-                                    <input type="text" value="<?=$scenic['money']?>" class="service_price_step">
+                                    <input type="text" value="" class="m0-input">
+                                    <input type="text" value="" class="service_price_step">
                                     <div class="sect">
                                         <select name="" class="serviceSelect">
-                                            <option value="1"  <?php if($scenic['type']==1){ echo "selected"; } ?>>一人</option>
-                                            <option value="0"  <?php if($scenic['type']==0){ echo "selected"; } ?>>一次</option>
+                                            <option value="1">一人</option>
+                                            <option value="0">一次</option>
                                         </select>
                                     </div>
                                     <a id="addServicePrice" href="javascript:;" class="add"></a>
                                 </dd>
-                                <?php }else{?>
-                                    <dd style="z-index:11">
-                                        <input type="text" value="<?=$scenic['title']?>" class="m0-input">
-                                        <input type="text" value="<?=$scenic['money']?>" class="service_price_step">
-                                        <div class="sect">
-                                            <select name="" class="serviceSelect">
-                                                <option value="1"  <?php if($scenic['type']==1){ echo "selected"; } ?>>一人</option>
-                                                <option value="0"  <?php if($scenic['type']==0){ echo "selected"; } ?>>一次</option>
-                                            </select>
-                                        </div>
-                                        <a href="javascript:;" onclick="removeServicePrice(this)" class="jian"></a>
-                                    </dd>
-
-                                <?php }?>
-                             <?php
-                                    }
-                                }
-                            ?>
+                            <?php } ?>
                         </dl>
 
                     </div>

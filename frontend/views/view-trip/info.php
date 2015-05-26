@@ -257,6 +257,7 @@
                     </ul>
                 <?php } ?>
             </div>
+            <br/>
             <p>基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
             <input id="toBuy" type="button" value="购买路线" class="web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
             <input id="toApply" type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
