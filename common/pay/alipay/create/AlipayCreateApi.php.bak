@@ -40,8 +40,21 @@ class AlipayCreateApi {
     //必填
 
     //付款金额
-    private $total_fee;
+    private $price;
     //必填
+
+    //商品数量
+    private $quantity = "1";
+    //必填，建议默认为1，不改变值，把一次交易看成是一次下订单而非购买一件商品
+    //物流费用
+    private $logistics_fee = "0.00";
+    //必填，即运费
+    //物流类型
+    private $logistics_type = "EXPRESS";
+    //必填，三个值可选：EXPRESS（快递）、POST（平邮）、EMS（EMS）
+    //物流支付方式
+    private $logistics_payment = "SELLER_PAY";
+    //必填，两个值可选：SELLER_PAY（卖家承担运费）、BUYER_PAY（买家承担运费）
 
     //订单描述
     private $body;
@@ -49,14 +62,25 @@ class AlipayCreateApi {
     private $show_url;
     //需以http://开头的完整路径，如：http://www.商户网站.com/myorder.html
 
-    //防钓鱼时间戳
-    private $anti_phishing_key="";
-    //若要使用请调用类文件submit中的query_timestamp函数
+    //收货人姓名
+    private $receive_name;
+    //如：张三
 
-    //客户端的IP地址
-    private $exter_invoke_ip="";
+    //收货人地址
+    private $receive_address ='北京市';
+    //如：XX省XXX市XXX区XXX路XXX小区XXX栋XXX单元XXX号
 
+    //收货人邮编
+    private $receive_zip ="100011";
+    //如：123456
 
+    //收货人电话号码
+    private $receive_phone='';
+    //如：0571-88158090
+
+    //收货人手机号码
+    private $receive_mobile;
+    //如：13312341234
 
 
 
@@ -74,9 +98,11 @@ class AlipayCreateApi {
         $this->notify_url=\Yii::$app->params['base_dir']."/pay-return/alipay-return";
         $this->out_trade_no=$order->orderNumber;
         $this->subject=htmlspecialchars($tripInfo['title']);
-        $this->total_fee=$order->totalPrice;
+        $this->price=$order->totalPrice;
         $this->body=htmlspecialchars($tripInfo['intro']);;//暂时写成随游详情 详情内容中不能有空格等参数
         $this->show_url=\Yii::$app->params['base_dir']."/view-trip/info?trip=".$tripInfo['tripId'];
+        $this->receive_name=htmlspecialchars($userBase->nickname);
+        $this->receive_mobile=$userBase->phone;
 
 
         $alipayConfig=new AlipayConfig();
@@ -88,7 +114,7 @@ class AlipayCreateApi {
 
         //构造要请求的参数数组，无需改动
         $parameter = array(
-            "service" => "create_direct_pay_by_user",
+            "service" => "create_partner_trade_by_buyer",
             "partner" => trim($alipay_config['partner']),
             "seller_email" => trim($alipay_config['seller_email']),
             "payment_type"	=> $this->payment_type,
@@ -96,11 +122,18 @@ class AlipayCreateApi {
             "return_url"	=> $this->return_url,
             "out_trade_no"	=> $this->out_trade_no,
             "subject"	=> $this->subject,
-            "total_fee"	=> $this->total_fee,
+            "price"	=> $this->price,
+            "quantity"	=> $this->quantity,
+            "logistics_fee"	=> $this->logistics_fee,
+            "logistics_type"	=> $this->logistics_type,
+            "logistics_payment"	=> $this->logistics_payment,
             "body"	=> $this->body,
             "show_url"	=> $this->show_url,
-            "anti_phishing_key"	=> $this->anti_phishing_key,
-            "exter_invoke_ip"	=> $this->exter_invoke_ip,
+            "receive_name"	=> $this->receive_name,
+            "receive_address"	=> $this->receive_address,
+            "receive_zip"	=> $this->receive_zip,
+            "receive_phone"	=> $this->receive_phone,
+            "receive_mobile"	=> $this->receive_mobile,
             "_input_charset"	=> trim(strtolower($alipay_config['input_charset']))
         );
 

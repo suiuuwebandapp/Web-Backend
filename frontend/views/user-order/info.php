@@ -71,13 +71,13 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
     </div>
     <div class="finish clearfix" style="display: none;" id="result">
         <p class="title">支付成功！</p>
-        <p class="tip">您可以在<a href="#"> 个人中心-我的订单 </a>查看您的订单状态</p>
+        <p class="tip">您可以在<a href="/user-info?myOrderManager"> 个人中心-我的订单 </a>查看您的订单状态</p>
         <p>分享这条随游</p>
         <ul class="share">
             <li><b class="icon sina"></b>
                 <b class="icon weixin"></b></li>
         </ul>
-        <a href="#" class="btn">确定</a>
+        <a href="/user-info?myOrderManager" class="btn">确定</a>
     </div>
     <?php } ?>
 </div>
@@ -187,6 +187,7 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
                 if(data.status==1){
                     $("#result").show();
                     $("#pay_div").hide();
+                    hideWxPay();
                     window.clearInterval(interval);
                 }
             }
