@@ -14,6 +14,7 @@ use common\entity\UserAccess;
 use common\entity\UserBase;
 use common\entity\WeChatUserInfo;
 use common\pay\wxpay\JsApiCall;
+use common\pay\wxpay\Log_;
 use common\pay\wxpay\NativeDynamicQrcode;
 use frontend\services\CountryService;
 use frontend\services\UserBaseService;
@@ -62,7 +63,8 @@ class WeChatController extends SController
     //todo @test
     public function actionTest()
     {
-
+        $log= new Log_();
+        $log->log_result("test.txt","2qwe");
         //var_dump( $this->getWechatUserInfo('oGfdst0AA7SAThQlEscjbHjbbzp8', true)); //关注的时候抓取用户信息
     }
 
@@ -562,7 +564,7 @@ class WeChatController extends SController
      */
     private function write_to_log($file, $str)
     {
-        if ($fd = @fopen($file, "a")) {
+        if ($fd = @fopen(getcwd().'/../runtime/suiuu/'.$file, "a")) {
             fputs($fd, $str);
             fclose($fd);
         }

@@ -14,17 +14,26 @@ class RequestValidate {
     public function validate()
     {
         if(isset($_POST)&&!empty($_POST)){
-            array_walk($_POST,function(&$value,$key){
-                $value=$this->checkhtml($value);
-            });
+            $this->arrWalk($_POST);
         }
         if(isset($_GET)&&!empty($_GET)){
-            array_walk($_GET,function(&$value,$key){
-                $value=$this->checkhtml($value);
-            });
+            $this->arrWalk($_GET);
         }
     }
 
+    private function arrWalk($arr)
+    {
+        if(isset($arr)&&!empty($arr)){
+            array_walk($_POST,function(&$value,$key){
+                if(is_array($value))
+                {
+                    $this->arrWalk($value);
+                }else{
+                $value=$this->checkhtml($value);
+                }
+            });
+        }
+    }
     //屏蔽html
     private function checkhtml($html) {
         //if(!checkperm('allowhtml')) {

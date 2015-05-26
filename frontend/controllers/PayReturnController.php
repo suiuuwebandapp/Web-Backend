@@ -37,7 +37,7 @@ class PayReturnController extends Controller {
         $alipayNotify = new AlipayNotify($alipay_config);
         $verify_result = $alipayNotify->verifyNotify();
 
-        //logResult($verify_result);
+        logResult($verify_result);
 
 
         if($verify_result) {//验证成功
@@ -181,7 +181,7 @@ class PayReturnController extends Controller {
 
         //以log文件形式记录回调信息
         $log_ = new Log_();
-        $log_name="./wx_notify_url.log";//log文件路径
+        $log_name="wx_notify_url.log";//log文件路径
         $log_->log_result($log_name,"【接收到的notify通知】:\n".$xml."\n");
 
         if($notify->checkSign() == TRUE)
@@ -234,7 +234,7 @@ class PayReturnController extends Controller {
         include_once("../../common/pay/wxpay/log_.php");
         $str=json_encode($_GET).json_encode($_POST);
         $log_ = new Log_();
-        $log_name="./wx_warning.txt";//log文件路径
+        $log_name="wx_warning.txt";//log文件路径
         $log_->log_result($log_name,"【警告】:\n".$str."\n");
     }
 }

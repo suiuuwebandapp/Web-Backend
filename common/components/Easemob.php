@@ -348,7 +348,7 @@ class Easemob {
 		$option ['client_id'] = $this->client_id;
 		$option ['client_secret'] = $this->client_secret;
 		$url = $this->url . "token";
-		$fp = @fopen ( "easemob.txt", 'r' );
+		$fp = @fopen ( getcwd().'/../runtime/suiuu/'."easemob.txt", 'r' );
 		if ($fp) {
 			$arr = unserialize ( fgets ( $fp ) );
 			if ($arr ['expires_in'] < time ()) {
@@ -374,7 +374,7 @@ class Easemob {
 
 		$result ['expires_in'] = $result ['expires_in'] + time ();
 
-		$fp = @fopen ( "easemob.txt", 'w' );
+		$fp = @fopen ( getcwd().'/../runtime/suiuu/'."easemob.txt", 'w' );
 		@fwrite ( $fp, serialize ( $result ) );
 		@fclose ( $fp );
 
