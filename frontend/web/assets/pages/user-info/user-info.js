@@ -562,7 +562,7 @@ function updateUserInfo(){
         success:function(data){
             data=eval("("+data+")");
             if(data.status==1){
-                Main.showTip("跟新用户信息成功");
+                Main.showTip("更新用户信息成功");
                 window.location.href=window.location.href;
             }else{
                 Main.showTip("更新用户信息失败");
@@ -635,7 +635,7 @@ function initSelect(){
             if(search.indexOf("/")!=-1){
                 search=search.split("/")[0];
             }
-            //findCityInfo(search);
+            findCityInfo(search);
         }
     });
     $("#countryId").change();
@@ -1729,7 +1729,12 @@ function initCollect(){
             var result=eval("("+data+")");
             if(result.status==1){
                 var l =  result.data.data.length;
-                $('#myCollectList').html('');
+                if(l==0){
+                    $('#myCollectList').html('<p class="no_result" style="padding-bottom: 20px">您还没有收藏过随游哦~</p>');
+                    return;
+                }else{
+                    $('#myCollectList').html('');
+                }
 
                 var str ='';
                 for(var i=0;i<l;i++)
@@ -1772,8 +1777,12 @@ function initMyComment(page){
             var result=eval("("+data+")");
             if(result.status==1){
                 var l =  result.data.data.length;
-                $('#commentList_51').html('');
-
+                if(l==0){
+                    $('#commentList_51').html('<p >您还没有收藏过随游哦~</p>');
+                    return;
+                }else{
+                    $('#commentList_51').html('');
+                }
                 var str ='';
                 for(var i=0;i<l;i++)
                 {

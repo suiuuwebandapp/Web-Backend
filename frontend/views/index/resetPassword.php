@@ -12,9 +12,9 @@
 <!----------重设密码------->
 <div id="resetPassword">
     <span>新密码：</span>
-    <input id="password" type="text" value="" class="csmm-text">
+    <input id="password" type="password" value="" class="csmm-text">
     <span>确认密码：</span>
-    <input id="confirmPassword" type="text" value="" class="csmm-text">
+    <input id="confirmPassword" type="password" value="" class="csmm-text">
     <span>验证码:</span>
     <p class="p1 clearfix">
         <input id="code_1" type="text" value="" class="code">

@@ -11,6 +11,7 @@ namespace frontend\services;
 
 
 use backend\components\Page;
+use common\entity\City;
 use common\models\BaseDb;
 use common\models\CountryDb;
 use yii\base\Exception;
@@ -96,6 +97,13 @@ class CountryService extends BaseDb{
         return $page->getList();
     }
 
+    /**
+     * 更具国家城市的名字获取ID
+     * @param $name
+     * @return array
+     * @throws Exception
+     * @throws \Exception
+     */
     public function getCC($name)
     {
         try {
@@ -117,6 +125,25 @@ class CountryService extends BaseDb{
         } finally {
             $this->closeLink();
         }
+    }
+
+    public function findCityById($cityId)
+    {
+        if(empty($cityId)){
+            throw new Exception("CityId is not Allow Empty");
+        }
+        $cityInfo=null;
+        try {
+            $conn = $this->getConnection();
+            $this->countryDb = new CountryDb($conn);
+            $cityInfo=$this->countryDb->findCityById($cityId);
+            $cityInfo=$this->arrayCastObject($cityInfo,City::class);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $cityInfo;
     }
 
 }

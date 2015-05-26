@@ -63,7 +63,7 @@ class Mail {
      */
     private static function getPasswordHtml($link)
     {
-        $html=sprintf('
+        $html='
             <p><img alt="随游欢迎您" src="http://image.suiuu.com/suiuu_email/header.png" style="width: 604px; height: 118px;" /></p>
 
             <div>
@@ -92,7 +92,7 @@ class Mail {
             <p>系统发信，请勿回复</p>
             </div>
 
-        ');
+        ';
 
         return $html;
     }
@@ -103,7 +103,7 @@ class Mail {
      */
     private static function getValidateHtml($link)
     {
-        $html=sprintf('
+        $html='
             <p><img alt="随游欢迎您" src="http://image.suiuu.com/suiuu_email/header.png" style="width: 604px; height: 118px;" /></p>
 
             <div>
@@ -132,7 +132,7 @@ class Mail {
             <p>系统发信，请勿回复</p>
             </div>
 
-        ');
+        ';
 
         return $html;
     }

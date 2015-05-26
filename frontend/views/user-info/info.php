@@ -190,12 +190,12 @@
     <div class="user w1200">
         <a href="javascript:;" class="userPic"><img src="<?=$this->context->userObj->headImg ?>" width="120px" alt=""></a>
         <span><?=$this->context->userObj->nickname ?></span>
-        <p><?=$this->context->userObj->intro ?></p>
+        <p class="sum"><?=$this->context->userObj->intro ?></p>
         <ul>
-            <li>性别:<b><?php if($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></li>
-            <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($this->context->userObj->birthday)?></b></li>
-            <li>城市:<b>北京</b></li>
-            <li>职业:<b><?=$this->context->userObj->profession;?></b></li>
+            <li>性别：<b><?php if($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($this->context->userObj->sex==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></li>
+            <li>年龄：<b><?=\common\components\DateUtils::convertBirthdayToAge($this->context->userObj->birthday)?></b></li>
+            <li>城市：<b><?=isset($cityInfo)?$cityInfo->cname:"保密"?></b></li>
+            <li>职业：<b><?=empty($this->context->userObj->profession)?"保密":$this->context->userObj->profession;?></b></li>
         </ul>
     </div>
 </div>
