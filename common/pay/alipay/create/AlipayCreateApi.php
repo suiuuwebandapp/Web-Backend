@@ -96,7 +96,7 @@ class AlipayCreateApi {
         $this->notify_url=\Yii::$app->params['base_dir']."/pay-return/alipay-return";
         $this->out_trade_no=$order->orderNumber;
         $this->subject=htmlspecialchars($tripInfo['title']);
-        $this->price=0.01;//$order->totalPrice;
+        $this->price=$order->totalPrice;
         $this->body=htmlspecialchars($tripInfo['intro']);;//暂时写成随游详情 详情内容中不能有空格等参数
         $this->show_url=\Yii::$app->params['base_dir']."/view-trip/info?trip=".$tripInfo['tripId'];
         $this->receive_name=htmlspecialchars($userBase->nickname);

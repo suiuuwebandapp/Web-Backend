@@ -171,11 +171,16 @@
         $("#searchBtn").bind("click",function(){
             tripSearch();
         });
+        $("#search").keypress(function(e){
+            if(e.keyCode==13){
+                $("#searchBtn").click();
+            }
+        });
     });
 
     function tripSearch(){
         var searchInfo=$("#search").val();
-        window.location.href="/view-trip/list?s="+searchInfo;
+        window.location.href="/view-trip/list?s="+encodeURIComponent(searchInfo);
     }
     function loadTrip(){
         $.ajax({

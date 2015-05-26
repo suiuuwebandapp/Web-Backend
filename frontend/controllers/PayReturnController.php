@@ -57,6 +57,7 @@ class PayReturnController extends Controller {
 
             //交易状态
             $trade_status = $_POST['trade_status'];
+            logResult($out_trade_no."-".$trade_no."-".$trade_status);
 
             //logResult($trade_status);
             if($_POST['trade_status'] == 'WAIT_BUYER_PAY') {

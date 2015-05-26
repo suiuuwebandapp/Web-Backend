@@ -12,7 +12,7 @@
 <link type="text/css" rel="stylesheet" href="/assets/css/jquery-ui.css">
 <style>
     body{
-        background-color: #EEEEEE;
+        background-color: #F7F7F7;
     }
 </style>
 
@@ -23,7 +23,7 @@
 <!--sylx-->
 <div class="sylx w1200">
     <div class="sylx-serch">
-        <input type="text" value="" class="w285" id="search">
+        <input type="text" value="<?=empty($search)?"":$search?>" class="w285" id="search">
         <input type="button" value="搜索" class="w52" id="searchBtn">
     </div>
     <div class="sylx-xiangxi clearfix">
@@ -145,7 +145,6 @@ i<script type="text/javascript">
             placeholder : "/assets/images/grey.jpg", //加载图片前的占位图片
             effect      : "fadeIn" //加载图片使用的效果(淡入)
         });
-        initSearchInfo();
         //searchTip();
         //init page click
         $("#spage li a").bind("click",function(){
@@ -155,6 +154,11 @@ i<script type="text/javascript">
         $("#searchBtn").bind("click",function(){
             currentPage=1;
             searchTip();
+        });
+        $("#search").keypress(function(e){
+            if(e.keyCode==13){
+                $("#searchBtn").click();
+            }
         });
 
         $("#add").bind("click",function(){
@@ -188,12 +192,6 @@ i<script type="text/javascript">
             searchTip();
         });
     });
-
-    function initSearchInfo(){
-        var searchInfo=Main.getRequestParam("s")
-        if(searchInfo==null){searchInfo="";}
-        $("#search").val(searchInfo);
-    }
 
     function scrollList()
     {

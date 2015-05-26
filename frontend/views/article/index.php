@@ -5,7 +5,9 @@
     <title>专栏</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <style type="text/css">
-        $("body").css("background","#eeeeee");
+        body{
+            background-color: #F7F7F7;
+        }
     </style>
 </head>
 
@@ -25,7 +27,6 @@
             <li id="fenxiang"><a href="javascript:;">分享</a>
                 <div id="other-line">
                     <a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a>
-
                 </div>
             </li>
         </ol>

@@ -12,7 +12,7 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
 
 <style>
     body{
-        background: #eeeeee;
+        background: #F7F7F7;
     }
 </style>
 <input type="hidden" value="<?=$orderInfo->orderNumber?>" id="orderNumber"/>

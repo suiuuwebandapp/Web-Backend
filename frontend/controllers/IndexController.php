@@ -624,12 +624,13 @@ class IndexController extends UnCController
             $nickname="";
             $countryService = new CountryService();
             $countryList=$countryService->getCountryList();
-            $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+            $userPublisher=null;
 
             if (isset($this->userObj)) {
                 $email = $this->userObj->email;
                 $phone = $this->userObj->phone;
                 $nickname=$this->userObj->nickname;
+                $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
             }
             if ($areaCode == "") {
                 $areaCode = "+86";
@@ -1032,7 +1033,6 @@ class IndexController extends UnCController
 
             return $this->redirect('/index/reg-pub-success');
         }catch (Exception $e){
-            throw $e;
             return $this->redirect(['/result', 'result' => '邮箱认证失败:'.$e->getMessage()]);
 
         }

@@ -28,8 +28,10 @@
     <!--header开始-->
     <div class="header">
         <div class="header-main clearfix w1200">
+            <h2 class="logo"><a href="<?=Yii::$app->params['base_dir']; ?>"><img width="120" height="42" src="/assets/images/nav-ico.png"></a></h2>
+
             <div class="header-nav fl">
-                <ul>
+                <ul class="menu_ul">
                     <li class="active"><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
                     <li><a href="/view-trip/list">随游</a></li>
                     <li><a href="/destination/list">目的地</a></li>
@@ -60,7 +62,7 @@
                         <div class="my-suiuu">
                             <span class="jiao"></span>
                             <ul>
-                                <?php if(true||$this->context->userObj->isPublisher){?>
+                                <?php if($this->context->userObj->isPublisher==true){?>
                                 <li class="bg1"><a href="/user-info?tripManager">我的随游</a></li>
                                 <?php } ?>
                                 <li class="bg2"><a href="/user-info?myOrderManager">我的订单</a></li>
@@ -82,7 +84,7 @@
             <h2 class="logo"><a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/nav-ico.png" width="120" height="42"></a></h2>
 
             <div class="nav">
-                <ul>
+                <ul class="menu_ul">
                     <li class="active"><a href="<?=Yii::$app->params['base_dir']; ?>">首页</a></li>
                     <li><a href="/view-trip/list">随游</a></li>
                     <li><a href="/destination/list">目的地</a></li>
@@ -193,7 +195,7 @@
         initPhoneRegister();
         initDocumentClick();
         initTopMessage();
-
+        initBreadcrumb();
         $("#userpassword").keypress(function(e){
             if(e.keyCode==13){
                $("#login-check").click();
@@ -206,6 +208,20 @@
         });
 
     });
+
+    function initBreadcrumb(){
+        var href=window.location.href;
+        if(href.indexOf("?")!=-1){
+            href=href.substring(0,href.indexOf("?"));
+        }
+        $(".menu_ul li").each(function(){
+            var a=$(this).find("a");
+            if(href.indexOf($(a).attr("href"))!=-1){
+                $(".menu_ul li").removeClass("active");
+                $(this).addClass("active");
+            }
+        });
+    }
     function initTopMessage(){
         //如果用户登录了，查询是否有新私信
         if(isLogin==1){

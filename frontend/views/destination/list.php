@@ -9,7 +9,7 @@
 ?>
 <style>
     body{
-        background-color: #EEEEEE;
+        background-color: #F7F7F7;
     }
 
     .select2-container .select2-choice {

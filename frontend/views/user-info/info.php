@@ -184,7 +184,7 @@
 <div class="syTop">
     <div class="banner">
         <div class="banner-inner">
-            <a href="javascript:;" class="btn">设置</a>
+            <a href="javascript:;" class="btn" style="display: none">设置</a>
         </div>
     </div>
     <div class="user w1200">
@@ -465,6 +465,7 @@
                     <input type="button" value="上 传" class="btn sure card_upload" id="uploadAll">
                     <br/>
                     <div style="clear: both"></div>
+                    <!--
                     <p><span>更多认证</span><span class="form_tip"></span></p>
                     <div class="moreRen">
                         <ul>
@@ -473,7 +474,9 @@
                             <li><b class="icon qq"></b><input type="button" value="关联"></li>
                         </ul>
                     </div>
+                     -->
                     <div style="clear: both"></div>
+
                     <p style="display: none"><a href="#"  class="surebtn">保存修改</a></p>
 
                 </div>
@@ -491,6 +494,7 @@
                     <input type="password" id="qPassword_user_info">
                     <span></span>
                     <span></span>
+                    <!--
                     <p class="Mtitle">收款设置</p>
                     <span></span>
                     <div class="moreRen">
@@ -500,6 +504,7 @@
                             <li><b class="icon sina"></b><input type="button" value="关联"></li>
                         </ul>
                     </div>
+                    -->
                     <span></span>
                     <a href="javascript:;"  class="surebtn" id="password_update_info">保存修改</a>
                 </div>

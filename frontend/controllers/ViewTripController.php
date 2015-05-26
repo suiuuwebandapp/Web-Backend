@@ -64,7 +64,8 @@ class ViewTripController extends UnCController{
         return $this->render("list",[
             'tagList' => $tagList,
             'rTravel'=>$recommendTravel['data'],
-            'pageResult'=>$pageResult
+            'pageResult'=>$pageResult,
+            'search'=>$search
         ]);
     }
 

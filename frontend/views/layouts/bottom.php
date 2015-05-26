@@ -15,7 +15,7 @@
 <div id="footer-out" class="clearfix">
     <div class="footer w1200 clearfix">
         <div class="left fl">
-            <img src="/assets/images/footer-pic.png" width="174" height="122">
+            <a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/footer-pic.png" width="174" height="122"></a>
         </div>
         <dl class="fl middle">
             <dt>公司信息</dt>
@@ -26,7 +26,6 @@
         </dl>
         <dl class="fl ">
             <dt>帮助中心</dt>
-            <dd><a href="#">帮助</a></dd>
             <dd><a href="/static?help-feedback">反馈</a></dd>
             <dd><a href="/static?help-useFlow">使用流程</a></dd>
             <dd><a href="/static?help-refundPolicy">退款政策</a></dd>
