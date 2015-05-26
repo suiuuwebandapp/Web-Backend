@@ -63,10 +63,10 @@ class WeChatController extends SController
     //todo @test
     public function actionTest()
     {
-        $log= new Log_();
-        $log->log_result("test.txt","2qwe");
+
         //var_dump( $this->getWechatUserInfo('oGfdst0AA7SAThQlEscjbHjbbzp8', true)); //关注的时候抓取用户信息
     }
+
 
     /**
      * 接收--文本

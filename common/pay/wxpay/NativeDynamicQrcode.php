@@ -42,10 +42,7 @@ class NativeDynamicQrcode {
         $tripInfo=$travelTripInfo['info'];
         $unifiedOrder->setParameter("body",$tripInfo['title']);//商品描述
         $money=$orderInfo->totalPrice*100;
-        if($money>1)
-        {
-            $money=1;
-        }
+
         //自定义订单号，此处仅作举例
         $timeStamp = time();
         $out_trade_no = $orderInfo->orderNumber;
