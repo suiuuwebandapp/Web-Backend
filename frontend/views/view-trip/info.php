@@ -189,7 +189,6 @@
                                 <a href="javascript:;" class="icon sina" data-cmd="tsina"></a>
                                 <a href="javascript:;" class="icon wei" data-cmd="weixin"></a>
                                 <a href="javascript:;" class="icon qq" data-cmd="qzone"></a>
-
                             </div>
                         </li>
                     </ol>
@@ -234,24 +233,30 @@
                     <li>随游次数:<b><?=$createUserInfo->travelCount;?></b></li>
                 </ul>
             </div>
-            <?php if($travelInfo['serviceList']!=null){ ?>
-                <p>附加服务</p>
-                <ul class="ul01" id="stepPriceList">
-                    <li class="tit"><span>服务</span><span>价格</span><span>单位</span></li>
-                    <?php foreach($travelInfo['serviceList'] as $service){  ?>
-                        <li><span><?=$service['title']?></span><span><b>¥<?=$service['money']?></b></span><span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span></li>
-                    <?php } ?>
-                </ul>
-            <?php } ?>
+            <div class="kuang">
+                <?php if($travelInfo['serviceList']!=null){ ?>
+                    <p>附加服务</p>
+                    <ul class="ul01" id="stepPriceList">
+                        <li class="tit"><span>服务</span><span>价格</span><span>单位</span></li>
+                        <?php foreach($travelInfo['serviceList'] as $service){  ?>
+                            <li>
+                                <span><?=mb_strlen($service['title'],"UTF-8")>5?mb_substr(0,5,"UTF-8")."...":$service['title']?></span>
+                                <span><b>¥<?=$service['money']?></b></span>
+                                <span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                <?php } ?>
 
-            <?php if($travelInfo['priceList']!=null){ ?>
-                <p>优惠价格:</p>
-                <ul class="ul02">
-                    <?php foreach($travelInfo['priceList'] as $price){  ?>
-                        <li><span><?=$price['minCount']?>人</span><span>至</span><span><?=$price['maxCount']?>人</span><span><b>¥<?=$price['price']?></b></span></li>
-                    <?php } ?>
-                </ul>
-            <?php } ?>
+                <?php if($travelInfo['priceList']!=null){ ?>
+                    <p>优惠价格:</p>
+                    <ul class="ul02">
+                        <?php foreach($travelInfo['priceList'] as $price){  ?>
+                            <li><span><?=$price['minCount']?>人</span><span>至</span><span><?=$price['maxCount']?>人</span><span><b>¥<?=$price['price']?></b></span></li>
+                        <?php } ?>
+                    </ul>
+                <?php } ?>
+            </div>
             <p>基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
             <input id="toBuy" type="button" value="购买路线" class="web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
             <input id="toApply" type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >

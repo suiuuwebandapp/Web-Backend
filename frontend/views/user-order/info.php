@@ -73,10 +73,14 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
         <p class="title">支付成功！</p>
         <p class="tip">您可以在<a href="/user-info?myOrderManager"> 个人中心-我的订单 </a>查看您的订单状态</p>
         <p>分享这条随游</p>
-        <ul class="share">
-            <li><b class="icon sina"></b>
-                <b class="icon weixin"></b></li>
-        </ul>
+            <ul class="share">
+                <li>
+                    <div class="bdsharebuttonbox" data-tag="share_1">
+                        <a data-cmd="tsina" href="javascript:;" class="icon sina"></a>
+                        <a data-cmd="weixin" href="javascript:;" class="icon weixin"></a>
+                    </div>
+                </li>
+            </ul>
         <a href="/user-info?myOrderManager" class="btn">确定</a>
     </div>
     <?php } ?>
@@ -194,5 +198,20 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
 
         });
     }
+
+    window._bd_share_config = {
+        common : {
+            bdText : '随游网-<?=htmlspecialchars($travelInfo['info']['intro'])?>',
+            bdDesc : '随游网-<?=htmlspecialchars($travelInfo['info']['title'])?>',
+            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip='.$travelInfo['info']['tripId'];?>&',
+            bdPic : '<?=$travelInfo['info']['titleImg']?>'
+        },
+        share : [{
+            "bdSize" : 16
+        }]
+    }
+
+    //以下为js加载部分
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
 
 </script>

@@ -437,20 +437,17 @@ transition:all 0.4s ease-in-out;
 #checkOut .check p span b{  color:#FF7A4D; }
 
 #checkOut .yuding{ height:auto; position:relative; background:#fff; margin:15px 0; padding:40px 0;}
-#checkOut .yuding .con{ text-align:center; height:auto; margin:0 auto;}
-#checkOut .yuding .con li{  width:100%;}
-#checkOut .yuding .con li img{ margin:0 30px;}
+#checkOut .yuding .con{  height:auto; margin:0 auto; width:240px;}
+#checkOut .yuding .con li{  width:100%; position:relative;  }
+#checkOut .yuding .con li img:nth-child(1){ margin-right:100px;}
 
-#checkOut .yuding .con li input{ height:0; width:0; opacity:0;}
+#checkOut .yuding .con li input{ height:0; width:0; opacity:0; position:absolute;}
 #checkOut .yuding .con li input+label{background: url("../images/check.png") no-repeat scroll 0 10px rgba(0, 0, 0, 0);
     display: inline-block;
     height: 36px;
     line-height: 36px;
-    padding-left: 20px;
-	margin-right:10px;
-	}
-	
-#checkOut .yuding .con li input+label.zb{ margin-right:93px;}	
+    padding-left: 20px;}
+#checkOut .yuding .con li input+label.zb{ margin-left:29px; margin-right:144px;}	
 #checkOut .yuding p{ font-size:14px; width:200px; line-height:21px; margin:0 auto;}
 #checkOut .yuding .btn{ height:36px; line-height:36px; width:95px; display:block; background:#97CBFF; color:#FFEB80; font-size:16px; position:absolute; right:0; bottom:0; text-align:center;}
 
@@ -460,7 +457,7 @@ transition:all 0.4s ease-in-out;
 #checkOut .finish .title{ font-size:20px; margin-bottom:30px; }
 #checkOut .finish .tip{ margin-bottom:40px; }
 
-#checkOut .finish .share{ width:150px; margin:20px auto;}
+#checkOut .finish .share{ width:185px; margin:20px auto;}
 #checkOut .finish .icon{background: url("../images/footer-icon.png") no-repeat 0 -252px;
     cursor: pointer;
     display: block;
@@ -585,11 +582,11 @@ transition:all 0.4s ease-in-out;
 .syTop .banner .banner-inner .btn{ width:80px; height:40px; text-align:center; line-height:40px; position:absolute; right:20px; bottom:10px; color:#f00; background:#FF0; z-index:2;}
 .syTop .user{height:245px; text-align:center; position:relative; margin-top:-60px; }
 .syTop .user .userPic{ height:120px; width:120px; display:block; margin:0 auto; border-radius:120px; overflow:hidden; box-shadow:0 0 5px rgba(0,0,0,0.3);
--webkit-transition:transform 1s ease-in-out;
--moz-transition:transform 1s ease-in-out;
--ms-transition:transform 1s ease-in-out;
--o-transition:transform 1s ease-in-out;
-transition:transform 1s ease-in-out;
+-webkit-transition:1s;
+-moz-transition:1s;
+-ms-transition:1s;
+-o-transition:1s;
+transition:1s;
 
 }
 .syTop .user .userPic:hover{ -webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg);}
