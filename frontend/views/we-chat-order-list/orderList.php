@@ -124,7 +124,9 @@ var jsApiParameters;
             jsApiParameters,
             function(res){
                 WeixinJSBridge.log(res.err_msg);
-                //alert(res.err_code+res.err_desc+res.err_msg);
+                var url ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/order-manage";
+                window.location.href=url;
+                    //alert(res.err_code+res.err_desc+res.err_msg);
             }
         );
     }

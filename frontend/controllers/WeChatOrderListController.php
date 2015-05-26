@@ -9,6 +9,7 @@
 namespace frontend\controllers;
 
 
+use common\components\Aes;
 use common\components\Code;
 use common\entity\WeChatOrderList;
 use common\entity\WeChatOrderRefund;
@@ -246,6 +247,17 @@ class WeChatOrderListController extends WController {
     public function actionBinding()
     {
         return $this->renderPartial('binding');
+    }
+
+    public function actionShowOrder()
+    {
+        $orderNumber=Yii::$app->request->get('o');
+
+        $v=Aes::decrypt($a,"suiuu9527",128);
+        echo $v;
+        $data = $this->orderListSer->getWeChatOrderListByOrderNumber($orderNumber);
+
+        return $this->renderPartial('showOrder',['val'=>$data]);
     }
 
     public function actionShowRefund()

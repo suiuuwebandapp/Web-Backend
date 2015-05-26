@@ -76,4 +76,8 @@ class WeChatOrderList{
      * @var微信id
      */
     public $openId;
+    /**
+     * @var价钱
+     */
+    public $wMoney;
 }

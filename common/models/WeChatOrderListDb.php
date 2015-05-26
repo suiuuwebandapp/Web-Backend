@@ -107,7 +107,18 @@ WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
         $this->setSql($sql);
         return $this->find($page);
     }
-
+    public function getWeChatOrderListByOrderNumber($wOrderNumber)
+    {
+        $sql=sprintf("
+        SELECT wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,wMoney,wDetails
+        FROM wechat_order_list a
+        LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
+WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
+        return $command->queryOne();
+    }
    /* public function updateWeChatOrderInfo(WeChatOrderList $weChatOrderList){
         $sql = sprintf("
             UPDATE wechat_order_list SET
