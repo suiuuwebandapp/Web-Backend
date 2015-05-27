@@ -57,7 +57,11 @@ class PayReturnController extends Controller {
 
             //交易状态
             $trade_status = $_POST['trade_status'];
-            logResult($out_trade_no."-".$trade_no."-".$trade_status);
+            /**
+             * 交易金额
+             */
+            $money=$_POST['total_fee'];
+            logResult($out_trade_no."-".$trade_no."-".$trade_status."-".$money);
 
             if($_POST['trade_status'] == 'TRADE_FINISHED') {
                 //判断该笔订单是否在商户网站中已经做过处理
@@ -82,6 +86,18 @@ class PayReturnController extends Controller {
 
                 //调试用，写文本函数记录程序运行情况是否正常
                 //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
+                if($_POST['extra_common_param']=="1"){
+                    try{
+                        //微信订定制
+                        $weChatOrderSer=new WeChatOrderListService();
+                        $weChatOrderSer->orderPayEnd($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_ALIPAY,$money);
+
+                        echo "success";		//请不要修改或删除
+                    }catch (Exception $e){
+                        //验证失败
+                        echo "fail";
+                    }
+                }else{
                 try{
                     $userPayService=new UserPayService();
                     $rst=$userPayService->addUserPay($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_ALIPAY,UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS);
@@ -93,6 +109,7 @@ class PayReturnController extends Controller {
                 }catch (Exception $e){
                     //验证失败
                     echo "fail";
+                }
                 }
             }
 

@@ -113,18 +113,15 @@ class AlipayCreateApi {
 
 
     }
-    public function createWxOrder($userSign,WeChatOrderList $orderInfo)
+    public function createWxOrder(WeChatOrderList $orderInfo)
     {
         $o = Aes::encrypt($orderInfo->wOrderNumber,"suiuu9527",128);
-        $this->notify_url=\Yii::$app->params['base_dir']."/pay-return/wxOrder-return?type=1";
+        $this->notify_url=\Yii::$app->params['base_dir']."/pay-return/alipay-return";
         $this->out_trade_no=$orderInfo->wOrderNumber;
         $this->subject=htmlspecialchars($orderInfo->wOrderSite);
-        $this->price=$orderInfo->wMoney;
+        $this->total_fee=$orderInfo->wMoney;
         $this->body=htmlspecialchars($orderInfo->wOrderContent);;//暂时写成随游详情 详情内容中不能有空格等参数
         $this->show_url=\Yii::$app->params['base_dir']."/we-chat-order-list/show-order?o=".$o;
-        //$this->receive_name=htmlspecialchars($userBase->nickname);
-        //$this->receive_mobile=$userBase->phone;
-
 
         $alipayConfig=new AlipayConfig();
         $alipay_config=$alipayConfig->alipay_config;
@@ -135,7 +132,7 @@ class AlipayCreateApi {
 
         //构造要请求的参数数组，无需改动
         $parameter = array(
-            "service" => "create_partner_trade_by_buyer",
+            "service" => "create_direct_pay_by_user",
             "partner" => trim($alipay_config['partner']),
             "seller_email" => trim($alipay_config['seller_email']),
             "payment_type"	=> $this->payment_type,
@@ -143,28 +140,19 @@ class AlipayCreateApi {
             "return_url"	=> $this->return_url,
             "out_trade_no"	=> $this->out_trade_no,
             "subject"	=> $this->subject,
-            "price"	=> $this->price,
-            "quantity"	=> $this->quantity,
-            "logistics_fee"	=> $this->logistics_fee,
-            "logistics_type"	=> $this->logistics_type,
-            "logistics_payment"	=> $this->logistics_payment,
+            "total_fee"	=> $this->total_fee,
             "body"	=> $this->body,
             "show_url"	=> $this->show_url,
-            "receive_name"	=> $this->receive_name,
-            "receive_address"	=> $this->receive_address,
-            "receive_zip"	=> $this->receive_zip,
-            "receive_phone"	=> $this->receive_phone,
-            "receive_mobile"	=> $this->receive_mobile,
+            "anti_phishing_key"	=> $this->anti_phishing_key,
+            "exter_invoke_ip"	=> $this->exter_invoke_ip,
+            "extra_common_param"=>"1",
             "_input_charset"	=> trim(strtolower($alipay_config['input_charset']))
         );
-
-
         //建立请求
 
         $alipaySubmit = new AlipaySubmit($alipay_config);
         $html_text = $alipaySubmit->buildRequestForm($parameter,"get", "正在提交订单，请稍后。。。");
         echo $html_text;
-
 
     }
 

@@ -64,7 +64,7 @@
                 <div class="down clearfix">
                     <p><?php echo $val['wDetails'];?></p>
                 </div>
-                <b class="money"><?php $val['wMoney']?></b>
+                <b class="money">￥ <?php echo $val['wMoney'];?></b>
                 <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
                     <a href="/we-chat-order-list/show-refund?o=<?php echo $val['wOrderNumber']?>" class="btn payback">申请退款</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
@@ -82,9 +82,9 @@
 <div class="order_pay clearfix">
     <p>选择支付方式</p>
     <div class="select clearfix">
-        <a href="#" class="zfb"></a>
-        <a href="#" class="wei"></a>
-        <a href="#" class="btn">取消</a>
+        <a href="javascript:;" class="zfb" onclick="aliPayUrl()"></a>
+        <a href="javascript:;" class="wei" onclick="payUrl()"></a>
+        <a href="javascript:;" class="btn">取消</a>
     </div>
 </div>
 <script>
@@ -115,54 +115,30 @@
 
 </script>
 <script type="text/javascript">
-var jsApiParameters;
-    //调用微信JS api 支付
-    function jsApiCall()
-    {
-        WeixinJSBridge.invoke(
-            'getBrandWCPayRequest',
-            jsApiParameters,
-            function(res){
-                WeixinJSBridge.log(res.err_msg);
-                var url ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/order-manage";
-                window.location.href=url;
-                    //alert(res.err_code+res.err_desc+res.err_msg);
-            }
-        );
-    }
-
+    var urlR="";
+    var urlA="";
     function callpay(orderNumber)
     {
-        var url ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?n="+orderNumber;
-        window.location.href=url;
-        /*$.ajax({
-            url :'<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?n='+orderNumber,
-            type:'get',
-            data:{
-            },
-            error:function(obj){
-                alert('异常');
-            },
-            success:function(data){
-                data=eval("("+data+")");
-                if(data.status==1){
-                    jsApiParameters=data.data;
-                    if (typeof WeixinJSBridge == "undefined"){
-                        if( document.addEventListener ){
-                            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
-                        }else if (document.attachEvent){
-                            document.attachEvent('WeixinJSBridgeReady', jsApiCall);
-                            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
-                        }
-                    }else{
-                        jsApiCall();
-                    }
-                }else {
-                    alert(data.data);
-                }
-            }
-        });*/
-
+        urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?n="+orderNumber;
+        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/ali-pay-url?o="+orderNumber;
+    }
+    function payUrl()
+    {
+        if(urlR=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlR;
+    }
+    function aliPayUrl()
+    {
+        if(urlA=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlA;
     }
 </script>
 </body>

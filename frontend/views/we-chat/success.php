@@ -14,7 +14,7 @@
 <div class="con finish clearfix">
     <img src="/assets/other/weixin/images/logo01.png" class="logo">
     <p>&nbsp;&nbsp;<?php echo $str?></p>
-
+    <a href="<?php echo $url;?>" class="btn"><?php if(isset($str2)){echo $str2;}?></a>
 </div>
 
 

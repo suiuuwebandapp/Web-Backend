@@ -3,7 +3,7 @@
 
 body{ background:#eee;font-size:0.85rem;}
 nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6e6e6e; display:block; color:#fff; font-size:1rem; max-width:640px;margin:0 auto }
-.con{ padding:0 1%; max-width:640px; margin:0 auto;}
+.con{ padding:0 1%; width:100%; max-width:640px; margin:0 auto; position:relative;}
 .bgwhite{ background:#fff;}
 
 /*-----------注册-------------*/
@@ -116,6 +116,9 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 /*-----------成功页-------------*/
 .finish .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
 .finish p{ text-align:center; }
+.finish .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:6rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
+.finish .btn:hover{ text-decoration:underline;}
+
 
 /*-----------国家-------------*/
 .country{ position:relative;}
@@ -144,6 +147,20 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .Remoney02 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:7rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
 .Remoney02 .btn:hover{ text-decoration:underline;}
 
+/*----------leader------------*/
+.leader .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
+.leader p{ text-align:center;margin-top:10px; }
+
+.leader .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:7rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
+.leader .btn:hover{ text-decoration:underline;}
+
+.mask{ position:absolute; top:0; left:0; background:rgba(0,0,0,0.9); height:100%; width:100%;}
+.maskCon{position:absolute; top:0; left:0; width:100%; height:100%; }
+.maskCon .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:2rem; }
+.maskCon p{ text-align:center; color:#fff; margin-top:10px;}
+
+.maskCon .tip{ width:5rem; height:6rem;display:block; position:absolute; top:2rem; right:0.5rem; }
+.maskCon p{ text-align:center; }
 
 
 

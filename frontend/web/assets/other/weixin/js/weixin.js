@@ -11,6 +11,33 @@ $(function(){
         $('.order_pay').animate({height:'0'},500);
     });
 
-
-
 })
+
+/*-----------浮层--------------*/
+$(function(){
+	var h=$(window).height();
+	var w=$(window).width();
+	$('.mask').height(h).width(w);
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

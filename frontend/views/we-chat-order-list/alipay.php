@@ -12,13 +12,17 @@
 <body class="bgwhite">
 <div class="con Remoney02 clearfix">
         <img src="/assets/other/weixin/images/logo01.png" class="logo">
-        <p>感谢您对随游的信任，我们将会在48小时之内与您取得联系，您也可以在 随游服务号“预定-订单管理”板块查看您所提交需求的最新动态。</p>
+        <p>请在浏览器中打开该页</p>
         <a href="<?php echo $url;?>" class="btn"><?php if(isset($str2)){echo $str2;}?></a>
 
 </div>
-
-
-
-
+<div class="mask"></div>
+<div class="maskCon">
+    <div class="con clearfix">
+        <img src="/assets/other/weixin/images/logo02.png" class="logo">
+        <p>请在浏览器中打开该页</p>
+        <img src="/assets/other/weixin/images/leader.fw.png" class="tip">
+    </div>
+</div>
 </body>
 </html>

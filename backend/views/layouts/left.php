@@ -116,7 +116,36 @@
                     </li>
                 </ul>
             </li>
-
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-globe"></i>
+                    <span class="title"> 微信消息</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#"> 添加消息</a>
+                    </li>
+                    <li>
+                        <a href="#"  class="left_menu_link"> 消息列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-camera"></i>
+                    <span class="title"> 微信定制</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#~/wechat/order"> 定制列表
+                    </li>
+                    <li>
+                        <a href="#~/"  class="left_menu_link"> 消息列表</a>
+                    </li>
+                </ul>
+            </li>
             <!--
             <li class="menu_top">
                 <a href="javascript:;">

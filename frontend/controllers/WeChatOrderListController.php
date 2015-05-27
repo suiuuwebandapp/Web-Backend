@@ -13,6 +13,7 @@ use common\components\Aes;
 use common\components\Code;
 use common\entity\WeChatOrderList;
 use common\entity\WeChatOrderRefund;
+use common\pay\alipay\create\AlipayCreateApi;
 use frontend\components\Page;
 use frontend\services\WeChatOrderListService;
 use frontend\services\WeChatOrderRefundService;
@@ -251,15 +252,70 @@ class WeChatOrderListController extends WController {
 
     public function actionShowOrder()
     {
-        $orderNumber=Yii::$app->request->get('o');
+        $a=Yii::$app->request->get('o');
 
         $v=Aes::decrypt($a,"suiuu9527",128);
-        echo $v;
-        $data = $this->orderListSer->getWeChatOrderListByOrderNumber($orderNumber);
-
+        $data = $this->orderListSer->getWeChatOrderListByOrderNumber($v);
         return $this->renderPartial('showOrder',['val'=>$data]);
     }
 
+    public function actionAliPay()
+    {
+        if($this->is_weixin())
+        {
+            return $this->renderPartial('alipay',['str2'=>'返回','url'=>"javascript:history.go(-1);"]);
+        }
+        $c=Yii::$app->request->get('c');
+        $v=Aes::decrypt($c,"alipay9527",128);
+        $arr= explode('_',$v);
+        if(!isset($arr[1])){
+            return $this->renderPartial('showOrder',['val'=>null]);
+        }else
+        {
+            $userSign = $arr[0];
+            $orderNumber = $arr[1];
+            $data = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+            if(empty($data)||$data==false)
+            {
+                return $this->renderPartial('showOrder',['val'=>null]);
+            }
+        }
+        if($data['wStatus']!=WeChatOrderList::STATUS_PROCESSED)
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "不是可支付订单"));
+        }
+
+        $orderEntity=new WeChatOrderList();
+        $orderEntity->wOrderNumber=$data['wOrderNumber'];
+        $orderEntity->wMoney=$data['wMoney'];
+        $orderEntity->wOrderSite=$data['wOrderSite'];
+        $orderEntity->wOrderContent=$data['wOrderContent'];
+        $alipayCreateApi=new AlipayCreateApi();
+        $alipayCreateApi->createWxOrder($orderEntity);
+    }
+
+    public function actionAliPayUrl()
+    {
+        /*$userSign="abb760a0ea093d829f7916b2a7a9f3ce";
+        $orderNumber='wx2015052152515398';*/
+        $this->loginValidJson();
+        $userSign=$this->userObj->userSign;
+        $orderNumber=Yii::$app->request->get('o');
+        if(empty($userSign))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "用户名不能为空"));
+        }
+        if(empty($orderNumber))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单号不能为空"));
+        }
+        $str=$userSign."_".$orderNumber;
+        $c=Aes::encrypt($str,"alipay9527",128);
+
+        $url= Yii::$app->params['base_dir']."/we-chat-order-list/ali-pay?c=".urlencode($c);
+        echo $url;
+        header("location: " . $url);
+    }
     public function actionShowRefund()
     {
         $orderNumber=Yii::$app->request->get('o');
@@ -268,5 +324,13 @@ class WeChatOrderListController extends WController {
 
     public function actionTest()
     {
+    }
+    private function is_weixin()
+    {
+
+        if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false) {
+            return true;
+        }
+        return false;
     }
 }

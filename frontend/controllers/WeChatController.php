@@ -250,7 +250,7 @@ class WeChatController extends SController
                 {
                     $this->weChatSer->bindingWeChatByUnionID($userBase->userSign,$userInfo->unionID);
                     $this->wRefresh($userInfo->openId);
-                    return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
+                    return $this->renderPartial('success',['title'=>'绑定成功','str'=>'绑定成功','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
                 }
             }else
             {
@@ -300,7 +300,7 @@ class WeChatController extends SController
                 $user=$userBaseService->addUser($userBase);
                 $this->weChatSer->bindingWeChatByUnionID($user->userSign,$userInfo->unionID);
                 $this->wRefresh($userInfo->openId);
-                return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
+                return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
             }else
             {
                 $c=Yii::$app->request->get('c');
@@ -334,8 +334,9 @@ class WeChatController extends SController
             $rst=$this->accessLogin($userInfo->unionID,UserAccess::ACCESS_TYPE_WECHAT,$userInfo->v_nickname,$sex,$userInfo->v_headimgurl);
             if($rst['status']==Code::SUCCESS)
             {
+                $this->weChatSer->bindingWeChatByUnionID($rst['data']->userSign,$userInfo->unionID);
               $this->wRefresh($userInfo->openId);
-                return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功']);
+                return $this->renderPartial('success',['title'=>"注册成功",'str'=>'注册成功','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
             }else
             {
                 return $this->renderPartial('errorHint', array('str1'=>'微信登陆错误'.$rst['data'],'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));

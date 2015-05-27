@@ -172,12 +172,8 @@ class AppLoginController extends SController{
         \Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
 
         $rst = null;
-        if ($areaCode == "0086" || $areaCode == "+86") {
-            $smsUtils = new SmsUtils();
-            $rst = $smsUtils->sendPasswordSMS($phone, $code);
-        } else {
-
-        }
+        $smsUtils = new SmsUtils();
+        $rst = $smsUtils->sendMessage($phone,$areaCode, $code,SmsUtils::SEND_MESSAGE_TYPE_PASSWORD);
         echo json_encode($rst);
     }
     public function actionAppRegister()
