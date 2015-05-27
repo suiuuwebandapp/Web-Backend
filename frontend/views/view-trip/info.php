@@ -642,6 +642,9 @@
                         str+='<img src=\"'+obj.data[i].headImg+'\" alt=\"\">';
                         str+='<span class=\"user-name\">';
                         str+=obj.data[i].nickname;
+                        if(obj.data[i].travelCount>0){
+                            str+='<b>玩过该路线</b>';
+                        }
                         str+="</span></div><p class='fl'><b>";
                         str+=r;
                         str+="</b>";

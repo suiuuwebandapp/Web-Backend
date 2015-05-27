@@ -53,8 +53,8 @@
 <!--zl Begin-->
 <div class="zl-banner tanchuBtn clearfix" id="img" onclick="showOld(<?php $id=isset($onList['articleId'])?$onList['articleId']:0;echo $id; ?>)">
     <div class="con w1200 clearfix">
-        <h3 class="data"><?php if(empty($onList)){echo '暂无最新专栏';}else{$str=isset($onList['title'])?$onList['title']:'';echo $str;}?></h3>
-        <h4 class="tit"><?php if(empty($onList)){echo '暂无最新专栏';}else{$str=isset($onList['name'])?$onList['name']:'';echo $str;}?></h4>
+        <h3 style="cursor: pointer" class="data"><?php if(empty($onList)){echo '暂无最新专栏';}else{$str=isset($onList['title'])?$onList['title']:'';echo $str;}?></h3>
+        <h4 style="cursor: pointer" class="tit"><?php if(empty($onList)){echo '暂无最新专栏';}else{$str=isset($onList['name'])?$onList['name']:'';echo $str;}?></h4>
     </div>
 </div>
 <!--zl END-->

@@ -18,7 +18,7 @@ return [
     'sms_account_sid'=>'8a48b5514cc55d22014cc62a9ba1010f',
     'sms_account_token'=>'1e257f0958bc4e14b7d1748e31505ae9',
     'sms_account_app_id'=>'8a48b5514ce46cb8014cf89dd7d00ebf',
-    'sms_account_server_ip'=>'sandboxapp.cloopen.com',
+    'sms_account_server_ip'=>'app.cloopen.com',
     'sms_account_server_port'=>'8883',
     'sms_account_soft_version'=>'2013-12-26',
 

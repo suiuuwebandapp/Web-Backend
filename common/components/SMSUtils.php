@@ -93,9 +93,9 @@ class SmsUtils
             //param 模板Id $tempId (测试为1)
             $tempId=1;
             if($type==self::SEND_MESSAGE_TYPE_REGISTER){
-                $tempId = 1;
+                $tempId = 20723;
             }else if($type==self::SEND_MESSAGE_TYPE_PASSWORD){
-                $tempId = 1;
+                $tempId = 20724;
             }
 
             // 发送模板短信

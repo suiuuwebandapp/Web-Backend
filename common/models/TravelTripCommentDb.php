@@ -78,15 +78,24 @@ class TravelTripCommentDb extends ProxyDb
     {
 
         $sql=sprintf("
-        FROM travel_trip_comment a
-LEFT JOIN user_base c ON c.userSign=a.userSign
-LEFT JOIN (SELECT * FROM user_attention bd WHERE bd.userSign=:userSign AND bd.relativeType=:rType ) b ON a.commentId=b.relativeId
-WHERE a.tripId=:tripId AND c.`status`=1 ORDER BY a.commentId DESC
+            FROM travel_trip_comment a
+            LEFT JOIN user_base c ON c.userSign=a.userSign
+            LEFT JOIN (SELECT * FROM user_attention bd WHERE bd.userSign=:userSign AND bd.relativeType=:rType ) b ON a.commentId=b.relativeId
+            LEFT JOIN
+            (
+                SELECT userId,count(orderId) as travelCount FROM user_order_info WHERE userId=:userSign AND tripId=:tripId
+                AND
+                (
+                  status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS . "
+                  OR status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
+                )
+            ) AS o ON o.userId=a.userSign
+            WHERE a.tripId=:tripId AND c.`status`=1 ORDER BY a.commentId DESC
         ");
         $this->setParam("tripId", $tripId);
         $this->setParam("userSign", $userSign);
         $this->setParam("rType", UserAttention::TYPE_COMMENT_FOR_TRAVEL);
-        $this->setSelectInfo('a.commentId,a.rTitle,a.content,b.`status`,c.nickname,c.headImg,c.userSign,a.isTravel');
+        $this->setSelectInfo('a.commentId,a.rTitle,a.content,b.`status`,c.nickname,c.headImg,c.userSign,a.isTravel,o.travelCount');
         $this->setSql($sql);
         return $this->find($page);
     }
@@ -113,7 +122,7 @@ WHERE a.tripId=:tripId AND c.`status`=1 ORDER BY a.commentId DESC
 
         $sql = sprintf("
             UPDATE  travel_trip_comment SET
-              supportCount=:supportCount,opposeCount=:opposeCount
+            supportCount=:supportCount,opposeCount=:opposeCount
             WHERE commentId=:commentId
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -150,9 +159,9 @@ WHERE a.tripId=:tripId AND c.`status`=1 ORDER BY a.commentId DESC
     public function getCommentTripId($page,$userSign)
     {
         $sql=sprintf("
-        FROM travel_trip_comment a
-LEFT JOIN travel_trip b ON a.tripId=b.tripId
-WHERE a.userSign=:userSign  GROUP BY a.tripId
+            FROM travel_trip_comment a
+            LEFT JOIN travel_trip b ON a.tripId=b.tripId
+            WHERE a.userSign=:userSign  GROUP BY a.tripId
         ");
         $this->setParam("userSign", $userSign);
         $this->setSelectInfo('b.title,b.titleImg,b.tripId,b.score');
@@ -164,8 +173,8 @@ WHERE a.userSign=:userSign  GROUP BY a.tripId
     public function getCommentUserAndTrip($page,$userSign,$tripId)
     {
         $sql=sprintf("
-        FROM travel_trip_comment a
-WHERE a.userSign=:userSign AND a.tripId=:tripId
+            FROM travel_trip_comment a
+            WHERE a.userSign=:userSign AND a.tripId=:tripId
         ");
         $this->setParam("userSign", $userSign);
         $this->setParam("tripId", $tripId);
@@ -174,14 +183,14 @@ WHERE a.userSign=:userSign AND a.tripId=:tripId
     }
 
     //根据用户得到评论
-    public function getCommentByUser($page,$userSign)
+    public function getCommentByUser($page, $userSign)
     {
-        $sql=sprintf("
-         FROM travel_trip_comment a
-         LEFT JOIN user_base d ON d.userSign =a.userSign
-        LEFT JOIN travel_trip b ON a.tripId=b.tripId
-        LEFT JOIN user_base c ON c.userSign=a.rUserSign
-        WHERE a.userSign = :userSign OR a.rUserSign=:rSign ORDER BY a.commentId DESC
+        $sql = sprintf("
+            FROM travel_trip_comment a
+            LEFT JOIN user_base d ON d.userSign =a.userSign
+            LEFT JOIN travel_trip b ON a.tripId=b.tripId
+            LEFT JOIN user_base c ON c.userSign=a.rUserSign
+            WHERE a.userSign = :userSign OR a.rUserSign=:rSign ORDER BY a.commentId DESC
         ");
         $this->setParam("userSign", $userSign);
         $this->setParam("rSign", $userSign);
