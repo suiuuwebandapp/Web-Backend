@@ -195,4 +195,33 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
         }
         return $command->execute();
     }
+
+
+    public function getWeChatOrderList($page,$searchName,$status,$isDel,$searchPhone)
+    {
+        $sql=sprintf("
+        FROM wechat_order_list a
+        LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
+        LEFT JOIN user_base c ON a.wUserSign=c.userSign WHERE 1=1
+        ");
+        if(!empty($searchName)){
+            $sql.=" AND (b.nickName like :search OR ,c.nickName like :search ) ";
+            $this->setParam("search","%".$searchName."%");
+        }
+        if(!empty($searchPhone)){
+            $sql.=" AND (wPhone like :wPhone ) ";
+            $this->setParam("wPhone","%".$searchPhone."%");
+        }
+        if(!empty($status)){
+            $sql.=" AND status=:status ";
+            $this->setParam("status",$status);
+        }
+        if(!empty($isDel)){
+            $sql.=" AND isDel=:isDel ";
+            $this->setParam("isDel",$isDel);
+        }
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,wMoney,wDetails,c.headImg as rHeadImg,c.nickName as rNickName');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
 }

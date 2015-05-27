@@ -139,7 +139,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="#~/wechat/order"> 定制列表
+                        <a href="#~/wechat-order/list"> 定制列表
                     </li>
                     <li>
                         <a href="#~/"  class="left_menu_link"> 消息列表</a>

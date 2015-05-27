@@ -46,13 +46,14 @@
 <div class="container">
     <div class="page page0 clearfix cur">
         <div class="top clearfix">
-            <img src="/assets/other/weixin/images/oneZ01.png">
-            <img src="/assets/other/weixin/images/oneZ02.png">
-            <img src="/assets/other/weixin/images/oneZ03.png">
+            <img src="/assets/other/weixin/images/oneZ01.jpg">
+            <img src="/assets/other/weixin/images/oneZ02.jpg">
+            <img src="/assets/other/weixin/images/oneZ03.jpg">
         </div>
         <div class="down">
             <img src="/assets/other/weixin/images/oneZ04.png">
         </div>
+        <a href="/we-chat-order-list/order-view" class="swp"></a>
     </div>
     <div class="page page1 clearfix">
         <div class="ball">
@@ -62,7 +63,7 @@
             <img src="/assets/other/weixin/images/page2Q04.png">
         </div>
         <div class="AdTv">
-            <img src="/assets/other/weixin/images/page2Bg.png" class="Tv">
+            <img src="/assets/other/weixin/images/page2Bg.jpg" class="Tv">
             <img src="/assets/other/weixin/images/page2Zi.png" class="zi">
         </div>
         <div class="water">
@@ -100,7 +101,7 @@
     </div>
     <div class="page page4 clearfix">
         <div class="top">
-            <img src="/assets/other/weixin/images/page5Sun.png" class="sun">
+            <img src="/assets/other/weixin/images/page5Sun.jpg" class="sun">
             <img src="/assets/other/weixin/images/page5Sun01.png"  class="zi">
         </div>
         <div class="down">

@@ -12,6 +12,7 @@
 </head>
 
 <body>
+<a href="/we-chat-order-list/order-view" class="fixedBtn">添加订单</a>
 <div class="con sy_order clearfix">
     <?php foreach($list as $val){
         if(empty($val['wRelativeSign'])||$val['wStatus']==\common\entity\WeChatOrderList::STATUS_NORMAL){

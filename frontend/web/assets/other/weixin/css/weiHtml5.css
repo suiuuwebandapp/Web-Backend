@@ -5,7 +5,7 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
 .container .page{height:100%; width:100%;position:relative;margin:0 auto; max-width:640px;}
 
 /*---------page0--------------*/
-.container .page0{background:#fff url(../images/page1Bg.png) no-repeat center 0; background-size:100% 100%;}
+.container .page0{background:#fff url(../images/page1Bg.jpg) no-repeat center 0; background-size:100% 100%;}
 .container .page0 .top{ width:12rem; margin:0 auto; margin-top:3rem; height:13rem; position:relative; }
 .container .page0 .top img{width:7.75rem; height:auto; position:absolute;opacity:0;}
 .container .page0 .top img:nth-child(1){ left:-7.75rem; top:0;
@@ -51,6 +51,8 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
 	-o-animation-delay:0.8s;
 	animation-delay:0.8s;
 }
+.container .page0 .swp{ width:3.85rem; height:2.71rem; background:url(../images/swp.png) no-repeat center center; background-size:3.85rem 2.71rem; display:block; position:absolute; right:20px; bottom:20px;}
+
 /*---------page0--end------------*/
 .container .page1 .ball{ width:10rem;margin:0 auto; margin-top:3rem; height:10.5rem; position:relative; z-index:7; }
 .container .page1 .ball img{ position:absolute;left:10rem; top:11rem;  width:0rem; opacity:0; }
@@ -129,7 +131,7 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
 	
 }
 
-.container .page2{ background:url(../images/page3Bg.png) no-repeat center 0; background-size:100% 100%;}
+.container .page2{ background:url(../images/page3Bg.jpg) no-repeat center 0; background-size:100% 100%;}
 .container .page2 .top{ margin:4rem auto 0; width:15rem; height:10rem;  position:relative; }
 .container .page2 .top img{position:absolute; display:block;  width:0; top:11rem; opacity:0;}
 
@@ -179,7 +181,7 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
 }
 
 
-.container .page3{ background:url(../images/page4Bg.png) no-repeat center 0; background-size:100% 100%;}
+.container .page3{ background:url(../images/page4Bg.jpg) no-repeat center 0; background-size:100% 100%;}
 .container .page3 .top{ margin:5rem auto 0; width:12.5rem; height:12.5rem;  position:relative; }
 .container .page3 .top img{ position:absolute; display:block; opacity:0;}
 .container .page3 .top img:nth-child(1){ width:10.28rem; top:10rem; left:50%; margin-left:-5.09rem;
@@ -231,7 +233,7 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
  animation:roll 4s infinite linear;	
 }
 
-.container .page4{background:url(../images/page5Bg.png) no-repeat center 0; background-size:100% 100%;}
+.container .page4{background:url(../images/page5Bg.jpg) no-repeat center 0; background-size:100% 100%;}
 .container .page4 .top{ width:13rem; height:6.6rem; margin:3rem auto 0; position:relative; }
 .container .page4 .top img{ display:block; position:absolute; }
 .container .page4 .top .sun{ top:0; right:0; width:5.3rem; position:absolute;}

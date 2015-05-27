@@ -13,7 +13,7 @@ namespace frontend\controllers;
 use frontend\services\CountryService;
 use common\components\Aes;
 use common\components\Code;
-use common\components\SmsUtils;
+use common\components\SMSUtils;
 use common\entity\UserAccess;
 use common\entity\UserBase;
 use frontend\components\ValidateCode;
@@ -147,6 +147,8 @@ class AppLoginController extends SController{
     {
         $areaCode=\Yii::$app->request->post('areaCode');
         $phone=\Yii::$app->request->post('phone');
+        /*$phone='17701085674';
+        $areaCode="";*/
         if(empty($phone))
         {
             echo json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
