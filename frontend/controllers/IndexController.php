@@ -875,6 +875,9 @@ class IndexController extends UnCController
         }else{
             $userBase= clone $this->userObj;
             $userPublisher=$this->userBaseService->findUserPublisherByUserSign($userBase->userSign);
+            if($userPublisher==null){
+                $userPublisher=new UserPublisher();
+            }
         }
         $userBase->nickname=$nickname;
 
@@ -1106,6 +1109,14 @@ class IndexController extends UnCController
             $emailTime = $tempTime > Code::USER_REGISTER_TIMER ? 0 : Code::USER_REGISTER_TIMER - $tempTime;
         }
         return $emailTime;
+    }
+
+
+    public function actionError()
+    {
+        return $this->render("error",[
+           'message'=>'系统异常'
+        ]);
     }
 
 

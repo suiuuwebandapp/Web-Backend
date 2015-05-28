@@ -45,8 +45,28 @@ class URL{
      * @return string           请求返回的内容
      */
     public function get_contents($url){
+        $response=null;
         if (ini_get("allow_url_fopen") == "1") {
-            $response = file_get_contents($url);
+//            $opts=[
+//                'http'=>[
+//                    'method'=>'GET',
+//                    'timeout'=>10
+//                ]
+//            ];
+//            $context=stream_context_create($opts);
+//            $cnt=0;
+//            while($cnt<3&&$response = @file_get_contents($url,false,$context)===false){
+//                $cnt++;
+//            }
+            $opts=[
+                'http'=>[
+                    'method'=>'GET',
+                    'timeout'=>30
+                ]
+            ];
+            $context=stream_context_create($opts);
+            $response = @file_get_contents($url,false,$context);
+
         }else{
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
