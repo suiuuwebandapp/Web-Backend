@@ -27,10 +27,10 @@
             <div class="portlet-body flip-scroll" id="table_div">
                 <div class="table-info-form">
                     <form id="datatables_form" onsubmit="return false;">
-                        <div class="col-md-7 input-group ">
-                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入订单号 或 用户昵称 或 手机号">
-                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态：</label>
-                                <select name="status" class="form-control input-medium">
+                        <div class="col-md-12 input-group ">
+                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入订单号 或 用户昵称 或 手机号" >
+                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态</label>
+                                <select name="status" class="form-control input-medium" >
                                     <option value="0">全部</option>
                                     <option value="1">未处理</option>
                                     <option value="2">未支付</option>
@@ -52,8 +52,6 @@
                         <th>城市</th>
                         <th>时间</th>
                         <th>人数</th>
-                        <th>需求</th>
-                        <th>详情</th>
                         <th>金钱</th>
                         <th>用户</th>
                         <th>负责人</th>
@@ -93,10 +91,12 @@
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "wOrderNumber","bSortable": false},
+                {"targets": [0],"data": "wOrderNumber",
+                    "width":"120px","bSortable": false},
                 {
                     "targets": [1],
                     "data": "wOrderSite",
+                    "width":"120px",
                     "bSortable": false,
                     "render": function(data, type, full) {
                         if(data==null)
@@ -109,6 +109,7 @@
                 {
                     "targets": [2],
                     "data": "wOrderTimeList",
+                    "width":"120px",
                     "bSortable": false,
                     "render": function(data, type, full) {
                         if(data==null)
@@ -131,42 +132,34 @@
                         return data.length<10?data:data.substring(0,10);
                     }
                 },
-                {
-                    "targets": [4],"data": "wOrderContent","bSortable": false,"width":"180px",
+
+                {"targets": [4],"data": "wMoney","bSortable": false,"width":"50px",
                     "render": function(data, type, full) {
-                        return data.length<10?data:data.substring(0,10);
+                        return data;
                     }
                 },
-                {
-                    "targets": [5],
-                    "data": "wDetails",
-                    "bSortable": false,
-                    "width":"200px",
+                {"targets": [5],"data": "nickName","bSortable": false,
+                    "width":"80px",
                     "render": function(data, type, full) {
                         if(data==null)
                         {
                             return "";
                         }
-                        return data.substring(0,10);
+                        return data.length<10?data:data.substring(0,10);
                     }
                 },
-                {"targets": [6],"data": "wMoney","bSortable": false,"width":"50px",
+                {"targets": [6],"data": "rNickName","bSortable": false,
+                    "width":"80px",
                     "render": function(data, type, full) {
-                        return data;
-                    }
-                },
-                {"targets": [7],"data": "nickName","bSortable": false,
-                    "render": function(data, type, full) {
-                        return data;
-                    }
-                },
-                {"targets": [8],"data": "rNickName","bSortable": false,
-                    "render": function(data, type, full) {
-                        return data;
+                        if(data==null)
+                        {
+                            return "";
+                        }
+                        return data.length<10?data:data.substring(0,10);
                     }
                 },
                 {
-                    "targets": [9],
+                    "targets": [7],
                     "data": "wStatus",
                     "bSortable": false,
                     "width":"100px",
@@ -191,10 +184,10 @@
                     }
                 },
                 {
-                    "targets": [10],
+                    "targets": [8],
                     "data": "wOrderNumber",
                     "bSortable": false,
-                    "width":"200px",
+                    "width":"300px",
                     "render": function(data, type, full) {
                         var html='';
 

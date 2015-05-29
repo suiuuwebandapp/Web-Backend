@@ -108,11 +108,11 @@
                     </div>
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="col-md-3 control-label">负责人手机</label>
+                            <label class="col-md-3 control-label">负责人</label>
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="rPhone" value="<?=$info['rPhone']?>" class="form-control" placeholder="请输入负责人手机" maxlength="30" required/>
+                                    <input type="text" id="rPhone" value="<?=$info['rPhone']?>" class="form-control" placeholder="请输入负责人手机或邮箱" maxlength="30" required/>
                                 </div>
                             </div>
                         </div>

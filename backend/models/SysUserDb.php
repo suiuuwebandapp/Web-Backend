@@ -135,13 +135,14 @@ class SysUserDb extends ProxyDb
         return $command->queryOne();
     }
 
-    public function findUserByPhone($phone)
+    public function findUserByPhoneOrMail($str)
     {
         $sql=sprintf("
-            SELECT * FROM user_base WHERE phone=:phone;
+            SELECT * FROM user_base WHERE phone=:phone OR email=:email
         ");
         $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":phone", $phone, PDO::PARAM_STR);
+        $command->bindParam(":phone", $str, PDO::PARAM_STR);
+        $command->bindParam(":email", $str, PDO::PARAM_STR);
         return $command->queryOne();
     }
 

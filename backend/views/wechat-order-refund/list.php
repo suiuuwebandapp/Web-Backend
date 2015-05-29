@@ -94,6 +94,7 @@
                     "targets": [2],
                     "data": "refundReason",
                     "bSortable": false,
+                    "width":"150px",
                     "render": function(data, type, full) {
                         if(data==null)
                         {

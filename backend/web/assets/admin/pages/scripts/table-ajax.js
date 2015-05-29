@@ -30,7 +30,7 @@ var TableAjax = function () {
 	            "dom" : "<'row'<'col-md-6 col-sm-12'><'col-md-12 col-sm-12'f>r>t<'row'<'col-md-3 col-sm-12'l><'col-md-4 col-sm-12'i><'col-md-5 col-sm-12'p>>", //default layout without horizontal scroll(remove this setting to enable horizontal scroll for the table)
 		        "processing": true,
 		        "serverSide": true,
-		        "stateSave" : true,
+		        "stateSave" : false,
 		        "pagingType": "bootstrap",
 		        "bAutoWidth":false,
 		        "bFilter"   :false,

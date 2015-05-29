@@ -87,7 +87,7 @@ class WechatOrderController extends CController {
             return json_encode(Code::statusDataReturn(Code::FAIL,"订单已经处理过"));
         }
         $userSer = new SysUserService();
-        $user = $userSer->findUserByPhone($rPhone);
+        $user = $userSer->findUserByPhoneOrMail($rPhone);
         if(empty($user)||empty($user->userSign))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL,"未知用户"));

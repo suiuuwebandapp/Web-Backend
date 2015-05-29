@@ -98,13 +98,13 @@ class SysUserService extends BaseDb
     }
 
 
-    public function findUserByPhone($phone)
+    public function findUserByPhoneOrMail($phone)
     {
         $sysUser=null;
         try {
             $conn = $this->getConnection();
             $this->sysUserDb = new SysUserDb($conn);
-            $result = $this->sysUserDb->findUserByPhone($phone);
+            $result = $this->sysUserDb->findUserByPhoneOrMail($phone);
             $sysUser=$this->arrayCastObject($result,SysUser::class);
         } catch (Exception $e) {
             throw new Exception(Code::SYS_SYSTEM_EXCEPTION,Code::FAIL,$e);
