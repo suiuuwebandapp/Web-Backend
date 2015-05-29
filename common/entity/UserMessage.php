@@ -32,4 +32,6 @@ class UserMessage {
 
     public $isRead;
 
+    public $isRefused;
+
 }

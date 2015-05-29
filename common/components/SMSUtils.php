@@ -97,6 +97,7 @@ class SmsUtils
             }else if($type==self::SEND_MESSAGE_TYPE_PASSWORD){
                 $tempId = 20724;
             }
+            $tempId=20766;
 
             // 发送模板短信
             $result = $this->rest->sendTemplateSMS($to, $datas, $tempId);
@@ -201,6 +202,7 @@ class SmsUtils
      */
     public function sendMessage($phone,$areaCode,$code,$type)
     {
+        $ip = $_SERVER["REMOTE_ADDR"];
         try{
             if(empty($phone)){
                 throw new Exception("Phone Is Not Allow Empty");
@@ -213,6 +215,16 @@ class SmsUtils
             }
 
             $areaCode=trim(str_replace("+","",$areaCode));
+            $ipCount=\Yii::$app->redis->get(Code::USER_SEND_MESSAGE_IP.$ip);
+            if(empty($ipCount)){
+                \Yii::$app->redis->set(Code::USER_SEND_MESSAGE_IP . $ip, 1);
+                \Yii::$app->redis->expire(Code::USER_SEND_MESSAGE_IP . $ip, Code::USER_SEND_MESSAGE_IP_EXPIRE_TIME);
+            }else{
+                if($ipCount>Code::USER_SEND_MESSAGE_IP_COUNT){
+                    return Code::statusDataReturn(Code::FAIL,"IP 超出发送次数");
+                }
+                \Yii::$app->redis->set(Code::USER_SEND_MESSAGE_IP . $ip, ++$ipCount);
+            }
             if($areaCode=='0086'||$areaCode=='86'){
                 return $this->sendChinaSMS($phone,$code,$type);
             }else{

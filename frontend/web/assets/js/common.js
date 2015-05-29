@@ -3,7 +3,7 @@
 
 
 
-/*-----登录注册checkUI-----*/
+/*-----checkUI-----*/
 
 $(function(){
 		//$('input[type=checkbox]').prop('checked','')
@@ -46,86 +46,30 @@ $(function(){
 		}else{
 			$('.nav-out,.header').css('box-shadow','none')
 		}
-		
-		
         
     });
-	
-
 
 })
 
 /*----nav-index登录、注册弹框-----*/
 
-
 $(function(){
 	$('.nav-out .nav-right ol .zhuces #zhuce').click(function(e) {
-        $('#zhuce-main').toggle();
-        $('.nav-out .nav-right ol .logins').children('#denglu-main').css('display','none');
-        $('#zhuce-main02').css('display','none');
-    });
-	$('.nav-out .nav-right ol .logins #denglu').click(function(e) {
-        $('#denglu-main').toggle();
-        $('.nav-out .nav-right ol .zhuces').children('#zhuce-main,#zhuce-main02').css('display','none');
+        $('.myLogins .a1').addClass('active');
+        $('.myLogins .a2,.myLogins .a3').removeClass('active');
+        $('.mask,.myLogins').toggle();
+        $('.myLogins .box1').css('display','block').siblings().css('display','none');
 		
     });
-	
-
+	$('.nav-out .nav-right ol .logins #denglu').click(function(e) {
+        $('.myLogins .a2').addClass('active');
+        $('.myLogins .a1,.myLogins .a3').removeClass('active');
+        $('.mask,.myLogins').toggle();
+        $('.myLogins .box2').css('display','block').siblings().css('display','none');
+    });
 
 })
 
-
-
-/*$(function(){
-	$('.nav-out .nav-right ol li:eq(1)').hover(function(e) {
-        $(this).children('#zhuce-main').css('display','block');
-    },function(){
-        $(this).children('#zhuce-main').css('display','none');
-        $(this).children('#zhuce-main02').css('display','none');
-    
-    
-    });
-	$('.nav-out .nav-right ol li:eq(2)').hover(function(e) {
-        $(this).children('#denglu-main').css('display','block');
-    },function(){
-        $(this).children('#denglu-main').css('display','none');
-    
-    
-    });
-
-
-})
-*/
-
-
-
-
-/*$(function(){
-	$('.nav-out .nav-right ol #zhuce').click(function(e) {
-        $('.nav-out .nav-right ol #zhuce-main').toggle();
-        $('.nav-out .nav-right ol #denglu-main').css('display','none');
-    });
-	$('.nav-out .nav-right ol #denglu').click(function(e) {
-        $('.nav-out .nav-right ol #denglu-main').toggle();
-        $('.nav-out .nav-right ol #zhuce-main').css('display','none');
-    });
-
-
-})
-*/
-
-/*---nav--注册方式切换弹框-----*/
-$(function(){
-	$('#zhuce-main .tab-title01').click(function(e) {
-        $(this).parent('').css('display','none').siblings().css('display','block')
-    });
-	$('#zhuce-main02 .tab-title02').click(function(e) {
-        $(this).parent('').css('display','none').siblings().css('display','block')
-    });
-
-
-
-})
 
 /*---header--top 搜索-----*/
 $(function(){
@@ -228,7 +172,7 @@ $(function(){
 /*-----专栏qq分享-----*/
 $(function(){
 	$('#fenxiang').click(function(e) {
-        $(this).children('#other-line').toggle()
+        $('#other-line').toggle()
     });
 
 })

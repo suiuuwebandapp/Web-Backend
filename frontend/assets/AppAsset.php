@@ -22,6 +22,7 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'assets/js/common.js',
+        'assets/js/myTab.js',
         'assets/js/main.js'
     ];
     public $depends = [

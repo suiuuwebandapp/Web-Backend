@@ -33,12 +33,14 @@ class UserMessageService extends BaseDb
      */
     public function addUserMessage(UserMessage $userMessage)
     {
-        $conn=$this->getConnection();
-        $tran=$conn->beginTransaction();
+
         //系统不能作为消息的收信人
         if($userMessage->receiveId==Code::USER_SYSTEM_MESSAGE_ID){
             throw new Exception("Invalid User System Message");
         }
+        $receiveSetting=$this->findUserMessageSettingByUserId($userMessage->receiveId);
+        $conn=$this->getConnection();
+        $tran=$conn->beginTransaction();
         try{
 
             $senderKey=$this->getMessageSessionKey($userMessage->senderId,$userMessage->receiveId);
@@ -47,16 +49,37 @@ class UserMessageService extends BaseDb
             $userMessage->sessionKeyOne=$senderKey;
             $userMessage->sessionKeyTwo=$receiveKey;
 
-            $this->userMessageDb=new UserMessageDb($conn);
-            $userMessageSession=$this->userMessageDb->findUserMessageSessionByKey($senderKey);
-            if($userMessageSession==null||$userMessageSession === false){
-                $userMessageSession=new UserMessageSession();
-                $userMessageSession->sessionKey=$senderKey;
-                $userMessageSession->senderId=$userMessage->senderId;
-                $userMessageSession->receiveId=$userMessage->receiveId;
-                $userMessageSession->lastContentInfo=$userMessage->content;
-                $userMessageSession->isRead=false;
 
+            $this->userMessageDb=new UserMessageDb($conn);
+            $refuseFlag=false;//是否屏蔽接受消息
+            if($receiveSetting->status==UserMessageSetting::USER_MESSAGE_SETTING_STATUS_ALLOW_ALL){
+                if(!empty($receiveSetting->shieldIds)){
+                    $shieldArr=explode(",",$receiveSetting->shieldIds);
+                    if(in_array($userMessage->senderId,$shieldArr)){$refuseFlag=true;}
+                }
+            }else if($receiveSetting->status==UserMessageSetting::USER_MESSAGE_SETTING_STATUS_REFUSE_ALL){
+                $refuseFlag=true;
+            }
+            $userMessage->isRefused=$refuseFlag;
+            if(!$refuseFlag){
+                $sendMessageSession=$this->userMessageDb->findUserMessageSessionByKey($senderKey);
+                //发信人 Session
+                if($sendMessageSession==null||$sendMessageSession === false){
+                    $userMessageSession=new UserMessageSession();
+                    $userMessageSession->sessionKey=$senderKey;
+                    $userMessageSession->senderId=$userMessage->senderId;
+                    $userMessageSession->receiveId=$userMessage->receiveId;
+                    $userMessageSession->lastContentInfo=$userMessage->content;
+                    $userMessageSession->isRead=false;
+
+                    $this->userMessageDb->addUserMessageSession($userMessageSession);
+                }else{
+                    $this->userMessageDb->updateUserMessageSession($senderKey,$userMessage->content,false);
+                }
+            }
+            $receiveMessageSession=$this->userMessageDb->findUserMessageSessionByKey($receiveKey);
+            //收信人 Session
+            if($receiveMessageSession==null||$receiveMessageSession === false){
                 $userMessageSessionTwo=new UserMessageSession();
                 $userMessageSessionTwo->sessionKey=$receiveKey;
                 $userMessageSessionTwo->senderId=$userMessage->receiveId;
@@ -64,14 +87,9 @@ class UserMessageService extends BaseDb
                 $userMessageSessionTwo->lastContentInfo=$userMessage->content;
                 $userMessageSessionTwo->isRead=true;
 
-                $this->userMessageDb->addUserMessageSession($userMessageSession);
                 $this->userMessageDb->addUserMessageSession($userMessageSessionTwo);
-
             }else{
-
-                $this->userMessageDb->updateUserMessageSession($senderKey,$userMessage->content,false);
                 $this->userMessageDb->updateUserMessageSession($receiveKey,$userMessage->content,true);
-
             }
 
             $this->userMessageDb->addUserMessage($userMessage);
@@ -239,8 +257,34 @@ class UserMessageService extends BaseDb
             $this->userMessageDb->updateUserMessageRead($sessionKey,$userSign);
             $this->userMessageDb->updateUserMessageSessionRead($sessionKey);
             $list=$this->userMessageDb->getUserMessageListByKey($userSign,$sessionKey);
+            $tempMessage=null;
+            $refusedFlag=false;
+            $newList=[];
+            if($list!=null&&count($list)>0){
+                $tempMessage=$list[0];
+            }
+            $messageSetting=$this->userMessageDb->findUserMessageSettingByUserId($userSign);
+            if($messageSetting['status']==UserMessageSetting::USER_MESSAGE_SETTING_STATUS_ALLOW_ALL){
+                if(!empty($messageSetting['shieldIds'])){
+                    $shieldArr=explode(",",$messageSetting['shieldIds']);
+                    if($tempMessage!=null&&in_array($tempMessage['senderId'],$shieldArr)){
+                        $refusedFlag=true;
+                    }
+                    var_dump($tempMessage                            );exit;
+                }
+            }else{
+                $refusedFlag=true;
+            }
+
+            foreach($list as $message){
+                if($refusedFlag==false){
+                    $newList[]=$message;
+                }else if($message['isRefused']==true){
+                    $newList[]=$message;
+                }
+            }
             $this->commit($tran);
-            return $list;
+            return $newList;
         }catch (Exception $e){
             $this->rollback($tran);
             throw $e;

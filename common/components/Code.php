@@ -67,6 +67,10 @@ class Code
     const USER_REGISTER_EMAIL_TIMER='U_R_E_T';//用户注册邮件时间控制
     const USER_REGISTER_PHONE_TIMER='U_R_P_T';//用户注册手机时间控制
 
+    const USER_SEND_MESSAGE_IP='U_S_M_I';//IP发送验证码次数 前缀
+    const USER_SEND_MESSAGE_IP_COUNT='20';//IP发送验证码限制次数20
+    const USER_SEND_MESSAGE_IP_EXPIRE_TIME='86400';//IP发送验证码限制时间(24小时)
+
 
     const TRAVEL_TRIP_TAG_PREFIX='T_T_T_P';
     const USER_COMMENT_SUPPORT='USER_COMMENT_SUPPORT';

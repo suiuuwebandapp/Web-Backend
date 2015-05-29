@@ -530,7 +530,6 @@
 
 </script>
 
-<script type="text/javascript" src="/assets/js/myTab.js"></script>
 <script type="text/javascript" src="/assets/plugins/imgAreaSelect/js/jquery.imgareaselect.js" ></script>
 <script type="text/javascript" src="/assets/plugins/jquery-uploadifive/jquery.uploadifive.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" ></script>

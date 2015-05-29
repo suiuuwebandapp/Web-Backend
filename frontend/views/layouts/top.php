@@ -23,6 +23,19 @@
     #unReadSystemMessageList a{
         height: auto;
     }
+    .select2-container .select2-choice{
+        height: 40px !important;
+    }
+    .myLogins .select2-container .select2-choice>.select2-chosen{
+        color: #858585;
+    }
+    .myLogins .select2-container .select2-choice>.select2-chosen:hover{
+        color: #858585;
+    }
+    .myLogins .down .rows .agreen{
+        font-size: 12px;
+        margin: 0px;
+    }
 </style>
 <?php if (isset($this->context->userObj)) { ?>
     <!--header开始-->
@@ -95,88 +108,15 @@
             <div class="nav-right">
                 <ol>
                     <li class="zhuces"><a href="javascript:;" id="zhuce">注册</a>
-
-                        <div id="zhuce-main">
-                            <a href="#" class="tab-title tab-title01">邮箱注册</a>
-                            <p class="m-20"><label>国家</label>
-                                <select id="codeId_top" name="countryIds" class="areaCodeSelect_top" required>
-                                <option value=""></option>
-                                <?php if($this->context->countryList!=null){ ?>
-                                <?php foreach ($this->context->countryList as $c) { ?>
-                                    <?php if(empty($c['areaCode'])){continue;} ?>
-                                    <?php if ($c['areaCode'] == $this->context->areaCode) { ?>
-                                        <option selected
-                                                value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
-                                    <?php } ?>
-                                <?php } ?>
-                                <?php } ?>
-                            </select></p>
-                            <p class="m-20"><label>手机号</label><input id="phone_top" type="text" value="" maxlength="30"></p>
-                            <p><label>密码</label><input id="phone_password_top" type="password" value=""></p>
-                            <p class="shuaxin"><input type="text" value="" id="phoneCode_top"><font><a href="javascript:;" id="getCodePhoneRegister">获取验证码</a></font></p>
-                            <p class="zidong"><a href="javascript:;" class="xieyi">网站注册协议</a>
-                                <input type="checkbox" id="zhuce-check01">
-                                <label for="zhuce-check01" class="check">同意</label></p>
-                            <a href="javascript:;" class="btn01" id="phoneRegister">注 册</a>
-                            <div class="out-p clearfix">
-                                <a href="/access/connect-weibo" class="logo-icon icon01"></a>
-                                <a href="/access/connect-wechat" class="logo-icon icon02"></a>
-                                <a href="/access/connect-qq" class="logo-icon icon03"></a>
-                            </div>
-
-                        </div>
-                        <div id="zhuce-main02">
-                            <a href="#" class="tab-title tab-title02">手机注册</a>
-
-                            <p class="m-20"><label>邮箱</label><input type="text" value="" id="regEmail"></p>
-
-                            <p><label>密码</label><input type="password" value="" id="regEmailPwd"></p>
-
-                            <p class="shuaxin" id="emailTime"><input type="button" value="发送成功，"/></p>
-
-                            <p class="zidong"><a href="javascript:;" class="xieyi">网站注册协议</a>
-                                <input type="checkbox" value="同意" id="zhuce-check02">
-                                <label for="zhuce-check02" class="check">同意</label>
-                            </p>
-                            <a href="javascript:;" class="btn01" id="emailRegister">注 册</a>
-                            <div class="out-p clearfix"><a href="#" class="logo-icon icon01"></a>
-                                <a href="#" href="#" class="logo-icon icon03"></a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="logins"><a href="javascript:;" id="denglu">登录</a>
-
-                        <div id="denglu-main">
-                            <p><label>邮箱/手机号</label><input type="text" value="" id="username"> </p>
-
-                            <p><label>密码</label><input type="password" value="" id="userpassword"></p>
-
-                            <p class="fogot"><a href="/index/password-send-code">忘记密码</a></p>
-                            <div id="code9527" class="form-group" style="padding-bottom: 20px;display: none">
-                                <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
-                            </div>
-                            <p class="zidong">
-                                <input type="checkbox" id="logo-check" value="自动登录" />
-                                <label for="logo-check" class="check">自动登录</label>
-                            </p>
-
-                            <a href="#" class="btn01" onclick="login()" id="login-check">立即登录</a>
-
-                            <div class="out-p clearfix">
-                                <a href="/access/connect-weibo" class="logo-icon icon01"></a>
-                                <a href="/access/connect-wechat" class="logo-icon icon02"></a>
-                                <a href="/access/connect-qq" class="logo-icon icon03"></a>
-                            </div>
-                        </div>
-                    </li>
-                </ol>
-                <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy" id="search-ipt"></p><a href="javascript:;" class="search-btn"></a></div>
-            </div>
-        </div>
-    </div>
-    <!--nav end-->
+                   </li>
+                   <li class="logins"><a href="javascript:;" id="denglu">登录</a>
+                 </li>
+             </ol>
+             <div class="search-out"><p class="search"><input type="text" value="" class="text-xqy" id="search-ipt"></p><a href="javascript:;" class="search-btn"></a></div>
+         </div>
+     </div>
+ </div>
+ <!--nav end-->
 
 <?php } ?>
 
@@ -193,7 +133,6 @@
     $(document).ready(function(){
         initEmailTimer();
         initPhoneRegister();
-        initDocumentClick();
         initTopMessage();
         initBreadcrumb();
         $("#userpassword").keypress(function(e){
@@ -253,41 +192,6 @@
             $("#unReadSystemMessageList").show();
         });
     }
-
-    function initDocumentClick(){
-        $(document).bind("click",function(e){
-            var target = $(e.target);
-            if(target.closest("#suiuu-btn1").length != 1){
-                if(target.closest(".xit-sz").length == 0){
-                    $(".xit-sz").hide();
-                }
-            }
-            if(target.closest("#suiuu-btn2").length != 1){
-                if(target.closest(".my-suiuu").length == 0){
-                    $(".my-suiuu").hide();
-                }
-            }
-
-
-            if(target.closest("#zhuce").length != 1){
-                if(target.closest("#zhuce-main").length == 0&&target.closest("#zhuce-main02").length == 0){
-                    $("#zhuce-main").hide();
-                    $("#zhuce-main02").hide();
-                }
-            }
-
-            if(target.closest("#denglu").length != 1){
-                if(target.closest("#denglu-main").length == 0){
-                    $("#denglu-main").hide();
-                }
-            }
-
-        });
-    }
-
-
-
-
 
     function initUserMessageInfoList()
     {
@@ -431,7 +335,7 @@
         }else{
             $("#emailTime input").val("");
             $("#emailRegister").removeAttr("disabled");
-            $("#emailRegister").css("color","#ffeb81");
+            $("#emailRegister").css("color","white");
             $("#emailTime").hide();
             $("#emailRegister").unbind("click");
             $("#emailRegister").bind("click",function(){
@@ -448,10 +352,7 @@
         var email = $("#regEmail").val();
         var password = $("#regEmailPwd").val();
 
-        if(!$("#zhuce-check02").is(":checked")){
-            Main.showTip("请同意《网站注册协议》");
-            return;
-        }
+
         if(email.length>30||email.length<6){
             Main.showTip("邮箱长度必须在6~30个字符之间");
             return false;
@@ -467,7 +368,10 @@
             Main.showTip("密码长度必须在6~30个字符之间");
             return false;
         }
-
+        if(!$("#zhuce-check02").is(":checked")){
+            Main.showTip("请同意《服务协议、退款政策、版权声明、免责声明》");
+            return;
+        }
         $.ajax({
             type: 'post',
             url: '/index/send-email',
@@ -599,6 +503,7 @@
         var phone=$('#phone_top').val();
         var password=$('#phone_password_top').val();
         var areaCode = $("#codeId_top").val();
+        var valNum = $("#valNum").val();
 
         if(phone=='')
         {
@@ -609,6 +514,8 @@
         }else if(areaCode=='')
         {
             Main.showTip("国家区号不能为空");
+        }else if(valNum==''){
+            Main.showTip("请输入图形验证码");
         }else
         {
             $.ajax({
@@ -618,6 +525,7 @@
                     phone:phone,
                     password:password,
                     areaCode:areaCode,
+                    valNum:valNum,
                     _csrf: $('input[name="_csrf"]').val()
                 },
                 beforeSend: function () {
@@ -653,7 +561,7 @@
             Main.showTip('验证码不能为空');
         }else{
             if(!$("#zhuce-check01").is(":checked")){
-                Main.showTip("请同意《网站注册协议》");
+                Main.showTip("请同意《服务协议、退款政策、版权声明、免责声明》");
                 return;
             }
             $.ajax({
@@ -693,7 +601,8 @@
     $(document).ready(function () {
         //初始化区号选择
         $(".areaCodeSelect_top").select2({
-            'width':'174px',
+            'width':'288px',
+            'height':'40px',
             formatNoMatches: function () {
                 return "暂无匹配";
             }

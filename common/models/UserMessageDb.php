@@ -29,11 +29,11 @@ class UserMessageDb extends ProxyDb
         $sql=sprintf("
             INSERT INTO user_message
             (
-              sessionKeyOne,sessionKeyTwo,receiveId,senderId,url,content,sendTime,isRead
+              sessionKeyOne,sessionKeyTwo,receiveId,senderId,url,content,sendTime,isRead,isRefused
             )
             VALUES
             (
-              :sessionKeyOne,:sessionKeyTwo,:receiveId,:senderId,:url,:content,now(),FALSE
+              :sessionKeyOne,:sessionKeyTwo,:receiveId,:senderId,:url,:content,now(),FALSE,:isRefused
             )
         ");
 
@@ -45,6 +45,7 @@ class UserMessageDb extends ProxyDb
         $command->bindParam(":senderId", $userMessage->senderId, PDO::PARAM_STR);
         $command->bindParam(":content", $userMessage->content, PDO::PARAM_STR);
         $command->bindParam(":url", $userMessage->url, PDO::PARAM_STR);
+        $command->bindParam(":isRefused",$userMessage->isRefused, PDO::PARAM_INT);
 
         $command->execute();
     }
@@ -146,13 +147,6 @@ class UserMessageDb extends ProxyDb
         ");
         if(isset($isRead)){
             $sql.=" AND s.isRead=:isRead ";
-        }
-        if($status==UserMessageSetting::USER_MESSAGE_SETTING_STATUS_ALLOW_ALL){
-            if(!empty($unReadList)){
-                $sql.=" AND s.userId NOT IN (".$unReadList.")";
-            }
-        }else{
-            $sql.=" AND s.userId='".Code::USER_SYSTEM_MESSAGE_ID."' ";
         }
         $sql.=" ORDER BY s.isRead,s.lastConcatTime DESC ";
         $command=$this->getConnection()->createCommand($sql);

@@ -9,7 +9,6 @@
 
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
-<script type="text/javascript" src="/assets/js/myTab.js"></script>
 
 <style type="text/css">
     .select2-container .select2-choice {

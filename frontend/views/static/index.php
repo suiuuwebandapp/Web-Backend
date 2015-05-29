@@ -8,7 +8,6 @@
  */
 
 ?>
-<script type="text/javascript" src="/assets/js/myTab.js"></script>
 <style>
     body{
         background-color: #F7F7F7;

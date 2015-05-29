@@ -425,6 +425,8 @@ class IndexController extends UnCController
         $phone = \Yii::$app->request->post('phone');//发送给用户的手机
         $areaCode = \Yii::$app->request->post('areaCode');//区号
         $password = \Yii::$app->request->post('password');
+        $valNum=\Yii::$app->request->post("valNum");
+        $sysNum= \Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
         //$passwordConfirm = \Yii::$app->request->post('passwordConfirm');
         /*else if ($password != $passwordConfirm) {
             $error = '两次密码输入不一致';
@@ -437,6 +439,8 @@ class IndexController extends UnCController
             $error = '密码格式不正确';
         } else if (empty($areaCode)) {
             $error = '手机区号格式不正确';
+        }else if(empty($valNum)||$valNum!=$sysNum){
+            $error = '图形验证码输入有误';
         }
         if (!empty($error)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));

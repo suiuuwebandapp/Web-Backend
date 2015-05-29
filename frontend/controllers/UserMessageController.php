@@ -55,6 +55,7 @@ class UserMessageController extends  CController{
             $this->userMessageService->addUserMessage($userMessage);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            throw $e;
             echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
