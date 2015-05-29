@@ -62,9 +62,11 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .sy_order .box .down{ position:relative;}
 .sy_order .box .down p{  line-height:1.2rem; margin-top:10px; }
 .sy_order .box .money{ color:#FF8000; font-size:1rem; position:absolute;  bottom:0.7rem; right:5rem;}
+.sy_order .box .money.money2{ right:9rem;}
 .sy_order .box .btn{ text-decoration:none; position:absolute;  bottom:0.7rem; right:0.7rem;text-align:center; color:#fff; background:#FF8000; display:block; width:3.9rem; height:1.78rem; line-height:1.78rem;}
 .sy_order .box .btn:hover{ text-decoration:underline; }
-.sy_order .box .payback{ background:#73B9FF;}
+.sy_order .box .payback{ background:#73B9FF; right:5rem;}
+.sy_order .box .sure{ background:#ff8000;}
 .sy_order .box .paying{ background:#A8A8B7;}
 .sy_order .box .finish{ background:#A8A8B7;}
 

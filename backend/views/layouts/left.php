@@ -139,10 +139,10 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="#~/wechat-order/list"> 定制列表
+                        <a href="#~/wechat-order/list"> 定制列表</a>
                     </li>
                     <li>
-                        <a href="#~/"  class="left_menu_link"> 消息列表</a>
+                        <a href="#~/wechat-order-refund/list"  class="left_menu_link"> 退款列表</a>
                     </li>
                 </ul>
             </li>

@@ -169,7 +169,7 @@ class UserBaseDb extends ProxyDb
     public function findByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,
+            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,status,
             registerTime,lastLoginTime,userSign,isPublisher,cityId,countryId,lon,lat,profession
             FROM user_base WHERE userSign=:userSign
         ");

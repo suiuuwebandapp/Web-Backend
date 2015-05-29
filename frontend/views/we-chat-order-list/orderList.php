@@ -65,13 +65,24 @@
                 <div class="down clearfix">
                     <p><?php echo $val['wDetails'];?></p>
                 </div>
-                <b class="money">￥ <?php echo $val['wMoney'];?></b>
+                <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
+                    <b class="money money2">￥ <?php echo $val['wMoney'];?></b>
+                <?php }else{?>
+                    <b class="money ">￥ <?php echo $val['wMoney'];?></b>
+                <?php }?>
                 <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
                     <a href="/we-chat-order-list/show-refund?o=<?php echo $val['wOrderNumber']?>" class="btn payback">申请退款</a>
+                    <a href="javascript:;" class="btn sure" onclick="overOrder('<?php echo $val['wOrderNumber']?>')">确认游玩</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
                     <a href="javascript:;" class="btn pay" onclick="callpay('<?php echo $val['wOrderNumber']?>')">支付</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
                     <a href="javascript:;" class="btn finish">退款中</a>
+                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_END){?>
+                    <a href="javascript:;" class="btn finish">已结束</a>
+                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_FAL){?>
+                    <a href="javascript:;" class="btn finish">拒绝退款</a>
+                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_SUCCESS){?>
+                    <a href="javascript:;" class="btn finish">退款成功</a>
                 <?php }else{?>
                     <a href="javascript:;" class="btn finish">已结束</a>
                 <?php }?>
@@ -88,7 +99,32 @@
         <a href="javascript:;" class="btn">取消</a>
     </div>
 </div>
+
 <script>
+    function overOrder(orderNumber)
+    {
+        $.ajax({
+            url :'/we-chat-order-list/over-order',
+            type:'post',
+            data:{
+                o:orderNumber
+            },
+            error:function(){
+                alert("结束订购异常");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    alert(data.data);
+                    setTimeout(function(){location.reload()},1000);
+                }else if(data.status==-3){
+                    window.location.href=data.data;
+                }else{
+                    alert(data.data);
+                }
+            }
+        });
+    }
     function deleteOrder(orderNumber)
     {
         $.ajax({
@@ -113,7 +149,6 @@
             }
         });
     }
-
 </script>
 <script type="text/javascript">
     var urlR="";

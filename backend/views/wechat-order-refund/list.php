@@ -13,9 +13,9 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">定制列表</span>
+                    <span class="caption-subject font-red-sunglo bold uppercase">退款列表</span>
                             <span class="caption-helper">
-                                微信定制、定制旅行
+                                微信定制、退款列表
                             </span>
                 </div>
                 <div class="actions">
@@ -27,21 +27,13 @@
             <div class="portlet-body flip-scroll" id="table_div">
                 <div class="table-info-form">
                     <form id="datatables_form" onsubmit="return false;">
-                        <div class="col-md-7 input-group ">
-                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入订单号 或 用户昵称 或 手机号">
-                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态：</label>
-                                <select name="status" class="form-control input-medium">
-                                    <option value="0">全部</option>
-                                    <option value="1">未处理</option>
-                                    <option value="2">未支付</option>
-                                    <option value="3">已支付</option>
-                                    <option value="4">已游玩</option>
-                                    <option value="5">申请退款中</option>
-                                    <option value="6">退款结束</option>
-                                </select>
-                             <span class="input-group-btn" >
+                        <div class="input-group input-xlarge pull-left">
+                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入订单号 或 用户昵称 ">
+
+                                    <span class="input-group-btn">
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
-                            </span>
+                                    </span>
+
                         </div>
                     </form>
                 </div>
@@ -49,14 +41,12 @@
                     <thead class="flip-content">
                     <tr>
                         <th>订单号</th>
-                        <th>城市</th>
-                        <th>时间</th>
-                        <th>人数</th>
-                        <th>需求</th>
-                        <th>详情</th>
-                        <th>金钱</th>
-                        <th>用户</th>
-                        <th>负责人</th>
+                        <th>申请时间</th>
+                        <th>申请理由</th>
+                        <th>申请用户</th>
+                        <th>退款金额</th>
+                        <th>操作理由</th>
+                        <th>操作人</th>
                         <th>状态</th>
                         <th>操作</th>
                     </tr>
@@ -84,31 +74,25 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
-
         var tableInfo = {
             'formObj'  :'#datatables_form',
             'tableDiv' :'#table_div',
             'tableObj' :'#table_list',
-            'tableUrl' :'/wechat-order/get-list',
+            'tableUrl' :'/wechat-order-refund/get-list',
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "wOrderNumber","bSortable": false},
+                {"targets": [0],"data": "orderNumber",
+                    "width":"150px","bSortable": false},
                 {
                     "targets": [1],
-                    "data": "wOrderSite",
-                    "bSortable": false,
-                    "render": function(data, type, full) {
-                        if(data==null)
-                        {
-                            return "";
-                        }
-                        return data.length<10?data:data.substring(0,10);
-                    }
+                    "data": "refundTime",
+                    "width":"150px",
+                    "bSortable": false
                 },
                 {
                     "targets": [2],
-                    "data": "wOrderTimeList",
+                    "data": "refundReason",
                     "bSortable": false,
                     "render": function(data, type, full) {
                         if(data==null)
@@ -120,28 +104,9 @@
                 },
                 {
                     "targets": [3],
-                    "data": "wUserNumber",
+                    "data": "nickName",
                     "bSortable": false,
-                    "width":"50px",
-                    "render": function(data, type, full) {
-                        if(data==null)
-                        {
-                            return "";
-                        }
-                        return data.length<10?data:data.substring(0,10);
-                    }
-                },
-                {
-                    "targets": [4],"data": "wOrderContent","bSortable": false,"width":"180px",
-                    "render": function(data, type, full) {
-                        return data.length<10?data:data.substring(0,10);
-                    }
-                },
-                {
-                    "targets": [5],
-                    "data": "wDetails",
-                    "bSortable": false,
-                    "width":"200px",
+                    "width":"150px",
                     "render": function(data, type, full) {
                         if(data==null)
                         {
@@ -150,59 +115,55 @@
                         return data.substring(0,10);
                     }
                 },
-                {"targets": [6],"data": "wMoney","bSortable": false,"width":"50px",
+                {
+                    "targets": [4],
+                    "data": "money",
+                    "width":"100px",
+                    "bSortable": false
+                },
+                {
+                    "targets": [5],"data": "updateReason","bSortable": false,"width":"180px",
                     "render": function(data, type, full) {
-                        return data;
+                        if(data==null)
+                        {
+                            return "";
+                        }
+                        return data.length<10?data:data.substring(0,10);
                     }
                 },
-                {"targets": [7],"data": "nickName","bSortable": false,
-                    "render": function(data, type, full) {
-                        return data;
-                    }
-                },
-                {"targets": [8],"data": "rNickName","bSortable": false,
+                {"targets": [6],"data": "rName",
+                    "width":"150px","bSortable": false,
                     "render": function(data, type, full) {
                         return data;
                     }
                 },
                 {
-                    "targets": [9],
-                    "data": "wStatus",
+                    "targets": [7],
+                    "data": "status",
                     "bSortable": false,
-                    "width":"100px",
                     "render": function(data, type, full) {
                         var html='';
                         if(data==1){
                             html='<span class="label label-success">&nbsp;未处理&nbsp;</span>'
                         }else if(data==2) {
-                            html='<span class="label label-default">&nbsp;未支付&nbsp;</span>';
-                        }else if(data==3) {
-                            html='<span class="label label-default">&nbsp;已支付&nbsp;</span>';
-                        }else if(data==4) {
-                            html='<span class="label label-default">&nbsp;游玩结束&nbsp;</span>';
-                        }else if(data==5) {
-                            html='<span class="label label-success">&nbsp;申请退款中&nbsp;</span>';
-                        }else if(data==6) {
-                            html='<span class="label label-default">&nbsp;退款结束&nbsp;</span>';
-                        }else if(data==7) {
                             html='<span class="label label-default">&nbsp;拒绝退款&nbsp;</span>';
+                        }else if(data==3) {
+                            html='<span class="label label-default">&nbsp;已经退款&nbsp;</span>';
+                        }else {
+                            html='<span class="label label-default">&nbsp;未知&nbsp;</span>';
                         }
                         return html;
                     }
                 },
                 {
-                    "targets": [10],
-                    "data": "wOrderNumber",
+                    "targets": [8],
+                    "data": "orderNumber",
                     "bSortable": false,
                     "width":"200px",
                     "render": function(data, type, full) {
                         var html='';
-
                         html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>&nbsp;&nbsp;';
-                        if(full['wStatus']==3){
-                            html +='<a href="javascript:;" onclick="confirmOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 结束</a>';
-                        }
+                        html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
                     }
                 }
@@ -218,42 +179,16 @@
         });
     });
 
-    function confirmOrder(id)
-    {
-        Main.confirmTip("确认要结束此订单吗？",function(){
-            $.ajax({
-                type:"POST",
-                url:"/wechat-order/over-order",
-                data:{
-                    orderNumber:id
-                },beforeSend:function(){
-                    Main.showWait("#table_list");
-                },
-                error:function(){
-                    Main.errorTip("系统异常");
-                },
-                success:function(data){
-                    data=eval("("+data+")");
-                    Main.hideWait("#table_list");
-                    if(data.status==1){
-                        TableAjax.deleteRefresh();
-                        Main.successTip("结束订单成功");
-                    }else{
-                        Main.errorTip("结束订单失败");
-                    }
-                }
-            });
-        });
-    }
     function editOrder(id){
-        Main.refreshContentAjax("/wechat-order/edit?o="+id);
+        Main.refreshContentAjax("/wechat-order-refund/edit?o="+id);
     }
 
     function deleteOrder(id){
+
         Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
-                url:"/wechat-order/delete-order",
+                url:"/wechat-order-refund/delete-refund",
                 data:{
                     orderNumber:id
                 },beforeSend:function(){

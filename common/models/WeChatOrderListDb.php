@@ -197,31 +197,68 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
     }
 
 
-    public function getWeChatOrderList($page,$searchName,$status,$isDel,$searchPhone)
+    public function getWeChatOrderList($page,$searchText,$status,$isDel)
     {
         $sql=sprintf("
         FROM wechat_order_list a
         LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
-        LEFT JOIN user_base c ON a.wUserSign=c.userSign WHERE 1=1
+        LEFT JOIN user_base c ON a.wUserSign=c.userSign WHERE 1=1 AND isDel=:isDel
         ");
-        if(!empty($searchName)){
-            $sql.=" AND (b.nickName like :search OR ,c.nickName like :search ) ";
-            $this->setParam("search","%".$searchName."%");
-        }
-        if(!empty($searchPhone)){
-            $sql.=" AND (wPhone like :wPhone ) ";
-            $this->setParam("wPhone","%".$searchPhone."%");
+        if(!empty($searchText)){
+            $sql.=" AND (b.nickName like :search OR c.nickName like :search OR a.wPhone like :search OR a.wOrderNumber like :search ) ";
+            $this->setParam("search","%".$searchText."%");
         }
         if(!empty($status)){
-            $sql.=" AND status=:status ";
+            $sql.=" AND a.wStatus=:status ";
             $this->setParam("status",$status);
         }
-        if(!empty($isDel)){
-            $sql.=" AND isDel=:isDel ";
-            $this->setParam("isDel",$isDel);
-        }
-        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,wMoney,wDetails,c.headImg as rHeadImg,c.nickName as rNickName');
+        /*if(!empty($orderNumber)){
+            $sql.=" AND wOrderNumber=:wOrderNumber ";
+            $this->setParam("wOrderNumber",$orderNumber);
+        }*/
+        $this->setParam("isDel",$isDel);
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,c.headImg,c.nickName,wMoney,wDetails,b.headImg as rHeadImg,b.nickName as rNickName');
         $this->setSql($sql);
         return $this->find($page);
+    }
+    public function sysFindWeChatOrderInfoByNumber($wOrderNumber)
+    {
+        $sql = sprintf("
+           SELECT a.*,c.headImg,c.nickName,b.headImg as rHeadImg,b.nickName as rNickName,b.phone as rPhone
+            FROM wechat_order_list a
+            LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
+            LEFT JOIN user_base c ON a.wUserSign=c.userSign
+            WHERE wOrderNumber=:wOrderNumber AND isDel=FALSE
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
+
+        return $command->queryOne();
+    }
+    public function updateOrderInfo(WeChatOrderList $weChatOrderList){
+        $sql = sprintf("
+            UPDATE wechat_order_list SET
+            wMoney=:wMoney,wDetails=:wDetails,
+            wStatus=:wStatus,wRelativeSign=:wRelativeSign,wLastTime=now()
+            WHERE wOrderNumber=:wOrderNumber
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wMoney", $weChatOrderList->wMoney, PDO::PARAM_STR);
+        $command->bindParam(":wDetails", $weChatOrderList->wDetails, PDO::PARAM_STR);
+        $command->bindParam(":wStatus", $weChatOrderList->wStatus, PDO::PARAM_INT);
+        $command->bindParam(":wRelativeSign", $weChatOrderList->wRelativeSign, PDO::PARAM_STR);
+        $command->bindParam(":wOrderNumber", $weChatOrderList->wOrderNumber, PDO::PARAM_STR);
+        return $command->execute();
+    }
+    public function updateOrderRefund(WeChatOrderList $weChatOrderList){
+        $sql = sprintf("
+            UPDATE wechat_order_list SET
+            wStatus=:wStatus,wLastTime=now()
+            WHERE wOrderNumber=:wOrderNumber
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wStatus", $weChatOrderList->wStatus, PDO::PARAM_INT);
+        $command->bindParam(":wOrderNumber", $weChatOrderList->wOrderNumber, PDO::PARAM_STR);
+        return $command->execute();
     }
 }

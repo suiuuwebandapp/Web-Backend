@@ -172,6 +172,21 @@ class WeChatOrderListController extends WController {
         }
     }
 
+    public function actionOverOrder()
+    {
+
+        $this->loginValidJson();
+        $userSign=$this->userObj->userSign;
+        $orderNumber=Yii::$app->request->post('o');
+        $data = $this->orderListSer->updateOrderStatus($orderNumber,WeChatOrderList::STATUS_END,$userSign);
+        if($data==1)
+        {
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, "确认成功"));
+        }else{
+            return json_encode(Code::statusDataReturn(Code::FAIL, "确认异常"));
+        }
+    }
+
     public function actionApplyRefund()
     {
         $this->loginValidJson();

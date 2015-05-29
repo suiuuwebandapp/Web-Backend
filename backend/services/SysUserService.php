@@ -98,6 +98,21 @@ class SysUserService extends BaseDb
     }
 
 
+    public function findUserByPhone($phone)
+    {
+        $sysUser=null;
+        try {
+            $conn = $this->getConnection();
+            $this->sysUserDb = new SysUserDb($conn);
+            $result = $this->sysUserDb->findUserByPhone($phone);
+            $sysUser=$this->arrayCastObject($result,SysUser::class);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYS_SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+        return $sysUser;
+    }
     /**
      * 密码加密方法
      * @param $password

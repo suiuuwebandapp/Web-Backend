@@ -11,8 +11,9 @@ namespace common\entity;
 
 class WeChatOrderList{
 
-    const STATUS_REFUND_END=6;//结束
-    const STATUS_APPLY_REFUND=5;//申请退款
+    const STATUS_REFUND_FAL=7;//拒绝退款
+    const STATUS_REFUND_SUCCESS=6;//结束退款
+    const STATUS_APPLY_REFUND=5;//申请退款中
     const STATUS_END = 4;//游玩结束
     const STATUS_PAY_SUCCESS = 3;//状态：已支付
     const STATUS_PROCESSED = 2;//状态：已经处理待支付
