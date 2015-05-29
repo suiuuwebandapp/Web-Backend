@@ -175,6 +175,7 @@
     if(!empty($userPublisher)&&!empty($userPublisher->idCardImg)){
         $idCardImg=$userPublisher->idCardImg;
     }
+    $tab=$_SERVER['QUERY_STRING'];;
 ?>
 <input type="hidden" id="lon"/>
 <input type="hidden" id="lat"/>
@@ -204,12 +205,12 @@
 <div class="sycon w1200 clearfix">
     <!-----------con-nav-------------->
     <ul class="con-nav synav">
-        <li><a href="javascript:;"  class="active" id="myMessage">收件箱</a></li>
-        <li><a href="javascript:;" id="myComment">发言</a></li>
-        <li><a href="javascript:;" id="myCollect">收藏</a></li>
-        <li><a href="javascript:;" id="myOrderManager">我的预定</a></li>
-        <li><a href="javascript:;" id="tripManager">随游管理</a></li>
-        <li><a href="javascript:;" id="userInfo">个人资料</a></li>
+        <li><a href="javascript:;"  <?php if($tab==""||$tab=="myMessage"){echo "class='active'";};?> id="myMessage">收件箱</a></li>
+        <li><a href="javascript:;" <?php if($tab=="myComment"){echo "class='active'";};?> id="myComment">发言</a></li>
+        <li><a href="javascript:;" <?php if($tab=="myCollect"){echo "class='active'";};?> id="myCollect">收藏</a></li>
+        <li><a href="javascript:;" <?php if($tab=="myOrderManager"){echo "class='active'";};?> id="myOrderManager">我的预定</a></li>
+        <li><a href="javascript:;" <?php if($tab=="tripManager"){echo "class='active'";};?> id="tripManager">随游管理</a></li>
+        <li><a href="javascript:;" <?php if($tab=="userInfo"){echo "class='active'";};?> id="userInfo">个人资料</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
     <div class="tab-div myEmail TabCon clearfix" style="display:block">

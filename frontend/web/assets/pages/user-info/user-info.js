@@ -335,7 +335,7 @@ function rebuildMessageSessionList(list){
     list=list.reverse();
     var content='',tempSession='';
     for(var i=0;i<list.length;i++){
-        var html=''
+        var html='';
         tempSession=list[i];
         //如果未读会话已经存在，那么置顶 ，移除当前  如果不存在，那么置顶 移除最后一个
         var index=currentPageMessageSessionKeyList.indexOf(tempSession.sessionKey);
@@ -366,6 +366,9 @@ function rebuildMessageSessionList(list){
         html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
         html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
+        if(tempSession.userId!=SystemMessage.userId){
+            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.userId+'\')">屏蔽</b>';
+        }
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
         html+='</li>';
 
@@ -1025,7 +1028,7 @@ function buildMyTripHtml(tripList){
         if(info.length>100){
             info=info.substring(0,100)+"...";
         }
-        if(count!=''){ count='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a><b>'+count+'</b>'};
+        if(count!=''){ count='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请<b>'+count+'</b></a>'};
         html+='<div class="orderList clearfix">';
         html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+',this)">';
         html+=' <dl class="order clearfix">';
@@ -1091,7 +1094,7 @@ function buildMyJoinTripHtml(tripList){
     for(var i=0;i<tripList.length;i++){
         tripInfo=tripList[i];
         var count=tripInfo.count==null?'':tripInfo.count;
-        if(count!=''){ count='<a href="#" class="sure">新申请</a><b>'+count+'</b>'};
+        if(count!=''){ count='<a href="#" class="sure">新申请<b>'+count+'</b></a>'};
         html+='<div class="orderList clearfix">';
         html+=' <dl class="order clearfix">';
         html+='   <dt class="title">';
@@ -1778,7 +1781,7 @@ function initMyComment(page){
             if(result.status==1){
                 var l =  result.data.data.length;
                 if(l==0){
-                    $('#commentList_51').html('<p >您还没有收藏过随游哦~</p>');
+                    $('#commentList_51').html('<p>您还没有发言哦~</p>');
                     return;
                 }else{
                     $('#commentList_51').html('');
