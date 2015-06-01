@@ -10,16 +10,30 @@
 namespace backend\controllers;
 
 
+use backend\components\Page;
+use backend\components\TableResult;
+use backend\services\UserBaseService;
 use common\components\Code;
 use common\entity\UserBase;
 use common\entity\UserPublisher;
-use frontend\services\UserBaseService;
 use yii\base\Exception;
 
 class UserBaseController extends CController{
 
 
+    private $userBaserService;
 
+    public function __construct($id,$module)
+    {
+        $this->userBaserService=new UserBaseService();
+        parent::__construct($id, $module);
+
+    }
+
+    /**
+     * 添加系统随游
+     * @return string
+     */
     public function actionAddSysPublisher()
     {
         $nickname=trim(\Yii::$app->request->post("nickname",""));
@@ -48,13 +62,34 @@ class UserBaseController extends CController{
         $userPublisher=new UserPublisher();
 
 
-        $userBaseService=new UserBaseService();
+        $userBaseService=new \frontend\services\UserBaseService();
         try{
             $userBaseService->addUser($userBase,null,$userPublisher);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
         }
+    }
+
+
+
+    public function actionUserList()
+    {
+        $search=\Yii::$app->request->get("searchText","");
+
+        $page=new Page(\Yii::$app->request);
+
+        $page=$this->userBaserService->getUserBaseListByPage($page,$search);
+
+        $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());
+
+        echo json_encode($tableResult);
+    }
+
+
+    public function actionToUserList()
+    {
+        return $this->render("userList");
     }
 
 

@@ -22,7 +22,7 @@ use yii\base\Exception;
 use yii\web\Controller;
 
 
-class AccessController extends Controller
+class AccessController extends UnCController
 {
 
 
@@ -64,9 +64,20 @@ class AccessController extends Controller
         $openId=$userInfo['id'];
         $nickname=$userInfo['screen_name'];
         $headImg=$userInfo['avatar_large'];
+
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_SINA_WEIBO,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
-            return $this->redirect("/");
+            if($rst['data']!=null){
+                return $this->redirect("/");
+            }else{
+                return $this->render("accessRegister",[
+                    'openId'=>$openId,
+                    'type'=>UserAccess::ACCESS_TYPE_QQ,
+                    'nickname'=>$nickname,
+                    'sex'=>$sex,
+                    'headImg'=>$headImg
+                ]);
+            }
         }else{
             return $this->redirect("/error/access-error");
         }
@@ -101,12 +112,25 @@ class AccessController extends Controller
         $rst=$this->accessLogin($unionid,UserAccess::ACCESS_TYPE_WECHAT,$nickname,$sex,$headImg);
 
         if($rst['status']==Code::SUCCESS){
-            return $this->redirect("/");
+            if($rst['data']!=null){
+                return $this->redirect("/");
+            }else{
+                return $this->render("accessRegister",[
+                    'openId'=>$openId,
+                    'type'=>UserAccess::ACCESS_TYPE_QQ,
+                    'nickname'=>$nickname,
+                    'sex'=>$sex,
+                    'headImg'=>$headImg
+                ]);
+            }
         }else{
             return $this->redirect("/error/access-error");
         }
     }
 
+    public function actionTest(){
+        return $this->render("accessRegister");
+    }
 
 
     public function actionQqLogin()
@@ -137,13 +161,26 @@ class AccessController extends Controller
 
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_QQ,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
-            return $this->redirect("/");
+            if($rst['data']!=null){
+                return $this->redirect("/");
+            }else{
+                return $this->render("accessRegister",[
+                    'openId'=>$openId,
+                    'type'=>UserAccess::ACCESS_TYPE_QQ,
+                    'nickname'=>$nickname,
+                    'sex'=>$sex,
+                    'headImg'=>$headImg
+                ]);
+            }
+
         }else{
             return $this->redirect("/error/access-error");
         }
 
 
     }
+
+
 
 
     private function accessLogin($openId,$type,$nickname,$sex,$headImg)
@@ -158,7 +195,10 @@ class AccessController extends Controller
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
                 return Code::statusDataReturn(Code::SUCCESS,$userBase);
             }
+        }else{
+            return Code::statusDataReturn(Code::SUCCESS,null);
         }
+        ///一下代码暂时忽略
         if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
             return Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid Sex Value");
         }
@@ -204,6 +244,9 @@ class AccessController extends Controller
     }
 
 
-
+    public function actionAccessRegister()
+    {
+        
+    }
 
 }

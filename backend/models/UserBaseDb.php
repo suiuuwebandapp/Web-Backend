@@ -10,62 +10,13 @@
 namespace backend\models;
 
 
+use backend\components\Page;
 use common\entity\UserBase;
+use common\models\ProxyDb;
 use yii\db\mssql\PDO;
 
 class UserBaseDb extends ProxyDb
 {
-    /**
-     * 添加用户
-     * @param UserBase $userBase
-     * @return int
-     * @throws \yii\db\Exception
-     */
-    public function addUser(UserBase $userBase)
-    {
-        $sql = sprintf("
-            INSERT INTO user_base
-            (
-              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,
-
-              headImg,hobby,profession,school,intro,info,travelCount,userSign,status,isPublisher,countryId,cityId,lon,lat
-            )
-            VALUES
-            (
-              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,
-              :headImg,:hobby,:profession,:school,:intro,:info,0,:userSign,:status,:isPublisher,:countryId,:cityId,:lon,:lat
-            )
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-
-        $command->bindParam(":password", $userBase->password, PDO::PARAM_STR);
-        $command->bindParam(":phone", $userBase->phone, PDO::PARAM_STR);
-        $command->bindParam(":areaCode", $userBase->areaCode, PDO::PARAM_STR);
-        $command->bindParam(":email", $userBase->email, PDO::PARAM_STR);
-        $command->bindParam(":nickname", $userBase->nickname, PDO::PARAM_STR);
-        $command->bindParam(":registerIp", $userBase->registerIp, PDO::PARAM_STR);
-        $command->bindParam(":lastLoginIp", $userBase->lastLoginIp, PDO::PARAM_STR);
-        $command->bindParam(":sex", $userBase->sex, PDO::PARAM_INT);
-        $command->bindParam(":birthday", $userBase->birthday, PDO::PARAM_STR);
-        $command->bindParam(":headImg", $userBase->headImg, PDO::PARAM_STR);
-        $command->bindParam(":hobby", $userBase->hobby, PDO::PARAM_STR);
-        $command->bindParam(":profession", $userBase->profession, PDO::PARAM_STR);
-        $command->bindParam(":school", $userBase->school, PDO::PARAM_STR);
-        $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
-        $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
-        $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
-        $command->bindParam(":status", $userBase->status, PDO::PARAM_INT);
-        $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
-        $command->bindParam(":countryId", $userBase->countryid, PDO::PARAM_INT);
-        $command->bindParam(":cityId", $userBase->cityId, PDO::PARAM_INT);
-        $command->bindParam(":lon", $userBase->lon, PDO::PARAM_STR);
-        $command->bindParam(":lat", $userBase->lat, PDO::PARAM_STR);
-
-
-        return $command->execute();
-
-    }
 
 
     /**
@@ -131,9 +82,7 @@ class UserBaseDb extends ProxyDb
     public function findByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,status,
-            registerTime,lastLoginTime,userSign,isPublisher,cityId,countryId,lon,lat,profession
-            FROM user_base WHERE userSign=:userSign
+            SELECT * FROM user_base WHERE userSign=:userSign
         ");
         if ($status != null) {
             $sql .= " AND status=:status";
@@ -277,6 +226,30 @@ class UserBaseDb extends ProxyDb
 
         return $command->queryAll();
 
+    }
+
+
+    /**
+     * 获取用户列表
+     * @param Page $page
+     * @param $search
+     * @return Page|null
+     */
+    public function getUserBaseListByPage(Page $page,$search)
+    {
+        $sql=sprintf("
+            FROM user_base
+            WHERE 1=1
+        ");
+
+        if(!empty($search)){
+            $sql.=" AND (nickname like :search or phone like :search OR email like :search)";
+            $this->setParam("search",$search."%");
+        }
+
+        $this->setSql($sql);
+        $page=$this->find($page);
+        return $page;
     }
 
 }
