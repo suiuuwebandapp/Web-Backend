@@ -387,15 +387,19 @@ class UserBaseService extends BaseDb
                 if($userPublisher==null){
                     $userBase->phone=null;
                 }
-                $str=$userBase->email;
-                $arr= explode('@',$str);
-                $userBase->nickname= substr($arr[0],0,4).'*****'.$arr[1];
+                if(empty($userBase->nickname)){
+                    $str=$userBase->email;
+                    $arr= explode('@',$str);
+                    $userBase->nickname= substr($arr[0],0,4).'*****'.$arr[1];
+                }
             }else{
                 if($userPublisher==null){
                     $userBase->email=null;
                 }
-                $str1=$userBase->phone;
-                $userBase->nickname=substr($str1,0,4).'*****'.substr($str1,-2);
+                if(empty($userBase->nickname)) {
+                    $str1 = $userBase->phone;
+                    $userBase->nickname = substr($str1, 0, 4) . '*****' . substr($str1, -2);
+                }
 
             }
         }

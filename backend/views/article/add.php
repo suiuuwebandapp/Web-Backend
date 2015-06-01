@@ -193,7 +193,6 @@
                 Main.hideWait();
             },
             success:function(data){
-                Main.printObject(data);
                 Main.hideWait();
                 var datas=eval('('+data+')');
                 if(datas.status==1){

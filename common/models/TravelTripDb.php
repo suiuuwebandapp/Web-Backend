@@ -84,7 +84,7 @@ class TravelTripDb extends ProxyDb{
         $this->setParam("status",$status);
         if(!empty($title)){
             $sql.=" AND t.title like :title ";
-            $this->setParam("title",$title."%");
+            $this->setParam("title","%".$title."%");
         }
          if(!empty($countryId)){
              $sql.=" AND t.countryId =:countryId";

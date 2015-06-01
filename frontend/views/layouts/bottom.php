@@ -86,91 +86,93 @@
     <a href="javascript:refundOrderByMessage();" class="btn">提交申请</a>
 </div>
 
-<div class="myLogins screens clearfix" style="display: none;">
-    <ol class="top myTit">
-        <li><a href="#" class="a1">手机注册</a></li>
-        <li><a href="#" class="a2">登录</a></li>
-        <li><a href="#" class="a3">邮箱注册</a></li>
-    </ol>
-    <div class="down clearfix">
-        <div class="left">
-            <div class="box myCon box1">
-                <ul>
-                    <li class="country">
-                        <select id="codeId_top" name="countryIds" class="areaCodeSelect_top" required>
-                            <option value=""></option>
-                            <?php if($this->context->countryList!=null){ ?>
-                                <?php foreach ($this->context->countryList as $c) { ?>
-                                    <?php if(empty($c['areaCode'])){continue;} ?>
-                                    <?php if ($c['areaCode'] == $this->context->areaCode) { ?>
-                                        <option selected
-                                                value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
+<?php if (!isset($this->context->userObj)){ ?>
+    <div class="myLogins screens clearfix" style="display: none;">
+        <ol class="top myTit">
+            <li><a href="#" class="a1">手机注册</a></li>
+            <li><a href="#" class="a2">登录</a></li>
+            <li><a href="#" class="a3">邮箱注册</a></li>
+        </ol>
+        <div class="down clearfix">
+            <div class="left">
+                <div class="box myCon box1">
+                    <ul>
+                        <li class="country">
+                            <select id="codeId_top" name="countryIds" class="areaCodeSelect_top" required>
+                                <option value=""></option>
+                                <?php if($this->context->countryList!=null){ ?>
+                                    <?php foreach ($this->context->countryList as $c) { ?>
+                                        <?php if(empty($c['areaCode'])){continue;} ?>
+                                        <?php if ($c['areaCode'] == $this->context->areaCode) { ?>
+                                            <option selected
+                                                    value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?= $c['areaCode'] ?>"><?= $c['cname'] . " " . $c['areaCode'] ?></option>
+                                        <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
-                            <?php } ?>
-                        </select>
-                    </li>
-                    <li><input id="phone_top" type="text" value="" maxlength="30" placeholder="手机号"></li>
-                    <li><input id="phone_password_top" type="password" value="" maxlength="30" placeholder="密码"></li>
-                    <li class="zrow">
-                        <input id="valNum" type="text" class="code" placeholder="图形验证码" maxlength="4">
-                        <img id="codeImg" src="/index/get-code" alt="" class="codeimg">
-                    </li>
-                    <li class="zrow">
-                        <input id="phoneCode_top" type="text" class="code" placeholder="手机验证码" maxlength="6">
-                        <a href="javascript:;" id="getCodePhoneRegister" class="pas">获取验证码</a>
-                    </li>
-                    <li><a href="javascript:;" class="btn blue" id="phoneRegister">注册</a></li>
-                    <li class="rows">
-                        <input type="checkbox" id="zhuce-check01">
-                        <label for="zhuce-check01" class="fleft">同意</label>
-                        <a target="_blank" href="/static?about-services" class="agreen" style="margin-left: 10px">服务协议</a>
-                        <a target="_blank" href="/static?help-refundPolicy" class="agreen">退款政策</a>
-                        <a target="_blank" href="/static?statement-copyright" class="agreen">版权声明</a>
-                        <a target="_blank" href="/static?statement-disclaimer" class="agreen">免责声明</a>
-                    </li>
-                </ul>
-            </div>
+                            </select>
+                        </li>
+                        <li><input id="phone_top" type="text" value="" maxlength="30" placeholder="手机号"></li>
+                        <li><input id="phone_password_top" type="password" value="" maxlength="30" placeholder="密码"></li>
+                        <li class="zrow">
+                            <input id="valNum" type="text" class="code" placeholder="图形验证码" maxlength="4">
+                            <img id="codeImg" src="/index/get-code" alt="" class="codeimg">
+                        </li>
+                        <li class="zrow">
+                            <input id="phoneCode_top" type="text" class="code" placeholder="手机验证码" maxlength="6">
+                            <a href="javascript:;" id="getCodePhoneRegister" class="pas">获取验证码</a>
+                        </li>
+                        <li><a href="javascript:;" class="btn blue" id="phoneRegister">注册</a></li>
+                        <li class="rows">
+                            <input type="checkbox" id="zhuce-check01">
+                            <label for="zhuce-check01" class="fleft">同意</label>
+                            <a target="_blank" href="/static?about-services" class="agreen" style="margin-left: 10px">服务协议</a>
+                            <a target="_blank" href="/static?help-refundPolicy" class="agreen">退款政策</a>
+                            <a target="_blank" href="/static?statement-copyright" class="agreen">版权声明</a>
+                            <a target="_blank" href="/static?statement-disclaimer" class="agreen">免责声明</a>
+                        </li>
+                    </ul>
+                </div>
 
-            <div class="box myCon box2">
-                <ul>
-                    <li><input type="text" placeholder="邮箱/手机号" id="username" maxlength="30"></li>
-                    <li><input type="password" placeholder="密码" id="userpassword" maxlength="30"></li>
-                    <li id="code9527" style="display: none">
-                        <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
-                    </li>
-                    <li><a href="javascript:;" onclick="login()" id="login-check" class="btn">登录</a></li>
-                    <li class="rows">
-                        <a href="/index/password-send-code" class="forgot">忘记密码</a>
-                        <input type="checkbox" id="logo-check">
-                        <label for="logo-check" class="fright">自动登录</label>
-                    </li>
-                </ul>
-            </div>
-            <div class="box myCon box3">
-                <ul>
-                    <li><input type="text" placeholder="邮箱" id="regEmail" maxlength="30"></li>
-                    <li><input type="password" placeholder="密码" id="regEmailPwd" maxlength="30"></li>
-                    <li><a href="javascript:;" id="emailRegister" class="btn blue">注册</a></li>
-                    <li id="emailTime" class="shuaxin"><input type="button" value="发送成功，" style="width: 288px"/></li>
-                    <li class="rows">
-                        <input type="checkbox" id="zhuce-check02">
-                        <label for="zhuce-check02" class="fleft">同意</label>
-                        <a target="_blank" href="/static?about-services" class="agreen" style="margin-left: 10px">服务协议</a>
-                        <a target="_blank" href="/static?help-refundPolicy" class="agreen">退款政策</a>
-                        <a target="_blank" href="/static?statement-copyright" class="agreen">版权声明</a>
-                        <a target="_blank" href="/static?statement-disclaimer" class="agreen">免责声明</a>
-                    </li>
-                </ul>
-            </div>
+                <div class="box myCon box2">
+                    <ul>
+                        <li><input type="text" placeholder="邮箱/手机号" id="username" maxlength="30"></li>
+                        <li><input type="password" placeholder="密码" id="userpassword" maxlength="30"></li>
+                        <li id="code9527" style="display: none">
+                            <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
+                        </li>
+                        <li><a href="javascript:;" onclick="login()" id="login-check" class="btn">登录</a></li>
+                        <li class="rows">
+                            <a href="/index/password-send-code" class="forgot">忘记密码</a>
+                            <input type="checkbox" id="logo-check">
+                            <label for="logo-check" class="fright">自动登录</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="box myCon box3">
+                    <ul>
+                        <li><input type="text" placeholder="邮箱" id="regEmail" maxlength="30"></li>
+                        <li><input type="password" placeholder="密码" id="regEmailPwd" maxlength="30"></li>
+                        <li><a href="javascript:;" id="emailRegister" class="btn blue">注册</a></li>
+                        <li id="emailTime" class="shuaxin"><input type="button" value="发送成功，" style="width: 288px"/></li>
+                        <li class="rows">
+                            <input type="checkbox" id="zhuce-check02">
+                            <label for="zhuce-check02" class="fleft">同意</label>
+                            <a target="_blank" href="/static?about-services" class="agreen" style="margin-left: 10px">服务协议</a>
+                            <a target="_blank" href="/static?help-refundPolicy" class="agreen">退款政策</a>
+                            <a target="_blank" href="/static?statement-copyright" class="agreen">版权声明</a>
+                            <a target="_blank" href="/static?statement-disclaimer" class="agreen">免责声明</a>
+                        </li>
+                    </ul>
+                </div>
 
-        </div>
-        <div class="right">
-            <a href="/access/connect-weibo" class="icon wei"></a>
-            <a href="/access/connect-wechat" class="icon sina"></a>
-            <a href="javascript:alert('QQ登录暂缓开通');" class="icon qq"></a><!--/access/connect-qq-->
+            </div>
+            <div class="right">
+                <a href="/access/connect-weibo" class="icon wei"></a>
+                <a href="/access/connect-wechat" class="icon sina"></a>
+                <a href="javascript:alert('QQ登录暂缓开通');" class="icon qq"></a><!--/access/connect-qq-->
+            </div>
         </div>
     </div>
-</div>
+<?php  } ?>

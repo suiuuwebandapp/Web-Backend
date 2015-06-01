@@ -39,7 +39,7 @@ return [
     'token_url'=>'&^ie:84Oke@#@$$@%@@', //防止盗链
 
     'pageCount'=>6,//app 页面显示数目
-    'imPassword'=>'suIuu9Q5E2T7',
+
     ////////////////////////////
     /**
      * 微信配置

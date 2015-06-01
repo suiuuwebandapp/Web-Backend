@@ -134,7 +134,7 @@ i<script type="text/javascript">
             slide: function( event, ui ) {
                 $( "#amount" ).val( "￥" + ui.values[ 0 ] + " - ￥" + ui.values[ 1 ] );
             },
-            change:function(){
+            stop:function(){
                 searchTip();
             }
         });

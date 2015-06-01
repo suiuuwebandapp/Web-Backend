@@ -33,5 +33,6 @@ return [
         'app_name'=>'suiuu'
     ),
 
-    'apiPassword'=>'sui@uu~9527&*'
+    'apiPassword'=>'sui@uu~9527&*',
+    'imPassword'=>'suIuu9Q5E2T7'
 ];

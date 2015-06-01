@@ -73,21 +73,24 @@
 <!--                    </li>-->
                 </ul>
             </li>
-<!--            <li class="menu_top">-->
-<!--                <a href="javascript:;">-->
-<!--                    <i class="icon-rocket"></i>-->
-<!--                    <span class="title"> 用户管理</span>-->
-<!--                    <span class="arrow"></span>-->
-<!--                </a>-->
-<!--                <ul class="sub-menu">-->
-<!--                    <li>-->
-<!--                        <a href="layout_horizontal_sidebar_menu.html"> 普通用户</a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a href="index_horizontal_menu.html"> 随友管理</a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </li>-->
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-rocket"></i>
+                    <span class="title"> 用户管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="layout_horizontal_sidebar_menu.html"> 普通用户</a>
+                    </li>
+                    <li>
+                        <a href="index_horizontal_menu.html"> 随友管理</a>
+                    </li>
+                    <li>
+                        <a href="#~/user-base/to-add-publisher"> 添加随友</a>
+                    </li>
+                </ul>
+            </li>
             <li class="menu_top">
                 <a href="javascript:;">
                     <i class="icon-star"></i>
