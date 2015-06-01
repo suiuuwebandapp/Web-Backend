@@ -17,6 +17,43 @@ use yii\db\mssql\PDO;
 class RecommendListDb extends ProxyDb
 {
 
+
+    public function addRecommend(RecommendList $recommend)
+    {
+        $sql = sprintf("
+            INSERT INTO recommend_list
+            (
+             relativeId,relativeType,status,rImg
+            )
+            VALUES
+            (
+            :relativeId,:relativeType,:status,:rImg
+            )
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":relativeId", $recommend->relativeId, PDO::PARAM_INT);
+        $command->bindParam(":relativeType", $recommend->relativeType, PDO::PARAM_INT);
+        $command->bindValue(":status",RecommendList::RECOMMEND_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindParam(":rImg", $recommend->rImg, PDO::PARAM_STR);
+        return $command->execute();
+    }
+
+    public function getList($page,$type)
+    {
+        $sql=sprintf("
+        FROM recommend_list a
+            WHERE 1=1
+        ");
+        if(!empty($type))
+        {
+            $sql.=" AND relativeType = :relativeType ";
+            $this->setParam("relativeType",$type);
+        }
+        $this->setSelectInfo('a.*');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
     /**
      * 查找推荐主题文章  //暂时用不上 只推荐了圈子
      * @return array
@@ -103,7 +140,7 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
         FROM recommend_list a LEFT JOIN sys_circle_sort b ON a.relativeId=b.cId
 WHERE a.relativeType=:relativeType AND a.`status`=:rStatus
         ");
-        $this->setParam("relativeType", UserAttention::TYPE_FOR_CIRCLE);
+        $this->setParam("relativeType", RecommendList::TYPE_FOR_CIRCLE);
         $this->setParam("rStatus", RecommendList::RECOMMEND_STATUS_NORMAL);
         $this->setSelectInfo('b.cId,b.cName,b.cType,b.cpic');
         $this->setSql($sql);
@@ -186,6 +223,9 @@ b GROUP BY b.userSign )as ss
         $this->setSql($sql);
         return $this->find($page);
     }
+
+
+
 
 
 }

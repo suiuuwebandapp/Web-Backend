@@ -43,4 +43,8 @@ class RecommendList {
      * @var 状态 是否启用
      */
     public $status;
+    /**
+     * @var背景图
+     */
+    public $rImg;
 }

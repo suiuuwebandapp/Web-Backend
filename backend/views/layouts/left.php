@@ -147,6 +147,9 @@
                     <li>
                         <a href="#~/wechat-order-refund/list"  class="left_menu_link"> 退款列表</a>
                     </li>
+                    <li>
+                        <a href="#~/wechat-order-pay/list"  class="left_menu_link"> 支付列表</a>
+                    </li>
                 </ul>
             </li>
             <!--

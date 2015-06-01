@@ -261,4 +261,24 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
         $command->bindParam(":wOrderNumber", $weChatOrderList->wOrderNumber, PDO::PARAM_STR);
         return $command->execute();
     }
+
+    public function getWeChatOrderPayList($page,$searchText,$type)
+    {
+        $sql=sprintf("
+        FROM wechat_pay_record a
+        LEFT JOIN wechat_order_list b ON a.orderNumber=b.wOrderNumber
+        LEFT JOIN user_base c ON b.wUserSign=c.userSign WHERE 1=1
+        ");
+        if(!empty($searchText)){
+            $sql.=" AND (c.nickName like :search OR a.orderNumber like :search) ";
+            $this->setParam("search","%".$searchText."%");
+        }
+        if(!empty($type)){
+            $sql.=" AND a.type=:type ";
+            $this->setParam("type",$type);
+        }
+        $this->setSelectInfo('a.*,c.nickName,b.wStatus');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
 }
