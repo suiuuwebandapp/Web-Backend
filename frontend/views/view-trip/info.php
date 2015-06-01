@@ -327,8 +327,15 @@
             $("#beginTime").focus();
         });
         $("#toApply").bind("click",function(){
+            if(userId==''){
+                $("#denglu").click();
+                //Main.showTip("登录后才能购买哦~！");
+                return;
+            }
             if(userPublisherId==''){
-                Main.showTip("登录后并且成为随友才能加入线路！");
+
+                Main.showTip("成为随友后才能加入线路！");
+                window.location.href='/index/create-travel';
                 return;
             }
             window.location.href='/trip/to-apply-trip?trip='+$("#tripId").val();
@@ -336,7 +343,8 @@
 
         $("#toBuy").bind("click",function(){
             if(userId==''){
-                Main.showTip("登录后才能购买哦~！");
+                $("#denglu").click();
+                //Main.showTip("登录后才能购买哦~！");
                 return;
             }
             $("html,body").animate({scrollTop: $("#buyTrip").offset().top-30}, 500);
@@ -358,7 +366,8 @@
 
 
             if(userId==''){
-                Main.showTip("登录后才能购买哦~！");
+                $("#denglu").click();
+                //Main.showTip("登录后才能购买哦~！");
                 return;
             }
             if(beginDate==''){

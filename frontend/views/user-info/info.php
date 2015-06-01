@@ -213,7 +213,7 @@
         <li><a href="javascript:;" <?php if($tab=="userInfo"){echo "class='active'";};?> id="userInfo">个人资料</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
-    <div class="tab-div myEmail TabCon clearfix" style="display:block">
+    <div class="tab-div myEmail TabCon clearfix" <?php if($tab==""||$tab=="myMessage"){echo "style='display:block'";}else{echo "style='display:none'";};?> >
         <ul class="emailNav recTit">
             <li><a href="javascript:;"  class="active">私信</a></li>
             <li><a href="javascript:;" id="userMessageSetting">设置</a></li>
@@ -258,7 +258,7 @@
         </div>
     </div>
     <!-------------TabCon2-发言------------->
-    <div class="tab-div huifu TabCon clearfix">
+    <div class="tab-div huifu TabCon clearfix" <?php if($tab=="myComment"){echo "style='display:block'";}else{echo "style='display:none'";};?>>
 
         <div class="huifu-list">
             <ul id="commentList_51">
@@ -267,12 +267,12 @@
         </div>
     </div>
     <!-------------TabCon3-收藏------------->
-    <div class="tab-div shoucang TabCon clearfix">
+    <div class="tab-div shoucang TabCon clearfix" <?php if($tab=="myCollect"){echo "style='display:block'";}else{echo "style='display:none'";};?> >
         <ul class="clearfix" id="myCollectList">
         </ul>
     </div>
     <!-------------TabCon4-我的预定------------->
-    <div class="tab-div orderCon TabCon clearfix">
+    <div class="tab-div orderCon TabCon clearfix" <?php if($tab=="myOrderManager"){echo "style='display:block'";}else{echo "style='display:none'";};?> >
         <ul class="myOderNav innerNav">
             <li><a href="#"  class="active" id="unFinishOrderManager">未完成订单</a></li>
             <li><a href="#" id="finishOrderManager">过往订单</a></li>
@@ -284,7 +284,7 @@
         </div>
     </div>
     <!-------------TabCon5-随游管理------------->
-    <div class="tab-div mySuiyou TabCon clearfix">
+    <div class="tab-div mySuiyou TabCon clearfix" <?php if($tab=="tripManager"){echo "style='display:block'";}else{echo "style='display:none'";};?>>
         <ul class="myOderNav tabTitle">
             <li><a href="javascript:;" class="active" id="unConfirmOrderManager">待接订单</a></li>
             <li><a href="javascript:;" id="myPublisherOrder">随游订单</a></li>
@@ -304,7 +304,7 @@
     </div>
 
     <!-------------TabCon6-个人资料------------>
-    <div class="tab-div myInformation TabCon clearfix">
+    <div class="tab-div myInformation TabCon clearfix" <?php if($tab=="userInfo"){echo "style='display:block'";}else{echo "style='display:none'";};?>>
         <ul class="InformationNav myTit">
             <li><a href="#"  class="active">我的资料</a></li>
             <li><a href="#">身份验证</a></li>

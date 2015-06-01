@@ -43,7 +43,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <div class="mddsx"><!--mddsx begin-->
-    <div class="fl mddsx-left" style="z-index:888;">
+    <div class="fl mddsx-left" style="z-index:4;">
         <select id="countryId" name="country" class="select2" required placeholder="国家">
             <option value=""></option>
             <?php foreach ($countryList as $c) { ?>

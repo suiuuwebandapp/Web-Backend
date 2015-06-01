@@ -169,8 +169,8 @@
 
             </div>
             <div class="right">
-                <a href="/access/connect-weibo" class="icon wei"></a>
-                <a href="/access/connect-wechat" class="icon sina"></a>
+                <a href="/access/connect-wechat" class="icon wei"></a>
+                <a href="/access/connect-weibo" class="icon sina"></a>
                 <a href="javascript:alert('QQ登录暂缓开通');" class="icon qq"></a><!--/access/connect-qq-->
             </div>
         </div>

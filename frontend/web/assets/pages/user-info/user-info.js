@@ -858,7 +858,9 @@ function resetImg(){
  * 移除截图选择器
  */
 function removeImgAreaSelect(){
-    imgAreaSelectApi.cancelSelection();
+    if(Main.isNotEmpty(imgAreaSelectApi)){
+        imgAreaSelectApi.cancelSelection();
+    }
 }
 
 /**

@@ -194,10 +194,6 @@
             </p>
         </div>
 
-        <p class="p1 agree">
-            <input name="" type="checkbox" value="" id="rad">
-            <label for="rad">同意</label><a href="javascript:;">《网站注册协议》</a>
-        </p>
         <input type="button" value="注册" class="zbtn" id="createPublisher">
     </form>
 </div>
@@ -576,10 +572,7 @@
             $("#phoneTip").focus();
             return;
         }
-        if(!$("#rad").is(":checked")){
-            Main.showTip("请先阅读并且同意注册协议");
-            return;
-        }
+
 
         $.ajax({
             url :'/index/register-publisher',

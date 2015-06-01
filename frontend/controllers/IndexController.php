@@ -74,7 +74,6 @@ class IndexController extends UnCController
             echo "<br>";
         }*/
 
-
     }
 
 
@@ -621,7 +620,9 @@ class IndexController extends UnCController
         if ((isset($this->userObj) && $this->userObj->isPublisher)) {
             return $this->redirect("/trip/new-trip");
         } else {
-
+            if (!isset($this->userObj)) {
+                return $this->redirect(['/result', 'result' => '请先登录再注册随友']);
+            }
             $email = "";
             $phone = "";
             $areaCode = "";
