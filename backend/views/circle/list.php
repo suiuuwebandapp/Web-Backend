@@ -159,7 +159,7 @@
         };
         TableAjax.init(tableInfo);
         $("#addRe").bind("click",function(){
-            Main.openModal("/recommend-list/show-add")
+            Main.openModal("/circle/show-add")
         });
 
         $("#refresh,#search").bind("click",function(){
@@ -171,7 +171,7 @@
     {
         $.ajax({
             type:"POST",
-            url:"/recommend-list/change",
+            url:"/circle/change",
             data:{
                 id:id,
                 status:status
@@ -195,7 +195,7 @@
 
     }
     function editOrder(id){
-        Main.openModal("/recommend-list/show-edit?id="+id);
+        Main.openModal("/circle/show-edit?id="+id);
     }
 
     function deleteOrder(id){
@@ -203,7 +203,7 @@
         Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
-                url:"/recommend-list/delete",
+                url:"/circle/delete",
                 data:{
                     id:id
                 },beforeSend:function(){
