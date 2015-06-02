@@ -181,7 +181,6 @@ class UserBaseDb extends ProxyDb
         if ($status != null) {
             $command->bindParam(":status", $status, PDO::PARAM_INT);
         }
-
         return $command->queryOne();
     }
 

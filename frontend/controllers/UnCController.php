@@ -35,7 +35,6 @@ class UnCController extends SController{
         //验证用户是否登录
         $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
         $cookieSign=\Yii::$app->request->cookies->getValue(\Yii::$app->params['suiuu_sign']);
-
         $enPassword = \Yii::$app->params['encryptPassword'];
         $enDigit = \Yii::$app->params['encryptDigit'];
 
@@ -45,8 +44,9 @@ class UnCController extends SController{
             $aes=new Aes();
             $userSign=$aes->decrypt($cookieSign,$enPassword,$enDigit);
 
-            $this->__userBaseService=new SysUserService();
+            $this->__userBaseService=new UserBaseService();
             $currentUser=$this->__userBaseService->findUserByUserSign($userSign);
+
             if(isset($currentUser)){
                 $this->userObj=$currentUser;
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);

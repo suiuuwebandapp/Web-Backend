@@ -69,7 +69,7 @@ class AccessController extends UnCController
 
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_SINA_WEIBO,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
-            if($rst['data']!=null){
+            if($rst['data']!=null&&$rst['data']->phone!=null){
                 return $this->redirect("/");
             }else{
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
@@ -122,7 +122,7 @@ class AccessController extends UnCController
         $rst=$this->accessLogin($unionid,UserAccess::ACCESS_TYPE_WECHAT,$nickname,$sex,$headImg);
 
         if($rst['status']==Code::SUCCESS){
-            if($rst['data']!=null){
+            if($rst['data']!=null&&$rst['data']->phone!=null){
                 return $this->redirect("/");
             }else{
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
@@ -179,7 +179,7 @@ class AccessController extends UnCController
 
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_QQ,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
-            if($rst['data']!=null){
+            if($rst['data']!=null&&$rst['data']->phone!=null){
                 return $this->redirect("/");
             }else{
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
@@ -334,12 +334,24 @@ class AccessController extends UnCController
             $userBase->phone = $phone;
             $userBase->password = $password;
             $userBase->nickname=$nickname;
+            $userBase->areaCode=$areaCode;
             $userAccess->userId=$userBase->userSign;
 
 
 
             $this->userBaseService=new UserBaseService();
-            $userBase=$this->userBaseService->addUser($userBase,$userAccess);
+
+            $tempUserBase=$this->userBaseService->findUserAccessByOpenIdAndType($userAccess->openId,$userAccess->type);
+            if($tempUserBase==null){
+                $userBase=$this->userBaseService->addUser($userBase,$userAccess);
+            }else{
+                $userBase=$tempUserBase;
+                $userBase->phone=$phone;
+                $userBase->phone = $phone;
+                $userBase->password = $password;
+                $userBase->nickname=$nickname;
+                $this->userBaseService->updateUserBase($userBase);
+            }
             //绑定用户状态
             \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
             \Yii::$app->session->remove("regUserBase");

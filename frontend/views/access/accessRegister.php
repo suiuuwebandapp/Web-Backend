@@ -83,7 +83,7 @@ if($userBase==null||$userAccess==null){
 
             </li>
             <li class="liTip" style="display: none">
-                <p class="tip">手机号已注册，继续注册将与原账号解绑</p>
+                <p class="tip">手机号已注册，请在页面右侧直接绑定</p>
 
             </li>
             <li class="liCode" style="display: none">

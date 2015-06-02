@@ -63,20 +63,16 @@ class IndexController extends UnCController
 
     public function actionTest()
     {
-       /* for($i=0;$i<300;$i++)
-        {
-            $userBase = new UserBase();
-            $userBase->email = 'test'.$i."@qq.com";
-            $userBase->password = 'qwe123';
-            //$this->userBaseService->addUser($userBase);
-            $str=$userBase->email.'|'.'qwe123';
-            echo $str;
-            echo "<br>";
-        }*/
 
     }
 
 
+    /**
+     * 找回密码
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionPasswordSendCode()
     {
         if(!isset($_POST['username']))
@@ -159,11 +155,19 @@ class IndexController extends UnCController
         }
     }
 
+    /**
+     * 跳转到重置密码页面
+     * @return string
+     */
     public function actionResetPasswordView()
     {
         return $this->render('resetPassword');
     }
-    //发送邮箱链接跳转或者手机正确验证后跳转
+
+    /**
+     * 发送邮箱链接跳转或者手机正确验证后跳转
+     * @return string|yii\web\Response
+     */
     public function actionResetPassword()
     {
         if(isset($_POST['u']))
@@ -203,7 +207,10 @@ class IndexController extends UnCController
 
     }
 
-    //更新密码
+    /**
+     * 更新密码
+     * @return string
+     */
     public function actionUpdatePassword()
     {
         $username=  Yii::$app->session->get(Code::USER_NAME_SESSION);
@@ -253,6 +260,10 @@ class IndexController extends UnCController
             $errors[] = $e->getMessage();
         }
     }
+
+    /**
+     * 获取图像验证码
+     */
     public function actionGetCode()
     {
         //phpinfo();exit;
@@ -485,6 +496,11 @@ class IndexController extends UnCController
     }
 
 
+    /**
+     * 第三方登录发送短信验证
+     * @return string
+     * @throws Exception
+     */
     public function actionAccSendMessage()
     {
         $phone = \Yii::$app->request->post('phone');//发送给用户的手机

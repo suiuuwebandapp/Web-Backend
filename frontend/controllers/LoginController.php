@@ -90,6 +90,7 @@ class LoginController extends Controller
     public function actionLogout()
     {
         \Yii::$app->session->remove(Code::USER_LOGIN_SESSION);
+        \Yii::$app->response->cookies->remove(\Yii::$app->params['suiuu_sign']);
         return $this->redirect("/");
     }
 

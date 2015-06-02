@@ -93,11 +93,10 @@ class SmsUtils
             //param 模板Id $tempId (测试为1)
             $tempId=1;
             if($type==self::SEND_MESSAGE_TYPE_REGISTER){
-                $tempId = 20723;
+                $tempId = 21176;
             }else if($type==self::SEND_MESSAGE_TYPE_PASSWORD){
-                $tempId = 20724;
+                $tempId = 20766;
             }
-            $tempId=20766;
 
             // 发送模板短信
             $result = $this->rest->sendTemplateSMS($to, $datas, $tempId);
