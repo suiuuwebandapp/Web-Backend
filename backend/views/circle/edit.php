@@ -43,7 +43,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="portlet-body form">
-                                <input id="id" value="<?= $info['recommendId'];?>" type="hidden"/>
+                                <input id="id" value="<?= $info['cId'];?>" type="hidden"/>
                                 <!-- BEGIN FORM-->
                                 <div class="form-body">
                                     <div class="alert alert-danger display-hide" style="display: none;">
@@ -59,38 +59,30 @@
                                         <div class="col-md-7 valdate">
                                             <div class="radio-list">
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="1" <?php if($info['relativeType']==1){echo "checked";}?> >
-                                                    用户
+                                                    <input type="radio" name="optionsRadios"  value="1" <?php if($info['cType']==1){echo "checked";}?> >
+                                                    主题
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios" value="2" <?php if($info['relativeType']==2){echo "checked";}?> >
-                                                    帖子
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="3" <?php if($info['relativeType']==3){echo "checked";}?> >
-                                                    随游
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="4" <?php if($info['relativeType']==4){echo "checked";}?> >
-                                                    圈子
+                                                    <input type="radio" name="optionsRadios" value="2" <?php if($info['cType']==2){echo "checked";}?> >
+                                                    地区
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">推荐编号<span class="required">*</span></label>
+                                        <label class="col-md-3 control-label">名称<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
-                                                <input id="rId" class="form-control" placeholder="请输入推荐编号" value="<?php echo $info['relativeId']?>" required />
+                                                <input id="cName" class="form-control" placeholder="请输入圈子名称" value="<?php echo $info['cName']?>" required />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
-                                            <input type="hidden" id="titleImg" value="<?php echo $info['rImg'];?>"/>
-                                            <img id="titleImgPre" src="<?php echo $info['rImg'];?>"/>
+                                            <input type="hidden" id="titleImg" value="<?php echo $info['cpic'];?>"/>
+                                            <img id="titleImgPre" src="<?php echo $info['cpic'];?>"/>
                                             <div id="queue"></div>
                                             <input id="file_upload" name="file_upload" type="file">
                                         </div>
@@ -155,38 +147,34 @@
     });
 
 
-    //添加目的地
     function add(){
         var id=$("#id").val();
-        var rId=$("#rId").val();
+        var cName=$("#cName").val();
         var img=$("#titleImg").val();
         var type=$("input[name='optionsRadios']:checked").val();
         if(id==''){
             Main.errorTip("编号不允许为空");
             return;
         }
-        if(rId==''){
-            Main.errorTip("推荐编号不允许为空");
+        if(cName==''){
+            Main.errorTip("名称不允许为空");
             return;
         }
         if(type==''){
-            Main.errorTip("推荐类型不允许为空");
+            Main.errorTip("类型不允许为空");
             return;
         }
-        if(type=="1")
+        if(img=="")
         {
-            if(img=="")
-            {
-                Main.errorTip("推荐用户需要添加背景图片");
-                return;
-            }
+            Main.errorTip("需要添加背景图片");
+            return;
         }
         $.ajax({
-            url :'/recommend-list/edit',
+            url :'/circle/edit',
             type:'post',
             data:{
                 id:id,
-                rId:rId,
+                name:cName,
                 img:img,
                 type:type
             },
@@ -201,11 +189,11 @@
                 data=eval("("+data+")");
                 Main.hideWait();
                 if(data.status==1){
-                    Main.successTip("添加推荐成功");
+                    Main.successTip("修改成功");
                     $("#modal_close").click();
                     Main.refrenshTable();
                 }else{
-                    Main.errorTip("添加目的地失败,错误信息:<br/>"+datas.data);
+                    Main.errorTip("修改失败,错误信息:<br/>"+datas.data);
                 }
             }
         });

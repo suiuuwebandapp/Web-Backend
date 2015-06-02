@@ -567,6 +567,7 @@
                     //hide load
                     data=eval("("+data+")");
                     if(data.status==1){
+                        Main.showTip("收藏成功");
                         $('#collection_trip').attr('attentionIdTrip',data.data);
                     }else{
                         Main.showTip(data.data);
@@ -595,7 +596,7 @@
                     //hide load
                     data=eval("("+data+")");
                     if(data.status==1){
-
+                        Main.showTip("取消成功");
                     }else{
                         $('#collection_trip').attr('class','collection active');
                         isCollection = true;

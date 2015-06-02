@@ -98,6 +98,7 @@ class RecommendListController extends CController {
         $rId=\Yii::$app->request->post("rId");
         $rType=\Yii::$app->request->post("type");
         $img=\Yii::$app->request->post("img");
+        if(empty($id)){return json_encode(Code::statusDataReturn(Code::FAIL,"编号不能为空"));}
         if(empty($rId)){return json_encode(Code::statusDataReturn(Code::FAIL,"编号不能为空"));}
         if(empty($rType)){return json_encode(Code::statusDataReturn(Code::FAIL,"类型不能为空"));}
         try{

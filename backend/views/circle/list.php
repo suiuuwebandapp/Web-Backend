@@ -13,8 +13,8 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">推荐列表</span>
-                            <span class="caption-helper">推荐列表
+                    <span class="caption-subject font-red-sunglo bold uppercase">圈子列表</span>
+                            <span class="caption-helper">圈子列表
                             </span>
                 </div>
                 <div class="actions">
@@ -27,7 +27,7 @@
                 <div class="table-info-form">
                     <form id="datatables_form" onsubmit="return false;">
                         <div class="input-group input-xlarge pull-left">
-                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入订单号 或 用户昵称 ">
+                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入圈子名称 ">
 
                                     <span class="input-group-btn">
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
@@ -143,9 +143,9 @@
                     "render": function(data, type, full) {
                         var html='';
                         if(full.cStatus!=1){
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
+                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.cStatus+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
                         }else{
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
+                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.cStatus+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
                         }
                         html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';

@@ -54,39 +54,31 @@
                                         <span></span>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">推荐类型<span class="required">*</span></label>
+                                        <label class="col-md-3 control-label">圈子类型<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
                                             <div class="radio-list">
                                                 <label class="radio-inline">
                                                     <input type="radio" name="optionsRadios"  value="1">
-                                                    用户
+                                                    主题
                                                 </label>
                                                 <label class="radio-inline">
                                                     <input type="radio" name="optionsRadios" value="2">
-                                                    帖子
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="3">
-                                                     随游
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="4">
-                                                    圈子
+                                                    地区
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">推荐编号<span class="required">*</span></label>
+                                        <label class="col-md-3 control-label">名称<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
-                                                <input id="rId" class="form-control" placeholder="请输入推荐编号" required/>
+                                                <input id="name" class="form-control" placeholder="请输入圈子名称" required/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
+                                        <label class="col-md-3 control-label">背景图<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
                                             <input type="hidden" id="titleImg"/>
                                             <img id="titleImgPre"/>
@@ -155,32 +147,28 @@
     });
 
 
-    //添加目的地
     function add(){
-        var id=$("#rId").val();
+        var name=$("#name").val();
         var img=$("#titleImg").val();
         var type=$("input[name='optionsRadios']:checked").val();
-        if(id==''){
-            Main.errorTip("推荐编号不允许为空");
+        if(name==''){
+            Main.errorTip("名称不允许为空");
             return;
         }
         if(type==''){
             Main.errorTip("推荐类型不允许为空");
             return;
         }
-        if(type=="1")
+        if(img=="")
         {
-            if(img=="")
-            {
-                Main.errorTip("推荐用户需要添加背景图片");
-                return;
-            }
+            Main.errorTip("推荐用户需要添加背景图片");
+            return;
         }
         $.ajax({
-            url :'/recommend-list/add',
+            url :'/circle/add',
             type:'post',
             data:{
-                rId:id,
+                name:name,
                 img:img,
                 type:type
             },
@@ -195,7 +183,7 @@
                 data=eval("("+data+")");
                 Main.hideWait();
                 if(data.status==1){
-                    Main.successTip("添加推荐成功");
+                    Main.successTip("添加圈子成功");
                     $("#modal_close").click();
                     Main.refrenshTable();
                 }else{

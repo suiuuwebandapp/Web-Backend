@@ -14,6 +14,9 @@ class CircleSort{
      * @var地方
      */
     const CIRCLE_TYPE_PLACE=2;
+
+    const STATUS_NORMAL=1;//用户状态：正常
+    const STATUS_DISABLED=2;//用户状态：禁用
     /**
      * @var 圈子id
      */
@@ -30,4 +33,8 @@ class CircleSort{
      * @var 圈子图片
      */
     public $cpic;
+    /**
+     * @var状态
+     */
+    public $cStatus;
 }
