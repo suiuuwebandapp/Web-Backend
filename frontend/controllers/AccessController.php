@@ -11,6 +11,7 @@ namespace frontend\controllers;
 
 
 use common\components\Code;
+use common\components\Validate;
 use common\entity\UserAccess;
 use common\entity\UserBase;
 use frontend\interfaces\TencentInterface;
@@ -20,6 +21,7 @@ use frontend\services\UserBaseService;
 use frontend\services\WeChatService;
 use yii\base\Exception;
 use yii\web\Controller;
+use yii\web\YiiAsset;
 
 
 class AccessController extends UnCController
@@ -70,13 +72,21 @@ class AccessController extends UnCController
             if($rst['data']!=null){
                 return $this->redirect("/");
             }else{
-                return $this->render("accessRegister",[
-                    'openId'=>$openId,
-                    'type'=>UserAccess::ACCESS_TYPE_QQ,
-                    'nickname'=>$nickname,
-                    'sex'=>$sex,
-                    'headImg'=>$headImg
-                ]);
+                if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
+                    throw new Exception("Invalid Sex Value");
+                }
+                $userBase=new UserBase();
+                $userBase->nickname=$nickname;
+                $userBase->headImg=$headImg;
+                $userBase->sex=$sex;
+
+                $userAccess=new UserAccess();
+                $userAccess->openId=$openId;
+                $userAccess->type=UserAccess::ACCESS_TYPE_SINA_WEIBO;
+
+                \Yii::$app->session->set("regUserBase",$userBase);
+                \Yii::$app->session->set("regUserAccess",$userAccess);
+                return $this->redirect("/access/access-finish");
             }
         }else{
             return $this->redirect("/error/access-error");
@@ -115,13 +125,21 @@ class AccessController extends UnCController
             if($rst['data']!=null){
                 return $this->redirect("/");
             }else{
-                return $this->render("accessRegister",[
-                    'openId'=>$openId,
-                    'type'=>UserAccess::ACCESS_TYPE_QQ,
-                    'nickname'=>$nickname,
-                    'sex'=>$sex,
-                    'headImg'=>$headImg
-                ]);
+                if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
+                    throw new Exception("Invalid Sex Value");
+                }
+                $userBase=new UserBase();
+                $userBase->nickname=$nickname;
+                $userBase->headImg=$headImg;
+                $userBase->sex=$sex;
+
+                $userAccess=new UserAccess();
+                $userAccess->openId=$openId;
+                $userAccess->type=UserAccess::ACCESS_TYPE_WECHAT;
+
+                \Yii::$app->session->set("regUserBase",$userBase);
+                \Yii::$app->session->set("regUserAccess",$userAccess);
+                return $this->redirect("/access/access-finish");
             }
         }else{
             return $this->redirect("/error/access-error");
@@ -164,13 +182,21 @@ class AccessController extends UnCController
             if($rst['data']!=null){
                 return $this->redirect("/");
             }else{
-                return $this->render("accessRegister",[
-                    'openId'=>$openId,
-                    'type'=>UserAccess::ACCESS_TYPE_QQ,
-                    'nickname'=>$nickname,
-                    'sex'=>$sex,
-                    'headImg'=>$headImg
-                ]);
+                if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
+                    throw new Exception("Invalid Sex Value");
+                }
+                $userBase=new UserBase();
+                $userBase->nickname=$nickname;
+                $userBase->headImg=$headImg;
+                $userBase->sex=$sex;
+
+                $userAccess=new UserAccess();
+                $userAccess->openId=$openId;
+                $userAccess->type=UserAccess::ACCESS_TYPE_QQ;
+
+                \Yii::$app->session->set("regUserBase",$userBase);
+                \Yii::$app->session->set("regUserAccess",$userAccess);
+                return $this->redirect("/access/access-finish");
             }
 
         }else{
@@ -244,9 +270,146 @@ class AccessController extends UnCController
     }
 
 
+    public function actionAccessFinish()
+    {
+        return $this->render("accessRegister");
+    }
+
+
+    /**
+     * 第三方登录注册
+     * @return string
+     */
     public function actionAccessRegister()
     {
-        
+        $sendCode=trim(\Yii::$app->request->post('code',""));
+        $password=trim(\Yii::$app->request->post('password',""));
+        $nickname=trim(\Yii::$app->request->post('nickname',""));
+
+        if(empty($sendCode))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'验证码错误'));
+        }
+        $valPassword=Validate::validatePassword($password);
+        if(!empty($valPassword))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$valPassword));
+        }
+        $valNickname=Validate::validateNickname($nickname);
+        if(!empty($valNickname))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$valNickname));
+        }
+
+        $session = \Yii::$app->session->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE);
+
+        if (empty($session)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_PHONE_CODE_ERROR));
+        }
+        $array = explode('-', $session);
+        $phone = $array[0];
+        $areaCode = $array[1];
+        $validateCode = $array[2];
+        $error = "";//错误信息
+        $valMsg = Validate::validatePhone($phone);
+        if (!empty($valMsg)) {
+            $error = $valMsg;
+        } else if (empty($password) || strlen($password) > 30) {
+            $error = '密码格式不正确';
+        } else if (empty($areaCode)) {
+            $error = '手机区号格式不正确';
+        } else if ($sendCode != $validateCode) {
+            $error = '验证码输入有误，请查证后再试';
+        }
+
+        if (!empty($error)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+        }
+
+
+
+        try {
+            $userBase=\Yii::$app->session->get("regUserBase");
+            $userAccess=\Yii::$app->session->get("regUserAccess");
+            $userBase->phone = $phone;
+            $userBase->password = $password;
+            $userBase->nickname=$nickname;
+            $userAccess->userId=$userBase->userSign;
+
+
+
+            $this->userBaseService=new UserBaseService();
+            $userBase=$this->userBaseService->addUser($userBase,$userAccess);
+            //绑定用户状态
+            \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
+            \Yii::$app->session->remove("regUserBase");
+            \Yii::$app->session->remove("regUserAccess");
+            if($userAccess->type==UserAccess::ACCESS_TYPE_WECHAT)
+            {
+                $weChatSer=new WeChatService();
+                $weChatSer->bindingWeChatByUnionID($userBase->userSign,$userAccess->openId);
+            }
+
+        } catch (Exception $e) {
+            return json_encode(Code::statusDataReturn(Code::FAIL, $e->getMessage()));
+        }
+
+        return json_encode(Code::statusDataReturn(Code::SUCCESS, 'success'));
+    }
+
+    public function actionBindUser()
+    {
+        $username=trim(\Yii::$app->request->post('username',""));
+        $password=trim(\Yii::$app->request->post('password',""));
+        $valNum=trim(\Yii::$app->request->post('valNum',""));
+        $sysNum=\Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
+        if(empty($valNum)||$valNum!=$sysNum){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "无效的验证码"));
+        }
+        $valPassword=Validate::validatePassword($password);
+        if(!empty($valPassword)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $valPassword));
+        }
+        try{
+            $this->userBaseService=new UserBaseService();
+            if(strpos($username,"@")){
+                $valUsername=Validate::validateEmail($username);
+                if(!empty($valUsername)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$valUsername));
+                }
+            }else{
+                $valUsername=Validate::validatePhone($username);
+                if(!empty($valUsername)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$valUsername));
+                }
+            }
+
+            $userBase=$this->userBaseService->findUserByUserNameAndPwd($username,$password);
+            if($userBase!=null){
+                $userAccess=\Yii::$app->session->get("regUserAccess");
+                if($userAccess==null){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"第三方登录信息超时，请重新登录"));
+                }
+                $userAccess->userId=$userBase->userSign;
+
+                $this->userBaseService->addUserAccess($userAccess);
+                if($userAccess->type==UserAccess::ACCESS_TYPE_WECHAT)
+                {
+                    $weChatSer=new WeChatService();
+                    $weChatSer->bindingWeChatByUnionID($userBase->userSign,$userAccess->openId);
+                }
+                //添加用户登录状态
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
+                \Yii::$app->session->remove("regUserBase");
+                \Yii::$app->session->remove("regUserAccess");
+                return json_encode(Code::statusDataReturn(Code::SUCCESS));
+            }else{
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户名或密码"));
+            }
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,"绑定用户异常，请稍后重试"));
+        }
+
     }
 
 }

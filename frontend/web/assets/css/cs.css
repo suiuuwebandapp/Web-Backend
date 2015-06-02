@@ -383,7 +383,7 @@ transition:all 0.4s ease-in-out;
 
 
 /*---------重设密码------*/
-#resetPassword{ width:350px; height:800px; margin:110px auto 0px;}
+#resetPassword{ width:350px; height:550px; margin:110px auto 0px;}
 #resetPassword input{ width:335px; line-height:36px; height:36px; background:#eeeeee; border:none; padding-left:15px; margin-bottom:10px;}
 #resetPassword span{ display:block; line-height:36px; height:36px; text-align:left;}
 #resetPassword p span{ display:block;}
@@ -515,8 +515,12 @@ transition:all 0.4s ease-in-out;
 
 /*----------------随友注册--end-------------*/
 
+
+
+
+
 /*----------------随友注册跳转------------*/
-.syRegisterT{ width:360px; padding-bottom:100px;margin:110px auto 110px;}
+.syRegisterT{ width:360px; margin:110px auto 0;}
 .syRegisterT p{ line-height:36px; font-size:18px; color:#858585; }
 
 /*-------------随友注册跳转-end-----------*/
@@ -551,6 +555,56 @@ transition:all 0.4s ease-in-out;
 #finish .dnav a:hover{color:#ddd;}
 
 /*-------------完成页-end-----------*/
+
+/*---------------注册绑定-------------*/
+.regBDing{ width:1000px;margin:110px auto 0; background:#fff; padding-top:50px; padding-bottom:35px; font-size:18px;}
+.regBDing .tit{ font-size:24px; padding-left:130px;}
+.regBDing .left{ float:left; width:370px; padding-left:130px;}
+.regBDing .left .p1{ font-size:16px; line-height:24px; margin-top:30px;}
+.regBDing li{ width:100%;  margin-top:10px; position:relative;}
+.regBDing li.liCode,.regBDing li.liTip{ display:none;}
+.regBDing li .row{ height:40px; line-height:40px; width:290px;}
+
+.regBDing li label{width:100%;  display:block; line-height:30px;}
+.regBDing li label span{ color:#FF7272;}
+.regBDing li input{width:270px; background:#eee; display:block; padding:0 10px;  line-height:40px; height:40px;}
+.regBDing .left li .tip{ font-size:14px; color:#FFA742; padding-left:20px;}
+.regBDing .left li .codeText{ height:40px; line-height:40px; width:125px; background:#eee; padding:0 10px; display:block; float:left;}
+.regBDing .left li .codeBtn{ display:block; height:40px; width:124px; float:right; color:#69b5ff; font-size:16px;}
+.regBDing .left li .codeBtn:hover{ text-decoration:underline;}
+.regBDing .left li.server { height:40px; line-height:40px;  }
+.regBDing .left li.server input{ height:0; width:0; position:absolute; left:0; top:0;}
+.regBDing .left li.server .input1{ opacity:0;height:0; width:0; position:absolute; left:0; top:0;}
+.regBDing .left li.server .fleft{ background: rgba(0, 0, 0, 0) url("../images/check.png") no-repeat scroll 0 -102px;
+    cursor: pointer;
+    padding-left: 25px; float:left; width:auto; height:40px; line-height:40px;}
+	
+.regBDing .left li.server .agreen{ color: #69b5ff;
+    font-size:12px; float:left; margin-left:6px;}
+.regBDing .left li.server .agreen:hover{ text-decoration:underline;}
+.regBDing .left li .btn{ background:#69b5ff;   color: #fff;
+    display: block;
+    font-size: 20px;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 15px;
+    text-align: center;
+    width: 288px;}
+
+.regBDing .right{ float:right; width:500px; }
+.regBDing .right .rtit{ font-size:24px; padding-left:55px;}
+.regBDing .right ul{padding:20px 0;    border-left:1px solid #ddd; padding-left:55px; }
+
+.regBDing .right li .codeText{ height:40px; line-height:40px; width:125px; background:#eee; padding:0 10px; display:block; float:left;}
+.regBDing .right li .codePic{ cursor:pointer; display:block; height:40px; width:124px; float:right; color:#69b5ff; font-size:16px;}
+.regBDing .right li .rbtn01{ display:inline-block; height:40px; line-height:40px; text-align:center; font-size:18px; color:#fff; background:#FFA742; width:105px; margin-left:80px;}
+.regBDing .right li .rfoget{ position:absolute; left:190px; bottom:0;font-size:14px;  }
+.regBDing .right li .rfoget:hover{ text-decoration:underline;  }
+.regBDing li.btns{  margin-top:30px; height:40px;}
+
+
+
+/*---------------注册绑定-end------------*/
 
 
 /*-------------随友个人中心-------------*/

@@ -117,7 +117,7 @@
                         <li><input id="phone_password_top" type="password" value="" maxlength="30" placeholder="密码"></li>
                         <li class="zrow">
                             <input id="valNum" type="text" class="code" placeholder="图形验证码" maxlength="4">
-                            <img id="codeImg" src="/index/get-code" alt="" class="codeimg">
+                            <img id="codeImg" src="/index/get-code" onclick="javascript:$(this).attr('src','/index/get-code')" alt="" class="codeimg">
                         </li>
                         <li class="zrow">
                             <input id="phoneCode_top" type="text" class="code" placeholder="手机验证码" maxlength="6">

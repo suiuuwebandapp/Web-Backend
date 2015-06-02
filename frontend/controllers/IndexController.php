@@ -368,10 +368,18 @@ class IndexController extends UnCController
     {
 
         $sendCode=Yii::$app->request->post('code');
+        $password=Yii::$app->request->post('password');
+
         if(empty($sendCode))
         {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'验证码错误'));
         }
+        $valPassword=Validate::validatePassword($password);
+        if(!empty($valPassword))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$valPassword));
+        }
+
         $session = \Yii::$app->session->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE);
 
         if (empty($session)) {
@@ -381,7 +389,6 @@ class IndexController extends UnCController
         $phone = $array[0];
         $areaCode = $array[1];
         $validateCode = $array[2];
-        $password = $array[3];
         $error = "";//错误信息
         $valMsg = Validate::validatePhone($phone);
         if (!empty($valMsg)) {
@@ -474,6 +481,52 @@ class IndexController extends UnCController
         }
         return null;
 
+
+    }
+
+
+    public function actionAccSendMessage()
+    {
+        $phone = \Yii::$app->request->post('phone');//发送给用户的手机
+        $areaCode = \Yii::$app->request->post('areaCode');//区号
+        $error = "";//错误信息
+        $valMsg = Validate::validatePhone($phone);
+        if (!empty($valMsg)) {
+            $error = $valMsg;
+        } else if (empty($areaCode)) {
+            $error = '手机区号格式不正确';
+        }
+
+        if (!empty($error)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+        }
+
+        $count = \Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX . $phone);
+
+        if ($count < Code::MAX_SEND_COUNT) {
+            //判断手机是否已经注册
+            $userBase = $this->userBaseService->findUserByPhone($phone);
+            if (!empty($userBase)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_PHONE_EXIST));
+            }
+            $code = $this->randomPhoneCode();//验证码
+            //分割可能会有问题，测试阶段
+            \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE, $phone . "-" . $areaCode . "-" . $code);
+            //调用发送短信接口 测试默认为成功
+            //调用发送短信接口 测试默认为成功
+            $smsUtils = new SmsUtils();
+            $rst = $smsUtils->sendMessage($phone, $areaCode,$code,SmsUtils::SEND_MESSAGE_TYPE_REGISTER);
+            if ($rst['status'] == Code::SUCCESS) {
+                //设置手机定时器，控制发送频率
+                Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
+                Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, Code::USER_REGISTER_TIMER));
+            } else {
+                return json_encode(Code::statusDataReturn(Code::FAIL, '短信发送异常'));
+            }
+        } else {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "发送验证码过于频繁，请稍后再试"));
+        }
 
     }
 
@@ -1122,6 +1175,32 @@ class IndexController extends UnCController
         return $this->render("error",[
            'message'=>'系统异常'
         ]);
+    }
+
+
+    /**
+     * 验证手机是否存在
+     * @return mixed|string
+     */
+    public function actionValPhoneExist()
+    {
+        $phone=Yii::$app->request->post("phone","");
+        if(Validate::validatePhone($phone)!=''){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的手机号码"));
+
+        }
+
+        try{
+            $userBase=$this->userBaseService->findUserByPhone($phone);
+            if($userBase==null){
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,0));
+            }else{
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,1));
+            }
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
     }
 
 

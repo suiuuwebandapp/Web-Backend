@@ -53,21 +53,19 @@ class UserBaseService extends BaseDb
             $this->userBaseDb = new UserBaseDb($conn);
             //验证手机或邮箱格式是否正确
             $userInfo=null;
-            //如果不是第三方登录，验证手机或者邮箱是否存在
-            if($userAccess==null){
-                if(!empty($userBase->phone)&&!empty($userBase->email)){
-                    $userInfo=$this->userBaseDb->findByEmail($userBase->email);
-                    if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
-                    $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
-                    if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
-                }else  if(!empty($userBase->email)){
-                    $userInfo=$this->userBaseDb->findByEmail($userBase->email);
-                    if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
+            //验证手机或者邮箱是否存在
+            if(!empty($userBase->phone)&&!empty($userBase->email)){
+                $userInfo=$this->userBaseDb->findByEmail($userBase->email);
+                if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
+                $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
+                if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
+            }else  if(!empty($userBase->email)){
+                $userInfo=$this->userBaseDb->findByEmail($userBase->email);
+                if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
 
-                }else if(!empty($userBase->phone)){
-                    $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
-                    if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
-                }
+            }else if(!empty($userBase->phone)){
+                $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
+                if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
             }
             //对用户密码进行加密
             $userBase->password = $this->encryptPassword($userBase->password);
@@ -108,6 +106,25 @@ class UserBaseService extends BaseDb
             $this->closeLink();
         }
         return $userBase;
+    }
+
+
+    /**
+     * 添加第三方登录信息
+     * @param UserAccess $userAccess
+     * @throws Exception
+     */
+    public function addUserAccess(UserAccess $userAccess)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $this->userBaseDb->addUserAccess($userAccess);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
     }
 
 
@@ -186,13 +203,10 @@ class UserBaseService extends BaseDb
             $this->userBaseDb = new UserBaseDb($conn);
             //对用户密码进行加密
             $password = $this->encryptPassword($password);
-            $valMsg = Validate::validateEmail($userName);
-            if(!empty($valMsg))
-            {
-                $result = $this->userBaseDb->findByPhoneAndPwd($userName, $password);
-            }else
-            {
+            if(!empty($userName)&&strpos($userName,"@")){
                 $result = $this->userBaseDb->findByEmailAndPwd($userName, $password);
+            }else{
+                $result = $this->userBaseDb->findByPhoneAndPwd($userName, $password);
             }
 
             $userBase=$this->arrayCastObject($result,UserBase::class);
