@@ -266,13 +266,13 @@ class CircleService extends BaseDb
                 $this->CircleDb->upDateArticleCommentNumb($articleRst);
                 if($isAt)
                 {
-                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_AT,$CircleComment->userSign,$relativeUserSign);
+                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_AT,$CircleComment->userSign,$relativeUserSign,UserMessageRemind::R_TYPE_CIRCLE_ARTICLE);
                 }
                 if($isReply){
-                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_REPLY,$CircleComment->userSign,$relativeUserSign);
+                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_REPLY,$CircleComment->userSign,$relativeUserSign,UserMessageRemind::R_TYPE_CIRCLE_ARTICLE);
                 }else
                 {
-                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_COMMENT,$CircleComment->userSign,$relativeUserSign);
+                    $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_COMMENT,$CircleComment->userSign,$relativeUserSign,UserMessageRemind::R_TYPE_CIRCLE_ARTICLE);
                 }
                 $transaction->commit();
             }

@@ -613,6 +613,8 @@
     var rSign='';
     function getComment(page)
     {
+        rid=0;
+        rSign='';
         $.ajax({
             type: 'post',
             url: '/view-trip/get-comment-list',
@@ -635,10 +637,13 @@
                     var str='';
                     for(var i=0;i<obj.data.length;i++)
                     {
-                        var r=obj.data[i].rTitle;
-                        if(r==null)
+                        var r="@";
+                        if(obj.data[i].rTitle==null)
                         {
                             r='';
+                        }else
+                        {
+                            r+=obj.data[i].rTitle;
                         }
                         var c='';
                         var status=obj.data[i].status;
@@ -691,15 +696,22 @@
     function submitComment()
     {
         var s=$('#pinglun').val();
-        var i =s.indexOf(':');
+        var i =s.indexOf('@');
         if(i==-1){
             var content= s;
             var t='';
         }else
         {
 
-            var t=s.slice(0,i);
-            var content= s.slice(i);
+            var j=s.indexOf(':');
+            if(j==-1){
+                var content= s;
+                var t='';
+            }else
+            {
+            var t=s.slice(0,j);
+            var content= s.slice(j);
+            }
         }
 
         $.ajax({

@@ -11,9 +11,11 @@ use common\components\Code;
 use common\entity\AllTotalize;
 use common\entity\TravelTripComment;
 use common\entity\UserAttention;
+use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\models\TravelTripCommentDb;
 use common\models\UserAttentionDb;
+use common\models\UserMessageRemindDb;
 use yii\base\Exception;
 
 class TravelTripCommentService extends BaseDb
@@ -21,7 +23,7 @@ class TravelTripCommentService extends BaseDb
 
     public $TravelTripCommentDb;
     public $AttentionDb;
-
+    public $remindDb;
 
     /**得到评论列表
      * @param $tripId
@@ -48,6 +50,7 @@ class TravelTripCommentService extends BaseDb
         try {
             $conn = $this->getConnection();
             $this->TravelTripCommentDb = new TravelTripCommentDb($conn);
+            $this->remindDb = new  UserMessageRemindDb($conn);
             $totalize=new AllTotalize();
             $totalize->tType=AllTotalize::TYPE_COMMENT_FOR_TRIP;
             $totalize->rId=$tripId;
@@ -67,6 +70,15 @@ class TravelTripCommentService extends BaseDb
             {
                 $comment->isTravel=TravelTripComment::TYPE_IS_TRAVEL_Y;
             }
+            if(empty($rTitle))
+            {
+                $rUserSign=null;
+            }
+            if(!empty($rUserSign))
+            {
+                $this->remindDb->addUserMessageRemind($tripId,UserMessageRemind::TYPE_AT,$userSign,$rUserSign,UserMessageRemind::R_TYPE_TRIP);
+            }
+
             $comment->rUserSign=$rUserSign;
 
             //得到是否玩过暂未修改

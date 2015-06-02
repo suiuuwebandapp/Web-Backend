@@ -23,6 +23,9 @@ class UserMessageRemind
 
     const  TYPE_ATTENTION=4;//类型为关注
 
+    const R_TYPE_TRIP=1;//随游
+    const R_TYPE_CIRCLE_ARTICLE=2;//圈子文章
+
     /**
      * @var消息id
      */
@@ -56,4 +59,8 @@ class UserMessageRemind
      * @var读取时间
      */
     public $readTime;
+    /**
+     * @var随游还是圈子
+     */
+    public $rType;
 }

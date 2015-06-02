@@ -26,10 +26,10 @@ class UserMessageRemindDb extends ProxyDb
      * @param $userSign
      * @return int
      */
-    public function addUserMessageRemind($relativeId,$relativeType,$userSign,$relativeUserSign)
+    public function addUserMessageRemind($relativeId,$relativeType,$userSign,$relativeUserSign,$rType=0)
     {
         $sql=sprintf("
-          INSERT INTO user_message_remind (relativeId,relativeUserSign,relativeType,createUserSign,createTime,rStatus) VALUES (:relativeId,:relativeUserSign,:relativeType,:userSign,now(),:rStatus);
+          INSERT INTO user_message_remind (relativeId,relativeUserSign,relativeType,createUserSign,createTime,rStatus,rType) VALUES (:relativeId,:relativeUserSign,:relativeType,:userSign,now(),:rStatus,:rType);
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":relativeId", $relativeId, PDO::PARAM_INT);
@@ -37,6 +37,7 @@ class UserMessageRemindDb extends ProxyDb
         $command->bindParam(":relativeType", $relativeType, PDO::PARAM_INT);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
         $command->bindValue(":rStatus", UserMessageRemind::REMIND_STATUS_NORMAL, PDO::PARAM_INT);
+        $command->bindParam(":rType", $rType, PDO::PARAM_INT);
         $command->execute();
         return $this->getConnection()->lastInsertID;
     }
@@ -78,7 +79,7 @@ class UserMessageRemindDb extends ProxyDb
         $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
         $this->setParam("userSign", $userSign);
         $this->setParam("relativeType", $type);
-        $this->setSelectInfo('a.relativeId,a.relativeType,a.remindId,b.headImg,b.nickname');
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,b.headImg,b.nickname');
         $this->setSql($sql);
         return $this->find($page);
     }

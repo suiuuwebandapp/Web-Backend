@@ -76,10 +76,12 @@ class TravelTripCommentDb extends ProxyDb
      */
     public function getCommentListByTripId($tripId,$page,$userSign)
     {
+        // LEFT JOIN user_base r ON r.userSign=a.rUserSign r.nickname as
 
         $sql=sprintf("
             FROM travel_trip_comment a
             LEFT JOIN user_base c ON c.userSign=a.userSign
+            LEFT JOIN user_base r ON r.userSign=a.rUserSign
             LEFT JOIN (SELECT * FROM user_attention bd WHERE bd.userSign=:userSign AND bd.relativeType=:rType ) b ON a.commentId=b.relativeId
             LEFT JOIN
             (
@@ -95,7 +97,7 @@ class TravelTripCommentDb extends ProxyDb
         $this->setParam("tripId", $tripId);
         $this->setParam("userSign", $userSign);
         $this->setParam("rType", UserAttention::TYPE_COMMENT_FOR_TRAVEL);
-        $this->setSelectInfo('a.commentId,a.rTitle,a.content,b.`status`,c.nickname,c.headImg,c.userSign,a.isTravel,o.travelCount');
+        $this->setSelectInfo('a.commentId,r.nickname as rTitle,a.content,b.`status`,c.nickname,c.headImg,c.userSign,a.isTravel,o.travelCount');
         $this->setSql($sql);
         return $this->find($page);
     }
