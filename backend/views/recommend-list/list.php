@@ -34,6 +34,9 @@
                                     </span>
 
                         </div>
+                        <div class="pull-right">
+                            <a id="addRe" href="javascript:" class="btn green-meadow"><i class="fa fa-plus"></i> 添加推荐</a>
+                        </div>
                     </form>
                 </div>
                 <table id="table_list" class="table table-hover">
@@ -74,91 +77,82 @@
             'formObj'  :'#datatables_form',
             'tableDiv' :'#table_div',
             'tableObj' :'#table_list',
-            'tableUrl' :'/wechat-order-refund/get-list',
+            'tableUrl' :'/recommend-list/get-list',
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "orderNumber",
+                {"targets": [0],"data": "recommendId",
                     "width":"150px","bSortable": false},
                 {
                     "targets": [1],
-                    "data": "refundTime",
+                    "data": "relativeId",
                     "width":"150px",
                     "bSortable": false
                 },
                 {
                     "targets": [2],
-                    "data": "refundReason",
+                    "data": "relativeType",
                     "bSortable": false,
                     "width":"150px",
                     "render": function(data, type, full) {
-                        if(data==null)
+                        switch (data)
                         {
-                            return "";
+                            case "1":
+                                return "推荐用户";
+                                break;
+                            case "2":
+                                return "推荐帖子";
+                                break;
+                            case "3":
+                                return "推荐随游";
+                                break;
+                            case "4":
+                                return "推荐圈子";
+                                break;
                         }
-                        return data.length<10?data:data.substring(0,10);
                     }
                 },
                 {
                     "targets": [3],
-                    "data": "nickName",
+                    "data": "rImg",
                     "bSortable": false,
                     "width":"150px",
                     "render": function(data, type, full) {
-                        if(data==null)
+                        if(data!=""&&data!=null){
+                        return '<a  class="titleImgGroup"  href="'+data+'"><img alt="" src="'+data+'" style="max-height:50px;"/></a>'
+                        }else
                         {
-                            return "";
+                            return "暂无背景";
                         }
-                        return data.substring(0,10);
                     }
                 },
                 {
                     "targets": [4],
-                    "data": "money",
-                    "width":"100px",
-                    "bSortable": false
-                },
-                {
-                    "targets": [5],"data": "updateReason","bSortable": false,"width":"180px",
-                    "render": function(data, type, full) {
-                        if(data==null)
-                        {
-                            return "";
-                        }
-                        return data.length<10?data:data.substring(0,10);
-                    }
-                },
-                {"targets": [6],"data": "rName",
-                    "width":"150px","bSortable": false,
-                    "render": function(data, type, full) {
-                        return data;
-                    }
-                },
-                {
-                    "targets": [7],
                     "data": "status",
+                    "width":"100px",
                     "bSortable": false,
                     "render": function(data, type, full) {
-                        var html='';
-                        if(data==1){
-                            html='<span class="label label-success">&nbsp;未处理&nbsp;</span>'
-                        }else if(data==2) {
-                            html='<span class="label label-default">&nbsp;拒绝退款&nbsp;</span>';
-                        }else if(data==3) {
-                            html='<span class="label label-default">&nbsp;已经退款&nbsp;</span>';
-                        }else {
-                            html='<span class="label label-default">&nbsp;未知&nbsp;</span>';
-                        }
-                        return html;
+                    var html='';
+                    if(data==1){
+                        html='<span class="label label-success">&nbsp;上&nbsp;线&nbsp;</span>'
+                    }else{
+                        html='<span class="label label-default">&nbsp;下&nbsp;线&nbsp;</span>';
+                    }
+                    return html;
                     }
                 },
                 {
-                    "targets": [8],
-                    "data": "orderNumber",
+                    "targets": [5],
+                    "data": "recommendId",
                     "bSortable": false,
                     "width":"200px",
                     "render": function(data, type, full) {
                         var html='';
+                        if(full.status!=1){
+                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
+                        }else{
+                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
+                        }
                         html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
@@ -170,14 +164,44 @@
             }
         };
         TableAjax.init(tableInfo);
+        $("#addRe").bind("click",function(){
+            Main.openModal("/recommend-list/show-add")
+        });
 
         $("#refresh,#search").bind("click",function(){
             TableAjax.refresh();
         });
     });
 
+    function changeStatus(id,status)
+    {
+        $.ajax({
+            type:"POST",
+            url:"/recommend-list/change",
+            data:{
+                id:id,
+                status:status
+            },beforeSend:function(){
+                Main.showWait("#table_list");
+            },
+            error:function(){
+                Main.errorTip("系统异常");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                Main.hideWait("#table_list");
+                if(data.status==1){
+                    TableAjax.deleteRefresh();
+                    Main.successTip("修改成功");
+                }else{
+                    Main.errorTip("修改失败");
+                }
+            }
+        });
+
+    }
     function editOrder(id){
-        Main.refreshContentAjax("/wechat-order-refund/edit?o="+id);
+        Main.openModal("/recommend-list/show-edit?id="+id);
     }
 
     function deleteOrder(id){
@@ -185,9 +209,9 @@
         Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
-                url:"/wechat-order-refund/delete-refund",
+                url:"/recommend-list/delete",
                 data:{
-                    orderNumber:id
+                    id:id
                 },beforeSend:function(){
                     Main.showWait("#table_list");
                 },

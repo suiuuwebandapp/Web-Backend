@@ -49,4 +49,62 @@ class RecommendListService extends BaseDb{
         }
     }
 
+    public function editRecommend($recommend)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->recommendDb = new RecommendListDb($conn);
+            $this->recommendDb->editRecommend($recommend);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->recommendDb = new RecommendListDb($conn);
+            $this->recommendDb->delete($id);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+    public function change($id,$status)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->recommendDb = new RecommendListDb($conn);
+            if($status==1)
+            {
+                $status=0;
+            }else
+            {
+                $status=1;
+            }
+            $this->recommendDb->change($id,$status);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    public function getInfo($id)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->recommendDb = new RecommendListDb($conn);
+            return $this->recommendDb->getInfo($id);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
 }

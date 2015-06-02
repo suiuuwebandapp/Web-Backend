@@ -35,7 +35,7 @@
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="false"></button>
                 <h4 class="modal-title">
-                    添加推荐
+                    编辑推荐
                 </h4>
             </div>
             <div class="modal-body">
@@ -43,6 +43,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="portlet-body form">
+                                <input id="id" value="<?= $info['recommendId'];?>" type="hidden"/>
                                 <!-- BEGIN FORM-->
                                 <div class="form-body">
                                     <div class="alert alert-danger display-hide" style="display: none;">
@@ -58,19 +59,19 @@
                                         <div class="col-md-7 valdate">
                                             <div class="radio-list">
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="1">
+                                                    <input type="radio" name="optionsRadios"  value="1" <?php if($info['relativeType']==1){echo "checked";}?> >
                                                     用户
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios" value="2">
+                                                    <input type="radio" name="optionsRadios" value="2" <?php if($info['relativeType']==2){echo "checked";}?> >
                                                     帖子
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="3">
-                                                     随游
+                                                    <input type="radio" name="optionsRadios"  value="3" <?php if($info['relativeType']==3){echo "checked";}?> >
+                                                    随游
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="optionsRadios"  value="4">
+                                                    <input type="radio" name="optionsRadios"  value="4" <?php if($info['relativeType']==4){echo "checked";}?> >
                                                     圈子
                                                 </label>
                                             </div>
@@ -81,15 +82,15 @@
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
-                                                <input id="rId" class="form-control" placeholder="请输入推荐编号" required/>
+                                                <input id="rId" class="form-control" placeholder="请输入推荐编号" value="<?php echo $info['relativeId']?>" required />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
-                                            <input type="hidden" id="titleImg"/>
-                                            <img id="titleImgPre"/>
+                                            <input type="hidden" id="titleImg" value="<?php echo $info['rImg'];?>"/>
+                                            <img id="titleImgPre" src="<?php echo $info['rImg'];?>"/>
                                             <div id="queue"></div>
                                             <input id="file_upload" name="file_upload" type="file">
                                         </div>
@@ -127,7 +128,6 @@
     $(document).ready(function() {
         FormValidation.init("add");
         Metronic.initSlimScroll($(".scroller"));
-        $("#titleImgPre").hide();//隐藏预览封面图
     });
 
 
@@ -157,10 +157,15 @@
 
     //添加目的地
     function add(){
-        var id=$("#rId").val();
+        var id=$("#id").val();
+        var rId=$("#rId").val();
         var img=$("#titleImg").val();
         var type=$("input[name='optionsRadios']:checked").val();
         if(id==''){
+            Main.errorTip("编号不允许为空");
+            return;
+        }
+        if(rId==''){
             Main.errorTip("推荐编号不允许为空");
             return;
         }
@@ -177,10 +182,11 @@
             }
         }
         $.ajax({
-            url :'/recommend-list/add',
+            url :'/recommend-list/edit',
             type:'post',
             data:{
-                rId:id,
+                id:id,
+                rId:rId,
                 img:img,
                 type:type
             },

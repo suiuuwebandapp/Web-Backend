@@ -38,6 +38,7 @@ class RecommendListDb extends ProxyDb
         return $command->execute();
     }
 
+
     public function getList($page,$type)
     {
         $sql=sprintf("
@@ -54,6 +55,49 @@ class RecommendListDb extends ProxyDb
         return $this->find($page);
     }
 
+    public function delete($id)
+    {
+        $sql = sprintf("
+            DELETE  FROM recommend_list WHERE recommendId =:recommendId;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":recommendId", $id, PDO::PARAM_INT);
+        return $command->execute();
+    }
+
+    public function change($id,$status)
+    {
+        $sql = sprintf("
+           UPDATE recommend_list set `status`=:status WHERE recommendId =:recommendId;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":status", $status, PDO::PARAM_INT);
+        $command->bindParam(":recommendId", $id, PDO::PARAM_INT);
+        return $command->execute();
+    }
+
+    public function editRecommend(RecommendList $recommend)
+    {
+        $sql = sprintf("
+           UPDATE recommend_list set relativeType=:relativeType,rImg=:rImg,relativeId=:relativeId  WHERE recommendId =:recommendId;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":relativeId",$recommend->relativeId , PDO::PARAM_INT);
+        $command->bindParam(":rImg",$recommend->rImg , PDO::PARAM_STR);
+        $command->bindParam(":relativeType",$recommend->relativeType , PDO::PARAM_INT);
+        $command->bindParam(":recommendId", $recommend->recommendId, PDO::PARAM_INT);
+        return $command->execute();
+    }
+
+    public function getInfo($id)
+    {
+        $sql = sprintf("
+            SELECT *  FROM recommend_list WHERE recommendId =:recommendId;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":recommendId", $id, PDO::PARAM_INT);
+        return $command->queryOne();
+    }
     /**
      * 查找推荐主题文章  //暂时用不上 只推荐了圈子
      * @return array

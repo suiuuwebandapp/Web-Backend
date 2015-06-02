@@ -152,6 +152,18 @@
                     </li>
                 </ul>
             </li>
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-camera"></i>
+                    <span class="title"> 推荐列表</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#~/recommend-list/list"> 推荐列表</a>
+                    </li>
+                </ul>
+            </li>
             <!--
             <li class="menu_top">
                 <a href="javascript:;">
