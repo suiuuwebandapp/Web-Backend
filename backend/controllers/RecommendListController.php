@@ -43,11 +43,6 @@ class RecommendListController extends CController {
         echo json_encode($tableResult);
     }
 
-    /**
-     *
-     * 添加目的地详情
-     * @return string
-     */
     public function actionAdd()
     {
         $rId=\Yii::$app->request->post("rId");
