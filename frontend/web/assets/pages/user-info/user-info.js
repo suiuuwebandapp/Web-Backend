@@ -1030,11 +1030,14 @@ function buildMyTripHtml(tripList){
         if(info.length>100){
             info=info.substring(0,100)+"...";
         }
-        if(count!=''){ count='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请<b>'+count+'</b></a>'};
         html+='<div class="orderList clearfix">';
         html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+',this)">';
         html+=' <dl class="order clearfix">';
-        html+='   <dt class="title">';
+        if(tripInfo.status==TripStatus.TRAVEL_TRIP_STATUS_DRAFT){
+            html+='   <dt class="title grey">';
+        }else{
+            html+='   <dt class="title">';
+        }
         html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';
         html+='   </dt>';
         html+='   <dd>';
@@ -1051,7 +1054,14 @@ function buildMyTripHtml(tripList){
         html+='        </span>';
         html+='   </dd>';
         html+=' </dl>';
-        html+=' <p><a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>'+count+'</p>';
+        html+=' <p>';
+        if(tripInfo.status==TripStatus.TRAVEL_TRIP_STATUS_DRAFT){
+            html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">编辑发布</a>';
+        }else{
+            if(count!=''){ html+='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请<b>'+count+'</b></a>';};
+        }
+        html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
+        html+=' </p>';
         html+='</div>';
     }
     return html;

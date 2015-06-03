@@ -328,6 +328,7 @@ class TripController extends CController
         $tripKind = trim(\Yii::$app->request->post("tripKind", ""));
         $info = trim(\Yii::$app->request->post("info", ""));
         $tagList = \Yii::$app->request->post("tagList", "");
+        $status = \Yii::$app->request->post("status", "");
 
 
         if ($this->userPublisherObj == null) {
@@ -471,6 +472,9 @@ class TripController extends CController
 
         try {
             $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList);
+            if($status==TravelTrip::TRAVEL_TRIP_STATUS_NORMAL&&$travelTrip['status']==TravelTrip::TRAVEL_TRIP_STATUS_DRAFT){
+                $this->tripService->changeTripStatus($travelTrip['tripId'],TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+            }
             $t=TagUtil::getInstance();
             $t->updateTagValList($tagList,$travelTrip['tripId']);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));

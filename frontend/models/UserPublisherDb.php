@@ -170,11 +170,11 @@ class UserPublisherDb extends ProxyDb
         $sql = sprintf("
             UPDATE user_publisher SET
             tripCount=tripCount+1
-            WHERE $userPublisherId=:$userPublisherId
+            WHERE userPublisherId=:userPublisherId
         ");
 
         $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userId", $userPublisherId, PDO::PARAM_STR);
+        $command->bindParam(":userPublisherId", $userPublisherId, PDO::PARAM_STR);
 
         $command->execute();
     }

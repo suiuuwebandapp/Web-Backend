@@ -406,7 +406,12 @@ class UserOrderService extends BaseDb
             $conn=$this->getConnection();
             $this->userOrderDb=new UserOrderDb($conn);
             $orderInfo=$this->userOrderDb->findOrderById($orderId);
-            if($orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS&&$orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){
+            if($orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS&&
+                $orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH&&
+                $orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_CANCELED&&
+                $orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL&&
+                $orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS
+            ){
                 throw new Exception("Invalid Order Status");
             }
             if($orderInfo['userId']!=$userId){

@@ -703,11 +703,12 @@ class TravelTripDb extends ProxyDb{
             )
             AS service
             ON service.tripId=t.tripId
-            WHERE t.createPublisherId=:createPublisherId AND t.status=:tripStatus
+            WHERE t.createPublisherId=:createPublisherId AND t.status!=:tripStatus
+            ORDER BY t.status ASC
         ");
         $this->setParam("createPublisherId",$createPublisherId);
         $this->setParam("status",TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
-        $this->setParam("tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+        $this->setParam("tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
 
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");

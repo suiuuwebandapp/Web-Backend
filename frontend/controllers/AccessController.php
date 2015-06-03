@@ -75,6 +75,7 @@ class AccessController extends UnCController
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
                     throw new Exception("Invalid Sex Value");
                 }
+
                 $userBase=new UserBase();
                 $userBase->nickname=$nickname;
                 $userBase->headImg=$headImg;
@@ -218,7 +219,6 @@ class AccessController extends UnCController
             if($userBase->status!=UserBase::USER_STATUS_NORMAL){
                 return Code::statusDataReturn(Code::FAIL,"User Status Is Disabled");
             }else{
-                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
                 return Code::statusDataReturn(Code::SUCCESS,$userBase);
             }
         }else{

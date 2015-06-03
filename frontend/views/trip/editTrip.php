@@ -304,10 +304,11 @@
                         <?php } ?>
                     <?php }?>
                 </ul>
+                <input type="button" class="btn yulan" value="预览" id="preview">
+                <input type="button" class="btn sure" value="立即发布" id="tripFinish">
             </div>
-            <input type="button" class="yulan" value="预览" id="preview">
         </div>
-        <!---step5 end-->
+       <!---step5 end-->
         <div class="bjy-bj6 bjy-bj">6</div>
     </div>
 </div>
@@ -405,6 +406,9 @@
 
         $("#preview").bind("click",function(){
             saveTrip(2);
+        });
+        $("#tripFinish").bind("click",function(){
+            saveTrip(1);
         });
         $("#finishTab").unbind("click");
 

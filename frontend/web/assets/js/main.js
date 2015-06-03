@@ -214,6 +214,11 @@ var Main = function() {
 
 }();
 
+var TripStatus={
+    'TRAVEL_TRIP_STATUS_NORMAL':1,
+    'TRAVEL_TRIP_STATUS_DRAFT':2,
+    'TRAVEL_TRIP_STATUS_DELETE':3
+};
 
 var OrderStatus= {
     'USER_ORDER_STATUS_PAY_WAIT': 0,
