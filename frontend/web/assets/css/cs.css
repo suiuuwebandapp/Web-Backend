@@ -70,37 +70,19 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .serch-out .serch{ position:absolute; top:10px; left:50%; margin-left:-170px;  width:340px;   overflow:hidden; } 
 .serch-out .text1{ width:244px;  border:none; background:rgba(102,102,102,0.6); padding:9px 20px; color:#ddd; float:left;}
 .serch-out .btn1{ width:50px; text-align:center;background:rgba(102,102,102,0.6); border:none; float:left; margin-left:4px; font-size:16px; color:#ddd; padding:8px; cursor:pointer;}
-
-.list{ height:auto;margin:35px auto 0px;}
-.list .title{height:40px; line-height:30px; font-size:24px; color:#858585; padding-left:10px;}
-.list ul li a{ height:260px;  width:284px; position:absolute; top:0; left:0; display:block;}
-.btn8{ color:#858585; width:100px; height:40px; margin:40px auto; line-height:40px; text-align:center; display:block; border:none; background:none; font-size:24px; }
-.list ul li p{ background:none;}
-
-#ul1{ width:1216px; margin:0 auto; overflow:hidden;}
-#ul1 li{ width:284px; height:340px; margin:10px; float:left; position:relative; overflow:hidden; background:#FFF; cursor:pointer;}
+.btn8{ float:right; color:#72B8FF; font-size:18px; margin-top:5px; margin-bottom:25px;  }
+.index_list{ height:auto;margin:35px auto 0px;}
+.index_list .title{height:40px; line-height:30px; font-size:24px; color:#858585; padding-left:10px;}
+.index_list ul li p{ background:none;}
+#ul1{ width:1216px; height:345px; margin:0 auto; overflow:hidden;}
+#ul1 li{ height:340px;  width:285px; float:left; margin-right:18px;}
 #ul1 li:hover{ box-shadow:0 0 8px rgba(0,0,0,0.4);}
-#ul1 li .box{ display:block; width:100%; height:260px; overflow:hidden;}
-#ul1 li .box img{ display:block; width:100%;}
-#ul1 li .user01{width:284px; height:40px; position:absolute; left:0px; top:240px;}
-#ul1 li .user01 img{ float:left; width:40px; height:40px; border-radius:360px;}
-#ul1 li .user01 font{ float:left; margin-left:10px; width:230px; height:20px; line-height:20px; margin-top:20px; display:block; font-size:14px;}
-#ul1 li h4{ width:284px; height:30px; line-height:30px; text-align:center; margin-top:20px; font-weight:normal;}
-#ul1 li div.zhezhao{ position:absolute; left:0; top:0; width:100%; height:0; background:rgba(0,0,0,0.6); color:#fff; line-height:22px; font-size:14px; font-weight:bold; opacity:0;
-transition:all 0.4s ease-in-out;
--webkit-transition:all 0.4s ease-in-out;
--moz-transition:all 0.4s ease-in-out;
--ms-transition:all 0.4s ease-in-out;
--o-transition:all 0.4s ease-in-out;
-}
-#ul1 li:hover div.zhezhao{ height:260px; opacity:1;}
-#ul1 li div.zhezhao p{ position:relative; color:#ddd; font-size:14px; text-indent:2em; margin:15px}
-#ul1 li div.zhezhao .pingjia{ width:90%; position:absolute; bottom:10px; right:10px;margin:0;}
-#ul1 li div.zhezhao .pingjia img{ margin:0 2px;}
-#ul1 li div.zhezhao .pingjia span b{ color:#ff794c; font-size:16px;}
-#ul1 li div.zhezhao .pingjia span{ margin-left:5px; display:block;}
+.index_list ul li a{ height:340px;  width:285px; overflow:hidden;}
+.index_list ul li a img{ display:block; width:285px;}
 
-.index-tuijian{ height:645px; overflow:hidden;}
+
+
+.index-tuijian{ height:690px; overflow:hidden;}
 .index-tuijian .countrys{ position:relative; height:645px;}
 .index-tuijian .countrys li{ overflow:hidden; position:absolute; background:#eee;}
 .index-tuijian .countrys li img{ width:100%; display:block; 
@@ -1163,7 +1145,7 @@ transition:1s;
 
 /*-----------随游页面---------*/
 .sylx{ height:auto; margin:85px auto 0px; overflow:hidden;}
-.sylx .syBanner{ height:400px; width:1200px; margin:0 auto 20px; background:url(../images/syBanner.jpg) no-repeat center 0; overflow:hidden; position:relative;}
+.sylx .syBanner{ height:400px; width:1200px; margin:0 auto 20px; background:url(http://image.suiuu.com/suiuu_index/syBanner.jpg) no-repeat center 0; overflow:hidden; position:relative;}
 .sylx .syBanner .detailBtn{  font-size:18px; color:#ff7a4d; position:absolute; left:287px; top:330px;}
 .sylx .syBanner .detailBtn:hover{ text-decoration:underline;}
 .sylx .syBanner .sylx-serch{  left:50%; margin-left:-170px; width:340px;  overflow:hidden; position:absolute; bottom:10px; left:50%; } 

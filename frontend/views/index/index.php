@@ -85,58 +85,41 @@
 <!--banner结束-->
 
 
-<!--list开始-->
-<div class="list w1200 clearfix">
+
+<div class="index_list w1200 clearfix">
 
     <p class="title">热门</p>
     <ul id="ul1">
-        <?php if($recommendTravel!=null){?>
-            <?php foreach($recommendTravel as $trip){?>
-                <li>
-                    <div class="box">
-                        <img src="<?=$trip['titleImg']?>" alt="" width="284px" height="260px">
-                    </div>
-                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>">
-                        <div class="zhezhao">
-                            <p><?=$trip['intro']?></p>
-                            <p class="pingjia">评价
-                                <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                                <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                                <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                                <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                                <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                                <span>基础价格：<b><?=floor($trip['basePrice'])?></b></span>
-                            </p>
-                        </div>
-                    </a>
-                    <p class="user01">
-                        <img src="<?=$trip['headImg'] ?>" alt="" width="40" height="40">
-                        <font><?=$trip['nickname']?></font>
-                    </p>
-                    <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
-                </li>
-            <?php } ?>
-        <?php } ?>
+        <li>
+            <a href="/view-trip/list?s=澳大利亚"><img src="/assets/images/index/pic01.jpg" width="285" height="340"></a>
+        </li>
+        <li>
+            <a href="/view-trip/list?s=香港"><img src="/assets/images/index/pic02.jpg" width="285" height="340"></a>
+        </li>
+        <li>
+            <a href="/view-trip/list?s=西班牙"><img src="/assets/images/index/pic03.jpg" width="285" height="340"></a>
+        </li>
+        <li>
+            <a href="/view-trip/list?s=新加坡"><img src="/assets/images/index/pic04.jpg" width="285" height="340"></a>
+        </li>
     </ul>
+    <a href="/view-trip/list"  class="btn8" id="showTripMore">显示更多</a>
 </div>
-<a href="/view-trip/list"  class="btn8" id="showTripMore">显示更多</a>
 
-<!--list结束-->
-<!--index-tuijian begin-->
+
+
 <div class="index-tuijian w1200 clearfix">
     <ul class="countrys">
-        <li><a href="/view-trip/list?s=济州岛"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/01.jpg"></a><span>济州岛</span></li>
-        <li><a href="/view-trip/list?s=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/02.jpg"></a><span>巴黎</span></li>
-        <li><a href="/view-trip/list?s=圣母院"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/03.jpg"></a><span>圣母院</span></li>
-        <li><a href="/view-trip/list?s=台北"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/04.jpg"></a><span>台北</span></li>
-        <li><a href="/view-trip/list?s=芬兰"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/05.jpg"></a><span>芬兰</span></li>
-        <li><a href="/view-trip/list?s=巴黎"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/06.jpg"></a><span>巴黎</span></li>
-        <li><a href="/view-trip/list?s=伦敦"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/07.jpg"></a><span>伦敦</span></li>
+        <li><a href="/view-trip/list?s=香港"><img src="/assets/images/index/01.jpg"></a><span>香港</span></li>
+        <li><a href="/view-trip/list?s=西班牙"><img src="/assets/images/index/02.jpg"></a><span>西班牙</span></li>
+        <li><a href="/view-trip/list?s=澳大利亚"><img src="/assets/images/index/03.jpg"></a><span>澳大利亚</span></li>
+        <li><a href="/view-trip/list?s=新加坡"><img src="/assets/images/index/04.jpg"></a><span>新加坡</span></li>
+        <li><a href="/view-trip/list?s=美国"><img src="/assets/images/index/05.jpg"></a><span>美国</span></li>
+        <li><a href="/view-trip/list?s=法国"><img src="/assets/images/index/06.jpg"></a><span>法国</span></li>
+        <li><a href="/view-trip/list?s=意大利"><img src="/assets/images/index/07.jpg"></a><span>意大利</span></li>
     </ul>
+    <a href="/destination/list" class="btn8">显示更多</a>
 </div>
-<a href="/destination/list"  class="btn8">显示更多</a>
-
-<!--index-tuijian end-->
 
 <script type="text/javascript">
     $(document).ready(function(){
