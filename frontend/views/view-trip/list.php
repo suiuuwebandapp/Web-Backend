@@ -74,7 +74,9 @@
                         </div>
                     </li>
                 <?php } ?>
-            <?php }?>
+            <?php }else{
+                echo "<div style='text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>";
+            }?>
         </ul>
         <ol id="spage">
             <?= $pageResult->pageHtml?>

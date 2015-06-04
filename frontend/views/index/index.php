@@ -87,7 +87,6 @@
 
 
 <div class="index_list w1200 clearfix">
-
     <p class="title">热门</p>
     <ul id="ul1">
         <li>
@@ -97,10 +96,10 @@
             <a href="/view-trip/list?s=香港"><img src="/assets/images/index/pic02.jpg" width="285" height="340"></a>
         </li>
         <li>
-            <a href="/view-trip/list?s=西班牙"><img src="/assets/images/index/pic03.jpg" width="285" height="340"></a>
+            <a href="/view-trip/list?s=新加坡"><img src="/assets/images/index/pic03.jpg" width="285" height="340"></a>
         </li>
         <li>
-            <a href="/view-trip/list?s=新加坡"><img src="/assets/images/index/pic04.jpg" width="285" height="340"></a>
+            <a href="/view-trip/list?s=意大利"><img src="/assets/images/index/pic04.jpg" width="285" height="340"></a>
         </li>
     </ul>
     <a href="/view-trip/list"  class="btn8" id="showTripMore">显示更多</a>
