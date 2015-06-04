@@ -37,7 +37,7 @@
         </dl>
         <dl class="fl ">
             <dt>随游移动端</dt>
-            <dd><a href="#">APP近期发布</a></dd>
+            <dd><a href="http://image.suiuu.com/suiuu_index/Suiuu.apk">Android App 下载</a></dd>
         </dl>
         <div class="fr right">
             <ul>
