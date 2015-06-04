@@ -21,10 +21,13 @@
 <script type="text/javascript" src="/assets/js/jquery.lazyload.min.js"></script>
 
 <!--sylx-->
-<div class="sylx w1200">
-    <div class="sylx-serch">
-        <input type="text" value="<?=empty($search)?"":$search?>" class="w285" id="search">
-        <input type="button" value="搜索" class="w52" id="searchBtn">
+<div class="sylx w1200 clearfix">
+    <div class="syBanner">
+        <a href="###" class="detailBtn">活动详情</a>
+        <div class="sylx-serch">
+            <input type="text" value="<?=empty($search)?"":$search?>" class="text1" id="search">
+            <input type="button" value="搜索" class="btn1" id="searchBtn">
+        </div>
     </div>
     <div class="sylx-xiangxi clearfix">
         <p class="p1 clearfix">
@@ -108,6 +111,26 @@
     </div>
 </div>
 <!--sylx-->
+
+
+
+<!------sy活动详情弹出层------>
+<div class="sydetailPop screens">
+    <div class="title"></div>
+    <div class="text">
+        <p class="p1">活动时间</p>
+        <p class="p2">2015年6月1日—2015年9月30日</p>
+        <p class="p1">活动内容</p>
+        <p>凡在随游网成功预定随游产品的用户即<br>可获赠由游友提供的出境随身WIFI（1天）</p>
+        <p class="p1">活动规则</p>
+        <p>1.用户在成功预定随游产品后，无需单独领取
+            小游会根据您的订单联系方式，尽快与您联
+            系安排WIFI设备领取事宜</p>
+        <p>2.WIFI领取可选择机场自提，或邮寄方式</p>
+        <p>3.WIFI设备由游友移动提供，产品本身任何问题，请登陆进行咨询</p>
+        <p>4.在法律许可范围内，随游网对本次活动拥有最终解释权。</p>
+    </div>
+</div>
 
 i<script type="text/javascript">
     var currentPage=1;
@@ -199,7 +222,7 @@ i<script type="text/javascript">
     {
         var scroll_offset=$("#trip_base_list").offset();
         $("body,html").animate({
-            scrollTop:0
+            scrollTop:scroll_offset.top-60
         },800);
     }
 
@@ -241,7 +264,7 @@ i<script type="text/javascript">
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
-                    scrollList();
+
                     $("#trip_base_list ul").html("");
                     var list=data.data.result;
                     if(list.length==0){
@@ -249,6 +272,7 @@ i<script type="text/javascript">
                         $("#spage").html("");
                         return;
                     }
+                    scrollList();
                     var trip,html="";
                     for(var i=0;i<list.length;i++){
                         trip=list[i];

@@ -203,6 +203,17 @@ $(function(){
 })
 */
 
+
+
+/*-----随游Bnner推广弹窗----*/
+$(function(){
+	$('.sylx .syBanner .detailBtn').click(function(e) {
+		$('.mask,.sydetailPop').css('display','block')
+    });
+
+})
+
+
 /*-----完成页满屏显示----*/
 $(function(){
 	var h1=$(window).height();
@@ -210,8 +221,9 @@ $(function(){
 	var myh=h1-h3-40-110;
 	$('#finish').outerHeight(myh+'px')
 	$('.forgotPaw').outerHeight(myh+'px')
+	$('.syRegisterT').outerHeight(myh+'px')
 	
-
+	
 })
 /*-----关闭浮层---*/
 $(function(){
@@ -235,13 +247,3 @@ $(function(){
 })
 
 */
-
-
-
-
-
-
-
-
-
-

@@ -255,7 +255,7 @@ function initUserMessageSessionTimer(){
     }
     messageSessionTimer=window.setInterval(function(){
         getUserUnReadMessageSession();
-    },5000);
+    },10000);
 }
 
 /**

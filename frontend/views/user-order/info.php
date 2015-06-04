@@ -36,7 +36,7 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
                 <span>
                     <a href="#" class="user"> <img src="<?=$travelInfo['createPublisherInfo']['headImg']?>" ></a>
                     <a href="#" class="message"><b><?=$travelInfo['createPublisherInfo']['nickname']?></b><br>
-                        <img src="/assets/images/xf.fw.png" width="18" height="12">
+                        <img src="/assets/images/xf.fw.png" width="18" height="12" onclick="Main.showSendMessage('<?=$travelInfo['createPublisherInfo']['userSign']?>')">
                     </a>
                 </span>
                 <span><?=$orderInfo->beginDate?></span>

@@ -1157,16 +1157,18 @@ transition:1s;
     color: #fff;
 	float:right;
   
-}/*---------------随友编辑-end------------*/
+}
+/*---------------随友编辑-end------------*/
 
 
-/*-----------随游浏览页面---------*/
+/*-----------随游页面---------*/
 .sylx{ height:auto; margin:85px auto 0px; overflow:hidden;}
-.sylx-serch{ width:340px; height:50px; margin:20px auto;}
-.sylx-serch input{ background:#b2b2b2; color:#fff; border:none; font-size:16px;}
-.sylx-serch input.w285{ width:250px; padding:11px;   float:left;}
-.sylx-serch input.w52{ cursor:pointer; width:50px;  margin-left:1px; text-align:center; padding:10px;}
-
+.sylx .syBanner{ height:400px; width:1200px; margin:0 auto 20px; background:url(../images/syBanner.jpg) no-repeat center 0; overflow:hidden; position:relative;}
+.sylx .syBanner .detailBtn{  font-size:18px; color:#ff7a4d; position:absolute; left:287px; top:330px;}
+.sylx .syBanner .detailBtn:hover{ text-decoration:underline;}
+.sylx .syBanner .sylx-serch{  left:50%; margin-left:-170px; width:340px;  overflow:hidden; position:absolute; bottom:10px; left:50%; } 
+.sylx .syBanner .sylx-serch .text1{ width:244px;  border:none; background:rgba(0,0,0,0.4); padding:9px 20px; color:#ddd; float:left;}
+.sylx .syBanner .sylx-serch .btn1{ width:50px; text-align:center;  background:rgba(0,0,0,0.4); border:none; float:left; margin-left:4px; font-size:16px; color:#ddd; padding:8px; cursor:pointer;}
 .sylx-xiangxi{ width:1165px; height:auto; margin:0px auto; padding-bottom:10px;}
 .sylx-xiangxi .p1 label,.sylx-xiangxi .p2 label{ height:36px; line-height:36px; width:50px; display:inline-block; float:left; margin-bottom:20px; }
 .sylx-xiangxi .p1 .icon{ height:36px; line-height:36px; width:36px;display:inline-block; float:left;  }
@@ -1208,7 +1210,15 @@ transition:1s;
 .sylx-tuij ul{ width:1200px; height:280px;}
 .sylx-tuij ul li{ float:left; width:284px; height:280px; overflow:hidden; margin:0px 20px 20px 0px;}
 .sylx-tuij ul li img{ width:284px; height:280px;}
-/*-----------随游浏览页-end---------*/
+
+.sydetailPop{ display:none; font-size:18px; position:fixed; top:100px; left:50%; margin-left:-225px; z-index:999; height:auto; width:445px; background:url(../images/sy-tBg02.png) no-repeat center bottom; padding-bottom:29px;}
+.sydetailPop .text{  background:#FFF4DD;}
+.sydetailPop .title{ background:url(../images/sy-tBg01.png) no-repeat center 0; height:101px; width:100%;}
+.sydetailPop p{ color:#FF9200;  line-height:36px; padding:0 40px;}
+.sydetailPop .p2{ line-height:50px;text-align:center;}
+.sydetailPop .p1{ color:#D86C00; height:44px; line-height:44px; text-align:center; background:#FFD590;}
+
+/*-----------随游页-end---------*/
 
 /*-------------随游详情---------*/
 .sydetail{margin:110px auto 0px;}
