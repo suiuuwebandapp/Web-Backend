@@ -18,44 +18,50 @@ use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\web\Controller;
 
-class UploadController extends Controller{
+class UploadController extends Controller
+{
 
     public $enableCsrfValidation = false;
 
     private $uploadService;
 
-    public function __construct($id,$module)
+    public function __construct($id, $module)
     {
-        $this->uploadService=new UploadService();
+        $this->uploadService = new UploadService();
         parent::__construct($id, $module);
     }
     /******************************************************************************
-
-    参数说明:
-    $max_file_size  : 上传文件大小限制, 单位BYTE
-    $destination_folder : 上传文件路径
-    $watermark   : 是否附加水印(1为加水印,其他为不加水印);
-
-    使用说明:
-    1. 将PHP.INI文件里面的"extension=php_gd2.so"一行前面的;号去掉,因为我们要用到GD库;
-    2. 将extension_dir =改为你的php_gd2.so所在目录;
+     *
+     * 参数说明:
+     * $max_file_size  : 上传文件大小限制, 单位BYTE
+     * $destination_folder : 上传文件路径
+     * $watermark   : 是否附加水印(1为加水印,其他为不加水印);
+     *
+     * 使用说明:
+     * 1. 将PHP.INI文件里面的"extension=php_gd2.so"一行前面的;号去掉,因为我们要用到GD库;
+     * 2. 将extension_dir =改为你的php_gd2.so所在目录;
      ******************************************************************************/
 
     //上传文件类型列表
-    const LOCAL_IMAGE_DIR='./uploads/image/';
+    const LOCAL_IMAGE_DIR = './uploads/image/';
 
 
-    private $maxCardImgSize=2048000;//上传文件大小限制, 单位BYTE
-    private $cardImgTypes=[
-        'jpg','png','jpeg'
+    private $maxCardImgSize = 2048000;//上传文件大小限制, 单位BYTE
+    private $cardImgTypes = [
+        'jpg', 'png', 'jpeg'
     ];
 
-    private $maxHeadImgSize=1024000;
-    private $headImgTypes=[
-        'jpg','png','jpeg'
+    private $maxHeadImgSize = 1024000;
+    private $headImgTypes = [
+        'jpg', 'png', 'jpeg'
     ];
 
-    private $localDir='./uploads/image/';
+    private $maxTripImgSize = 2048000;
+    private $tripImgTypes = [
+        'jpg', 'png', 'jpeg'
+    ];
+
+    private $localDir = './uploads/image/';
 
     /**
      * 上传用户身份证
@@ -63,58 +69,109 @@ class UploadController extends Controller{
      */
     public function actionUploadCardImg()
     {
-        if(!array_key_exists('Filedata',$_FILES)){
+        if (!array_key_exists('Filedata', $_FILES)) {
             echo json_encode(['status']);
-        }else{
-            $result=$this->uploadService->uploadOssFile($_FILES['Filedata'],$this->maxHeadImgSize,$this->headImgTypes,OssUpload::OSS_SUIUU_CARD_DIR);
+        } else {
+            $result = $this->uploadService->uploadOssFile($_FILES['Filedata'], $this->maxHeadImgSize, $this->headImgTypes, OssUpload::OSS_SUIUU_CARD_DIR);
             return json_encode($result);
         }
     }
 
+
+    /**
+     * 上传随游图片
+     * @return string
+     */
+    public function actionUploadTripImg()
+    {
+        if (!array_key_exists('Filedata', $_FILES)) {
+            echo json_encode(['status']);
+        } else {
+            $result = $this->uploadService->uploadOssFile($_FILES['Filedata'], $this->maxTripImgSize, $this->tripImgTypes, OssUpload::OSS_SUIUU_TRIP_DIR);
+            return json_encode($result);
+        }
+    }
+
+
+
+
+    /**
+     * 更新随友证件
+     * @return string
+     */
     public function actionUploadCardImgByUser()
     {
-        if(!array_key_exists('Filedata',$_FILES)){
+        if (!array_key_exists('Filedata', $_FILES)) {
             echo json_encode(['status']);
-        }else{
-            $result=$this->uploadService->uploadOssFile($_FILES['Filedata'],$this->maxHeadImgSize,$this->headImgTypes,OssUpload::OSS_SUIUU_CARD_DIR);
-            if($result['status']==Code::SUCCESS){
-                $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
+        } else {
+            $result = $this->uploadService->uploadOssFile($_FILES['Filedata'], $this->maxHeadImgSize, $this->headImgTypes, OssUpload::OSS_SUIUU_CARD_DIR);
+            if ($result['status'] == Code::SUCCESS) {
+                $currentUser = \Yii::$app->session->get(Code::USER_LOGIN_SESSION);
 
-                try{
-                    if($currentUser!=null){
-                        $userBaseService=new UserBaseService();
-                        $userPublisher=$userBaseService->findUserPublisherByUserSign($currentUser->userSign);
-                        if($userPublisher==null){
-                            $userPublisher=new UserPublisher();
-                            $userPublisher->userId=$currentUser->userSign;
-                            $userPublisher->idCardImg=$result['data'];
+                try {
+                    if ($currentUser != null) {
+                        $userBaseService = new UserBaseService();
+                        $userPublisher = $userBaseService->findUserPublisherByUserSign($currentUser->userSign);
+                        if ($userPublisher == null) {
+                            $userPublisher = new UserPublisher();
+                            $userPublisher->userId = $currentUser->userSign;
+                            $userPublisher->idCardImg = $result['data'];
                             $userBaseService->addUserPublisher($userPublisher);
-                        }else{
-                            $userPublisher->idCardImg=$result['data'];
+                        } else {
+                            $userPublisher->idCardImg = $result['data'];
                             $userBaseService->updateUserPublisher($userPublisher);
                         }
 
-                    }else{
-                        $result=Code::statusDataReturn(Code::FAIL);
+                    } else {
+                        $result = Code::statusDataReturn(Code::FAIL);
                     }
-                }catch (Exception $e){
-                    $result=Code::statusDataReturn(Code::FAIL);
+                } catch (Exception $e) {
+                    $result = Code::statusDataReturn(Code::FAIL);
                 }
             }
             return json_encode($result);
         }
     }
 
+
+    /**
+     * 上传用户头像（上传到本地）
+     * @return string
+     */
     public function actionUploadHeadImg()
     {
-        if(!array_key_exists('Filedata',$_FILES)){
+        if (!array_key_exists('Filedata', $_FILES)) {
             echo json_encode(['status']);
-        }else{
-            $result=$this->uploadService->uploadLocalImg($_FILES['Filedata'],$this->maxCardImgSize,$this->cardImgTypes,$this->localDir);
+        } else {
+            $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxCardImgSize, $this->cardImgTypes, $this->localDir);
             return json_encode($result);
         }
     }
 
+
+    /**
+     * 上传随游标题图像 压缩
+     * @return array|string
+     */
+    public function actionUploadTripTitleImg()
+    {
+        if (!array_key_exists('Filedata', $_FILES)) {
+            echo json_encode(['status']);
+        } else {
+            $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxTripImgSize, $this->tripImgTypes, $this->localDir);
+            if ($result['status'] == Code::SUCCESS) {
+                $rst=$this->uploadService->resetImg($result['data'],550,500,2);
+                if($rst['status']!=Code::SUCCESS){
+                    return $rst;
+                }
+                $ossUpload=new OssUpload();
+                $rst=$ossUpload->putObject($rst['data'],OssUpload::OSS_SUIUU_TRIP_DIR,basename($rst['data']));
+                return json_encode($rst);
+            }else{
+                return json_encode($result);
+            }
+        }
+    }
 
 
 }

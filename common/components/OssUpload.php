@@ -9,7 +9,7 @@
 
 namespace common\components;
 
-require_once '../../vendor/oss/sdk.class.php';
+require_once \Yii::getAlias("vendor").'/oss/sdk.class.php';
 
 
 class OssUpload
@@ -24,6 +24,11 @@ class OssUpload
      * 用户头像等图片
      */
     const OSS_SUIUU_HEAD_DIR='suiuu_head';
+
+    /**
+     * 随游图片
+     */
+    const OSS_SUIUU_TRIP_DIR='suiuu_trip';
 
     /**
      * 专栏，目的地等图片

@@ -138,4 +138,103 @@ class UploadService {
             return Code::statusDataReturn(Code::FAIL,$e->getMessage());
         }
     }
+
+
+
+
+    /**
+     *
+     * @param $Image    //需要调整的图片(含路径)
+     * @param int $Dw   //调整时最大宽度;缩略图时的绝对宽度
+     * @param int $Dh   //调整时最大高度;缩略图时的绝对高度
+     * @param int $Type //1,调整尺寸; 2,生成缩略图
+     * @return array
+     */
+    public function resetImg($Image, $Dw = 550, $Dh = 500, $Type = 1)
+    {
+        IF (!file_exists($Image)) {
+            return Code::statusDataReturn(Code::FAIL);
+        }
+        //如果需要生成缩略图,则将原图拷贝一下重新给$Image赋值
+        IF ($Type != 1) {
+            $tempArr=explode('.',$Image);
+            $tempArr[count($tempArr)-2].='_reset';
+            $newImg=implode('.',$tempArr);
+            Copy($Image, $newImg);
+            $Image = $newImg;
+        }
+        //取得文件的类型,根据不同的类型建立不同的对象
+        $ImgInfo = getimagesize($Image);
+        switch ($ImgInfo[2]) {
+            case 1:
+                $Img = @imagecreatefromgif($Image);
+                break;
+            case 2:
+                $Img = @imagecreatefromjpeg($Image);
+                break;
+            case 3:
+                $Img = @imagecreatefrompng($Image);
+                break;
+        }
+        //如果对象没有创建成功,则说明非图片文件
+        IF (empty($Img)) {
+            //如果是生成缩略图的时候出错,则需要删掉已经复制的文件
+            IF ($Type != 1) {
+                unlink($Image);
+            }
+            return Code::statusDataReturn(Code::FAIL);
+        }
+        //如果是执行调整尺寸操作则
+        if ($Type == 1) {
+            $w = imagesx($Img);
+            $h = imagesy($Img);
+            $width = $w;
+            $height = $h;
+            if ($width > $Dw) {
+                $Par = $Dw / $width;
+                $width = $Dw;
+                $height = $height * $Par;
+                if ($height > $Dh) {
+                    $Par = $Dh / $height;
+                    $height = $Dh;
+                    $width = $width * $Par;
+                }
+            } else if ($height > $Dh) {
+                $Par = $Dh / $height;
+                $height = $Dh;
+                $width = $width * $Par;
+                if ($width > $Dw) {
+                    $Par = $Dw / $width;
+                    $width = $Dw;
+                    $height = $height * $Par;
+                }
+            }
+            $nImg = imagecreatetruecolor($width, $height);   //新建一个真彩色画布
+            imagecopyresampled($nImg, $Img, 0, 0, 0, 0, $width, $height, $w, $h);//重采样拷贝部分图像并调整大小
+            imagejpeg($nImg, $Image);     //以JPEG格式将图像输出到浏览器或文件
+            return Code::statusDataReturn(Code::SUCCESS,$Image);
+            //如果是执行生成缩略图操作则
+        } else {
+            $w = imagesx($Img);
+            $h = imagesy($Img);
+            $width = $w;
+            $height = $h;
+            $nImg = imagecreatetruecolor($Dw, $Dh);
+            if ($h / $w > $Dh / $Dw) { //高比较大
+                $width = $Dw;
+                $height = $h * $Dw / $w;
+                $IntNH = $height - $Dh;
+                imagecopyresampled($nImg, $Img, 0, -$IntNH / 1.8, 0, 0, $Dw, $height, $w, $h);
+            } else {   //宽比较大
+                $height = $Dh;
+                $width = $w * $Dh / $h;
+                $IntNW = $width - $Dw;
+                imagecopyresampled($nImg, $Img, -$IntNW / 1.8, 0, 0, 0, $width, $Dh, $w, $h);
+            }
+            imagejpeg($nImg, $Image);
+            return Code::statusDataReturn(Code::SUCCESS,$Image);
+        }
+    }
+
+
 }

@@ -821,4 +821,26 @@ class TravelTripDb extends ProxyDb{
         return $command->queryOne();
     }
 
+
+    /**
+     * 更新随游封面图
+     * @param $tripId
+     * @param $titleImg
+     * @throws \yii\db\Exception
+     */
+    public function updateTravelTripTitleImg($tripId,$titleImg)
+    {
+        $sql=sprintf("
+            UPDATE travel_trip SET titleImg=:titleImg
+            WHERE tripId=:tripId
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->bindParam(":titleImg", $titleImg, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
 }

@@ -827,7 +827,7 @@
         $('#titleImgFile').uploadifive({
             'auto': false,
             'queueID': 'frontQueue',
-            'uploadScript': '/upload/upload-card-img',
+            'uploadScript': '/upload/upload-trip-title-img',
             'multi': false,
             'dnd': false,
             'onUploadComplete': function (file, data) {
@@ -874,7 +874,7 @@
         $('#picFile').uploadifive({
             'auto': true,
             'queueID': 'frontQueue',
-            'uploadScript': '/upload/upload-card-img',
+            'uploadScript': '/upload/upload-trip-img',
             'multi': false,
             'dnd': false,
             'onUploadComplete': function (file, data) {

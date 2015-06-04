@@ -711,4 +711,25 @@ class TripService extends BaseDb{
         }
         return $travelTripApply;
     }
+
+
+    /**
+     * 更新随游封面图
+     * @param $tripId
+     * @param $titleImg
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function updateTravelTripTitleImg($tripId,$titleImg)
+    {
+        try{
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $this->tripTravelDb->updateTravelTripTitleImg($tripId,$titleImg);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 }
