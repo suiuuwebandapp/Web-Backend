@@ -145,7 +145,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="#~/wechat-news/add"> 添加消息</a>
+                        <a href="#~/wechat-news/show-add"> 添加消息</a>
                     </li>
                     <li>
                         <a href="#~/wechat-news/list"  class="left_menu_link"> 消息列表</a>

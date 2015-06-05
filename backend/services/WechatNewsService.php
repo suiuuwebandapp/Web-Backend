@@ -80,4 +80,30 @@ class WechatNewsService extends BaseDb{
         }
     }
 
+    public function getInfo($id)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->wechatNewDb = new WeChatNewsListDb($conn);
+            $data=$this->wechatNewDb->findNewsById($id);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $data;
+    }
+
+    public function editNews($chatNewsList)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->wechatNewDb = new WeChatNewsListDb($conn);
+            $this->wechatNewDb->updateNews($chatNewsList);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
 }

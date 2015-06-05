@@ -38,9 +38,7 @@
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
                                     </span>
                         </div>
-                        <div class="pull-right">
-                            <a id="addRe" href="javascript:" class="btn green-meadow"><i class="fa fa-plus"></i> 添加推荐</a>
-                        </div>
+                        
                     </form>
                 </div>
                 <table id="table_list" class="table table-hover">
@@ -52,6 +50,7 @@
                         <th>标题</th>
                         <th>简介</th>
                         <th>封皮</th>
+                        <th>内容或url</th>
                         <th>消息类型</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -137,6 +136,19 @@
                 },
                 {
                     "targets": [6],
+                    "data": "nContent",
+                    "bSortable": false,
+                    "width":"150px",
+                    "render": function(data, type, full) {
+                        if(data==null||data=='')
+                        {
+                            return full.nUrl<20?full.nUrl:full.nUrl.substring(0,20);
+                        }
+                        return data.length<10?data:data.substring(0,10);
+                    }
+                },
+                {
+                    "targets": [7],
                     "data": "nType",
                     "bSortable": false,
                     "width":"150px",
@@ -155,10 +167,10 @@
                     }
                 },
                 {
-                    "targets": [7],
+                    "targets": [8],
                     "data": "nStatus",
                     "bSortable": false,
-                    "width":"150px",
+                    "width":"50px",
                     "render": function(data, type, full) {
                         var html='';
                         if(data==1){
@@ -170,10 +182,10 @@
                     }
                 },
                 {
-                    "targets": [8],
+                    "targets": [9],
                     "data": "newsId",
                     "bSortable": false,
-                    "width":"200px",
+                    "width":"250px",
                     "render": function(data, type, full) {
                         var html='';
                         if(full.nStatus!=1){
@@ -181,6 +193,7 @@
                         }else{
                             html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
                         }
+                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/we-chat/get-news-info?id="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
@@ -192,9 +205,7 @@
             }
         };
         TableAjax.init(tableInfo);
-        $("#addRe").bind("click",function(){
-            Main.goAction("/wechat-news/add");
-        });
+
 
         $("#refresh,#search").bind("click",function(){
             TableAjax.refresh();
@@ -229,7 +240,7 @@
 
     }
     function editOrder(id){
-        Main.openModal("/wechat-news/show-edit?id="+id);
+        Main.goAction("/wechat-news/show-edit?id="+id);
     }
 
     function deleteOrder(id){

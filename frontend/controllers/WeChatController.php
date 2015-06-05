@@ -684,13 +684,12 @@ class WeChatController extends SController
 
         $rstData = $this->newsListSer->getNewsInfoForId($id);
         if (!empty($rstData)) {
-
-            if (empty($rstData['nContent'])) {
+            if (!empty($rstData)&&empty($rstData['nContent'])) {
                 header("location: " . $rstData['nUrl']);
                 exit;
             }
         }
-        $this->render('newsInfo', array('data' => $rstData));
+        return $this->render('newsInfo', array('data' => $rstData));
     }
 
 

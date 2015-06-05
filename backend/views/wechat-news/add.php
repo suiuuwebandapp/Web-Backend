@@ -34,8 +34,8 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">添加专栏文章</span>
-                    <span class="caption-helper"> 添加专栏文章基本信息 </span>
+                    <span class="caption-subject font-red-sunglo bold uppercase">微信消息</span>
+                    <span class="caption-helper"> 添加消息 </span>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -43,7 +43,7 @@
                 <form id="form_validate" class="form-horizontal" method="post" isSubmit="false">
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Tid<span class="required">*</span></label>
+                            <label class="col-md-3 control-label">Tid</label>
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-body">
                             <div class="form-group">
-                                <label class="col-md-3 control-label">标题<span class="required">*</span></label>
+                                <label class="col-md-3 control-label">标题</label>
                                 <div class="col-md-4 valdate">
                                     <div class="input-icon right">
                                         <i class="fa"></i>
@@ -64,7 +64,7 @@
                         </div>
                         <div class="form-body">
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label">简介<span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">简介</label>
                                     <div class="col-md-4 valdate">
                                         <div class="input-icon right">
                                             <i class="fa"></i>
@@ -76,7 +76,7 @@
                         <div class="form-body">
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">类型<span class="required">*</span></label>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" style="padding-left: 30px">
                                             <div class="radio-list">
                                                 <label class="radio-inline">
                                                     <input type="radio" name="optionsRadios"  value="1" >
@@ -91,7 +91,7 @@
                                     </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">关键字<span class="required">*</span></label>
+                            <label class="col-md-3 control-label">关键字</label>
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
@@ -100,7 +100,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">URL<span class="required">*</span></label>
+                            <label class="col-md-3 control-label">URL</label>
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
@@ -109,7 +109,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">封面图<span class="required">*</span></label>
+                            <label class="col-md-3 control-label">封面图</label>
                             <div class="col-md-4 valdate">
                                 <input type="hidden" id="titleImg"/>
                                 <img id="titleImgPre"/>
@@ -119,7 +119,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label">内容<span class="required">*</span></label>
+                            <label class="col-md-3 control-label">内容</label>
                             <div class="col-md-6">
                                 <script id="container" name="content" type="text/plain" style="height:300px;">
                                 </script>
@@ -180,7 +180,7 @@
             'auto'             : true,
             'buttonText'       : '请选择封面图',
             'queueID'          : 'queue',
-            'uploadScript'     : '/upload/upload-title-img',
+            'uploadScript'     : '/upload/upload-wechat-img',
             'multi'            : false,
             'onUploadComplete' : function(file, data) {
                 var datas=eval('('+data+')');
@@ -198,7 +198,9 @@
     });
 
 
-
+    function delHtmlTag(str){
+        return str.replace(/<[^>]+>/g,"");//去掉所有的html标记
+    }
 
     function addNews(){
 
@@ -207,17 +209,29 @@
         var nIntro=$("#nIntro").val();
         var nAntistop=$("#nAntistop").val();
         var nUrl=$("#nUrl").val();
-        var type=$("#name").val();
+        var type=$('input:radio:checked').val();
         var titleImg=$("#titleImg").val();
         var content=ue.getContent();
-
+        if(type==""||type==undefined)
+        {
+            Main.errorTip("消息类型不允许为空");
+            return;
+        }
+        if(type=="1"){
+            if(content==''){
+                Main.errorTip("文本消息不允许为空");
+                return;
+            }
+            content =  delHtmlTag(content);
+        }else{
         if(titleImg==''){
             Main.errorTip("封面图不允许为空");
             return;
         }
-        if(content==''){
-            Main.errorTip("文章内容不允许为空");
+        if(title==''){
+            Main.errorTip("标题不允许为空");
             return;
+        }
         }
         $.ajax({
             url :'/wechat-news/add',

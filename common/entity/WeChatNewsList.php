@@ -24,7 +24,7 @@ class WeChatNewsList
     /**
      * @var相对类型 id
      */
-    public $nTid;
+    public $nTid=0;
     /**
      * @var标题
      */

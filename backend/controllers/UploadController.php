@@ -62,6 +62,19 @@ class UploadController extends CController{
         }
     }
 
+    /**
+     * 上传微信图片
+     * @return array
+     */
+    public function actionUploadWechatImg()
+    {
+        if(!array_key_exists('Filedata',$_FILES)){
+            echo json_encode(['status']);
+        }else{
+            $result=$this->uploadOssFile($_FILES['Filedata'],$this->maxTitleImgSize,$this->titleImgTypes,OssUpload::OSS_SUIUU_WECHAT_DIR);
+            return json_encode($result);
+        }
+    }
 
 
 

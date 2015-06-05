@@ -69,6 +69,7 @@ class WechatNewsController extends CController {
         $nContent=\Yii::$app->request->post("nContent");
         $nUrl=\Yii::$app->request->post("nUrl");
         $nCover=\Yii::$app->request->post("nCover");
+        if(empty($nTid)){$nTid = 0;}
         if(empty($nType)){return json_encode(Code::statusDataReturn(Code::FAIL,"类型不能为空"));}
         try{
             $wechatNews=new WeChatNewsList();
@@ -81,8 +82,8 @@ class WechatNewsController extends CController {
             $wechatNews->nUrl=$nUrl;
             $wechatNews->nCover=$nCover;
             $this->wechatNewsSer->addNews($wechatNews);
-        }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+            }catch (Exception $e){
+        return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
         }
         return json_encode(Code::statusDataReturn(Code::SUCCESS));
     }
@@ -107,23 +108,34 @@ class WechatNewsController extends CController {
 
     public function actionEdit()
     {
-        $id=\Yii::$app->request->post("id");
-        $cName=\Yii::$app->request->post("name");
-        $rType=\Yii::$app->request->post("type");
-        $img=\Yii::$app->request->post("img");
-        if(empty($id)){return json_encode(Code::statusDataReturn(Code::FAIL,"编号不能为空"));}
-        if(empty($cName)){return json_encode(Code::statusDataReturn(Code::FAIL,"名称不能为空"));}
-        if(empty($rType)){return json_encode(Code::statusDataReturn(Code::FAIL,"类型不能为空"));}
-        if(empty($img)){return json_encode(Code::statusDataReturn(Code::FAIL,"圈子背景不能为空"));}
+
+        $newsId=\Yii::$app->request->post("newsId");
+        $nTid=\Yii::$app->request->post("nTid");
+        $nTitle=\Yii::$app->request->post("nTitle");
+        $nType=\Yii::$app->request->post("nType");
+        $nAntistop=\Yii::$app->request->post("nAntistop");
+        $nIntro=\Yii::$app->request->post("nIntro");
+        $nContent=\Yii::$app->request->post("nContent");
+        $nUrl=\Yii::$app->request->post("nUrl");
+        $nCover=\Yii::$app->request->post("nCover");
+        if(empty($nType)){$nTid = 0;}
+        if(empty($newsId)){return json_encode(Code::statusDataReturn(Code::FAIL,"编号不能为空"));}
+        if(empty($nType)){return json_encode(Code::statusDataReturn(Code::FAIL,"类型不能为空"));}
         try{
-            $circleSort=new CircleSort();
-            $circleSort->cId=$id;
-            $circleSort->cName=$cName;
-            $circleSort->cType=$rType;
-            $circleSort->cpic=$img;
-            $this->circleSer->edit($circleSort);
+
+            $wechatNews=new WeChatNewsList();
+            $wechatNews->newsId=$newsId;
+            $wechatNews->nTid=$nTid;
+            $wechatNews->nTitle=$nTitle;
+            $wechatNews->nType=$nType;
+            $wechatNews->nAntistop=$nAntistop;
+            $wechatNews->nIntro=$nIntro;
+            $wechatNews->nContent=$nContent;
+            $wechatNews->nUrl=$nUrl;
+            $wechatNews->nCover=$nCover;
+            $this->wechatNewsSer->editNews($wechatNews);
         }catch (Exception $e){
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
         }
         return json_encode(Code::statusDataReturn(Code::SUCCESS));
     }
@@ -132,7 +144,7 @@ class WechatNewsController extends CController {
     {
         $id=\Yii::$app->request->get("id");
         if(empty($id)){return json_encode(Code::statusDataReturn(Code::FAIL,"编号不能为空"));}
-        $data = $this->circleSer->getInfo($id);
+        $data = $this->wechatNewsSer->getInfo($id);
         return $this->render("edit",['info'=>$data]);
     }
 }

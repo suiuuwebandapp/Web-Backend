@@ -30,7 +30,7 @@ class WeChatNewsListDb  extends ProxyDb {
           INSERT INTO wechat_news_list
           (nAntistop,nContent,nCover,nIntro,nTid,nTitle,nType,nUrl,nStatus)
           VALUES
-          (:nAntistop,:nContent,:nCover,:nIntro,:nTid,:nTitle,:nType,nUrl,:nStatus)
+          (:nAntistop,:nContent,:nCover,:nIntro,:nTid,:nTitle,:nType,:nUrl,:nStatus)
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":nAntistop", $chatNewsList->nAntistop, PDO::PARAM_STR);
@@ -45,6 +45,26 @@ class WeChatNewsListDb  extends ProxyDb {
         return $command->execute();
     }
 
+    public function updateNews(WeChatNewsList $chatNewsList)
+    {
+        $sql = sprintf("
+          UPDATE wechat_news_list
+          SET nAntistop=:nAntistop,nContent=:nContent,nCover=:nCover,nIntro=:nIntro,nTid=:nTid,nTitle=:nTitle,nType=:nType,nUrl=:nUrl,nStatus=:nStatus
+          WHERE newsId=:newsId;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":newsId", $chatNewsList->newsId, PDO::PARAM_INT);
+        $command->bindParam(":nAntistop", $chatNewsList->nAntistop, PDO::PARAM_STR);
+        $command->bindParam(":nContent", $chatNewsList->nContent, PDO::PARAM_STR);
+        $command->bindParam(":nCover", $chatNewsList->nCover, PDO::PARAM_STR);
+        $command->bindParam(":nIntro", $chatNewsList->nIntro, PDO::PARAM_STR);
+        $command->bindParam(":nTid", $chatNewsList->nTid, PDO::PARAM_INT);
+        $command->bindParam(":nTitle", $chatNewsList->nTitle, PDO::PARAM_STR);
+        $command->bindParam(":nType", $chatNewsList->nType, PDO::PARAM_INT);
+        $command->bindParam(":nUrl", $chatNewsList->nUrl, PDO::PARAM_STR);
+        $command->bindValue(":nStatus",WeChatNewsList::STATUS_NORMAL, PDO::PARAM_INT);
+        return $command->execute();
+    }
     public function getNewsListByTid($page,$nTid)
     {
         $sql = sprintf("

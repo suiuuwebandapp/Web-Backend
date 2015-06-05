@@ -36,6 +36,11 @@ class OssUpload
     const OSS_SUIUU_CONTENT_DIR='suiuu_content';
 
     /**
+     * 专栏，目的地等图片
+     */
+    const OSS_SUIUU_WECHAT_DIR='suiuu_wechat';
+
+    /**
      * 用户身份证目录
      */
     const OSS_SUIUU_CARD_DIR='user_card';
