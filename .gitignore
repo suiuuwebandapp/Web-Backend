@@ -1,3 +1,15 @@
 .idea
 
 frontend/web/logWeChat.txt
+
+common/weChatWall/WeiXinUtil.php
+
+backend/controllers/WeChatWallController.php
+
+common/weChatWall/FileUtil.php
+
+common/weChatWall/HttpUtil.php
+
+common/weChatWall/token.txt
+
+common/weChatWall/WeiXinUtil.php
