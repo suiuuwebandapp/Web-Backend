@@ -16,6 +16,11 @@ return [
     //基础信息
     'base_dir' => 'http://sys.suiuu.com',
     'url'=>'sys.suiuu.com',
+
+    //前台url
+    'suiuu_url' => 'http://www.suiuu.com',
+    //app圈子图片目录
+    'app_circle_img_url'=>'http://image.suiuu.com/suiuu_content',
     //资源URL
     'res_url'=>'',
     //Cookie

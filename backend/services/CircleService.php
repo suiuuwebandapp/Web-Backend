@@ -106,4 +106,58 @@ class CircleService extends BaseDb{
         }
     }
 
+
+
+    public function getArticleList($page,$search,$type,$cId,$aStatus)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->circleDb = new CircleDb($conn);
+            $page=$this->circleDb->getArticleList($page,$search,$type,$cId,$aStatus);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $page;
+    }
+
+    public function deleteArticle($id)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->circleDb = new CircleDb($conn);
+            $this->circleDb->deleteArticle($id);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    public function getCommentList($page,$search,$aStatus)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->circleDb = new CircleDb($conn);
+            $page=$this->circleDb->getCommentList($page,$search,$aStatus);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $page;
+    }
+    public function deleteComment($id)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->circleDb = new CircleDb($conn);
+            $this->circleDb->deleteComment($id);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
 }

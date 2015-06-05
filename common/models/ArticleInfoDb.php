@@ -333,4 +333,21 @@ WHERE a.articleId=:articleId AND c.`status`=1
         return $command->queryOne();
     }
 
+    public function getCommentList($page,$search)
+    {
+        $sql=sprintf("
+            FROM article_comment a
+            LEFT JOIN article_info b ON a.articleId=b.articleId
+            LEFT JOIN user_base c ON a.userSign=c.userSign
+            WHERE 1=1
+        ");
+        if(!empty($search)){
+            $sql.=" AND (a.content like :search OR b.name like :search OR c.nickname like :search ) ";
+            $this->setParam("search","%".$search."%");
+        }
+        $this->setSelectInfo('a.*,b.name,c.nickname');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
 }

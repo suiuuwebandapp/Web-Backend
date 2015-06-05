@@ -822,6 +822,7 @@ class TravelTripDb extends ProxyDb{
     }
 
 
+
     /**
      * 更新随游封面图
      * @param $tripId
@@ -830,16 +831,87 @@ class TravelTripDb extends ProxyDb{
      */
     public function updateTravelTripTitleImg($tripId,$titleImg)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             UPDATE travel_trip SET titleImg=:titleImg
             WHERE tripId=:tripId
         ");
 
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->bindParam(":titleImg", $titleImg, PDO::PARAM_STR);
+    }
+    /**后台得到随游列表
+     * @param $page
+     * @param $search
+     * @param $peopleCount
+     * @param $startPrice
+     * @param $endPrice
+     * @param $status
+     * @return Page|null
+     */
+    public function sysGetList($page,$search,$peopleCount,$startPrice,$endPrice,$status)
+    {
 
+        $sql=sprintf("
+            FROM travel_trip AS t
+            LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
+            LEFT JOIN user_base AS u ON uo.userId=u.userSign
+            LEFT JOIN country AS c ON c.id=t.countryId
+            LEFT JOIN city AS ci ON ci.id=t.cityId
+            WHERE 1=1
+        ");
+        if(!empty($status)){
+            $sql.=" AND t.status=:status" ;
+            $this->setParam("status",$status);
+        }
+        if(!empty($search)){
+            $sql.=" AND ( t.title like :search OR c.cname like :search OR ci.cname like :search OR u.nickname like :search ) ";
+            $this->setParam("search","%".$search."%");
+        }
+        if(!empty($peopleCount)&&$peopleCount!=0){
+            $sql.=" AND t.maxUserCount>=:peopleCount ";
+            $this->setParam("peopleCount",$peopleCount);
+        }
+        if(!empty($startPrice)){
+            $sql.=" AND t.basePrice>=:startPrice ";
+            $this->setParam("startPrice",$startPrice);
+        }
+        if(!empty($endPrice)){
+            $sql.=" AND t.basePrice<=:endPrice ";
+            $this->setParam("endPrice",$endPrice);
+        }
+        $this->setSql($sql);
+        $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname as ctName,ci.ename as cteName ");
+
+        return $this->find($page);
+    }
+
+    public function getComment($page,$search)
+    {
+        $sql=sprintf("
+            FROM travel_trip_comment a
+            LEFT JOIN travel_trip b ON a.tripId=b.tripId
+            LEFT JOIN user_base c ON a.userSign = c.userSign
+            WHERE 1=1
+        ");
+        if(!empty($search)){
+            $sql.=" AND ( b.title like :search OR c.nickname like :search OR a.content like :search ) ";
+            $this->setParam("search","%".$search."%");
+        }
+        $this->setSql($sql);
+        $this->setSelectInfo("a.*,b.title,c.nickname");
+        return $this->find($page);
+    }
+
+    public function deleteComment($id)
+    {
+        $sql = sprintf("
+            DELETE FROM travel_trip_comment
+            WHERE commentId=:commentId
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":commentId", $id, PDO::PARAM_INT);
         $command->execute();
     }
 

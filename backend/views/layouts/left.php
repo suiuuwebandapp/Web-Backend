@@ -75,7 +75,7 @@
             </li>
             <li class="menu_top">
                 <a href="javascript:;">
-                    <i class="icon-rocket"></i>
+                    <i class="icon-user"></i>
                     <span class="title"> 用户管理</span>
                     <span class="arrow"></span>
                 </a>
@@ -93,7 +93,7 @@
             </li>
             <li class="menu_top">
                 <a href="javascript:;">
-                    <i class="icon-star"></i>
+                    <i class="icon-pointer"></i>
                     <span class="title"> 目的地管理</span>
                     <span class="arrow"></span>
                 </a>
@@ -117,6 +117,24 @@
                     <li>
                         <a href="#~/article/list"  class="left_menu_link"> 专栏列表</a>
                     </li>
+                    <li>
+                        <a href="#~/article/comment-list"  class="left_menu_link"> 专栏评论</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-basket"></i>
+                    <span class="title"> 随游管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#~/trip/list"> 随游列表</a>
+                    </li>
+                    <li>
+                        <a href="#~/trip/comment-list"  class="left_menu_link"> 随游评论</a>
+                    </li>
                 </ul>
             </li>
             <li class="menu_top">
@@ -127,10 +145,10 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="#"> 添加消息</a>
+                        <a href="#~/wechat-news/add"> 添加消息</a>
                     </li>
                     <li>
-                        <a href="#"  class="left_menu_link"> 消息列表</a>
+                        <a href="#~/wechat-news/list"  class="left_menu_link"> 消息列表</a>
                     </li>
                 </ul>
             </li>
@@ -154,8 +172,8 @@
             </li>
             <li class="menu_top">
                 <a href="javascript:;">
-                    <i class="icon-camera"></i>
-                    <span class="title"> 推荐列表</span>
+                    <i class="icon-diamond"></i>
+                    <span class="title"> 推荐管理</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
@@ -166,15 +184,22 @@
             </li>
             <li class="menu_top">
                 <a href="javascript:;">
-                    <i class="icon-camera"></i>
-                    <span class="title"> APP圈子</span>
+                    <i class="icon-present"></i>
+                    <span class="title"> 圈子管理</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
                     <li>
                         <a href="#~/circle/list">圈子列表</a>
                     </li>
+                    <li>
+                        <a href="#~/circle/article-list">文章列表</a>
+                    </li>
+                    <li>
+                        <a href="#~/circle/comment-list">评论列表</a>
+                    </li>
                 </ul>
+
             </li>
             <!--
             <li class="menu_top">

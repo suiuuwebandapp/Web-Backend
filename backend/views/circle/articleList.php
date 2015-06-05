@@ -13,8 +13,8 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">推荐列表</span>
-                            <span class="caption-helper">推荐列表
+                    <span class="caption-subject font-red-sunglo bold uppercase">圈子列表</span>
+                            <span class="caption-helper">文章列表
                             </span>
                 </div>
                 <div class="actions">
@@ -24,28 +24,36 @@
                 </div>
             </div>
             <div class="portlet-body flip-scroll" id="table_div">
-                <div class="table-info-form">
+                <div class="table-info-form ">
                     <form id="datatables_form" onsubmit="return false;">
-                        <div class="input-group input-xlarge pull-left">
-                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入订单号 或 用户昵称 ">
-
+                        <div class="col-md-8 input-group ">
+                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入标题或用户昵称 或圈子">
+                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态：</label>
+                            <select name="status" class="form-control input-medium" >
+                                <option value="1">正常</option>
+                                <option value="2">已删除</option>
+                                <option value="0">全部</option>
+                            </select>
                                     <span class="input-group-btn">
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
                                     </span>
-
                         </div>
-                        <div class="pull-right">
+                       <!-- <div class="pull-right">
                             <a id="addRe" href="javascript:" class="btn green-meadow"><i class="fa fa-plus"></i> 添加推荐</a>
-                        </div>
+                        </div>-->
                     </form>
                 </div>
                 <table id="table_list" class="table table-hover">
                     <thead class="flip-content">
                     <tr>
                         <th>编号</th>
-                        <th>推荐编号</th>
-                        <th>推荐类型</th>
-                        <th>背景图片</th>
+                        <th>标题</th>
+                        <th>封皮</th>
+                        <th>评论数</th>
+                        <th>类型</th>
+                        <th>创建人</th>
+                        <th>所属主题</th>
+                        <th>所属地区</th>
                         <th>状态</th>
                         <th>操作</th>
                     </tr>
@@ -77,84 +85,105 @@
             'formObj'  :'#datatables_form',
             'tableDiv' :'#table_div',
             'tableObj' :'#table_list',
-            'tableUrl' :'/recommend-list/get-list',
+            'tableUrl' :'/circle/get-article-list',
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "recommendId",
+                {"targets": [0],"data": "articleId",
                     "width":"150px","bSortable": false},
                 {
                     "targets": [1],
-                    "data": "relativeId",
+                    "data": "aTitle",
                     "width":"150px",
                     "bSortable": false
                 },
                 {
                     "targets": [2],
-                    "data": "relativeType",
+                    "data": "aImg",
+                    "bSortable": false,
+                    "width":"150px",
+                    "render": function(data, type, full) {
+                        if(data!=""&&data!=null){
+                            return '<a  class="titleImgGroup"  href="<?php echo Yii::$app->params["app_circle_img_url"]; ?>'+data+'"><img alt="" src="<?php echo Yii::$app->params["app_circle_img_url"]; ?>'+data+'" style="max-height:50px;"/></a>'
+                        }else
+                        {
+                            return "暂无封皮";
+                        }
+                    }
+                },
+                {
+                    "targets": [3],
+                    "data": "aCmtCount",
+                    "width":"150px",
+                    "bSortable": false
+                },
+                {
+                    "targets": [4],
+                    "data": "aType",
                     "bSortable": false,
                     "width":"150px",
                     "render": function(data, type, full) {
                         switch (data)
                         {
                             case "1":
-                                return "推荐用户";
+                                return "随拍";
                                 break;
                             case "2":
-                                return "推荐帖子";
+                                return "随问";
                                 break;
                             case "3":
-                                return "推荐随游";
+                                return "随记";
                                 break;
-                            case "4":
-                                return "推荐圈子";
-                                break;
+                            default :
+                                return "未知";
                         }
-                    }
-                },
-                {
-                    "targets": [3],
-                    "data": "rImg",
-                    "bSortable": false,
-                    "width":"150px",
-                    "render": function(data, type, full) {
-                        if(data!=""&&data!=null){
-                        return '<a  class="titleImgGroup"  href="'+data+'"><img alt="" src="'+data+'" style="max-height:50px;"/></a>'
-                        }else
-                        {
-                            return "暂无背景";
-                        }
-                    }
-                },
-                {
-                    "targets": [4],
-                    "data": "status",
-                    "width":"100px",
-                    "bSortable": false,
-                    "render": function(data, type, full) {
-                    var html='';
-                    if(data==1){
-                        html='<span class="label label-success">&nbsp;上&nbsp;线&nbsp;</span>'
-                    }else{
-                        html='<span class="label label-default">&nbsp;下&nbsp;线&nbsp;</span>';
-                    }
-                    return html;
                     }
                 },
                 {
                     "targets": [5],
-                    "data": "recommendId",
+                    "data": "nickname",
+                    "width":"100px",
+                    "bSortable": false
+                },
+                {
+                    "targets": [6],
+                    "data": "ztName",
+                    "width":"100px",
+                    "bSortable": false
+                },
+                {
+                    "targets": [7],
+                    "data": "dqName",
+                    "width":"100px",
+                    "bSortable": false
+                },
+                {
+                    "targets": [8],
+                    "data": "aStatus",
+                    "width":"100px",
+                    "bSortable": false,
+                    "render": function(data, type, full) {
+                        switch (data)
+                        {
+                            case "1":
+                                return "正常";
+                                break;
+                            case "2":
+                                return "被删除";
+                                break;
+                        }
+                    }
+                },
+                {
+                    "targets": [9],
+                    "data": "articleId",
                     "bSortable": false,
                     "width":"200px",
                     "render": function(data, type, full) {
                         var html='';
-                        if(full.status!=1){
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
-                        }else{
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
-                        }
-                        html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
+
+                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/circle/web-info?infoId="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
+                        html +='<a href="javascript:;" onclick="deleteArticle(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
                     }
                 }
@@ -164,52 +193,21 @@
             }
         };
         TableAjax.init(tableInfo);
-        $("#addRe").bind("click",function(){
-            Main.openModal("/recommend-list/show-add")
-        });
+        /*$("#addRe").bind("click",function(){
+            Main.openModal("/circle/show-add")
+        });*/
 
         $("#refresh,#search").bind("click",function(){
             TableAjax.refresh();
         });
     });
 
-    function changeStatus(id,status)
-    {
-        $.ajax({
-            type:"POST",
-            url:"/recommend-list/change",
-            data:{
-                id:id,
-                status:status
-            },beforeSend:function(){
-                Main.showWait("#table_list");
-            },
-            error:function(){
-                Main.errorTip("系统异常");
-            },
-            success:function(data){
-                data=eval("("+data+")");
-                Main.hideWait("#table_list");
-                if(data.status==1){
-                    Main.refrenshTableCurrent();
-                    Main.successTip("修改成功");
-                }else{
-                    Main.errorTip("修改失败");
-                }
-            }
-        });
-
-    }
-    function editOrder(id){
-        Main.openModal("/recommend-list/show-edit?id="+id);
-    }
-
-    function deleteOrder(id){
+    function deleteArticle(id){
 
         Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
-                url:"/recommend-list/delete",
+                url:"/circle/delete-article",
                 data:{
                     id:id
                 },beforeSend:function(){

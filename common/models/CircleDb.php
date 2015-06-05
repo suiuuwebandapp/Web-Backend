@@ -145,4 +145,97 @@ class CircleDb extends ProxyDb{
         $command->bindParam(":cId", $id, PDO::PARAM_INT);
         return $command->queryOne();
     }
+
+    public function getArticleList($page,$search,$type,$cId,$status)
+    {
+        $sql=sprintf("
+        FROM circle_article a
+        LEFT JOIN user_base  b ON a.aCreateUserSign=b.userSign
+        LEFT JOIN sys_circle_sort  c ON c.cId=a.cId
+        LEFT JOIN sys_circle_sort  d ON d.cId=a.cAddrId
+        WHERE 1=1
+        ");
+        if(!empty($type))
+        {
+            $sql.=" AND aType = :aType ";
+            $this->setParam("aType",$type);
+        }
+        if(!empty($cId))
+        {
+            $sql.=" AND (a.cId = :cId OR a.cAddrId=:cId)";
+            $this->setParam("cId",$cId);
+        }
+        if(!empty($status))
+        {
+            $sql.=" AND a.aStatus=:aStatus";
+            $this->setParam("aStatus",$status);
+        }
+        if(!empty($search))
+        {
+            $sql.=" AND (b.nickname like :search OR a.aTitle like :search  OR c.cName like :search OR d.cName like :search )";
+            $this->setParam("search","%".$search."%");
+        }
+        $this->setSelectInfo('a.*,b.nickname,c.cName as ztName,d.cName as dqName');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
+    public function deleteArticle($id)
+    {
+        $sql = sprintf("
+            UPDATE circle_article
+             SET aStatus=:aStatus
+            WHERE articleId=:articleId
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":articleId",$id, PDO::PARAM_INT);
+        $command->bindValue(":aStatus",CircleArticle::ARTICLE_STATUS_DISABLED, PDO::PARAM_INT);
+        $command->execute();
+    }
+
+    public function getCommentList($page,$search,$status)
+    {
+        $sql=sprintf("
+        FROM circle_article_comment a
+        LEFT JOIN user_base  b ON a.userSign=b.userSign
+        LEFT JOIN circle_article  c ON c.articleId=a.articleId
+        WHERE 1=1
+        ");
+        if(!empty($status))
+        {
+            $sql.=" AND a.cStatus=:cStatus";
+            $this->setParam("cStatus",$status);
+        }
+        if(!empty($search))
+        {
+            $sql.=" AND (b.nickname like :search OR c.aTitle like :search  OR a.content like :search )";
+            $this->setParam("search","%".$search."%");
+        }
+        $this->setSelectInfo('a.*,b.nickname,c.aTitle');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+    public function getCommentInfoById()
+    {
+        $sql = sprintf("
+            SELECT * FROM  circle_article_comment
+            WHERE commentId=:commentId
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":commentId",$id, PDO::PARAM_INT);
+        return $command->queryOne();
+    }
+
+    public function deleteComment($id)
+    {
+        $sql = sprintf("
+            UPDATE circle_article_comment
+             SET cStatus=:cStatus
+            WHERE commentId=:commentId
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":commentId",$id, PDO::PARAM_INT);
+        $command->bindValue(":cStatus",CircleArticle::ARTICLE_STATUS_DISABLED, PDO::PARAM_INT);
+        $command->execute();
+    }
 }

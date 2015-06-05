@@ -185,7 +185,7 @@
                 data=eval("("+data+")");
                 Main.hideWait("#table_list");
                 if(data.status==1){
-                    TableAjax.deleteRefresh();
+                    TableAjax.refrenshTableCurrent();
                     Main.successTip("修改成功");
                 }else{
                     Main.errorTip("修改失败");

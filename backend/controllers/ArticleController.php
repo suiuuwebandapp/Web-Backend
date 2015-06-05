@@ -187,4 +187,32 @@ class ArticleController extends CController{
 
     }
 
+    public function actionGetCommentList()
+    {
+        $page=new Page(\Yii::$app->request);
+        $page->sortName="commentId";
+        $page->sortType="desc";
+        $search=\Yii::$app->request->get("searchText","");
+        $page = $this->articleService->getCommentList($page,$search);
+        $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());
+        echo json_encode($tableResult);
+    }
+
+    public function actionCommentList()
+    {
+        return $this->render('commentList');
+    }
+    public function actionDeleteComment()
+    {
+        $id=\Yii::$app->request->post("id");
+        if(empty($id)){return json_encode(Code::statusDataReturn(Code::FAIL,"编号不能为空"));}
+        try{
+            $this->articleService->deleteComment($id);
+        }catch (Exception $e){
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+        }
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+
+    }
+
 }

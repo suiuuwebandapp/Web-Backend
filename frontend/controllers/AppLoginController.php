@@ -175,7 +175,7 @@ class AppLoginController extends SController{
 
         $rst = null;
         $smsUtils = new SmsUtils();
-        $rst = $smsUtils->sendMessage($phone,$areaCode, $code,SmsUtils::SEND_MESSAGE_TYPE_PASSWORD);
+        $rst = $smsUtils->sendMessage($phone,$areaCode, $code,SmsUtils::SEND_MESSAGE_TYPE_REGISTER);
         echo json_encode($rst);
     }
     public function actionAppRegister()

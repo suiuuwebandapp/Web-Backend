@@ -158,4 +158,30 @@ class ArticleService extends BaseDb{
             $this->closeLink();
         }
     }
+
+    public function getCommentList($page,$search)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->articleDb = new ArticleInfoDb($conn);
+            $page=$this->articleDb->getCommentList($page,$search);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $page;
+    }
+    public function deleteComment($id)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->articleDb = new ArticleInfoDb($conn);
+            $this->articleDb->deleteComment($id);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
 }
