@@ -9,7 +9,7 @@
 
 namespace common\components;
 
-require_once \Yii::getAlias("vendor").'/oss/sdk.class.php';
+require_once \Yii::getAlias("@vendor").'/oss/sdk.class.php';
 
 
 class OssUpload
