@@ -11,6 +11,7 @@ namespace frontend\controllers;
 
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\components\Validate;
 use common\entity\UserAccess;
 use common\entity\UserBase;
@@ -250,6 +251,7 @@ class AccessController extends UnCController
             }
 
         }catch (Exception $e){
+            LogUtils::log($e);
             return Code::statusDataReturn(Code::FAIL,$e->getName());
         }
        return Code::statusDataReturn(Code::SUCCESS,$userBase);
@@ -363,6 +365,7 @@ class AccessController extends UnCController
             }
 
         } catch (Exception $e) {
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL, $e->getMessage()));
         }
 
@@ -419,6 +422,7 @@ class AccessController extends UnCController
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户名或密码"));
             }
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"绑定用户异常，请稍后重试"));
         }
 

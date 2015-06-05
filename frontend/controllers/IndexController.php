@@ -11,15 +11,14 @@ namespace frontend\controllers;
 
 use backend\components\Page;
 use common\components\Aes;
+use common\components\LogUtils;
 use common\components\Mail;
 use common\components\SMSUtils;
-use common\components\TagUtil;
 use common\components\Validate;
 use common\entity\UserBase;
 use common\entity\UserPublisher;
-use frontend\components\ValidateCode;
+use common\components\ValidateCode;
 use frontend\services\CountryService;
-use frontend\services\TripService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use common\components\Code;
@@ -60,12 +59,6 @@ class IndexController extends UnCController
             'recommendTravel'=>$recommendTravel['data']
         ]);
     }
-
-    public function actionTest()
-    {
-
-    }
-
 
     /**
      * 找回密码
@@ -119,11 +112,11 @@ class IndexController extends UnCController
                     \Yii::$app->redis->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, $c);
                     Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $username, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
                     //设置邮件定时器，控制发送频率
-                    echo json_encode(Code::statusDataReturn(Code::SUCCESS));
                     Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $username, ++$count);
                     Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $username, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                    return json_encode(Code::statusDataReturn(Code::SUCCESS));
                 } else {
-                    echo json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
+                    return json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
                 }
             }elseif(empty(Validate::validatePhone($username))){
                //手机验证
@@ -142,14 +135,14 @@ class IndexController extends UnCController
                $rst = $smsUtils->sendMessage($username, $areaCode,$code,SmsUtils::SEND_MESSAGE_TYPE_PASSWORD);
                if(!empty($rst))
                {
-                   echo json_encode(Code::statusDataReturn(Code::SUCCESS));
                    Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $username, ++$count);
                    Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $username, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                   return json_encode(Code::statusDataReturn(Code::SUCCESS));
                }else {
-                   echo json_encode(Code::statusDataReturn(Code::FAIL, "发送信息失败，请稍后重试"));
+                   return json_encode(Code::statusDataReturn(Code::FAIL, "发送信息失败，请稍后重试"));
                }
            } else {
-               $errors = "用户名格式不正确";
+                $errors = "用户名格式不正确";
                 return json_encode(Code::statusDataReturn(Code::FAIL, $errors));
             }
         }
@@ -257,7 +250,8 @@ class IndexController extends UnCController
                 return json_encode(Code::statusDataReturn(Code::FAIL,'密码重复无需修改'));
             }
         } catch (Exception $e) {
-            $errors[] = $e->getMessage();
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -266,8 +260,6 @@ class IndexController extends UnCController
      */
     public function actionGetCode()
     {
-        //phpinfo();exit;
-        //\Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,'9527');
         $ValidateCode=new ValidateCode();
         $ValidateCode->doimg();
         \Yii::$app->session->set(Code::USER_LOGIN_VERIFY_CODE,$ValidateCode->getCode());
@@ -324,7 +316,6 @@ class IndexController extends UnCController
             return json_encode(Code::statusDataReturn(Code::FAIL, $errors[0],$errorCount));
 
         }
-
         try {
             //验证用户名是否存在
             $result = $this->userBaseService->findUserByUserNameAndPwd($username, $password);
@@ -362,13 +353,11 @@ class IndexController extends UnCController
             }
 
         } catch (Exception $e) {
-            $errors[] = $e->getMessage();
+            LogUtils::log($e);
+            $errors[] = "登录失败";
+            return json_encode(Code::statusDataReturn(Code::FAIL, $errors[0], $errorCount));
+
         }
-        //判断是否需要输入验证码
-        /*if($errorCount>=Code::SYS_LOGIN_ERROR_COUNT){
-            $showVerifyCode=true;
-        }
-        return $this->render('index', ['errors' => $errors, 'showVerifyCode' => $showVerifyCode]);*/
     }
 
     /**
@@ -423,12 +412,11 @@ class IndexController extends UnCController
             $userBase = $this->userBaseService->addUser($userBase);
             //添加用户登录状态
             \Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
-
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, 'success'));
         } catch (Exception $e) {
-            return json_encode(Code::statusDataReturn(Code::FAIL, $e->getMessage()));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
-
-        return json_encode(Code::statusDataReturn(Code::SUCCESS, 'success'));
 
     }
 
@@ -469,8 +457,7 @@ class IndexController extends UnCController
             //判断手机是否已经注册
             $userBase = $this->userBaseService->findUserByPhone($phone);
             if (!empty($userBase)) {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_PHONE_EXIST));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_PHONE_EXIST));
             }
             $code = $this->randomPhoneCode();//验证码
             //分割可能会有问题，测试阶段
@@ -483,14 +470,13 @@ class IndexController extends UnCController
                 //设置手机定时器，控制发送频率
                 Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
                 Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
-                echo json_encode(Code::statusDataReturn(Code::SUCCESS, Code::USER_REGISTER_TIMER));
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, Code::USER_REGISTER_TIMER));
             } else {
-                echo json_encode(Code::statusDataReturn(Code::FAIL, '短信发送异常'));
+                return json_encode(Code::statusDataReturn(Code::FAIL, '短信发送异常'));
             }
         } else {
-            echo json_encode(Code::statusDataReturn(Code::FAIL, "发送验证码过于频繁，请稍后再试"));
+            return json_encode(Code::statusDataReturn(Code::FAIL, "发送验证码过于频繁，请稍后再试"));
         }
-        return null;
 
 
     }
@@ -562,8 +548,7 @@ class IndexController extends UnCController
             $error = '密码格式不正确';
         }
         if (!empty($error)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
         }
 
 
@@ -572,8 +557,7 @@ class IndexController extends UnCController
             //判断邮箱是否已经注册
             $userBase = $this->userBaseService->findUserByEmail($email);
             if (!empty($userBase)) {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_EMAIL_EXIST));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_EMAIL_EXIST));
             }
             $enPwd = $this->getEncryptPassword($password);
             $code = $this->getEmailCode($email, $enPwd);
@@ -584,14 +568,13 @@ class IndexController extends UnCController
             if ($rst['status'] == Code::SUCCESS) {
                 //设置邮件定时器，控制发送频率
                 \Yii::$app->session->set(Code::USER_REGISTER_EMAIL_TIMER, date('Y-m-d H:i:s', time()));
-                echo json_encode(Code::statusDataReturn(Code::SUCCESS, Code::USER_REGISTER_TIMER));
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, Code::USER_REGISTER_TIMER));
             } else {
-                echo json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
+                return json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
             }
         } else {
-            echo json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件过于频繁，请稍后再试"));
+            return json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件过于频繁，请稍后再试"));
         }
-        return null;
     }
 
 
@@ -619,11 +602,11 @@ class IndexController extends UnCController
             $userBase=$this->userBaseService->addUser($userBase);
             //设置SESSION 登录状态
             Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
-
+            return $this->redirect(['/result', 'result' => '注册成功！']);
         } catch (Exception $e) {
+            LogUtils::log($e);
             return $this->redirect(['/result', 'result' => '验证邮箱失败！']);
         }
-        return $this->redirect(['/result', 'result' => '注册成功！']);
 
     }
 
@@ -831,7 +814,7 @@ class IndexController extends UnCController
             $this->userBaseService->updateUserBase($rstUser);
             $this->refreshUserInfo();
         } catch (Exception $e) {
-            //return $this->redirect(['/result', 'result' => '邮箱认证失败:'.$e->getMessage()]);
+            LogUtils::log($e);
             return $this->redirect(['/result', 'result' => '验证邮箱失败！']);
         }
         return $this->redirect(['/result', 'result' => '验证成功']);
@@ -857,8 +840,7 @@ class IndexController extends UnCController
             //判断邮箱是否已经注册
             $userBase = $this->userBaseService->findUserByEmail($mail);
             if (!empty($userBase)) {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_EMAIL_EXIST));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_EMAIL_EXIST));
             }
             $userBase=null;
             if($this->userObj==null){
@@ -879,9 +861,9 @@ class IndexController extends UnCController
             $rst = Mail::sendValidateMail($mail, $url);
             //
             if ($rst['status'] == Code::SUCCESS) {
-                echo json_encode(Code::statusDataReturn(Code::SUCCESS, '发送成功'));
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, '发送成功'));
             } else {
-                echo json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
+                return json_encode(Code::statusDataReturn(Code::FAIL, "发送邮件失败，请稍后重试"));
             }
         }
     }
@@ -902,44 +884,34 @@ class IndexController extends UnCController
         $code = trim(\Yii::$app->request->post("code", ""));
 
         if (empty($nickname)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "昵称不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "昵称不能为空"));
         }
         if (empty($email)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "邮箱不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "邮箱不能为空"));
         }
         if (empty($userCard)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "护照不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "护照不能为空"));
         }
         if (empty($password)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "密码不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "密码不能为空"));
         }
         if (empty($passwordConfirm)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "确认密码不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "确认密码不能为空"));
         }
         if ($password != $passwordConfirm) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "两次密码输入不一致"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "两次密码输入不一致"));
         }
         if (empty($countryId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不能为空"));
         }
         if (empty($cityId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不能为空"));
         }
         if (empty($areaCode)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机区号不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机区号不能为空"));
         }
         if (empty($phone)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机号码不能为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机号码不能为空"));
         }
 
         $userBase=null;
@@ -980,17 +952,14 @@ class IndexController extends UnCController
 
                     //验证邮箱是否存在
                     if($this->userBaseService->validateEmailExist($email,$userBase->userId)) {
-                        echo json_encode(Code::statusDataReturn(Code::FAIL, "邮箱地址已经注册"));
-                        return;
+                        return json_encode(Code::statusDataReturn(Code::FAIL, "邮箱地址已经注册"));
                     }
                     //验证验证码是否正确
                     if($this->userBaseService->validatePhoneExist($phone,$userBase->userId)){
-                        echo json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
-                        return;
+                        return json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
                     }
                     if(!$this->validatePhoneCode($phone,$code)){
-                        echo json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
-                        return;
+                        return json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
                     }
                     //验证邮箱是否正确 发送验证邮件
 
@@ -1002,13 +971,11 @@ class IndexController extends UnCController
                     $userBase->areaCode = $areaCode;
                     //验证手机是否存在
                     if($this->userBaseService->validatePhoneExist($phone,$userBase->userId)){
-                        echo json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
-                        return;
+                        return json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
                     }
                     //判断验证码是否正确
                     if(!$this->validatePhoneCode($phone,$code)){
-                        echo json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
-                        return;
+                        return json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
                     }
 
                 } else if (empty($this->userObj->email) && empty(!$this->userObj->phone))//用户邮箱为空，手机不为空
@@ -1017,8 +984,7 @@ class IndexController extends UnCController
                     $userBase->email = $email;
                     //验证邮箱是否存在
                     if($this->userBaseService->validateEmailExist($email,$userBase->userId)) {
-                        echo json_encode(Code::statusDataReturn(Code::FAIL, "邮箱地址已经注册"));
-                        return;
+                        return json_encode(Code::statusDataReturn(Code::FAIL, "邮箱地址已经注册"));
                     }
 
                     $needEmailValidate=true;
@@ -1032,29 +998,24 @@ class IndexController extends UnCController
                     if($rst['status']==Code::SUCCESS){
                         $rst['data']='/index/wait-email-validate';
                     }
-                    echo json_encode($rst);
-                    return;
+                    return json_encode($rst);
                 }else{
                     $this->userBaseService->updateUserBaseAndAddUserPublisher($userBase,$userPublisher);
-                    echo json_encode(Code::statusDataReturn(Code::SUCCESS,'/index/reg-pub-success'));
-                    return;
+                    return json_encode(Code::statusDataReturn(Code::SUCCESS,'/index/reg-pub-success'));
                 }
             } else {
 
                 //验证邮箱是否存在
                 if($this->userBaseService->validateEmailExist($email,null)) {
-                    echo json_encode(Code::statusDataReturn(Code::FAIL, "邮箱地址已经注册"));
-                    return;
+                    return json_encode(Code::statusDataReturn(Code::FAIL, "邮箱地址已经注册"));
                 }
                 //验证手机是否存在
                 if($this->userBaseService->validatePhoneExist($phone,null)){
-                    echo json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
-                    return;
+                    return json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
                 }
                 //验证验证码是否正确
                 if(!$this->validatePhoneCode($phone,$code)){
-                    echo json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
-                    return;
+                    return json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
                 }
 
                 $userBase=new UserBase();
@@ -1069,12 +1030,12 @@ class IndexController extends UnCController
                 if($rst['status']==Code::SUCCESS){
                     $rst['data']='/index/wait-email-validate';
                 }
-                echo json_encode($rst);
-                return;
+                return json_encode($rst);
             }
 
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 

@@ -9,6 +9,7 @@
 
 namespace frontend\controllers;
 
+use common\components\LogUtils;
 use common\components\SMSUtils;
 use common\components\Code;
 use common\components\DateUtils;
@@ -81,7 +82,6 @@ class UserOrderController extends  CController{
         }
         if(empty($startTime)){
             return $this->redirect(['/result', 'result' => '起始时间不正确']);
-            return;
         }
         if(strtotime($beginDate)<time()){
             return $this->redirect(['/result', 'result' => '无效的出行日期']);
@@ -106,8 +106,7 @@ class UserOrderController extends  CController{
             $basePrice=$tripInfo['basePrice'];
 
             if($peopleCount>$tripInfo['maxUserCount']){
-                echo Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
-                return;
+                return Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
             }
             //计算阶梯价格 和 基础价格
             if(!empty($tripPriceList)&&count($tripPriceList)>0){
@@ -162,6 +161,7 @@ class UserOrderController extends  CController{
                 'orderNumber'=>$userOrderInfo->orderNumber
             ]);
         }catch (Exception $e){
+            LogUtils::log($e);
             return $this->redirect(['/result', 'result' => '系统未知异常']);
         }
     }
@@ -185,9 +185,10 @@ class UserOrderController extends  CController{
         try{
             $userSign=$this->userObj->userSign;
             $list=$this->userOrderService->getUnFinishOrderList($userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -199,9 +200,10 @@ class UserOrderController extends  CController{
         try{
             $userSign=$this->userObj->userSign;
             $list=$this->userOrderService->getFinishOrderList($userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -213,9 +215,10 @@ class UserOrderController extends  CController{
         try{
             $publisherId=$this->userPublisherObj->userPublisherId;
             $list=$this->userOrderService->getUnConfirmOrderByPublisher($publisherId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -234,9 +237,10 @@ class UserOrderController extends  CController{
         }
         try{
             $this->userOrderService->publisherConfirmOrder($orderId,$publisherId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e) {
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -256,9 +260,10 @@ class UserOrderController extends  CController{
         }
         try{
             $this->userOrderService->publisherIgnoreOrder($orderId,$publisherId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e) {
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -289,6 +294,7 @@ class UserOrderController extends  CController{
 
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"取消订单失败"));
         }
 
@@ -320,6 +326,7 @@ class UserOrderController extends  CController{
             $this->userOrderService->changeOrderStatus($orderInfo->orderNumber,UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
         }
     }
@@ -344,6 +351,7 @@ class UserOrderController extends  CController{
             $this->userOrderService->userRefundOrder($this->userObj->userSign,$orderId,$message);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"申请退款失败"));
         }
     }
@@ -363,6 +371,7 @@ class UserOrderController extends  CController{
             $this->userOrderService->deleteOrderInfo($this->userObj->userSign,$orderId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"删除订单失败"));
         }
     }
@@ -381,6 +390,7 @@ class UserOrderController extends  CController{
             $list=$this->userOrderService->getPublisherOrderList($publisherId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"获取随友订单失败"));
         }
     }
@@ -409,6 +419,7 @@ class UserOrderController extends  CController{
 
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"取消订单失败"));
         }
     }
@@ -438,6 +449,7 @@ class UserOrderController extends  CController{
             $sysMessageUtils->sendUserConfirmPlayMessage($userPublisher->userId,$orderInfo->orderNumber);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"确认游玩失败"));
         }
     }
@@ -539,6 +551,7 @@ class UserOrderController extends  CController{
             $this->userOrderService->addUserOrderComment($userOrderComment);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 

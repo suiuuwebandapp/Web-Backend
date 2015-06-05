@@ -7,6 +7,7 @@
  */
 namespace frontend\controllers;
 
+use common\components\LogUtils;
 use common\entity\TravelTripComment;
 use common\entity\UserBase;
 use frontend\components\Page;
@@ -30,11 +31,6 @@ class AppTravelController extends AController
         $this->tripCommentSer=new TravelTripCommentService();
     }
 
-    public function actionTest()
-    {
-       // $this->loginValid();
-       // var_dump($this->userObj);
-    }
     //得到随游列表 根据筛选条件
     public function actionGetTravelList()
     {
@@ -58,11 +54,10 @@ class AppTravelController extends AController
             $endPrice=Yii::$app->request->post('endPrice');
             $tag=Yii::$app->request->post('tag');
             $data=$this->travelSer->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data->getList(),$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data->getList(),$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -75,11 +70,10 @@ class AppTravelController extends AController
             $countryService = new CountryService();
             $countryList = $countryService->getCountryList();
             //$tagList = TagUtil::getInstance()->getTagList();
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$countryList));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$countryList));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -93,11 +87,10 @@ class AppTravelController extends AController
             $countryService = new CountryService();
             $cityList = $countryService->getCityList($countryId,$cityName);
             //$tagList = TagUtil::getInstance()->getTagList();
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$cityList));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$cityList));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -107,16 +100,14 @@ class AppTravelController extends AController
         $this->loginValid();
         try{
             $tagList = TagUtil::getInstance()->getTagList();
-
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$tagList));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
-//得到随游详情
+    //得到随游详情
     public function actionGetTravelInfo()
     {
         $this->loginValid();
@@ -131,16 +122,14 @@ class AppTravelController extends AController
             $tripPublisherId=$tripInfo['createPublisherId'];
             $createPublisherId=$publisherService->findById($tripPublisherId);
             if(empty($createPublisherId)){
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知的随友'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知的随友'));
             }
             $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
             $data['userInfo']=$createUserInfo;
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$this->unifyReturn($data)));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$this->unifyReturn($data)));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -170,10 +159,10 @@ class AppTravelController extends AController
 
             $rst= $this->tripCommentSer->getTravelComment($tripId,$page,$userSign);
 
-            //
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
         }
     }
 
@@ -190,9 +179,10 @@ class AppTravelController extends AController
             if(empty($tripId)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知随游'));}
             if(empty($content)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法发布空评论'));}
             $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle,$rSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));
         }
     }
     public function actionAddSupport()
@@ -203,10 +193,9 @@ class AppTravelController extends AController
             $commentId= \Yii::$app->request->post('rId');//评论id
             $this->tripCommentSer->addCommentSupport($commentId,$userSign,TravelTripComment::TYPE_SUPPORT);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 

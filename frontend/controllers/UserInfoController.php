@@ -12,6 +12,7 @@ namespace frontend\controllers;
 
 use common\components\Common;
 use common\components\DateUtils;
+use common\components\LogUtils;
 use common\entity\UserBase;
 use frontend\components\Page;
 use frontend\services\CountryService;
@@ -31,6 +32,12 @@ class UserInfoController extends CController{
     }
 
 
+    /**
+     * 跳转到个人中心页面
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionIndex()
     {
         $countryService = new CountryService();
@@ -47,12 +54,16 @@ class UserInfoController extends CController{
         ]);
     }
 
+
+    /**
+     * 获取用户信息
+     * @return string
+     */
     public function actionFindUserInfo()
     {
         $userSign=\Yii::$app->request->post("userSign");
         if(empty($userSign)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户"));
         }
         try{
             $userInfo=$this->userBaseService->findBaseInfoBySign($userSign);
@@ -64,13 +75,18 @@ class UserInfoController extends CController{
                 $userInfo->sex='保密';
             }
             $userInfo->birthday=DateUtils::convertBirthdayToAge($userInfo->birthday);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userInfo));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$userInfo));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
 
+    /**
+     * 更新用户详情
+     * @return string
+     */
     public function actionUpdateUserInfo()
     {
         $userId = $this->userObj->userId;
@@ -86,16 +102,13 @@ class UserInfoController extends CController{
         $profession = trim(\Yii::$app->request->post('profession'));
 
         if(empty($nickname)||strlen($nickname)>30){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"昵称格式不正确"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"昵称格式不正确"));
         }
         if(empty($countryId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地国家"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地国家"));
         }
         if(empty($cityId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地城市"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地城市"));
         }
         try{
             $userInfo=$this->userBaseService->findUserById($userId);
@@ -113,15 +126,20 @@ class UserInfoController extends CController{
             $this->userBaseService->updateUserBase($userInfo);
             $this->refreshUserInfo();
 
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
 
         }catch (Exception $e) {
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
 
 
+    /**
+     * 截取用户头像并更新
+     * @return string
+     */
     public function actionChangeUserHeadImg()
     {
         $userId = $this->userObj->userId;
@@ -199,46 +217,51 @@ class UserInfoController extends CController{
                 unlink($picName);
                 $this->userBaseService->updateUserHeadImg($userId, $rst['data']);
                 $this->refreshUserInfo();
-                echo json_encode(Code::statusDataReturn(Code::SUCCESS, $rst['data']));
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, $rst['data']));
             }else{
-                echo json_encode(Code::statusDataReturn(Code::FAIL));
+                return json_encode(Code::statusDataReturn(Code::FAIL));
             }
 
         } catch (Exception $e) {
-            echo json_encode(Code::statusDataReturn(Code::FAIL, $e));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL, $e));
         }
     }
 
-    //得到收藏随游
+    /**
+     * 得到收藏随游
+     * @return string
+     */
     public function  actionGetCollectionTravel()
     {
 
         try {
             if(empty($this->userObj))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
             }
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $AttentionService =new UserAttentionService();
             $data = $AttentionService->getUserCollectionTravel($userSign, $page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
-            $error = $e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
 
-    //发言
+    /**
+     * 获取用户发言
+     * @return string
+     */
     public function actionGetComment()
     {
         try {
             if(empty($this->userObj))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才有发言'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才有发言'));
             }
             $cPage=\Yii::$app->request->post('cPage');
             if(empty($cPage)||$cPage<1)
@@ -260,20 +283,24 @@ class UserInfoController extends CController{
                 $count=intval($totalCount);
                 $str=Common::pageHtml($cPage,$numb,$count);
             }
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $rst,$str));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $rst,$str));
         } catch (Exception $e) {
-            $error = $e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
+
+    /**
+     * 修改密码
+     * @return string
+     */
     public function actionUpdatePassword()
     {
         try {
             if(empty($this->userObj))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才可以修改密码'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才可以修改密码'));
             }
             $userSign = $this->userObj->userSign;
             $password=\Yii::$app->request->post('password');
@@ -283,25 +310,22 @@ class UserInfoController extends CController{
             if(empty($password)){ return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'新密码不能为空'));}
             if($password!=$qPassword)
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'两次密码不统一'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'两次密码不统一'));
             }
             $rst=$this->userBaseService->findPasswordByUserSign($userSign);
             if(empty($rst)||$rst==false)
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未找到用户'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未找到用户'));
             }
             if(!$this->userBaseService->validatePassword($oPassword,$rst->password))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'旧密码不正确'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'旧密码不正确'));
             }
             $r=$this->userBaseService->updatePassword($userSign,$password);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'修改成功'));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'修改成功'));
         } catch (Exception $e) {
-            $error = $e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }

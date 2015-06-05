@@ -1,6 +1,5 @@
 <?php
-namespace frontend\components;
-use common\components\Code;
+namespace common\components;
 
 /**
  * Created by PhpStorm.
@@ -87,7 +86,6 @@ class ValidateCode
         $this->createCode();
         $this->createLine();
         $this->createFont();
-        \Yii::$app->session->set(Code::SYS_USER_LOGIN_VERIFY_CODE,strtolower($this->code));
         $this->outPut();
 
 

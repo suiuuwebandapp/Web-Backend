@@ -12,6 +12,7 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\DateUtils;
+use common\components\LogUtils;
 use common\components\TagUtil;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
@@ -156,65 +157,50 @@ class TripController extends CController
 
 
         if ($this->userPublisherObj == null) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
         }
 
         if (empty($title)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "标题不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "标题不允许为空"));
         }
         if (empty($titleImg)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "封面图不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "封面图不允许为空"));
         }
         if (empty($intro)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "简介不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "简介不允许为空"));
         }
         if (empty($countryId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不允许为空"));
         }
         if (empty($cityId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
         }
         if (empty($basePrice)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "基础价格不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "基础价格不允许为空"));
         }
         if (empty($peopleCount)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务人数不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务人数不允许为空"));
         }
         if (empty($beginTime) || empty($endTime)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "结束时间不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "结束时间不允许为空"));
         }
         if (empty($tripLong)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游时长不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游时长不允许为空"));
         }
         if (empty($info)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "详情介绍不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "详情介绍不允许为空"));
         }
         if (empty($scenicList)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个景区"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个景区"));
         }
         if (empty($picList)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个图片介绍"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个图片介绍"));
         }
         if (count($scenicList) > 10) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图片介绍不能大于10个"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图片介绍不能大于10个"));
         }
         if (empty($tagList)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要选择一个标签"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要选择一个标签"));
         }
 
 
@@ -295,9 +281,10 @@ class TripController extends CController
             $travelTrip=$this->tripService->addTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $travelTripPublisher, $tripServiceList);
             $t=TagUtil::getInstance();
             $t->updateTagValList($tagList,$travelTrip['tripId']);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -332,76 +319,59 @@ class TripController extends CController
 
 
         if ($this->userPublisherObj == null) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
         }
         if (empty($tripId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
         }
         if (empty($title)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "标题不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "标题不允许为空"));
         }
         if (empty($titleImg)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "封面图不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "封面图不允许为空"));
         }
         if (empty($intro)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "简介不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "简介不允许为空"));
         }
         if (empty($countryId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不允许为空"));
         }
         if (empty($cityId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
         }
         if (empty($basePrice)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "基础价格不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "基础价格不允许为空"));
         }
         if (empty($peopleCount)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务人数不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务人数不允许为空"));
         }
         if (empty($beginTime) || empty($endTime)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "结束时间不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "结束时间不允许为空"));
         }
         if (empty($tripLong)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游时长不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游时长不允许为空"));
         }
         if (empty($info)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "详情介绍不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "详情介绍不允许为空"));
         }
         if (empty($scenicList)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个景区"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个景区"));
         }
         if (empty($picList)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个图片介绍"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有一个图片介绍"));
         }
         if (count($scenicList) > 10) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图片介绍不能大于10个"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图片介绍不能大于10个"));
         }
         if (empty($tagList)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要选择一个标签"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要选择一个标签"));
         }
 
         //验证当前用户是不是随游的所属者
         $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
         $travelTrip = $this->tripService->getTravelTripById($tripId);
         if($travelTrip->createPublisherId!=$userPublisherId){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
         }
 
         $tripStartTime = DateUtils::convertTimePicker($beginTime, 1);
@@ -477,9 +447,10 @@ class TripController extends CController
             }
             $t=TagUtil::getInstance();
             $t->updateTagValList($tagList,$travelTrip['tripId']);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -491,19 +462,18 @@ class TripController extends CController
     {
         $tripId = trim(\Yii::$app->request->post("tripId", ""));
         if (empty($tripId)) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
         }
         try{
             $travelTrip=$this->tripService->getTravelTripById($tripId);
             if($travelTrip->status!=TravelTrip::TRAVEL_TRIP_STATUS_DRAFT){
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改该随游"));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改该随游"));
             }
             $this->tripService->changeTripStatus($tripId,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL, "发布随游失败"));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL, "发布随游失败"));
         }
     }
 
@@ -578,21 +548,17 @@ class TripController extends CController
         $tripPublisherId=trim(\Yii::$app->request->post("tripPublisherId", ""));
 
         if(empty($tripId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty"));
         }
         if(empty($tripPublisherId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripPublisherId Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripPublisherId Is Not Allow Empty"));
         }
         $tripInfo=$this->tripService->getTravelTripById($tripId);
         if(!isset($tripInfo)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR));
         }
         if($tripInfo->createPublisherId!=$this->userPublisherObj->userPublisherId){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid User Power"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid User Power"));
         }
         try{
             $travelTripPublisher=new TravelTripPublisher();
@@ -600,11 +566,11 @@ class TripController extends CController
             $travelTripPublisher->tripPublisherId=$tripPublisherId;
 
             $this->tripService->deleteTravelTriPublisher($travelTripPublisher);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
-        return;
     }
 
     /**
@@ -613,14 +579,14 @@ class TripController extends CController
     public function actionMyTripList()
     {
         if(!$this->userObj->isPublisher){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"User Is Not Publisher"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::FAIL,"User Is Not Publisher"));
         }
         try{
             $list=$this->tripService->getMyTripList($this->userPublisherObj->userPublisherId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -630,14 +596,14 @@ class TripController extends CController
     public function actionMyJoinTripList()
     {
         if(!$this->userObj->isPublisher){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"User Is Not Publisher"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"User Is Not Publisher"));
         }
         try{
             $list=$this->tripService->getMyJoinTripList($this->userPublisherObj->userPublisherId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -660,6 +626,7 @@ class TripController extends CController
                 'travelInfo'=>$tripInfo
             ]);
         }catch (Exception $e){
+            LogUtils::log($e);
             return $this->redirect(['/result', 'result' => '未知系统异常']);
 
         }
@@ -674,19 +641,18 @@ class TripController extends CController
         $publisherId=trim(\Yii::$app->request->post("publisherId", ""));
 
         if(empty($applyId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ApplyId Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ApplyId Is Not Allow Empty"));
         }
         if(empty($publisherId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"PublisherId Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"PublisherId Is Not Allow Empty"));
         }
 
         try{
             $this->tripService->agreePublisherApply($applyId,$publisherId,$this->userPublisherObj->userPublisherId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -698,15 +664,15 @@ class TripController extends CController
         $applyId=trim(\Yii::$app->request->post("applyId", ""));
 
         if(empty($applyId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ApplyId Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ApplyId Is Not Allow Empty"));
         }
 
         try{
             $this->tripService->opposePublisherApply($applyId,$this->userPublisherObj->userPublisherId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -718,8 +684,7 @@ class TripController extends CController
         $tripId=trim(\Yii::$app->request->post("tripId", ""));
 
         if(empty($tripId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty"));
         }
 
         try{
@@ -728,10 +693,10 @@ class TripController extends CController
                 throw new Exception("您只能删除自己的随游哦~");
             }
             $this->tripService->changeTripStatus($tripId,TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            throw $e;
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }

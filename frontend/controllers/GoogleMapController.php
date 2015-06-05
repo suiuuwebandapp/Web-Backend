@@ -12,6 +12,7 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\GoogleMap;
+use common\components\LogUtils;
 use frontend\services\TripService;
 use yii\base\Exception;
 
@@ -24,6 +25,11 @@ class GoogleMapController extends UnCController{
         parent::__construct($id, $module);
     }
 
+
+    /**
+     * 跳转到地图页面
+     * @return string
+     */
     public function actionToMap()
     {
         //默认坐标 为 北京
@@ -64,12 +70,13 @@ class GoogleMapController extends UnCController{
             $rst=json_decode($rst);
             if($rst->status=="OK"){
                 $location=$rst->results[0]->geometry->location;
-                echo json_encode(Code::statusDataReturn(Code::SUCCESS,$location));
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,$location));
             }else{
-                echo json_encode(Code::statusDataReturn(Code::FAIL));
+                return json_encode(Code::statusDataReturn(Code::FAIL));
             }
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
     }
 

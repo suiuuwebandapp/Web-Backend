@@ -9,6 +9,7 @@ namespace frontend\controllers;
 
 use common\components\Aes;
 use common\components\Code;
+use common\components\LogUtils;
 use common\components\wx\WXBizMsgCrypt;
 use common\entity\UserAccess;
 use common\entity\UserBase;
@@ -375,6 +376,7 @@ class WeChatController extends SController
         }
         }catch (Exception $e)
         {
+            LogUtils::log($e);
             return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
     }
@@ -415,19 +417,21 @@ class WeChatController extends SController
         }
         return Code::statusDataReturn(Code::FAIL);
     }
+
+
     private function msgHandle( $fromUsername, $toUsername, $time, $rst,$bak=null)
     {
-            if (empty($rst['data'])) {
-                if(empty($bak))
-                {
-                    $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_TEXT, WeChat::MSG_TXT_NO);
-                }else
-                {
-                    $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_TEXT, $bak);
-                }
-            } else {
-                $this->mapMsgTxt(WeChat::MSG_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_NEWS, $rst);
+        if (empty($rst['data'])) {
+            if(empty($bak))
+            {
+                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_TEXT, WeChat::MSG_TXT_NO);
+            }else
+            {
+                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_TEXT, $bak);
             }
+        } else {
+            $this->mapMsgTxt(WeChat::MSG_TPL, $fromUsername, $toUsername, $time, WeChat::MSGTYPE_NEWS, $rst);
+        }
     }
 
     /**
@@ -660,6 +664,7 @@ class WeChatController extends SController
             }
 
         }catch (Exception $e){
+            LogUtils::log($e);
             return Code::statusDataReturn(Code::FAIL,$e->getName());
         }
         return Code::statusDataReturn(Code::SUCCESS,$userBase);

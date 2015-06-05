@@ -82,28 +82,25 @@ class PayController extends CController{
 
     public function actionTest()
     {
-        $out_trade_no="2015051499575755";
-        $trade_no="2015051400001000880050810772";
-        $userPayService=new UserPayService();
-        $rst=$userPayService->addUserPay($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_ALIPAY,UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS);
+        //$out_trade_no="2015051499575755";
+        //$trade_no="2015051400001000880050810772";
+        //$userPayService=new UserPayService();
+        //$rst=$userPayService->addUserPay($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_ALIPAY,UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS);
     }
 
 
     public function actionSend()
     {
-        $sendApi=new AlipaySendApi();
-        $sendApi->alipaySend("2015051400001000880050824241");
+        //$sendApi=new AlipaySendApi();
+        //$sendApi->alipaySend("2015051400001000880050824241");
     }
 
 
     public function actionConfirm()
     {
-        $userOrderService=new UserOrderService();
+        //$userOrderService=new UserOrderService();
         //如果用户确认收货，是不是自动改变订单状态为已完成
-        $userOrderService->changeOrderStatus('2015051499575757',UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
-
-        echo 1111;
-
+        //$userOrderService->changeOrderStatus('2015051499575757',UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
     }
 
 

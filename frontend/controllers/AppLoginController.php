@@ -10,6 +10,7 @@
 namespace frontend\controllers;
 
 
+use common\components\LogUtils;
 use frontend\services\CountryService;
 use common\components\Aes;
 use common\components\Code;
@@ -99,29 +100,12 @@ class AppLoginController extends SController{
 
         $userBase=null;
         try{
-            $userBase=new UserBase();
-            $userBase->nickname=$nickname;
-            $userBase->headImg=$headImg;
-            $userBase->sex=$sex;
 
-            $userAccess=new UserAccess();
-            $userAccess->openId=$openId;
-            $userAccess->type=$type;
-            $userBase=$this->userBaseService->addUser($userBase,$userAccess);
-            $enPassword = \Yii::$app->params['encryptPassword'];
-            $enDigit = \Yii::$app->params['encryptDigit'];
-            $aes=new Aes();
-            $sysSign=$aes->encrypt($userBase->userSign,$enPassword,$enDigit);
-            \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($userBase));
-            \Yii::$app->redis->expire(Code::APP_USER_LOGIN_SESSION.$sysSign,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userBase,$sysSign));
-            return null;
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
-            return null;
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
         }
-        echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userBase));
-        return null;
+        return json_encode(Code::statusDataReturn(Code::SUCCESS,$userBase));
 
     }
 
@@ -137,10 +121,9 @@ class AppLoginController extends SController{
         $countryService = new CountryService();
         $countryList=$countryService->getCountryList();
         if(empty($countryList)){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
-            exit;
+            return json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
         }
-        echo json_encode(Code::statusDataReturn(Code::SUCCESS,$countryList));
+        return  json_encode(Code::statusDataReturn(Code::SUCCESS,$countryList));
 
     }
     public function actionGetPhoneCode()
@@ -151,8 +134,7 @@ class AppLoginController extends SController{
         $areaCode="";*/
         if(empty($phone))
         {
-            echo json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
-            exit;
+            return json_encode(Code::statusDataReturn(Code::FAIL,'用户手机号不能为空'));
         }
         if(empty($areaCode))
         {
@@ -161,8 +143,7 @@ class AppLoginController extends SController{
 
         $count = \Yii::$app->redis->get(Code::USER_SEND_ERROR_COUNT_PREFIX . $phone);
         if ($count >= Code::MAX_SEND_COUNT) {
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "发送次数过多24小时后将继续发送"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "发送次数过多24小时后将继续发送"));
         }
         $code = $this->randomPhoneCode();
         //设置验证码 和 有效时长
@@ -176,8 +157,9 @@ class AppLoginController extends SController{
         $rst = null;
         $smsUtils = new SmsUtils();
         $rst = $smsUtils->sendMessage($phone,$areaCode, $code,SmsUtils::SEND_MESSAGE_TYPE_REGISTER);
-        echo json_encode($rst);
+        return json_encode($rst);
     }
+
     public function actionAppRegister()
     {
         $phone=\Yii::$app->request->post('phone');
@@ -187,30 +169,35 @@ class AppLoginController extends SController{
         $code=\Yii::$app->request->post('validateCode');//验证码
         if(empty($password))
         {
-            echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不能为空'));
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'密码不能为空'));
         }
         if($cPassword!=$password)
         {
-            echo json_encode(Code::statusDataReturn(Code::FAIL,'密码不一致'));
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'密码不一致'));
         }
         $rCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
         if(empty($rCode)||$rCode!=$code)
         {
-            echo json_encode(Code::statusDataReturn(Code::FAIL,'验证码不正确'));
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'验证码不正确'));
         }
-        $userBase=new UserBase();
-        $userBase->nickname=$nick;
-        $userBase->password=$password;
-        $userBase->phone=$phone;
-        $user=$this->userBaseService->addUser($userBase);
-        $enPassword = \Yii::$app->params['encryptPassword'];
-        $enDigit = \Yii::$app->params['encryptDigit'];
-        $aes=new Aes();
-        $sysSign=$aes->encrypt($user->userSign,$enPassword,$enDigit);
-        \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($user));
-        \Yii::$app->redis->expire(Code::APP_USER_LOGIN_SESSION.$sysSign,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
-        echo json_encode(Code::statusDataReturn(Code::SUCCESS,$user,$sysSign));
-        exit;
+        try{
+            $userBase=new UserBase();
+            $userBase->nickname=$nick;
+            $userBase->password=$password;
+            $userBase->phone=$phone;
+            $user=$this->userBaseService->addUser($userBase);
+            $enPassword = \Yii::$app->params['encryptPassword'];
+            $enDigit = \Yii::$app->params['encryptDigit'];
+            $aes=new Aes();
+            $sysSign=$aes->encrypt($user->userSign,$enPassword,$enDigit);
+            \Yii::$app->redis->set(Code::APP_USER_LOGIN_SESSION.$sysSign,json_encode($user));
+            \Yii::$app->redis->expire(Code::APP_USER_LOGIN_SESSION.$sysSign,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$user,$sysSign));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
     }
     /**
      * 生成手机六位验证码
@@ -254,8 +241,7 @@ class AppLoginController extends SController{
         }
         //用户输入信息验证
         if($error!=''){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
-            exit;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
         }
         try{
             //验证用户名是否存在
@@ -263,7 +249,6 @@ class AppLoginController extends SController{
             if(isset($result)){
 
                 //设置Session
-
                 $enPassword = \Yii::$app->params['encryptPassword'];
                 $enDigit = \Yii::$app->params['encryptDigit'];
                 $aes=new Aes();
@@ -274,21 +259,17 @@ class AppLoginController extends SController{
 
                 //清除错误登录次数
                 \Yii::$app->redis->del(Code::APP_USER_LOGIN_ERROR_COUNT_PREFIX.$username);
-
-                echo json_encode(Code::statusDataReturn(Code::SUCCESS,$result,$sysSign));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,$result,$sysSign));
             }else{
 
                 \Yii::$app->redis->set(Code::APP_USER_LOGIN_ERROR_COUNT_PREFIX.$username,++$errorCount);
                 \Yii::$app->redis->expire(Code::APP_USER_LOGIN_ERROR_COUNT_PREFIX.$username,Code::APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
                 $error="用户名或密码错误";
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
             }
         }catch (Exception $e){
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
-            exit;
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR));
         }
 
 
@@ -302,12 +283,10 @@ class AppLoginController extends SController{
         $rst = \Yii::$app->redis->del(Code::APP_USER_LOGIN_SESSION.$appSign);
         if($rst==1)
         {
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,Code::APP_USER_LOGOUT_SUCCESS_STR));
-            exit;
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,Code::APP_USER_LOGOUT_SUCCESS_STR));
         }else
         {
-            echo json_encode(Code::statusDataReturn(Code::FAIL,Code::APP_USER_LOGOUT_FAIL_STR));
-            exit;
+            return json_encode(Code::statusDataReturn(Code::FAIL,Code::APP_USER_LOGOUT_FAIL_STR));
         }
     }
 
@@ -319,10 +298,10 @@ class AppLoginController extends SController{
         $currentUser=json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION.$appSign)));
         if(empty($currentUser))
         {
-            echo json_encode(Code::statusDataReturn(Code::UN_LOGIN));
+            return json_encode(Code::statusDataReturn(Code::UN_LOGIN));
         }else
         {
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }
     }
 

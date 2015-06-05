@@ -9,6 +9,7 @@ namespace frontend\controllers;
 
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\entity\UserBase;
 use frontend\components\Page;
 use frontend\services\CircleService;
@@ -16,6 +17,7 @@ use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use Yii;
 use yii\base\Exception;
+use yii\debug\models\search\Log;
 
 class AppMainController extends AController
 {
@@ -48,16 +50,13 @@ class AppMainController extends AController
         $profession = trim(\Yii::$app->request->post('profession'));
 
         if(empty($nickname)||strlen($nickname)>30){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"昵称格式不正确"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"昵称格式不正确"));
         }
         if(empty($countryId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地国家"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地国家"));
         }
         if(empty($cityId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地城市"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地城市"));
         }
         try{
             $userInfo=$userService->findUserByUserSign($userSign);
@@ -75,9 +74,10 @@ class AppMainController extends AController
 
             $userService->updateUserBase($userInfo);
             $this->appRefreshUserInfo();
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userInfo));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$userInfo));
         }catch (Exception $e) {
-            echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -85,20 +85,18 @@ class AppMainController extends AController
     public function actionGetSeek()
     {
         $this->loginValid(false);
+        if(empty($str))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法搜索未知标题'));
+        }
         try{
             $str=\Yii::$app->request->post('str');
             $page = new Page(\Yii::$app->request);
-            if(empty($str))
-            {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法搜索未知标题'));
-                exit;
-            }
             $this->CircleService->getSeekResult($str,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //得到用户主页
@@ -115,15 +113,13 @@ class AppMainController extends AController
             //$mySign='5787a571910e3352a76c753776e1b8f4';
             if(empty($userSign))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法得到未知用户主页'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知用户主页'));
             }
             $data=$this->CircleService->getHomepageInfo($userSign,$page,$mySign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -135,11 +131,10 @@ class AppMainController extends AController
             $userSign = $this->userObj->userSign;
             $page = new Page(\Yii::$app->request);
             $data =$this->CircleService->getTravelListByUserSign($userSign,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //得到用户的帖子
@@ -151,11 +146,10 @@ class AppMainController extends AController
             $page = new Page(\Yii::$app->request);
 
             $data =$this->CircleService->getArticleListByUserSign($userSign,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -184,11 +178,10 @@ class AppMainController extends AController
             $data['userDynamic'] = $this->AttentionService->getAttentionUserDynamic($userSign,$page2);
             $data['recommendUser'] =$this->AttentionService->getRecommendUser($page3);
             $data['recommendTravel'] =$this->AttentionService->getRecommendTravel($page4);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 }

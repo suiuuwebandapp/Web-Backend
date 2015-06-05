@@ -8,6 +8,7 @@
 namespace frontend\controllers;
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\entity\UserFeedback;
 use frontend\services\UserFeedbackService;
 use yii\base\Exception;
@@ -29,17 +30,16 @@ class UserFeedbackController extends AController
         try{
             $feedback = new UserFeedback();
             $feedback->content=Yii::$app->request->post('content');
-            if( empty($feedback->content)){return json_encode(Code::statusDataReturn(Code::FAIL,'不能反馈空信息')); }
+            if( empty($feedback->content)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'不能反馈空信息')); }
             $feedback->userSign=isset($this->userObj->userSign)?$this->userObj->userSign:'';
             $feedback->imgList=Yii::$app->request->post('imgList');
             $feedback->fLevel=Yii::$app->request->post('level');
             $feedback->fType=UserFeedback::TYPE_APP;
             $this->userFeedbackSer->createFeedback($feedback);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR));
         }
     }
     public function actionWebCreateFeedback()
@@ -49,7 +49,7 @@ class UserFeedbackController extends AController
             $feedback = new UserFeedback();
             $feedback->content=Yii::$app->request->post('content');
             if(empty($feedback->content))
-            {return json_encode(Code::statusDataReturn(Code::FAIL,'不能反馈空信息'));}
+            {return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'不能反馈空信息'));}
 
             $feedback->userSign=isset($this->userObj->userSign)?$this->userObj->userSign:'';
             $feedback->imgList=Yii::$app->request->post('imgList');
@@ -57,10 +57,9 @@ class UserFeedbackController extends AController
             $feedback->fType=UserFeedback::TYPE_WEB;
             $this->userFeedbackSer->createFeedback($feedback);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 }

@@ -11,6 +11,7 @@ namespace frontend\controllers;
 
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\entity\UserMessage;
 use frontend\services\UserMessageService;
 use yii\base\Exception;
@@ -36,12 +37,10 @@ class UserMessageController extends  CController{
         $content=trim(\Yii::$app->request->post("content"));
 
         if(empty($receiveId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ReceiveId Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"ReceiveId Is Not Allow Empty"));
         }
         if(empty($content)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Content Is Not Allow Empty"));
-            return;
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Content Is Not Allow Empty"));
         }
 
         //判断黑白名单
@@ -53,10 +52,10 @@ class UserMessageController extends  CController{
 
         try{
             $this->userMessageService->addUserMessage($userMessage);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            throw $e;
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -70,10 +69,10 @@ class UserMessageController extends  CController{
         try{
             $userSign=$this->userObj->userSign;
             $list=$this->userMessageService->getUserMessageSessionList($userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            throw $e;
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -85,9 +84,10 @@ class UserMessageController extends  CController{
         try{
             $userSign=$this->userObj->userSign;
             $list=$this->userMessageService->getUnReadMessageSessionList($userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -102,9 +102,10 @@ class UserMessageController extends  CController{
         try{
             $userSign=$this->userObj->userSign;
             $list=$this->userMessageService->getUserMessageSessionInfo($userSign,$sessionKey);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -120,9 +121,10 @@ class UserMessageController extends  CController{
             $rst=[];
             $rst['userList']=$list;
             $rst['sysList']=$sysList;
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -134,14 +136,15 @@ class UserMessageController extends  CController{
         $messageId=trim(\Yii::$app->request->post("messageId"));
 
         if(empty($messageId)){
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的消息"));
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的消息"));
         }
         try{
             $userSign=$this->userObj->userSign;
             $userMessageSetting=$this->userMessageService->changeSystemMessageRead($messageId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userMessageSetting));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$userMessageSetting));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -154,9 +157,10 @@ class UserMessageController extends  CController{
         try{
             $userSign=$this->userObj->userSign;
             $userMessageSetting=$this->userMessageService->findUserMessageSettingByUserId($userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userMessageSetting));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$userMessageSetting));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -171,9 +175,10 @@ class UserMessageController extends  CController{
             $userMessageSetting=$this->userMessageService->findUserMessageSettingByUserId($userSign);
             $userMessageSetting->status=$status;
             $this->userMessageService->updateUserMessageSetting($userMessageSetting);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -187,9 +192,10 @@ class UserMessageController extends  CController{
         $userSign=$this->userObj->userSign;
         try{
             $this->userMessageService->addUserMessageShield($userSign,$shieldId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -202,9 +208,10 @@ class UserMessageController extends  CController{
         $userSign=$this->userObj->userSign;
         try{
             $this->userMessageService->deleteUserMessageShield($userSign,$shieldId);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 }

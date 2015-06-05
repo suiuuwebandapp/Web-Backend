@@ -12,6 +12,7 @@ namespace frontend\controllers;
 
 use backend\components\Page;
 use common\components\Code;
+use common\components\LogUtils;
 use common\components\PageResult;
 use common\components\SphinxUtils;
 use frontend\services\ArticleService;
@@ -28,6 +29,10 @@ class SearchController extends UnCController{
     }
 
 
+    /**
+     * 跳转到搜索页面
+     * @return string
+     */
     public function actionIndex()
     {
         $search=\Yii::$app->request->get("s");
@@ -39,6 +44,10 @@ class SearchController extends UnCController{
     }
 
 
+    /**
+     * 全文检索
+     * @return string
+     */
     public function actionSearch()
     {
         $search=\Yii::$app->request->post("s");
@@ -105,11 +114,17 @@ class SearchController extends UnCController{
 
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
         }catch (Exception $e){
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
-
+    /**
+     * 根据Id将随游排序（匹配程度）
+     * @param $ids
+     * @param $list
+     * @return array
+     */
     public function sortTripResult($ids,$list)
     {
         $listMap=[];
@@ -124,6 +139,13 @@ class SearchController extends UnCController{
         return $newList;
     }
 
+
+    /**
+     * 根据Id将文章排序（匹配程度）
+     * @param $ids
+     * @param $list
+     * @return array
+     */
     public function sortArticleResult($ids,$list)
     {
         $listMap=[];

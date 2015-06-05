@@ -9,6 +9,7 @@ namespace frontend\controllers;
 
 
 use common\components\Common;
+use common\components\LogUtils;
 use common\entity\CircleArticle;
 use common\entity\CircleComment;
 use common\entity\UserBase;
@@ -35,17 +36,9 @@ class CircleController extends AController{
 
     }
 
-    public function actionIndex()
-    {
-        echo 1;
-
-    }
-
-
-
-
     /**
-     * @var 发布圈子文章
+     *  发布圈子文章
+     * @return string
      */
     public function actionCreateArticle()
     {
@@ -64,24 +57,24 @@ class CircleController extends AController{
 
             if(empty( $CircleArticleEntity->cId)&&empty( $CircleArticleEntity->cAddrId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'请选择所属圈子'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请选择所属圈子'));
             }
             if(empty( $CircleArticleEntity->aType))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'请选择文章类型'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请选择文章类型'));
             }
             $data = $this->CircleService->CreateArticle($CircleArticleEntity);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
+
     /**
-     * @var 删除圈子文章
+     * 删除圈子文章
+     * @return string
      */
     public function actionDeleteArticle()
     {
@@ -90,22 +83,21 @@ class CircleController extends AController{
             $articleId=\Yii::$app->request->post('articleId');
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法删除未知文章'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法删除未知文章'));
             }
             $userSign =$this->userObj->userSign;
             $this->CircleService->deleteArticleInfoById($articleId,$userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
 
     /**
-     * @var 修改圈子文章
+     * 修改圈子文章
+     * @return string
      */
     public function actionUpDateArticle()
     {
@@ -122,19 +114,19 @@ class CircleController extends AController{
             $CircleArticleEntity->aCreateUserSign=$this->userObj->userSign;
             if(empty( $CircleArticleEntity->articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法修改未知文章'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::FAIL,'无法修改未知文章'));
             }
             $this->CircleService->updateArticleInfo($CircleArticleEntity);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
     /**
-     * @var 查询圈子文章根据文章id
+     * 查询圈子文章根据文章id
+     * @return string
      */
     public function actionGetArticleById()
     {
@@ -148,15 +140,13 @@ class CircleController extends AController{
             $userSign=$this->userObj->userSign;
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知文章'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法查看未知文章'));
             }
             $data=$this->CircleService->getArticleInfoById($articleId,$userSign,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -169,19 +159,19 @@ class CircleController extends AController{
             $page = new Page(\Yii::$app->request);
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知文章的评论'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法查看未知文章的评论'));
             }
             $data=$this->CircleService->getCommentByArticleId($articleId,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
     /**
-     * @var 查询文章列表根据圈子id
+     * 查询文章列表根据圈子id
+     * @return string
      */
     public function actionGetArticleByCircleId()
     {
@@ -194,25 +184,23 @@ class CircleController extends AController{
             $page=new Page(\Yii::$app->request);
             if(empty($circleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知圈子列表'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知圈子列表'));
             }
             if(empty($type))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知圈子类型列表'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知圈子类型列表'));
             }
             $data=$this->CircleService->getArticleByCircleId($circleId,$page,$userSign,$type);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,(object)$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,(object)$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
     /**
-     * @var 查询圈子
+     * 查询圈子
+     * @return string
      */
     public function actionGetCircle()
     {
@@ -222,16 +210,16 @@ class CircleController extends AController{
             $type = \Yii::$app->request->post('type');
             $page =new Page(\Yii::$app->request);
             $data=$this->CircleService->getCircleByType($type,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
     /**
-     *@var 发表评论
+     * 发表评论
+     * @return string
      */
     public function actionCreateComment()
     {
@@ -249,19 +237,20 @@ class CircleController extends AController{
             $isAt = \Yii::$app->request->post('at');//是否艾特@
             if(empty($CircleCommentEntity->articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法评论未知文章'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知文章'));
             }
             $this->CircleService->CreateArticleComment($CircleCommentEntity,$relativeUserSign,$isReply,$isAt);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
+
     /**
-     * @var 删除评论
+     * 删除评论
+     * @return string
      */
     public function actionDeleteComment()
     {
@@ -272,15 +261,13 @@ class CircleController extends AController{
             $userSign=$this->userObj->userSign;
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法删除未知评论'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法删除未知评论'));
             }
             $this->CircleService->deleteCommentById($articleId,$commentId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -309,15 +296,13 @@ class CircleController extends AController{
             $userSign=$this->userObj->userSign;
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法查看未知文章'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法查看未知文章'));
             }
             $data=$this->CircleService->getArticleInfoById($articleId,$userSign,$page);
             return $this->renderPartial('info',['data'=> $data,'pr'=>Yii::$app->params['app_circle_article_img']]);
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 

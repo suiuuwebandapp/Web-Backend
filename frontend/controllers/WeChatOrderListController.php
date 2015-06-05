@@ -132,6 +132,7 @@ class WeChatOrderListController extends WController {
         }
         return $this->renderPartial('orderView',['c'=>$c,'n'=>$n]);
     }
+
     public function actionOrderManage()
     {
         $this->loginValid(false);

@@ -10,6 +10,7 @@
 namespace frontend\controllers;
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\entity\UserOrderInfo;
 use common\entity\UserPayRecord;
 use common\pay\alipay\create\AlipayConfig;
@@ -107,6 +108,7 @@ class PayReturnController extends Controller {
 
                     echo "success";		//请不要修改或删除
                 }catch (Exception $e){
+                    LogUtils::log($e);
                     //验证失败
                     echo "fail";
                 }

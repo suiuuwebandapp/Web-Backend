@@ -13,6 +13,7 @@ namespace frontend\controllers;
 use backend\components\Page;
 use backend\components\TableResult;
 use common\components\Code;
+use common\components\LogUtils;
 use common\components\PageResult;
 use frontend\services\CountryService;
 use frontend\services\DestinationService;
@@ -28,7 +29,12 @@ class DestinationController extends UnCController{
     }
 
 
-
+    /**
+     * 目的地列表
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionList()
     {
         $countryService = new CountryService();
@@ -60,6 +66,13 @@ class DestinationController extends UnCController{
         ]);
     }
 
+
+    /**
+     * 目的地详情页面
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionInfo()
     {
         $desId=\Yii::$app->request->get("des");
@@ -79,6 +92,10 @@ class DestinationController extends UnCController{
     }
 
 
+    /**
+     * 获取目的地列表（AJAX）
+     * @return string
+     */
     public function actionFindList()
     {
         $countryId=\Yii::$app->request->post("countryId");
@@ -95,9 +112,10 @@ class DestinationController extends UnCController{
             $page=$destinationService->getList($page,null,$countryId,$cityId);
             $pageResult=new PageResult($page);
 
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$pageResult));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$pageResult));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"获取目的地列表失败"));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取目的地列表失败"));
         }
 
 

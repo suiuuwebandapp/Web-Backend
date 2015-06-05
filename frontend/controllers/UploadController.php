@@ -11,6 +11,7 @@ namespace frontend\controllers;
 
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\components\OssUpload;
 use common\entity\UserPublisher;
 use frontend\services\UploadService;
@@ -126,6 +127,7 @@ class UploadController extends Controller
                         $result = Code::statusDataReturn(Code::FAIL);
                     }
                 } catch (Exception $e) {
+                    LogUtils::log($e);
                     $result = Code::statusDataReturn(Code::FAIL);
                 }
             }
@@ -141,7 +143,7 @@ class UploadController extends Controller
     public function actionUploadHeadImg()
     {
         if (!array_key_exists('Filedata', $_FILES)) {
-            echo json_encode(['status']);
+            return json_encode(['status']);
         } else {
             $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxCardImgSize, $this->cardImgTypes, $this->localDir);
             return json_encode($result);
@@ -156,7 +158,7 @@ class UploadController extends Controller
     public function actionUploadTripTitleImg()
     {
         if (!array_key_exists('Filedata', $_FILES)) {
-            echo json_encode(['status']);
+            return json_encode(['status']);
         } else {
             $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxTripImgSize, $this->tripImgTypes, $this->localDir);
             if ($result['status'] == Code::SUCCESS) {

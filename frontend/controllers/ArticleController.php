@@ -10,6 +10,7 @@ namespace frontend\controllers;
 use backend\components\Page;
 use common\components\Code;
 use common\components\Common;
+use common\components\LogUtils;
 use common\entity\ArticleComment;
 use common\entity\ArticleInfo;
 use common\entity\UserBase;
@@ -51,14 +52,12 @@ class ArticleController extends UnCController{
             $data=$this->aritcleSer->getArticleInfoById($id);
             if(empty($data))
             {
-                return json_encode(Code::statusDataReturn(Code::FAIL,'未找到对应的文章'));
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未找到对应的文章'));
             }
-
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -86,14 +85,15 @@ class ArticleController extends UnCController{
                 $str=Common::pageHtml($page,$numb,$count);
             }
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$data,$str));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            echo json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
     /**
-     *@var 发表评论
+     * 发表评论
+     * @return string
      */
     public function actionAddArticleComment()
     {
@@ -103,7 +103,6 @@ class ArticleController extends UnCController{
                 $userSign =$this->userObj->userSign;
             }
 
-
             $articleId = \Yii::$app->request->post('articleId');
             $content = \Yii::$app->request->post('content');
             $rId= \Yii::$app->request->post('rId');
@@ -111,20 +110,17 @@ class ArticleController extends UnCController{
             $rSign= \Yii::$app->request->post('rSign');
             if(empty($userSign))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'登陆之后才能评论'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆之后才能评论'));
             }
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'无法评论未知文章'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知文章'));
             }
             $this->aritcleSer->addArticleComment($userSign,$content,$rId,$articleId,$rTitle,$rSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -138,20 +134,15 @@ class ArticleController extends UnCController{
 
             if(empty($userSign))
             {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'登陆之后才能点赞'));
-                exit;
+                return json_encode(Code::statusDataReturn(Code::FAIL,'登陆之后才能点赞'));
             }
             $rId= \Yii::$app->request->post('rId');
             $this->aritcleSer->addCommentSupport($rId,$userSign,ArticleComment::TYPE_SUPPORT);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
-    }
-    public function actionTest()
-    {
     }
 
 }

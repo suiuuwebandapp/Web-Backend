@@ -10,6 +10,7 @@
 namespace frontend\controllers;
 
 
+use common\components\LogUtils;
 use frontend\services\CountryService;
 use common\components\Code;
 use yii\base\Exception;
@@ -35,11 +36,11 @@ class CountryController extends UnCController{
         $countryId=\Yii::$app->request->post("countryId");
         try{
             $list=$this->countryService->getCityList($countryId,null);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getMessage()));
         }
-        return null;
     }
 
 

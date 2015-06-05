@@ -14,6 +14,7 @@ use backend\components\Page;
 use backend\components\TableResult;
 use common\components\Code;
 use common\components\Common;
+use common\components\LogUtils;
 use common\components\PageResult;
 use common\components\TagUtil;
 use common\entity\TravelTripComment;
@@ -24,6 +25,7 @@ use frontend\services\TripService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
+use yii\debug\models\search\Log;
 
 class ViewTripController extends UnCController{
 
@@ -41,6 +43,12 @@ class ViewTripController extends UnCController{
         parent::__construct($id, $module);
     }
 
+    /**
+     * 跳转到随游列表页面
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionList()
     {
         $search=\Yii::$app->request->get("s",null);
@@ -83,11 +91,10 @@ class ViewTripController extends UnCController{
             $page->pageSize=$numb;
             $page->startRow = (($page->currentPage - 1) * $page->pageSize);
             $recommendTravel =$this->AttentionService->getRecommendTravel($page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$recommendTravel));
-         }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$recommendTravel));
+         }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -134,55 +141,63 @@ class ViewTripController extends UnCController{
         ]);
     }
 
-    //收藏随游
+    /**
+     * 收藏随游
+     * @return string
+     */
     public function actionAddCollectionTravel()
     {
         try{
             if(empty($this->userObj))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
             }
             $travelId= \Yii::$app->request->post('travelId');
             if(empty($travelId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $data=$this->AttentionService->CreateCollectionToTravel($travelId,$userSign);
             echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
-    //删除
+
+
+    /**
+     * 删除收藏
+     * @return string
+     */
     public function actionDeleteAttention()
     {
 
         try{
             if(empty($this->userObj))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
             }
             $attentionId= \Yii::$app->request->post('attentionId');
             if(empty($attentionId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'取消信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'取消信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $this->AttentionService->deleteAttention($attentionId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
+
+    /**
+     * 获取随游列表
+     * @return string
+     */
     public function actionGetTripList()
     {
         $c=\Yii::$app->request->post("p");
@@ -216,11 +231,11 @@ class ViewTripController extends UnCController{
             $pageResult=new PageResult($page);
             $pageResult->pageHtml=$pageHtml;
 
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$pageResult));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$pageResult));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"获取随游列表失败"));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取随游列表失败"));
         }
-        return;
     }
 
     /**初始化redis Tag
@@ -247,6 +262,11 @@ class ViewTripController extends UnCController{
         }
 
     }
+
+    /**
+     * 获取评论列表
+     * @return string
+     */
     public function actionGetCommentList()
     {
         try{
@@ -279,22 +299,25 @@ class ViewTripController extends UnCController{
                 $str=Common::pageHtml($cPage,$numb,$count);
             }
             //
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$str));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$str));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
         }
     }
 
 
-
+    /**
+     * 添加评论
+     * @return string
+     */
     public function actionAddComment()
     {
+        if(empty($this->userObj))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再发布评论'));
+        }
         try{
-            if(empty($this->userObj))
-            {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再发布评论'));
-                return;
-            }
             $userSign=$this->userObj->userSign;
             $tripId = \Yii::$app->request->post('tripId');
             $content = \Yii::$app->request->post('content');
@@ -304,30 +327,40 @@ class ViewTripController extends UnCController{
             if(empty($tripId)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知随游'));}
             if(empty($content)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法发布空评论'));}
             $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle,$rUserSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-            }catch (Exception $e){
-        echo json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));
         }
     }
+
+
+    /**
+     * 支持评论
+     * @return string
+     */
     public function actionAddSupport()
     {
         try {
             if(empty($this->userObj))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再点赞'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再点赞'));
             }
             $userSign =$this->userObj->userSign;
             $commentId= \Yii::$app->request->post('rId');//评论id
             $this->tripCommentSer->addCommentSupport($commentId,$userSign,TravelTripComment::TYPE_SUPPORT);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
+
+    /**
+     * 获取用户评论
+     * @return string
+     */
     public function actionGetUserComment()
     {
         try{
@@ -358,10 +391,11 @@ class ViewTripController extends UnCController{
                 $count=intval($totalCount);
                 $str=Common::pageHtml($cPage,$numb,$count);
             }
-            //
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$str));
+
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$str));
         }catch (Exception $e){
-            echo json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
         }
     }
 }

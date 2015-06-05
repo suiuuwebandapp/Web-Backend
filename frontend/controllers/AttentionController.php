@@ -9,6 +9,7 @@ namespace frontend\controllers;
 
 use common\components\Code;
 use common\components\Common;
+use common\components\LogUtils;
 use common\entity\UserBase;
 use frontend\components\Page;
 use frontend\services\CircleService;
@@ -41,10 +42,10 @@ class AttentionController extends AController
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserAttentionCircle($userSign, $page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
-            $error = $e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -58,10 +59,10 @@ class AttentionController extends AController
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserAttentionUser($userSign, $page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
-            $error = $e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -74,10 +75,10 @@ class AttentionController extends AController
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserCollectionArticle($userSign, $page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
-            $error = $e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
@@ -90,10 +91,10 @@ class AttentionController extends AController
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getUserCollectionTravel($userSign, $page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
-            $error = $e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -105,16 +106,14 @@ class AttentionController extends AController
             $circleId= \Yii::$app->request->post('cId');
             if(empty($circleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'关注信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'关注信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $data =  $this->AttentionService->CreateAttentionToCircle($circleId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //关注用户
@@ -125,16 +124,14 @@ class AttentionController extends AController
             $userSign= \Yii::$app->request->post('userSign');
             if(empty($userSign))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'关注信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'关注信息不能为空'));
             }
             $cUserSign = $this->userObj->userSign;
             $data =$this->AttentionService->CreateAttentionToUser($userSign,$cUserSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //收藏文章
@@ -145,16 +142,14 @@ class AttentionController extends AController
             $articleId= \Yii::$app->request->post('articleId');
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->CreateCollectionToArticle($articleId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //收藏随游
@@ -165,16 +160,14 @@ class AttentionController extends AController
             $travelId= \Yii::$app->request->post('travelId');
             if(empty($travelId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $data= $this->AttentionService->CreateCollectionToTravel($travelId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -186,16 +179,14 @@ class AttentionController extends AController
             $travelId= \Yii::$app->request->post('travelId');
             if(empty($travelId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'点赞信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'点赞信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $data= $this->AttentionService->CreatePraiseToTravel($travelId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //圈子文章点赞
@@ -206,16 +197,14 @@ class AttentionController extends AController
             $articleId= \Yii::$app->request->post('articleId');
             if(empty($articleId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'点赞信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'点赞信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $data= $this->AttentionService->CreatePraiseToCircleArticle($articleId,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -227,21 +216,18 @@ class AttentionController extends AController
             $attentionId= \Yii::$app->request->post('attentionId');
             if(empty($attentionId))
             {
-                echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'取消信息不能为空'));
-                return;
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'取消信息不能为空'));
             }
             $userSign = $this->userObj->userSign;
             $rst = $this->AttentionService->deleteAttention($attentionId,$userSign);
             if($rst==1){
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-            }else
-            {
-                echo json_encode(Code::statusDataReturn(Code::FAIL,'fail'));
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+            }else{
+                return json_encode(Code::statusDataReturn(Code::FAIL,'fail'));
             }
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -253,11 +239,10 @@ class AttentionController extends AController
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getAttentionCircleDynamic($userSign,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -267,11 +252,10 @@ class AttentionController extends AController
         try{
             $page = new Page(\Yii::$app->request);
             $data = $this->AttentionService->getRecommendCircle($page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //用户动态 //关注动态
@@ -283,11 +267,10 @@ class AttentionController extends AController
             $count = \Yii::$app->request->post('count');
             $userSign = $this->userObj->userSign;
             $data = $this->AttentionService->getAttentionUserDynamic($userSign,$page,$count);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
     //获得推荐用户
@@ -296,11 +279,10 @@ class AttentionController extends AController
         try{
             $page =new Page(\Yii::$app->request);
             $data =$this->AttentionService->getRecommendUser($page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -314,11 +296,10 @@ class AttentionController extends AController
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $data =$this->AttentionService->getUserFans($userSign,$page);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -332,11 +313,10 @@ class AttentionController extends AController
             $userSign = $this->userObj->userSign;
             $type = \Yii::$app->request->post('type');
             $data =$this->AttentionService->getMessageRemind($userSign,$page,$type);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
@@ -348,11 +328,10 @@ class AttentionController extends AController
             $rid = \Yii::$app->request->post('rid');
             $userSign = $this->userObj->userSign;
             $this->AttentionService->deleteUserMessageRemind($rid,$userSign);
-            echo json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
-        }catch (Exception $e)
-        {
-            $error=$e->getMessage();
-            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 
