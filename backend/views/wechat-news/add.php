@@ -259,7 +259,7 @@
                 var datas=eval('('+data+')');
                 if(datas.status==1){
                     Main.successTip("添加成功");
-                    initForm();
+                    Main.goAction("/wechat-news/list");
                 }else{
                     Main.errorTip("添加失败,错误信息:"+datas.data);
                 }

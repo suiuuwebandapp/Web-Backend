@@ -248,7 +248,7 @@
         Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
-                url:"/wechat-news/delete",
+                url:"/wechat-news/delete-news",
                 data:{
                     id:id
                 },beforeSend:function(){
