@@ -25,7 +25,7 @@ class ValidateCode
     //构造方法初始化
     public function __construct()
     {
-        $this->font = dirname(dirname(__FILE__)).'/web/assets/font/elephant.ttf';//注意字体路径要写对，否则显示不了图片
+        $this->font = \Yii::getAlias("@common").'/font/Elephant.ttf';//注意字体路径要写对，否则显示不了图片
     }
 
     //生成随机码
