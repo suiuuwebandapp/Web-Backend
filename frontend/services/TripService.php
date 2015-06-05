@@ -16,14 +16,11 @@ use common\components\SysMessageUtils;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripPublisher;
-use common\entity\TravelTripService;
 use common\entity\UserAttention;
-use common\entity\UserBase;
 use common\models\BaseDb;
 use common\models\TravelTripDb;
 use common\models\UserAttentionDb;
-use frontend\models\UserBaseDb;
-use frontend\models\UserPublisherDb;
+use common\models\UserPublisherDb;
 use yii\base\Exception;
 
 class TripService extends BaseDb{

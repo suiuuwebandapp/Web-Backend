@@ -135,14 +135,12 @@
                     "width":"200px",
                     "render": function(data, type, full) {
                         var html='';
+                        html +='<a href="javascript:;" onclick="showUserInfo(\''+full.userSign+'\')" class="btn default btn-xs blue-hoki"><i class="fa fa-cog"></i> 查看</a>&nbsp;&nbsp;';
                         if(full.status==1){
                             html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 禁用</a>&nbsp;&nbsp;';
                         }else if(full.status==2){
                             html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 启用</a>&nbsp;&nbsp;';
                         }
-                        html +='<a href="javascript:;" onclick="manageScenic(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs blue-hoki"><i class="fa fa-cog"></i> 查看</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteDes(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
-
                         return html;
                     }
                 }
@@ -161,10 +159,16 @@
         });
     });
 
+    var showUserInfo=function(userSign){
+        Main.openModal("/user-base/to-user-info?id="+userSign);
+    }
 
-
-
-    function changeStatus(id,status){
+    /**
+     * 改变用户状态
+     * @param id
+     * @param status
+     */
+    var changeStatus=function(id,status){
         var url="";
         if(status==1){
             url="/destination/outline";

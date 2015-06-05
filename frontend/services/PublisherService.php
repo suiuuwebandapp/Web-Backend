@@ -12,7 +12,7 @@ namespace frontend\services;
 
 use common\entity\UserPublisher;
 use common\models\BaseDb;
-use frontend\models\UserPublisherDb;
+use common\models\UserPublisherDb;
 use yii\base\Exception;
 
 class PublisherService extends BaseDb

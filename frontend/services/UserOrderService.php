@@ -28,7 +28,7 @@ use common\models\TravelTripDb;
 use common\models\UserOrderDb;
 use common\models\UserOrderRefundDb;
 use frontend\models\UserBaseDb;
-use frontend\models\UserPublisherDb;
+use common\models\UserPublisherDb;
 use yii\base\Exception;
 
 class UserOrderService extends BaseDb

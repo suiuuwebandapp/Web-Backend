@@ -3,13 +3,12 @@ namespace frontend\services;
 
 use common\components\Code;
 use common\components\SysMessageUtils;
-use common\components\Validate;
 use common\entity\UserAccess;
 use common\entity\UserPublisher;
 use common\models\BaseDb;
 use common\entity\UserBase;
 use frontend\models\UserBaseDb;
-use frontend\models\UserPublisherDb;
+use common\models\UserPublisherDb;
 use yii\base\Exception;
 use common\components\Easemob;
 

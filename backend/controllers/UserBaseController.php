@@ -72,7 +72,11 @@ class UserBaseController extends CController{
     }
 
 
-
+    /**
+     * 用户列表(AJAX)
+     * @throws Exception
+     * @throws \Exception
+     */
     public function actionUserList()
     {
         $search=\Yii::$app->request->get("searchText","");
@@ -87,9 +91,27 @@ class UserBaseController extends CController{
     }
 
 
+    /**
+     * 跳转到用户列表
+     * @return string
+     */
     public function actionToUserList()
     {
         return $this->render("userList");
+    }
+
+
+    /**
+     * 用户详情
+     * @return string
+     */
+    public function actionToUserInfo()
+    {
+        $userSign=\Yii::$app->request->get("id");
+        $userInfo=$this->userBaserService->findUserInfoByUserSign($userSign);
+        return $this->render("userInfo",[
+            'userInfo'=>$userInfo
+        ]);
     }
 
 

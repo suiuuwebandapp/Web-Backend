@@ -7,11 +7,10 @@
  * Email: zhangxinmailvip@foxmail.com
  */
 
-namespace frontend\models;
+namespace common\models;
 
 
 use common\entity\UserPublisher;
-use common\models\ProxyDb;
 use yii\db\mssql\PDO;
 
 class UserPublisherDb extends ProxyDb
