@@ -59,9 +59,9 @@
 <div id="showMessageDiv" class="smessages screens" style="display: none">
     <form id="sendMessageForm">
         <input id="show_message_receiverId" type="hidden"/>
-        <div class="top">
-            <div class="ss"><a href="#" class="userPic"><img id="show_message_headImg" src="/assets/images/5.png" class="pic"></a> <span class="name" id="show_message_nickname">irrt95</span></div>
-            <p>性别: <b id="show_message_sex">女</b> <b id="show_message_age">90后</b> <b id="show_message_city">德国慕尼黑</b></p>
+        <div class="top clearfix">
+           <a href="#" class="userPic"><img id="show_message_headImg" src="/assets/images/5.png" class="pic"></a> <span class="name" id="show_message_nickname">irrt95</span>
+            <p class="p1">性别: <b id="show_message_sex">女</b>&nbsp;&nbsp;&nbsp;<b id="show_message_age">90后</b>&nbsp;&nbsp;&nbsp;<b id="show_message_city">德国慕尼黑</b></p>
         </div>
         <textarea id="sendMessageContent"></textarea>
         <a href="javascript:;" class="btn" onclick="Main.showScreenSendMessage()">发送</a>

@@ -55,23 +55,18 @@
             <?php if($pageResult->result!=null&&count($pageResult->result)>0){ ?>
                 <?php foreach($pageResult->result as $trip){?>
                     <li>
-                        <a href="/view-trip/info?trip=<?=$trip['tripId']?>">
-                            <img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" >
-                        </a>
-                        <p class="posi">
-                            <img src="<?=$trip['headImg'] ?>" alt="">
-                            <span><?=$trip['nickname']?></span>
-                        </p>
+                        <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" ></a>
+                        <p class="posi"><img src="<?=$trip['headImg'] ?>" alt=""><span><?=$trip['nickname']?></span></p>
                         <div>
                             <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
-                            <p>评论&nbsp;
+                            <p class="xing">
                                 <span><img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
                                 <span><img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
                                 <span><img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span
                                 <span><img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
                                 <span><img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                            </p><font>基础价格：<b><?= $trip['basePrice'] ?></b></font>
-                        </div>
+                                <b>￥<?= intval($trip['basePrice']) ?></b>
+                            </p></div>
                     </li>
                 <?php } ?>
             <?php }else{
@@ -86,28 +81,20 @@
     <div class="sylx-list h400">
         <ul>
             <?php foreach($rTravel as $trip){?>
-            <li>
-                <a href="/view-trip/info?trip=<?php echo $trip['tripId'];?>">
-                    <img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" >
-                </a>
-                <p class="posi"><img src="<?php echo $trip['headImg'];?>" alt=""><span><?php echo $trip['nickname'];?></span></p>
-                <div>
-                    <h4><?php echo $trip['title'];?></h4>
-                    <p>评论&nbsp;
-                        <?php for($i=0;$i<5;$i++){
-                            $n=intval($trip['score']/2);
-                            if($n<=$i)
-                            {
-                                echo '<span><img src="/assets/images/start2.fw.png" alt=""></span>';
-
-                            }else{
-                                echo '<span><img src="/assets/images/start1.fw.png" alt=""></span>';
-                            }
-                        }?>
-                    </p>
-                    <font>基础价格：<b><?php echo $trip['basePrice'];?></b></font>
-                </div>
-            </li>
+                <li>
+                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" ></a>
+                    <p class="posi"><img src="<?=$trip['headImg'] ?>" alt=""><span><?=$trip['nickname']?></span></p>
+                    <div>
+                        <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
+                        <p class="xing">
+                            <span><img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                            <span><img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                            <span><img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span
+                            <span><img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                            <span><img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
+                            <b>￥<?= intval($trip['basePrice']) ?></b>
+                        </p></div>
+                </li>
             <?php }?>
         </ul>
     </div>
@@ -134,7 +121,7 @@
     </div>
 </div>
 
-i<script type="text/javascript">
+<script type="text/javascript">
     var currentPage=1;
     $(function(){
         $('.sylx .sylx-xiangxi .p2 span').click(function(e) {
@@ -286,7 +273,7 @@ i<script type="text/javascript">
                         html+='<li>' +
                         '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="/assets/images/grey.jpg" data-original="'+trip.titleImg+'" alt=""></a>' +
                         '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
-                        '<div><h4>'+title+'</h4><p>评论&nbsp;';
+                        '<div><h4>'+title+'</h4><p class="xing">';
                         if(trip.score>=2){
                             html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
                         }else{
@@ -312,8 +299,8 @@ i<script type="text/javascript">
                         }else{
                             html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
                         }
-
-                        html+='</p><font>基础价格：<b>'+trip.basePrice+'</b></font></div></li>';
+                        html+='<b>￥'+trip.basePrice+'</b>';
+                        html+='</p></div></li>';
                     }
                     $("#trip_base_list ul").html(html);
                     $("#spage").html(data.data.pageHtml);

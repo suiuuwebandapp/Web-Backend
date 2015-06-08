@@ -13,6 +13,8 @@ namespace common\models;
 use backend\components\Page;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
+use common\entity\TravelTripDetail;
+use common\entity\TravelTripHighlight;
 use common\entity\TravelTripPicture;
 use common\entity\TravelTripPrice;
 use common\entity\TravelTripPublisher;
@@ -154,13 +156,13 @@ class TravelTripDb extends ProxyDb{
         $sql = sprintf("
             INSERT INTO travel_trip
             (
-              createPublisherId,createTime,title,titleImg,countryId,cityId,lon,lat,basePrice,maxUserCount,isAirplane,
-              isHotel,score,tripCount,startTime,endTime,travelTime,travelTimeType,intro,info,tags,status
+              createPublisherId,createTime,title,titleImg,countryId,cityId,lon,lat,basePrice,basePriceType,maxUserCount,
+              isAirplane,isHotel,score,tripCount,startTime,endTime,travelTime,travelTimeType,intro,info,tags,status
             )
             VALUES
             (
-              :createPublisherId,now(),:title,:titleImg,:countryId,:cityId,:lon,:lat,:basePrice,:maxUserCount,:isAirplane,
-              :isHotel,:score,0,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status
+              :createPublisherId,now(),:title,:titleImg,:countryId,:cityId,:lon,:lat,:basePrice,:basePriceType,:maxUserCount,
+              :isAirplane,:isHotel,:score,0,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status
             )
         ");
 
@@ -173,6 +175,7 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":lon", $travelTrip->lon, PDO::PARAM_STR);
         $command->bindParam(":lat", $travelTrip->lat, PDO::PARAM_STR);
         $command->bindParam(":basePrice", $travelTrip->basePrice, PDO::PARAM_STR);
+        $command->bindParam(":basePriceType", $travelTrip->basePriceType, PDO::PARAM_INT);
         $command->bindParam(":maxUserCount", $travelTrip->maxUserCount, PDO::PARAM_INT);
         $command->bindParam(":isAirplane", $travelTrip->isAirplane, PDO::PARAM_INT);
         $command->bindParam(":isHotel", $travelTrip->isHotel, PDO::PARAM_INT);
@@ -200,9 +203,9 @@ class TravelTripDb extends ProxyDb{
         $sql = sprintf("
             UPDATE travel_trip SET
             title=:title,titleImg=:titleImg,countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,basePrice=:basePrice,
-            maxUserCount=:maxUserCount,isAirplane=:isAirplane,isHotel=:isHotel,score=:score,tripCount=:tripCount,startTime=:startTime,
-            endTime=:endTime,travelTime=:travelTime,travelTimeType=:travelTimeType,intro=:intro,info=:info,tags=:tags,
-            status=:status
+            basePriceType=:basePriceType,maxUserCount=:maxUserCount,isAirplane=:isAirplane,isHotel=:isHotel,score=:score,
+            tripCount=:tripCount,startTime=:startTime,endTime=:endTime,travelTime=:travelTime,travelTimeType=:travelTimeType,
+            intro=:intro,info=:info,tags=:tags,status=:status
             WHERE tripId=:tripId
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -213,6 +216,7 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":lon", $travelTrip->lon, PDO::PARAM_STR);
         $command->bindParam(":lat", $travelTrip->lat, PDO::PARAM_STR);
         $command->bindParam(":basePrice", $travelTrip->basePrice, PDO::PARAM_STR);
+        $command->bindParam(":basePriceType", $travelTrip->basePriceType, PDO::PARAM_INT);
         $command->bindParam(":maxUserCount", $travelTrip->maxUserCount, PDO::PARAM_INT);
         $command->bindParam(":isAirplane", $travelTrip->isAirplane, PDO::PARAM_INT);
         $command->bindParam(":isHotel", $travelTrip->isHotel, PDO::PARAM_INT);
@@ -798,7 +802,6 @@ class TravelTripDb extends ProxyDb{
         $command->execute();
     }
 
-
     /**
      * 获取是否有申请正在等待审核
      * @param $tripId
@@ -821,8 +824,6 @@ class TravelTripDb extends ProxyDb{
         return $command->queryOne();
     }
 
-
-
     /**
      * 更新随游封面图
      * @param $tripId
@@ -840,7 +841,10 @@ class TravelTripDb extends ProxyDb{
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->bindParam(":titleImg", $titleImg, PDO::PARAM_STR);
+
+        $command->execute();
     }
+
     /**后台得到随游列表
      * @param $page
      * @param $search
@@ -887,6 +891,12 @@ class TravelTripDb extends ProxyDb{
         return $this->find($page);
     }
 
+    /**
+     * 获取随游评论
+     * @param $page
+     * @param $search
+     * @return Page|null
+     */
     public function getComment($page,$search)
     {
         $sql=sprintf("
@@ -904,6 +914,12 @@ class TravelTripDb extends ProxyDb{
         return $this->find($page);
     }
 
+
+    /**
+     * 删除随游评论
+     * @param $id
+     * @throws \yii\db\Exception
+     */
     public function deleteComment($id)
     {
         $sql = sprintf("
@@ -914,5 +930,131 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":commentId", $id, PDO::PARAM_INT);
         $command->execute();
     }
+
+
+    /**
+     * 添加随游明细
+     * @param TravelTripDetail $travelTripDetail
+     * @throws \yii\db\Exception
+     */
+    public function addTravelTripDetail(TravelTripDetail $travelTripDetail)
+    {
+        $sql=sprintf("
+            INSERT INTO travel_trip_detail
+            (
+              tripId,name,type
+            )
+            VALUES
+            (
+              :tripId,:name,:type
+            )
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $travelTripDetail->tripId, PDO::PARAM_INT);
+        $command->bindParam(":name", $travelTripDetail->name, PDO::PARAM_STR);
+        $command->bindParam(":type", $travelTripDetail->type, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
+    /**
+     * 删除随游相关的明细
+     * @param $tripId
+     * @throws \yii\db\Exception
+     */
+    public function deleteTravelTripDetailByTripId($tripId)
+    {
+        $sql=sprintf("
+            DELETE FROM travel_trip_detail
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->execute();
+    }
+
+    /**
+     * 添加随游亮点
+     * @param TravelTripHighlight $travelTripHighlight
+     * @throws \yii\db\Exception
+     */
+    public function addTravelTripHighLight(TravelTripHighlight $travelTripHighlight)
+    {
+        $sql=sprintf("
+            INSERT INTO travel_trip_highlight
+            (
+              tripId,value
+            )
+            VALUES
+            (
+              :tripId,:value
+            )
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $travelTripHighlight->tripId, PDO::PARAM_INT);
+        $command->bindParam(":value", $travelTripHighlight->value, PDO::PARAM_STR);
+
+        $command->execute();
+    }
+
+    /**
+     * 删除随游相关的亮点
+     * @param $tripId
+     * @throws \yii\db\Exception
+     */
+    public function deleteTravelTripHighLightByTripId($tripId)
+    {
+        $sql=sprintf("
+            DELETE FROM travel_trip_highlight
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->execute();
+    }
+
+
+    /**
+     * 获取明细根据随游Id
+     * @param $tripId
+     * @return array
+     */
+    public function getTravelTripDetailList($tripId)
+    {
+        $sql=sprintf("
+            SELECT * FROM travel_trip_detail
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        return $command->queryAll();
+    }
+
+    /**
+     * 获取亮点 根据随游Id
+     * @param $tripId
+     * @return array
+     */
+    public function getTravelTripHighlightList($tripId)
+    {
+        $sql=sprintf("
+            SELECT * FROM travel_trip_highlight
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        return $command->queryAll();
+    }
+
+
+
 
 }

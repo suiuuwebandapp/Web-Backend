@@ -6,7 +6,6 @@
  * Time : 下午6:00
  * Email: zhangxinmailvip@foxmail.com
  */
-
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" />
 <link rel="stylesheet" type="text/css" href="/assets/plugins/time-picki/css/timepicki.css">
@@ -107,7 +106,6 @@
                 <a href="javascript:;" class="nex" id="nex"><img src="/assets/images/next.png" alt=""></a>
             </div>
             <div class="map">
-                <h2 class="title"><?=$travelInfo['info']['title'];?></h2>
                 <ul class="details">
                     <li>
                         <span class="icon icon1">随游
@@ -122,8 +120,45 @@
                 <div class="map-pic">
                     <iframe id="mapFrame" name="mapFrame" src="/google-map/view-scenic-map?tripId=<?=$travelInfo['info']['tripId'];?>" width="893px" height="330px;" frameborder="0" scrolling="no"></iframe>
                 </div>
+                <?php if(!empty($travelInfo['highlightList'])&&count($travelInfo['highlightList'])>0){ ?>
+                    <p class="title02">随游亮点</p>
+                    <?php foreach($travelInfo['highlightList'] as $highlight){ ?>
+                        <p class="p3"><b></b><?=$highlight['value']?></p>
+                    <?php } ?>
+                <?php } ?>
+                <p class="title02">详情描述</p>
                 <div class="trip_info">
                     <?=str_replace("\n","</br>",$travelInfo['info']['info']);?>
+                </div>
+                <?php if(!empty($travelInfo['includeDetailList'])&&!empty($travelInfo['unIncludeDetailList'])){ ?>
+                    <p class="title02">价格内容</p>
+                    <div class="contian clearfix">
+                        <?php foreach($travelInfo['includeDetailList'] as $detail){ ?>
+                            <span><b class="icon icon01"></b><?=$detail['name']?></span>
+                        <?php } ?>
+                        <?php foreach($travelInfo['unIncludeDetailList'] as $detail){ ?>
+                            <span><b class="icon icon02"></b><?=$detail['name']?></span>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+                <ul class="detNav tabTitle clearfix">
+                    <li><a href="###" class="icon icon01 active">退款说明</a></li>
+                    <li><a href="###" class="icon icon02">保险保障</a></li>
+                </ul>
+                <div class="detCon tabCon" style="display:block;">
+                    <p>作为用户，您的权益会在随游得到充分保障。</p>
+                    <p>作为旅行者，您如果选择预订随游产品，可以享受以下的退款政策</p>
+                    <p>1.支付并提交订单后48小时无人接单，则订单自动取消，全额返还服务费</p>
+                    <p>2.订单提交时间未满48小时，但超过订单预期服务时间的，全额返还服务费</p>
+                    <p>3.在订单被接单之前取消订单，全额返还所支付费用</p>
+                    <p>4.所提交订单被随友接单，在服务指定日期前5天可以申请取消预订并全额退款</p>
+                    <p>5.在指定日期内5天可以申请退款，经平台审核后返还部分预订费用。</p>
+                    <p>在随游服务过程中及服务后且未确认完成服务前，可以提交退款请求，经平台调查审核后返还部分服务费用。</p>
+                </div>
+                <div class="detCon tabCon">
+                    <p>作为用户，您的权益会在随游得到充分保障。</p>
+                    <p>作为旅行者，您如果选择预订随游产品，可以享受以下的退款政策</p>
+                    <p>在随游服务过程中及服务后且未确认完成服务前，可以提交退款请求，经平台调查审核后返还部分服务费用。</p>
                 </div>
             </div>
 
@@ -213,9 +248,8 @@
                 <div class="user-name">
                     <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
                     <span><?=$createUserInfo->nickname;?></span>
+                    <a href="javascript:Main.showSendMessage('<?=$createUserInfo->userSign?>')" class="message"><img src="/assets/images/xf.fw.png" width="18" height="12"></a>
                 </div>
-                <a href="javascript:;" onclick="Main.showSendMessage('<?=$createUserInfo->userSign?>');"><img src="/assets/images/xf.fw.png" alt="" style="float: right;margin-right: 45px;"></a>
-
                 <p><?=$createUserInfo->intro;?></p>
             </div>
             <div class="pf">
@@ -247,35 +281,30 @@
                         <?php } ?>
                     </ul>
                 <?php } ?>
-
-                <?php if($travelInfo['priceList']!=null){ ?>
-                    <p>优惠价格:</p>
-                    <ul class="ul02">
-                        <?php foreach($travelInfo['priceList'] as $price){  ?>
-                            <li><span><?=$price['minCount']?>人</span><span>至</span><span><?=$price['maxCount']?>人</span><span><b>¥<?=$price['price']?></b></span></li>
-                        <?php } ?>
-                    </ul>
-                <?php } ?>
             </div>
-            <br/>
-            <p>基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>人/次</p>
-            <input id="toBuy" type="button" value="购买路线" class="web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-            <input id="toApply" type="button" value="申请加入路线" class="web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <p class="price">基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>
+                <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'/次':'/人'?>
+            </p>
+            <?php if($travelInfo['priceList']!=null){ ?>
+                <p class="price orange">多人预定享受优惠价格</p>
+            <?php } ?>
+            <input id="toBuy" type="button" value="购买路线" class="btn web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <input id="toApply" type="button" value="申请加入路线" class="btn web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
             <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
                 <?php foreach ($relateRecommend as $trip) {?>
                     <?php if($trip['tripId']==$travelInfo['info']['tripId']){continue;} ?>
                     <div class="web-tuijian" style="cursor: pointer" onclick="javascript:window.location.href='/view-trip/info?trip=<?=$trip['tripId']?>'">
-                        <h4><?=strlen($trip['title'])>10?mb_substr($trip['title'],0,10,'UTF-8')."...":$trip['title']?></h4>
-                        <img src="<?=$trip['titleImg']?>" alt="" class="pic">
+                        <a href="###" class="pic"><img src="<?=$trip['titleImg']?>" alt=""></a>
+                        <p><?=mb_strlen($trip['title'],"UTF-8")>33?mb_substr($trip['title'],0,33,'UTF-8')."...":$trip['title']?></p>
                         <p class="xing">
                             <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                             <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                             <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                             <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                             <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                            <span>¥<?=intval($trip['basePrice'])?></span>
                         </p>
-                        <div><?=strlen($trip['intro'])>50?mb_substr($trip['intro'],0,50,'UTF-8')."...":$trip['intro']?></div>
-                        <span>基础价格：<a><?=$trip['basePrice']?></a> 人/次</span>
+
                     </div>
                 <?php } ?>
             <?php } ?>
@@ -293,6 +322,7 @@
         }
     ?>
     var basePrice='<?=$travelInfo['info']['basePrice'];?>';
+    var basePriceType='<?=$travelInfo['info']['basePriceType'];?>';
     var maxPeopleCount='<?=$travelInfo['info']['maxUserCount'];?>';
     var stepPriceJson='<?=$stepPriceJson;?>';
     var serviceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT;?>';
@@ -435,6 +465,15 @@
             });
 
         });
+        //隐藏日期选择
+        $(document).bind("click",function(e){
+            var target = $(e.target);
+            if(target.closest("#beginTime").length != 1){
+                if(target.closest(".datetimepicker").length == 0){
+                    $(".datetimepicker").hide();
+                }
+            }
+        });
     });
 
 
@@ -479,7 +518,6 @@
     function showPrice()
     {
         var peopleCount=$("#peopleCount").val();
-
         var tripTime=$("#tripTime").val();
         var allPrice=0;
         var stepPriceFlag=false;
@@ -500,7 +538,7 @@
         if(stepPriceJson!=''){
             stepPriceList=eval("("+stepPriceJson+")");
         }
-        if(stepPriceList.length>0){
+        if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_PERSON&&stepPriceList.length>0){
             for(var i=0;i<stepPriceList.length;i++){
                 var stepPrice=stepPriceList[i];
                 if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
@@ -511,7 +549,11 @@
             }
         }
         if(!stepPriceFlag){
-            allPrice=basePrice*peopleCount;
+            if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
+                allPrice=basePrice;
+            }else{
+                allPrice=basePrice*peopleCount;
+            }
         }
         //判断有没有附加服务
         $("#serviceLi input[type='checkbox']").each(function(){

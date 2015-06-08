@@ -14,6 +14,7 @@ use common\components\SMSUtils;
 use common\components\Code;
 use common\components\DateUtils;
 use common\components\SysMessageUtils;
+use common\entity\TravelTrip;
 use common\entity\TravelTripService;
 use common\entity\UserMessage;
 use common\entity\UserOrderComment;
@@ -103,21 +104,28 @@ class UserOrderController extends  CController{
             $orderTripInfoJson=json_encode($travelInfo);//订单详情
             $selectServiceList=[];//附加服务list
             $servicePrice=0;//附加服务价格
-            $basePrice=$tripInfo['basePrice'];
+            $basePrice=0;
 
             if($peopleCount>$tripInfo['maxUserCount']){
                 return Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
             }
-            //计算阶梯价格 和 基础价格
-            if(!empty($tripPriceList)&&count($tripPriceList)>0){
-                foreach($tripPriceList as $stepPrice)
-                {
-                    if($peopleCount>=$stepPrice['minCount']&&$peopleCount<=$stepPrice['maxCount']){
-                        $basePrice=$stepPrice['price'];
-                        break;
+            if($tripInfo['basePriceType']==TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT){
+                $basePrice=$tripInfo['basePrice'];
+            }else{
+                //计算阶梯价格 和 基础价格
+                if(!empty($tripPriceList)&&count($tripPriceList)>0){
+                    foreach($tripPriceList as $stepPrice)
+                    {
+                        if($peopleCount>=$stepPrice['minCount']&&$peopleCount<=$stepPrice['maxCount']){
+                            $basePrice=$stepPrice['price']*$peopleCount;
+                            break;
+                        }
                     }
+                }else{
+                    $basePrice=$tripInfo['basePrice']*$peopleCount;
                 }
             }
+
 
             if(!empty($serviceIds)){
                 $serviceIdArr=explode(",",$serviceIds);
@@ -147,10 +155,10 @@ class UserOrderController extends  CController{
             $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,1);
             $userOrderInfo->personCount=$peopleCount;
             $userOrderInfo->serviceInfo=$serviceInfo;
-            $userOrderInfo->basePrice=$basePrice;
+            $userOrderInfo->basePrice=$tripInfo['basePrice'];
             $userOrderInfo->servicePrice=$servicePrice;
             $userOrderInfo->tripJsonInfo=$orderTripInfoJson;
-            $userOrderInfo->totalPrice=($basePrice*$peopleCount)+$servicePrice;
+            $userOrderInfo->totalPrice=$basePrice+$servicePrice;
             $userOrderInfo->status=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT;//默认订单状态，待支付
             $userOrderInfo->orderNumber=Code::createOrderNumber();
             $this->userOrderService->addUserOrder($userOrderInfo);

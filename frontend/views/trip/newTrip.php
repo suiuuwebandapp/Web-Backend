@@ -76,14 +76,13 @@
                <span class="spn_title">坐标</span>
                <span class="form_tip" id="countryTip"></span>
             </p>
-            <select id="countryId" name="country" class="select2" required placeholder="国家">
+            <select id="countryId" name="country" class="select2" placeholder="国家" required>
                 <option value=""></option>
                 <?php foreach ($countryList as $c) { ?>
                     <option value="<?= $c['id'] ?>"><?= $c['cname'] . "/" . $c['ename'] ?></option>
-
                 <?php } ?>
             </select>
-            <select id="cityId" name="city" class="select2" required placeholder="城市"></select>
+            <select id="cityId" name="city" class="select2" placeholder="城市" required></select>
             <p>
                 <span class="spn_title">景点名称</span>
                 <span class="form_tip" id="scenicTip"></span>
@@ -119,9 +118,21 @@
                     <span>基本价格</span>
                     <span class="form_tip" id="basePriceTip"></span>
                 </p>
-                <p><input type="text" vlaue="" id="basePrice">
-                    <a href="javascript:;">人/次</a>
+                <p class="sect">
+                    <input type="text" value="" id="basePrice" />
+                    <select name="" class="serviceSelect" id="basePriceType">
+                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON?>">每人</option>
+                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?>">每次</option>
+                    </select>
                 </p>
+                <span>价格包括（选填）</span>
+                <div id="include_detail">
+                    <p><input type="text" value="" class="text2"><a href="javascript:addDetail(true);" class="add"></a></p>
+                </div>
+                <span>价格不包括（选填）</span>
+                <div id="uninclude_detail">
+                    <p><input type="text" value="" class="text2"><a href="javascript:addDetail(false);" class="add"></a></p>
+                </div>
                 <p class="mixi"><font>价格明细</font></p>
                 <div class="bj4-main" >
                     <p>
@@ -129,21 +140,23 @@
                         <span class="form_tip" id="peopleCountTip"></span>
                     </p>
                     <input type="text" placeholder="你最多可以接待多少人呢" class="sx" id="peopleCount">
-                    <P>
-                        <span>阶梯价格</span>
-                        <span class="form_tip" id="stepTip"></span>
-                    </P>
-                    <div id="stepDiv">
-                        <p>
-                            <input type="text" value="" class="step_people"><em>人至</em>
-                            <input type="text" value="" class="step_people"><em>人</em>
-                            <input type="text" value="" class="step_price"><em>RMB</em>
-                            <a href="javascript:;" id="addStepPrice" class="add"></a>
-                        </p>
+                    <div id="step_div_content">
+                        <P>
+                            <span>优惠价格（选填）</span>
+                            <span class="form_tip" id="stepTip"></span>
+                        </P>
+                        <div id="stepDiv">
+                            <p>
+                                <input type="text" value="" class="step_people"><em>人至</em>
+                                <input type="text" value="" class="step_people"><em>人</em>
+                                <input type="text" value="" class="step_price"><em>RMB</em>
+                                <a href="javascript:;" id="addStepPrice" class="add"></a>
+                            </p>
+                        </div>
                     </div>
                     <p>
-                        <span>单项服务及价格</span>
-                        <span class="form_tip" id="servicePriceTip"></span>
+                        <span style="width: 180px;">单项服务及价格（选填）</span>
+                        <span class="form_tip" id="servicePriceTip"  style="width: 220px !important;"></span>
                     </p>
                     <div class="creat clearfix">
                         <dl id="stepDl">
@@ -207,6 +220,10 @@
                     <li><?=$tag?></li>
                     <?php }?>
                 </ul>
+                <span>随游亮点（选填）</span>
+                <div id="highlight_div">
+                    <p><input type="text" value=""><a href="javascript:addHighlight();" class="add"></a></p>
+                </div>
                 <input type="button" class="btn yulan" value="预览" id="preview">
                 <input type="button" class="btn sure" value="立即发布" id="tripFinish">
             </div>
@@ -314,6 +331,14 @@
             saveTrip(1);
         });
 
+        $("#basePriceType").bind("change",function(){
+            if($(this).val()==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
+                $("#step_div_content").hide();
+            }else{
+                $("#step_div_content").show();
+            }
+        });
+
         initValidate();
         initTouchSpin();
 
@@ -405,9 +430,12 @@
         var picList = new Array();
 
         var basePrice = $("#basePrice").val();
+        var basePriceType=$("#basePriceType").val();
         var peopleCount = $("#peopleCount").val();
         var stepPriceList = new Array();
         var serviceList = new Array();
+        var includeDetailList=new Array();
+        var unIncludeDetailList=new Array();
         var beginTime = $("#beginTime").val();
         var endTime = $("#endTime").val();
         var tripLong = $("#tripLong").val();
@@ -415,6 +443,7 @@
 
         var info = $("#info").val();
         var tagList = new Array();
+        var highlightList=new Array();
 
 
         var error = false;
@@ -512,6 +541,18 @@
                 serviceList.push(serviceInfo);
             }
         });
+        $("#include_detail input").each(function(){
+            var name=$(this).val();
+            if(name!=""){
+                includeDetailList.push(name);
+            }
+        });
+        $("#uninclude_detail input").each(function(){
+            var name=$(this).val();
+            if(name!=""){
+                unIncludeDetailList.push(name);
+            }
+        });
         if (error) {
             selectTab(4);
             return;
@@ -525,6 +566,13 @@
         $("#tagsUl li").each(function () {
             if ($(this).hasClass("active-bj")) {
                 tagList.push($(this).html());
+            }
+        });
+
+        $("#highlight_div input").each(function(){
+            var value=$(this).val();
+            if(value!=""){
+                highlightList.push(value);
             }
         });
         if (tagList.length == 0) {
@@ -548,15 +596,19 @@
                 scenicList:scenicList,
                 picList:picList,
                 basePrice:basePrice,
+                basePriceType:basePriceType,
                 peopleCount:peopleCount,
                 stepPriceList:stepPriceList,
                 serviceList:serviceList,
+                includeDetailList:includeDetailList,
+                unIncludeDetailList:unIncludeDetailList,
                 beginTime:beginTime,
                 endTime:endTime,
                 tripLong:tripLong,
                 tripKind:tripKind,
                 info:info,
                 tagList:tagList,
+                highlightList:highlightList,
                 status:saveType
 
             },
@@ -631,6 +683,31 @@
     //移除专项服务
     function removeServicePrice(obj){
         $(obj).parent("dd").remove();
+    }
+
+    //添加随游明细 type=true include
+    function addDetail(type){
+        var html='<p><input type="text" value="" class="text2"><a href="javascript:;" onclick="removeDetail(this)" class="jian"></a></p>';
+        if(type){
+            $("#include_detail").append(html);
+        }else{
+            $("#uninclude_detail").append(html);
+        }
+    }
+
+    //删除明细
+    function removeDetail(obj){
+        $(obj).parent().remove();
+    }
+
+    //添加亮点
+    function addHighlight(){
+        var html='<p><input type="text" value="" class="text2"><a href="javascript:;" onclick="removeHighlight(this)" class="jian"></a></p>';
+        $("#highlight_div").append(html);
+    }
+    //移除亮点
+    function removeHighlight(obj){
+        $(obj).parent().remove();
     }
 
     //动态初始化SELECT

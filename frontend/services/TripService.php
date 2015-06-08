@@ -15,6 +15,7 @@ use common\components\Code;
 use common\components\SysMessageUtils;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
+use common\entity\TravelTripDetail;
 use common\entity\TravelTripPublisher;
 use common\entity\UserAttention;
 use common\models\BaseDb;
@@ -116,11 +117,13 @@ class TripService extends BaseDb{
      * @param $priceList
      * @param TravelTripPublisher $travelTripPublisher
      * @param $serviceList
+     * @param $detailList
+     * @param $highlightList
      * @return array|bool
      * @throws Exception
      * @throws \Exception
      */
-    public function addTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,TravelTripPublisher $travelTripPublisher,$serviceList)
+    public function addTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,TravelTripPublisher $travelTripPublisher,$serviceList,$detailList,$highlightList)
     {
         $conn = $this->getConnection();
         $tran=$conn->beginTransaction();
@@ -159,6 +162,20 @@ class TripService extends BaseDb{
                     $this->tripTravelDb->addTravelTripService($service);
                 }
             }
+            if($detailList!=null){
+                foreach($detailList as $detail)
+                {
+                    $detail->tripId=$tripId;
+                    $this->tripTravelDb->addTravelTripDetail($detail);
+                }
+            }
+            if($highlightList!=null){
+                foreach($highlightList as $highlight)
+                {
+                    $highlight->tripId=$tripId;
+                    $this->tripTravelDb->addTravelTripHighLight($highlight);
+                }
+            }
             $this->commit($tran);
             return $this->tripTravelDb->findTravelTripById($tripId);
         } catch (Exception $e) {
@@ -176,11 +193,13 @@ class TripService extends BaseDb{
      * @param $picList
      * @param $priceList
      * @param $serviceList
+     * @param $detailList
+     * @param $highlightList
      * @return array|bool
      * @throws Exception
      * @throws \Exception
      */
-    public function updateTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,$serviceList)
+    public function updateTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,$serviceList,$detailList,$highlightList)
     {
         $conn = $this->getConnection();
         $tran=$conn->beginTransaction();
@@ -189,36 +208,52 @@ class TripService extends BaseDb{
             $this->tripTravelDb = new TravelTripDb($conn);
             $this->tripTravelDb->updateTravelTrip($travelTrip);
             //删除 ，添加
+            $this->tripTravelDb->deleteTravelTripScenicBytripId($travelTrip->tripId);
             if($scenicList!=null){
-                $this->tripTravelDb->deleteTravelTripScenicBytripId($travelTrip->tripId);
                 foreach($scenicList as $scenic)
                 {
                     $scenic->tripId=$travelTrip->tripId;
                     $this->tripTravelDb->addTravelTripScenic($scenic);
                 }
             }
+            $this->tripTravelDb->deleteTravelTripPicBytripId($travelTrip->tripId);
             if($picList!=null){
-                $this->tripTravelDb->deleteTravelTripPicBytripId($travelTrip->tripId);
                 foreach($picList as $pic)
                 {
                     $pic->tripId=$travelTrip->tripId;
                     $this->tripTravelDb->addTravelTripPicture($pic);
                 }
             }
+            $this->tripTravelDb->deleteTravelTripPriceBytripId($travelTrip->tripId);
             if($priceList!=null){
-                $this->tripTravelDb->deleteTravelTripPriceBytripId($travelTrip->tripId);
                 foreach($priceList as $price)
                 {
                     $price->tripId=$travelTrip->tripId;
                     $this->tripTravelDb->addTravelTripPrice($price);
                 }
             }
+            $this->tripTravelDb->deleteTravelTripServiceBytripId($travelTrip->tripId);
             if($serviceList!=null){
-                $this->tripTravelDb->deleteTravelTripServiceBytripId($travelTrip->tripId);
                 foreach($serviceList as $service)
                 {
                     $service->tripId=$travelTrip->tripId;
                     $this->tripTravelDb->addTravelTripService($service);
+                }
+            }
+            $this->tripTravelDb->deleteTravelTripDetailByTripId($travelTrip->tripId);
+            if($detailList!=null){
+                foreach($detailList as $detail)
+                {
+                    $detail->tripId=$travelTrip->tripId;
+                    $this->tripTravelDb->addTravelTripDetail($detail);
+                }
+            }
+            $this->tripTravelDb->deleteTravelTripHighLightByTripId($travelTrip->tripId);
+            if($highlightList!=null){
+                foreach($highlightList as $highlight)
+                {
+                    $highlight->tripId=$travelTrip->tripId;
+                    $this->tripTravelDb->addTravelTripHighLight($highlight);
                 }
             }
             $this->commit($tran);
@@ -271,6 +306,22 @@ class TripService extends BaseDb{
             $tripInfo['publisherList']=$this->tripTravelDb->getTravelTripPublisherList($tripId);
             $tripInfo['scenicList']=$this->tripTravelDb->getTravelTripScenicList($tripId);
             $tripInfo['serviceList']=$this->tripTravelDb->getTravelTripServiceList($tripId);
+            $tripInfo['highlightList']=$this->tripTravelDb->getTravelTripHighlightList($tripId);
+            //所有明细
+            $detailList=$this->tripTravelDb->getTravelTripDetailList($tripId);
+            $includeDetailList=[];
+            $unIncludeDetailList=[];
+            if(!empty($detailList)&&count($detailList)>0){
+                foreach($detailList as $detail){
+                    if($detail['type']==TravelTripDetail::TRAVEL_TRIP_DETAIL_TYPE_INCLUDE){
+                        $includeDetailList[]=$detail;
+                    }else{
+                        $unIncludeDetailList[]=$detail;
+                    }
+                }
+            }
+            $tripInfo['includeDetailList']=$includeDetailList;
+            $tripInfo['unIncludeDetailList']=$unIncludeDetailList;
 
             foreach($tripInfo['publisherList'] as $publisherInfo){
                 if($publisherInfo['publisherId']==$tripInfo['info']['createPublisherId']){

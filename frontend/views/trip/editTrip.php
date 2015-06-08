@@ -147,9 +147,45 @@
                     <span>基本价格</span>
                     <span class="form_tip" id="basePriceTip"></span>
                 </P>
-                <p><input type="text" value="<?=$travelInfo['info']['basePrice']?>" id="basePrice">
-                    <a href="javascript:;">人/次</a>
+                <p class="sect">
+                    <input type="text" value="<?=$travelInfo['info']['basePrice']?>" id="basePrice">
+                    <select name="" class="serviceSelect" id="basePriceType">
+                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON?>"
+                            <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON?'selected':''; ?>
+                            >每人</option>
+                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?>"
+                            <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'selected':''; ?>
+                            >每次</option>S
+                    </select>
                 </p>
+                <span>价格包括（选填）</span>
+                <div id="include_detail">
+                    <?php if($travelInfo['includeDetailList']!=null){ ?>
+                        <?php foreach($travelInfo['includeDetailList'] as $key=> $detail){ ?>
+                            <?php if($key==0){?>
+                                <p><input type="text" value="<?=$detail['name']?>" class="text2"><a href="javascript:addDetail(true);" class="add"></a></p>
+                            <?php }else{?>
+                                <p><input type="text" value="<?=$detail['name']?>" class="text2"><a href="javascript:;" onclick="removeDetail(this)" class="jian"></a></p>
+                            <?php }?>
+                        <?php }?>
+                    <?php }else{ ?>
+                        <p><input type="text" value="" class="text2"><a href="javascript:addDetail(true);" class="add"></a></p>
+                    <?php } ?>
+                </div>
+                <span>价格不包括（选填）</span>
+                <div id="uninclude_detail">
+                    <?php if($travelInfo['unIncludeDetailList']!=null){ ?>
+                        <?php foreach($travelInfo['unIncludeDetailList'] as $key=> $detail){ ?>
+                            <?php if($key==0){?>
+                                <p><input type="text" value="<?=$detail['name']?>" class="text2"><a href="javascript:addDetail(false);" class="add"></a></p>
+                            <?php }else{?>
+                                <p><input type="text" value="<?=$detail['name']?>" class="text2"><a href="javascript:;" onclick="removeDetail(this)" class="jian"></a></p>
+                            <?php }?>
+                        <?php }?>
+                    <?php }else{ ?>
+                        <p><input type="text" value="" class="text2"><a href="javascript:addDetail(false);" class="add"></a></p>
+                    <?php } ?>
+                </div>
                 <p class="mixi"><font>价格明细</font></p>
                 <div class="bj4-main" >
                     <p>
@@ -157,47 +193,50 @@
                         <span class="form_tip" id="peopleCountTip"></span>
                     </p>
                     <input type="text" placeholder="你最多可以接待多少人呢" value="<?=$travelInfo['info']['maxUserCount']?>" class="sx" id="peopleCount">
-                    <p>
-                        <span>阶梯价格</span>
-                        <span class="form_tip" id="stepTip"></span>
-                    </p>
-                    <div id="stepDiv">
-                    <?php
-                        if($travelInfo['priceList']!=null){
-                            foreach($travelInfo['priceList'] as $key=> $price){
-                                if($key==0){
-                                    ?>
-                                    <p>
-                                        <input type="text" value="<?=$price['minCount']?>" class="step_people"><em>人至</em>
-                                        <input type="text" value="<?=$price['maxCount']?>" class="step_people"><em>人</em>
-                                        <input type="text" value="<?=$price['price']?>" class="step_price"><em>RMB</em>
-                                        <a href="javascript:;" id="addStepPrice" class="add"></a>
-                                    </p>
-                                <?php }else{?>
-                                    <p>
-                                        <input type="text" value="<?=$price['minCount']?>" class="step_people"><em>人至</em>
-                                        <input type="text" value="<?=$price['maxCount']?>" class="step_people"><em>人</em>
-                                        <input type="text" value="<?=$price['price']?>" class="step_price"><em>RMB</em>
-                                        <a href="javascript:;" onclick="removeStepPrice(this)" class="jian"></a>
-                                    </p>
-                                <?php }?>
+                    <div id="step_div_content" <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'style="display:none"':''; ?>>
+                        <p>
+                            <span>优惠价格（选填）</span>
+                            <span class="form_tip" id="stepTip"></span>
+                        </p>
+                        <div id="stepDiv">
+                            <?php
+                            if($travelInfo['priceList']!=null){
+                                foreach($travelInfo['priceList'] as $key=> $price){
+                                    if($key==0){
+                                        ?>
+                                        <p>
+                                            <input type="text" value="<?=$price['minCount']?>" class="step_people"><em>人至</em>
+                                            <input type="text" value="<?=$price['maxCount']?>" class="step_people"><em>人</em>
+                                            <input type="text" value="<?=$price['price']?>" class="step_price"><em>RMB</em>
+                                            <a href="javascript:;" id="addStepPrice" class="add"></a>
+                                        </p>
+                                    <?php }else{?>
+                                        <p>
+                                            <input type="text" value="<?=$price['minCount']?>" class="step_people"><em>人至</em>
+                                            <input type="text" value="<?=$price['maxCount']?>" class="step_people"><em>人</em>
+                                            <input type="text" value="<?=$price['price']?>" class="step_price"><em>RMB</em>
+                                            <a href="javascript:;" onclick="removeStepPrice(this)" class="jian"></a>
+                                        </p>
+                                    <?php }?>
+                                <?php
+                                }
+                            }else{
+                                ?>
+                                <p>
+                                    <input type="text" value="" class="step_people"><em>人至</em>
+                                    <input type="text" value="" class="step_people"><em>人</em>
+                                    <input type="text" value="" class="step_price"><em>RMB</em>
+                                    <a href="javascript:;" id="addStepPrice" class="add"></a>
+                                </p>
                             <?php
                             }
-                        }else{
-                    ?>
-                            <p>
-                                <input type="text" value="" class="step_people"><em>人至</em>
-                                <input type="text" value="" class="step_people"><em>人</em>
-                                <input type="text" value="" class="step_price"><em>RMB</em>
-                                <a href="javascript:;" id="addStepPrice" class="add"></a>
-                            </p>
-                    <?php
-                        }
-                    ?>
+                            ?>
+                        </div>
+
                     </div>
                     <p>
-                        <span>单项服务及价格</span>
-                        <span class="form_tip" id="servicePriceTip"></span>
+                        <span style="width: 180px;">单项服务及价格（选填）</span>
+                        <span class="form_tip" id="servicePriceTip"  style="width: 220px !important;"></span>
                     </p>
                     <div class="creat clearfix">
                         <dl id="stepDl">
@@ -304,6 +343,20 @@
                         <?php } ?>
                     <?php }?>
                 </ul>
+                <span>随游亮点（选填）</span>
+                <div id="highlight_div">
+                    <?php if($travelInfo['highlightList']!=null){ ?>
+                        <?php foreach($travelInfo['highlightList'] as $key=> $highlight){ ?>
+                            <?php if($key==0){?>
+                                <p><input type="text" value="<?=$highlight['value']?>"><a href="javascript:addHighlight();" class="add"></a></p>
+                            <?php }else{?>
+                                <p><input type="text" value="<?=$highlight['value']?>"><a href="javascript:;" onclick="removeHighlight(this)" class="jian"></a></p>
+                            <?php }?>
+                        <?php }?>
+                    <?php }else{ ?>
+                        <p><input type="text" value=""><a href="javascript:addHighlight();" class="add"></a></p>
+                    <?php } ?>
+                </div>
                 <input type="button" class="btn yulan" value="预览" id="preview">
                 <input type="button" class="btn sure" value="立即发布" id="tripFinish">
             </div>
@@ -412,6 +465,14 @@
         });
         $("#finishTab").unbind("click");
 
+        $("#basePriceType").bind("change",function(){
+            if($(this).val()==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
+                $("#step_div_content").hide();
+            }else{
+                $("#step_div_content").show();
+            }
+        });
+
         initValidate();
         initTouchSpin();
         initEditInfo();
@@ -517,9 +578,12 @@
         var picList = new Array();
 
         var basePrice = $("#basePrice").val();
+        var basePriceType=$("#basePriceType").val();
         var peopleCount = $("#peopleCount").val();
         var stepPriceList = new Array();
         var serviceList = new Array();
+        var includeDetailList=new Array();
+        var unIncludeDetailList=new Array();
         var beginTime = $("#beginTime").val();
         var endTime = $("#endTime").val();
         var tripLong = $("#tripLong").val();
@@ -527,6 +591,7 @@
 
         var info = $("#info").val();
         var tagList = new Array();
+        var highlightList=new Array();
 
 
         var error = false;
@@ -623,6 +688,18 @@
                 serviceList.push(serviceInfo);
             }
         });
+        $("#include_detail input").each(function(){
+            var name=$(this).val();
+            if(name!=""){
+                includeDetailList.push(name);
+            }
+        });
+        $("#uninclude_detail input").each(function(){
+            var name=$(this).val();
+            if(name!=""){
+                unIncludeDetailList.push(name);
+            }
+        });
         if (error) {
             selectTab(4);
             return;
@@ -636,6 +713,12 @@
         $("#tagsUl li").each(function () {
             if ($(this).hasClass("active-bj")) {
                 tagList.push($(this).html());
+            }
+        });
+        $("#highlight_div input").each(function(){
+            var value=$(this).val();
+            if(value!=""){
+                highlightList.push(value);
             }
         });
         if (tagList.length == 0) {
@@ -660,15 +743,19 @@
                 scenicList:scenicList,
                 picList:picList,
                 basePrice:basePrice,
+                basePriceType:basePriceType,
                 peopleCount:peopleCount,
                 stepPriceList:stepPriceList,
                 serviceList:serviceList,
+                includeDetailList:includeDetailList,
+                unIncludeDetailList:unIncludeDetailList,
                 beginTime:beginTime,
                 endTime:endTime,
                 tripLong:tripLong,
                 tripKind:tripKind,
                 info:info,
                 tagList:tagList,
+                highlightList:highlightList,
                 status:saveType
 
             },
@@ -741,6 +828,31 @@
     //移除专项服务
     function removeServicePrice(obj){
         $(obj).parent("dd").remove();
+    }
+
+    //添加随游明细 type=true include
+    function addDetail(type){
+        var html='<p><input type="text" value="" class="text2"><a href="javascript:;" onclick="removeDetail(this)" class="jian"></a></p>';
+        if(type){
+            $("#include_detail").append(html);
+        }else{
+            $("#uninclude_detail").append(html);
+        }
+    }
+
+    //删除明细
+    function removeDetail(obj){
+        $(obj).parent().remove();
+    }
+
+    //添加亮点
+    function addHighlight(){
+        var html='<p><input type="text" value="" class="text2"><a href="javascript:;" onclick="removeHighlight(this)" class="jian"></a></p>';
+        $("#highlight_div").append(html);
+    }
+    //移除亮点
+    function removeHighlight(obj){
+        $(obj).parent().remove();
     }
 
     //动态初始化SELECT

@@ -16,6 +16,8 @@ use common\components\LogUtils;
 use common\components\TagUtil;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
+use common\entity\TravelTripDetail;
+use common\entity\TravelTripHighlight;
 use common\entity\TravelTripPicture;
 use common\entity\TravelTripPrice;
 use common\entity\TravelTripPublisher;
@@ -144,15 +146,19 @@ class TripController extends CController
         $scenicList = \Yii::$app->request->post("scenicList", "");
         $picList = \Yii::$app->request->post("picList", "");
         $basePrice = trim(\Yii::$app->request->post("basePrice", ""));
+        $basePriceType=trim(\Yii::$app->request->post("basePriceType", TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON));
         $peopleCount = trim(\Yii::$app->request->post("peopleCount", ""));
         $stepPriceList = \Yii::$app->request->post("stepPriceList", "");
         $serviceList = \Yii::$app->request->post("serviceList", "");
+        $includeDetailList = \Yii::$app->request->post("includeDetailList", "");
+        $unIncludeDetailList = \Yii::$app->request->post("unIncludeDetailList", "");
         $beginTime = trim(\Yii::$app->request->post("beginTime", ""));
         $endTime = trim(\Yii::$app->request->post("endTime", ""));
         $tripLong = trim(\Yii::$app->request->post("tripLong", ""));
-        $tripKind = trim(\Yii::$app->request->post("tripKind", ""));
+        $tripKind = trim(\Yii::$app->request->post("tripKind", TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR));
         $info = trim(\Yii::$app->request->post("info", ""));
         $tagList = \Yii::$app->request->post("tagList", "");
+        $highlightList = \Yii::$app->request->post("highlightList", "");
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
 
@@ -213,6 +219,8 @@ class TripController extends CController
         $tripPicList = array();
         $tripStepPriceList = array();
         $tripServiceList = array();
+        $tripDetailList=array();
+        $tripHighlightList=array();
 
         //随游基本信息
         $travelTrip = new TravelTrip();
@@ -222,6 +230,7 @@ class TripController extends CController
         $travelTrip->countryId = $countryId;
         $travelTrip->cityId = $cityId;
         $travelTrip->basePrice = $basePrice;
+        $travelTrip->basePriceType=$basePriceType;
         $travelTrip->maxUserCount = $peopleCount;
         $travelTrip->isAirplane = false;
         $travelTrip->isHotel = false;
@@ -254,7 +263,7 @@ class TripController extends CController
             $tripPicList[] = $tempPic;
         }
         //阶梯价格
-        if(!empty($stepPriceList)){
+        if($basePriceType==TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON&&!empty($stepPriceList)){
             foreach ($stepPriceList as $step) {
                 if($step[1]==0){
                     continue;
@@ -266,9 +275,12 @@ class TripController extends CController
                 $tripStepPriceList[] = $tempPrice;
             }
         }
+        //专项服务
         if(!empty($serviceList)){
-            //专项服务
             foreach ($serviceList as $service) {
+                if(empty($service[0])||empty($service[1])){
+                    continue;
+                }
                 $tempService = new TravelTripService();
                 $tempService->title = $service[0];
                 $tempService->money = $service[1];
@@ -276,9 +288,44 @@ class TripController extends CController
                 $tripServiceList[] = $tempService;
             }
         }
+        //包含内容
+        if(!empty($includeDetailList)){
+            foreach ($includeDetailList as $includeDetail) {
+                if(empty($includeDetail)){
+                    continue;
+                }
+                $tempDetail = new TravelTripDetail();
+                $tempDetail->type = TravelTripDetail::TRAVEL_TRIP_DETAIL_TYPE_INCLUDE;
+                $tempDetail->name = $includeDetail;
+                $tripDetailList[] = $tempDetail;
+            }
+        }
+        //不包含内容
+        if(!empty($unIncludeDetailList)){
+            foreach ($unIncludeDetailList as $unIncludeDetail) {
+                if(empty($unIncludeDetail)){
+                    continue;
+                }
+                $tempDetail = new TravelTripDetail();
+                $tempDetail->type = TravelTripDetail::TRAVEL_TRIP_DETAIL_TYPE_UN_INCLUDE;
+                $tempDetail->name = $unIncludeDetail;
+                $tripDetailList[] = $tempDetail;
+            }
+        }
+        //随游亮点
+        if(!empty($highlightList)){
+            foreach ($highlightList as $highlight) {
+                if(empty($highlight)){
+                    continue;
+                }
+                $tempHighlight = new TravelTripHighlight();
+                $tempHighlight->value = $highlight;
+                $tripHighlightList[] = $tempHighlight;
+            }
+        }
 
         try {
-            $travelTrip=$this->tripService->addTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $travelTripPublisher, $tripServiceList);
+            $travelTrip=$this->tripService->addTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $travelTripPublisher, $tripServiceList,$tripDetailList,$tripHighlightList);
             $t=TagUtil::getInstance();
             $t->updateTagValList($tagList,$travelTrip['tripId']);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
@@ -306,16 +353,20 @@ class TripController extends CController
         $scenicList = \Yii::$app->request->post("scenicList", "");
         $picList = \Yii::$app->request->post("picList", "");
         $basePrice = trim(\Yii::$app->request->post("basePrice", ""));
+        $basePriceType=trim(\Yii::$app->request->post("basePriceType", TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON));
         $peopleCount = trim(\Yii::$app->request->post("peopleCount", ""));
         $stepPriceList = \Yii::$app->request->post("stepPriceList", "");
         $serviceList = \Yii::$app->request->post("serviceList", "");
+        $includeDetailList = \Yii::$app->request->post("includeDetailList", "");
+        $unIncludeDetailList = \Yii::$app->request->post("unIncludeDetailList", "");
         $beginTime = trim(\Yii::$app->request->post("beginTime", ""));
         $endTime = trim(\Yii::$app->request->post("endTime", ""));
         $tripLong = trim(\Yii::$app->request->post("tripLong", ""));
-        $tripKind = trim(\Yii::$app->request->post("tripKind", ""));
+        $tripKind = trim(\Yii::$app->request->post("tripKind", TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR));
         $info = trim(\Yii::$app->request->post("info", ""));
         $tagList = \Yii::$app->request->post("tagList", "");
-        $status = \Yii::$app->request->post("status", "");
+        $highlightList = \Yii::$app->request->post("highlightList", "");
+        $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
 
         if ($this->userPublisherObj == null) {
@@ -381,6 +432,8 @@ class TripController extends CController
         $tripPicList = array();
         $tripStepPriceList = array();
         $tripServiceList = array();
+        $tripDetailList=array();
+        $tripHighlightList=array();
 
         //随游基本信息
         $travelTrip = $this->tripService->getTravelTripById($tripId);
@@ -390,6 +443,7 @@ class TripController extends CController
         $travelTrip->countryId = $countryId;
         $travelTrip->cityId = $cityId;
         $travelTrip->basePrice = $basePrice;
+        $travelTrip->basePriceType=$basePriceType;
         $travelTrip->maxUserCount = $peopleCount;
         $travelTrip->isAirplane = false;
         $travelTrip->isHotel = false;
@@ -417,7 +471,7 @@ class TripController extends CController
             $tripPicList[] = $tempPic;
         }
         //阶梯价格
-        if(!empty($stepPriceList)){
+        if($basePriceType==TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON&&!empty($stepPriceList)){
             foreach ($stepPriceList as $step) {
                 if($step[1]==0){
                     continue;
@@ -429,9 +483,12 @@ class TripController extends CController
                 $tripStepPriceList[] = $tempPrice;
             }
         }
+        //专项服务
         if(!empty($serviceList)){
-            //专项服务
             foreach ($serviceList as $service) {
+                if(empty($service[0])||empty($service[1])){
+                    continue;
+                }
                 $tempService = new TravelTripService();
                 $tempService->title = $service[0];
                 $tempService->money = $service[1];
@@ -439,9 +496,44 @@ class TripController extends CController
                 $tripServiceList[] = $tempService;
             }
         }
+        //包含内容
+        if(!empty($includeDetailList)){
+            foreach ($includeDetailList as $includeDetail) {
+                if(empty($includeDetail)){
+                    continue;
+                }
+                $tempDetail = new TravelTripDetail();
+                $tempDetail->type = TravelTripDetail::TRAVEL_TRIP_DETAIL_TYPE_INCLUDE;
+                $tempDetail->name = $includeDetail;
+                $tripDetailList[] = $tempDetail;
+            }
+        }
+        //不包含内容
+        if(!empty($unIncludeDetailList)){
+            foreach ($unIncludeDetailList as $unIncludeDetail) {
+                if(empty($unIncludeDetail)){
+                    continue;
+                }
+                $tempDetail = new TravelTripDetail();
+                $tempDetail->type = TravelTripDetail::TRAVEL_TRIP_DETAIL_TYPE_UN_INCLUDE;
+                $tempDetail->name = $unIncludeDetail;
+                $tripDetailList[] = $tempDetail;
+            }
+        }
+        //随游亮点
+        if(!empty($highlightList)){
+            foreach ($highlightList as $highlight) {
+                if(empty($highlight)){
+                    continue;
+                }
+                $tempHighlight = new TravelTripHighlight();
+                $tempHighlight->value = $highlight;
+                $tripHighlightList[] = $tempHighlight;
+            }
+        }
 
         try {
-            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList);
+            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList,$tripDetailList,$tripHighlightList);
             if($status==TravelTrip::TRAVEL_TRIP_STATUS_NORMAL&&$travelTrip['status']==TravelTrip::TRAVEL_TRIP_STATUS_DRAFT){
                 $this->tripService->changeTripStatus($travelTrip['tripId'],TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
             }

@@ -220,6 +220,11 @@ var TripStatus={
     'TRAVEL_TRIP_STATUS_DELETE':3
 };
 
+var TripBasePriceType={
+    'TRIP_BASE_PRICE_TYPE_PERSON':1,
+    'TRIP_BASE_PRICE_TYPE_COUNT':2
+};
+
 var OrderStatus= {
     'USER_ORDER_STATUS_PAY_WAIT': 0,
     'USER_ORDER_STATUS_PAY_SUCCESS': 1,
