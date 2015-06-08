@@ -13,3 +13,9 @@ common/weChatWall/HttpUtil.php
 common/weChatWall/token.txt
 
 common/weChatWall/WeiXinUtil.php
+
+backend/web/client.php
+
+backend/web/log.txt
+
+backend/web/test.php
