@@ -158,7 +158,12 @@ var Main = function() {
                         $("#show_message_sex").html(userInfo.sex);
                         $("#show_message_receiverId").val(userSign);
                         $("#show_message_headImg").attr("src",userInfo.headImg);
-                        $("#show_message_city").html(userInfo.cityName);
+                        if(Main.isNotEmpty(userInfo.countryCname)){
+                            $("#show_message_city").html(userInfo.countryCname+" "+userInfo.cityCname);
+                        }else{
+                            $("#show_message_city").html("");
+                        }
+
                         $("#show_message_nickname").html(userInfo.nickname);
                         $("#show_message_age").html(userInfo.birthday);
 

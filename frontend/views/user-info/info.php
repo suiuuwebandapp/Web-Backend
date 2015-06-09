@@ -104,7 +104,7 @@
         width: 20px !important;
     }
     .sycon .myInformation .past02 .wdzl input.phone{
-        height: 39px !important;
+        height: 44px !important;
         margin-left: 20px;
         width: 210px;
     }

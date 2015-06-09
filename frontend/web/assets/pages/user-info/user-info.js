@@ -57,7 +57,7 @@ $(document).ready(function(){
         getFinishList();
     });
 
-    $(".con-nav li").bind("click",function(){
+    $(".con-nav li a").bind("click",function(){
         resetUploadHeadImg();
     });
 
@@ -696,7 +696,7 @@ function initUserInfo(){
     //init sex
     if(userSex==0){
         $("input:radio[name='sex'][value='0']").prop("checked",true);
-        $("#rado2").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
+        $("#rad02").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
     }else if(userSex==1){
         $("input:radio[name='sex'][value='1']").prop("checked",true);
         $("#rad01").next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')

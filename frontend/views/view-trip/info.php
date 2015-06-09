@@ -200,7 +200,7 @@
                                       serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>"
                                     >
                                 <label for="radio<?=$service['serviceId']?>" ><?=$service['title']?></label>
-                                <span><b><?=$service['money']?>￥</b></span>
+                                <span><b>￥<?=intval($service['money'])?></b></span>
                                 <span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span>
                             </p>
                         </li>
@@ -208,7 +208,7 @@
                 </ul>
                 <div class="pay">
                     <p>
-                        <span>总价：<b id="allPrice"><?=$travelInfo['info']['basePrice'];?></span>
+                        <span>总价：<b id="allPrice">￥<?=intval($travelInfo['info']['basePrice']);?></span>
                         <a href="javascript:;" id="addOrder" class="btn" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >支付</a>
                     </p>
                 </div>
@@ -275,15 +275,15 @@
                         <?php foreach($travelInfo['serviceList'] as $service){  ?>
                             <li>
                                 <span title="<?=$service['title'];?>"><?=mb_strlen($service['title'],"UTF-8")>5?(mb_substr($service['title'],0,5,"UTF-8")."..."):$service['title']?></span>
-                                <span><b>¥<?=$service['money']?></b></span>
+                                <span><b>¥<?=intval($service['money'])?></b></span>
                                 <span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span>
                             </li>
                         <?php } ?>
                     </ul>
                 <?php } ?>
             </div>
-            <p class="price">基础价格:<b id="basePrice"><?=$travelInfo['info']['basePrice'];?></b>
-                <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'/次':'/人'?>
+            <p class="price">基础价格:<b id="basePrice">¥<?=intval($travelInfo['info']['basePrice']);?></b>
+                <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
             </p>
             <?php if($travelInfo['priceList']!=null){ ?>
                 <p class="price orange">多人预定享受优惠价格</p>
@@ -321,7 +321,7 @@
             $stepPriceJson=json_encode($travelInfo['priceList']);
         }
     ?>
-    var basePrice='<?=$travelInfo['info']['basePrice'];?>';
+    var basePrice='<?=intval($travelInfo['info']['basePrice']);?>';
     var basePriceType='<?=$travelInfo['info']['basePriceType'];?>';
     var maxPeopleCount='<?=$travelInfo['info']['maxUserCount'];?>';
     var stepPriceJson='<?=$stepPriceJson;?>';
@@ -520,7 +520,6 @@
         var peopleCount=$("#peopleCount").val();
         var tripTime=$("#tripTime").val();
         var allPrice=0;
-        var stepPriceFlag=false;
 
         if(peopleCount==''||peopleCount==0){
             return;
@@ -538,23 +537,22 @@
         if(stepPriceJson!=''){
             stepPriceList=eval("("+stepPriceJson+")");
         }
-        if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_PERSON&&stepPriceList.length>0){
-            for(var i=0;i<stepPriceList.length;i++){
-                var stepPrice=stepPriceList[i];
-                if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
-                    allPrice=parseInt(stepPrice['price'])*peopleCount;
-                    stepPriceFlag=true;
-                    break;
+        if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
+            allPrice=basePrice;
+        }else{
+            if(stepPriceList.length>0){
+                for(var i=0;i<stepPriceList.length;i++){
+                    var stepPrice=stepPriceList[i];
+                    if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
+                        allPrice=parseInt(stepPrice['price'])*peopleCount;
+                        break;
+                    }
                 }
-            }
-        }
-        if(!stepPriceFlag){
-            if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
-                allPrice=basePrice;
             }else{
-                allPrice=basePrice*peopleCount;
+                allPrice=parseInt(basePrice)*peopleCount;
             }
         }
+
         //判断有没有附加服务
         $("#serviceLi input[type='checkbox']").each(function(){
             var tempPrice=parseInt($(this).attr("servicePrice"));
@@ -567,7 +565,8 @@
                 }
             }
         });
-        $("#allPrice").html(allPrice);
+        allPrice=parseInt(allPrice);
+        $("#allPrice").html("￥"+allPrice);
     }
 
     function submitCollection()
