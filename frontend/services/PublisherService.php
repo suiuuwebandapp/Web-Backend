@@ -38,4 +38,22 @@ class PublisherService extends BaseDb
         }
         return $publisherObj;
     }
+
+    public function findUserPublisherByUserSign($userSign)
+    {
+        $publisherObj=null;
+        try{
+            $conn=$this->getConnection();
+            $this->userPublisherDb=new UserPublisherDb($conn);
+            $publisherObj=$this->userPublisherDb->findUserPublisherByUserId($userSign);
+
+            $publisherObj=$this->arrayCastObject($publisherObj,UserPublisher::class);
+
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $publisherObj;
+    }
 }

@@ -23,9 +23,8 @@
             <div class="left">
                 <a href="#" class="user">
                     <img src="/assets/other/weixin/images/logo01.png" class="logo">
-                    <span class="name">未分配</span>
                 </a>
-                <a href="javascript:;" class="email"></a>
+                <span class="name">未分配</span>
             </div>
             <div class="right">
                 <p>城市：<b><?php echo $val['wOrderSite'];?></b></p>
@@ -50,7 +49,7 @@
                     <?php if($val['wStatus']!=\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS&&$val['wStatus']!=\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
                     <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
                     <?php }?>
-                    <div class="left"><a href="#" class="user"><img src="<?php echo $val['headImg']?>" class="logo"><span class="name"><?php echo $val['nickName'];?></span></a></div>
+                    <div class="left"><a href="#" class="user"><img src="<?php echo $val['headImg']?>" class="logo"></a><span class="name"><?php echo $val['nickName'];?></span></div>
                     <div class="right">
                         <p>城市：<b><?php echo $val['wOrderSite'];?></b></p>
                         <?php
@@ -60,6 +59,7 @@
                             ?>
                             <p>日期：<b><?php echo $dataV;?></b></p>
                         <?php } ?>
+                        <p>手机：<a href="tel:<?php echo $val['areaCode'].$val['phone'];?>"><?php echo $val['areaCode'].$val['phone'];?></a></p>
                     </div>
                 </div>
                 <div class="down clearfix">
@@ -74,7 +74,11 @@
                     <a href="/we-chat-order-list/show-refund?o=<?php echo $val['wOrderNumber']?>" class="btn payback">申请退款</a>
                     <a href="javascript:;" class="btn sure" onclick="overOrder('<?php echo $val['wOrderNumber']?>')">确认游玩</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
+                    <?php if($val['wMoney']!=0){?>
                     <a href="javascript:;" class="btn pay" onclick="callpay('<?php echo $val['wOrderNumber']?>')">支付</a>
+                    <?php }else{?>
+                        <a href="javascript:alert('金额不能为0');" class="btn finish" >支付</a>
+                    <?php }?>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
                     <a href="javascript:;" class="btn finish">退款中</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_END){?>
@@ -157,6 +161,7 @@
     {
         urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?n="+orderNumber;
         urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/ali-pay-url?o="+orderNumber;
+
     }
     function payUrl()
     {

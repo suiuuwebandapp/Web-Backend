@@ -103,7 +103,7 @@ class WeChatOrderListDb extends ProxyDb{
 WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
         ");
         $this->setParam("userSign", $userSign);
-        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,wMoney,wDetails');
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,b.phone,b.areaCode,wMoney,wDetails');
         $this->setSql($sql);
         return $this->find($page);
     }
@@ -217,7 +217,7 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
             $this->setParam("wOrderNumber",$orderNumber);
         }*/
         $this->setParam("isDel",$isDel);
-        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,c.headImg,c.nickName,wMoney,wDetails,b.headImg as rHeadImg,b.nickName as rNickName');
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wPhone,wLastTime,wUserNumber,c.headImg,c.nickName,wMoney,wDetails,b.headImg as rHeadImg,b.nickName as rNickName');
         $this->setSql($sql);
         return $this->find($page);
     }

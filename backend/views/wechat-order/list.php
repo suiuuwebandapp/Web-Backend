@@ -54,6 +54,7 @@
                         <th>人数</th>
                         <th>金钱</th>
                         <th>用户</th>
+                        <th>手机</th>
                         <th>负责人</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -148,7 +149,10 @@
                         return data.length<10?data:data.substring(0,10);
                     }
                 },
-                {"targets": [6],"data": "rNickName","bSortable": false,
+                {"targets": [6],"data": "wPhone","bSortable": false,
+                    "width":"80px"
+                },
+                {"targets": [7],"data": "rNickName","bSortable": false,
                     "width":"80px",
                     "render": function(data, type, full) {
                         if(data==null)
@@ -159,7 +163,7 @@
                     }
                 },
                 {
-                    "targets": [7],
+                    "targets": [8],
                     "data": "wStatus",
                     "bSortable": false,
                     "width":"100px",
@@ -184,7 +188,7 @@
                     }
                 },
                 {
-                    "targets": [8],
+                    "targets": [9],
                     "data": "wOrderNumber",
                     "bSortable": false,
                     "width":"300px",

@@ -12,6 +12,7 @@ use backend\services\CountryService;
 use common\components\Code;
 use common\components\Aes;
 use common\entity\UserBase;
+use common\entity\UserPublisher;
 use frontend\services\UserBaseService;
 use yii\web\Controller;
 
@@ -24,13 +25,15 @@ class AController extends SController{
 
     public $userService=null;
     public $enableCsrfValidation=false;
+    public $userPublisherObj=null;
+    public $__userBaseService=null;
 
     public function __construct($id, $module = null)
     {
 
         parent::__construct($id, $module);
     }
-    public function loginValid($bo=true,$isApp=true)
+    public function loginValid($bo=false,$isApp=true)
     {
         if($isApp) {
             if ($bo) {
@@ -70,6 +73,17 @@ class AController extends SController{
                     $this->userObj->userSign='';
                 }
             }
+            if($currentUser!=null&&$currentUser->isPublisher){
+                if($this->__userBaseService==null)$this->__userBaseService=new UserBaseService();
+                $userPublisherObj=$this->__userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+                $this->userPublisherObj=$userPublisherObj;
+            }
+            if($this->userPublisherObj==null)
+            {
+                $this->userPublisherObj=new UserPublisher();
+                $this->userPublisherObj->userPublisherId=11;
+            }
+
         }else
         {
             //验证用户是否登录
@@ -103,6 +117,10 @@ class AController extends SController{
                 if($this->__userBaseService==null)$this->__userBaseService=new UserBaseService();
                 $userPublisherObj=$this->__userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
                 $this->userPublisherObj=$userPublisherObj;
+            }
+            if($this->userPublisherObj==null)
+            {
+                $this->userPublisherObj=new UserPublisher();
             }
         }
     }
