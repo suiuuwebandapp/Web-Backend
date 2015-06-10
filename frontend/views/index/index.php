@@ -8,10 +8,6 @@
  */
 ?>
 
-<script type="text/javascript">
-    $("body").css("background","#eeeeee");
-</script>
-
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
@@ -25,7 +21,6 @@
         padding-top:0 ;
         margin: 0 auto;
         border: none;
-
     }
     .select2-drop {
         font-size: 14px;
