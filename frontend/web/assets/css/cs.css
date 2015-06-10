@@ -1034,7 +1034,7 @@ transition:1s;
 .bj6 div ul li a{ display:block; width:60px; height:26px; line-height:26px; text-align:center; background:#858585; color:#ffeb80; font-size:12px; border-radius:3px;}
 .bj7{ width:660px; height:300px; background:#c00; float:left; color:#ddd;;}
 
-.bjy{ width:1030px; height:auto; margin:110px auto 0px; position:relative;}
+.bjy{ width:1030px; height:auto; min-height:500px; margin:110px auto 0px; position:relative;}
 .bjy .bjy-bj{ display:none;}
 .bjy ul{ width:1030px; height:30px; margin:30px auto 0px; background:url(../images/bjybj.fw.png) no-repeat; margin-top:15px;}
 .bjy-prev{left:0px; }
@@ -1064,7 +1064,12 @@ transition:1s;
 .bjy-bj3 .imgs img{ width:205px; }
 .bjy-bj3 .imgs .delet{ background:rgba(0,0,0,0.3) url(../images/delete02.png) no-repeat 182px 4px; height:115px; width:205px; display:block; position:absolute; left:0; top:0; display:none;}
 .bjy-bj3 .imgs:hover .delet{ display:block; }
-
+.picPop{ height:495px; width:520px; position:fixed; top:100px; left:50%; margin-left:-225px; z-index:999; display:none; }
+.picPop .pic{ height:450px; width:520px; background:#D6D6D6;   }
+.picPop .pic p{   text-align:center; margin-top:210px; color:#fff; font-size:22px;    }
+.picPop .btn{ height:36px; width:90px; line-height:36px; text-align:center; display:block; position:absolute; font-size:16px;  color:#FFF;    }
+.picPop .btn.sure{background:#73b9ff; bottom:0; right:0px;  }
+.picPop .btn.cancle{ background:#FF7A4D; bottom:0; right:100px;    }
 .bjy-bj4{width:1030px;margin:80px auto 20px; }
 .bjy-bj4 span{width:480px; height:36px; display:block; line-height:36px; text-align:left; margin:10px auto 0; }
 .bjy-bj4 p{ width:480px; height:36px; margin:0px auto 10px; clear:both;}
@@ -1168,7 +1173,7 @@ transition:1s;
 .sylx-xiangxi .p1 .icon.jian{ height:36px; line-height:36px; width:36px; background:url(../images/jian.fw.png) no-repeat center center; }
 .sylx-xiangxi .p1 .icon.add{ height:36px; line-height:36px; width:36px; background:url(../images/creat.fw.png) no-repeat center center; }
 .sylx-xiangxi .p1 input{ padding:0 10px; text-align:center; display:inline-block; float:left;height:36px; line-height:36px; width:100px; background:#fff; }
-.sylx-xiangxi .p2 span{ padding:0 20px; text-align:center; display:inline-block; float:left;height:36px; line-height:36px; cursor:pointer; margin:0 10px;  }
+.sylx-xiangxi .p2 span{ padding:0 20px; text-align:center; display:inline-block; float:left;height:36px; line-height:36px; cursor:pointer; margin:0 10px; border:1px solid #ddd; }
 .sylx-xiangxi .p2 span.active{ color:#FADE33; background:#6DB7FF; }
 .sylx-xiangxi .price-select{ width:70%;}
 .sylx-xiangxi .price-select #amount{ color:#f6931f; font-size:18px;}
@@ -1247,9 +1252,17 @@ transition:1s;
 .sydetail .web-content .web-left .map .detNav{ height:40px; line-height:40px; margin:40px 0 20px;  }
 .sydetail .web-content .web-left .map .detNav li{ float:left; margin-right:50px; }
 .sydetail .web-content .web-left .map .detNav .icon{ font-size:18px;background:url(../images/sydIicon.png) no-repeat 0 -245px; padding-left:45px; height:40px; display:block; }
-.sydetail .web-content .web-left .map .detNav .icon01:hover,.sydetail .web-content .web-left .map .detNav .icon01.active{  background-position:0 -385px; color:#70b8ff;  }
-.sydetail .web-content .web-left .map .detNav .icon02{ background-position:0 -525px; }
-.sydetail .web-content .web-left .map .detNav .icon02:hover,.sydetail .web-content .web-left .map .detNav .icon02.active{  background-position:0 -665px;  color:#70b8ff;  }
+.sydetail .web-content .web-left .map .detNav .icon01:hover,.sydetail .web-content .web-left .map .detNav .icon01.active{  background-position:0 -805px; color:#70b8ff;  }
+.sydetail .web-content .web-left .map .detNav .icon01{ background-position:0 -945px; }
+.sydetail .web-content .web-left .map .detNav .icon01:hover,.sydetail .web-content .web-left .map .detNav .icon01.active{  background-position:0 -805px;  color:#70b8ff;  }
+.sydetail .web-content .web-left .map .detNav .icon02{ background-position:0 -245px; }
+.sydetail .web-content .web-left .map .detNav .icon02:hover,.sydetail .web-content .web-left .map .detNav .icon02.active{  background-position:0 -385px;  color:#70b8ff;  }
+.sydetail .web-content .web-left .map .detNav .icon03{ background-position:0 -525px; }
+.sydetail .web-content .web-left .map .detNav .icon03:hover,.sydetail .web-content .web-left .map .detNav .icon03.active{  background-position:0 -665px;  color:#70b8ff;  }
+
+
+
+
 .sydetail .web-content .web-left .map .detCon{ display:none; }
 .sydetail .web-content .web-left .map .details li{height:36px; line-height:36px; width:38%; float:left;  }
 .sydetail .web-content .web-left .map .details li.last{width:24%;}

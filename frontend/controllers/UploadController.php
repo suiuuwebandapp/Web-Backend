@@ -88,7 +88,7 @@ class UploadController extends Controller
         if (!array_key_exists('Filedata', $_FILES)) {
             echo json_encode(['status']);
         } else {
-            $result = $this->uploadService->uploadOssFile($_FILES['Filedata'], $this->maxTripImgSize, $this->tripImgTypes, OssUpload::OSS_SUIUU_TRIP_DIR);
+            $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxTripImgSize, $this->tripImgTypes, $this->localDir);
             return json_encode($result);
         }
     }
@@ -172,6 +172,95 @@ class UploadController extends Controller
             }else{
                 return json_encode($result);
             }
+        }
+    }
+
+
+
+
+    /**
+     * 截取用户头像并更新
+     * @return string
+     */
+    public function actionCutTripImg()
+    {
+        $selectorX = \Yii::$app->request->post('x');
+        $selectorY = \Yii::$app->request->post('y');
+        $viewPortW = \Yii::$app->request->post('w');
+        $viewPortH = \Yii::$app->request->post('h');
+        $source = \Yii::$app->request->post('src');
+        $extArr=explode(".", $source);
+        $ext = end($extArr);
+        $pWidth = \Yii::$app->request->post('pWidth');
+        $pHeight = \Yii::$app->request->post('pHeight');
+        try {
+            if ($ext == "png") {
+                $img = imagecreatefrompng($source);
+            }
+            if ($ext == "jpg") {
+                $img = imagecreatefromjpeg($source);
+            }
+
+            list($width, $height) = getimagesize($source);
+
+            $scale=$pWidth/$width;
+
+            $viewPortW=$viewPortW/$scale;
+            $viewPortH=$viewPortH/$scale;
+            $selectorX=$selectorX/$scale;
+            $selectorY=$selectorY/$scale;
+
+            $resultImg = imagecreatetruecolor($viewPortW, $viewPortH);
+
+            //裁剪
+            imagecopy($resultImg, $img, 0, 0, $selectorX, $selectorY, $viewPortW, $viewPortH);
+
+            if ($ext == "png") {
+                imagesavealpha($resultImg, true);
+            }
+
+            if ($ext == "png") {
+                $white = imagecolorallocatealpha($resultImg, 0, 0, 0, 127);
+                imagealphablending($resultImg, false);
+                imagefill($resultImg, 0, 0, $white);
+                imagefill($resultImg, $viewPortW, 0, $white);
+                imagefill($resultImg, 0, $viewPortH, $white);
+                imagefill($resultImg, $viewPortW, $viewPortH, $white);
+            }
+
+            //获得文件扩展名
+            $fileFolder = UploadController::LOCAL_IMAGE_DIR; //图片目录路径
+
+            $fileFolder .= date("Ymd");
+            if (!file_exists($fileFolder)) { // 判断存放文件目录是否存在
+                mkdir($fileFolder, 0777, true);
+            }
+            $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $ext;
+            $picName = $fileFolder . "/" . $new_file_name;
+            if ($ext == "png") {
+                header('Content-type: image/png');
+                imagepng($resultImg, $picName);
+            }
+            if ($ext == "jpg") {
+                header('Content-type: image/jpg');
+                imagejpeg($resultImg, $picName);
+            }
+
+            imagedestroy($resultImg);
+
+            $ossUpload=new OssUpload();
+            $rst=$ossUpload->putObject($picName,OssUpload::OSS_SUIUU_HEAD_DIR,$new_file_name);
+
+            if($rst['status']==Code::SUCCESS){
+                unlink($picName);
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, $rst['data']));
+            }else{
+                return json_encode(Code::statusDataReturn(Code::FAIL));
+            }
+
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL, $e));
         }
     }
 

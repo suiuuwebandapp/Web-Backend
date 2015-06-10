@@ -84,17 +84,21 @@ class TravelTripDb extends ProxyDb{
         ");
         $sql.=" AND t.status=:status";
         $this->setParam("status",$status);
-        if(!empty($title)){
-            $sql.=" AND t.title like :title ";
-            $this->setParam("title","%".$title."%");
-        }
-         if(!empty($countryId)){
-             $sql.=" AND t.countryId =:countryId";
-             $this->setParam("countryId",$countryId);
-         }
-        if(!empty($cityId)){
-            $sql.=" AND t.cityId =:cityId";
-            $this->setParam("cityId",$cityId);
+
+        if(!empty($countryId)||!empty($cityId)){
+            if(!empty($countryId)){
+                $sql.=" AND t.countryId =:countryId";
+                $this->setParam("countryId",$countryId);
+            }
+            if(!empty($cityId)){
+                $sql.=" AND t.cityId =:cityId";
+                $this->setParam("cityId",$cityId);
+            }
+        }else{
+            if(!empty($title)){
+                $sql.=" AND t.title like :title ";
+                $this->setParam("title","%".$title."%");
+            }
         }
         if(!empty($peopleCount)&&$peopleCount!=0){
             $sql.=" AND t.maxUserCount>=:peopleCount ";

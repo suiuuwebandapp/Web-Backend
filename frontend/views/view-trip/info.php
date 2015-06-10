@@ -142,10 +142,18 @@
                     </div>
                 <?php } ?>
                 <ul class="detNav tabTitle clearfix">
-                    <li><a href="###" class="icon icon01 active">退款说明</a></li>
-                    <li><a href="###" class="icon icon02">保险保障</a></li>
+                    <li><a href="###" class="icon icon01 active">预定流程</a></li>
+                    <li><a href="###" class="icon icon02">退款说明</a></li>
+                    <li><a href="###" class="icon icon03">保险保障</a></li>
                 </ul>
                 <div class="detCon tabCon" style="display:block;">
+                    <p>A. 咨询随游的发布者，确认游玩细节。</p>
+                    <p>B. 填写日期，人数等信息并预支付订单。</p>
+                    <p>C. 等待随友接单后，通过邮件，短信及站内信方式收到订单提醒。</p>
+                    <p>D. 凭电子确认单进行游玩。</p>
+                    <p>E. 完成游玩后进行确认，评价您选择的随游及服务提供者。</p>
+                </div>
+                <div class="detCon tabCon">
                     <p>作为用户，您的权益会在随游得到充分保障。</p>
                     <p>作为旅行者，您如果选择预订随游产品，可以享受以下的退款政策</p>
                     <p>1.支付并提交订单后48小时无人接单，则订单自动取消，全额返还服务费</p>
@@ -156,15 +164,16 @@
                     <p>在随游服务过程中及服务后且未确认完成服务前，可以提交退款请求，经平台调查审核后返还部分服务费用。</p>
                 </div>
                 <div class="detCon tabCon">
-                    <p>作为用户，您的权益会在随游得到充分保障。</p>
-                    <p>作为旅行者，您如果选择预订随游产品，可以享受以下的退款政策</p>
-                    <p>在随游服务过程中及服务后且未确认完成服务前，可以提交退款请求，经平台调查审核后返还部分服务费用。</p>
+                    <p>全天候客服热线</p>
+                    <p>和随游旅行的过程中，如果有任何问题，随时拨打随游客服电话或在微信公众号上与客服沟通，我们7x24随叫随到，为您服务</p>
+                    <p>旅行保险一份100%赔付</p>
+                    <p>和随游旅行过程中如出现意外情况，随友和游客无需承担保险范围内的任何费用，随游网提供的旅行保险全权处理100%赔付。据统计90%以上的游客和随友的相处都非常愉快，如需赔付，您只需要提供现场相关证据照片，在48小时内与随游客服联系，即可享受保险保障</p>
                 </div>
             </div>
 
             <?php if($isOwner&&count($travelInfo['publisherList'])>1){?>
             <div class="newsLists clearfix" id="publisherList">
-                <h2 class="title">随游处理</h2>
+                <h2 class="title">随友处理</h2>
                 <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
                     <?php if($publisherInfo['publisherId']==$travelInfo['info']['createPublisherId']){continue;} ?>
                     <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">

@@ -78,7 +78,12 @@ class TripService extends BaseDb{
                     $tagStr='-1';
                 }
             }
-
+            if(empty($countryId)&&empty($cityId)){
+                $countryService=new CountryService();
+                $cc=$countryService->getCC($title);
+                $countryId=$cc[0];
+                $cityId=$cc[1];
+            }
             return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tagStr,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         } catch (Exception $e) {
             throw $e;

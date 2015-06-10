@@ -12,6 +12,8 @@
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 <link rel="stylesheet" type="text/css" href="/assets/plugins/jquery-uploadifive/uploadifive.css">
 <link rel="stylesheet" type="text/css" href="/assets/pages/trip/new-trip.css"/>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/imgAreaSelect/css/imgareaselect-default.css" />
+
 
 
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
@@ -19,6 +21,7 @@
 <script type="text/javascript" src="/assets/js/squid.js"></script>
 <script type="text/javascript" src="/assets/plugins/time-picki/js/timepicki.js"></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
+<script type="text/javascript" src="/assets/plugins/imgAreaSelect/js/jquery.imgareaselect.base.js" ></script>
 
 <!--编辑切换-->
 <script  type="text/javascript" src="/assets/js/xcbjy.js"></script>
@@ -44,11 +47,6 @@
                     <span class="form_tip" id="titleTip"></span>
                 </p>
                 <input type="text" value="" id="title" step="1">
-                <p>
-                    <span class="spn_title">随游简介</span>
-                    <span class="form_tip" id="introTip"></span>
-                </p>
-                <textarea class="jianjie" id="intro"></textarea>
                 <div>
                     <p>
                         <span class="spn_title">封面</span>
@@ -235,8 +233,45 @@
 <!--发布随游 end-->
 
 
+<form id='coordinates_form' method="post">
+    <input type='hidden' id="img_x" name='x' class='x' value='0'/>
+    <input type='hidden' id="img_y" name='y' class='y' value='0'/>
+    <input type='hidden' id="img_w" name='w' class='w' value='0'/>
+    <input type='hidden' id="img_h" name='h' class='h' value='0'/>
+    <input type='hidden' id="img_rotate" name='rotate' class='rotate' value='0'/>
+    <input type="hidden" id="img_src" name="src" value=""/>
+</form>
+
+<div id="showTripImgDiv" class="picPop" style="display: none">
+    <div class="pic clearfix">
+        <p id="show_img_tip">正在上传...</p>
+        <img id="img_origin" style="display: none" />
+    </div>
+    <a href="###" class="btn sure" id="show_img_confirm">确定</a>
+    <a href="javascript:;" class="btn cancle" id="show_img_cancel">取消</a>
+</div>
+
+
 <script type="text/javascript">
+    var rotate;
+    var rotateCount=0;
+    var containerDivWidth=520;
+    var containerDivHeight=450;
+
+    var x=172;
+    var y=100;
+
+    var imgAreaSelectApi;
     $(document).ready(function(){
+
+        $("#show_img_cancel").bind("click",function(){
+            $("#showTripImgDiv").hide();
+            $("#myMask").hide();
+            removeImgAreaSelect();
+        });
+        $("#show_img_confirm").bind("click",function(){
+            selectImg();
+        });
 
         /*添加标签*/
         xcbjy();
@@ -383,15 +418,14 @@
         });
     }
 
-    function initValidate()
-    {
+    /**
+     * 初始化验证
+     */
+    function initValidate(){
+
         $("#title").bind("blur",function(){
             if($("#title").val()==""){$("#titleTip").html("请输入随游标题");}else{$("#titleTip").html("");};
         });
-        $("#intro").bind("blur",function(){
-            if($("#intro").val()==""){$("#introTip").html("请输入随游简介");}else{$("#introTip").html("");};
-        });
-
         $("#basePrice").bind("focus",function(){
             $("#basePriceTip").html("");
         });
@@ -412,17 +446,18 @@
         $("#tagsUl li").bind("click",function(){
             $("#tagsTip").html("");
         });
-
-
     }
 
 
-    //保存随游
+    /**
+     * 保存随游
+     * @param saveType
+     */
     function saveTrip(saveType) {
 
         var title = $("#title").val();
         var titleImg = $("#tripTitleImg").val();
-        var intro = $("#intro").val();
+        var intro =title;
 
         var countryId = $("#countryId").val();
         var cityId = $("#cityId").val();
@@ -635,13 +670,17 @@
     }
 
 
-    //切换TAB
-    function selectTab(count)
-    {
+    /**
+     * 切换TAB
+     * @param count
+     */
+    function selectTab(count){
         $("#bjy-box ul li").eq(count-1).click();
     }
 
-    //添加阶梯价格
+    /**
+     * 添加阶梯价格
+     */
     function addStepPrice(){
         var html='<p><input type="text" value="" class="step_people"><em>人至</em>' +
                     '<input type="text" value="" class="step_people"><em>人</em>' +
@@ -661,10 +700,17 @@
         });
     }
 
+    /**
+     * 移除阶梯价格
+     * @param obj
+     */
     function removeStepPrice(obj){
         $(obj).parent("p").remove();
     }
-    //添加专项服务
+
+    /**
+     * 添加专项服务
+     */
     function addServicePrice(){
         var html=' <dd style="z-index:11"><input type="text" value="" class="m0-input"><input type="text" value="" class="service_price_step">' +
             '<div class="sect"><select id="test" class="serviceSelect"><option value="1">一人</option><option value="0">一次</option></select>' +
@@ -680,12 +726,18 @@
 
     }
 
-    //移除专项服务
+    /**
+     * 移除专项服务
+     * @param obj
+     */
     function removeServicePrice(obj){
         $(obj).parent("dd").remove();
     }
 
-    //添加随游明细 type=true include
+    /**
+     * 添加随游明细
+     * @param type=true include
+     */
     function addDetail(type){
         var html='<p><input type="text" value="" class="text2"><a href="javascript:;" onclick="removeDetail(this)" class="jian"></a></p>';
         if(type){
@@ -695,22 +747,32 @@
         }
     }
 
-    //删除明细
+    /**
+     * 删除明细
+     * @param obj
+     */
     function removeDetail(obj){
         $(obj).parent().remove();
     }
 
-    //添加亮点
+    /**
+     * 添加亮点
+     */
     function addHighlight(){
         var html='<p><input type="text" value="" class="text2"><a href="javascript:;" onclick="removeHighlight(this)" class="jian"></a></p>';
         $("#highlight_div").append(html);
     }
-    //移除亮点
+    /**
+     * 移除亮点
+     * @param obj
+     */
     function removeHighlight(obj){
         $(obj).parent().remove();
     }
 
-    //动态初始化SELECT
+    /**
+     * /动态初始化SELECT
+     */
     function initSelect(){
         $(".serviceSelect").each(function(){
             try{
@@ -723,7 +785,10 @@
         });
     }
 
-    //加载地图
+    /**
+     * 加载地图
+     * @param obj
+     */
     function loadLocation(obj){
         $("#scenicTip").html("");
         var lon=$(obj).attr("lon");
@@ -734,7 +799,10 @@
             findScenicInfo(obj);
         }
     }
-    //搜索地图
+    /**
+     * 搜索地图
+     * @param obj
+     */
     function searchLocation(obj){
         $("#scenicTip").html("");
         var title=$(obj).attr("title");
@@ -746,8 +814,10 @@
     }
 
 
-
-    //获取景区详情
+    /**
+     * 获取景区详情
+     * @param obj
+     */
     function findScenicInfo(obj) {
         var name=$(obj).val();
         if(name==""){
@@ -777,20 +847,27 @@
         });
     }
 
-    //添加景区
+    /**
+     * 添加景区
+     */
     function addScenic(){
         var html='<div class="jing"><input type="text" placeholder="景点" onfocus="loadLocation(this)" onblur="searchLocation(this)" /><a href="javascript:;" onclick="removeScenic(this)" class="remove"></a></div>';
         $("#scenicList").append(html);
         //同时删除选中坐标
     }
-    //删除景区
+
+    /**
+     * 删除景区
+     * @param obj
+     */
     function removeScenic(obj){
         $(obj).parent().remove();
     }
 
 
-
-    //初始化封面图上传插件
+    /**
+     * 初始化封面图上传插件
+     */
     function initUploadfive(){
         $('#titleImgFile').uploadifive({
             'auto': false,
@@ -853,25 +930,20 @@
             'dnd': false,
             'onUploadComplete': function (file, data) {
                 var datas = eval('(' + data + ')');
-                var span=$("#upload_div span[picName='"+file.name+"']");
-                var img=$(span).next().next();
-                if (datas.status == 1) {
-                    $(span).remove();
-                    $(img).attr("src",datas.data);
-                } else {
-                    $("#span").html("上传失败，请重试");
-                }
-                var size=$("#upload_div a[class='imgs']").size();
-                if(size>=10){
-                    $("#uploadPic").hide();
-                }
+                var url=datas.data;
+                $("#img_origin").attr("src",url.substring(1,url.length));
+                $("#img_src").val(url);
+                $("#img_origin").show();
+                $("#show_img_tip").hide();
+                $("#uploadBtn").hide();
+                initImgAreaSelect("#img_origin");
             },
             'onProgress'   : function(file, e) {
-                var size=$("#upload_div span[picName='"+file.name+"']").size();
-                if(size==0){
-                    var html='<a href="#" class="imgs"><span class="upload_show_info" picName="'+file.name+'">正在上传...</span><span class="delet" onclick="removePic(this)"></span><img/></a>';
-                    $("#upload_div").prepend(html);
+                if($("#showTripImgDiv").css("display")=="none"){
+                    $("#myMask").show();
+                    $("#showTripImgDiv").show();
                 }
+
                 if (e.lengthComputable) {
                     var percent = Math.round((e.loaded / e.total) * 100);
                 }
@@ -890,7 +962,9 @@
     }
 
 
-    //级联获取城市列表
+    /**
+     * 级联获取城市列表
+     */
     function  getCityList(){
         var countryId=$("#countryId").val();
         if(countryId==""){
@@ -929,5 +1003,187 @@
     }
 
 
+
+
+
+    /**** BEGIN IMG *****/
+
+
+    /**
+     * 重置上传头像插件
+     */
+    function resetUploadHeadImg(){
+        removeImgAreaSelect();
+        $("#uploadBtn").val("点击上传图片");
+        $("#uploadBtn").show();
+        $("#img_origin").hide();
+        $("#img_origin").attr("src","");
+        $("#img_src").val();
+    }
+
+    /**
+     * 上传头像选择IMG（截头像）
+     */
+    function selectImg(){
+        var x=$("#img_x").val();
+        var y=$("#img_y").val();
+        var w=$("#img_w").val();
+        var h=$("#img_h").val();
+        var imgSrc=$("#img_src").val();
+        if(imgSrc==""){
+            Main.showTip("您还没有选择图片哦！");
+            return;
+        }
+        if(w==0||h==0){
+            Main.showTip("请正确选择图片！");
+            return;
+        }
+        if(isNaN(w)||isNaN(h)){
+            Main.showTip("请正确选择图片！");
+            return;
+        }
+        var html='<a href="#" class="imgs"><span class="upload_show_info" picName="'+imgSrc+'">正在上传...</span><span class="delet" onclick="removePic(this)"></span><img/></a>';
+        $("#upload_div").prepend(html);
+        $("#show_img_cancel").click();
+        $.ajax({
+            url: "/upload/cut-trip-img",
+            type: "post",
+            data:{
+                "x":x,
+                "y":y,
+                "w":w,
+                "h":h,
+                "src":imgSrc,
+                "pWidth":$("#img_origin").width(),
+                "pHeight":$("#img_origin").height()
+            },
+            error:function(){
+                alert("上传随游图片异常，请刷新重试！");
+            },
+            success: function(data){
+                var result=eval("("+data+")");
+                if(result.status==1){
+                    var span=$("#upload_div span[picName='"+imgSrc+"']");
+                    var img=$(span).next().next();
+                    $(span).remove();
+                    $(img).attr("src",result.data);
+                    var size=$("#upload_div a[class='imgs']").size();
+                    if(size>=10){
+                        $("#uploadPic").hide();
+                    }
+                }else{
+                    alert("上传头像异常，请刷新重试！");
+                }
+            }
+        });
+    }
+
+    /**
+     * 重置截头像插件
+     */
+    function resetImg(){
+        imgAreaSelectApi.update();
+    }
+
+    /**
+     * 移除截图选择器
+     */
+    function removeImgAreaSelect(){
+        if(Main.isNotEmpty(imgAreaSelectApi)){
+            imgAreaSelectApi.cancelSelection();
+        }
+    }
+
+    /**
+     * 初始化头像截取插件
+     * @param imgObj
+     */
+    function initImgAreaSelect(imgObj){
+        imgAreaSelectApi = $(imgObj).imgAreaSelect({
+            instance : true,	// true，返回一个imgAreaSelect绑定到的图像的实例，可以使用api方法
+            onSelectChange : preview,	// 改变选区时的回调函数
+            handles : true,	// true，调整手柄则会显示在选择区域内
+            fadeSpeed:200,
+            resizable : true,
+            aspectRatio:"172:100"
+        });
+        $(".mask").unbind("click");
+    }
+
+    /**
+     * 图片加载完成触发事件
+     */
+    $('#img_origin').load(function(){
+        var form = $('#coordinates_form');
+
+        //获取 x、y、w、h的值
+        var left = parseInt(form.children('.x').val());
+        var top = parseInt(form.children('.y').val());
+        var width = parseInt(form.children('.w').val());
+        var height = parseInt(form.children('.h').val());
+
+        //imgAreaSelectApi 就是图像img_origin的实例 上边instance已解释
+        //setSelection(),设置选区的坐标
+        //update(),更新
+        imgAreaSelectApi.setSelection(left, top, left+width, top+height);
+        imgAreaSelectApi.update();
+
+        //图片居中
+        var imgWidth=$("#img_origin").width();
+        var imgHeight=$("#img_origin").height();
+        $("#img_origin").css("margin","0");
+
+        if((containerDivWidth/containerDivHeight)<(imgWidth/imgHeight)){
+            $("#img_origin").width(containerDivWidth);
+        }else{
+            $("#img_origin").height(containerDivHeight);
+        }
+        imgWidth=$("#img_origin").width();
+        imgHeight=$("#img_origin").height();
+
+        if(imgWidth>imgHeight){
+            var padding=(containerDivHeight-imgHeight)/2;
+            $("#img_origin").css("margin-top",padding);
+            //imgAreaSelectApi.setSelection((imgWidth/2)-(imgHeight/4), (imgHeight/2)-(imgHeight/4), (imgWidth/2)+(imgHeight/4), (imgHeight/2)+(imgHeight/4), true);
+
+        }
+        if(imgHeight>imgWidth){
+            var padding=(containerDivWidth-imgWidth)/2;
+            $("#img_origin").css("margin-left",padding);
+            //imgAreaSelectApi.setSelection((imgHeight/2)-(imgWidth/4)-padding, (imgHeight/2)-(imgWidth/4), (imgHeight/2)+(imgWidth/4)-padding, (imgHeight/2)+(imgWidth/4), true);
+
+        }
+        if(imgHeight==imgWidth){
+            if(containerDivHeight>containerDivWidth){
+                $("#img_origin").css("margin-top",(containerDivHeight-imgHeight)/2);
+            }else{
+                $("#img_origin").css("margin-left",(containerDivWidth-imgWidth)/2);
+            }
+        }
+        if(imgWidth>170&&imgHeight>100){
+            imgAreaSelectApi.setSelection(0, 0, 172,100, true);
+        }
+        imgAreaSelectApi.setOptions({ show: true });
+
+        imgAreaSelectApi.update();
+        preview($("#img_origin"),imgAreaSelectApi.getSelection());
+
+    });
+
+    /**
+     * 上传完成预览事件
+     * @param img
+     * @param selection
+     */
+    function preview(img, selection){
+
+        var form = $('#coordinates_form');
+        //重新设置x、y、w、h的值
+        form.children('.x').val(selection.x1);
+        form.children('.y').val(selection.y1);
+        form.children('.w').val(selection.x2-selection.x1);
+        form.children('.h').val(selection.y2-selection.y1);
+    }
+    /************END  IMG ************/
 
 </script>
