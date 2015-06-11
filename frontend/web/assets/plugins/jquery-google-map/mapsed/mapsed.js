@@ -693,7 +693,6 @@
 				false/*draggable*/,
 				markerType
 			);
-
 			jQuery.extend(marker.details, model);
 			attachTooltip(marker);
 			_markers.push(marker);
@@ -1251,8 +1250,25 @@
 				"</div>"
 			);
 
-			forMarker.tooltip = new gm.InfoWindow();
+            var myOptions = {
+                disableAutoPan: true,
+                maxWidth: 300
+                ,pixelOffset: new google.maps.Size(0, 30)
+                //,zIndex: null
+                ,closeBoxMargin: "0"
+                ,closeBoxURL: ""
+                //,infoBoxClearance: new google.maps.Size(1, 1)
+                //,isHidden: false
+                //,pane: "floatPane"
+                //,enableEventPropagation: false
+            };
+
+
+            forMarker.tooltip = new gm.InfoWindow();
+
 			forMarker.tooltip.setContent(item[0]);
+
+            forMarker.tooltip.setOptions(myOptions);
 			// we'll still need a reference to the marker later on
 			forMarker.tooltip.marker = forMarker;
 			forMarker.showTooltip = showTooltip;
@@ -1261,6 +1277,14 @@
 
 		} // createTooltip
 
+        function printObject(obj)
+        {
+            var temp = "";
+            for(var i in obj){// 用javascript的for/in循环遍历对象的属性
+                temp += i+":"+obj[i]+"\n";
+            }
+            console.info(temp);
+        }
 
 		/// <summary>
 		/// Handles the showing of the appropriate tooltip, depending 
@@ -1328,22 +1352,22 @@
 			  + "<tr><td colspan='2'>"
 			  + "<h1 class='mapsed-name' title='{NAME}'>{SHORT_NAME}</h1>"
 			  + "</td></tr>"
-			  + "<tr>"
-			  + "<td class='mapsed-left'>"
-			  + "<address>"
-			  + "<div class='mapsed-street'>{STREET}</div>"
-			  + "<div class='mapsed-town'>{TOWN}</div>"
-			  + "<div class='mapsed-area'>{AREA}</div>"
-			  + "<div class='mapsed-postCode'>{POSTCODE}</div>"
-			  + "</address>"
-			  + "<a class='mapsed-telNo' href='tel:{TELNO}'>{TELNO}</a>"
-			  + "<a class='mapsed-website' href='{WEBSITE}' title='{WEBSITE}'>website</a>"
-			  + "<a class='mapsed-url' href='{GPLUS}' title='{GPLUS}'>g+</a>"
-			  + "</td>"
-			  + "<td class='mapsed-right'>"
-			  + "<a href='{GPLUS}'>{IMG src='{PHOTOURL}' /></a>"
-			  + "</td>"
-			  + "</tr>"
+			  //+ "<tr>"
+			  //+ "<td class='mapsed-left'>"
+			  //+ "<address>"
+			  //+ "<div class='mapsed-street'>{STREET}</div>"
+			  //+ "<div class='mapsed-town'>{TOWN}</div>"
+			  //+ "<div class='mapsed-area'>{AREA}</div>"
+			  //+ "<div class='mapsed-postCode'>{POSTCODE}</div>"
+			  //+ "</address>"
+			  //+ "<a class='mapsed-telNo' href='tel:{TELNO}'>{TELNO}</a>"
+			  //+ "<a class='mapsed-website' href='{WEBSITE}' title='{WEBSITE}'>website</a>"
+			  //+ "<a class='mapsed-url' href='{GPLUS}' title='{GPLUS}'>g+</a>"
+			  //+ "</td>"
+			  //+ "<td class='mapsed-right'>"
+			  //+ "<a href='{GPLUS}'>{IMG src='{PHOTOURL}' /></a>"
+			  //+ "</td>"
+			  //+ "</tr>"
 			  + "<tr class='mapsed-buttons'>"
 			  + "<td colspan='2'>"
 			  + "<button class='mapsed-select-button'>Select</button>"
@@ -1514,7 +1538,6 @@
 						pos = new gm.LatLng(p.lat, p.lng),
 						markerType = ""
 				;
-
 				if (p.reference && p.reference.length > 0) {
 					// we'll get the details from Google
 					markerType = "google";

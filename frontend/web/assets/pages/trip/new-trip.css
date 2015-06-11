@@ -168,3 +168,20 @@ input,textarea{
 .input-group-btn{
     display: none !important;
 }
+
+.detail_tags{
+    display: inline-block;
+    text-shadow: none !important;
+    font-weight: 300;
+    font-size: 14px;
+    padding: 3px 6px 3px 6px;
+    color: #fff;
+    background-color: #51c7b7;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+.bjy-bj4 .detail_title{
+    height: 30px;
+    margin-bottom: 0px;
+    line-height: 30px;
+}

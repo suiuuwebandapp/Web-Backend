@@ -14,15 +14,21 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link href="/assets/plugins/jquery-google-map/mapsed/mapsed.css" rel="stylesheet">
     <style>
         .mapsed-name{
-            text-align: center;
-            height: 30px;
-            line-height: 30px;
+            margin: 0px;
+            font-size: 14px;
+            color: #858585;
+            font-weight: normal;
         }
-        .mapsed-left,.mapsed-right{
-            display: none;
+        .gm-style-iw{
+            background-color: white;
+            text-align: center;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            height: 38px;
+            line-height: 33px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -55,6 +61,25 @@
             showOnLoad:list
         });
     });
+
+    var interval;
+    $(document).ready(function(){
+        //return;
+        interval=window.setInterval(function(){
+            if($("div[class='gm-style-iw']").size()>0){
+                var showInfoDiv=$("div[class='gm-style-iw']");
+                var closeDiv=$(showInfoDiv).next();
+                $(closeDiv).hide();
+                $(showInfoDiv).prev().remove();
+                $(showInfoDiv).bind("click",function(){
+                    $(closeDiv).find("img").click();
+                });
+                window.clearInterval(interval);
+            }
+        },30);
+
+    });
 </script>
+
 </body>
 </html>

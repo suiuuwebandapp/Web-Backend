@@ -170,6 +170,14 @@
                         <p><input type="text" value="" class="text2"><a href="javascript:addDetail(true);" class="add"></a></p>
                     <?php } ?>
                 </div>
+                <div>
+                    <p class="detail_title">常用标签：</p>
+                    <b class="detail_tags" type="include">陪同讲解</b>
+                    <b class="detail_tags" type="include">随行翻译</b>
+                    <b class="detail_tags" type="include">包车费用</b>
+                    <b class="detail_tags" type="include">小费</b>
+                    <b class="detail_tags" type="include">随友交通费用</b>
+                </div>
                 <span>价格不包括（选填）</span>
                 <div id="uninclude_detail">
                     <?php if($travelInfo['unIncludeDetailList']!=null){ ?>
@@ -183,6 +191,16 @@
                     <?php }else{ ?>
                         <p><input type="text" value="" class="text2"><a href="javascript:addDetail(false);" class="add"></a></p>
                     <?php } ?>
+                </div>
+                <div>
+                    <p class="detail_title">常用标签：</p>
+                    <b class="detail_tags" type="uninclude">门票费用</b>
+                    <b class="detail_tags" type="uninclude">交通费用</b>
+                    <b class="detail_tags" type="uninclude">住宿</b>
+                    <b class="detail_tags" type="uninclude">餐饮费用</b>
+                    <b class="detail_tags" type="uninclude">小费</b>
+                    <b class="detail_tags" type="uninclude">接送机</b>
+                    <b class="detail_tags" type="uninclude">其他未提及费用</b>
                 </div>
                 <p class="mixi"><font>价格明细</font></p>
                 <div class="bj4-main" >
@@ -403,6 +421,21 @@
         });
         $("#show_img_confirm").bind("click",function(){
             selectImg();
+        });
+
+        $(".detail_tags").bind("click",function(){
+            var div;
+            if($(this).attr("type")=="include"){
+                div=$("#include_detail");
+            }else{
+                div=$("#uninclude_detail");
+            }
+            if($(div).find("input").size()==1&& $.trim($(div).find("input").eq(0).val())==""){
+                $(div).find("input").eq(0).val($(this).html())
+            }else{
+                var html='<p><input type="text" value="'+$(this).html()+'" class="text2"><a href="javascript:;" onclick="removeDetail(this)" class="jian"></a></p>';
+                $(div).append(html);
+            }
         });
 
 
