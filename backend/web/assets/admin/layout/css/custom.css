@@ -120,3 +120,8 @@ h1, h2, h3, h4, h5, h6{
 .select2-container .select2-choice{
     overflow: inherit !important;
 }
+
+.show_info_div{
+    clear: both;
+    height: 36px;
+}

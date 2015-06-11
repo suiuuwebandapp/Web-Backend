@@ -104,7 +104,7 @@
                 <a id="uploadPic"><img src="/assets/images/addPic.gif" width="205" height="115"></a>
             </div>
             <div>
-                <input type="file" id="picFile"/>
+                <input type="file" id="picFile" style="display: none"/>
             </div>
         </div>
         <!------step3  end-->
@@ -262,6 +262,7 @@
     var y=100;
 
     var imgAreaSelectApi;
+
     $(document).ready(function(){
 
         $("#show_img_cancel").bind("click",function(){
@@ -320,7 +321,7 @@
         });
 
         $("#uploadPic").bind("click", function () {
-            var file = $("#uploadifive-picFile input[type='file']").last();
+            var file = $("#picFile");
             $(file).click();
         });
 
@@ -532,6 +533,11 @@
         if (size == 0) {
             selectTab(3);
             Main.showTip("请至少上传一张图片");
+            return;
+        }
+        if($("#upload_div span[class!='delet']").size()>0){
+            selectTab(3);
+            Main.showTip("您有图片正在上传，请上传完成后再进行提交");
             return;
         }
 
@@ -921,34 +927,38 @@
                 });
             }
         });
-
-        $('#picFile').uploadifive({
-            'auto': true,
-            'queueID': 'frontQueue',
-            'uploadScript': '/upload/upload-trip-img',
-            'multi': false,
-            'dnd': false,
-            'onUploadComplete': function (file, data) {
-                var datas = eval('(' + data + ')');
-                var url=datas.data;
-                $("#img_origin").attr("src",url.substring(1,url.length));
-                $("#img_src").val(url);
-                $("#img_origin").show();
-                $("#show_img_tip").hide();
-                $("#uploadBtn").hide();
-                initImgAreaSelect("#img_origin");
-            },
-            'onProgress'   : function(file, e) {
+        $("#picFile").bind("change",function(){
+            var file = this.files[0];
+            //判断类型是不是图片
+            if(!/image\/\w+/.test(file.type)){
+                Main.showTip("请确保文件为图像类型");
+                return false;
+            }
+            if(file.type.indexOf("gif")!=-1){
+                Main.showTip("请确保文件为图像类型为JPG、PNG");
+                return false;
+            }
+            //判断大小
+            if(file.size>2048000){
+                Main.showTip("图片大小不能超过2M");
+                return false;
+            }
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e){
+                //$("#upload_div").append('<img src="'+this.result+'" width="205" height="115">');
                 if($("#showTripImgDiv").css("display")=="none"){
                     $("#myMask").show();
                     $("#showTripImgDiv").show();
                 }
-
-                if (e.lengthComputable) {
-                    var percent = Math.round((e.loaded / e.total) * 100);
-                }
-                //file.queueItem.find('.fileinfo').html(' - ' + percent + '%');
-                //file.queueItem.find('.progress-bar').css('width', percent + '%');
+                $("#img_origin").width("");
+                $("#img_origin").height("");
+                $("#img_origin").attr("src",this.result);
+                $("#img_src").val(this.result);
+                $("#img_origin").show();
+                $("#show_img_tip").hide();
+                $("#uploadBtn").hide();
+                initImgAreaSelect("#img_origin");
             }
         });
     }
@@ -1042,9 +1052,11 @@
             Main.showTip("请正确选择图片！");
             return;
         }
+
         var html='<a href="#" class="imgs"><span class="upload_show_info" picName="'+imgSrc+'">正在上传...</span><span class="delet" onclick="removePic(this)"></span><img/></a>';
         $("#upload_div").prepend(html);
         $("#show_img_cancel").click();
+
         $.ajax({
             url: "/upload/cut-trip-img",
             type: "post",
@@ -1132,6 +1144,8 @@
         var imgWidth=$("#img_origin").width();
         var imgHeight=$("#img_origin").height();
         $("#img_origin").css("margin","0");
+        $("#img_origin").attr("oldWidth",imgWidth);
+        $("#img_origin").attr("oldHeight",imgHeight);
 
         if((containerDivWidth/containerDivHeight)<(imgWidth/imgHeight)){
             $("#img_origin").width(containerDivWidth);

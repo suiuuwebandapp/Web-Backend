@@ -80,7 +80,7 @@ class UserBaseService extends BaseDb{
         if(empty($userSign)){
             throw new Exception("UserSign Is Not Allow Empty");
         }
-        $userInfo=null;
+        $userInfo=[];
         try {
             $conn = $this->getConnection();
             $userBaseDb=new UserBaseDb($conn);

@@ -179,7 +179,7 @@ class UploadController extends Controller
 
 
     /**
-     * 截取用户头像并更新
+     * 截取随游并更新
      * @return string
      */
     public function actionCutTripImg()
@@ -189,6 +189,22 @@ class UploadController extends Controller
         $viewPortW = \Yii::$app->request->post('w');
         $viewPortH = \Yii::$app->request->post('h');
         $source = \Yii::$app->request->post('src');
+
+        $new_file_name =null;
+        $fileFlag=false;
+        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $source, $result)){
+            $type = $result[2];
+            $new_file_name= date("YmdHis") . '_' . rand(10000, 99999) . '.' . $type;
+            $new_file = self::LOCAL_IMAGE_DIR.$new_file_name;
+            if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $source)))){
+                //echo '新文件保存成功：', $new_file;
+                $fileFlag=true;
+                $source=$new_file;
+            }
+        }
+        if(!$fileFlag){
+            return Code::statusDataReturn(Code::FAIL);
+        }
         $extArr=explode(".", $source);
         $ext = end($extArr);
         $pWidth = \Yii::$app->request->post('pWidth');
@@ -197,13 +213,16 @@ class UploadController extends Controller
             if ($ext == "png") {
                 $img = imagecreatefrompng($source);
             }
-            if ($ext == "jpg") {
+            if ($ext == "jpg"||$ext == "jpeg") {
                 $img = imagecreatefromjpeg($source);
             }
 
             list($width, $height) = getimagesize($source);
-
-            $scale=$pWidth/$width;
+            if($pWidth==0){
+                $scale=$pHeight/$height;
+            }else{
+                $scale=$pWidth/$width;
+            }
 
             $viewPortW=$viewPortW/$scale;
             $viewPortH=$viewPortH/$scale;
@@ -215,19 +234,27 @@ class UploadController extends Controller
             //裁剪
             imagecopy($resultImg, $img, 0, 0, $selectorX, $selectorY, $viewPortW, $viewPortH);
 
-            if ($ext == "png") {
-                imagesavealpha($resultImg, true);
-            }
+//            if ($ext == "png") {
+//                imagesavealpha($resultImg, true);
+//            }
+//
+//            if ($ext == "png") {
+//                $white = imagecolorallocatealpha($resultImg, 0, 0, 0, 127);
+//                imagealphablending($resultImg, false);
+//                imagefill($resultImg, 0, 0, $white);
+//                imagefill($resultImg, $viewPortW, 0, $white);
+//                imagefill($resultImg, 0, $viewPortH, $white);
+//                imagefill($resultImg, $viewPortW, $viewPortH, $white);
+//            }
 
-            if ($ext == "png") {
-                $white = imagecolorallocatealpha($resultImg, 0, 0, 0, 127);
-                imagealphablending($resultImg, false);
-                imagefill($resultImg, 0, 0, $white);
-                imagefill($resultImg, $viewPortW, 0, $white);
-                imagefill($resultImg, 0, $viewPortH, $white);
-                imagefill($resultImg, $viewPortW, $viewPortH, $white);
-            }
 
+            //缩放
+            $showWidth=830;
+            $showHeight=482;
+            $image=imagecreatetruecolor($showWidth, $showHeight);
+
+            //关键函数，参数（目标资源，源，目标资源的开始坐标x,y, 源资源的开始坐标x,y,目标资源的宽高w,h,源资源的宽高w,h）
+            imagecopyresampled($image, $resultImg, 0, 0, 0, 0, $showWidth, $showHeight, $viewPortW, $viewPortH);
             //获得文件扩展名
             $fileFolder = UploadController::LOCAL_IMAGE_DIR; //图片目录路径
 
@@ -239,11 +266,11 @@ class UploadController extends Controller
             $picName = $fileFolder . "/" . $new_file_name;
             if ($ext == "png") {
                 header('Content-type: image/png');
-                imagepng($resultImg, $picName);
+                imagepng($image, $picName);
             }
-            if ($ext == "jpg") {
+            if ($ext == "jpg"||$ext == "jpeg") {
                 header('Content-type: image/jpg');
-                imagejpeg($resultImg, $picName);
+                imagejpeg($image, $picName);
             }
 
             imagedestroy($resultImg);

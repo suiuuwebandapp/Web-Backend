@@ -55,7 +55,7 @@
             <?php if($pageResult->result!=null&&count($pageResult->result)>0){ ?>
                 <?php foreach($pageResult->result as $trip){?>
                     <li>
-                        <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" ></a>
+                        <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/loading.gif" data-original="<?=$trip['titleImg']?>" ></a>
                         <p class="posi"><img src="<?=$trip['headImg'] ?>" alt=""><span><?=$trip['nickname']?></span></p>
                         <div>
                             <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
@@ -82,7 +82,7 @@
         <ul>
             <?php foreach($rTravel as $trip){?>
                 <li>
-                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/grey.jpg" data-original="<?=$trip['titleImg']?>" ></a>
+                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/loading.gif" data-original="<?=$trip['titleImg']?>" ></a>
                     <p class="posi"><img src="<?=$trip['headImg'] ?>" alt=""><span><?=$trip['nickname']?></span></p>
                     <div>
                         <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
@@ -156,8 +156,9 @@
 
     $(document).ready(function(){
         $("img").lazyload({
-            placeholder : "/assets/images/grey.jpg", //加载图片前的占位图片
-            effect      : "fadeIn" //加载图片使用的效果(淡入)
+            placeholder : "/assets/images/loading.gif", //加载图片前的占位图片
+            effect      : "fadeIn"//, //加载图片使用的效果(淡入)
+            //threshold   :500
         });
         //searchTip();
         //init page click
@@ -271,7 +272,7 @@
                         }
 
                         html+='<li>' +
-                        '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="/assets/images/grey.jpg" data-original="'+trip.titleImg+'" alt=""></a>' +
+                        '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="/assets/images/loading.gif" data-original="'+trip.titleImg+'" alt=""></a>' +
                         '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
                         '<div><h4>'+title+'</h4><p class="xing">';
                         if(trip.score>=2){
@@ -309,7 +310,7 @@
                         searchTip();
                     });
                     $("img").lazyload({
-                        placeholder : "/assets/images/grey.jpg", //加载图片前的占位图片
+                        placeholder : "/assets/images/loading.gif", //加载图片前的占位图片
                         effect      : "fadeIn" //加载图片使用的效果(淡入)
                     });
 

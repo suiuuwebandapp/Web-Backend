@@ -226,7 +226,6 @@ class ViewTripController extends UnCController{
             $page= $this->tripService->getList($page,$title,null,null,$peopleCount,$startPrice,$endPrice,$tag);
 
             //查询热门推荐
-            //
             $pageHtml=Common::pageHtml($page->currentPage,$page->pageSize,$page->totalCount);
             $pageResult=new PageResult($page);
             $pageResult->pageHtml=$pageHtml;

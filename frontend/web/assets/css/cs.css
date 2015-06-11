@@ -47,10 +47,10 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .index-banner{ width:100%; height:600px; margin:-70px auto 0px; position:relative;}
 .index-banner .banners{ width:100%; height:600px; overflow:hidden;}
 .index-banner .banners li{ float:left; width:100%; height:600px; overflow:hidden; }
-.index-banner .banners .banner01{ background:url(http://image.suiuu.com/suiuu_index/banner01.jpg) no-repeat center 0;background-size:100% 100%;}
-.index-banner .banners .banner02{ background:url(http://image.suiuu.com/suiuu_index/banner02.jpg) no-repeat center 0;background-size:100% 100%; display:none;}
-.index-banner .banners .banner03{background:url(http://image.suiuu.com/suiuu_index/banner03.jpg) no-repeat center 0;background-size:100% 100%;display:none;}
-.index-banner .banners .banner04{ background:url(http://image.suiuu.com/suiuu_index/banner04.jpg) no-repeat center 0;background-size:100% 100%;display:none;}
+.index-banner .banners .banner01{ background:url(http://image.suiuu.com/suiuu_index/banner01.jpg) no-repeat center 0; }
+.index-banner .banners .banner02{ background:url(http://image.suiuu.com/suiuu_index/banner02.jpg) no-repeat center 0;  display:none;}
+.index-banner .banners .banner03{background:url(http://image.suiuu.com/suiuu_index/banner03.jpg) no-repeat center 0; display:none;}
+.index-banner .banners .banner04{ background:url(http://image.suiuu.com/suiuu_index/banner04.jpg) no-repeat center 0; display:none;}
 .index-banner .banner-btn{position:absolute;top:330px; width:100%;}
 .index-banner .banner-btn a{display:block;width:40px;height:48px;position:absolute;top:0;}
 .index-banner .banner-btn a.prev{left:20px; background:url(../images/index/bannerbtn.png) no-repeat 0 0;} 
@@ -606,7 +606,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 	/*-------------------------------*/
 .syTop{height:auto; overflow:hidden; margin:0 auto;}
-.syTop .banner{ width:100%; height:400px; position:relative; background:url(http://image.suiuu.com/suiuu_index/userBanner.jpg) no-repeat center 0; background-size:100% 400px; }
+.syTop .banner{ width:100%; height:400px; position:relative; background:url(http://image.suiuu.com/suiuu_index/userBanner.jpg) no-repeat center 0;  }
 .syTop .banner .banner-inner{height:400px; width:1200px; margin:0 auto; position:relative; }
 .syTop .banner .banner-inner .btn{ width:80px; height:40px; text-align:center; line-height:40px; position:absolute; right:20px; bottom:10px; color:#f00; background:#FF0; z-index:2;}
 .syTop .user{height:245px; text-align:center; position:relative; margin-top:-60px; }
@@ -1251,7 +1251,7 @@ transition:1s;
 .sydetail .web-content .web-left .map .contian .icon02{ background-position:0 -123px; }
 .sydetail .web-content .web-left .map .detNav{ height:40px; line-height:40px; margin:40px 0 20px;  }
 .sydetail .web-content .web-left .map .detNav li{ float:left; margin-right:50px; }
-.sydetail .web-content .web-left .map .detNav .icon{ font-size:18px;background:url(../images/sydIicon.png) no-repeat 0 -245px; padding-left:45px; height:40px; display:block; }
+.sydetail .web-content .web-left .map .detNav .icon{ font-size:20px;background:url(../images/sydIicon.png) no-repeat 0 -245px; padding-left:45px; height:40px; display:block; }
 .sydetail .web-content .web-left .map .detNav .icon01:hover,.sydetail .web-content .web-left .map .detNav .icon01.active{  background-position:0 -805px; color:#70b8ff;  }
 .sydetail .web-content .web-left .map .detNav .icon01{ background-position:0 -945px; }
 .sydetail .web-content .web-left .map .detNav .icon01:hover,.sydetail .web-content .web-left .map .detNav .icon01.active{  background-position:0 -805px;  color:#70b8ff;  }
@@ -1263,14 +1263,21 @@ transition:1s;
 
 
 
-.sydetail .web-content .web-left .map .detCon{ display:none; }
 .sydetail .web-content .web-left .map .details li{height:36px; line-height:36px; width:38%; float:left;  }
 .sydetail .web-content .web-left .map .details li.last{width:24%;}
 .sydetail .web-content .web-left .map .details li span{ height:36px; line-height:28px; display:block; font-size:18px;}
 .sydetail .web-content .web-left .map .details li .icon{ padding-left:35px; background:url(../images/syxq.png) no-repeat 0 0;}
 .sydetail .web-content .web-left .map .details li .icon2{ background-position:0 -67px;}
 .sydetail .web-content .web-left .map .details li .icon3{ background-position:0 -133px;}
-.sydetail .web-content .web-left .map p{   line-height:35px;}
+
+.sydetail .web-content .web-left .map p{ position:relative;  line-height:36px;}
+.sydetail .web-content .web-left .map .detCon{ display:none; padding-left:13px;}
+.sydetail .web-content .web-left .map .p3{ font-size:18px;}
+.sydetail .web-content .web-left .map .con01{ position:relative;  }
+.sydetail .web-content .web-left .map .con01 .line{ height:150px; width:2px; background:#70b8ff; position:absolute; left:23px; top:20px; }
+.sydetail .web-content .web-left .map .con01 p{ position:relative; padding-left:30px;}
+.sydetail .web-content .web-left .map .con01 p span{ display:block; position:absolute; left:0; top:7px; text-align:center; line-height:22px; height:22px; width:22px; color:#fff; background:#70b8ff; border-radius:50px;}
+.sydetail .web-content .web-left .map .detCon .title03{ font-size:18px; color:#70b8ff; line-height:36px; }
 .sydetail .web-content .web-left .map .map-pic{ height:300px; width:100%; background:#DBDBEB; overflow:hidden; margin:20px 0;}
 
 .sydetail .web-content .web-left .title{ color:#FF7945; font-size:20px; height:45px; line-height:45px; border-bottom:1px solid #ddd;  }
@@ -1482,7 +1489,7 @@ transition:1s;
 
 
 /*--------------专栏-----------*/
-.zl-banner{ width:100%; height:600px; position:relative; background:url(http://image.suiuu.com/suiuu_index/zhanBanner.jpg) no-repeat fixed center 0; background-size:100% 600px; margin:0px auto;}
+.zl-banner{ width:100%; height:600px; position:relative; background:url(http://image.suiuu.com/suiuu_index/zhanBanner.jpg) no-repeat fixed center 0;   margin:0px auto;}
 .zl-banner .con{ height:600px;}
 .zl-banner .data{ font-size:36px; margin-top:430px; color:#fff; padding:0 50px; }
 .zl-banner .tit{ font-size:30px; margin-top:30px; color:#fff; padding:0 50px;}
