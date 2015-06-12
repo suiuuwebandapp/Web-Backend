@@ -998,6 +998,122 @@ class AppTravelController extends AController
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
+
+
+    /**
+     * 添加用户订单
+     * @return void|\yii\web\Response
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionAddOrder()
+    {
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+        $peopleCount=trim(\Yii::$app->request->post("peopleCount", ""));
+        $beginDate=trim(\Yii::$app->request->post("beginDate", ""));
+        $startTime=trim(\Yii::$app->request->post("startTime", ""));
+        $serviceIds=trim(\Yii::$app->request->post("serviceIds", ""));
+
+        if(empty($tripId)){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"随游编号不正确");
+        }
+        if(empty($peopleCount)||$peopleCount==0){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"出行人数不正确");
+        }
+        if(empty($beginDate)){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"行程日期不正确");
+        }
+        if(empty($startTime)){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"起始时间不正确");
+        }
+        if(strtotime($beginDate)<time()){
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"无效的出行日期");
+        }
+        if(strtotime($beginDate)==strtotime(date('y-M-d'),time())){
+            //TODO 判断如果是当天，需要判断当前时间是否正确  并且判断服务时间
+        }
+        //判断开始时间是否小于当前时间
+
+
+        $tripService=new TripService();
+        try{
+            $travelInfo=$tripService->getTravelTripInfoById($tripId);
+            $tripInfo=$travelInfo['info'];
+            $tripPriceList=$travelInfo['priceList'];
+            $tripPublisherList=$travelInfo['publisherList'];
+            $tripServiceList=$travelInfo['serviceList'];
+
+            $orderTripInfoJson=json_encode($travelInfo);//订单详情
+            $selectServiceList=[];//附加服务list
+            $servicePrice=0;//附加服务价格
+            $basePrice=0;
+
+            if($peopleCount>$tripInfo['maxUserCount']){
+                return Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
+            }
+            if($tripInfo['basePriceType']==TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT){
+                $basePrice=$tripInfo['basePrice'];
+            }else{
+                //计算阶梯价格 和 基础价格
+                if(!empty($tripPriceList)&&count($tripPriceList)>0){
+                    foreach($tripPriceList as $stepPrice)
+                    {
+                        if($peopleCount>=$stepPrice['minCount']&&$peopleCount<=$stepPrice['maxCount']){
+                            $basePrice=$stepPrice['price']*$peopleCount;
+                            break;
+                        }
+                    }
+                }else{
+                    $basePrice=$tripInfo['basePrice']*$peopleCount;
+                }
+            }
+
+
+            if(!empty($serviceIds)){
+                $serviceIdArr=explode(",",$serviceIds);
+                foreach($serviceIdArr as $serviceId)
+                {
+                    foreach($tripServiceList as $tripService)
+                    {
+                        if($serviceId==$tripService['serviceId'])
+                        {
+                            $selectServiceList[]=$tripService;
+                            if($tripService['type']==TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT){
+                                $servicePrice+=($tripService['money']);
+                            }else if($tripService['type']==TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE){
+                                $servicePrice+=($tripService['money']*$peopleCount);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            $serviceInfo=json_encode($selectServiceList);//附加服务详情
+
+            $userOrderInfo=new UserOrderInfo();
+            $userOrderInfo->tripId=$tripInfo['tripId'];
+            $userOrderInfo->userId=$this->userObj->userSign;
+            $userOrderInfo->beginDate=$beginDate;
+            $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,1);
+            $userOrderInfo->personCount=$peopleCount;
+            $userOrderInfo->serviceInfo=$serviceInfo;
+            $userOrderInfo->basePrice=$tripInfo['basePrice'];
+            $userOrderInfo->servicePrice=$servicePrice;
+            $userOrderInfo->tripJsonInfo=$orderTripInfoJson;
+            $userOrderInfo->totalPrice=$basePrice+$servicePrice;
+            $userOrderInfo->status=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT;//默认订单状态，待支付
+            $userOrderInfo->orderNumber=Code::createOrderNumber();
+            $this->userOrderService->addUserOrder($userOrderInfo);
+            //给随友发送消息
+            $sysMessageUtils=new SysMessageUtils();
+            $sysMessageUtils->sendNewOrderMessage($tripPublisherList,$userOrderInfo->orderNumber);
+            return Code::statusDataReturn(Code::SUCCESS,$userOrderInfo->orderNumber);
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return Code::statusDataReturn(Code::PARAMS_ERROR,"系统未知异常");
+        }
+    }
+
     private function unifyReturn($data)
     {
         if($data==false)

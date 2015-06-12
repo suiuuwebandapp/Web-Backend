@@ -24,6 +24,15 @@ class WeChatNewsListDb  extends ProxyDb {
         return $command->queryOne();
     }
 
+    public function findNewsByKeyword($keyword)
+    {
+        $sql = sprintf("
+           SELECT * FROM wechat_news_list WHERE nAntistop=:nAntistop
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":nAntistop", $keyword, PDO::PARAM_STR);
+        return $command->queryOne();
+    }
     public function addNews(WeChatNewsList $chatNewsList)
     {
         $sql = sprintf("

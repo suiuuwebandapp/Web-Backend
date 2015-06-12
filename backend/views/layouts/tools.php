@@ -11,7 +11,7 @@
 <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
 <a id="ajaxModal" href="" data-target="#ajax" data-toggle="modal"></a>
 <div class="modal fade modal-scrollable modal-scroll" id="ajax" tabindex="-1" role="basic" aria-hidden="true" style="z-index: 10053">
-    <img src="/assets/global/img/ajax-modal-loading.gif" alt="" class="loading">
+    <img src="<?=Yii::$app->params['res_url'] ?>/assets/global/img/ajax-modal-loading.gif" alt="" class="loading">
 </div>
 <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
 <!-- BEGIN STYLE CUSTOMIZER -->

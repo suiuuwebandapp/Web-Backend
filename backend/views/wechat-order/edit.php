@@ -1,3 +1,24 @@
+<?php
+
+$str =$info['wDetails'];//'rrrr######qweqweqwe###09###ssssss######qqqqqqqq###asd###asdasdasd';
+$arr_i=array();
+$arr_t=array();
+$contentTitle="";
+if(!empty($str)){
+$arr=explode('###',$str);
+$contentTitle=$arr[0];
+for($i=1;$i<count($arr);$i++)
+{
+    if($i%2==0)
+    {
+        $arr_i[]=$arr[$i];
+    }else
+    {
+        $arr_t[]=$arr[$i];
+    }
+}
+}
+?>
 <div class="row">
     <div class="col-md-12">
         <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -130,18 +151,83 @@
                     </div>
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="col-md-3 control-label">详细计划</label>
-                            <div class="col-md-9 valdate">
+                            <label class="col-md-3 control-label">详细标题</label>
+                            <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <textarea id="wDetails" class="form-control"  placeholder="详细计划" required><?=$info['wDetails']?></textarea>
+                                    <input type="text" id="content_title" value="<?=$contentTitle?>" class="form-control" placeholder="请输入标题" maxlength="50" required/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">详细计划</label>
+                            <div class="col-md-9 valdate">
+                                    <div  id="content_info">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                时间
+                                                </span>
+                                                    <input type="text" value="<?php echo isset($arr_t[0])?$arr_t[0]:''; ?>" class="form-control">
+                                                </div>
+                                                <!-- /input-group -->
+                                            </div>
+                                            <!-- /.col-md-6 -->
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                内容
+                                                </span>
+                                                    <input type="text" value="<?php echo isset($arr_i[0])?$arr_i[0]:''; ?>" class="form-control">
+                                                    <span class="input-group-btn">
+
+                                                <button class="btn blue" type="button" onclick="addInput()">添加</button>
+
+                                                </span>
+                                                </div>
+                                                <!-- /input-group -->
+                                            </div>
+                                            <!-- /.col-md-6 -->
+                                        </div>
+                                        <?php for($j=1;$j<count($arr_i);$j++){?>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                时间
+                                                </span>
+                                                    <input type="text" value="<?=$arr_t[$j]?>" class="form-control">
+                                                </div>
+                                                <!-- /input-group -->
+                                            </div>
+                                            <!-- /.col-md-6 -->
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                内容
+                                                </span>
+                                                    <input type="text" value="<?=$arr_i[$j]?>" class="form-control">
+                                                    <span class="input-group-btn">
+                                                <button class="btn blue" type="button" onclick="deleteInput(this)">删除</button>
+                                                </span>
+                                                </div>
+                                                <!-- /input-group -->
+                                            </div>
+                                            <!-- /.col-md-6 -->
+                                        </div>
+                                        <?php }?>
+                                    </div>
+                                    <!-- /.row -->
                             </div>
                         </div>
                     </div>
                     <div class="form-actions fluid">
                         <div class="col-md-offset-3 col-md-9">
                             <button type="submit" class="btn green-meadow">&nbsp;&nbsp;更新定制&nbsp;&nbsp;</button>
+
                         </div>
                     </div>
                 </form>
@@ -164,15 +250,61 @@
 
 <script type="text/javascript">
 
+    function showOrder(id)
+    {
+        window.open("<?php echo Yii::$app->params['suiuu_url']?>"+"/we-chat-order-list/sys-show-order?password=9527suiuu&id="+id);
+    }
+    function addInput()
+    {
+
+        var str = '<div class="row">';
+        str+='<div class="col-md-2">';
+        str+='<div class="input-group">';
+        str+='<span class="input-group-addon">';
+        str+='时间';
+        str+='</span>';
+        str+='<input type="text" class="form-control">';
+        str+='</div>';
+        str+='</div>';
+        str+='<div class="col-md-6">';
+        str+='<div class="input-group">';
+        str+='<span class="input-group-addon">';
+        str+='内容';
+        str+='</span>';
+        str+='<input type="text" class="form-control">';
+        str+='<span class="input-group-btn">';
+        str+='<button class="btn blue" type="button" onclick="deleteInput(this)">删除</button>';
+        str+='</span>';
+        str+='</div>';
+        str+='</div>';
+        str+='</div>';
+        $('#content_info').append(str);
+    }
+
+    function deleteInput(obj)
+    {
+        $(obj).parent().parent().parent().parent().remove();
+    }
     $(document).ready(function() {
         FormValidation.init("editArticle");
     });
-    //添加专栏文章
+    //
     function editArticle(){
+
+        var str='';
+        var arr = new Array();
+        var content_title =$('#content_title').val();
+        arr.push(content_title);
+        var i=0;
+        $("#content_info").find("input[type='text']").each(function () {
+            arr.push($(this).val());
+
+        });
+
+        str=arr.join("###");
         var orderNumber=$("#orderNumber").val();
         var rPhone=$("#rPhone").val();
         var money=$("#money").val();
-        var wDetails=$("#wDetails").val();
         var status=$("#status").val();
         if(orderNumber==''){
             Main.errorTip("订单号异常，请刷新后重试");
@@ -182,14 +314,11 @@
             Main.errorTip("负责人不能为空");
             return;
         }
-        if(money==''){
+        /*if(money==''){
             Main.errorTip("订单金额不能为空");
             return;
-        }
-        if(wDetails==''){
-            Main.errorTip("定制详细信息不能为空");
-            return;
-        }
+        }*/
+
         if(status>2){
             Main.errorTip("订单已经处理，无法修改");
             return;
@@ -202,7 +331,7 @@
                 orderNumber:orderNumber,
                 rPhone:rPhone,
                 money:money,
-                wDetails:wDetails
+                wDetails:str
             },
             beforeSend:function(){
                 Main.showWait();

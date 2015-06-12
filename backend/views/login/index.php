@@ -10,7 +10,7 @@ use yii\helpers\Html;
 ?>
 <!-- BEGIN LOGO -->
 <div class="logo">
-    <img src="/assets/admin/layout/img/logo-big.png" alt="" />
+    <img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/logo-big.png" alt="" />
 </div>
 <!-- END LOGO -->
 <!-- BEGIN LOGIN -->

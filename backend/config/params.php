@@ -22,7 +22,7 @@ return [
     //app圈子图片目录
     'app_circle_img_url'=>'http://image.suiuu.com/suiuu_content',
     //资源URL
-    'res_url'=>'',
+    'res_url'=>'',//http://image.suiuu.com/suiuu_sys_resources
     //Cookie
     'sys_suiuu_sign'=> 'sys_suiuu_sign',
     'cookie_domain' => '/',

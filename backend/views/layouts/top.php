@@ -15,7 +15,7 @@
         <!-- BEGIN LOGO -->
         <div class="page-logo">
             <a href="index.html">
-                <img src="/assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/>
+                <img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/>
             </a>
             <div class="menu-toggler sidebar-toggler hide">
                 <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -153,7 +153,7 @@
                                 <li>
                                     <a href="inbox.html?a=view">
 									<span class="photo">
-									<img src="../../assets/admin/layout/img/avatar2.jpg" alt=""/>
+									<img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar2.jpg" alt=""/>
 									</span>
 									<span class="subject">
 									<span class="from">
@@ -168,7 +168,7 @@
                                 <li>
                                     <a href="inbox.html?a=view">
 									<span class="photo">
-									<img src="../../assets/admin/layout/img/avatar3.jpg" alt=""/>
+									<img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar3.jpg" alt=""/>
 									</span>
 									<span class="subject">
 									<span class="from">
@@ -183,7 +183,7 @@
                                 <li>
                                     <a href="inbox.html?a=view">
 									<span class="photo">
-									<img src="../../assets/admin/layout/img/avatar1.jpg" alt=""/>
+									<img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar1.jpg" alt=""/>
 									</span>
 									<span class="subject">
 									<span class="from">
@@ -198,7 +198,7 @@
                                 <li>
                                     <a href="inbox.html?a=view">
 									<span class="photo">
-									<img src="../../assets/admin/layout/img/avatar2.jpg" alt=""/>
+									<img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar2.jpg" alt=""/>
 									</span>
 									<span class="subject">
 									<span class="from">
@@ -213,7 +213,7 @@
                                 <li>
                                     <a href="inbox.html?a=view">
 									<span class="photo">
-									<img src="../../assets/admin/layout/img/avatar3.jpg" alt=""/>
+									<img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar3.jpg" alt=""/>
 									</span>
 									<span class="subject">
 									<span class="from">
@@ -375,7 +375,7 @@
                 <!-- BEGIN USER LOGIN DROPDOWN -->
                 <li class="dropdown dropdown-user">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <img alt="" class="img-circle hide1" src="../../assets/admin/layout/img/avatar3_small.jpg"/>
+                        <img alt="" class="img-circle hide1" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar3_small.jpg"/>
 					<span class="username username-hide-on-mobile"> <?= $this->context->userObj->nickname ?> </span>
                         <i class="fa fa-angle-down"></i>
                     </a>

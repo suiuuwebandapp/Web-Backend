@@ -12,42 +12,11 @@
 </head>
 
 <body>
-<a href="/we-chat-order-list/order-view" class="fixedBtn">添加订单</a>
 <div class="con sy_order clearfix">
-    <?php foreach($list as $val){
-        if(empty($val['wRelativeSign'])||$val['wStatus']==\common\entity\WeChatOrderList::STATUS_NORMAL){
-        ?>
-    <div class="box clearfix">
-        <div class="top clearfix">
-            <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
-            <div class="left">
-                <a href="#" class="user">
-                    <img src="/assets/other/weixin/images/logo01.png" class="logo">
-                </a>
-                <span class="name">未分配</span>
-            </div>
-            <div class="right">
-                <p>城市：<b><?php echo $val['wOrderSite'];?></b></p>
-                <?php
-                $dateList=$val['wOrderTimeList'];
-                $dataArr=explode(',',$dateList);
-                foreach($dataArr as $dataV){
-                ?>
-                <p>日期：<b><?php echo $dataV;?></b></p>
-                <?php } ?>
-            </div>
-        </div>
-        <div class="down clearfix">
-            <p><?php echo $val['wOrderContent'];?></p>
-        </div>
-        <b class="money">待定&nbsp</b>
-        <a href="#" class="btn paying">处理中</a>
-    </div>
-     <?php }else{ ?>
             <div class="box clearfix">
                 <div class="top clearfix">
                     <?php if($val['wStatus']!=\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS&&$val['wStatus']!=\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
-                    <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
+                        <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
                     <?php }?>
                     <div class="left"><a href="#" class="user"><img src="<?php echo $val['headImg']?>" class="logo"></a><span class="name"><?php echo $val['nickName'];?></span></div>
                     <div class="right">
@@ -104,7 +73,7 @@
                     <a href="javascript:;" class="btn sure" onclick="overOrder('<?php echo $val['wOrderNumber']?>')">确认游玩</a>
                 <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
                     <?php if($val['wMoney']!=0){?>
-                    <a href="javascript:;" class="btn pay" onclick="callpay('<?php echo $val['wOrderNumber']?>')">支付</a>
+                        <a href="javascript:;" class="btn pay" onclick="callpay('<?php echo $val['wOrderNumber']?>')">支付</a>
                     <?php }else{?>
                         <a href="javascript:alert('金额不能为0');" class="btn finish" >支付</a>
                     <?php }?>
@@ -120,9 +89,7 @@
                     <a href="javascript:;" class="btn finish">已结束</a>
                 <?php }?>
             </div>
-        <?php }?>
-    <?php }?>
-    </div>
+</div>
 </div>
 <div class="order_pay clearfix">
     <p>选择支付方式</p>
@@ -134,82 +101,10 @@
 </div>
 
 <script>
-    function overOrder(orderNumber)
-    {
-        $.ajax({
-            url :'/we-chat-order-list/over-order',
-            type:'post',
-            data:{
-                o:orderNumber
-            },
-            error:function(){
-                alert("结束订购异常");
-            },
-            success:function(data){
-                data=eval("("+data+")");
-                if(data.status==1){
-                    alert(data.data);
-                    setTimeout(function(){location.reload()},1000);
-                }else if(data.status==-3){
-                    window.location.href=data.data;
-                }else{
-                    alert(data.data);
-                }
-            }
-        });
-    }
-    function deleteOrder(orderNumber)
-    {
-        $.ajax({
-            url :'/we-chat-order-list/delete-order',
-            type:'post',
-            data:{
-                orderNumber:orderNumber
-            },
-            error:function(){
-                alert("删除订购异常");
-            },
-            success:function(data){
-                data=eval("("+data+")");
-                if(data.status==1){
-                    alert(data.data);
-                    setTimeout(function(){location.reload()},1000);
-                }else if(data.status==-3){
-                    window.location.href=data.data;
-                }else{
-                    alert(data.data);
-                }
-            }
-        });
-    }
+
 </script>
 <script type="text/javascript">
-    var urlR="";
-    var urlA="";
-    function callpay(orderNumber)
-    {
-        urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?n="+orderNumber;
-        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/ali-pay-url?o="+orderNumber;
 
-    }
-    function payUrl()
-    {
-        if(urlR=="")
-        {
-            alert("未知的订单");
-            return;
-        }
-        window.location.href=urlR;
-    }
-    function aliPayUrl()
-    {
-        if(urlA=="")
-        {
-            alert("未知的订单");
-            return;
-        }
-        window.location.href=urlA;
-    }
 </script>
 </body>
 </html>

@@ -50,7 +50,7 @@
                     <tr>
                         <th>订单号</th>
                         <th>城市</th>
-                        <th>时间</th>
+                        <th>出发时间</th>
                         <th>人数</th>
                         <th>金钱</th>
                         <th>用户</th>
@@ -194,7 +194,7 @@
                     "width":"300px",
                     "render": function(data, type, full) {
                         var html='';
-
+                        html +='<a href="javascript:;" onclick="showOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 预览</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>&nbsp;&nbsp;';
                         if(full['wStatus']==3){
@@ -215,6 +215,10 @@
         });
     });
 
+    function showOrder(id)
+    {
+        window.open("<?php echo Yii::$app->params['suiuu_url']?>"+"/we-chat-order-list/sys-show-order?password=9527suiuu&id="+id);
+    }
     function confirmOrder(id)
     {
         Main.confirmTip("确认要结束此订单吗？",function(){

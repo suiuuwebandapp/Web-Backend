@@ -117,6 +117,27 @@ class WeChatOrderListController extends WController {
         }
     }
 
+    public function actionSysShowOrder()
+    {
+        try {
+            $password=Yii::$app->request->get('password');
+            if($password!="9527suiuu")
+            {
+                return $this->renderPartial('noOrder');
+            }
+            $id=Yii::$app->request->get('id');
+            $data = $this->orderListSer->sysOrderInfo($id);
+            if(empty($data)){
+                return $this->renderPartial('noOrder');
+            }else {
+                return $this->renderPartial('sysOrderInfo', ['val' => $data]);
+            }
+        }catch (Exception $e)
+        {
+            $error=$e->getMessage();
+            echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$error));
+        }
+    }
     public function actionIndex()
     {
         return $this->renderPartial('index');
@@ -137,7 +158,7 @@ class WeChatOrderListController extends WController {
     {
         $this->loginValid(false);
         $userSign=$this->userObj->userSign;
-        //$userSign="085963dc0af031709b032725e3ef18f5";
+        //$userSign="abb760a0ea093d829f7916b2a7a9f3ce";
         if(empty($userSign))
         {
             return $this->renderPartial('noOrder');

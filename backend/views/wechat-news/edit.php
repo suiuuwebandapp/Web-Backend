@@ -80,11 +80,11 @@
                                 <div class="col-md-4" style="padding-left: 30px">
                                     <div class="radio-list">
                                         <label class="radio-inline">
-                                            <input type="radio" name="optionsRadios"  value="1" <?php if($info['nStatus']==1){echo "checked";}?> >
+                                            <input type="radio" name="optionsRadios"  value="1" <?php if($info['nType']==1){echo "checked";}?> >
                                             文本
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="optionsRadios" value="2"  <?php if($info['nStatus']==2){echo "checked";}?> >
+                                            <input type="radio" name="optionsRadios" value="2"  <?php if($info['nType']==2){echo "checked";}?> >
                                             图文
                                         </label>
                                     </div>
@@ -96,7 +96,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="nAntistop" value="<?=$info['nAntistop']?>" class="form-control" placeholder="请输入回复关键字" maxlength="30" required/>
+                                    <input type="text" id="nAntistop" value="<?=$info['nAntistop']?>" class="form-control" placeholder="请输入回复关键字" maxlength="30" <?php if(strstr($info['nAntistop'],"禁止修改")){echo "disabled";}?>/>
                                 </div>
                             </div>
                         </div>

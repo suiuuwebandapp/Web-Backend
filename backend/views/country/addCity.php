@@ -87,10 +87,10 @@
 </form>
 <!-- END PAGE LEVEL STYLES -->
 
-<script type="text/javascript" src="/assets/global/plugins/jquery-validation/dist/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/assets/global/plugins/jquery-validation/dist/additional-methods.min.js"></script>
-<script type="text/javascript" src="/assets/admin/pages/scripts/form-validation.js?<?=time().rand(100,999)?>"></script>
-<script type="text/javascript" src="/assets/global/plugins/jquery-validation/localization/messages_zh.js" ></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/dist/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/dist/additional-methods.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/scripts/form-validation.js?<?=time().rand(100,999)?>"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/localization/messages_zh.js" ></script>
 <script type="text/javascript">
     jQuery(document).ready(function() {
         FormValidation.init("addCity");

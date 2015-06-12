@@ -10,12 +10,39 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .Registered .lists li{ position:relative;  }
 .Registered .lists li label{ font-size:0.85rem; width:100%; margin-top:0.8rem; display:block; }
 .Registered .lists li input{ background:#fff; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
-.Registered .lists li .country{ background:#fff url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
+.Registered .lists li .country{ cursor:pointer;background:#fff url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
 .Registered .lists li .code{ font-size:0.85rem; position:absolute; right:0.8rem; bottom:0.8rem; color:#FF7F00; text-decoration:none;}
 .Registered .lists li .code:hover{ text-decoration:underline;}
 .Registered .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:1.8rem auto 0; text-decoration:none;}
 .Registered .btn:hover{ text-decoration:underline;}
 
+/*-----------随友注册-------------*/
+.syRegistered .lists li{ position:relative;  }
+.syRegistered .lists li label{ font-size:0.85rem; width:100%; margin-top:0.8rem; display:block; }
+.syRegistered .lists li input{ background:#fff; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.syRegistered .lists li .country{ background:#fff url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; cursor:pointer; }
+.syRegistered .lists li .row{ height:2.7rem; line-height:2.7rem; clear:both; }
+.syRegistered .lists li .row .phone{ font-size:0.85rem; color:#858585; height:2.7rem;  line-height:2.7rem; width:35%; float:left; }
+.syRegistered .lists li .row .phoneNum{ font-size:0.85rem; color:#858585; height:2.7rem;  line-height:2.7rem; width:63%; float:right; }
+.syRegistered .lists li .code{ font-size:0.85rem; position:absolute; right:0.8rem; bottom:0.8rem; color:#FF7F00; text-decoration:none;}
+.syRegistered .lists li .code:hover{ text-decoration:underline;}
+.syRegistered .lists li .box{ display:block;  height:14rem; width:100%; background:#fff;}
+.syRegistered .lists li .box .pic{ display:block;  height:100%; width:100%; background:url(../images/syreg.png) no-repeat center center;}
+.syRegistered .agr{ text-align:center; margin-top:0.8rem;}
+.syRegistered .agr #agreement{ opacity:0;}
+.syRegistered .agr #agreement+label{ display:inline-block; line-height:2rem;   padding-left:1rem; background:url(../images/check1.png) no-repeat 0 center; background-size:0.857rem;}
+.syRegistered .agr #agreement:checked+label{ background:url(../images/check2.png) no-repeat 0 center;background-size:0.857rem;}
+.syRegistered .agr a{ color:#97cbff; text-decoration:none;}
+.syRegistered .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:10px auto 20px; text-decoration:none;}
+.syRegistered .btn:hover{ text-decoration:underline;}
+	/*-----------随友注册选择国家弹层-------------*/
+.sySetcountry{ position:absolute; top:0; left:0; z-index:444; display:none;}
+.sySetcountry .navbars{ font-size:0.85rem; width:1.6rem; position:fixed; right:0; top:5rem; z-index:9; }
+.sySetcountry .navbars a{ color:#FFAB00; font-size:0.85rem; text-decoration:none; line-height:0.85rem; }
+.sySetcountry .search{ height:2.7rem; width:100%; display:block; background:#fff url(../images/top-search.png) no-repeat 0.17rem center; background-size:1.142rem 1.07rem; font-size:0.85rem; margin:0.28rem auto; padding:0 1.25rem; border:1px solid #ddd; }
+.sySetcountry .lists dt{ height:1.5rem;width:100%; display:block; background:#eee;  font-size:0.85rem; line-height:1.5rem; padding:0 0.5rem;}
+.sySetcountry .lists dd{ height:2.5rem; border-bottom:1px solid #ddd; width:100%; display:block; background:#fff;  font-size:0.85rem; line-height:2.5rem; padding:0 0.5rem;}
+/*-----------随友注册--end-------------*/
 
 /*-----------绑定-------------*/
 .bangding .lists li{ position:relative;  }
@@ -46,21 +73,21 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 .sy_order{ margin-top:2.5rem;  }
 .sy_order .box{ position:relative; padding:0.9rem 0.8rem 3rem; background:#fff;margin-top:0.5rem;  }
-.sy_order .box .top{ border-bottom:1px solid #ddd; padding-bottom:20px; }
+.sy_order .box .top{  padding-bottom:20px; }
 .sy_order .box .top .left{ float:left;  width:36%; text-align:center; position:relative; height:4rem; }
 .sy_order .box .top .right{ float:right; width:60%;  }
 .sy_order .box .top .left .user{ position:relative; width:2.58rem; height:2.58rem; border-radius:50%;display:block; margin:0 auto; overflow:hidden; margin-bottom:5px;}
 .sy_order .box .top .left .user img{ width:2.58rem;  border-radius:50%;display:block; }
 .sy_order .box .top .left .name{ word-break:break-all;   width:5rem; margin:0 auto; }
 .sy_order .box .delete{ position:absolute; height:41px; width:41px; display:block;  top:0.7rem; right:0.7rem; background:url(../images/delet02.png) no-repeat center center;  }
-
-
-
-
 .sy_order .box .top p{  line-height:1.2rem; margin-top:10px; }
 .sy_order .box .top a{ color:#97cbff; text-decoration:none;}
-.sy_order .box .down{ position:relative;}
-.sy_order .box .down p{  line-height:1.2rem; margin-top:10px; }
+.sy_order .box .down{ position:relative; margin-top:1rem;}
+.sy_order .box .down .title{ font-size:1rem; text-align:center;  line-height:1.5rem; position:relative; border-bottom:1px solid #ddd;}
+.sy_order .box .down .title02{  border-bottom:1px solid #ddd; color:#97cbff; text-align:center; line-height:2rem;}
+.sy_order .box .down dl dd{ display:table; width:100%; vertical-align:middle; border-bottom:1px solid #ddd;}
+.sy_order .box .down dl dd .time{ width:20%; text-align:center; display:table-cell; vertical-align:middle;color:#97cbff; border-right:1px solid #ddd;}
+.sy_order .box .down dl dd .detail{ width:80%; padding:0.3rem;display:table-cell; vertical-align:middle;line-height:1.2rem;}
 .sy_order .box .money{ color:#FF8000; font-size:1rem; position:absolute;  bottom:0.7rem; right:5rem;}
 .sy_order .box .money.money2{ right:9rem;}
 .sy_order .box .btn{ text-decoration:none; position:absolute;  bottom:0.7rem; right:0.7rem;text-align:center; color:#fff; background:#FF8000; display:block; width:3.9rem; height:1.78rem; line-height:1.78rem;}

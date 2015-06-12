@@ -73,7 +73,7 @@ class WechatOrderController extends CController {
         $wDetails=Yii::$app->request->post('wDetails');
 
         if(empty($orderNumber)){return json_encode(Code::statusDataReturn(Code::FAIL,"未知订单号"));}
-        if(empty($money)){return json_encode(Code::statusDataReturn(Code::FAIL,"未知金额"));}
+        //if(empty($money)){return json_encode(Code::statusDataReturn(Code::FAIL,"未知金额"));}
         if(empty($rPhone)){return json_encode(Code::statusDataReturn(Code::FAIL,"未知用户"));}
         if(empty($wDetails)){return json_encode(Code::statusDataReturn(Code::FAIL,"未知详细信息"));}
 

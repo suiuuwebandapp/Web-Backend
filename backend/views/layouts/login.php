@@ -36,8 +36,8 @@ LoginAsset::register($this);
     <meta name="MobileOptimized" content="320">
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
-    <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
-    <link href="/assets/admin/pages/css/login-soft.css" rel="stylesheet" type="text/css"/>
+    <link rel="shortcut icon" href="<?=Yii::$app->params['res_url'] ?>/assets/img/favicon.ico"/>
+    <link href="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/css/login-soft.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript">
         if (window != top) {
             top.location.href = location.href;
@@ -59,14 +59,14 @@ LoginAsset::register($this);
     var basePath = "/";
 </script>
 <!--[if lt IE 9]>
-<script type="text/javascript" src="/assets/plugins/respond.min.js"></script>
-<script type="text/javascript" src="/assets/plugins/excanvas.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/plugins/respond.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/plugins/excanvas.min.js"></script>
 <![endif]-->
 
-<script type="text/javascript" src="/assets/global/plugins/jquery-validation/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/assets/global/plugins/backstretch/jquery.backstretch.min.js"></script>
-<script type="text/javascript" src="/assets/global/plugins/select2/select2.min.js"></script>
-<script type="text/javascript" src="/assets/admin/pages/scripts/login-soft.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-validation/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/backstretch/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/scripts/login-soft.js"></script>
 <script>
     jQuery(document).ready(function () {
         Metronic.init(); // init metronic core components
@@ -75,10 +75,10 @@ LoginAsset::register($this);
         Demo.init(); // init demo features
         Login.init();
         $.backstretch([
-                "/assets/admin/pages/media/bg/1.jpg",
-                "/assets/admin/pages/media/bg/2.jpg",
-                "/assets/admin/pages/media/bg/3.jpg",
-                "/assets/admin/pages/media/bg/4.jpg"
+                "<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/media/bg/1.jpg",
+                "<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/media/bg/2.jpg",
+                "<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/media/bg/3.jpg",
+                "<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/media/bg/4.jpg"
             ], {
                 fade: 1000,
                 duration: 8000

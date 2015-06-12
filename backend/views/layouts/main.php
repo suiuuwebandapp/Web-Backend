@@ -31,9 +31,9 @@ AppAsset::register($this);
 
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
-    <link rel="shortcut icon" href="/assets/img/favicon.ico"/>
+    <link rel="shortcut icon" href="<?=Yii::$app->params['res_url'] ?>/assets/img/favicon.ico"/>
     <!-- 将Jquery 引入到前方，方便内部引用-->
-    <script type="text/javascript" src="/assets/global/plugins/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-1.11.0.min.js"></script>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -67,8 +67,8 @@ AppAsset::register($this);
 
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
-<script src="/assets/plugins/respond.min.js"></script>
-<script src="/assets/plugins/excanvas.min.js"></script>
+<script src="<?=Yii::$app->params['res_url'] ?>/assets/plugins/respond.min.js"></script>
+<script src="<?=Yii::$app->params['res_url'] ?>/assets/plugins/excanvas.min.js"></script>
 <![endif]-->
 
 

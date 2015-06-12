@@ -13,6 +13,7 @@ use common\components\LogUtils;
 use common\components\wx\WXBizMsgCrypt;
 use common\entity\UserAccess;
 use common\entity\UserBase;
+use common\entity\WeChatNewsList;
 use common\entity\WeChatUserInfo;
 use common\pay\wxpay\JsApiCall;
 use common\pay\wxpay\Log_;
@@ -92,7 +93,12 @@ class WeChatController extends SController
             //关注的
             if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_SUBSCRIBE) {
                 $this->getWechatUserInfo($fromUsername, true); //关注的时候抓取用户信息
-                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::ATTENTION_REPLY_STR);
+                $wordList = $this->newsListSer->getKeyWordInfo('禁止修改关注回复');
+                if(!empty($wordList)){
+                    $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text,$wordList['nContent']);
+                }else{
+                    $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
+                }
             } else if ($msgType == WeChat::MSGTYPE_EVENT && $objEvent == WeChat::EVENT_LOCATION) {
                 //报告地理位置
                 //$this->commonMsgTxt($this->textTpl, $fromUsername, $toUsername, $time, $msgType_text, "欢迎关注巴别鱼");
@@ -100,11 +106,11 @@ class WeChatController extends SController
                 //click 事件
                 switch ($objEventKey) {
                     case WeChat::EVENT_CLICK_KEY_ACTIVE: //21
-                        $data = $this->newsListSer->findNewsById(1);
+                        $data = $this->newsListSer->findNewsByKeyword('禁止修改活动');
                         if(!empty($data)){
                         $this->msgHandle($fromUsername, $toUsername, $time, $data);
                         }else{
-                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO."1");
+                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
                         }
                         break;
                     default :
@@ -114,26 +120,35 @@ class WeChatController extends SController
                 //发送位置签到
             } else {
                 //关于用户发送消息的
-
                 if (!empty($keyword)) {
-
-
                     if ($keyword == '更新用户资料') {
                         $this->getWechatUserInfo($fromUsername, true); //关注的时候抓取用户信息
                         $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, '更新成功');
-                    }elseif($keyword==1){
-                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 1);
-                    }
-                    else {
-                        if (
-                            ($date_H == WeChat::TIME_OUT && $date_I >= WeChat::TIME_OUT_I) ||
-                            ($date_H > WeChat::TIME_OUT)
-                        ) {
-                            $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::TIME_OUT_STRING);
-                        }else{
-                            //$this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::ATTENTION_REPLY_STR);
-                            //$this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_dkf,'');
-                            //$this->actionSendMsg($fromUsername, $keyword);
+                    }else {
+                        $bo=true;
+                        $wordList = $this->newsListSer->getKeywordList();
+                        foreach($wordList as $word)
+                        {
+                            if($keyword==$word['nAntistop'])
+                            {
+                                $bo=false;
+                                if($word['nType']==WeChatNewsList::TYPE_TEXT){
+                                    $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text,$word['nContent']);
+                                }
+                                else{
+                                    $rst = $this->newsListSer->findNewsByKeyword($keyword);
+                                    $this->msgHandle($fromUsername, $toUsername, $time, $rst);
+                                }
+                                break;
+                            }
+                        }
+                        if($bo){
+                            if (($date_H == WeChat::TIME_OUT && $date_I >= WeChat::TIME_OUT_I) ||($date_H > WeChat::TIME_OUT))
+                            {
+                                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::TIME_OUT_STRING);
+                            }else{
+                                $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_dkf,'1');
+                            }
                         }
 
                     }

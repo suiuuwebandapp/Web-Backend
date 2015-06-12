@@ -75,6 +75,19 @@ class WeChatOrderListDb extends ProxyDb{
         return $command->queryOne();
     }
 
+    public function sysOrderInfo($wOrderNumber)
+    {
+        $sql = sprintf("
+         SELECT wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,b.phone,b.areaCode,wMoney,wDetails
+          FROM wechat_order_list a
+        LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
+        WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
+        return $command->queryOne();
+    }
+
     public function deleteOrder($wOrderNumber,$userSign)
     {
         $sql = sprintf("

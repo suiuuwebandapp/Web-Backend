@@ -189,9 +189,9 @@
                     "render": function(data, type, full) {
                         var html='';
                         if(full.nStatus!=1){
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
+                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\',\''+full.nAntistop+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
                         }else{
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
+                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\',\''+full.nAntistop+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
                         }
                         html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/we-chat/get-news-info?id="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
@@ -212,8 +212,12 @@
         });
     });
 
-    function changeStatus(id,status)
+    function changeStatus(id,status,nAntistop)
     {
+        if(nAntistop.indexOf("禁止修改")!=-1){
+            alert('系统内容部使用禁止修改');
+            return;
+        }
         $.ajax({
             type:"POST",
             url:"/wechat-news/change",
