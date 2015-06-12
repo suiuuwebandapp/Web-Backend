@@ -177,6 +177,8 @@
                 <h2 class="title">随友处理</h2>
                 <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
                     <?php if($publisherInfo['publisherId']==$travelInfo['info']['createPublisherId']){continue;} ?>
+                    <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
+
                     <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">
                         <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
                         <ul class="clearfix">
@@ -190,8 +192,11 @@
                         <a href="javascript:;" tripPublisherId="<?=$publisherInfo['tripPublisherId']?>" class="sureBtn">移除</a>
                     </div>
                 <?php } ?>
-
             </div>
+            <?php }else{ ?>
+                <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
+                    <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
+                <?php } ?>
             <?php } ?>
             <div  id="buyTrip"></div>
             <form action="/user-order/add-order" method="post" id="orderForm">
@@ -299,7 +304,7 @@
                 <p class="price orange">多人预定享受优惠价格</p>
             <?php } ?>
             <input id="toBuy" type="button" value="购买路线" class="btn web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-            <input id="toApply" type="button" value="申请加入路线" class="btn web-btn6" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <input id="toApply" type="button" value="申请加入路线" class="btn web-btn6" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
             <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
                 <?php foreach ($relateRecommend as $trip) {?>
                     <?php if($trip['tripId']==$travelInfo['info']['tripId']){continue;} ?>

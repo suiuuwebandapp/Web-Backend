@@ -617,6 +617,14 @@ class TripController extends CController
         if(isset($apply)){
             return $this->redirect(['/result', 'result' => '您已经有申请正在审核，请耐心等待回复']);
         }
+        $travelPublisherList=$this->tripService->getTravelTripPublisherList($tripId);
+        if(isset($travelPublisherList)){
+            foreach($travelPublisherList as $publisher){
+                if($publisherId==$publisher['publisherId']){
+                    return $this->redirect(['/result', 'result' => '您已经在此随游之中，无须申请']);
+                }
+            }
+        }
 
         $travelTripApply=new TravelTripApply();
         $travelTripApply->tripId=$tripId;
@@ -791,6 +799,32 @@ class TripController extends CController
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
+    }
+
+
+    /**
+     * 退出随游
+     * @return string
+     */
+    public function actionQuitTrip()
+    {
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+
+        if(empty($tripId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"TripId Is Not Allow Empty"));
+        }
+
+        try{
+            $travelTripPublisher=new TravelTripPublisher();
+            $travelTripPublisher->tripId=$tripId;
+            $travelTripPublisher->tripPublisherId=$this->userPublisherObj->userPublisherId;
+
+            $this->tripService->deleteTravelTriPublisher($travelTripPublisher);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
     }
 
 

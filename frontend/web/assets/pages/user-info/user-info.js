@@ -1105,16 +1105,20 @@ function buildMyJoinTripHtml(tripList){
     var tripInfo,html='';
     for(var i=0;i<tripList.length;i++){
         tripInfo=tripList[i];
-        var count=tripInfo.count==null?'':tripInfo.count;
-        if(count!=''){ count='<a href="#" class="sure">新申请<b>'+count+'</b></a>'};
+        var info=tripInfo.info;
+        if(info.length>100){
+            info=info.substring(0,100)+"...";
+        }
+        //var count=tripInfo.count==null?'':tripInfo.count;
+        //if(count!=''){ count='<a href="#" class="sure">新申请<b>'+count+'</b></a>'};
         html+='<div class="orderList clearfix">';
         html+=' <dl class="order clearfix">';
         html+='   <dt class="title">';
         html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';
         html+='   </dt>';
         html+='   <dd>';
-        html+='       <span class="pic"><img src="'+tripInfo.titleImg+'"></span>';
-        html+='       <span>'+tripInfo.info+'</span>';
+        html+='       <span class="pic"><a href="/view-trip?trip='+tripInfo.tripId+'"><img src="'+tripInfo.titleImg+'"></a></span>';
+        html+='       <span>'+info+'</span>';
         html+='       <span>'+tripInfo.startTime+'</span>';
         html+='       <span>';
         if(tripInfo.names!=''&&tripInfo.names!=null){
@@ -1126,7 +1130,10 @@ function buildMyJoinTripHtml(tripList){
         html+='        </span>';
         html+='   </dd>';
         html+=' </dl>';
-        html+=' <p><a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>'+count+'</p>';
+        html+='<p>';
+        html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
+        html+=' <a href="javascript:;" onclick="quitTravelTrip('+tripInfo.tripId+',this)" class="sure">退出随游</a>';
+        html+='</p>';
         html+='</div>';
     }
     return html;
@@ -1519,6 +1526,34 @@ function deleteTravelTrip(tripId,obj){
                 $(obj).parent("div").remove();
             }else{
                 Main.showTip("删除随游失败");
+            }
+        }
+    });
+}
+
+function quitTravelTrip(tripId,obj)
+{
+    if(!confirm("确定要退出随游吗？")){
+        return;
+    }
+    $.ajax({
+        url :'/trip/quit-trip',
+        type:'post',
+        data:{
+            tripId:tripId,
+            _csrf: $('input[name="_csrf"]').val()
+
+        },
+        error:function(){
+            Main.showTip("退出随游失败");
+        },
+        success:function(data){
+            var datas=eval('('+data+')');
+            if(datas.status==1){
+                Main.showTip("退出随游成功");
+                $(obj).parent().parent().remove();
+            }else{
+                Main.showTip("退出随游失败");
             }
         }
     });

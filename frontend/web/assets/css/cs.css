@@ -148,18 +148,19 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .sosoCon .nav li a:hover{ color:#FFA54C;border-bottom:1px solid #ffa54c; }
 .sosoCon .nav li a.active{ color:#FFA54C; border-bottom:1px solid #ffa54c; }
 
-.sosoCon .slist .ul1 li{ overflow:hidden;}
-.sosoCon .slist .ul1 li .box{display: block;
-    height: 260px;
-    overflow: hidden;
-    width: 100% ; float:none;}
-.sosoCon .slist .ul1 li .box img{ width:100%; display:block; }
-.sosoCon .slist{ display:none; height: auto;
-    margin: 10px auto 0;}
-.sosoCon .slist .ul1{margin: 0 auto;
-    overflow: hidden;
-    width: 1216px;}
-.sosoCon .slist .pingjia{ text-align:right; padding:0 10px;}
+.sosoCon .slist{margin:0px auto;}
+.sosoCon .slist ul{width:1208px; height:auto; overflow:hidden;}
+.sosoCon .slist ul li{width:285px; height:365px; float:left; position:relative; background:#fff; margin:20px 0px 0px 14px;}
+.sosoCon .slist ul li:hover{ box-shadow:0 0 8px rgba(0,0,0,0.4);}
+.sosoCon .slist ul li a img{width:285px; height:260px; overflow:hidden;}
+.sosoCon .slist ul li .posi{ width:275px; height:60px; position:absolute; left:10px; top:225px; }
+.sosoCon .slist ul li .posi img{ width:60px; height:60px; float:left; border-radius:360px;}
+.sosoCon .slist ul li .posi span{ float:left; margin-left:5px;width:160px; height:20px; margin-top:36px; line-height:20px;}
+.sosoCon .slist ul li div{margin-top:20px;}
+.sosoCon .slist ul li div h4{ line-height:24px; height:auto; padding:0 25px; text-align:center;}
+.sosoCon .slist ul li div .xing{ padding:0 25px; width:235px; position:absolute; left:0; bottom:8px;}
+.sosoCon .slist ul li div .xing span{ width:14px; height:14px; }
+.sosoCon .slist ul li div .xing b{color:#FFA54C; float:right;}
 
 .sosoCon .szhuan{height: auto;
     margin: 35px auto 0; display:none;}

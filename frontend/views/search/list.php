@@ -31,14 +31,14 @@
     </ul>
     <!--list开始-->
     <div id="trip_div" class="slist w1200 TabCon clearfix" style="display:block;">
-        <ul id="ul1">
+        <ul id="tripUl">
 
         </ul>
         <a href="javascript:;" class="btn8" id="showTripMore">显示更多</a>
 
     </div>
     <div id="article_div" class="szhuan w1200 TabCon clearfix">
-        <ul id="ul2" style="overflow: hidden">
+        <ul id="articleUl" style="overflow: hidden">
         </ul>
         <a href="javascript:;" class="btn8" id="showArticleMore">显示更多</a>
     </div>
@@ -60,7 +60,6 @@
             currentTripPage=1;
             getSearchList();
         });
-
 
 
         $("#showTripMore").bind("click",function(){
@@ -168,9 +167,9 @@
 
         }
         if(currentArticlePage==1){
-            $("#ul2").html(html);
+            $("#articleUl").html(html);
         }else{
-            $("#ul2").append(html);
+            $("#articleUl").append(html);
         }
 
         if(articleResult.totalPage==currentTripPage){
@@ -204,45 +203,42 @@
 
             }
 
-            html+='<li><div class="box"><img src="'+trip.titleImg+'" alt="" width="284px" height="260px"></div>';
-            html+='<a target="_blank" href="/view-trip/info?trip='+trip.tripId+'"><div class="zhezhao">';
-            html+='<p>'+intro+'</p>';
-            html+='<p class="pingjia">评价';
+            html+='<li>' +
+            '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="'+trip.titleImg+'" data-original="'+trip.titleImg+'" alt=""></a>' +
+            '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
+            '<div><h4>'+title+'</h4><p class="xing">';
             if(trip.score>=2){
-                html+='<img src="/assets/images/start1.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
             }else{
-                html+='<img src="/assets/images/start2.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
             }
             if(trip.score>=4){
-                html+='<img src="/assets/images/start1.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
             }else{
-                html+='<img src="/assets/images/start2.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
             }
             if(trip.score>=6){
-                html+='<img src="/assets/images/start1.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
             }else{
-                html+='<img src="/assets/images/start2.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
             }
             if(trip.score>=8){
-                html+='<img src="/assets/images/start1.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
             }else{
-                html+='<img src="/assets/images/start2.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
             }
             if(trip.score>=10){
-                html+='<img src="/assets/images/start1.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
             }else{
-                html+='<img src="/assets/images/start2.fw.png" alt="">';
+                html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
             }
-            html+='<span>基础价格：<b>'+trip.basePrice+'</b></span></p>';
-            html+='</div></a>';
-            html+='<p class="user01"><img src="'+trip.headImg+'" alt="" width="40" height="40"><font>'+trip.nickname+'</font></p>';
-            html+='<h4>'+title+'</h4>';
-            html+='</li>';
+            html+='<b>￥'+trip.basePrice+'</b>';
+            html+='</p></div></li>';
         }
         if(currentTripPage==1){
-            $("#ul1").html(html);
+            $("#tripUl").html(html);
         }else{
-            $("#ul1").append(html);
+            $("#tripUl").append(html);
         }
 
         if(tripResult.totalPage==currentTripPage){

@@ -8,7 +8,17 @@
  */
 
 ?>
-
+<style>
+    .trip_info{
+        display: block;
+    }
+    .pic img{
+        margin-top: 5px;
+    }
+    .title{
+        font-weight: bold;
+    }
+</style>
 <div class="syApply clearfix">
     <div class="user">
         <div class="user-name">
@@ -39,6 +49,8 @@
         </div>
         <div class="right">
             <h2 class="title"><?=$tripInfo->title?></h2>
+            <span class="trip_info">随游 <?=$tripInfo->startTime?>-<?=$tripInfo->endTime?></span>
+            <span class="trip_info">随游时长 <?=$tripInfo->startTime?>-<?=$tripInfo->endTime?></span>
             <p>
                 <?= str_replace(" ","&nbsp;",str_replace("\n","</br>",$tripInfo->info));?>
             </p>
