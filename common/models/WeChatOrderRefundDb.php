@@ -37,7 +37,7 @@ class WeChatOrderRefundDb extends ProxyDb {
     public function findRefundInfoByOrderNumber($orderNumber)
     {
         $sql = sprintf("
-            SELECT a.*,b.nickName,c.nickName as rName FROM wechat_order_refund a
+            SELECT a.*,b.nickname as nickName,c.nickname as rName FROM wechat_order_refund a
             LEFT JOIN user_base b ON a.userSign=b.userSign
             LEFT JOIN sys_user c ON a.updateUserSign=c.userSign
              WHERE orderNumber=:orderNumber
@@ -56,14 +56,14 @@ class WeChatOrderRefundDb extends ProxyDb {
         WHERE 1=1 AND isDel=0
         ");
         if(!empty($searchText)){
-            $sql.=" AND (b.nickName like :search OR a.orderNumber like :search ) ";
+            $sql.=" AND (b.nickname like :search OR a.orderNumber like :search ) ";
             $this->setParam("search","%".$searchText."%");
         }
         if(!empty($status)){
             $sql.=" AND a.status=:status ";
             $this->setParam("status",$status);
         }
-        $this->setSelectInfo('a.*,b.nickName,c.nickName as rName');
+        $this->setSelectInfo('a.*,b.nickname as nickName,c.nickname as rName');
         $this->setSql($sql);
         return $this->find($page);
     }

@@ -65,7 +65,7 @@ class WeChatController extends SController
     //todo @test
     public function actionTest()
     {
-
+       //return $this->render("test");
         //var_dump( $this->getWechatUserInfo('oGfdst0AA7SAThQlEscjbHjbbzp8', true)); //关注的时候抓取用户信息
     }
 
@@ -602,7 +602,6 @@ class WeChatController extends SController
         if (empty($access_token)) {
             $this->actionGetToken();
             $access_token = Yii::$app->redis->get(WeChat::TOKEN_FILE_NAME);
-
             //创建菜单  只有当token 为空的时候,又重写创建的时候,再重写创建菜单
             $this->weChatSer->createMenuInfo($access_token);
         }

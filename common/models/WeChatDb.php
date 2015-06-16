@@ -116,5 +116,21 @@ class WeChatDb extends ProxyDb{
         return $command->execute();
     }
 
+    public function getWeChatOrderList($page,$searchText)
+    {
+        $sql=sprintf("
+        FROM wechat_user_info a
+        LEFT JOIN user_base b ON a.userSign=b.userSign
+         WHERE 1=1
+        ");
+        if(!empty($searchText)){
+            $sql.=" AND (b.nickname like :search OR a.v_nickname like :search OR a.openId like :search ) ";
+            $this->setParam("search","%".$searchText."%");
+        }
+        $this->setSelectInfo('a.*,b.nickname');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
 
 }

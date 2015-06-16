@@ -84,6 +84,9 @@
                         <a href="#~/user-base/to-user-list"> 普通用户</a>
                     </li>
                     <li>
+                        <a href="#~/user-base/to-wechat-user-list">微信用户</a>
+                    </li>
+                    <li>
                         <a href="index_horizontal_menu.html"> 随友管理</a>
                     </li>
                     <li>

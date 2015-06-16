@@ -218,7 +218,7 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
         LEFT JOIN user_base c ON a.wUserSign=c.userSign WHERE 1=1 AND isDel=:isDel
         ");
         if(!empty($searchText)){
-            $sql.=" AND (b.nickName like :search OR c.nickName like :search OR a.wPhone like :search OR a.wOrderNumber like :search ) ";
+            $sql.=" AND (b.nickname like :search OR c.nickname like :search OR a.wPhone like :search OR a.wOrderNumber like :search ) ";
             $this->setParam("search","%".$searchText."%");
         }
         if(!empty($status)){
@@ -230,14 +230,14 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
             $this->setParam("wOrderNumber",$orderNumber);
         }*/
         $this->setParam("isDel",$isDel);
-        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wPhone,wLastTime,wUserNumber,c.headImg,c.nickName,wMoney,wDetails,b.headImg as rHeadImg,b.nickName as rNickName');
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wPhone,wLastTime,wUserNumber,c.headImg,c.nickname as nickName,wMoney,wDetails,b.headImg as rHeadImg,b.nickName as rNickName');
         $this->setSql($sql);
         return $this->find($page);
     }
     public function sysFindWeChatOrderInfoByNumber($wOrderNumber)
     {
         $sql = sprintf("
-           SELECT a.*,c.headImg,c.nickName,b.headImg as rHeadImg,b.nickName as rNickName,b.phone as rPhone
+           SELECT a.*,c.headImg,c.nickname as nickName,b.headImg as rHeadImg,b.nickname as rNickName,b.phone as rPhone
             FROM wechat_order_list a
             LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
             LEFT JOIN user_base c ON a.wUserSign=c.userSign
@@ -283,14 +283,14 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
         LEFT JOIN user_base c ON b.wUserSign=c.userSign WHERE 1=1
         ");
         if(!empty($searchText)){
-            $sql.=" AND (c.nickName like :search OR a.orderNumber like :search) ";
+            $sql.=" AND (c.nickname like :search OR a.orderNumber like :search) ";
             $this->setParam("search","%".$searchText."%");
         }
         if(!empty($type)){
             $sql.=" AND a.type=:type ";
             $this->setParam("type",$type);
         }
-        $this->setSelectInfo('a.*,c.nickName,b.wStatus');
+        $this->setSelectInfo('a.*,c.nickname as nickName,b.wStatus');
         $this->setSql($sql);
         return $this->find($page);
     }

@@ -104,7 +104,7 @@
                     "width":"150px",
                     "render": function(data, type, full) {
                         if(data!=""&&data!=null){
-                            return '<a  class="titleImgGroup"  href="<?php echo Yii::$app->params["app_circle_img_url"]; ?>'+data+'"><img alt="" src="<?php echo Yii::$app->params["app_circle_img_url"]; ?>'+data+'" style="max-height:50px;"/></a>'
+                            return '<a  class="titleImgGroup"  href="'+data+'"><img alt="" src="'+data+'" style="max-height:50px;"/></a>'
                         }else
                         {
                             return "暂无封皮";

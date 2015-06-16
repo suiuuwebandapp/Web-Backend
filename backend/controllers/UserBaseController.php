@@ -13,19 +13,25 @@ namespace backend\controllers;
 use backend\components\Page;
 use backend\components\TableResult;
 use backend\services\UserBaseService;
+use backend\services\WechatService;
 use common\components\Code;
+use common\components\Common;
 use common\entity\UserBase;
 use common\entity\UserPublisher;
+use common\entity\WeChat;
+use common\entity\WeChatUserInfo;
 use yii\base\Exception;
 
 class UserBaseController extends CController{
 
 
     private $userBaserService;
+    private $wechatService;
 
     public function __construct($id,$module)
     {
         $this->userBaserService=new UserBaseService();
+        $this->wechatService=new WechatService();
         parent::__construct($id, $module);
 
     }
@@ -100,7 +106,58 @@ class UserBaseController extends CController{
         return $this->render("userList");
     }
 
+    /**
+     * 跳转到微信用户列表
+     * @return string
+     */
+    public function actionToWechatUserList()
+    {
+        return $this->render("wechatUserList");
+    }
+    /**
+     * 微信用户列表(AJAX)
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionWechatUserList()
+    {
+        $search=\Yii::$app->request->get("searchText","");
 
+        $page=new Page(\Yii::$app->request);
+
+        $page= $this->wechatService->getWechatUserBaseList($page,$search);
+
+        $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());
+
+        echo json_encode($tableResult);
+    }
+
+    public function actionUpdateWechatUser()
+    {
+        $openId= \Yii::$app->request->post('openId');
+        $access_token = \Yii::$app->redis->get(WeChat::TOKEN_FILE_NAME);
+        $access_token = 'uexkDUMSNLuDRtH7tOXB75lCjR2YuE3_tyM9h9WdCW_PUITLFHerc4us1OkNTtcYH-Pzth8Pf7ZLuJMRQOvCK23Psg7m_LDa3QB3oYoloUk';
+        if(empty($access_token))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL,'token 已经过期'));
+        }
+        $url = WeChat::GET_USER_INFO . $access_token . "&openid=" . $openId . "&lang=zh_CN";
+
+        $rst =  Common::CurlHandel($url);
+        if ($rst['status'] == Code::SUCCESS) {
+            $rstJson = json_decode($rst['data'],true);
+            if (isset($rstJson['nickname'])) {
+                $weChatUserInfo=new WeChatUserInfo();
+                $weChatUserInfo->openId=$openId;
+                $WeChatRst = $this->wechatService->getUserInfo($weChatUserInfo);
+                $this->wechatService->upDateWeChatInfo($rstJson,$WeChatRst['userSign']);
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,'更新成功'));
+            } else {
+                return json_encode(Code::statusDataReturn(Code::FAIL,'未知的用户信息'));
+            }
+        }
+        return Code::statusDataReturn(Code::FAIL);
+    }
     /**
      * 用户详情
      * @return string

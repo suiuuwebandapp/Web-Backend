@@ -299,7 +299,8 @@ class CircleController extends AController{
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法查看未知文章'));
             }
             $data=$this->CircleService->getArticleInfoById($articleId,$userSign,$page);
-            return $this->renderPartial('info',['data'=> $data,'pr'=>Yii::$app->params['app_circle_article_img']]);
+            //Yii::$app->params['app_circle_article_img']
+            return $this->renderPartial('info',['data'=> $data,'pr'=>'']);
         }catch (Exception $e){
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
