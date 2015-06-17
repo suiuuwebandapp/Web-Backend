@@ -414,5 +414,52 @@ class UserOrderDb extends ProxyDb
     {}
 
 
+    /**
+     * 后台获取订单列表
+     * @param Page $page
+     * @param $search
+     * @param $beginTime
+     * @param $endTime
+     * @param $status
+     * @return Page
+     */
+    public function getOrderList(Page $page,$search,$beginTime,$endTime,$status)
+    {
+        $sql=sprintf("
+            FROM user_order_info uoi
+            LEFT JOIN user_base ub ON uoi.userId=ub.userSign
+            WHERE 1=1
+        ");
+
+        if(!empty($search)){
+            $sql.=' AND  ( uoi.orderNumber=:search OR userPhone=:search OR userNickname like :search  )';
+            $this->setParam('search',$search.'%');
+        }
+
+        if(!empty($beginTime)&&!empty($endTime)){
+            $sql.=' AND  uoi.createTime >=:beginTime AND uoi.endTime <=:endTime';
+            $this->setParam('beginTime',$beginTime);
+            $this->setParam('endTime',$endTime);
+        }else if(empty($beginTime)&&!empty($endTime)){
+            $sql.=' AND uoi.endTime <=:endTime';
+            $this->setParam('endTime',$endTime);
+        }
+        else if(!empty($beginTime)&&empty($endTime)){
+            $sql.=' AND uoi.beginTime <=:beginTime';
+            $this->setParam('beginTime',$beginTime);
+        }
+
+        if($status!==""){
+            $sql.=' AND uoi.status=:status ';
+            $this->setParam('status',$status);
+        }
+        $this->setSelectInfo(' uoi.*,ub.nickname AS userNickname,ub.phone AS userPhone ');
+        $this->setSql($sql);
+        return $this->find($page);
+
+    }
+
+
+
 
 }
