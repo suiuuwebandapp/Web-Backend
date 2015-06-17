@@ -142,6 +142,18 @@
             </li>
             <li class="menu_top">
                 <a href="javascript:;">
+                    <i class="icon-basket"></i>
+                    <span class="title"> 订单管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#~/trip-order/list"> 订单列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu_top">
+                <a href="javascript:;">
                     <i class="icon-globe"></i>
                     <span class="title"> 微信消息</span>
                     <span class="arrow"></span>

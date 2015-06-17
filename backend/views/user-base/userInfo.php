@@ -81,54 +81,67 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                                <label class="control-label col-md-4">昵称:</label>
+                                                <label class="control-label col-md-4">职业:</label>
                                                 <div class="col-md-8">
-                                                    <p class="form-control-static"><?=$userBase['nickname']?></p>
+                                                    <p class="form-control-static"><?=$userBase['profession']?></p>
                                                 </div>
                                         </div>
                                         <!--/span-->
                                         <div class="col-md-6">
-                                                <label class="control-label col-md-4">性别:</label>
+                                                <label class="control-label col-md-4">爱好:</label>
                                                 <div class="col-md-8">
-                                                    <p class="form-control-static"><?=$userBase['sex']?></p>
+                                                    <p class="form-control-static"><?=$userBase['hobby']?></p>
                                                 </div>
                                         </div>
                                         <!--/span-->
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                                <label class="control-label col-md-4">手机:</label>
-                                                <div class="col-md-8">
-                                                    <p class="form-control-static"><?=$userBase['phone']?></p>
-                                                </div>
+                                            <label class="control-label col-md-4">国家城市:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"><?=$userBase['nickname']?></p>
+                                            </div>
                                         </div>
                                         <!--/span-->
                                         <div class="col-md-6">
-                                                <label class="control-label col-md-4">邮箱:</label>
-                                                <div class="col-md-8">
-                                                    <p class="form-control-static"><?=$userBase['email']?></p>
-                                                </div>
+                                            <label class="control-label col-md-4">随游次数:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"><?=$userBase['travelCount']?></p>
+                                            </div>
                                         </div>
                                         <!--/span-->
                                     </div>
-                                    <h3 class="form-section">Address</h3>
                                     <div class="row">
                                         <div class="col-md-6">
-                                                <label class="control-label col-md-4">Address:</label>
-                                                <div class="col-md-8">
-                                                    <p class="form-control-static">
-                                                        #24 Sun Park Avenue, Rolton Str
-                                                    </p>
-                                                </div>
+                                            <label class="control-label col-md-4">注册时间:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"><?=$userBase['registerTime']?></p>
+                                            </div>
                                         </div>
+                                        <!--/span-->
                                         <div class="col-md-6">
-                                                <label class="control-label col-md-4">Address:</label>
-                                                <div class="col-md-8">
-                                                    <p class="form-control-static">
-                                                        #24 Sun Park Avenue, Rolton Str
-                                                    </p>
-                                                </div>
+                                            <label class="control-label col-md-4">最后登录:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"><?=$userBase['lastLoginTime']?></p>
+                                            </div>
                                         </div>
+                                        <!--/span-->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4">注册IP:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"><?=$userBase['registerIp']?></p>
+                                            </div>
+                                        </div>
+                                        <!--/span-->
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4">登录IP:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"><?=$userBase['lastLoginIp']?></p>
+                                            </div>
+                                        </div>
+                                        <!--/span-->
                                     </div>
                                 </div>
                                 <!-- END FORM-->

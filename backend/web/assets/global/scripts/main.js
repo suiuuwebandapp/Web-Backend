@@ -12,6 +12,7 @@ var Main = function() {
 	var modalConfirm = "#modalConfirm";
 	var messageTitle = "系统提示信息";
 
+
     var initMenuOpen=function(currentLi){
         //初始化Head
         //初始化Menu
@@ -408,7 +409,10 @@ var ModuleUrl = {
 	editMovieDownloadUrlId : '5fa9973031b548dfbb68318c91688020',
 	editMovieRoleUrlId     : '692cf956b9f84fac81655b6f28115776'
 	
-}
+};
+var FrontUrl={
+    'tripUrl' :'http://www.suiuu.com/view-trip/info?trip='
+};
 
 /*******************************************************************************
  * Usage
