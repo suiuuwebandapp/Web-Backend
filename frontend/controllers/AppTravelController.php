@@ -833,6 +833,7 @@ class AppTravelController extends AController
         if(empty($userSign)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未知的用户'));
         }
+        //$userSign='a4c1406ff4cc382389f19bf6ec3e55c1';
         try{
             $publisherService=new PublisherService();
             $createPublisherInfo = $publisherService->findUserPublisherByUserSign($userSign);
@@ -840,8 +841,8 @@ class AppTravelController extends AController
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未知的随友'));
             }
             $userPublisherId=$createPublisherInfo->userPublisherId;
-            $list=$this->travelSer->getMyTripList($userPublisherId);
-            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+            $myList=$this->travelSer->getMyTripList($userPublisherId);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$myList));
         }catch (Exception $e){
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
@@ -854,9 +855,7 @@ class AppTravelController extends AController
     public function actionMyJoinTripList()
     {
         $this->loginValid();
-        if(!$this->userObj->isPublisher){
-            return json_encode(Code::statusDataReturn(Code::FAIL,"User Is Not Publisher"));
-        }
+
         $userSign=trim(\Yii::$app->request->post("userSign", ""));
         if(empty($userSign)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未知的用户'));
@@ -1008,29 +1007,37 @@ class AppTravelController extends AController
      */
     public function actionAddOrder()
     {
+        $this->loginValid();
         $tripId=trim(\Yii::$app->request->post("tripId", ""));
         $peopleCount=trim(\Yii::$app->request->post("peopleCount", ""));
         $beginDate=trim(\Yii::$app->request->post("beginDate", ""));
         $startTime=trim(\Yii::$app->request->post("startTime", ""));
         $serviceIds=trim(\Yii::$app->request->post("serviceIds", ""));
+        /*$tripId=41;
+        $peopleCount=1;
+        $beginDate="2015-06-22";
+        $startTime="06:20 PM";*/
 
         if(empty($tripId)){
-            return Code::statusDataReturn(Code::PARAMS_ERROR,"随游编号不正确");
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"随游编号不正确"));
         }
         if(empty($peopleCount)||$peopleCount==0){
-            return Code::statusDataReturn(Code::PARAMS_ERROR,"出行人数不正确");
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"出行人数不正确"));
         }
         if(empty($beginDate)){
-            return Code::statusDataReturn(Code::PARAMS_ERROR,"行程日期不正确");
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"行程日期不正确"));
         }
         if(empty($startTime)){
-            return Code::statusDataReturn(Code::PARAMS_ERROR,"起始时间不正确");
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"起始时间不正确"));
         }
+
         if(strtotime($beginDate)<time()){
-            return Code::statusDataReturn(Code::PARAMS_ERROR,"无效的出行日期");
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的出行日期"));
         }
+
         if(strtotime($beginDate)==strtotime(date('y-M-d'),time())){
             //TODO 判断如果是当天，需要判断当前时间是否正确  并且判断服务时间
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"时间不正确"));
         }
         //判断开始时间是否小于当前时间
 
@@ -1049,7 +1056,7 @@ class AppTravelController extends AController
             $basePrice=0;
 
             if($peopleCount>$tripInfo['maxUserCount']){
-                return Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count"));
             }
             if($tripInfo['basePriceType']==TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT){
                 $basePrice=$tripInfo['basePrice'];
@@ -1094,7 +1101,7 @@ class AppTravelController extends AController
             $userOrderInfo->tripId=$tripInfo['tripId'];
             $userOrderInfo->userId=$this->userObj->userSign;
             $userOrderInfo->beginDate=$beginDate;
-            $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,1);
+            $userOrderInfo->startTime=$startTime;
             $userOrderInfo->personCount=$peopleCount;
             $userOrderInfo->serviceInfo=$serviceInfo;
             $userOrderInfo->basePrice=$tripInfo['basePrice'];
@@ -1107,10 +1114,10 @@ class AppTravelController extends AController
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
             $sysMessageUtils->sendNewOrderMessage($tripPublisherList,$userOrderInfo->orderNumber);
-            return Code::statusDataReturn(Code::SUCCESS,$userOrderInfo->orderNumber);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$userOrderInfo->orderNumber));
         }catch (Exception $e){
             LogUtils::log($e);
-            return Code::statusDataReturn(Code::PARAMS_ERROR,"系统未知异常");
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"系统未知异常"));
         }
     }
 

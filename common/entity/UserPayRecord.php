@@ -14,7 +14,7 @@ class UserPayRecord {
 
     const PAY_RECORD_TYPE_ALIPAY=1;
     const PAY_RECORD_TYPE_WXPAY=2;
-
+    const PAY_RECORD_TYPE_PINGPP=3;
     public $payId;
 
     public $orderNumber;

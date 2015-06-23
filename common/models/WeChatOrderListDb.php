@@ -213,7 +213,7 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
     public function getWeChatOrderList($page,$searchText,$status,$isDel)
     {
         $sql=sprintf("
-        FROM wechat_order_list a
+        FROM (SELECT * FROM wechat_order_list ORDER BY wCreateTime desc)  a
         LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
         LEFT JOIN user_base c ON a.wUserSign=c.userSign WHERE 1=1 AND isDel=:isDel
         ");

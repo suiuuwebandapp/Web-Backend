@@ -10,6 +10,7 @@
 namespace frontend\controllers;
 
 use common\components\Code;
+use common\components\Common;
 use common\components\LogUtils;
 use common\entity\UserOrderInfo;
 use common\entity\UserPayRecord;
@@ -93,10 +94,10 @@ class PayReturnController extends Controller {
                         $weChatOrderSer=new WeChatOrderListService();
                         $weChatOrderSer->orderPayEnd($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_ALIPAY,$money);
 
-                        echo "success";		//请不要修改或删除
+                        return "success";		//请不要修改或删除
                     }catch (Exception $e){
                         //验证失败
-                        echo "fail";
+                        return "fail";
                     }
                 }else{
                 try{
@@ -106,11 +107,11 @@ class PayReturnController extends Controller {
                     \Yii::$app->redis->set(Code::USER_ORDER_PAY_STATS.$out_trade_no,1);
                     \Yii::$app->redis->expire(Code::USER_ORDER_PAY_STATS.$out_trade_no,600);//设定保留时长 10分钟（600秒）
 
-                    echo "success";		//请不要修改或删除
+                    return "success";		//请不要修改或删除
                 }catch (Exception $e){
                     LogUtils::log($e);
                     //验证失败
-                    echo "fail";
+                    return "fail";
                 }
                 }
             }
@@ -204,8 +205,51 @@ class PayReturnController extends Controller {
         }
     }
 
+    public function actionPingppReturn()
+    {
+        $raw_data=file_get_contents("php://input");
+        $input_data = json_decode($raw_data, true);
+        $headers = \Yii::$app->request->headers;
+        $signature = $headers->get('x-pingplusplus-signature');
+        $pub_key_path = "../../common/pay/pingpp/lib/rsa_public_key.pem";
+        $pub_key_contents = file_get_contents($pub_key_path);
+        if(empty($signature)||empty($pub_key_contents))
+        {
+            echo 'verification failed';
+            exit;
+        }
+        $result = openssl_verify($raw_data, base64_decode($signature), $pub_key_contents, OPENSSL_ALGO_SHA256);
+        $log_ = new Log_();
+        $log_name="pingppLog.txt";//log文件路径
+        if ($result === 1) {
+            if($input_data['type'] == 'charge.succeeded'&& $input_data['data']['object']['paid'] == true)
+            {
+                try{
+                    $log_->log_result($log_name,"【ping++支付成功】:\n".$raw_data."|"."#."."\n");
+                    $orderNumber =$input_data['data']['object']['order_no'];
+                    $trade_no=$input_data['data']['object']['id'];
+                    $userPayService=new UserPayService();
+                    $rst=$userPayService->addUserPay($orderNumber,$trade_no,UserPayRecord::PAY_RECORD_TYPE_PINGPP,UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS);
+                    \Yii::$app->redis->set(Code::USER_ORDER_PAY_STATS.$orderNumber,1);
+                    \Yii::$app->redis->expire(Code::USER_ORDER_PAY_STATS.$orderNumber,600);//设定保留时长 10分钟（600秒）
+                }catch (Exception $e){
+                    LogUtils::log($e);
+                }
+                http_response_code(200);// PHP 5.4 or greater
+            }else{
+                $log_->log_result($log_name,"【ping++支付失败】:\n".$raw_data."|".$input_data['type']."#"."\n");
+            }
+        } elseif ($result === 0) {
+            $log_->log_result($log_name,"【ping++支付失败】:\n".$raw_data."|"."#"."\n");
+        } else {
+            $log_->log_result($log_name,"【ping++支付错误】:\n".$raw_data."|"."#"."\n");
+        }
+        exit;
+    }
+    public function actionPingppReturnError()
+    {
 
-
+    }
     public function actionWarning()
     {
         include_once("../../common/pay/wxpay/log_.php");
@@ -214,4 +258,8 @@ class PayReturnController extends Controller {
         $log_name="wx_warning.txt";//log文件路径
         $log_->log_result($log_name,"【警告】:\n".$str."\n");
     }
+
+
+
+
 }

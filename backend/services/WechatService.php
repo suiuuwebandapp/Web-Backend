@@ -73,7 +73,7 @@ class WechatService extends BaseDb{
             $wechatDb=new WeChatDb($conn);
             return $wechatDb->updateWeChatUserInfo($weChatUserInfo);
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception('更新用户信息异常', Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -103,4 +103,13 @@ class WechatService extends BaseDb{
         $weChatUserInfo->v_groupid=isset($arr['groupid'])?$arr['groupid']:0;
         return $weChatUserInfo;
     }
+
+    /*private function emojiDelete($str)
+    {
+
+        $tmpStr = json_encode($str); //暴露出unicode  \ue052
+        $tmpStr = preg_replace("/\ue[0-9a-f]{3})/","",$tmpStr); //将emoji的unicode留下，其他不动
+        $text = json_decode($tmpStr);
+       return $text;
+    }*/
 }

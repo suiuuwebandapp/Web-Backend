@@ -136,7 +136,7 @@ class UserBaseController extends CController{
     {
         $openId= \Yii::$app->request->post('openId');
         $access_token = \Yii::$app->redis->get(WeChat::TOKEN_FILE_NAME);
-        $access_token = 'uexkDUMSNLuDRtH7tOXB75lCjR2YuE3_tyM9h9WdCW_PUITLFHerc4us1OkNTtcYH-Pzth8Pf7ZLuJMRQOvCK23Psg7m_LDa3QB3oYoloUk';
+        //$access_token = 'lOQH7VeXmhtnRtlXpJ732qjIcIHHq0Ejmr3jKK3L6NbLtJKyx4xASM_Lxw6zjoQ_1Kjh-gj0mau3s-o-AfONUFa0nuRJ1iSHrtGK09c4weg';
         if(empty($access_token))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL,'token 已经过期'));

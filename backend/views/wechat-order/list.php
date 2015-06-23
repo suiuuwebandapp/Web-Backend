@@ -49,6 +49,7 @@
                     <thead class="flip-content">
                     <tr>
                         <th>订单号</th>
+                        <th>下单时间</th>
                         <th>城市</th>
                         <th>出发时间</th>
                         <th>人数</th>
@@ -94,8 +95,10 @@
             'tableColumn':[
                 {"targets": [0],"data": "wOrderNumber",
                     "width":"120px","bSortable": false},
+                {"targets": [1],"data": "wCreateTime",
+                    "width":"150px","bSortable": false},
                 {
-                    "targets": [1],
+                    "targets": [2],
                     "data": "wOrderSite",
                     "width":"120px",
                     "bSortable": false,
@@ -108,7 +111,7 @@
                     }
                 },
                 {
-                    "targets": [2],
+                    "targets": [3],
                     "data": "wOrderTimeList",
                     "width":"120px",
                     "bSortable": false,
@@ -121,7 +124,7 @@
                     }
                 },
                 {
-                    "targets": [3],
+                    "targets": [4],
                     "data": "wUserNumber",
                     "bSortable": false,
                     "width":"50px",
@@ -134,12 +137,12 @@
                     }
                 },
 
-                {"targets": [4],"data": "wMoney","bSortable": false,"width":"50px",
+                {"targets": [5],"data": "wMoney","bSortable": false,"width":"50px",
                     "render": function(data, type, full) {
                         return data;
                     }
                 },
-                {"targets": [5],"data": "nickName","bSortable": false,
+                {"targets": [6],"data": "nickName","bSortable": false,
                     "width":"80px",
                     "render": function(data, type, full) {
                         if(data==null)
@@ -149,10 +152,10 @@
                         return data.length<10?data:data.substring(0,10);
                     }
                 },
-                {"targets": [6],"data": "wPhone","bSortable": false,
+                {"targets": [7],"data": "wPhone","bSortable": false,
                     "width":"80px"
                 },
-                {"targets": [7],"data": "rNickName","bSortable": false,
+                {"targets": [8],"data": "rNickName","bSortable": false,
                     "width":"80px",
                     "render": function(data, type, full) {
                         if(data==null)
@@ -163,7 +166,7 @@
                     }
                 },
                 {
-                    "targets": [8],
+                    "targets": [9],
                     "data": "wStatus",
                     "bSortable": false,
                     "width":"100px",
@@ -188,7 +191,7 @@
                     }
                 },
                 {
-                    "targets": [9],
+                    "targets": [10],
                     "data": "wOrderNumber",
                     "bSortable": false,
                     "width":"300px",

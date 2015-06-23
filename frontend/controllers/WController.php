@@ -52,7 +52,11 @@ class WController extends SController {
                 }
 
             }else {
-                $currentUser=\Yii::$app->session->get(Yii::$app->params['weChatSign']);
+                $session=\Yii::$app->session->get(Yii::$app->params['weChatSign']);
+                if(!empty($session))
+                {
+                    $currentUser=json_decode($session);
+                }
                 if (isset($currentUser)) {
                     if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
                         $this->userObj=new UserBase();
@@ -91,7 +95,11 @@ class WController extends SController {
                 exit;
             }
         }else {
-            $currentUser=\Yii::$app->session->get(Yii::$app->params['weChatSign']);
+            $session=\Yii::$app->session->get(Yii::$app->params['weChatSign']);
+            if(!empty($session))
+            {
+                $currentUser=json_decode($session);
+            }
             if (isset($currentUser)) {
                 if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
                     $this->userObj=new UserBase();

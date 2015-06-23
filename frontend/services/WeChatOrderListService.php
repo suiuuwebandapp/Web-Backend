@@ -128,6 +128,11 @@ class WeChatOrderListService extends BaseDb{
         try {
             $conn = $this->getConnection();
             $this->weChatOrderListDb=new WeChatOrderListDb($conn);
+            $orderInfo = $this->weChatOrderListDb->findWeChatOrderInfoByNumber($wOrderNumber,null);
+            if($orderInfo['wStatus']!=WeChatOrderList::STATUS_PROCESSED)
+            {
+                throw new Exception('变更订单状态异常');
+            }
             $i=$this->weChatOrderListDb->orderPayEnd($wOrderNumber);
             if($i==1)
             {
