@@ -13,12 +13,15 @@ namespace frontend\controllers;
 use common\components\Common;
 use common\components\DateUtils;
 use common\components\LogUtils;
+use common\entity\UserAccount;
 use common\entity\UserBase;
 use frontend\components\Page;
+use frontend\interfaces\WechatInterface;
 use frontend\services\CountryService;
 use common\components\Code;
 use common\components\OssUpload;
 use frontend\services\TravelTripCommentService;
+use frontend\services\UserAccountService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
@@ -40,17 +43,52 @@ class UserInfoController extends CController{
      */
     public function actionIndex()
     {
+        $tab=\Yii::$app->request->get("tab",$_SERVER['QUERY_STRING']);
+        $tabInfo=\Yii::$app->request->get("tabInfo","");
+        $bindWechat=\Yii::$app->request->get("bindWechat",0);
+
         $countryService = new CountryService();
         $countryList = $countryService->getCountryList();
         $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
         $cityInfo=null;
+        $userAccountList=null;
+        $openId=null;//微信绑定回调 用户微信OpenId
+        $nickname=null;//微信绑定回调 用户微信昵称
+        $bindAlipayAccount=false;
+        $bindWechatAccount=false;
+        //获取用户城市详情
         if(!empty($this->userObj->cityId)){
             $cityInfo=$countryService->findCityById($this->userObj->cityId);
         }
+        //获取用户账户收款信息
+        if($this->userObj->isPublisher){
+            $userAccountService=new UserAccountService();
+            $userAccountList=$userAccountService->getUserAccountList($this->userObj->userSign);
+        }
+        if(!empty($userAccountList)){
+            foreach($userAccountList as $userAccount){
+                if($userAccount['type']==UserAccount::USER_ACCOUNT_TYPE_WECHAT){
+                    $bindWechatAccount=true;
+                }
+                if($userAccount['type']==UserAccount::USER_ACCOUNT_TYPE_ALIPAY){
+                    $bindAlipayAccount=true;
+                }
+            }
+        }
+
+        $wechatAccount=\Yii::$app->getSession()->get(Code::USER_WECHAT_ACCOUNT);
         return $this->render("info",[
             'countryList'=>$countryList,
             'userPublisher'=>$userPublisher,
-            'cityInfo'=>$cityInfo
+            'cityInfo'=>$cityInfo,
+            'userAccountList'=>$userAccountList,
+            'tab'=>$tab,
+            'tabInfo'=>$tabInfo,
+            'wechatAccount'=>$wechatAccount,
+            'bindWechat'=>$bindWechat,
+            'bindWechatAccount'=>$bindWechatAccount,
+            'bindAlipayAccount'=>$bindAlipayAccount
+
         ]);
     }
 

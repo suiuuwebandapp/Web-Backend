@@ -153,7 +153,7 @@ function buildUserMessageListHtml(list)
             if(nickname.length>5){
                 nickname=nickname.substring(0,5);
             }
-            userHtml+='<li><a style="width: 240px;height: 40px" href="/user-info?myMessage"><img src="'+messageInfo.headImg+'"><span>'+nickname+'</span>';
+            userHtml+='<li><a style="width: 240px;height: 40px" href="/user-info?tab=myMessage"><img src="'+messageInfo.headImg+'"><span>'+nickname+'</span>';
             userHtml+='<p>给您发了私信</p>';
             userHtml+='</a></li>';
             user_message_count++;
@@ -183,7 +183,7 @@ function changeSystemMessageRead(messageId,url){
                 if(url!=""){
                     window.location.href=url;
                 }else{
-                    window.location.href="/user-info?myMessage";
+                    window.location.href="/user-info?tab=myMessage";
                 }
             }else{
 

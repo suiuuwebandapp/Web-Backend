@@ -10,6 +10,7 @@
 namespace frontend\interfaces;
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\components\UrlUtil;
 use yii\base\Exception;
 
@@ -62,7 +63,7 @@ class WechatInterface {
     }
 
     /**
-     * 跳转到QQ接入页面
+     * 跳转到微信接入页面
      */
     public function toConnectWechat(){
         $returnUrl='http://www.suiuu.com/access/weixin-login';
@@ -108,6 +109,7 @@ class WechatInterface {
                 return Code::statusDataReturn(Code::SUCCESS,$rst);
             }
         }catch (Exception $e){
+            LogUtils::log($e);
             return Code::statusDataReturn(Code::FAIL,$e->getMessage());
         }
 

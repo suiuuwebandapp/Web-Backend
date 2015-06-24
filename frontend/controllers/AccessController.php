@@ -15,6 +15,9 @@ use common\components\LogUtils;
 use common\components\Validate;
 use common\entity\UserAccess;
 use common\entity\UserBase;
+use common\pay\alipay\auth\AlipayAuthApi;
+use common\pay\alipay\auth\AlipayConfig;
+use common\pay\alipay\lib\AlipayNotify;
 use frontend\interfaces\TencentInterface;
 use frontend\interfaces\WechatInterface;
 use frontend\interfaces\WeiboInterface;
@@ -146,10 +149,6 @@ class AccessController extends UnCController
         }else{
             return $this->redirect("/error/access-error");
         }
-    }
-
-    public function actionTest(){
-        return $this->render("accessRegister");
     }
 
 
@@ -426,6 +425,61 @@ class AccessController extends UnCController
             return json_encode(Code::statusDataReturn(Code::FAIL,"绑定用户异常，请稍后重试"));
         }
 
+    }
+
+    /**
+     * 支付宝Auth认证回调
+     */
+    public function actionAlipayAuthReturn()
+    {
+        $alipayConfig=new AlipayConfig();
+        $alipay_config=$alipayConfig->alipay_config;
+        //计算得出通知验证结果
+        $alipayNotify = new AlipayNotify($alipay_config);
+        $verify_result = $alipayNotify->verifyReturn();
+        if($verify_result) {//验证成功
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //请在这里加上商户的业务逻辑程序代码
+
+            //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+            //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表
+
+            //支付宝用户号
+
+            $user_id = $_GET['user_id'];
+
+            //授权令牌
+            $token = $_GET['token'];
+
+
+            $account=$_GET['email'];
+
+            $username=$_GET['real_name'];
+
+
+            //判断是否在商户网站中已经做过了这次通知返回的处理
+            //如果没有做过处理，那么执行商户的业务程序
+            //如果有做过处理，那么不执行商户的业务程序
+
+            echo $account;echo $username;
+            echo "验证成功<br />";
+
+            //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
+        else {
+            //验证失败
+            //如要调试，请看alipay_notify.php页面的verifyReturn函数
+            echo "验证失败";
+        }
+    }
+
+
+    public function actionAlipayLogin()
+    {
+        $alipayAutoApi=new AlipayAuthApi();
+        $alipayAutoApi->auth();
     }
 
 }
