@@ -60,7 +60,7 @@ class BaseDb {
 
     public function getLastInsertId()
     {
-        $this->getConnection()->lastInsertIDn;
+        return $this->getConnection()->lastInsertID;
     }
 
 }

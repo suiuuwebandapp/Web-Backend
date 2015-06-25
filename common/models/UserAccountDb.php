@@ -10,6 +10,7 @@
 namespace common\models;
 
 
+use backend\components\Page;
 use common\entity\UserAccount;
 use common\entity\UserAccountRecord;
 use common\entity\UserCashRecord;
@@ -19,7 +20,7 @@ class UserAccountDb extends ProxyDb{
 
 
     /**
-     * 添加用户账户
+     * 添加用户账户关联
      * @param UserAccount $userAccount
      * @throws \yii\db\Exception
      */
@@ -32,7 +33,7 @@ class UserAccountDb extends ProxyDb{
             )
             VALUES
             (
-              :userId,:type,:account,,:username,now(),now(),FALSE
+              :userId,:type,:account,:username,now(),now(),FALSE
             )
         ");
 
@@ -72,33 +73,153 @@ class UserAccountDb extends ProxyDb{
         $command->bindParam(":type",$userAccountRecord->type,PDO::PARAM_INT);
         $command->bindParam(":relateId",$userAccountRecord->relateId,PDO::PARAM_STR);
         $command->bindParam(":money",$userAccountRecord->money,PDO::PARAM_STR);
-        $command->bindParam(":info",$userAccountRecord->userId,PDO::PARAM_STR);
+        $command->bindParam(":info",$userAccountRecord->info,PDO::PARAM_STR);
 
         $command->execute();
     }
 
+
+    /**
+     * 添加用户提现记录
+     * @param UserCashRecord $userCashRecord
+     * @throws \yii\db\Exception
+     */
 
     public function addUserCashRecord(UserCashRecord $userCashRecord)
     {
         $sql=sprintf("
             INSERT INTO user_cash_record
             (
-              cashId,cashNumber,userId,money,balance,recordTime
+              userId,type,account,username,money,balance,createTime,status
             )
             VALUES
             (
-              :userId,:type,:relateId,:money,:info,now()
+              :userId,:type,:account,:username,:money,:balance,now(),:status
             )
         ");
 
         $command=$this->getConnection()->createCommand($sql);
 
-        $command->bindParam(":userId",$userAccountRecord->userId,PDO::PARAM_STR);
-        $command->bindParam(":type",$userAccountRecord->type,PDO::PARAM_INT);
-        $command->bindParam(":relateId",$userAccountRecord->relateId,PDO::PARAM_STR);
-        $command->bindParam(":money",$userAccountRecord->money,PDO::PARAM_STR);
-        $command->bindParam(":info",$userAccountRecord->userId,PDO::PARAM_STR);
+        $command->bindParam(":userId",$userCashRecord->userId,PDO::PARAM_INT);
+        $command->bindParam(":type",$userCashRecord->type,PDO::PARAM_STR);
+        $command->bindParam(":account",$userCashRecord->account,PDO::PARAM_STR);
+        $command->bindParam(":username",$userCashRecord->username,PDO::PARAM_STR);
+        $command->bindParam(":money",$userCashRecord->money,PDO::PARAM_STR);
+        $command->bindParam(":balance",$userCashRecord->balance,PDO::PARAM_STR);
+        $command->bindParam(":status",$userCashRecord->status,PDO::PARAM_INT);
 
         $command->execute();
+    }
+
+
+    /**
+     * 获取用户账户记录列表
+     * @param Page $page
+     * @param $startTime
+     * @param $endTime
+     * @param $type
+     * @return Page
+     */
+    public function getUserAccountRecordList(Page $page,$startTime,$endTime,$type)
+    {
+        $sql=sprintf("
+            FROM user_account_record uar
+            LEFT JOIN user_cash_record ucr ON uar.relateId=ucr.cashId
+            WHERE 1=1
+        ");
+        if(!empty($type)){
+            $sql.=" AND uar.type in (".$type.")";
+        }
+        if(isset($startTime)){
+            $sql.=" AND date_format(uar.recordTime,'%Y-%m')>=:startTime";
+            $this->setParam("startTime",$startTime);
+        }
+        if(isset($endTime)){
+            $sql.=" AND date_format(uar.recordTime,'%Y-%m')<=:endTime";
+            $this->setParam("endTime",$endTime);
+        }
+        $this->setSql($sql);
+        $this->setSelectInfo("uar.*,ucr.status");
+        return  $this->find($page);
+    }
+
+
+    /**
+     * 获取用户账户列表
+     * @param $userSign
+     * @return array
+     */
+    public function getUserAccountList($userSign)
+    {
+        $sql=sprintf("
+            SELECT * FROM user_account
+            WHERE userId=:userSign AND isDel=FALSE
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":userSign",$userSign,PDO::PARAM_STR);
+
+        return $command->queryAll();
+    }
+
+    /**
+     * 更新其他账户信息为删除状态
+     * @param $userSign
+     * @param $type
+     * @return array
+     */
+    public function updateUserAccountDelete($userSign,$type)
+    {
+        $sql=sprintf("
+            UPDATE user_account SET isDel=TRUE
+            WHERE userId=:userSign AND type=:type
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":userSign",$userSign,PDO::PARAM_STR);
+        $command->bindParam(":type",$type,PDO::PARAM_INT);
+
+        $command->execute();
+    }
+
+
+    /**
+     * 获取用户账户类型
+     * @param $userSign
+     * @param $type
+     * @return array|bool
+     */
+    public function getUserAccountByType($userSign,$type)
+    {
+        $sql=sprintf("
+            SELECT * FROM user_account
+            WHERE userSign=:userSign  AND type=:type
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":userSign",$userSign,PDO::PARAM_STR);
+        $command->bindParam(":type",$type,PDO::PARAM_INT);
+
+        return $command->queryOne();
+    }
+
+    /**
+     * 根据Id获取账户详情
+     * @param $accountId
+     * @return array|bool
+     */
+    public function getUserAccountByAccountId($accountId)
+    {
+        $sql=sprintf("
+            SELECT * FROM user_account
+            WHERE accountId=:accountId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":accountId",$accountId,PDO::PARAM_INT);
+
+        return $command->queryOne();
     }
 }

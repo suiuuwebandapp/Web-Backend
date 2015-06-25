@@ -18,6 +18,6 @@
     </div>
     <p class="dnav">
         <a href="<?php echo Yii::$app->params['base_dir']; ?>" class="orange">返回首页</a>
-        <a href="<?php echo Yii::$app->params['base_dir']; ?>/user-info?userInfo" class="m14 blue">进入个人主页</a>
+        <a href="<?php echo Yii::$app->params['base_dir']; ?>/user-info?tab=userInfo" class="m14 blue">进入个人主页</a>
     </p>
 </div>

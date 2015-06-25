@@ -247,7 +247,20 @@ var SystemMessage={
     'userId':'SYSTEM_MESSAGE',
     'nickname':'系统消息',
     'headImg':'/assets/images/user_default.png'
-}
+};
+
+var UserAccountRecordType={
+    'USER_ACCOUNT_RECORD_TYPE_TRIP_SERVER':1,//随游服务
+    'USER_ACCOUNT_RECORD_TYPE_TRIP_DIVIDED_INTO':2,//随游分成
+    'USER_ACCOUNT_RECORD_TYPE_DRAW_MONEY':3,//提现
+    'USER_ACCOUNT_RECORD_TYPE_OTHER':4//其他
+};
+
+var UserCashRecordType={
+    'USER_CASH_RECORD_STATUS_WAIT':1,//等待转出
+    'USER_CASH_RECORD_STATUS_SUCCESS':2,//转出成功
+    'USER_CASH_RECORD_STATUS_FAIL':3//转出失败
+};
 
 /*******************************************************************************
  * Usage

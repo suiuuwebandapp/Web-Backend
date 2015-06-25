@@ -5,7 +5,7 @@ return [
     'version'=>'beat 1.0',
     'copyright'=>' 2015 &copy; Suiuu. Admin Dashboard Template.',
     'language'=>'zh-cn',
-    'sourceLanguage'=>'zh-cn',
+    'sourceLanguage'=>'zh-CN',
     'defaultController'=>'index',
     'charset'=>'utf-8',
 

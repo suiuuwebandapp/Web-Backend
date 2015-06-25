@@ -133,6 +133,9 @@ class Common{
     {
         if($nowPage==null||$nowPage==0){$nowPage=1;}
         if($pageCount==null||$pageCount==0){$pageCount=10;}
+        if($allCount<=$pageCount){
+            return '';
+        }
         $str='';
         if($allCount%$pageCount==0){
             $count=floor($allCount/$pageCount);

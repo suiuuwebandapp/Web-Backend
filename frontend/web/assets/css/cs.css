@@ -100,7 +100,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .index-tuijian .countrys li:nth-child(5){ left:0; bottom:0; width:290px; height:260px;}
 .index-tuijian .countrys li:nth-child(6){left:305px; bottom:0; width:290px; height:260px;}
 .index-tuijian .countrys li:nth-child(7){right:0; bottom:0; width:590px; height:260px;}
-.index-tuijian .countrys li span{ position:absolute; top:50%; display:block; width:100%; text-align:center;  font-size:40px; font-weight:500; color:#fff;
+.index-tuijian .countrys li span{ position:absolute; cursor:pointer; top:50%; display:block; width:100%; text-align:center;  font-size:40px; font-weight:500; color:#fff;
  -webkit-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
  -moz-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
  -ms-text-shadow:3px 3px 3px rgba(0,0,0,0.8);
@@ -1185,7 +1185,7 @@ transition:1s;
 .sylx-list ul{width:1208px; height:auto; overflow:hidden;}
 .sylx-list ul li{width:285px; height:365px; float:left; position:relative; background:#fff; margin:20px 0px 0px 14px;}
 .sylx-list ul li:hover{ box-shadow:0 0 8px rgba(0,0,0,0.4);}
-.sylx-list ul li a img{width:285px; height:260px; overflow:hidden;}
+.sylx-list ul li a img{width:285px;  overflow:hidden;}
 .sylx-list ul li .posi{ width:275px; height:60px; position:absolute; left:10px; top:225px; }
 .sylx-list ul li .posi img{ width:60px; height:60px; float:left; border-radius:360px;}
 .sylx-list ul li .posi span{ float:left; margin-left:5px;width:160px; height:20px; margin-top:36px; line-height:20px;}
@@ -1387,7 +1387,7 @@ transition:1s;
 .sydetail .web-content .web-right .web-tuijian{width:285px;  overflow:hidden; margin:0 auto 30px;  }
 .sydetail .web-content .web-right .web-tuijian .pic{ width:100%; height:185px; overflow:hidden;  display:block;}
 .sydetail .web-content .web-right .web-tuijian p{ line-height:25px; margin:5px 0;}
-.sydetail .web-content .web-right .web-tuijian .pic img{ width:100%; height:185px; display:block;}
+.sydetail .web-content .web-right .web-tuijian .pic img{ width:100%; display:block;}
 .sydetail .web-content .web-right .web-tuijian .xing{ margin:0;}
 .sydetail .web-content .web-right .web-tuijian .xing span{ color:#ff7a45;   float:right;}
 
@@ -1683,7 +1683,14 @@ transition:1s;
 .scancelTip{ width:590px; height:330px; background:#fff; padding:20px;  font-size:16px; position:fixed; left:50%; margin-left:-295px; top:100px; z-index:99; display:none;}
 .scancelTip textarea{ width:100%; height:170px; background:#eee; margin:10px 0;}
 .scancelTip .blue{ color:#73b9ff; font-size:18px;}
-.scancelTip .btn{ display:block; position:absolute; bottom:0; right:0; width:80px; height:36px; line-height:36px; color:#ffeb79; background:#73b9ff; text-align:center;}
+.scancelTip .btn{  display:block; position:absolute; bottom:0; right:0; width:80px; height:36px; line-height:36px; color:#ffeb79; background:#73b9ff; text-align:center;}
 
 
+/*------------支付宝绑定弹层------------*/
+.zfbPro{ width:390px; height:345px; background:#F4F3EF; font-size:16px; position:fixed; left:50%; margin-left:-175px; top:100px; z-index:99; display:none; box-shadow:0 0 5px rgba(0,0,0,0.4); border-radius:10px; overflow:hidden;}
+.zfbPro .top{ margin-bottom:45px;   height:50px; background:#ebe3cc; position:relative; border-top:1px solid #fff; box-shadow:0 1px 1px rgba(0,0,0,0.1);  }
+ 
+.zfbPro input{ margin:0 auto; border:1px solid #ddd; display:block; width:340px;  border-radius:5px; height:45px; line-height:45px; background:#fff; padding:0 10px;   line-height:22px; word-break:break-all;  }
+.zfbPro .tip{ text-align:center; height:45px; line-height:45px; color:#ff794c; font-size:14px;  }
+.zfbPro .btn{ display:block; margin:0 auto;  width:340px;  border-radius:5px; height:45px; line-height:45px;  color:#fff; background:#73b9ff; text-align:center; font-size:20px;}
 

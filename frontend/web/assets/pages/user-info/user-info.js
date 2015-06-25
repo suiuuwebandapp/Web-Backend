@@ -25,11 +25,29 @@ $(document).ready(function(){
         $("#myPublisherOrder").bind("click",function(){
             getPublisherOrderList();
         });
+        $("#userAccount,#accountList").bind("click",function(){
+            getUserAccountRecordList();
+        });
+        $("#accountHistory").bind("click",function(){
+            getUserAccountHistoryList();
+        });
+        $("#accountSearch select").bind("change",function(){
+            getUserAccountHistoryList();
+        });
+        $("#toAddUserAccount").bind("click",function(){
+            $("#userInfo").click();
+            $("#userAccountLink").click();
+        });
+        if(bindWechat){
+            showWechatDiv();
+        }
+
 
         getUnConfirmOrderByPublisher();
 
     }else{
         $("#tripManager").parent("li").hide();
+        $("#userAccount").parent("li").hide();
     }
 
 
@@ -56,6 +74,7 @@ $(document).ready(function(){
     $("#finishOrderManager").bind("click",function(){
         getFinishList();
     });
+
 
     $(".con-nav li a").bind("click",function(){
         resetUploadHeadImg();
@@ -638,7 +657,7 @@ function initSelect(){
             if(search.indexOf("/")!=-1){
                 search=search.split("/")[0];
             }
-            findCityInfo(search);
+            //findCityInfo(search);
         }
     });
     $("#countryId").change();
@@ -730,15 +749,20 @@ function initUserInfo(){
  * 初始化TAB选择触发事件
  */
 function initTab(){
-    var href=window.location.href;
-    if(href.endWith("#")){
-        href=href.substring(0,href.length-1);
-    }
-    var tabId='';
-    if(href.indexOf("?")!=-1){
-        tabId=href.substring(href.indexOf("?")+1,href.length);
+    var tabId=Main.getRequestParam("tab");
+    if(tabId!=""){
         $("#"+tabId).click();
+    }else{
+        var href=window.location.href;
+        if(href.endWith("#")){
+            href=href.substring(0,href.length-1);
+        }
+        if(href.indexOf("?")!=-1){
+            tabId=href.substring(href.indexOf("?")+1,href.length);
+            $("#"+tabId).click();
+        }
     }
+
 }
 
 /**
@@ -2224,7 +2248,7 @@ function userConfirmOrder(orderId){
             data=eval("("+data+")");
             if(data.status==1){
                 Main.showTip("确认游玩成功");
-                getFinishList();
+                getUnFinishList();
             }else{
                 Main.showTip("确认游玩失败");
             }
@@ -2258,4 +2282,258 @@ function uploadAll() {
     }
     $('#fileCardFront').uploadifive('upload');
     $("#uploadAll").val("正在上传，请稍后...");
+}
+
+
+/**
+ * 获取用户账户信息列表
+ */
+function getUserAccountRecordList(){
+    $.ajax({
+        url :'/user-account/list',
+        type:'post',
+        data:{
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("获取用户账户清单失败");
+        },
+        success:function(data){
+            data= $.parseJSON(data);
+            if(data.status==1){
+                buildUserAccountListHtml(data.data,"accountDl");
+            }else{
+                Main.showTip("获取用户账户清单失败");
+            }
+        }
+    });
+}
+
+/**
+ * 构建清单列表
+ * @param data
+ */
+function buildUserAccountListHtml(data,id) {
+    var html='',type='',status='',flag=false;
+    if(data.totalCount==0){
+        html='<dd><p>暂无数据</p></dd>';
+        $("#"+id+" dd").remove();
+        $("#"+id).append(html);
+        return;
+    }
+
+    for(var i=0;i<data.result.length;i++){
+        var record=data.result[i];
+        html+='<dd>';
+        html+='<span>'+Main.formatDate(record.recordTime,'yyyy-MM-dd')+'</span>';
+        if(record.type==UserAccountRecordType.USER_ACCOUNT_RECORD_TYPE_TRIP_SERVER){
+            type='随游服务收入';
+            status='已入账';
+        }else if(record.type==UserAccountRecordType.USER_ACCOUNT_RECORD_TYPE_DRAW_MONEY){
+            type='转出';
+            flag=true;
+            if(record.status==UserCashRecordType.USER_CASH_RECORD_STATUS_WAIT){
+                status='正在处理';
+            }else if(record.status==UserCashRecordType.USER_CASH_RECORD_STATUS_SUCCESS){
+                status='转出成功';
+            }else if(record.status==UserCashRecordType.USER_CASH_RECORD_STATUS_FAIL){
+                status='转出失败';
+            }else{
+                status="转出异常";
+            }
+        }else if(record.type==UserAccountRecordType.USER_ACCOUNT_RECORD_TYPE_TRIP_DIVIDED_INTO){
+            type='线路分成服务';
+            status='已入账';
+        }else if(record.type==UserAccountRecordType.USER_ACCOUNT_RECORD_TYPE_OTHER){
+            type='其他收入';
+            status='已入账';
+        }
+        html+='<span>'+type+'</span>';
+        html+='<span>'+record.info+'</span>';
+        html+='<span class="orange">￥'+parseInt(record.money)+'</span>';
+        if(id=="historyDl"){
+            html+='<span class="blueColor">'+status+'</span>';
+        }
+        html+='</dd>';
+
+    }
+    $("#"+id+" dd").remove();
+    $("#"+id).append(html);
+    if(data.pageHtml!=''){
+        $("#"+id).append('<dd>'+data.pageHtml+'</dd>');
+    }
+}
+
+/**
+ * 获取用户账户历史
+ */
+function getUserAccountHistoryList(){
+    $.ajax({
+        url :'/user-account/history-list',
+        type:'post',
+        data:{
+            year :$("#accountYear").val(),
+            month:$("#accountMonth").val(),
+            type :$("#accountType").val(),
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("获取用户历史交易失败");
+        },
+        success:function(data){
+            data= $.parseJSON(data);
+            if(data.status==1){
+                buildUserAccountListHtml(data.data,"historyDl");
+            }else{
+                Main.showTip("获取用户历史交易失败");
+            }
+        }
+    });
+}
+
+/**
+ * 弹出绑定支付宝
+ */
+function showBindAlipay(){
+    $("#showAlipayDiv").show();
+    $(".mask").show();
+}
+
+/**
+ * 绑定支付宝账号
+ */
+function bindAlipayAccount() {
+    var account=$("#bindAlipayName").val();
+    var name=$("#bindAlipayName").val();
+
+    if(account==''){
+        Main.showTip("请输入支付宝账户");
+        return;
+    }
+    if(name==''){
+        Main.showTip("请输入真实姓名");
+        return;
+    }
+    $.ajax({
+        url :'/user-account/bind-alipay',
+        type:'post',
+        data:{
+            account :$("#bindAlipayAccount").val(),
+            name : $("#bindAlipayName").val(),
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("绑定支付宝账户失败");
+        },
+        success:function(data){
+            data= $.parseJSON(data);
+            if(data.status==1){
+                Main.showTip("绑定支付宝账户成功");
+                window.location.href="/user-info?tab=userInfo&tabInfo=userAccountLink"
+            }else{
+                Main.showTip("绑定支付宝账户失败");
+            }
+        }
+    });
+}
+
+
+/**
+ * 绑定微信账号
+ */
+function bindWechatAccount(){
+
+    var name=$("#bindWechatName").val();
+    if(name==''){
+        Main.showTip("请输入真实姓名");
+        return;
+    }
+    $.ajax({
+        url :'/user-account/bind-wechat',
+        type:'post',
+        data:{
+            name : $("#bindWechatName").val(),
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("绑定微信账户失败");
+        },
+        success:function(data){
+            data= $.parseJSON(data);
+            if(data.status==1){
+                Main.showTip("绑定微信账户成功");
+                window.location.href="/user-info?tab=userInfo&tabInfo=userAccountLink"
+            }else{
+                Main.showTip("绑定微信账户失败");
+            }
+        }
+    });
+}
+/**
+ * 显示微信绑定扫码图片
+ */
+function showWechatImgDiv() {
+    $("#showChangeWechatDiv").hide();
+    $("#showWechatImgDiv").show();
+    $(".mask").show();
+}
+
+/**
+ * 显示微信绑定DIV
+ */
+function showWechatDiv(){
+    $("#showWechatDiv").show();
+    $(".mask").show();
+}
+/**
+ * 显示更新微信绑定DIV
+ */
+function showChangeWechatDiv(){
+    $("#showChangeWechatDiv").show();
+    $(".mask").show();
+}
+
+/**
+ * 提现
+ */
+function drawMoney(){
+    var accountId=$("#accountId").val();
+    var drawMoney=$("#drawMoney").val();
+    if(accountId==""){
+        Main.showTip("请选择有效的收款账户");
+        return;
+    }
+    if(drawMoney==""){
+        Main.showTip("请输入有效的转出金额");
+        return;
+    }
+    if(isNaN(drawMoney)){
+        Main.showTip("请输入有效的转出金额");
+        return;
+    }
+    if(drawMoney<1){
+        Main.showTip("请输入有效的转出金额");
+        return;
+    }
+    $.ajax({
+        url :'/user-account/draw-money',
+        type:'post',
+        data:{
+            accountId : accountId,
+            money : drawMoney,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("转出余额失败");
+        },
+        success:function(data){
+            data= $.parseJSON(data);
+            if(data.status==1){
+                Main.showTip("转出余额成功，我们会在5个工作日内将钱打入您的指定账户。");
+                window.location.href="/user-info?tab=userAccount";
+            }else{
+                Main.showTip("转出余额失败");
+            }
+        }
+    });
 }

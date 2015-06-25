@@ -168,6 +168,30 @@
         float: left;
         padding-left: 20px;
     }
+    .accountSpan{
+        line-height: 36px;
+    }
+    #bindAccountUl{
+        padding-left: 65px;
+    }
+    #bindAccountUl li{
+        padding: 0 10px;
+    }
+    .InformationCon hr{
+        border:0;background-color:#eee;height:1px;
+    }
+    .Mtitle{
+        margin: 10px;
+    }
+    .bind_account_title{
+        height: 50px;line-height: 50px;margin-left: 30px;font-size: 16px;color: #73b9ff;
+    }
+    #historyDl span{
+        width: 20%;
+    }
+    .sycon .accountCon .orderList .order dd span{
+        overflow: hidden;
+    }
 </style>
 
 <?php
@@ -175,7 +199,6 @@
     if(!empty($userPublisher)&&!empty($userPublisher->idCardImg)){
         $idCardImg=$userPublisher->idCardImg;
     }
-    $tab=$_SERVER['QUERY_STRING'];;
 ?>
 <input type="hidden" id="lon"/>
 <input type="hidden" id="lat"/>
@@ -211,6 +234,7 @@
         <li><a href="javascript:;" <?php if($tab=="myOrderManager"){echo "class='active'";};?> id="myOrderManager">我的预定</a></li>
         <li><a href="javascript:;" <?php if($tab=="tripManager"){echo "class='active'";};?> id="tripManager">随游管理</a></li>
         <li><a href="javascript:;" <?php if($tab=="userInfo"){echo "class='active'";};?> id="userInfo">个人资料</a></li>
+        <li><a href="javascript:;" <?php if($tab=="userAccount"){echo "class='active'";};?> id="userAccount">个人账户</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
     <div class="tab-div myEmail TabCon clearfix" <?php if($tab==""||$tab=="myMessage"){echo "style='display:block'";}else{echo "style='display:none'";};?> >
@@ -257,6 +281,7 @@
 
         </div>
     </div>
+
     <!-------------TabCon2-发言------------->
     <div class="tab-div huifu TabCon clearfix" <?php if($tab=="myComment"){echo "style='display:block'";}else{echo "style='display:none'";};?>>
 
@@ -266,16 +291,18 @@
             <ol id="spage"></ol>
         </div>
     </div>
+
     <!-------------TabCon3-收藏------------->
     <div class="tab-div shoucang TabCon clearfix" <?php if($tab=="myCollect"){echo "style='display:block'";}else{echo "style='display:none'";};?> >
         <ul class="clearfix" id="myCollectList">
         </ul>
     </div>
+
     <!-------------TabCon4-我的预定------------->
     <div class="tab-div orderCon TabCon clearfix" <?php if($tab=="myOrderManager"){echo "style='display:block'";}else{echo "style='display:none'";};?> >
         <ul class="myOderNav innerNav">
-            <li><a href="#"  class="active" id="unFinishOrderManager">未完成订单</a></li>
-            <li><a href="#" id="finishOrderManager">过往订单</a></li>
+            <li><a href="javascript:;"  class="active" id="unFinishOrderManager">未完成订单</a></li>
+            <li><a href="javascript:;" id="finishOrderManager">过往订单</a></li>
         </ul>
         <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList">
         </div>
@@ -283,6 +310,7 @@
 
         </div>
     </div>
+
     <!-------------TabCon5-随游管理------------->
     <div class="tab-div mySuiyou TabCon clearfix" <?php if($tab=="tripManager"){echo "style='display:block'";}else{echo "style='display:none'";};?>>
         <ul class="myOderNav tabTitle">
@@ -306,11 +334,11 @@
     <!-------------TabCon6-个人资料------------>
     <div class="tab-div myInformation TabCon clearfix" <?php if($tab=="userInfo"){echo "style='display:block'";}else{echo "style='display:none'";};?>>
         <ul class="InformationNav myTit">
-            <li><a href="#"  class="active">我的资料</a></li>
-            <li><a href="#">身份验证</a></li>
-            <li><a href="#">账号设置</a></li>
+            <li><a href="javascript:;"  <?php if(empty($tabInfo)){echo "class='active'";};?>>我的资料</a></li>
+            <li><a href="javascript:;">身份验证</a></li>
+            <li><a href="javascript:;" id="userAccountLink" <?php if($tabInfo=="userAccountLink"){echo "class='active'";};?>>账号设置</a></li>
         </ul>
-        <div class="InformationCon past01 myCon" style="display:block;">
+        <div class="InformationCon past01 myCon" <?php if(empty($tabInfo)){echo "style='display:block'";};?>>
             <form id='coordinates_form' method="post">
                 <input type='hidden' id="img_x" name='x' class='x' value='0'/>
                 <input type='hidden' id="img_y" name='y' class='y' value='0'/>
@@ -478,12 +506,12 @@
                      -->
                     <div style="clear: both"></div>
 
-                    <p style="display: none"><a href="#"  class="surebtn">保存修改</a></p>
+                    <p style="display: none"><a href="javascript:;"  class="surebtn">保存修改</a></p>
 
                 </div>
             </div>
         </div>
-        <div class="InformationCon past03 myCon">
+        <div class="InformationCon past03 myCon" <?php if($tabInfo=="userAccountLink"){echo "style='display:block'";};?>>
             <div class="wdzl clearfix">
                 <div class="wdzl-xx">
                     <p class="Mtitle">密码设置</p>
@@ -493,26 +521,164 @@
                     <input type="password" id="password_user_info">
                     <span>确认密码:</span>
                     <input type="password" id="qPassword_user_info">
-                    <span></span>
-                    <span></span>
-                    <!--
+                    <a href="javascript:;"  class="surebtn" id="password_update_info">保存修改</a>
+                    <hr/>
                     <p class="Mtitle">收款设置</p>
-                    <span></span>
                     <div class="moreRen">
-                        <ul>
-                            <li><b class="icon zfb"></b><input class="active" type="button" value="关联"></li>
-                            <li><b class="icon weixin"></b><input type="button" value="关联"></li>
-                            <li><b class="icon sina"></b><input type="button" value="关联"></li>
+                        <ul id="bindAccountUl">
+                            <?php if($bindAlipayAccount){ ?>
+                                <li><b class="icon zfb"></b><input type="button" value="已关联" onclick="showBindAlipay()"></li>
+                            <?php }else{ ?>
+                                <li><b class="icon zfb"></b><input class="active" type="button" value="关联" id="showBindAlipayBtn" onclick="showBindAlipay()"></li>
+                            <?php } ?>
+                            <?php if($bindWechatAccount){ ?>
+                                <li><b class="icon weixin"></b><input type="button" value="已关联" onclick="showChangeWechatDiv()"></li>
+                            <?php }else{ ?>
+                                <li><b class="icon weixin"></b><input class="active" type="button" value="关联" id="showBindWechatBtn" onclick="showWechatImgDiv()"></li>
+                            <?php } ?>
                         </ul>
                     </div>
-                    -->
-                    <span></span>
-                    <a href="javascript:;"  class="surebtn" id="password_update_info">保存修改</a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-------------TabCon7-个人账户------------->
+    <div class="tab-div accountCon TabCon clearfix" <?php if($tab=="userAccount"){echo "style='display:block'";}else{echo "style='display:none'";};?>>
+        <ul class="myOderNav actNav">
+            <li><a href="javascript:;" class="active" id="accountList">账户信息</a></li>
+            <li><a href="javascript:;" id="accountHistory">历史交易</a></li>
+        </ul>
+        <div class="myOder nowOder actCon" style="display:block;">
+            <div class="top clearfix">
+                <p class="row clearfix">账户余额：<span class="orange" style="float: none">￥<?=intval($this->context->userObj->balance);?></span> <a href="javascript:;" id="toAddUserAccount" class=" btn blueColor">添加收款方式</a></p>
+                <?php if(!empty($userAccountList)){ ?>
+                    <div class="row clearfix">
+                        <span class="accountSpan">选择收款方式：</span><div class="selets"><select name="" id="accountId">
+                                <option value="">收款方式</option>
+                                <?php foreach($userAccountList as $userAccount){ ?>
+                                    <?php if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_ALIPAY){ ?>
+                                        <option value="<?=$userAccount['accountId']?>">支付宝（<?=$userAccount['username'].":".$userAccount['account']?>）</option>
+                                    <?php }else if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_WECHAT){ ?>
+                                        <option value="<?=$userAccount['accountId']?>">微信（<?=$userAccount['username']?>）</option>
+                                    <?php } ?>
+                                <?php }?>
+                            </select></div>
+                        <span class="accountSpan">输入金额：</span><input type="text" id="drawMoney"><a href="javascript:drawMoney();" class="btnBlue">转出</a>
+                    </div>
+                <?php } ?>
+            </div>
+            <p class="listTit">账户清单</p>
+            <div class="orderList clearfix">
+                <dl class="order clearfix" id="accountDl">
+                    <dt class="title">
+                        <span>日期</span><span>类别</span><span>详情</span><span>金额</span>
+                    </dt>
+                </dl>
+            </div>
+        </div>
+        <div class="myOder nowOder actCon">
+            <div class="top clearfix">
+                <div class="row clearfix" id="accountSearch">
+                    <div class="selets">
+                        <select id="accountYear">
+                            <?php for($i=2015;$i<=date('Y');$i++){
+                                if($i==date('Y')){
+                                    echo '<option value="'.$i.'" selected>'.$i.'年</option>';
+                                }else{
+                                    echo '<option value="'.$i.'">'.$i.'年</option>';
+                                }
+                            } ?>
+                        </select>
+                    </div>
+                    <div class="selets">
+                        <select id="accountMonth">
+                            <?php for($i=1;$i<=12;$i++){
+                                if($i==date('m')){
+                                    echo '<option value="'.$i.'" selected>'.$i.'月</option>';
+                                }else{
+                                    echo '<option value="'.$i.'">'.$i.'月</option>';
+                                }
+
+                            } ?>
+                        </select>
+                    </div>
+                    <div class="selets">
+                        <select name="" id="accountType">
+                            <option value="">全部</option>
+                            <option value="1">随游服务收入</option>
+                            <option value="2">路线分成服务</option>
+                            <option value="3">转出</option>
+                            <option value="4">其他收入</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </div>
+            <p class="listTit">交易清单</p>
+            <div class="orderList clearfix">
+                <dl class="order clearfix" id="historyDl">
+                    <dt class="title">
+                        <span>日期</span><span>类别</span><span>详情</span><span>金额</span><span>状态</span>
+                    </dt>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+    $alipayAccount=null;
+    $wechatAccount=null;
+?>
+<?php foreach($userAccountList as $userAccount){ ?>
+    <?php if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_ALIPAY){
+        $alipayAccount=$userAccount;
+    }else if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_WECHAT){
+        $wechatAccount=$userAccount;
+    } ?>
+<?php }?>
+
+<!-----------支付宝绑定弹层--------------->
+<div class="zfbPro screens" id="showAlipayDiv">
+    <div class="top clearfix">
+        <p class="bind_account_title">绑定支付宝账号</p>
+    </div>
+
+    <input type="text" id="bindAlipayAccount" placeholder="支付宝账号" value="<?=$alipayAccount==null?"":$alipayAccount['account'] ?>" maxlength="50">
+    <input type="text" id="bindAlipayName" placeholder="真实姓名" value="<?=$alipayAccount==null?"":$alipayAccount['username'] ?>" maxlength="50">
+    <p class="tip">此账号将是您的支付宝收款账号，请慎重填写！</p>
+    <a href="javascript:bindAlipayAccount();" class="btn"><?=$alipayAccount==null?"绑定账号":"重新绑定支付宝账号" ?></a>
+</div>
+
+<div class="zfbPro screens" id="showWechatImgDiv" style="height: auto;text-align: center">
+    <div id="login_container"></div>
+</div>
+
+<?php
+    $wechatNickname="";
+    if(!empty($wechatAccount)){
+        $wechatNickname=$wechatAccount['username'];
+    }
+?>
+
+<div class="zfbPro screens" id="showWechatDiv">
+    <div class="top clearfix">
+        <p class="bind_account_title">绑定微信账号</p>
+    </div>
+    <input type="text" value="<?=$wechatNickname?>" placeholder="微信昵称" readonly style="background-color: #ddd">
+    <input type="text" value="" id="bindWechatName" placeholder="真实姓名" maxlength="50">
+    <p class="tip">此账号将是您的微信收款账号，请慎重填写！</p>
+    <a href="javascript:bindWechatAccount();" class="btn">绑定账号</a>
+</div>
+<div class="zfbPro screens" id="showChangeWechatDiv" style="height: 250px;">
+    <div class="top clearfix">
+        <p class="bind_account_title">绑定微信账号</p>
+    </div>
+    <p style="text-align: center">已经绑定微信账号：<?=$wechatNickname?></p>
+    <p class="tip"></p>
+    <a href="javascript:showWechatImgDiv();" class="btn">重新绑定微信账号</a>
 </div>
 <!-----------个人中心-end--------------->
 <script type="text/javascript">
@@ -527,6 +693,7 @@
     var userSign='<?=$this->context->userObj->userSign; ?>';
     var phoneTime = 0;
     var phoneTimer;
+    var bindWechat=<?=$bindWechat?>
 
 </script>
 
@@ -537,3 +704,20 @@
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <script type="text/javascript" src="/assets/pages/user-info/user-info.js"></script>
 
+
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+
+
+<script>
+   $(document).ready(function(){
+       var obj = new WxLogin({
+           id:"login_container",
+           appid: "wxa33b47d647d7b8f6",
+           scope: "snsapi_login",
+           redirect_uri: "<?=Yii::$app->params['base_dir']."/user-account/get-wechat-info" ?>",
+           state: "",
+           style: "",
+           href: ".loginPanel .title{display:none}"
+       });
+   });
+</script>
