@@ -47,7 +47,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="Tid" value="" class="form-control" placeholder="请输入相对类型id" maxlength="20" />
+                                    <input type="text" id="Tid" value="" class="form-control" placeholder="请输入相对类型id"  />
                                 </div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                 <div class="col-md-4 valdate">
                                     <div class="input-icon right">
                                         <i class="fa"></i>
-                                        <input type="text" id="title" value="" class="form-control" placeholder="请输入图文消息标题" maxlength="20"  />
+                                        <input type="text" id="title" value="" class="form-control" placeholder="请输入图文消息标题"  />
                                     </div>
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
                                     <div class="col-md-4 valdate">
                                         <div class="input-icon right">
                                             <i class="fa"></i>
-                                            <input type="text" id="nIntro" value="" class="form-control" placeholder="请输入图文消息简介" maxlength="20"  />
+                                            <input type="text" id="nIntro" value="" class="form-control" placeholder="请输入图文消息简介" />
                                         </div>
                                     </div>
                                 </div>
@@ -95,7 +95,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="nAntistop" value="" class="form-control" placeholder="请输入回复关键字" maxlength="30" required/>
+                                    <input type="text" id="nAntistop" value="" class="form-control" placeholder="请输入回复关键字" required/>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="nUrl" value="" class="form-control" placeholder="请输入图文消息指向URL" maxlength="30" required/>
+                                    <input type="text" id="nUrl" value="" class="form-control" placeholder="请输入图文消息指向URL" required/>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                     </div>
                     <div class="form-actions fluid">
                         <div class="col-md-offset-3 col-md-9">
-                            <button type="submit" class="btn green-meadow">&nbsp;&nbsp;添加专栏&nbsp;&nbsp;</button>
+                            <button type="submit" class="btn green-meadow">&nbsp;&nbsp;添加消息&nbsp;&nbsp;</button>
                         </div>
                     </div>
                 </form>

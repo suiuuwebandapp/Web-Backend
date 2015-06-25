@@ -17,6 +17,6 @@
         <a href="/index/create-travel" class="go-suiyou fl">发布随游</a>
         <a href="/view-trip/list" class="jion-suiyou m14 fl">加入随游</a>
     </div>
-    <p class="dnav"><a href="<?=Yii::$app->params['base_dir']; ?>" class="orange">返回首页</a><a href="/user-info?tab=userInfo" class="m14 blue">进入个人主页</a></p>
+    <p class="dnav"><a href="<?=Yii::$app->params['base_dir']; ?>" class="orange">返回首页</a><a href="/user-info?userInfo" class="m14 blue">进入个人主页</a></p>
 </div>
 <!---------------随友注册完成--end----------->

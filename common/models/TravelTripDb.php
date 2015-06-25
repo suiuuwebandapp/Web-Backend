@@ -446,11 +446,13 @@ class TravelTripDb extends ProxyDb{
     public function getTravelTripPublisherList($tripId)
     {
         $sql=sprintf("
-            SELECT  ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,t.*
+            SELECT  ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.countryId,ub.cityId,
+            ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,t.*,cit.cname as cityName,cty.cname as countryName
             FROM travel_trip_publisher t
             LEFT JOIN user_publisher up ON up.userPublisherId=t.publisherId
             LEFT JOIN user_base ub ON ub.userSign=up.userId
+			LEFT JOIN city cit ON cit.id=ub.cityId
+			LEFT JOIN country cty ON cty.id=ub.countryId
             WHERE t.tripId=:tripId
         ");
         $command=$this->getConnection()->createCommand($sql);

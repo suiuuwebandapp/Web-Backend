@@ -45,7 +45,7 @@ class WeChatDb extends ProxyDb{
 
     public function findWeChatUserInfo(WeChatUserInfo $weChatUserInfo){
         $sql = sprintf("
-           SELECT a.openId,a.unionID,a.v_nickname,a.v_sex,a.v_headimgurl,b.* FROM wechat_user_info a
+           SELECT a.openId,a.unionID,a.v_nickname,a.v_sex,a.v_headimgurl,b.nickname,b.phone,b.email,b.headImg,b.userSign,b.isPublisher,b.status FROM wechat_user_info a
            LEFT JOIN user_base b ON a.userSign=b.userSign
             WHERE 1=1
         ");

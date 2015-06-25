@@ -129,22 +129,18 @@ class AppTravelController extends AController
         try{
             $userSign=$this->userObj->userSign;
             $trId=Yii::$app->request->post('trId');
-            //$trId=70;
             $data=$this->travelSer->getTravelTripInfoById($trId,$userSign);
             $tripInfo=$data['info'];
-            $userService=new UserBaseService();
             $publisherService=new PublisherService();
             $tripPublisherId=$tripInfo['createPublisherId'];
             $createPublisherId=$publisherService->findById($tripPublisherId);
             if(empty($createPublisherId)){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知的随友'));
             }
-            $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
-            $data['userInfo']=$createUserInfo;
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$this->unifyReturn($data)));
         }catch (Exception $e){
             LogUtils::log($e);
-            return json_encode(Code::statusDataReturn(Code::FAIL));
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"error"));
         }
     }
 

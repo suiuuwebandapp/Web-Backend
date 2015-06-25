@@ -455,9 +455,6 @@ class UserOrderController extends  CController{
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
             $sysMessageUtils->sendUserConfirmPlayMessage($userPublisher->userId,$orderInfo->orderNumber);
-            //刷新用户信息
-            $this->refreshUserInfo();
-            //TODO 刷新随友用户信息
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);

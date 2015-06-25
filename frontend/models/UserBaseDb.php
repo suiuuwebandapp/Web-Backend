@@ -170,7 +170,7 @@ class UserBaseDb extends ProxyDb
     {
         $sql = sprintf("
             SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,status,
-            registerTime,lastLoginTime,userSign,isPublisher,cityId,countryId,lon,lat,profession,balance
+            registerTime,lastLoginTime,userSign,isPublisher,cityId,countryId,lon,lat,profession
             FROM user_base WHERE userSign=:userSign
         ");
         if ($status != null) {
@@ -235,7 +235,7 @@ class UserBaseDb extends ProxyDb
     /**
      * 查找用户（根据用户标示）
      * @param $userSign
-     * @param int|null $status
+     * @param null $status
      * @return array|bool
      */
     public function findBaseAllBySign($userSign, $status = 1)

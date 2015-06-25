@@ -160,7 +160,7 @@
                 var datas=eval('('+data+')');
                 if(datas.status==1){
                     Main.showTip("添加评论成功");
-                    window.location.href="/user-info?tab=myOrderManager";
+                    window.location.href="/user-info?myOrderManager";
                 }else{
                     Main.showTip("添加评论失败");
                 }

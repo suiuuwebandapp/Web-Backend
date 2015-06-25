@@ -30,7 +30,7 @@ class SysMessageUtils {
         $userMessage->senderId=Code::USER_SYSTEM_MESSAGE_ID;
         $userMessage->receiveId=$userId;
         $userMessage->content="亲爱的用户，您好，由于随友的原因，您的订单：".$orderNumber."已被取消，稍后客户或者随游将跟您联系，给您带来的不便，敬请谅解。";
-        $userMessage->url="/user-info?tab=myOrderManager";
+        $userMessage->url="/user-info?myOrderManager";
         try{
             $userMessageService=new UserMessageService();
             $userMessageService->addUserMessage($userMessage);
@@ -54,7 +54,7 @@ class SysMessageUtils {
             $userMessage->senderId=Code::USER_SYSTEM_MESSAGE_ID;
             $userMessage->receiveId=$publisher['userSign'];
             $userMessage->content="您有新的可接随游订单，订单号：".$orderNumber.",点击查看详情";
-            $userMessage->url="/user-info?tab=tripManager";
+            $userMessage->url="/user-info?tripManager";
 
             $messageList[]=$userMessage;
         }
@@ -81,7 +81,7 @@ class SysMessageUtils {
         $userMessage->senderId=Code::USER_SYSTEM_MESSAGE_ID;
         $userMessage->receiveId=$userId;
         $userMessage->content="亲爱的用户，您好，随友已经确认了您的订单：".$orderNumber."，我们将尽快给您打款。";
-        $userMessage->url="/user-info?tab=myOrderManager";
+        $userMessage->url="/user-info?myOrderManager";
         try{
             $userMessageService=new UserMessageService();
             $userMessageService->addUserMessage($userMessage);
@@ -193,7 +193,7 @@ class SysMessageUtils {
         $userMessage->senderId=Code::USER_SYSTEM_MESSAGE_ID;
         $userMessage->receiveId=$userId;
         $userMessage->content="亲爱的随友，您已经被创建者移除随游【".$tripTitle."】.";
-        $userMessage->url="/user-info?tab=tripManager";
+        $userMessage->url="/user-info?tripManager";
         try{
             $userMessageService=new UserMessageService();
             $userMessageService->addUserMessage($userMessage);
@@ -209,7 +209,7 @@ class SysMessageUtils {
         $userMessage->senderId=Code::USER_SYSTEM_MESSAGE_ID;
         $userMessage->receiveId=$userId;
         $userMessage->content="亲爱的用户，您的个人信息尚未完善，快去完善个人信息吧~";
-        $userMessage->url="/user-info?tab=userInfo";
+        $userMessage->url="/user-info?userInfo";
         try{
             $userMessageService=new UserMessageService();
             $userMessageService->addUserMessage($userMessage);

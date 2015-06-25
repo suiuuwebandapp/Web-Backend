@@ -81,7 +81,7 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
                     </div>
                 </li>
             </ul>
-        <a href="/user-info?tab=myOrderManager" class="btn">确定</a>
+        <a href="/user-info?myOrderManager" class="btn">确定</a>
     </div>
     <?php } ?>
 </div>

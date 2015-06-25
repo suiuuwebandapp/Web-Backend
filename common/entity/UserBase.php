@@ -118,9 +118,4 @@ class UserBase {
 
     public $lat;
 
-
-    public $balance;
-
-    public $version;
-
 }

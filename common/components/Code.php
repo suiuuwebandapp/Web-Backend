@@ -79,8 +79,6 @@ class Code
 
     const USER_SYSTEM_MESSAGE_ID='SYSTEM_MESSAGE';//系统消息KEY
 
-    const USER_WECHAT_ACCOUNT='USER_WECHAT_ACCOUNT';//用户绑定微信账户的KEY
-
 
     /**
      * 异常信息（后台）

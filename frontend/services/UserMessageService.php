@@ -270,6 +270,7 @@ class UserMessageService extends BaseDb
                     if($tempMessage!=null&&in_array($tempMessage['senderId'],$shieldArr)){
                         $refusedFlag=true;
                     }
+                    var_dump($tempMessage                            );exit;
                 }
             }else{
                 $refusedFlag=true;

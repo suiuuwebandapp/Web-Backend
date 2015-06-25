@@ -76,10 +76,10 @@
                             <span class="jiao"></span>
                             <ul>
                                 <?php if($this->context->userObj->isPublisher==true){?>
-                                <li class="bg1"><a href="/user-info?tab=tripManager">我的随游</a></li>
+                                <li class="bg1"><a href="/user-info?tripManager">我的随游</a></li>
                                 <?php } ?>
-                                <li class="bg2"><a href="/user-info?tab=myOrderManager">我的订单</a></li>
-                                <li class="bg3"><a href="/user-info?tab=userInfo">个人中心</a></li>
+                                <li class="bg2"><a href="/user-info?myOrderManager">我的订单</a></li>
+                                <li class="bg3"><a href="/user-info?userInfo">个人中心</a></li>
                                 <li class="bg4"><a href="/login/logout">安全退出</a></li>
                             </ul>
                         </div>

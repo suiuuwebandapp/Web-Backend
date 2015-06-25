@@ -75,6 +75,11 @@ class WeChatNewsListService  extends BaseDb{
         }
     }
 
+    /**关键词回复 文字
+     * @param $keyword
+     * @return array|bool
+     * @throws Exception
+     */
     public function getKeyWordInfo($keyword)
     {
         try {
@@ -88,7 +93,7 @@ class WeChatNewsListService  extends BaseDb{
         }
     }
 
-    /**关键字查询
+    /**关键字查询 图文
      * @param $keyword
      * @return array
      * @throws Exception

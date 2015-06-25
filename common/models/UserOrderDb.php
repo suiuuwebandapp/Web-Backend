@@ -13,8 +13,6 @@ namespace common\models;
 use backend\components\Page;
 use common\entity\DestinationInfo;
 use common\entity\DestinationScenic;
-use common\entity\UserAccount;
-use common\entity\UserAccountRecord;
 use common\entity\UserOrderComment;
 use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
@@ -411,101 +409,9 @@ class UserOrderDb extends ProxyDb
     }
 
 
-    /**
-     * 添加用户账号记录
-     * @param UserAccountRecord $userAccountRecord
-     * @throws \yii\db\Exception
-     */
-    public function addUserAccountRecord(UserAccountRecord $userAccountRecord)
-    {
-        $sql=sprintf("
-            INSERT INTO user_account_record
-            (
-              userId,type,relateId,money,info,recordTime
-            )
-            VALUES
-            (
-              :userId,:type,:relateId,:money,:info,now()
-            )
-        ");
+    public function updatePublisherOrder()
 
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userId", $userAccountRecord->userId, PDO::PARAM_STR);
-        $command->bindParam(":type", $userAccountRecord->type, PDO::PARAM_STR);
-        $command->bindParam(":relateId", $userAccountRecord->relateId, PDO::PARAM_INT);
-        $command->bindParam(":money", $userAccountRecord->money, PDO::PARAM_STR);
-        $command->bindParam(":info", $userAccountRecord->info, PDO::PARAM_STR);
-
-        $command->execute();
-    }
-
-    /**
-     * 添加用户账户
-     * @param UserAccount $userAccount
-     */
-    public function addUserAccount(UserAccount $userAccount)
-    {
-        $sql=sprintf("
-            INSERT INTO user_account_record
-            (
-              userId,account,username,type,createTime,updateTime,isDel
-            )
-            VALUES
-            (
-              :userId,:account,:username,:type,now(),now(),FALSE
-            )
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userId", $userAccount->userId, PDO::PARAM_STR);
-        $command->bindParam(":account", $userAccount->account, PDO::PARAM_STR);
-        $command->bindParam(":username", $userAccount->username, PDO::PARAM_INT);
-        $command->bindParam(":type", $userAccount->type, PDO::PARAM_STR);
-
-        $command->execute();
-    }
-
-
-    /**
-     * 更新用户y
-     * @param $userSign
-     * @param $balance
-     * @param $version
-     * @return int
-     * @throws \yii\db\Exception
-     */
-    public function updateUserBaseMoney($userSign,$balance,$version)
-    {
-        $sql=sprintf("
-            UPDATE user_base SET version=version+1,balance=:balance
-            WHERE userSign=:userSign AND version=:version
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        $command->bindParam(":balance", $balance, PDO::PARAM_STR);
-        $command->bindParam(":version", $version, PDO::PARAM_INT);
-
-        return $command->execute();
-    }
-
-    /**
-     * 获取用户账户余额
-     * @param $userSign
-     * @return array|bool
-     */
-    public function getUserMoney($userSign)
-    {
-        $sql=sprintf("
-            SELECT balance,version FROM user_base
-            WHERE userSign=:userSign
-        ");
-
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-
-        return $command->queryOne();
-    }
+    {}
 
 
     /**

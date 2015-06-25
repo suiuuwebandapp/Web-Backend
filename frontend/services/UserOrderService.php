@@ -14,7 +14,6 @@ use common\components\Code;
 use common\components\SysMessageUtils;
 use common\entity\TravelTrip;
 use common\entity\TravelTripComment;
-use common\entity\UserAccountRecord;
 use common\entity\UserMessage;
 use common\entity\UserOrderComment;
 use common\entity\UserOrderInfo;
@@ -570,9 +569,6 @@ class UserOrderService extends BaseDb
         if($userPublisher==null){
             throw new Exception("Invalid Publisher");
         }
-        $tripJsonInfo=json_decode($orderInfo->tripJsonInfo,true);
-        $tripInfo=$tripJsonInfo['info'];
-
         $conn = $this->getConnection();
         $tran = $conn->beginTransaction();
         try{
@@ -588,22 +584,6 @@ class UserOrderService extends BaseDb
             $tripDb->addTravelTripCount($orderInfo->tripId);
             //5.改变订单状态为确认游玩
             $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
-            //6.更新随友账户余额
-            $userMoney=$this->userOrderDb->getUserMoney($userPublisher->userId);
-            $balance=$userMoney['balance']+$orderInfo->totalPrice;
-            $version=$userMoney['version'];
-            $rstCount=$this->userOrderDb->updateUserBaseMoney($userPublisher->userId,$balance,$version);
-            if($rstCount==0){
-                throw new Exception("Invalid UserBase Version");
-            }
-            //7.添加随友账户记录
-            $userAccountRecord=new UserAccountRecord();
-            $userAccountRecord->userId=$userPublisher->userId;
-            $userAccountRecord->money=$orderInfo->totalPrice;
-            $userAccountRecord->balance=$balance;
-            $userAccountRecord->info=$tripInfo['title'];
-            $userAccountRecord->type=UserAccountRecord::USER_ACCOUNT_RECORD_TYPE_TRIP_SERVER;
-            $this->userOrderDb->addUserAccountRecord($userAccountRecord);
             $this->commit($tran);
         }catch (Exception $e){
             $this->rollback($tran);

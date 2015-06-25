@@ -113,6 +113,14 @@ class WeChatController extends SController
                         $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
                         }
                         break;
+                    case WeChat::EVENT_CLICK_KEY_DESTINATION: //22
+                        $data = $this->newsListSer->getKeyWordInfo('禁止修改目的地');
+                        if(!empty($data)){
+                            $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text,$data['nContent']);
+                        }else{
+                            $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
+                        }
+                        break;
                     default :
                         $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, WeChat::MSG_TXT_NO);
                 }
@@ -332,7 +340,8 @@ class WeChatController extends SController
     public function actionError()
     {
         $str=Yii::$app->request->get('str');
-        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+        $url=Yii::$app->request->get('url',"javascript:WeixinJSBridge.call('closeWindow')");
+        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>'返回微信 ','url'=>$url));
     }
     public function actionAccess()
     {

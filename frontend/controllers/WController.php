@@ -31,6 +31,7 @@ class WController extends SController {
     public function loginValid($bd=true,$bo=true)
     {
 
+        $this->userObj =json_decode('{"openId":"oGfdst0AA7SAThQlEscjbHjbbzp8","unionID":"ozIyCuNpgAaFfPnsApuOu6ZNBlh4","v_nickname":"\u900d\u9065","v_sex":"1","v_headimgurl":"http:\/\/wx.qlogo.cn\/mmopen\/jDOP3vxolkPntbltzibSgIcn0PMRWZhEam3nNpWwhic5GLNrGwAr4KxtyZhib3PFpgZIk9H4lypY2WrGFiciaAUT58g\/0","nickname":"277*****@qq.com","phone":"15311445352","email":"277646935@qq.com","headImg":"http:\/\/image.suiuu.com\/suiuu_head\/20150519053006_33633.jpg","userSign":"a4c1406ff4cc382389f19bf6ec3e55c1","isPublisher":"1","status":"1"}');return;
             if ($bo) {
                 //验证用户是否登录
                 $session=\Yii::$app->session->get(Yii::$app->params['weChatSign']);

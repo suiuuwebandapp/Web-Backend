@@ -31,6 +31,8 @@ class WeChat {
      * click事件
      */
     const EVENT_CLICK_KEY_ACTIVE='EVENT_KEY_ACTIVE';
+    const EVENT_CLICK_KEY_DESTINATION='EVENT_KEY_DESTINATION';
+
     const MSG_TXT_NO='暂无消息';
     const ATTENTION_REPLY_STR='[Rose]欢迎关注随游[Kiss]我们相信旅行从分享开始，我们相信旅行从来不需要等待，我们相信完美的旅行一直能够说走就走[Sun]你呢？准备好和我们一起出发了吗？欢迎随时吐槽，打字不爽就致电010-58483692，小游一直在这里等你哦[Beckon][Lips]';
     //const AUTO_RETURN_STR="您的消息我们已经收到";
