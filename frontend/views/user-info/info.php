@@ -632,13 +632,15 @@
     $alipayAccount=null;
     $wechatAccount=null;
 ?>
-<?php foreach($userAccountList as $userAccount){ ?>
-    <?php if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_ALIPAY){
-        $alipayAccount=$userAccount;
-    }else if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_WECHAT){
-        $wechatAccount=$userAccount;
-    } ?>
-<?php }?>
+<?php if(!empty($userAccountList)){ ?>
+    <?php foreach($userAccountList as $userAccount){ ?>
+        <?php if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_ALIPAY){
+            $alipayAccount=$userAccount;
+        }else if($userAccount['type']==\common\entity\UserAccount::USER_ACCOUNT_TYPE_WECHAT){
+            $wechatAccount=$userAccount;
+        } ?>
+    <?php }?>
+<?php }  ?>
 
 <!-----------支付宝绑定弹层--------------->
 <div class="zfbPro screens" id="showAlipayDiv">
