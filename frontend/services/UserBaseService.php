@@ -349,6 +349,26 @@ class UserBaseService extends BaseDb
     }
 
     /**
+     * 获取用户基本信息
+     * @param $userSign
+     * @return array|null
+     * @throws Exception
+     */
+    public function findBaseInfoBySignArray($userSign)
+    {
+        $userBase=null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result = $this->userBaseDb->findBaseInfoBySignArray($userSign);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $result;
+    }
+    /**
      * 获取用户所有信息
      * @param $userSign
      * @return mixed|null

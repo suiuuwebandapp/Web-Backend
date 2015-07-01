@@ -80,11 +80,11 @@
                                 <div class="col-md-4" style="padding-left: 30px">
                                     <div class="radio-list">
                                         <label class="radio-inline">
-                                            <input type="radio" name="optionsRadios"  value="1" <?php if($info['nType']==1){echo "checked";}?> >
+                                            <input type="radio" name="optionsRadios"  value="1" <?php if($info['nType']==1){echo "checked";}?> onclick="changedx(1)" >
                                             文本
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="optionsRadios" value="2"  <?php if($info['nType']==2){echo "checked";}?> >
+                                            <input type="radio" name="optionsRadios" value="2"  <?php if($info['nType']==2){echo "checked";}?> onclick="changedx(2)" >
                                             图文
                                         </label>
                                     </div>
@@ -121,7 +121,11 @@
 
                         <div class="form-group">
                             <label class="col-md-3 control-label">内容</label>
-                            <div class="col-md-6">
+                            <div id="txt_id1"  class="col-md-6" <?php if($info['nType']==2){echo 'style="display: none"';}?> >
+                                <textarea id="textareaid1" class="col-md-6"><?=$info['nContent']?></textarea>
+                            </div>
+                            <div id="txt_id2"  class="col-md-6" <?php if($info['nType']!=2){echo 'style="display: none"';}?>>
+
                                 <script id="container" name="content" type="text/plain" style="height:300px;"><?=$info['nContent']?></script>
                             </div>
                         </div>
@@ -201,6 +205,18 @@
     function delHtmlTag(str){
         return str.replace(/<[^>]+>/g,"");//去掉所有的html标记
     }
+    function changedx(i)
+    {
+        if(i==1)
+        {
+            $('#txt_id1').show();
+            $('#txt_id2').hide();
+        }else
+        {
+            $('#txt_id1').hide();
+            $('#txt_id2').show();
+        }
+    }
 
     function addNews(){
 
@@ -224,11 +240,11 @@
             return;
         }
         if(type=="1"){
+            content =  $('#textareaid1').val();
             if(content==''){
                 Main.errorTip("文本消息不允许为空");
                 return;
             }
-            content =  delHtmlTag(content);
         }else{
             if(titleImg==''){
                 Main.errorTip("封面图不允许为空");

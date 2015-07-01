@@ -66,7 +66,7 @@
 <script>
     function toInfo(id)
     {
-        window.location.href="/wechat-user-center/order-info?id="+id;
+        window.location.href="/wechat-user-center/trip-order-info?id="+id;
     }
 </script>
 </body>

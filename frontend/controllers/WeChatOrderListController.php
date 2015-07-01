@@ -158,18 +158,29 @@ class WeChatOrderListController extends WController {
     {
         $this->loginValid(false);
         $userSign=$this->userObj->userSign;
-        //$userSign="abb760a0ea093d829f7916b2a7a9f3ce";
         if(empty($userSign))
         {
             return $this->renderPartial('noOrder');
         }
         $page = new Page(Yii::$app->request);
-        $data = $this->orderListSer->getOrderListByUserSign($userSign,$page);
+        $data = $this->orderListSer->getOrderListByUserSign(    $userSign,$page);
         if(empty($data->getList())){
             return $this->renderPartial('noOrder');
         }else{
             return $this->renderPartial('orderList',['list'=>$data->getList()]);
         }
+    }
+
+    public function actionOrderInfo()
+    {
+        $this->loginValid();
+        $userSign=$this->userObj->userSign;
+        $orderNumber=Yii::$app->request->get("orderNumber");
+        $data = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+        if(empty($data)){
+            return $this->redirect('/we-chat/error?str=订单用户不匹配');
+        }
+        return $this->renderPartial('orderInfo',['info'=>$data]);
     }
 
     public function actionDeleteOrder()

@@ -10,58 +10,65 @@
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
 </head>
 
-<body>
-<div class="con Registered clearfix">
+<body class="bgwhite">
+<div class="con RegisteredPhone clearfix">
     <form action="/we-chat/register" method="post" id="wechat_register">
+    </form>
     <ul class="lists clearfix">
         <li>
-            <label for="">国家</label>
             <input id="wechat_country" type="text" areaCode="<?php echo $c;?>" class="country" value="<?php echo $n;?>"  onclick="toCountry()">
         </li>
         <li>
-            <label for="">手机号</label>
-            <input name="phone" type="text" id="wechat_phone"><a href="javascript:;" class="code" onclick="getCode()">获取验证码</a>
+            <input type="text" id="wechat_phone" placeholder="手机号">
         </li>
         <li>
-            <label for="">验证码</label>
-            <input name="validateCode" type="text">
+            <input type="password" id="wechat_password" placeholder="密码">
         </li>
-        <li>
-            <label for="">密码</label>
-            <input name="password" type="password">
+        <li class="clearfix">
+            <input type="text" class="w70" placeholder="图形验证码" id="wechat_valNum"><a href="" class="code"><img onclick="changeCode()" src="/index/get-code"></a>
         </li>
-        <li>
-            <label for="">确认密码</label>
-            <input name="cPassword" type="password">
+        <li class="clearfix">
+            <input type="text" class="w70" placeholder="手机验证码" id="wechat_code"><a href="javascript:;" class="code colBlue" onclick="getCode()">获取验证码</a>
         </li>
     </ul>
-    <a href="javascript:;" class="btn" onclick="submit()">立即注册</a>
-    </form>
+    <a href="javascript:;" class="btn" onclick="register()">注册</a>
+    <p class="agr"><input type="checkbox" id="agreement"><label for="agreement">同意<a href="###">《网站注册协议》</a></label></p>
+    <div class="down clearfix">
+        <div class="line"></div>
+        <span>快速登录</span>
+        <div class="ddd clearfix"><a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a></div>
+
+
+    </div>
+
 </div>
 <script>
-    function submit()
+    function changeCode()
     {
-        if($('input[name=phone]').val()=="")
-        {
-            alert("手机号不能为空");
-            return ;
-        }
-        if($('input[name=validateCode]').val()=="")
-        {
-            alert("验证码不能为空");
-            return ;
-        }
-        if($('input[name=password]').val()=="")
-        {
-            alert("密码不能为空");
-            return ;
-        }
-        if($('input[name=cPassword]').val()=="")
-        {
-            alert("确认密码不能为空");
-            return ;
-        }
-        $('#wechat_register').submit();
+        $('#codeImg').attr('src','/index/get-code')
+    }
+    function register()
+    {
+        $.ajax({
+            url :'/we-chat/phone-register',
+            type:'post',
+            data:{
+                code:$('#wechat_code').val()
+            },
+            error:function(){
+
+                alert("注册失败");
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    window.location.href="/wechat-trip/index";
+                }else{
+                    alert(data.data);
+                }
+            }
+        });
     }
     function toCountry()
     {
@@ -71,6 +78,8 @@
     {
         var phone = $('#wechat_phone').val();
         var areaCode = $('#wechat_country').attr('areaCode');
+        var valNum = $('#wechat_valNum').val();
+        var password = $('#wechat_password').val();
         if(areaCode=="")
         {
             alert('验证码不能为空');
@@ -81,15 +90,26 @@
             alert('手机号不能为空');
             return;
         }
+        if(valNum=="")
+        {
+            alert('图型验证码不能为空');
+            return;
+        }
+        if(password=="")
+        {
+            alert('密码不能为空');
+            return;
+        }
         $.ajax({
-            url :'/app-login/get-phone-code',
+            url :'/we-chat/send-message',
             type:'post',
             data:{
                 areaCode:areaCode,
-                phone:phone
+                phone:phone,
+                password:password,
+                valNum:valNum
             },
             error:function(){
-
                 alert("验证码发送失败");
             },
             success:function(data){
@@ -98,7 +118,7 @@
                 if(data.status==1){
                     alert("发送成功，请注意查收");
                 }else{
-                    alert(data.data[0]);
+                    alert(data.data);
                 }
             }
         });

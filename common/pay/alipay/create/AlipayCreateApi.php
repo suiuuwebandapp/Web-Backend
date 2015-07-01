@@ -157,6 +157,7 @@ class AlipayCreateApi {
             "show_url"	=> $this->show_url,
             "anti_phishing_key"	=> $this->anti_phishing_key,
             "exter_invoke_ip"	=> $this->exter_invoke_ip,
+            "extra_common_param"=>"0",
             "_input_charset"	=> trim(strtolower($alipay_config['input_charset']))
         );
 

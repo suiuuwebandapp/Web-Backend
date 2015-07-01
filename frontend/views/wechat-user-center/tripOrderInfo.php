@@ -30,13 +30,19 @@
             </div>
         </div>
         <div class="part clearfix">
+            <?php  if(!empty($userInfo)){?>
             <a href="#" class="userPic"><img src="<?= $userInfo->headImg?>"></a>
             <span class="userName"><?= $userInfo->nickname?></span>
+            <?php }else{?>
+                <a href="#" class="btnfr02 colOrange">未知用户</a>
+            <?php }?>
         </div>
         <div class="part clearfix">
-            <?php if($info->status!=\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
-            <p>出发日期：<b><?php echo $info->beginDate;?></b></p>
-            <?php }?>
+            <?php if($info->status!=\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS||$info->status!=\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){
+                if(!empty($userInfo)){
+                ?>
+                <p>联系电话：<a href="tel:<?php echo $userInfo->phone;?>" class="colBlue"><?php echo $userInfo->phone;?></a></p>
+            <?php } }?>
             <p>出发日期：<b><?php echo $info->beginDate;?></b></p>
             <p>开始时间：<b><?php echo \common\components\DateUtils::convertTimePicker($tripInfo['info']['startTime'],2);?></b></p>
             <p>随游人数：<b><?= $info->personCount?>人</b></p>

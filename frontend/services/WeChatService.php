@@ -69,7 +69,7 @@ class WeChatService extends BaseDb{
                         },
                         {
                            "type":"click",
-                           "name":"目的地",
+                           "name":"随游全球",
                            "key":"EVENT_KEY_DESTINATION"
                         }
                        ]

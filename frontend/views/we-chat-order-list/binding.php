@@ -22,8 +22,8 @@
         <a href="/we-chat/register" class="btn">立即注册</a>
         <label>已有随游账号</label>
         <a href="/we-chat/binding" class="btn">账号绑定</a>
-        <label>等不及啦！</label>
-        <a href="/we-chat/access" class="btn">微信注册</a>
+<!--        <label>等不及啦！</label>-->
+<!--        <a href="/we-chat/access" class="btn">微信注册</a>-->
     </div>
 
 </div>

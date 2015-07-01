@@ -285,17 +285,15 @@ class UserOrderDb extends ProxyDb
     public function getPublisherOrderList($publisherId)
     {
         $sql=sprintf("
-            SELECT uoi.*,ttp.publisherId,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
+            SELECT uoi.*,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
             ub.profession,ub.school,ub.intro,ub.info,ub.travelCount
             FROM user_order_info uoi
-            LEFT JOIN travel_trip_publisher ttp ON ttp.tripId=uoi.tripId
             LEFT JOIN user_base ub ON ub.userSign=uoi.userId
             WHERE uoi.isDel=FALSE AND uoi.orderId IN
             (
               SELECT orderId FROM user_order_publisher
               WHERE publisherId=:publisherId
             )
-            AND ttp.publisherId IS NOT NULL
             AND uoi.status IN
             (".
             UserOrderInfo::USER_ORDER_STATUS_CONFIRM.",".

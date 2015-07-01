@@ -27,6 +27,7 @@ class CController extends SController{
 
     public function __construct($id, $module = null)
     {
+        $this->userBaseService=new UserBaseService();
         //验证用户是否登录
         $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
         $cookieSign=\Yii::$app->request->cookies->getValue(\Yii::$app->params['www_suiuu_sign']);
@@ -42,7 +43,6 @@ class CController extends SController{
             $aes=new Aes();
             $userSign=$aes->decrypt($cookieSign,$enPassword,$enDigit);
 
-            $this->userBaseService=new UserBaseService();
             $currentUser=$this->userBaseService->findUserByUserSign($userSign);
             if(isset($currentUser)){
                 $this->userObj=$currentUser;
@@ -53,7 +53,6 @@ class CController extends SController{
 
         }
         if($currentUser->isPublisher){
-            if($this->userBaseService==null)$this->userBaseService=new UserBaseService();
             $userPublisherObj=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
             $this->userPublisherObj=$userPublisherObj;
         }
@@ -63,7 +62,6 @@ class CController extends SController{
 
     public function refreshUserInfo()
     {
-        $this->userBaseService=new UserBaseService();
         $currentUser=$this->userBaseService->findUserByUserSign($this->userObj->userSign);
         $this->userObj=$currentUser;
         \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);

@@ -12,13 +12,15 @@
 </head>
 
 <body>
-<a href="/we-chat-order-list/order-view" class="fixedBtn">添加订单</a>
-<div class="con sy_order clearfix">
+
+<div class="con cdzOder clearfix">
+    <a href="/we-chat-order-list/order-view" class="bgBlue colWit btnfixed">添加订单</a>
     <?php foreach($list as $val){
         if(empty($val['wRelativeSign'])||$val['wStatus']==\common\entity\WeChatOrderList::STATUS_NORMAL){
         ?>
-    <div class="box clearfix">
+    <div class="box clearfix box01">
         <div class="top clearfix">
+            <span class="state colOrange">处理中</span>
             <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
             <div class="left">
                 <a href="#" class="user">
@@ -35,17 +37,28 @@
                 ?>
                 <p>日期：<b><?php echo $dataV;?></b></p>
                 <?php } ?>
+                <a href="#" class="colBlue">详情...</a>
             </div>
         </div>
-        <div class="down clearfix">
-            <p><?php echo $val['wOrderContent'];?></p>
-        </div>
-        <b class="money">待定&nbsp</b>
-        <a href="#" class="btn paying">处理中</a>
     </div>
      <?php }else{ ?>
-            <div class="box clearfix">
+            <div class="box clearfix box01">
                 <div class="top clearfix">
+                    <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
+                        <span class="state colOrange">游玩中</span>
+                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
+                        <span class="state colOrange">待支付</span>
+                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
+                        <span class="state colOrange">退款中</span>
+                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_END){?>
+                        <span class="state colBlue">已结束</span>
+                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_FAL){?>
+                        <span class="state colBlue">拒绝退款</span>
+                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_SUCCESS){?>
+                        <span class="state colBlue">退款成功</span>
+                    <?php }else{?>
+                    <span class="state colOrange">处理中</span>
+                    <?php }?>
                     <?php if($val['wStatus']!=\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS&&$val['wStatus']!=\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
                     <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
                     <?php }?>
@@ -60,6 +73,7 @@
                             <p>日期：<b><?php echo $dataV;?></b></p>
                         <?php } ?>
                         <p>手机：<a href="tel:<?php echo $val['areaCode'].$val['phone'];?>"><?php echo $val['areaCode'].$val['phone'];?></a></p>
+                        <a href="/we-chat-order-list/order-info?orderNumber=<?php echo $val['wOrderNumber'];?>" class="colBlue">详情...</a>
                     </div>
                 </div>
                 <div class="down clearfix">
@@ -94,31 +108,6 @@
                         <?php }?>
                     </dl>
                 </div>
-                <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
-                    <b class="money money2">￥ <?php echo $val['wMoney'];?></b>
-                <?php }else{?>
-                    <b class="money ">￥ <?php echo $val['wMoney'];?></b>
-                <?php }?>
-                <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
-                    <a href="/we-chat-order-list/show-refund?o=<?php echo $val['wOrderNumber']?>" class="btn payback">申请退款</a>
-                    <a href="javascript:;" class="btn sure" onclick="overOrder('<?php echo $val['wOrderNumber']?>')">确认游玩</a>
-                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
-                    <?php if($val['wMoney']!=0){?>
-                    <a href="javascript:;" class="btn pay" onclick="callpay('<?php echo $val['wOrderNumber']?>')">支付</a>
-                    <?php }else{?>
-                        <a href="javascript:alert('金额不能为0');" class="btn finish" >支付</a>
-                    <?php }?>
-                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
-                    <a href="javascript:;" class="btn finish">退款中</a>
-                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_END){?>
-                    <a href="javascript:;" class="btn finish">已结束</a>
-                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_FAL){?>
-                    <a href="javascript:;" class="btn finish">拒绝退款</a>
-                <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_SUCCESS){?>
-                    <a href="javascript:;" class="btn finish">退款成功</a>
-                <?php }else{?>
-                    <a href="javascript:;" class="btn finish">已结束</a>
-                <?php }?>
             </div>
         <?php }?>
     <?php }?>

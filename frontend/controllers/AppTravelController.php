@@ -974,12 +974,12 @@ class AppTravelController extends AController
         try{
             $userService=new UserBaseService();
             $publisherService=new PublisherService();
-            $createUserInfo=$userService->findUserByUserSign($userSign);
+            $createUserInfo=$userService->findBaseInfoBySignArray($userSign);
             if(empty($createUserInfo))
             {
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未知的用户'));
             }
-            if(empty($createUserInfo->isPublisher))
+            if(empty($createUserInfo['isPublisher']))
             {
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未知的随友'));
             }
@@ -1009,11 +1009,10 @@ class AppTravelController extends AController
         $beginDate=trim(\Yii::$app->request->post("beginDate", ""));
         $startTime=trim(\Yii::$app->request->post("startTime", ""));
         $serviceIds=trim(\Yii::$app->request->post("serviceIds", ""));
-        /*$tripId=41;
-        $peopleCount=1;
-        $beginDate="2015-06-22";
-        $startTime="06:20 PM";*/
-
+        $userSign = $this->userObj->userSign;
+        if(empty($userSign)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无效用户'));
+        }
         if(empty($tripId)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"随游编号不正确"));
         }
@@ -1095,7 +1094,7 @@ class AppTravelController extends AController
 
             $userOrderInfo=new UserOrderInfo();
             $userOrderInfo->tripId=$tripInfo['tripId'];
-            $userOrderInfo->userId=$this->userObj->userSign;
+            $userOrderInfo->userId=$userSign;
             $userOrderInfo->beginDate=$beginDate;
             $userOrderInfo->startTime=$startTime;
             $userOrderInfo->personCount=$peopleCount;

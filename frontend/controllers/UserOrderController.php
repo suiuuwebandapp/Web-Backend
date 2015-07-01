@@ -493,7 +493,7 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '无效的订单号']);
         }
         $orderPublisher=$this->userOrderService->findPublisherByOrderId($orderId);
-        if(!isset($orderPublisher)){
+        if(empty($orderPublisher)){
             return $this->redirect(['/result', 'result' => '无效的随友信息']);
         }
         $publisherInfo=$this->userBaseService->findUserPublisherByPublisherId($orderPublisher->userPublisherId);

@@ -10,6 +10,8 @@ namespace frontend\controllers;
 use common\components\Aes;
 use common\components\Code;
 use common\components\LogUtils;
+use common\components\SmsUtils;
+use common\components\Validate;
 use common\components\wx\WXBizMsgCrypt;
 use common\entity\UserAccess;
 use common\entity\UserBase;
@@ -28,6 +30,7 @@ use yii\web\Controller;
 use yii;
 use common\entity\WeChat;
 use common\components\Common;
+use yii\web\Cookie;
 
 class WeChatController extends SController
 {
@@ -287,56 +290,6 @@ class WeChatController extends SController
 
     }
 
-    public function actionRegister()
-    {
-
-        if (!$this->is_weixin()) {
-            $this->showNoWx();
-            exit;
-        }
-        $userInfo=json_decode(Yii::$app->session->get(Yii::$app->params['weChatSign']));
-        if(isset($userInfo->openId))
-        {
-            if($_POST)
-            {
-                $phone=\Yii::$app->request->post('phone');
-                $password=\Yii::$app->request->post('password');
-                $cPassword=\Yii::$app->request->post('cPassword');
-                $code=\Yii::$app->request->post('validateCode');//验证码
-                if(empty($password))
-                {
-                    return $this->renderPartial('errorHint', array('str1'=>'密码不能为空','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
-                }
-                if($cPassword!=$password)
-                {
-                    return $this->renderPartial('errorHint', array('str1'=>'密码不一致','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
-                }
-                $rCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
-                if(empty($rCode)||$rCode!=$code)
-                {
-                    return $this->renderPartial('errorHint', array('str1'=>'验证码不正确','str2'=>'','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
-                }
-                $userBase=new UserBase();
-                $userBase->nickname=$userInfo->v_nickname;
-                $userBase->password=$password;
-                $userBase->phone=$phone;
-                $userBaseService = new UserBaseService();
-                $user=$userBaseService->addUser($userBase);
-                $this->weChatSer->bindingWeChatByUnionID($user->userSign,$userInfo->unionID);
-                $this->wRefresh($userInfo->openId);
-                return $this->renderPartial('success',['title'=>'注册成功','str'=>'注册成功','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
-            }else
-            {
-                $c=Yii::$app->request->get('c');
-                $n=Yii::$app->request->get('n');
-                return $this->renderPartial('register',['c'=>$c,'n'=>$n]);
-            }
-        }else
-        {
-            return $this->renderPartial('errorHint', array('str1'=>'绑定错误,无法获取用户信息','str2'=>'请联系管理员','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
-        }
-
-    }
     public function actionError()
     {
         $str=Yii::$app->request->get('str');
@@ -733,5 +686,218 @@ class WeChatController extends SController
     public function showNoWx()
     {
         echo "请在微信浏览器打开";
+    }
+
+
+    /**
+     * 登陆
+     */
+    public function actionLogin()
+    {
+            if($_POST)
+            {
+                $username=\Yii::$app->request->post('username');
+                $password=\Yii::$app->request->post('password');
+                $code=\Yii::$app->request->post('code');
+                $remember = Yii::$app->request->post('remember');//记住密码
+                $errorCount = 0;
+                if(empty($username))
+                {
+                    return json_encode(Code::statusDataReturn(Code::FAIL,"用户名不能为空",$errorCount));
+                }
+                if(empty($password))
+                {
+                    return json_encode(Code::statusDataReturn(Code::FAIL,"密码不能为空",$errorCount));
+                }
+
+
+                //从Redis 获取用户名登录错误次数
+                $cacheCount = Yii::$app->redis->get(Code::USER_LOGIN_ERROR_COUNT_PREFIX . $username);
+                if (!empty($cacheCount)) {
+                    $errorCount = $cacheCount;
+                }
+                if ($errorCount >= Code::SYS_LOGIN_ERROR_COUNT) {
+                    if(empty($code))
+                    {
+                        return json_encode(Code::statusDataReturn(Code::FAIL,"验证码不能为空",$errorCount));
+                    }
+                    if($code!=\Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE)){
+                        return json_encode(Code::statusDataReturn(Code::FAIL,"验证码不正确",$errorCount));
+                    }
+                }
+                $userBaseService = new UserBaseService();
+                $userBase = $userBaseService->findUserByUserNameAndPwd($username,$password);
+                if(empty($userBase)||$userBase==false)
+                {
+                    Yii::$app->redis->set(Code::USER_LOGIN_ERROR_COUNT_PREFIX . $username, ++$errorCount);
+                    Yii::$app->redis->expire(Code::USER_LOGIN_ERROR_COUNT_PREFIX . $username, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                    return json_encode(Code::statusDataReturn(Code::FAIL,"用户名或密码错误",$errorCount));
+                }
+                Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
+                if ($this->is_weixin()||$remember) {
+                    //记录加密Cookie
+                    $enPassword = Yii::$app->params['encryptPassword'];
+                    $enDigit = Yii::$app->params['encryptDigit'];
+
+                    $aes = new Aes();
+                    $Sign = $aes->encrypt($userBase->userSign, $enPassword, $enDigit);
+                    $cookies = Yii::$app->response->cookies;//cookie 注意，发送Cookie 是response 读取是 request
+                    $signCookie = new Cookie([
+                        'name' => Yii::$app->params['suiuu_sign'],
+                        'value' => $Sign,
+                    ]);
+                    $signCookie->expire = time() + 24 * 60 * 60 * floor(Yii::$app->params['cookie_expire']);
+                    $cookies->add($signCookie);
+                }
+                //清除错误登录次数
+                Yii::$app->redis->del(Code::USER_LOGIN_ERROR_COUNT_PREFIX . $username);
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,"登陆成功"));
+            }else
+            {
+                return $this->renderPartial('login');
+            }
+    }
+
+    /**
+     * 用户手机注册
+     * @return mixed
+     */
+    public function actionPhoneRegister()
+    {
+
+        $sendCode=Yii::$app->request->post('code');
+
+        if(empty($sendCode))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'验证码错误'));
+        }
+        $session = \Yii::$app->session->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE);
+
+        if (empty($session)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_PHONE_CODE_ERROR));
+        }
+        $array = explode('-', $session);
+        $phone = $array[0];
+        $areaCode = $array[1];
+        $validateCode = $array[2];
+        $password=$array[3];
+        $error = "";//错误信息
+        $valMsg = Validate::validatePhone($phone);
+        if (!empty($valMsg)) {
+            $error = $valMsg;
+        } else if (empty($password) || strlen($password) > 30) {
+            $error = '密码格式不正确';
+        } else if (empty($areaCode)) {
+            $error = '手机区号格式不正确';
+        } else if ($sendCode != $validateCode) {
+            $error = '验证码输入有误，请查证后再试';
+        }
+
+        if (!empty($error)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+        }
+
+        try {
+            $userBase = new UserBase();
+            $userBase->phone = $phone;
+            $userBase->password = $password;
+            $userBaseService = new UserBaseService();
+            $userBase = $userBaseService->addUser($userBase);
+            //添加用户登录状态
+            \Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, 'success'));
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,'注册失败'));
+        }
+
+    }
+
+
+
+    /**
+     * 给用户发送短信
+     */
+    public function actionSendMessage()
+    {
+
+
+        $phone = \Yii::$app->request->post('phone');//发送给用户的手机
+        $areaCode = \Yii::$app->request->post('areaCode');//区号
+        $password = \Yii::$app->request->post('password');
+        $valNum=\Yii::$app->request->post("valNum");
+        $sysNum= \Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
+        //$passwordConfirm = \Yii::$app->request->post('passwordConfirm');
+        /*else if ($password != $passwordConfirm) {
+            $error = '两次密码输入不一致';
+        }*/
+        $error = "";//错误信息
+        $valMsg = Validate::validatePhone($phone);
+        if (!empty($valMsg)) {
+            $error = $valMsg;
+        } else if (empty($password) || strlen($password) > 30) {
+            $error = '密码格式不正确';
+        } else if (empty($areaCode)) {
+            $error = '手机区号格式不正确';
+        }else if(empty($valNum)||$valNum!=$sysNum){
+            //$error = '图形验证码输入有误';
+        }
+        if (!empty($error)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
+        }
+
+        $count = \Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX . $phone);
+
+        if ($count < Code::MAX_SEND_COUNT) {
+            $userBaseService = new UserBaseService();
+            //判断手机是否已经注册
+            $userBase = $userBaseService->findUserByPhone($phone);
+            if (!empty($userBase)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_PHONE_EXIST));
+            }
+            $code = $this->randomPhoneCode();//验证码
+            //分割可能会有问题，测试阶段
+            \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE, $phone . "-" . $areaCode . "-" . $code. "-" . $password);
+            //调用发送短信接口 测试默认为成功
+            //调用发送短信接口 测试默认为成功
+            $smsUtils = new SmsUtils();
+            $rst = $smsUtils->sendMessage($phone, $areaCode,$code,SmsUtils::SEND_MESSAGE_TYPE_REGISTER);
+            if ($rst['status'] == Code::SUCCESS) {
+                //设置手机定时器，控制发送频率
+                Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
+                Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, Code::USER_REGISTER_TIMER));
+            } else {
+                return json_encode(Code::statusDataReturn(Code::FAIL, '短信发送异常'));
+            }
+        } else {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "发送验证码过于频繁，请稍后再试"));
+        }
+
+    }
+    public function actionRegister()
+    {
+
+        if (!$this->is_weixin()) {
+            $this->showNoWx();
+            exit;
+        }
+            $c=Yii::$app->request->get('c');
+            $n=Yii::$app->request->get('n');
+            return $this->renderPartial('register',['c'=>$c,'n'=>$n]);
+
+    }
+
+    /**
+     * 生成手机六位验证码
+     * @return string
+     */
+    private function randomPhoneCode()
+    {
+        $code = "";
+        for ($i = 0; $i < 6; $i++) {
+            $code .= rand(0, 9);
+        }
+        return $code;
     }
 }
