@@ -105,6 +105,7 @@ class UserOrderController extends  CController{
             $selectServiceList=[];//附加服务list
             $servicePrice=0;//附加服务价格
             $basePrice=0;
+            $stepFlag=false;
 
             if($peopleCount>$tripInfo['maxUserCount']){
                 return Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
@@ -118,10 +119,14 @@ class UserOrderController extends  CController{
                     {
                         if($peopleCount>=$stepPrice['minCount']&&$peopleCount<=$stepPrice['maxCount']){
                             $basePrice=$stepPrice['price']*$peopleCount;
+                            $stepFlag=true;
                             break;
                         }
                     }
                 }else{
+                    $basePrice=$tripInfo['basePrice']*$peopleCount;
+                }
+                if(!$stepFlag){
                     $basePrice=$tripInfo['basePrice']*$peopleCount;
                 }
             }

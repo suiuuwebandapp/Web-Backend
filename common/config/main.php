@@ -19,5 +19,9 @@ return [
             'port' => 6379,
             'database' => 0,
         ],
+        'session' => array(
+            'class' => 'yii\web\Session',
+            'cookieParams' => ['domain' => '.' . "suiuu.com", 'lifetime' => 0],
+        ),
     ],
 ];

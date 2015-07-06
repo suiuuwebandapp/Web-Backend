@@ -535,6 +535,7 @@
         var peopleCount=$("#peopleCount").val();
         var tripTime=$("#tripTime").val();
         var allPrice=0;
+        var stepFlag=false;
 
         if(peopleCount==''||peopleCount==0){
             return;
@@ -560,10 +561,14 @@
                     var stepPrice=stepPriceList[i];
                     if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
                         allPrice=parseInt(stepPrice['price'])*peopleCount;
+                        stepFlag=true;
                         break;
                     }
                 }
             }else{
+                allPrice=parseInt(basePrice)*peopleCount;
+            }
+            if(!stepFlag){
                 allPrice=parseInt(basePrice)*peopleCount;
             }
         }
