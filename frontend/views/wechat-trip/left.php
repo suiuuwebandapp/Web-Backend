@@ -14,6 +14,10 @@
         <?php if($userObj->isPublisher==1){?>
             <li><a href="/wechat-user-center/trip-order" <?php if($active==6){echo 'class="active"';}?> >随游订单</a></li>
         <?php }?>
-        <li><a href="/we-chat/logout">退出</a></li>
+        <?php if(empty($userObj->userSign)){?>
+        <li><a href="/we-chat/login">登录</a></li>
+        <?php }else{?>
+            <li><a href="/we-chat/logout">退出</a></li>
+        <?php }?>
     </ul>
 </div>

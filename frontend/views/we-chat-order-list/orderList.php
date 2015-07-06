@@ -52,7 +52,7 @@
                 ?>
                 <p>日期：<b><?php echo $dataV;?></b></p>
                 <?php } ?>
-                <a href="#" class="colBlue">详情...</a>
+                <a href="javascript:alert('暂无详情');" class="colBlue">详情...</a>
             </div>
         </div>
     </div>

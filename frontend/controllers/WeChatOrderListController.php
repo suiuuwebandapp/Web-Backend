@@ -9,10 +9,12 @@
 namespace frontend\controllers;
 
 
+use backend\services\WechatService;
 use common\components\Aes;
 use common\components\Code;
 use common\entity\WeChatOrderList;
 use common\entity\WeChatOrderRefund;
+use common\entity\WeChatUserInfo;
 use common\pay\alipay\create\AlipayCreateApi;
 use frontend\components\Page;
 use frontend\services\WeChatOrderListService;
@@ -42,10 +44,9 @@ class WeChatOrderListController extends WController {
         $userNumber=Yii::$app->request->post('userNumber');
         $userPhone=Yii::$app->request->post('phone');
         $userSign=$this->userObj->userSign;
-        $openId=$this->userObj->openId;
-        if(empty($openId))
+        if(empty($userSign))
         {
-            return json_encode(Code::statusDataReturn(Code::FAIL, "无效的微信用户"));
+            return json_encode(Code::statusDataReturn(Code::FAIL, "无效的用户"));
         }
         if(empty($site))
         {
@@ -68,6 +69,14 @@ class WeChatOrderListController extends WController {
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "订购人数不能为空"));
         }
+        $wechatSer = new WechatService();
+        $userInfo=new WeChatUserInfo();
+        $userInfo->userSign=$userSign;
+        $wechatUserInfo=$wechatSer->getUserInfo($userInfo);
+        $openId="";
+        if(isset($wechatUserInfo['openId'])){
+            $openId=$wechatUserInfo['openId'];
+        }
         $orderNumber=Code::createWxOrderNumber();
         $orderEntity=new WeChatOrderList();
         $orderEntity->wOrderSite=$site;
@@ -79,10 +88,7 @@ class WeChatOrderListController extends WController {
         $orderEntity->wPhone=$userPhone;
         $orderEntity->openId=$openId;
         $this->orderListSer->insertWeChatInfo($orderEntity);
-        if(empty($userSign))
-        {
-            return json_encode(Code::statusDataReturn(Code::UN_LOGIN, '/we-chat-order-list/binding'));
-        }
+
         return json_encode(Code::statusDataReturn(Code::SUCCESS, '/we-chat-order-list/order-success'));
     }
 
@@ -156,7 +162,7 @@ class WeChatOrderListController extends WController {
 
     public function actionOrderManage()
     {
-        $this->loginValid(false);
+        $this->loginValid();
         $userSign=$this->userObj->userSign;
         if(empty($userSign))
         {
@@ -287,11 +293,11 @@ class WeChatOrderListController extends WController {
     }
     public function actionOrderSuccess()
     {
-        return $this->renderPartial('orderSuccess',['str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
+        return $this->renderPartial('orderSuccess',['str2'=>'返回','url'=>"javascript:history.go(-1);"]);
     }
     public function actionRefundSuccess()
     {
-        return $this->renderPartial('refundSuccess',['str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"]);
+        return $this->renderPartial('refundSuccess',['str2'=>'返回','url'=>"javascript:history.go(-1);"]);
     }
     public function actionBinding()
     {

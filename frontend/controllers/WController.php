@@ -108,9 +108,11 @@ class WController extends SController {
 
             if(!isset($currentUser)&&empty($cookieSign)) {
                 echo json_encode(Code::statusDataReturn(Code::UN_LOGIN, '/we-chat/login'));
+                exit;
             }else if(isset($currentUser)){
                 if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
                     echo json_encode(Code::statusDataReturn(Code::UN_LOGIN, '/we-chat/login'));
+                    exit;
                 }
                 $this->userObj=$currentUser;
             }else if(!empty($cookieSign)){
@@ -123,6 +125,7 @@ class WController extends SController {
                     \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
                 }else{
                     echo json_encode(Code::statusDataReturn(Code::UN_LOGIN, '/we-chat/login'));
+                    exit;
                 }
             }
         }else {

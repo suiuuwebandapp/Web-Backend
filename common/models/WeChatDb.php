@@ -49,6 +49,10 @@ class WeChatDb extends ProxyDb{
            LEFT JOIN user_base b ON a.userSign=b.userSign
             WHERE 1=1
         ");
+        if(!empty($weChatUserInfo->userSign))
+        {
+            $sql.=' AND a.userSign=:userSign';
+        }
         if(!empty($weChatUserInfo->id))
         {
             $sql.=' AND id=:id';
@@ -62,6 +66,10 @@ class WeChatDb extends ProxyDb{
             $sql.=' AND unionID=:unionID';
         }
         $command=$this->getConnection()->createCommand($sql);
+        if(!empty($weChatUserInfo->userSign))
+        {
+            $command->bindParam(":userSign", $weChatUserInfo->userSign, PDO::PARAM_STR);
+        }
         if(!empty($weChatUserInfo->id))
         {
             $command->bindParam(":id", $weChatUserInfo->id, PDO::PARAM_INT);

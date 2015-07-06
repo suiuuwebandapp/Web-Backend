@@ -46,7 +46,7 @@ return [
      */
 
     //微信url
-    'weChatUrl'=>'http://pay.jiebanyouni.com',
+    'weChatUrl'=>'http://www.suiuu.com',
     'weChatSign'=>'weChatSign',
     'weChatOpenId'=>'weChatOpenId',
     //token
