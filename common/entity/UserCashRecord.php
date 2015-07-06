@@ -13,10 +13,11 @@ namespace common\entity;
 class UserCashRecord {
 
 
-    const USER_CASH_RECORD_STATUS_WAIT=1;//等待转出
-    const USER_CASH_RECORD_STATUS_SUCCESS=2;//转出成功
-    const USER_CASH_RECORD_STATUS_FAIL=3;//转出失败
+    const USER_CASH_RECORD_STATUS_WAIT=1;//等待打款
+    const USER_CASH_RECORD_STATUS_SUCCESS=2;//打款成功
+    const USER_CASH_RECORD_STATUS_FAIL=3;//打款失败
 
+    const PRIMARY_KEY='cashId';
 
     /**
      * @var提现ID

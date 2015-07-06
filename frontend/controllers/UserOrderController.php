@@ -277,7 +277,7 @@ class UserOrderController extends  CController{
     }
 
     /**
-     * 尚未接单情况，直接取消订单
+     * 尚未付款，直接取消订单
      * @return string
      */
     public function actionCancelOrder()
@@ -319,19 +319,8 @@ class UserOrderController extends  CController{
         if(empty($orderId)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
         }
-
         try{
-            $orderInfo=$this->userOrderService->findOrderByOrderId($orderId);
-            if(empty($orderInfo)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
-            }
-            if($orderInfo->userId!=$this->userObj->userSign){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"您没有权限申请退款"));
-            }
-            if($orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"订单暂时无法申请退款"));
-            }
-            $this->userOrderService->changeOrderStatus($orderInfo->orderNumber,UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT);
+            $this->userOrderService->userRefundOrder($this->userObj->userSign,$orderId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -356,7 +345,7 @@ class UserOrderController extends  CController{
         }
 
         try{
-            $this->userOrderService->userRefundOrder($this->userObj->userSign,$orderId,$message);
+            $this->userOrderService->userRefundOrderByMessage($this->userObj->userSign,$orderId,$message);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);

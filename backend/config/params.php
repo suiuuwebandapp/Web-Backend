@@ -7,7 +7,7 @@ return [
     'adminEmail' => 'xin.zhang@suiuu.com',
     'name'=>'随游后台管理系统',
     'version'=>'beat 1.0',
-    'copyright'=>' 2015 &copy; Suiuu. Admin Dashboard Template.',
+    'copyright'=>' &copy; 2015 Suiuu.com All Rights Reserved. 沪ICP备15030059号-1',
     'language'=>'zh-cn',
     'sourceLanguage'=>'zh-cn',
     'defaultController'=>'index',

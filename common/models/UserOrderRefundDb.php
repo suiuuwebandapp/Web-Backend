@@ -10,6 +10,7 @@
 namespace common\models;
 
 
+use backend\components\Page;
 use common\entity\UserOrderRefund;
 use common\entity\UserOrderRefundApply;
 use yii\db\mssql\PDO;
@@ -51,11 +52,11 @@ class UserOrderRefundDb extends ProxyDb{
      * @param UserOrderRefundApply $userOrderRefundApply
      * @throws \yii\db\Exception
      */
-    public function updateUserOrderRefundApplys(UserOrderRefundApply $userOrderRefundApply)
+    public function updateUserOrderRefundApply(UserOrderRefundApply $userOrderRefundApply)
     {
         $sql=sprintf("
             UPDATE user_order_refund_apply SET
-            replyTime=:now(),replyContent=:replyContent,status=:status
+            replyTime=now(),replyContent=:replyContent,status=:status
             WHERE refundApplyId=:refundApplyId
         ");
 
@@ -78,25 +79,96 @@ class UserOrderRefundDb extends ProxyDb{
         $sql = sprintf("
             INSERT  INTO user_order_refund
             (
-              refundNumber,orderId,userId,tripId,applyId,refundTime,content,status
+              accountInfo,refundNumber,orderId,userId,tripId,applyId,refundTime,content,money
             )
             VALUES
             (
-              :refundNumber,:orderId,:userId,:tripId,:applyId,now(),:content,:status
+              :accountInfo,:refundNumber,:orderId,:userId,:tripId,:applyId,now(),:content,:money
             )
 
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":refundNumber", $userOrderRefund->refundNumber, PDO::PARAM_STR);
+        $command->bindParam(":accountInfo", $userOrderRefund->accountInfo, PDO::PARAM_STR);
         $command->bindParam(":orderId", $userOrderRefund->orderId, PDO::PARAM_INT);
         $command->bindParam(":userId", $userOrderRefund->userId, PDO::PARAM_STR);
         $command->bindParam(":tripId", $userOrderRefund->tripId, PDO::PARAM_INT);
         $command->bindParam(":applyId", $userOrderRefund->applyId, PDO::PARAM_INT);
         $command->bindParam(":content", $userOrderRefund->content, PDO::PARAM_STR);
-        $command->bindParam(":status", $userOrderRefund->status, PDO::PARAM_INT);
+        $command->bindParam(":money", $userOrderRefund->money, PDO::PARAM_STR);
 
         $command->execute();
     }
+
+
+    /**
+     * 获取用户申请退款列表
+     * @param Page $page
+     * @param $search
+     * @param $status
+     * @return Page|null
+     */
+    public function getOrderRefundApplyList(Page $page,$search,$status)
+    {
+        $sql=sprintf("
+            FROM user_order_refund_apply uof
+            LEFT JOIN user_order_info uoi ON uof.orderId=uoi.orderId
+            LEFT JOIN user_base ub ON uoi.userId=ub.userSign
+            WHERE 1=1
+        ");
+
+        if(!empty($search)){
+            $sql.=' AND  ( uoi.orderNumber like :search OR ub.phone like :search OR ub.nickname like :search  )';
+            $this->setParam('search',$search.'%');
+        }
+        if($status!==""){
+            $sql.=' AND uof.status=:status ';
+            $this->setParam('status',$status);
+        }
+        $this->setSelectInfo(' uof.*,uoi.orderNumber,uoi.totalPrice,uoi.createTime,uoi.tripJsonInfo,ub.nickname AS userNickname,ub.phone AS userPhone ');
+        $this->setSql($sql);
+        return $this->find($page);
+
+    }
+
+
+    /**
+     * 获取随游退款申请详情
+     * @param $refundApplyId
+     * @return array|bool
+     */
+    public function findOrderRefundApplyById($refundApplyId)
+    {
+        $sql = sprintf("
+            SELECT * FROM  user_order_refund_apply
+            WHERE refundApplyId=:refundApplyId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":refundApplyId", $refundApplyId, PDO::PARAM_INT);
+
+        return $command->queryOne();
+    }
+
+
+    /**
+     * 获取订单退款详情
+     * @param $applyId
+     * @return array|bool
+     */
+    public function findOrderRefundByApplyId($applyId)
+    {
+        $sql = sprintf("
+            SELECT * FROM  user_order_refund
+            WHERE applyId=:applyId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":applyId", $applyId, PDO::PARAM_INT);
+
+        return $command->queryOne();
+    }
+
 
 
 }

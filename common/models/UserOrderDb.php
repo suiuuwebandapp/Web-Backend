@@ -11,8 +11,6 @@ namespace common\models;
 
 
 use backend\components\Page;
-use common\entity\DestinationInfo;
-use common\entity\DestinationScenic;
 use common\entity\UserAccount;
 use common\entity\UserAccountRecord;
 use common\entity\UserOrderComment;
@@ -162,6 +160,7 @@ class UserOrderDb extends ProxyDb
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_CANCELED . "
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL . "
+            AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS . "
 
 
         ");
@@ -193,7 +192,7 @@ class UserOrderDb extends ProxyDb
               OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH . "
               OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_CANCELED . "
               OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL . "
-
+              OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS . "
             )
         ");
         $command = $this->getConnection()->createCommand($sql);
@@ -318,8 +317,9 @@ class UserOrderDb extends ProxyDb
     public function findPublisherByOrderId($orderId)
     {
         $sql=sprintf("
-            SELECT * FROM user_publisher
-            WHERE userPublisherId=
+            SELECT ub.nickname,ub.phone,ub.email,up.* FROM user_publisher up
+            LEFT JOIN user_base ub ON ub.userSign=up.userId
+            WHERE up.userPublisherId=
             (
               SELECT publisherId FROM user_order_publisher WHERE orderId=:orderId
             )
@@ -515,7 +515,7 @@ class UserOrderDb extends ProxyDb
      * @param $status
      * @return Page
      */
-    public function getOrderList(Page $page,$search,$beginTime,$endTime,$status)
+    public function getAllOrderList(Page $page,$search,$beginTime,$endTime,$status)
     {
         $sql=sprintf("
             FROM user_order_info uoi
@@ -524,7 +524,7 @@ class UserOrderDb extends ProxyDb
         ");
 
         if(!empty($search)){
-            $sql.=' AND  ( uoi.orderNumber=:search OR userPhone=:search OR userNickname like :search  )';
+            $sql.=' AND  ( uoi.orderNumber like :search OR ub.phone like :search OR ub.email like :search OR ub.nickname like :search  )';
             $this->setParam('search',$search.'%');
         }
 
@@ -545,13 +545,10 @@ class UserOrderDb extends ProxyDb
             $sql.=' AND uoi.status=:status ';
             $this->setParam('status',$status);
         }
-        $this->setSelectInfo(' uoi.*,ub.nickname AS userNickname,ub.phone AS userPhone ');
+        $this->setSelectInfo(' uoi.*,ub.nickname AS userNickname,ub.phone AS userPhone,ub.email ');
         $this->setSql($sql);
         return $this->find($page);
 
     }
-
-
-
 
 }

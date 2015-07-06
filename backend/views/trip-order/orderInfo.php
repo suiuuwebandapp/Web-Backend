@@ -16,6 +16,7 @@ if($orderInfo!=null){
     $user=$orderInfo['user'];
     $publisher=$orderInfo['publisher'];
     $travelInfo=json_decode($info['tripJsonInfo'],true);
+    $serviceList=json_decode($info['serviceInfo'],true);
 }else{
     throw new \yii\base\Exception("无效的订单信息");
 }
@@ -49,14 +50,14 @@ if($orderInfo!=null){
                                                 <p class="form-control-static"><?=$info['orderNumber']?></p>
                                             </div>
                                         </div>
-                                        <!--/span-->
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-4">创建日期:</label>
+                                            <label class="control-label col-md-4">订单状态:</label>
                                             <div class="col-md-8">
-                                                <p class="form-control-static"><?=$info['status']?></p>
+                                                <p class="form-control-static">
+                                                    <?=\common\entity\UserOrderInfo::getOrderStatusDes($info['status']); ?>
+                                                </p>
                                             </div>
                                         </div>
-                                        <!--/span-->
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -65,69 +66,109 @@ if($orderInfo!=null){
                                                 <p class="form-control-static"><a target="_blank" href="<?php echo Yii::$app->params['suiuu_url']?>/view-trip/info?trip=<?=$travelInfo['info']['tripId']?>"><?=$travelInfo['info']['title']?></a></p>
                                             </div>
                                         </div>
-                                        <!--/span-->
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4">订单金额:</label>
                                             <div class="col-md-8">
                                                 <p class="form-control-static"><?=$info['totalPrice']?></p>
                                             </div>
                                         </div>
-                                        <!--/span-->
                                     </div>
                                     <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4">创建日期:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"><?=$info['createTime']?></p>
+                                            </div>
+                                        </div>
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4">用户昵称:</label>
                                             <div class="col-md-8">
                                                 <p class="form-control-static"><?=$user['nickname']?></p>
                                             </div>
                                         </div>
-                                        <!--/span-->
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4">用户手机:</label>
                                             <div class="col-md-8">
                                                 <p class="form-control-static"><?=$user['phone']?></p>
                                             </div>
                                         </div>
-                                        <!--/span-->
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="control-label col-md-4">:</label>
-                                            <div class="col-md-8">
-                                                <p class="form-control-static"><?=$user['nickname']?></p>
-                                            </div>
-                                        </div>
-                                        <!--/span-->
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4">用户邮箱:</label>
                                             <div class="col-md-8">
-                                                <p class="form-control-static"><?=$user['email']?></p>
+                                                <p class="form-control-static"><?=empty($user['email'])?"暂无":$user['email'];?></p>
                                             </div>
                                         </div>
-                                        <!--/span-->
                                     </div>
-                                    <?php
-                                    if(isset($publisher)){
-                                        var_dump($publisher);exit;
-                                    }
-                                    ?>
-                                    <hr/><!-- 随友信息 -->
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-4">注册IP:</label>
+                                            <label class="control-label col-md-4">出行人数:</label>
                                             <div class="col-md-8">
-                                                <p class="form-control-static"><?=$info['orderNumber']?></p>
+                                                <p class="form-control-static"><?=$info['personCount']?>人</p>
                                             </div>
                                         </div>
-                                        <!--/span-->
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-4">登录IP:</label>
+                                            <label class="control-label col-md-4">出行日期:</label>
                                             <div class="col-md-8">
-                                                <p class="form-control-static"><?=$info['orderNumber']?></p>
+                                                <p class="form-control-static"><?=$info['beginDate']." ".\common\components\DateUtils::convertTimePicker($info['startTime'],2);?></p>
                                             </div>
                                         </div>
-                                        <!--/span-->
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4">基础价格:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static">
+                                                    ￥<?=$info['basePrice']?>
+                                                    <?=isset($info['basePriceType'])&&$info['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?"/次":"/人"?>
+
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-4">附加服务:</label>
+                                            <div class="col-md-8">
+                                                <?php  foreach($travelInfo['serviceList'] as $service){ ?>
+                                                    <p class="form-control-static">
+                                                        <?=$service['title']?> ￥<?=$service['money']?>
+                                                        <?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT?"/次":"/人"?>
+                                                    </p>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php if(isset($publisher)){ ?>
+                                        <hr/><!-- 随友信息 -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="control-label col-md-4">接单随友:</label>
+                                                <div class="col-md-8">
+                                                    <p class="form-control-static"><?=$publisher['nickname']?></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="control-label col-md-4">接单时间:</label>
+                                                <div class="col-md-8">
+                                                    <p class="form-control-static"><?=isset($info['confirmTime'])?$info['confirmTime']:"";?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="control-label col-md-4">随友手机:</label>
+                                                <div class="col-md-8">
+                                                    <p class="form-control-static"><?=$publisher['phone']?></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="control-label col-md-4">随友邮箱:</label>
+                                                <div class="col-md-8">
+                                                    <p class="form-control-static"><?=$publisher['email'];?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                                 <!-- END FORM-->
                             </div>
@@ -145,10 +186,5 @@ if($orderInfo!=null){
 </form>
 <!-- END PAGE LEVEL STYLES -->
 
-<script type="text/javascript">
-    jQuery(document).ready(function() {
-    });
-
-</script>
 </body>
 </html>

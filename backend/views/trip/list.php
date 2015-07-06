@@ -139,7 +139,7 @@
                                 return "草稿";
                                 break;
                             case "3":
-                                return "被删除";
+                                return "已删除";
                                 break;
                         }
                     }
@@ -152,6 +152,7 @@
                     "render": function(data, type, full) {
                         var html='';
                         html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/view-trip/info?trip="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
+                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/sys/edit-trip?trip="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="deleteHandle(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
                     }

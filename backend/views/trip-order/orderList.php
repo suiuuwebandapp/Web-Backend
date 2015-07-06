@@ -9,11 +9,12 @@
 
 ?>
 
-<link rel="stylesheet" type="text/css"
-      href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/data-tables/DT_bootstrap.css"
-      xmlns="http://www.w3.org/1999/html"/>
-<link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-colorbox/colorbox.css" />
-
+<link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/data-tables/DT_bootstrap.css" />
+<style type="text/css">
+    .table-info-form select{
+        margin-left: 20px !important;
+    }
+</style>
 <div class="clearfix"></div>
 <div class="row">
     <div class="col-md-12">
@@ -38,9 +39,8 @@
                     <form id="trip_order_form" onsubmit="return false;">
                         <div class="col-md-12 input-group ">
                             <input type="text" name="searchText" class="input-xlarge" placeholder="请输入订单号 或 用户昵称 或 手机号" >
-                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态</label>
                             <select name="status" class="form-control input-medium" >
-                                <option value="">全部</option>
+                                <option value="">请选择订单状态</option>
                                 <option value="0">待付款</option>
                                 <option value="1">待接单</option>
                                 <option value="2">已接单</option>
@@ -51,6 +51,7 @@
                                 <option value="7">游玩结束</option>
                                 <option value="8">退款审核中</option>
                                 <option value="9">退款失败</option>
+                                <option value="10"></option>
                             </select>
                             <span class="input-group-btn" >
                                 <button id="search" class="btn green-meadow" type="button">搜索</button>
@@ -176,6 +177,8 @@
                             html='<span class="label label-default">&nbsp;退款审核中&nbsp;</span>';
                         }else if(data==9) {
                             html='<span class="label label-default">&nbsp;退款失败&nbsp;</span>';
+                        }else if(data==10){
+                            html='<span class="label label-default">&nbsp;随友取消订单&nbsp;</span>';
                         }
                         return html;
                     }

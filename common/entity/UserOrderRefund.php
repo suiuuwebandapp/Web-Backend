@@ -16,6 +16,8 @@ class UserOrderRefund {
 
     public $refundNumber;
 
+    public $accountInfo;
+
     public $userId;
 
     public $orderId;
@@ -30,5 +32,4 @@ class UserOrderRefund {
 
     public $content;
 
-    public $status;
 }

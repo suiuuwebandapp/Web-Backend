@@ -87,9 +87,6 @@
                         <a href="#~/user-base/to-wechat-user-list">微信用户</a>
                     </li>
                     <li>
-                        <a href="index_horizontal_menu.html"> 随友管理</a>
-                    </li>
-                    <li>
                         <a href="#~/user-base/to-add-publisher"> 添加随友</a>
                     </li>
                 </ul>
@@ -127,7 +124,7 @@
             </li>
             <li class="menu_top">
                 <a href="javascript:;">
-                    <i class="icon-basket"></i>
+                    <i class="icon-paper-plane"></i>
                     <span class="title"> 随游管理</span>
                     <span class="arrow"></span>
                 </a>
@@ -149,6 +146,12 @@
                 <ul class="sub-menu">
                     <li>
                         <a href="#~/trip-order/list"> 订单列表</a>
+                    </li>
+                    <li>
+                        <a href="#~/trip-order/refund-apply-list"> 退款申请</a>
+                    </li>
+                    <li>
+                        <a href="#~/user-account/to-cash-list"> 提现申请</a>
                     </li>
                 </ul>
             </li>

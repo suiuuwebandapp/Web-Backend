@@ -21,6 +21,7 @@ use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
 use common\entity\UserOrderPublisherCancel;
 use common\entity\UserOrderPublisherIgnore;
+use common\entity\UserOrderRefund;
 use common\entity\UserOrderRefundApply;
 use common\entity\UserPublisher;
 use common\models\BaseDb;
@@ -337,6 +338,58 @@ class UserOrderService extends BaseDb
         }
     }
 
+    /**
+     * 用户申请退款
+     * @param $userId
+     * @param $orderId
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function userRefundOrder($userId,$orderId)
+    {
+        if(empty($userId)){
+            throw new Exception("UserId Is Not Allow Empty");
+        }
+        if(empty($orderId)){
+            throw new Exception("OrderId Is Not Allow Empty");
+        }
+        $conn=$this->getConnection();
+        $tran=$conn->beginTransaction();
+        try{
+
+            $this->userOrderDb=new UserOrderDb($conn);
+            $userRefundDb=new UserOrderRefundDb($conn);
+            $orderInfo=$this->userOrderDb->findOrderById($orderId);
+            if(empty($orderInfo)){
+                throw new Exception("Invalid Order Number");
+            }
+            if($orderInfo['status']!=UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){
+                throw new Exception("Invalid Order Status");
+            }
+            if($orderInfo['userId']!=$userId){
+                throw new Exception("Invalid User");
+            }
+
+            //更新订单状态
+            $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT);
+            //添加退款申请  系统默认通过
+            $userOrderRefundApply=new UserOrderRefundApply();
+            $userOrderRefundApply->orderId=$orderInfo['orderId'];
+            $userOrderRefundApply->tripId=$orderInfo['tripId'];
+            $userOrderRefundApply->applyContent="系统：未接单情况用户申请退款";
+            $userOrderRefundApply->userId=$userId;
+            $userOrderRefundApply->status=UserOrderRefundApply::USER_ORDER_REFUND_APPLY_STATUS_SUCCESS;
+
+            $userRefundDb->addUserOrderRefundApply($userOrderRefundApply);
+            $this->commit($tran);
+        }catch (Exception $e){
+            $this->rollback($tran);
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
 
     /**
      * 用户提交退款申请 退款将进入审核阶段
@@ -346,7 +399,7 @@ class UserOrderService extends BaseDb
      * @throws Exception
      * @throws \Exception
      */
-    public function userRefundOrder($userId,$orderId,$message)
+    public function userRefundOrderByMessage($userId,$orderId,$message)
     {
         if(empty($userId)){
             throw new Exception("UserId Is Not Allow Empty");
@@ -358,9 +411,10 @@ class UserOrderService extends BaseDb
             throw new Exception("Message Is Not Allow Empty");
         }
 
+        $conn=$this->getConnection();
+        $tran=$conn->beginTransaction();
         try{
 
-            $conn=$this->getConnection();
             $this->userOrderDb=new UserOrderDb($conn);
             $userOrderRefundDb=new UserOrderRefundDb($conn);
             $orderInfo=$this->userOrderDb->findOrderById($orderId);
@@ -379,7 +433,9 @@ class UserOrderService extends BaseDb
 
             $userOrderRefundDb->addUserOrderRefundApply($userOrderRefundApply);
             $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY);
+            $this->commit($tran);
         }catch (Exception $e){
+            $this->rollback($tran);
             throw $e;
         }finally{
             $this->closeLink();
@@ -687,7 +743,6 @@ class UserOrderService extends BaseDb
             $this->closeLink();
         }
     }
-
 
 
 

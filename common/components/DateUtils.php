@@ -58,4 +58,14 @@ class DateUtils {
     }
 
 
+    /**
+     * 获取当前时间
+     * @return bool|string
+     */
+    public static function getNowTime()
+    {
+        return date('Y-m-d H:i:s',time());
+    }
+
+
 }

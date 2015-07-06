@@ -10,7 +10,10 @@
 ?>
 
 <!-----footer------>
-
+<style>
+.copyright{color: #ddd;text-align: center;margin-top: 12px;font-size: 14px;}
+.copyright a{color: #ddd;}
+</style>
 
 <div id="footer-out" class="clearfix">
     <div class="footer w1200 clearfix">
@@ -46,9 +49,8 @@
             </ul>
 
         </div>
-
-
     </div>
+    <p class="copyright"><?=Yii::$app->params['copyright']; ?></p>
 
 </div>
 <!-----footer--end---->

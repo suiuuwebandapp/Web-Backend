@@ -290,6 +290,12 @@ var Main = function() {
 				}
 			});
 		},
+        showBackDrop:function(){
+            jQuery("body").append('<div class="modal-backdrop fade in"></div>');
+        },
+        hideBackDrop:function(){
+            $(".modal-backdrop").remove();
+        } ,
         refrenshTable:function(){
             TableAjax.refresh();
         },
@@ -337,6 +343,13 @@ var Main = function() {
 			} 
 			alert(temp);
 		} ,
+        isNotEmpty:function(obj){
+            if(obj==null||obj=="null"||obj==""||obj==undefined){
+                return false;
+            }else{
+                return true;
+            }
+        },
 		//加载图片预览
 		getInitialPreviewImage: function (str){
 			var result=null;
@@ -396,20 +409,18 @@ var Main = function() {
 
 }();
 
-// MODULE URL
-var ModuleUrl = {
-	addRoleUrl  :  '8f4193c3dc554efb9c2f9d83656d7ae9',
-	roleListUrl :  '5e433f8fbc624f9db6f2f69c93683fd3',
-	editRoleUrl :  '8b2dc88318ac4c5c9c617f6f23665f76',
-	
-	addMovieUrl            : '27f141acfae84989be0786ccb7dbd3ce',
-	movieListUrl           : '7c1050abe67c4a809a769a4128287822',
-	editMovieUrl           : 'cb01d37d34074f4d88380db8abd4716f',
-	editMovieDetailUrl     : '2444d87011b442d0b21b99b1214c176d',
-	editMovieDownloadUrlId : '5fa9973031b548dfbb68318c91688020',
-	editMovieRoleUrlId     : '692cf956b9f84fac81655b6f28115776'
-	
-};
+
+var USER_CASH_CYCLE=5;//用户提现周期
+
+/**
+ * 体现状态 1.等待退款  2.退款成功 3.退款失败
+ * @type {{USER_CASH_RECORD_STATUS_WAIT: string, USER_CASH_RECORD_STATUS_SUCCESS: string, USER_CASH_RECORD_STATUS_FAIL: string}}
+ */
+var UserCashRecordType ={
+    USER_CASH_RECORD_STATUS_WAIT    :'1',
+    USER_CASH_RECORD_STATUS_SUCCESS :'2',
+    USER_CASH_RECORD_STATUS_FAIL    :'3'
+}
 var FrontUrl={
     'tripUrl' :'http://www.suiuu.com/view-trip/info?trip='
 };

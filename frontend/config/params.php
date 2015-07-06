@@ -3,7 +3,7 @@ return [
     'adminEmail' => 'xin.zhang@suiuu.com',
     'name'=>'随游',
     'version'=>'beat 1.0',
-    'copyright'=>' 2015 &copy; Suiuu. Admin Dashboard Template.',
+    'copyright'=>' &copy; 2015 Suiuu.com All Rights Reserved. <a href="www.miitbeian.gov.cn" target="_blank">沪ICP备15030059号-1</a>',
     'language'=>'zh-cn',
     'sourceLanguage'=>'zh-CN',
     'defaultController'=>'index',

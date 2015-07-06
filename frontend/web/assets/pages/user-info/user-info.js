@@ -25,6 +25,8 @@ $(document).ready(function(){
         $("#myPublisherOrder").bind("click",function(){
             getPublisherOrderList();
         });
+
+        //我的账户页面
         $("#userAccount,#accountList").bind("click",function(){
             getUserAccountRecordList();
         });
@@ -42,12 +44,8 @@ $(document).ready(function(){
             showWechatDiv();
         }
 
-
         getUnConfirmOrderByPublisher();
 
-    }else{
-        $("#tripManager").parent("li").hide();
-        $("#userAccount").parent("li").hide();
     }
 
 
@@ -657,7 +655,7 @@ function initSelect(){
             if(search.indexOf("/")!=-1){
                 search=search.split("/")[0];
             }
-            //findCityInfo(search);
+            findCityInfo(search);
         }
     });
     $("#countryId").change();

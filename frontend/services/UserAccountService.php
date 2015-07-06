@@ -34,6 +34,7 @@ class UserAccountService extends BaseDb{
     /**
      * 获取用户账户记录列表
      * @param Page $page
+     * @param $userId
      * @param $startTime
      * @param $endTime
      * @param $type
@@ -41,12 +42,12 @@ class UserAccountService extends BaseDb{
      * @throws Exception
      * @throws \Exception
      */
-    public function getUserAccountRecordList(Page $page,$startTime,$endTime,$type)
+    public function getUserAccountRecordList(Page $page,$userId,$startTime,$endTime,$type)
     {
         try {
             $conn = $this->getConnection();
             $this->userAccountDb = new UserAccountDb($conn);
-            $page=$this->userAccountDb->getUserAccountRecordList($page,$startTime,$endTime,$type);
+            $page=$this->userAccountDb->getUserAccountRecordList($page,$userId,$startTime,$endTime,$type);
         } catch (Exception $e) {
             throw $e;
         } finally {
@@ -104,7 +105,7 @@ class UserAccountService extends BaseDb{
 
 
 
-    public function getUserAccountByType($type)
+    public function findUserAccountByType($type)
     {
 
     }
@@ -116,7 +117,7 @@ class UserAccountService extends BaseDb{
         try {
             $userOrderDb=new UserOrderDb($conn);
             $this->userAccountDb = new UserAccountDb($conn);
-            $userAccount=$this->userAccountDb->getUserAccountByAccountId($accountId);
+            $userAccount=$this->userAccountDb->findUserAccountByAccountId($accountId);
             //判断accountId 和   userSign 的有效性
             if(empty($userAccount)||$userAccount['userId']!=$userSign){
                 throw new Exception("Invalid AccountId");

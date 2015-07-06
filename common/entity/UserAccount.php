@@ -55,4 +55,21 @@ class UserAccount {
      */
     public $isDel;
 
+
+    /**
+     * 获取账户类型
+     * @param $type
+     * @return string
+     */
+    public static function getAccountType($type)
+    {
+        if($type==self::USER_ACCOUNT_TYPE_WECHAT){
+            return "微信";
+        }else if(self::USER_ACCOUNT_TYPE_ALIPAY){
+            return "支付宝";
+        }else{
+            return "未知类型";
+        }
+    }
+
 }

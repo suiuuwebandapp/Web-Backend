@@ -17,6 +17,7 @@ class UserAccountRecord {
     const USER_ACCOUNT_RECORD_TYPE_TRIP_DIVIDED_INTO=2;//随游分成
     const USER_ACCOUNT_RECORD_TYPE_DRAW_MONEY=3;//提现
     const USER_ACCOUNT_RECORD_TYPE_OTHER=4;//其他
+    const USER_ACCOUNT_RECORD_TYPE_REFUND=5;//退款
 
     /**
      * @var记录ID

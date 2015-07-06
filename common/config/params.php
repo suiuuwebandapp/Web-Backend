@@ -34,5 +34,11 @@ return [
     ),
 
     'apiPassword'=>'sui@uu~9527&*',
-    'imPassword'=>'suIuu9Q5E2T7'
+    'imPassword'=>'suIuu9Q5E2T7',
+
+    //支付宝相关信息
+    'alipay_key'=>'muso6ay8e49jec17yjb04ls7e0vp4jru',
+    'alipay_partner'=>'2088911313021779',
+    'alipay_seller_email'=>'rodg2351@suiuu.com'
+
 ];

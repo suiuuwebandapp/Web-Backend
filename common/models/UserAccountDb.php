@@ -32,7 +32,7 @@ class UserAccountDb extends ProxyDb{
               userId,type,account,username,createTime,updateTime,isDel
             )
             VALUES
-            (
+            (+
               :userId,:type,:account,:username,now(),now(),FALSE
             )
         ");
@@ -115,18 +115,20 @@ class UserAccountDb extends ProxyDb{
     /**
      * 获取用户账户记录列表
      * @param Page $page
+     * @param $userId
      * @param $startTime
      * @param $endTime
      * @param $type
      * @return Page
      */
-    public function getUserAccountRecordList(Page $page,$startTime,$endTime,$type)
+    public function getUserAccountRecordList(Page $page,$userId,$startTime,$endTime,$type)
     {
         $sql=sprintf("
             FROM user_account_record uar
             LEFT JOIN user_cash_record ucr ON uar.relateId=ucr.cashId
-            WHERE 1=1
+            WHERE 1=1 AND uar.userId=:userId
         ");
+        $this->setParam("userId",$userId);
         if(!empty($type)){
             $sql.=" AND uar.type in (".$type.")";
         }
@@ -191,7 +193,7 @@ class UserAccountDb extends ProxyDb{
      * @param $type
      * @return array|bool
      */
-    public function getUserAccountByType($userSign,$type)
+    public function findUserAccountByType($userSign,$type)
     {
         $sql=sprintf("
             SELECT * FROM user_account
@@ -210,7 +212,7 @@ class UserAccountDb extends ProxyDb{
      * @param $accountId
      * @return array|bool
      */
-    public function getUserAccountByAccountId($accountId)
+    public function findUserAccountByAccountId($accountId)
     {
         $sql=sprintf("
             SELECT * FROM user_account
@@ -222,4 +224,61 @@ class UserAccountDb extends ProxyDb{
 
         return $command->queryOne();
     }
+
+
+    /**
+     * 获取所有用户体现记录
+     * @param Page $page
+     * @param $search
+     * @param $type
+     * @param $status
+     * @return Page|null
+     */
+    public function getAllUserCashList(Page $page,$search,$type,$status)
+    {
+        $sql=sprintf("
+            FROM user_cash_record ucr
+            LEFT JOIN user_base ub ON ub.userSign=ucr.userId
+            WHERE 1=1
+        ");
+        if(!empty($search)){
+            $sql.=' AND  ( ucr.cashNumber=:search OR ub.phone like :search OR ub.email like :search OR ub.nickname like :search  )';
+            $this->setParam('search',$search.'%');
+        }
+        if(!empty($type)){
+            $sql.=" AND ucr.type =:type";
+            $this->setParam("type",$type);
+        }
+        if(!empty($status)){
+            $sql.=" AND ucr.status =:status";
+            $this->setParam("status",$status);
+        }
+        $this->setSql($sql);
+        $this->setSelectInfo("ucr.*,ub.nickname,ub.phone,ub.areaCode,ub.email");
+        return  $this->find($page);
+    }
+
+
+    /**
+     * 获取提现详情
+     * @param $cashId
+     * @return array|bool
+     */
+    public function findUserCashById($cashId)
+    {
+        $sql=sprintf("
+            SELECT * FROM user_cash_record
+            WHERE cashId=:cashId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":cashId",$cashId,PDO::PARAM_INT);
+
+        return $command->queryOne();
+    }
+
+
+
+
+
 }

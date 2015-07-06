@@ -131,7 +131,7 @@ class AlipayCreateApi {
         $this->out_trade_no=$order->orderNumber;
         $this->subject=$this->strFilter($tripInfo['title']);
         $this->total_fee=$order->totalPrice;
-        $this->body=$this->strFilter($tripInfo['intro']);;//暂时写成随游详情 详情内容中不能有空格等参数
+        $this->body=$this->strFilter($tripInfo['intro']);//暂时写成随游详情 详情内容中不能有空格等参数
         $this->show_url=\Yii::$app->params['base_dir']."/view-trip/info?trip=".$tripInfo['tripId'];
 
 
@@ -160,7 +160,6 @@ class AlipayCreateApi {
             "extra_common_param"=>"0",
             "_input_charset"	=> trim(strtolower($alipay_config['input_charset']))
         );
-
 
         //建立请求
 

@@ -28,11 +28,10 @@ class AlipayConfig{
 
         //↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         //合作身份者id，以2088开头的16位纯数字
-        $this->alipay_config['partner']		= '2088911313021779';
-
+        $this->alipay_config['partner']		= \Yii::$app->params['alipay_partner'];
 
         //安全检验码，以数字和字母组成的32位字符
-        $this->alipay_config['key']			= 'giav3ogn9a3eo2sd16olnvtw3iajq8lh';
+        $this->alipay_config['key']			= \Yii::$app->params['alipay_key'];
 
         //↑↑↑↑↑↑↑↑↑↑请在这里配置您的基本信息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 

@@ -19,6 +19,7 @@ class UserOrderRefundApply {
     const USER_ORDER_REFUND_APPLY_STATUS_WAIT=0;//待审核
     const USER_ORDER_REFUND_APPLY_STATUS_SUCCESS=1;//审核通过
     const USER_ORDER_REFUND_APPLY_STATUS_FAIL=2;//审核不同过
+    const USER_ORDER_REFUND_APPLY_STATUS_PAY=3;//已支付
 
     public $refundApplyId;
 

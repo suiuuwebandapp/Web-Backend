@@ -43,7 +43,7 @@ class UserAccountController extends CController {
         $page=new Page(\Yii::$app->request);
         try{
             $typeList=[UserAccountRecord::USER_ACCOUNT_RECORD_TYPE_TRIP_DIVIDED_INTO,UserAccountRecord::USER_ACCOUNT_RECORD_TYPE_OTHER,UserAccountRecord::USER_ACCOUNT_RECORD_TYPE_TRIP_SERVER];
-            $page=$this->userAccountService->getUserAccountRecordList($page,null,null,implode(",",$typeList));
+            $page=$this->userAccountService->getUserAccountRecordList($page,$this->userObj->userSign,null,null,implode(",",$typeList));
             $pageResult=new PageResult($page);
             $pageHtml=Common::pageHtml($pageResult->currentPage,$pageResult->pageSize,$pageResult->totalCount);
             $pageResult->pageHtml=$pageHtml;
@@ -71,7 +71,7 @@ class UserAccountController extends CController {
                 $month="0".$month;
             }
             $recordTime=$year."-".$month;
-            $page=$this->userAccountService->getUserAccountRecordList($page,$recordTime,$recordTime,$type);
+            $page=$this->userAccountService->getUserAccountRecordList($page,$this->userObj->userSign,$recordTime,$recordTime,$type);
             $pageResult=new PageResult($page);
             $pageHtml=Common::pageHtml($pageResult->currentPage,$pageResult->pageSize,$pageResult->totalCount);
             $pageResult->pageHtml=$pageHtml;
