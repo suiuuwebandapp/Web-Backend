@@ -16,6 +16,20 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .Registered .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:1.8rem auto 0; text-decoration:none;}
 .Registered .btn:hover{ text-decoration:underline;}
 
+/*-----------注册02-------------*/
+.Registered02 .lists li{ position:relative;  }
+.Registered02 .lists li .country{ cursor:pointer;background:#eee url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
+.Registered02 .lists li label{ font-size:0.85rem; width:100%; margin-top:0.8rem; display:block; }
+.Registered02 .lists li input{ background:#eee; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.Registered02 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:1.8rem auto 0; text-decoration:none;}
+.Registered02 .btn:hover{ text-decoration:underline;}
+.Registered02 .agr{ text-align:center; margin-top:15px;}
+.Registered02 .agr #agreement{ opacity:0;}
+.Registered02 .agr #agreement+label{ display:inline-block; line-height:2rem;   padding-left:1rem; background:url(../images/check1.png) no-repeat 0 center; background-size:0.857rem;}
+.Registered02 .agr #agreement:checked+label{ background:url(../images/check2.png) no-repeat 0 center;background-size:0.857rem;}
+.Registered02 .agr a{ color:#97cbff; text-decoration:none;}
+
+
 /*-----------随友注册-------------*/
 .syRegistered .lists li{ position:relative;  }
 .syRegistered .lists li label{ font-size:0.85rem; width:100%; margin-top:0.8rem; display:block; }
@@ -52,7 +66,6 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .bangding .btn:hover{ text-decoration:underline;}
 
 
-
 /*-----------随游-账号登录/绑定-------------*/
 .sy_zh .box{ position:relative; padding:0.9rem 0.8rem 1.5rem; background:#fff;margin-top:0.5rem;   }
 .sy_zh .box .logo{ width:4.6rem;display:block; margin:0 auto; }
@@ -62,6 +75,59 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .sy_zh .box label{ font-size:0.7rem;  display:block; width:8.2rem; line-height:1.2rem;  margin:1.3rem auto 0; }
 .sy_zh .box .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:0 auto; text-decoration:none;}
 .sy_zh .box .btn:hover{ text-decoration:underline;}
+
+
+/*-----------绑定02-------------*/
+.bangding02 .lists li{ position:relative; margin-top:15px;  }
+.bangding02 .lists li label{ font-size:0.85rem; width:100%;  display:block; }
+.bangding02 .lists li input{ background:#eee; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.bangding02 .lists li .w70{ width:70%; float:left;}
+.bangding02 .lists li .code{height:2.7rem; width:30%; overflow:hidden;font-size:0.85rem; float:right; color:#FF7F00; text-decoration:none; text-align:center; line-height:2.7rem;}
+.bangding02 .lists li .code.colBlue{ color:#73b9ff;}
+.bangding02 .lists li .code img{ width:100%; display:block;}
+.bangding02 .lists li .code:hover{ text-decoration:underline;}
+.bangding02 .lists li .country{ color:#858585; text-align:center; cursor:pointer;background:#eee url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
+.bangding02 .btn{  font-size:0.85rem; 
+  display:block; width:8.2rem; height:2.14rem; line-height:2.14rem;
+   text-align:center; text-decoration:none;
+   position:absolute; left:50%; margin-left:-4.1rem;
+  }
+.bangding02 .lists li.btns{ margin:1.5rem 0;} 
+.bangding02 .forget{ margin-right:2rem; margin-top:0.8rem; color:#858585; text-decoration:none;} 
+  
+.bangding02 .btn:hover{ text-decoration:underline;}
+
+
+/*-----------邮箱找回-------------*/
+.findPassword01 .lists li{ position:relative; margin-top:15px;  }
+.findPassword01 .lists li label{ font-size:0.85rem; width:100%; display:block; }
+.findPassword01 .lists li input{ background:#eee; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.findPassword01 .lists li .w70{ width:70%; float:left;}
+.findPassword01 .lists li .code{height:2.7rem; width:30%; overflow:hidden;font-size:0.85rem; float:right; color:#FF7F00; text-decoration:none; text-align:center; line-height:2.7rem;}
+.findPassword01 .lists li .code.colBlue{ color:#73b9ff;}
+.findPassword01 .lists li .code img{ width:100%; height:2.7rem;display:block;}
+.findPassword01 .lists li .code:hover{ text-decoration:underline;}
+.findPassword01 .lists li .country{ color:#858585; text-align:center; cursor:pointer;background:#eee url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
+.findPassword01 .btn{  font-size:0.85rem; 
+  display:block; width:8.2rem; height:2.14rem; line-height:2.14rem;
+   text-align:center; text-decoration:none;
+   margin:1rem auto;
+    
+  }
+.findPassword01 .lists li.btns{ margin:1.5rem 0;} 
+.findPassword01 .forget{ margin-right:2rem; margin-top:0.8rem; color:#858585; text-decoration:none;} 
+.findPassword01 .btn:hover{ text-decoration:underline;}
+
+
+/*-----------手机找回-------------*/
+.findPassword02 .lists li{ position:relative; margin-top:15px;  }
+.findPassword02 .lists li label{ font-size:0.85rem; width:100%;  display:block; }
+.findPassword02 .lists li .set{ background:#eee; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.findPassword02 .lists li input{ color:#858585; background:#eee; font-size:0.85rem; width:100%; height:2.7rem; line-height:2.7rem; border:1px solid #ddd; padding:0 1%; display:block;}
+.findPassword02 .lists li .code{ position:absolute; top:0.8rem; right:1rem;  }
+.findPassword02 .btn{ border-radius:5px; font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:2rem auto 20px; text-decoration:none;}
+.findPassword02 .btn:hover{ text-decoration:underline;}
+
 /*-----------随游-订单-----------*/
 
 .fixedBtn{ position:fixed; top:10px; left:50%; margin-left:-4rem;z-index:999; font-size:1rem; color:#fff; background:#97CBFF; display:block; width:8rem; height:2.14rem; line-height:2.14rem; text-align:center;  text-decoration:none;   }
@@ -203,7 +269,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 #menu .user{ height:auto; }
 #menu .user .userPic{ height:2.85rem; width:2.85rem; border-radius:50%; display:block; overflow:hidden; margin:0 auto; }
 #menu .user .userPic img{ width:100%; display:block; }
-#menu .user .userName{ font-size:1rem; }
+#menu .user .userName{ font-size:1rem;  color:#858585;}
 
 .userCenter .content{ padding-top:2.85rem;}
 .userCenter .Uheader{
@@ -238,6 +304,8 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 /*----------个人中心 我的订单----------*/
 .center_myOder .content{ width:100%; max-width:640px; margin:0 auto;}
+.center_myOder .content .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.0rem; }
+.center_myOder .content .noOrder{ line-height:1.5rem;margin-top:10px;text-align: center; }
 .center_myOder .content .box{ width:100%; position:relative;}
 .center_myOder .content .box a.pic{ width:100%; display:block;}
 .center_myOder .content .box a img{ width:100%; display:block;}
@@ -294,6 +362,8 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 /*----------个人中心 随游订单----------*/
 .center_syOder .content{ width:100%; max-width:640px; margin:0 auto;}
+.center_syOder .content .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.0rem; }
+.center_syOder .content .noOrder{ line-height:1.5rem;margin-top:10px;text-align: center; }
 .center_syOder .content .line{ margin-top:10px; margin-bottom:15px; border-bottom:1px solid #73b9ff;  }
 .center_syOder .content .syOdernav{ width:60%; margin:0 auto;}
 .center_syOder .content .syOdernav li{ float:left; width:50%; text-align:center; }
@@ -507,7 +577,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 #pagepiling .section .content .box01 a.pic{ width:100%; display:block;}
 #pagepiling .section .content .box01 a img{ width:100%; display:block;}
 #pagepiling .section .content .box01 .details{ width:100%; box-sizing:border-box; color:#fff; position:absolute; padding:2%; left:0; bottom:0;}
-#pagepiling .section .content .box01 .details .title{ margin-bottom:4px; color:#fff; font-size:0.85rem;}
+#pagepiling .section .content .box01 .details .title{ position:relative; top:0; left:0; margin-bottom:4px; color:#fff; font-size:0.85rem;}
 #pagepiling .section .content .box01 .details .colOrange{ color:#FFEA7F; font-size:0.85rem;}
 #pagepiling .section .content .box01 .details .line img{ float:right; margin-left:3px;}
 
@@ -561,7 +631,6 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .payfor .down .icon{ display:block;   width:1.6rem; height:1.6rem; background:url(../images/icon02.fw.png) no-repeat center 0; background-size:1.607rem 28.92rem;}
 .payfor .down .icon.wei{ background-position:center -9.03rem; }
 .payfor .down .icon.zfb{ background-position:center -21rem; }
-
 
 
 /*----------- 订单确认----------*/
