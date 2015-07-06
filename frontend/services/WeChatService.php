@@ -46,17 +46,17 @@ class WeChatService extends BaseDb{
         $string = '{
                     "button":[
                     {
-                      "name":"预定",
+                      "name":"随游服务",
                        "sub_button":[
                         {
                            "type":"view",
                            "name":"定制",
-                           "url":"%s"
+                           "url":"http://www.suiuu.com/we-chat-order-list/order-manage"
                         },
                        {
                           "type":"view",
-                           "name":"订单管理",
-                           "url":"%s"
+                           "name":"随游",
+                           "url":"http://www.suiuu.com/wechat-trip"
                         }]
                     },
                     {
@@ -75,29 +75,21 @@ class WeChatService extends BaseDb{
                        ]
                     },
                     {
-                      "name":"加入随游",
-                       "sub_button":[
-                        {
-                           "type":"view",
-                           "name":"当地人申请",
-                           "url":"https://jinshuju.net/f/GWbYtm"
-                        },
-                        {
-                           "type":"view",
-                           "name":"加入公测",
-                           "url":"https://jinshuju.net/f/M7mEkb"
-                        }]
+                        "type":"view",
+                        "name":"个人中心",
+                        "url":"http://www.suiuu.com/wechat-user-center"
+
                     }
                     ]
                     }';
-        $url_1 ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
+        /*$url_1 ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
         $app_id = WeChat::APP_ID;
         $url_test1_1  =  $this->baseUrl."/we-chat/get-code?actionType=11";//购课放在了第一位
         $url_test1_2 =  $this->baseUrl ."/we-chat/get-code?actionType=12";
         $url_test1_1_s=sprintf($url_1,$app_id,urlencode($url_test1_1));
         $url_test1_2_s=sprintf($url_1,$app_id,urlencode($url_test1_2));
-        $data      = sprintf($string,$url_test1_1_s,$url_test1_2_s);
-        $rstInfo   = $this->CurlHandel($url,$data);
+        $data      = sprintf($string,$url_test1_1_s,$url_test1_2_s);*/
+        $rstInfo   = $this->CurlHandel($url,$string);
         $json_data = json_decode($rstInfo['data']);
         return  $json_data;
 

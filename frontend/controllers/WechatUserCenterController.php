@@ -34,6 +34,18 @@ class WechatUserCenterController extends WController {
         parent::__construct($id, $module);
     }
 
+    public function actionIndex()
+    {
+        $this->loginValid();
+        $userSign=$this->userObj->userSign;
+        $publisherService=new PublisherService();
+        $createPublisherInfo = $publisherService->findUserPublisherByUserSign($userSign);
+        if(isset($createPublisherInfo->userPublisherId)){
+            $this->redirect(['/wechat-user-center/my-trip']);
+        }else{
+            $this->redirect(['/wechat-user-center/my-order']);
+        }
+    }
 
     public function actionMyTrip()
     {

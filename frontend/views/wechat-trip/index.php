@@ -34,7 +34,7 @@
 <body>
 <div id="page" class="userCenter">
     <?php include "left.php"; ?>
-    <div class="Uheader header mm-fixed-top">
+    <div class="Uheader header mm-fixed-top" id="menuH">
         <a href="#menu"></a>
         随游
     </div>
@@ -90,7 +90,7 @@
     <div class="section" id="section5">
         <div class="content">
             <?php foreach($recommendTravel as $val){?>
-            <div class="box01">
+            <div class="box01" >
                 <a href="/wechat-trip/info?tripId=<?php echo $val['tripId']?>" class="pic"><img src="<?php echo $val['titleImg']?>"></a>
                 <div class="details">
                     <h3 class="title"><?php echo $val['title']?></h3>
@@ -110,8 +110,11 @@
 </div>
 </div>
 <script>
-
-
+    $(document).ready(function(){
+        $('#section5 .box01').each(function(){
+            $(this).height(($('#section4').height()-$("#menuH").height())/4);
+        });
+    });
     function gotoSelect(str)
     {
         if(str=='')

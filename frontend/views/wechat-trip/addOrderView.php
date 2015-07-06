@@ -136,6 +136,7 @@
     function showPrice()
     {
         var peopleCount=$("#number").val();
+
         var allPrice=0;
 
         if(peopleCount==''||peopleCount==0){
@@ -157,18 +158,25 @@
         if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
             allPrice=basePrice;
         }else{
+            var bo=true;
             if(stepPriceList.length>0){
                 for(var i=0;i<stepPriceList.length;i++){
                     var stepPrice=stepPriceList[i];
                     if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
                         allPrice=parseInt(stepPrice['price'])*peopleCount;
+                        bo=false;
                         break;
                     }
                 }
             }else{
                 allPrice=parseInt(basePrice)*peopleCount;
             }
+            if(bo)
+            {
+                allPrice=parseInt(basePrice)*peopleCount;
+            }
         }
+
         //判断有没有附加服务
         $("#serviceLi input[type='checkbox']").each(function(){
             var tempPrice=parseInt($(this).attr("servicePrice"));
@@ -182,7 +190,7 @@
             }
         });
         allPrice=parseInt(allPrice);
-        $("#allPrice").html("￥"+allPrice);
+        $("#allPrice").html(" ￥"+allPrice);
     }
 
     $("#addOrder").bind("click",function(){

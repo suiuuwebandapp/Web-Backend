@@ -158,6 +158,7 @@ class WechatTripController extends WController {
             if($peopleCount>$tripInfo['maxUserCount']){
                 return Code::statusDataReturn(Code::PARAMS_ERROR,"PeopleCount Over Max User Count");
             }
+            $bo=true;
             if($tripInfo['basePriceType']==TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT){
                 $basePrice=$tripInfo['basePrice'];
             }else{
@@ -167,10 +168,15 @@ class WechatTripController extends WController {
                     {
                         if($peopleCount>=$stepPrice['minCount']&&$peopleCount<=$stepPrice['maxCount']){
                             $basePrice=$stepPrice['price']*$peopleCount;
+                            $bo=false;
                             break;
                         }
                     }
                 }else{
+                    $basePrice=$tripInfo['basePrice']*$peopleCount;
+                }
+                if($bo)
+                {
                     $basePrice=$tripInfo['basePrice']*$peopleCount;
                 }
             }
