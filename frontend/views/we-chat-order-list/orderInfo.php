@@ -57,7 +57,7 @@
             <a href="javascript:;" class="btn bgBlue fl" onclick="overOrder('<?php echo $info['wOrderNumber']?>')">确认游玩</a>
         <?php }elseif($info['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
             <?php if($info['wMoney']!=0){?>
-                <a href="javascript:;" class="btn bgBlue fl" onclick="callpay('<?php echo $info['wOrderNumber']?>')">支付</a>
+                <a href="javascript:;" class="btn bgBlue fl" id="payC" onclick="callpay('<?php echo $info['wOrderNumber']?>')">支付</a>
             <?php }else{?>
                 <a href="javascript:alert('金额不能为0');" class="btn finish" >支付</a>
             <?php }?>
@@ -87,7 +87,53 @@
 
     </div>
 </div>
+<div class="order_pay clearfix">
+    <p>选择支付方式</p>
+    <div class="select clearfix">
+        <a href="javascript:;" class="zfb" onclick="aliPayUrl()"></a>
+        <a href="javascript:;" class="wei" onclick="payUrl()"></a>
+        <a href="javascript:;" class="btn" id="qxPay">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('#payC').click(function(e) {
+            $('.order_pay').animate({height:'6.5rem'},500);
+        });
+        $('#qxPay').click(function(e) {
+            $('.order_pay').animate({height:'0'},500);
+        });
 
+    })
+    var urlR="";
+    var urlA="";
+    function callpay(orderNumber)
+    {
+        urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?t=1&n="+orderNumber;
+        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/ali-pay-url?t=1&o="+orderNumber;
+
+    }
+    function payUrl()
+    {
+        if(urlR=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlR;
+    }
+    function aliPayUrl()
+    {
+        alert("暂无");
+        return;
+        if(urlA=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlA;
+    }
+</script>
 
 </body>
 </html>

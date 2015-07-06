@@ -12,7 +12,7 @@ $userAccess=Yii::$app->session->get("regUserAccess");
 
 $bindFlag=1;
 if($userBase==null||$userAccess==null){
-    $bindFlag==0;
+    $bindFlag=0;
 }
 ?>v
 <script type="text/javascript">

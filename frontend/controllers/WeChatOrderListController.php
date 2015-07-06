@@ -35,7 +35,7 @@ class WeChatOrderListController extends WController {
      */
     public function actionAddOrder()
     {
-        $this->loginValidJson(false);
+        $this->loginValidJson();
         $site=Yii::$app->request->post('site');
         $content=Yii::$app->request->post('content');
         $timeList=Yii::$app->request->post('timeList');
@@ -123,12 +123,12 @@ class WeChatOrderListController extends WController {
             $password=Yii::$app->request->get('password');
             if($password!="9527suiuu")
             {
-                return $this->renderPartial('noOrder');
+                return $this->redirect('/we-chat/error?str=无效订单');
             }
             $id=Yii::$app->request->get('id');
             $data = $this->orderListSer->sysOrderInfo($id);
             if(empty($data)){
-                return $this->renderPartial('noOrder');
+                return $this->redirect('/we-chat/error?str=无效订单');
             }else {
                 return $this->renderPartial('sysOrderInfo', ['val' => $data]);
             }
@@ -160,14 +160,14 @@ class WeChatOrderListController extends WController {
         $userSign=$this->userObj->userSign;
         if(empty($userSign))
         {
-            return $this->renderPartial('noOrder');
+            return $this->renderPartial('noOrder',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
         }
         $page = new Page(Yii::$app->request);
         $data = $this->orderListSer->getOrderListByUserSign(    $userSign,$page);
         if(empty($data->getList())){
-            return $this->renderPartial('noOrder');
+            return $this->renderPartial('noOrder',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
         }else{
-            return $this->renderPartial('orderList',['list'=>$data->getList()]);
+            return $this->renderPartial('orderList',['list'=>$data->getList(),'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
         }
     }
 

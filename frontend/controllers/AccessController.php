@@ -50,6 +50,7 @@ class AccessController extends UnCController
     public function actionWeiboLogin()
     {
         $code = \Yii::$app->request->get("code");
+        $type = \Yii::$app->session->get("accessType");
         $weiboInterface=new WeiboInterface();
 
         //获取微博用户UID
@@ -74,7 +75,11 @@ class AccessController extends UnCController
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_SINA_WEIBO,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
             if($rst['data']!=null&&$rst['data']->phone!=null){
-                return $this->redirect("/");
+                if(empty($type)){
+                    return $this->redirect("/");
+                }else {
+                    return $this->redirect("/wechat-trip");
+                }
             }else{
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
                     throw new Exception("Invalid Sex Value");
@@ -91,10 +96,22 @@ class AccessController extends UnCController
 
                 \Yii::$app->session->set("regUserBase",$userBase);
                 \Yii::$app->session->set("regUserAccess",$userAccess);
-                return $this->redirect("/access/access-finish");
+                if(empty($type)){
+                    return $this->redirect("/access/access-finish");
+                }else
+                {
+                    return $this->redirect("/we-chat/binding");
+                }
+
             }
         }else{
-            return $this->redirect("/error/access-error");
+            if(empty($type)){
+                return $this->redirect("/error/access-error");
+            }else
+            {
+                return $this->redirect("/we-chat/error?str=微博登陆失败");
+            }
+
         }
 
     }
@@ -130,6 +147,7 @@ class AccessController extends UnCController
             if($rst['data']!=null&&$rst['data']->phone!=null){
                 return $this->redirect("/");
             }else{
+
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
                     throw new Exception("Invalid Sex Value");
                 }
@@ -139,7 +157,7 @@ class AccessController extends UnCController
                 $userBase->sex=$sex;
 
                 $userAccess=new UserAccess();
-                $userAccess->openId=$openId;
+                $userAccess->openId=$unionid;
                 $userAccess->type=UserAccess::ACCESS_TYPE_WECHAT;
 
                 \Yii::$app->session->set("regUserBase",$userBase);
@@ -151,6 +169,56 @@ class AccessController extends UnCController
         }
     }
 
+    public function actionWeixinLoginJs()
+    {
+        $code = \Yii::$app->request->get("code");
+        $state = \Yii::$app->request->get("state");
+        $tokenRst=$this->wechatInterface->getWechatUserOpenId($state,$code);
+        if($tokenRst['status']!=Code::SUCCESS){
+            throw new Exception('微信认证失败');
+        }
+        $tokenInfo=$tokenRst['data'];
+        $openId=$tokenInfo['openid'];
+
+        $userInfoRst=$this->wechatInterface->getWeChatUserInfo($openId,true);
+        if($userInfoRst['status']!=Code::SUCCESS){
+            throw new Exception('获取微信用户信息失败');
+        }
+        $userInfo=$userInfoRst['data'];
+        $nickname=$userInfo['nickname'];
+        $headImg=$userInfo['headimgurl'];
+        $unionid=$userInfo['unionid'];
+        $sex=UserBase::USER_SEX_FEMALE;
+        if($userInfo['sex']==1){
+            $sex=UserBase::USER_SEX_MALE;
+        }
+        $rst=$this->accessLogin($unionid,UserAccess::ACCESS_TYPE_WECHAT,$nickname,$sex,$headImg);
+
+        if($rst['status']==Code::SUCCESS){
+            if($rst['data']!=null&&$rst['data']->phone!=null){
+                return $this->redirect("/wechat-trip");
+            }else{
+
+                if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
+                    throw new Exception("Invalid Sex Value");
+                }
+                $userBase=new UserBase();
+                $userBase->nickname=$nickname;
+                $userBase->headImg=$headImg;
+                $userBase->sex=$sex;
+
+                $userAccess=new UserAccess();
+                $userAccess->openId=$unionid;
+                $userAccess->type=UserAccess::ACCESS_TYPE_WECHAT;
+
+                \Yii::$app->session->set("regUserBase",$userBase);
+                \Yii::$app->session->set("regUserAccess",$userAccess);
+                return $this->redirect("/we-chat/binding");
+            }
+        }else{
+            return $this->redirect("/we-chat/error?str=微信登陆失败");
+        }
+    }
 
     public function actionQqLogin()
     {
@@ -181,6 +249,7 @@ class AccessController extends UnCController
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_QQ,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
             if($rst['data']!=null&&$rst['data']->phone!=null){
+
                 return $this->redirect("/");
             }else{
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
@@ -219,6 +288,7 @@ class AccessController extends UnCController
             if($userBase->status!=UserBase::USER_STATUS_NORMAL){
                 return Code::statusDataReturn(Code::FAIL,"User Status Is Disabled");
             }else{
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
                 return Code::statusDataReturn(Code::SUCCESS,$userBase);
             }
         }else{
@@ -262,6 +332,8 @@ class AccessController extends UnCController
 
     public function actionConnectWeibo()
     {
+        $str=\Yii::$app->request->get("str");
+        \Yii::$app->session->set("accessType",$str);
         $this->weiboInterface->toConnectWeibo();
     }
 
@@ -270,7 +342,10 @@ class AccessController extends UnCController
         $this->wechatInterface->toConnectWechat();
     }
 
-
+    public function actionConnectWechatJs()
+    {
+        $this->wechatInterface->toConnectWechatJs();
+    }
     public function actionAccessFinish()
     {
         return $this->render("accessRegister");

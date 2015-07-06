@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>个人中心</title>
+    <title>我的随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
@@ -16,6 +16,10 @@
             $('div#menu').mmenu();
         });
     </script>
+    <style>
+        .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.0rem; }
+        .noOrder{ line-height:1.5rem;margin-top:10px;text-align: center; }
+    </style>
 </head>
 
 <body>
@@ -26,6 +30,10 @@
         我的随游
     </div>
     <div class="content">
+        <?php if(count($list)==0){?>
+        <img src="/assets/other/weixin/images/logo02.png" class="logo">
+        <p class="noOrder">你还没有发布随游哦</p>
+        <?php }?>
         <?php foreach($list as $val){?>
         <div class="box">
             <a href="javascript:;" class="pic"><img src="<?php echo $val['titleImg'];?>"></a>

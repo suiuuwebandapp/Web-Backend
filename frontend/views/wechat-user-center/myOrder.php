@@ -6,16 +6,33 @@
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
     <title>我的订单</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body>
+<div id="page" class="userCenter">
 <div class="center_myOder">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        我的订单
+    </div>
     <div class="content">
+        <?php if(count($list)==0){?>
+            <img src="/assets/other/weixin/images/logo02.png" class="logo">
+        <p class="noOrder">你还没有订单哦</p>
+        <?php }?>
         <?php foreach($list as $val){
             $tripInfo = json_decode($val['tripJsonInfo'],true);
-
             ?>
             <div class="box" onclick="toInfo('<?php echo $val['orderNumber'] ?>')">
                 <a href="javascript:;" class="pic"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
@@ -32,6 +49,7 @@
                 </div>
             </div>
         <?php }?>
+</div>
 </div>
 </div>
 <script>

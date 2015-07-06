@@ -35,7 +35,6 @@ class Page {
             $oColumn = $request->post("o");//排序的列
             $oType = $request->post("t");//排序的顺序
             $isShowAll = $request->post("showAll");
-
             if (!empty($length)) {
                 $this->pageSize = $length;
             }

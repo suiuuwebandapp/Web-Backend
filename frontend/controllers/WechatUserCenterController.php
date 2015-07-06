@@ -46,7 +46,7 @@ class WechatUserCenterController extends WController {
             $userPublisherId=$createPublisherInfo->userPublisherId;
             $myList=$this->tripSer->getMyTripList($userPublisherId);
         }
-        return $this->renderPartial('myTrip',['list'=>$myList,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        return $this->renderPartial('myTrip',['list'=>$myList,'userObj'=>$this->userObj,'active'=>5,'newMsg'=>0]);
     }
 
     /**
@@ -68,11 +68,7 @@ class WechatUserCenterController extends WController {
         try{
             $userSign=$this->userObj->userSign;
             $list=$this->userOrderService->getUnFinishOrderList($userSign);
-            if(count($list)==0)
-            {
-                return $this->renderPartial('noOrder');
-            }
-            return $this->renderPartial('myOrder',['list'=>$list]);
+            return $this->renderPartial('myOrder',['list'=>$list,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str="系统异常"');
@@ -92,13 +88,13 @@ class WechatUserCenterController extends WController {
         $userSign=$this->userObj->userSign;
         $userBaseService = new UserBaseService();
         $userPublisherObj=$userBaseService->findUserPublisherByUserSign($userSign);
-        $publisherId=$userPublisherObj->userPublisherId;
-        if(empty($publisherId)){
+        if(empty($userPublisherObj)){
             return $this->redirect('/we-chat/error?str=无效的随友信息');
         }
+        $publisherId=$userPublisherObj->userPublisherId;
         $list=$this->userOrderService->getPublisherOrderList($publisherId);
         $newList=$this->userOrderService->getUnConfirmOrderByPublisher($publisherId);
-        return $this->renderPartial('tripOrder',['list'=>$list,'newList'=>$newList]);
+        return $this->renderPartial('tripOrder',['list'=>$list,'newList'=>$newList,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
     }
 
     public function actionTripOrderInfo()
@@ -109,10 +105,10 @@ class WechatUserCenterController extends WController {
             $userSign=$this->userObj->userSign;
             $userBaseService = new UserBaseService();
             $userPublisherObj=$userBaseService->findUserPublisherByUserSign($userSign);
-            $publisherId=$userPublisherObj->userPublisherId;
-            if(empty($publisherId)){
+            if(empty($userPublisherObj)){
                 return $this->redirect('/we-chat/error?str=无效的随友信息');
             }
+            $publisherId=$userPublisherObj->userPublisherId;
             $orderNumber=\Yii::$app->request->get('id');
             if(empty($orderNumber)){
                return $this->redirect('/we-chat/error?str=未知的订单&url=javascript:history.go(-1);');
@@ -160,7 +156,6 @@ class WechatUserCenterController extends WController {
             $userSign=$this->userObj->userSign;
             $orderNumber=\Yii::$app->request->get('id');
 
-           /* $userSign="085963dc0af031709b032725e3ef18f5";*/
             if(empty($orderNumber)){
                 return $this->redirect('/we-chat/error?str=未知的订单&url=javascript:history.go(-1);');
             }
@@ -196,6 +191,9 @@ class WechatUserCenterController extends WController {
             $userSign=$this->userObj->userSign;
             $userBaseService = new UserBaseService();
             $userPublisherObj=$userBaseService->findUserPublisherByUserSign($userSign);
+            if(empty($userPublisherObj)){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友信息"));
+            }
             $publisherId=$userPublisherObj->userPublisherId;
         if(empty($orderId)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));

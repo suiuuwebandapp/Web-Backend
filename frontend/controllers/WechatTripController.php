@@ -37,11 +37,12 @@ class WechatTripController extends WController {
 
     public function actionIndex()
     {
+        $this->loginValid(false);
         $page=new Page();
         $page->pageSize=4;
         $attentionService=new UserAttentionService();
         $recommendTravel =$attentionService->getRecommendTravel($page);
-       return $this->renderPartial("index",["recommendTravel"=>$recommendTravel['data']]);
+       return $this->renderPartial("index",["recommendTravel"=>$recommendTravel['data'],'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
     }
 
     public function actionSelect()
@@ -55,6 +56,7 @@ class WechatTripController extends WController {
         $peopleCount=\Yii::$app->request->post("peopleCount");
         $amount=\Yii::$app->request->post("amount");
         $tag=\Yii::$app->request->post("tag");
+        $type=\Yii::$app->request->post("type");//是否是ajax;
         $startPrice="";
         $endPrice="";
         if(!empty($amount)){
@@ -64,10 +66,14 @@ class WechatTripController extends WController {
             $startPrice=$priceArr[0];
             $endPrice=$priceArr[1];
         }
-        $page=new Page();
-        $page->showAll=true;
+        $page=new Page(\Yii::$app->request);
+        $page->pageSize=10;
         $page= $this->tripService->getList($page,$str,null,null,$peopleCount,$startPrice,$endPrice,$tag);
-        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'peopleCount'=>$peopleCount,"amount"=>$amount,"tag"=>$tag]);
+        if($type=="post")
+        {
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$page->getList()));
+        }
+        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,'peopleCount'=>$peopleCount,"amount"=>$amount,"tag"=>$tag]);
     }
 
     public function actionSearch()

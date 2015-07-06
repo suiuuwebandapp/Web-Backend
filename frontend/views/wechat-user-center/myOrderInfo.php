@@ -60,7 +60,7 @@ $serviceInfo=json_decode($info->serviceInfo,true);
         </div>
         <div class="part mrTop60 clearfix">
             <?php if($info->status==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
-                    <a href="javascript:;" class="btn bgOrange"   onclick="pay('<?= $info->orderId;?>')">支付</a>
+                    <a href="javascript:;" class="btn bgOrange"  id="payC"  onclick="pay('<?= $info->orderId;?>')">支付</a>
                     <a href="javascript:;" class="btn bgBlue" onclick="cancelOrder('<?= $info->orderId;?>')">取消订单</a>
             <?php }elseif($info->status==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
                 <a href="javascript:;" class="btn bgOrange one"   onclick="refundOrder('<?= $info->orderId;?>')">申请退款</a>
@@ -87,11 +87,54 @@ $serviceInfo=json_decode($info->serviceInfo,true);
         </div>
     </div>
 </div>
-<script>
-    function pay(orderId)
+<div class="order_pay clearfix">
+    <p>选择支付方式</p>
+    <div class="select clearfix">
+        <a href="javascript:;" class="zfb" onclick="aliPayUrl()"></a>
+        <a href="javascript:;" class="wei" onclick="payUrl()"></a>
+        <a href="javascript:;" class="btn" id="qxPay">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('#payC').click(function(e) {
+            $('.order_pay').animate({height:'6.5rem'},500);
+        });
+        $('#qxPay').click(function(e) {
+            $('.order_pay').animate({height:'0'},500);
+        });
+
+    })
+    var urlR="";
+    var urlA="";
+    function pay(orderNumber)
     {
+        urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?t=2&n="+orderNumber;
+        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/ali-pay-url?t=2&o="+orderNumber;
 
     }
+    function payUrl()
+    {
+        if(urlR=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlR;
+    }
+    function aliPayUrl()
+    {
+        alert("暂无");
+        return;
+        if(urlA=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlA;
+    }
+</script>
+<script>
 
     function refundByMessage(orderId)
     {

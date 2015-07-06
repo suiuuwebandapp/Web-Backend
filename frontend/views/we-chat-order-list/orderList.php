@@ -4,21 +4,36 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>随游-订单</title>
+    <title></title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="/assets/other/weixin/js/weixin.js"></script>
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body>
-
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        我的订单
+    </div>
 <div class="con cdzOder clearfix">
-    <a href="/we-chat-order-list/order-view" class="bgBlue colWit btnfixed">添加订单</a>
-    <?php foreach($list as $val){
+    <a href="/we-chat-order-list/order-view" class="bgBlue colWit dbtnfixed">添加订单</a>
+    <?php
+        $i=0;
+        foreach($list as $val){
+            $i++;
         if(empty($val['wRelativeSign'])||$val['wStatus']==\common\entity\WeChatOrderList::STATUS_NORMAL){
         ?>
-    <div class="box clearfix box01">
+    <div class="box clearfix <?php if($i==1)echo 'box01';?>">
         <div class="top clearfix">
             <span class="state colOrange">处理中</span>
             <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
@@ -42,7 +57,7 @@
         </div>
     </div>
      <?php }else{ ?>
-            <div class="box clearfix box01">
+            <div class="box clearfix <?php if($i==1)echo 'box01';?>">
                 <div class="top clearfix">
                     <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
                         <span class="state colOrange">游玩中</span>
@@ -76,51 +91,13 @@
                         <a href="/we-chat-order-list/order-info?orderNumber=<?php echo $val['wOrderNumber'];?>" class="colBlue">详情...</a>
                     </div>
                 </div>
-                <div class="down clearfix">
-                    <?php
-                    $str =$val['wDetails'];//'rrrr######qweqweqwe###09###ssssss######qqqqqqqq###asd###asdasdasd';
-                    $arr_i=array();
-                    $arr_t=array();
-                    $contentTitle="";
-                    if(!empty($str)){
-                        $arr=explode('###',$str);
-                        $contentTitle=$arr[0];
-                        for($i=1;$i<count($arr);$i++)
-                        {
-                            if($i%2==0)
-                            {
-                                $arr_i[]=$arr[$i];
-                            }else
-                            {
-                                $arr_t[]=$arr[$i];
-                            }
-                        }
-                    }
-                    ?>
-                    <h3 class="title"><?php echo $contentTitle;?></h3>
-                    <dl>
-                        <?php for($j=0;$j<count($arr_i);$j++){?>
-                            <?php if(empty($arr_t[$j])){ ?>
-                                <dt class="title02"><?php echo $arr_i[$j];?></dt>
-                            <?php }else{?>
-                                <dd><span class="time"><?php echo $arr_t[$j];?> </span><p class="detail"><?php echo $arr_i[$j];?></p></dd>
-                            <?php }?>
-                        <?php }?>
-                    </dl>
-                </div>
             </div>
         <?php }?>
     <?php }?>
     </div>
 </div>
-<div class="order_pay clearfix">
-    <p>选择支付方式</p>
-    <div class="select clearfix">
-        <a href="javascript:;" class="zfb" onclick="aliPayUrl()"></a>
-        <a href="javascript:;" class="wei" onclick="payUrl()"></a>
-        <a href="javascript:;" class="btn">取消</a>
-    </div>
 </div>
+
 
 <script>
     function overOrder(orderNumber)
@@ -172,33 +149,6 @@
         });
     }
 </script>
-<script type="text/javascript">
-    var urlR="";
-    var urlA="";
-    function callpay(orderNumber)
-    {
-        urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?n="+orderNumber;
-        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/ali-pay-url?o="+orderNumber;
 
-    }
-    function payUrl()
-    {
-        if(urlR=="")
-        {
-            alert("未知的订单");
-            return;
-        }
-        window.location.href=urlR;
-    }
-    function aliPayUrl()
-    {
-        if(urlA=="")
-        {
-            alert("未知的订单");
-            return;
-        }
-        window.location.href=urlA;
-    }
-</script>
 </body>
 </html>

@@ -16,7 +16,7 @@
     </form>
     <ul class="lists clearfix">
         <li>
-            <input id="wechat_country" type="text" areaCode="<?php echo $c;?>" class="country" value="<?php echo $n;?>"  onclick="toCountry()">
+            <input id="wechat_country" type="text" placeholder="国家" areaCode="<?php echo $c;?>" class="country" value="<?php echo $n;?>"  onclick="toCountry()">
         </li>
         <li>
             <input type="text" id="wechat_phone" placeholder="手机号">
@@ -36,11 +36,10 @@
     <div class="down clearfix">
         <div class="line"></div>
         <span>快速登录</span>
-        <div class="ddd clearfix"><a href="#" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a></div>
+        <div class="ddd clearfix"><a href="/access/connect-weibo?str=wap" class="icon sina"></a><a href="" class="icon wei"></a><a href="#" class="icon qq"></a></div>
 
 
     </div>
-
 </div>
 <script>
     function changeCode()
@@ -49,14 +48,50 @@
     }
     function register()
     {
+        var code=$('#wechat_code').val();
+
+
+        var phone = $('#wechat_phone').val();
+        var areaCode = $('#wechat_country').attr('areaCode');
+        var valNum = $('#wechat_valNum').val();
+        var password = $('#wechat_password').val();
+        if(areaCode=="")
+        {
+            alert('验证码不能为空');
+            return;
+        }
+        if(phone=="")
+        {
+            alert('手机号不能为空');
+            return;
+        }
+        if(valNum=="")
+        {
+            alert('图型验证码不能为空');
+            return;
+        }
+        if(password=="")
+        {
+            alert('密码不能为空');
+            return;
+        }
+        if(code=="")
+        {
+            alert('验证码不能为空');
+            return;
+        }
+        if(!$('#agreement').is(':checked'))
+        {
+            alert('请同意网站注册协议');
+            return;
+        }
         $.ajax({
             url :'/we-chat/phone-register',
             type:'post',
             data:{
-                code:$('#wechat_code').val()
+                code:code
             },
             error:function(){
-
                 alert("注册失败");
             },
             success:function(data){

@@ -10,40 +10,85 @@
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
 </head>
 
-<body>
-<div class="con bangding clearfix">
-    <form action="/we-chat/binding" method="post" id="wechat_binding">
+<body class="bgwhite">
+<div class="con bangding02 clearfix">
     <ul class="lists clearfix">
         <li>
-            <label for="">邮箱/手机</label>
-            <input name="username" type="text">
+            <label for="">邮箱/已验证手机</label>
+            <input id="phone" type="text" placeholder="手机号">
         </li>
         <li>
             <label for="">密码</label>
-            <input name="password" type="password">
+            <input id="password" type="password" placeholder="密码">
         </li>
+        <li><label for="">验证码</label></li>
+        <li class="clearfix">
+            <input type="text" class="w70" placeholder="图形验证码" id="valNum"><a href="" class="code"><img onclick="changeCode()" src="/index/get-code"></a>
+        </li>
+        <li class="btns clearfix"><a href="javascript:;" class="btn colWit bgOrange" onclick="binding()">绑定账号</a><a href="###" class="fr forget">忘记密码？</a></li>
     </ul>
-    <a href="javascript:;" class="btn" onclick="binding()">立即绑定</a>
-    </form>
+    <div class="down clearfix">
+        <ul class="lists clearfix">
+            <li>
+                <label for="">没有随游账号</label>
+                <input type="text" class="country" value="注册账号" onclick="toRegister()">
+            </li>
+        </ul>
+
+    </div>
 
 </div>
-
 <script>
+    function changeCode()
+    {
+        $('#codeImg').attr('src','/index/get-code')
+    }
+    function toRegister()
+    {
+        window.location.href='/we-chat/access-reg';
+    }
     function binding()
     {
-        if($('input[name=username]').val()=="")
+        var phone = $('#phone').val();
+        var valNum = $('#valNum').val();
+        var password = $('#password').val();
+        if(phone=="")
         {
-            alert("用户名不能为空");
-            return ;
+            alert('手机号不能为空');
+            return;
         }
-       /* if($('input[name=password]').val()=="")
+        if(valNum=="")
         {
-            alert("密码不能为空");
-            return ;
-        }*/
-        $('#wechat_binding').submit();
+            alert('图型验证码不能为空');
+            return;
+        }
+        if(password=="")
+        {
+            alert('密码不能为空');
+            return;
+        }
+        $.ajax({
+            url :'/we-chat/binding',
+            type:'post',
+            data:{
+                username:phone,
+                password:password,
+                valNum:valNum
+            },
+            error:function(){
+                alert("验证码发送失败");
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    window.location.href="/wechat-trip";
+                }else{
+                    alert(data.data);
+                }
+            }
+        });
     }
 </script>
-
 </body>
 </html>

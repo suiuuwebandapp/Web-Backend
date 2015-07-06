@@ -21,18 +21,32 @@
 
     </script>
     <!-- 上下滚动JS/css stop -->
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
 
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 <body>
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        随游
+    </div>
 <div id="pagepiling">
     <div class="section" id="section1">
         <div class="box">
             <h2 class="title">澳大利亚</h2>
             <p class="detail">和神兽一起玩耍</p>
-            <img src="/assets/other/weixin/images/pic01.jpg" class="pics">
+            <img onclick="gotoSelect('澳大利亚')" src="/assets/other/weixin/images/pic01.jpg" class="pics">
             <div class="search_out">
                 <input type="text" placeholder="你的旅行目的地" class="search">
-                <a href="###" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
+                <a href="javascript:;" class="btn"><img onclick="gotoSelect('')"  src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
 
         </div>
@@ -41,7 +55,7 @@
         <div class="box">
             <h2 class="title">香港</h2>
             <p class="detail">校园行一起做学霸</p>
-            <img src="/assets/other/weixin/images/pic02.jpg" class="pics">
+            <img onclick="gotoSelect('香港')" src="/assets/other/weixin/images/pic02.jpg" class="pics">
             <div class="search_out">
                 <input type="text" placeholder="你的旅行目的地" class="search">
                 <a href="###" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
@@ -50,10 +64,10 @@
         </div>
     </div>
     <div class="section" id="section3">
-        <div class="box">
+        <div class="box" >
             <h2 class="title">新加坡</h2>
             <p class="detail">不只有鱼尾狮</p>
-            <img src="/assets/other/weixin/images/pic03.jpg" class="pics">
+            <img  onclick="gotoSelect('新加坡')" src="/assets/other/weixin/images/pic03.jpg" class="pics">
             <div class="search_out">
                 <input type="text" placeholder="你的旅行目的地" class="search">
                 <a href="###" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
@@ -65,10 +79,10 @@
         <div class="box">
             <h2 class="title">意大利</h2>
             <p class="detail">买买买</p>
-            <img src="/assets/other/weixin/images/pic04.jpg" class="pics">
+            <img  onclick="gotoSelect('意大利')" src="/assets/other/weixin/images/pic04.jpg" class="pics">
             <div class="search_out">
-                <input type="text" placeholder="你的旅行目的地" class="search">
-                <a href="###" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
+                <input type="text" placeholder="你的旅行目的地" class="search" >
+                <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
 
         </div>
@@ -77,7 +91,7 @@
         <div class="content">
             <?php foreach($recommendTravel as $val){?>
             <div class="box01">
-                <a href="" class="pic"><img src="<?php echo $val['titleImg']?>"></a>
+                <a href="/wechat-trip/info?tripId=<?php echo $val['tripId']?>" class="pic"><img src="<?php echo $val['titleImg']?>"></a>
                 <div class="details">
                     <h3 class="title"><?php echo $val['title']?></h3>
                     <p class="line clearfix">
@@ -94,5 +108,24 @@
         </div>
     </div>
 </div>
+</div>
+<script>
+
+
+    function gotoSelect(str)
+    {
+        if(str=='')
+        {
+            $("input[class='search']").each(function(){
+                var s=$(this).val();
+                if(s!="")
+                {
+                    str=s;
+                }
+            });
+        }
+        window.location.href="/wechat-trip/select-list?str="+str;
+    }
+</script>
 </body>
 </html>
