@@ -15,6 +15,7 @@ use common\components\LogUtils;
 use common\components\Validate;
 use common\entity\UserAccess;
 use common\entity\UserBase;
+use common\entity\WeChat;
 use common\pay\alipay\auth\AlipayAuthApi;
 use common\pay\alipay\auth\AlipayConfig;
 use common\pay\alipay\lib\AlipayNotify;
@@ -75,6 +76,7 @@ class AccessController extends UnCController
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_SINA_WEIBO,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
             if($rst['data']!=null&&$rst['data']->phone!=null){
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 if(empty($type)){
                     return $this->redirect("/");
                 }else {
@@ -145,6 +147,7 @@ class AccessController extends UnCController
 
         if($rst['status']==Code::SUCCESS){
             if($rst['data']!=null&&$rst['data']->phone!=null){
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 return $this->redirect("/");
             }else{
 
@@ -173,16 +176,16 @@ class AccessController extends UnCController
     {
         $code = \Yii::$app->request->get("code");
         $state = \Yii::$app->request->get("state");
-        $tokenRst=$this->wechatInterface->getWechatUserOpenId($state,$code);
+        $tokenRst=$this->wechatInterface->getWechatUserOpenId($code);
         if($tokenRst['status']!=Code::SUCCESS){
-            throw new Exception('微信认证失败');
+           $this->redirect(['we-chat/error?str="微信认证失败']);
         }
         $tokenInfo=$tokenRst['data'];
         $openId=$tokenInfo['openid'];
 
         $userInfoRst=$this->wechatInterface->getWeChatUserInfo($openId,true);
         if($userInfoRst['status']!=Code::SUCCESS){
-            throw new Exception('获取微信用户信息失败');
+            $this->redirect(['we-chat/error?str="获取微信用户信息失败']);
         }
         $userInfo=$userInfoRst['data'];
         $nickname=$userInfo['nickname'];
@@ -196,6 +199,7 @@ class AccessController extends UnCController
 
         if($rst['status']==Code::SUCCESS){
             if($rst['data']!=null&&$rst['data']->phone!=null){
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 return $this->redirect("/wechat-trip");
             }else{
 
@@ -249,7 +253,7 @@ class AccessController extends UnCController
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_QQ,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
             if($rst['data']!=null&&$rst['data']->phone!=null){
-
+                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 return $this->redirect("/");
             }else{
                 if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
@@ -288,7 +292,6 @@ class AccessController extends UnCController
             if($userBase->status!=UserBase::USER_STATUS_NORMAL){
                 return Code::statusDataReturn(Code::FAIL,"User Status Is Disabled");
             }else{
-                \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$userBase);
                 return Code::statusDataReturn(Code::SUCCESS,$userBase);
             }
         }else{

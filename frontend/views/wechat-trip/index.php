@@ -43,89 +43,65 @@
         <div class="box">
             <h2 class="title">澳大利亚</h2>
             <p class="detail">和神兽一起玩耍</p>
-            <img onclick="gotoSelect('澳大利亚')" src="/assets/other/weixin/images/pic01.jpg" class="pics">
-            <div class="search_out">
+
+            <div class="search_out" onclick="gotoSelect('')" >
                 <input type="text" placeholder="你的旅行目的地" class="search">
-                <a href="javascript:;" class="btn"><img onclick="gotoSelect('')"  src="/assets/other/weixin/images/top-search.png"> </a>
+                <a href="javascript:;" class="btn"><img  src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
 
         </div>
+        <img onclick="gotoSelect('澳大利亚')" src="/assets/other/weixin/images/pic01.jpg" class="pics">
     </div>
     <div class="section" id="section2">
         <div class="box">
             <h2 class="title">香港</h2>
             <p class="detail">校园行一起做学霸</p>
-            <img onclick="gotoSelect('香港')" src="/assets/other/weixin/images/pic02.jpg" class="pics">
-            <div class="search_out">
+            <div class="search_out"  onclick="gotoSelect('')">
                 <input type="text" placeholder="你的旅行目的地" class="search">
-                <a href="###" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
+                <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
-
         </div>
+        <img onclick="gotoSelect('香港')" src="/assets/other/weixin/images/pic02.jpg" class="pics">
     </div>
     <div class="section" id="section3">
         <div class="box" >
             <h2 class="title">新加坡</h2>
             <p class="detail">不只有鱼尾狮</p>
-            <img  onclick="gotoSelect('新加坡')" src="/assets/other/weixin/images/pic03.jpg" class="pics">
-            <div class="search_out">
+            <div class="search_out"  onclick="gotoSelect('')">
                 <input type="text" placeholder="你的旅行目的地" class="search">
-                <a href="###" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
+                <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
-
         </div>
+        <img  onclick="gotoSelect('新加坡')" src="/assets/other/weixin/images/pic03.jpg" class="pics">
     </div>
     <div class="section" id="section4">
         <div class="box">
             <h2 class="title">意大利</h2>
             <p class="detail">买买买</p>
-            <img  onclick="gotoSelect('意大利')" src="/assets/other/weixin/images/pic04.jpg" class="pics">
-            <div class="search_out">
+            <div class="search_out"  onclick="gotoSelect('')">
                 <input type="text" placeholder="你的旅行目的地" class="search" >
                 <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
-
         </div>
+        <img  onclick="gotoSelect('意大利')" src="/assets/other/weixin/images/pic04.jpg" class="pics">
     </div>
     <div class="section" id="section5">
-        <div class="content">
-            <?php foreach($recommendTravel as $val){?>
-            <div class="box01" >
-                <a href="/wechat-trip/info?tripId=<?php echo $val['tripId']?>" class="pic"><img src="<?php echo $val['titleImg']?>"></a>
-                <div class="details">
-                    <h3 class="title"><?php echo $val['title']?></h3>
-                    <p class="line clearfix">
-                        <b class="colOrange">￥<?php echo $val['basePrice']?></b>
-                        <img src="<?= $val['score']>=2?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                        <img src="<?= $val['score']>=4?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                        <img src="<?= $val['score']>=6?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                        <img src="<?= $val['score']>=8?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                        <img src="<?= $val['score']>=10?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                    </p>
-                </div>
-            </div>
-            <?php }?>
+        <div class="box">
+            <p class="p1">找不到您想要的体验？</p>
+            <a href="/we-chat-order-list/order-view" class="btn02">订制服务</a>
         </div>
+        <img src="/assets/other/weixin/images/pic05.jpg" class="pics">
+
     </div>
 </div>
 </div>
 <script>
-    $(document).ready(function(){
-        $('#section5 .box01').each(function(){
-            $(this).height(($('#section4').height()-$("#menuH").height())/4);
-        });
-    });
     function gotoSelect(str)
     {
         if(str=='')
         {
-            $("input[class='search']").each(function(){
-                var s=$(this).val();
-                if(s!="")
-                {
-                    str=s;
-                }
-            });
+            window.location.href="/wechat-trip/select";
+            return;
         }
         window.location.href="/wechat-trip/select-list?str="+str;
     }

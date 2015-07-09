@@ -17,6 +17,7 @@ use common\entity\TravelTrip;
 use common\entity\TravelTripService;
 use common\entity\UserOrderInfo;
 use frontend\components\Page;
+use frontend\services\CountryService;
 use frontend\services\TripService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
@@ -47,16 +48,28 @@ class WechatTripController extends WController {
 
     public function actionSelect()
     {
-        return $this->renderPartial('select');
+        $cc =  \Yii::$app->redis->get(Code::TRIP_COUNTRY_CITY);
+        $arrCC=json_decode($cc,true);
+        $countryList = isset($arrCC['c'])?$arrCC['c']:array();
+        $cityList = isset($arrCC['ct'])?$arrCC['ct']:array();
+        return $this->renderPartial('select',['cList'=>$countryList,'ctList'=>$cityList]);
     }
 
     public function actionSelectList()
     {
         $str=\Yii::$app->request->get("str");
-        $peopleCount=\Yii::$app->request->post("peopleCount");
-        $amount=\Yii::$app->request->post("amount");
-        $tag=\Yii::$app->request->post("tag");
         $type=\Yii::$app->request->post("type");//是否是ajax;
+        if($type=="post")
+        {
+            $peopleCount=\Yii::$app->request->post("peopleCount");
+            $amount=\Yii::$app->request->post("amount");
+            $tag=\Yii::$app->request->post("tag");
+        }else
+        {
+            $peopleCount=\Yii::$app->request->get("peopleCount");
+            $amount=\Yii::$app->request->get("amount");
+            $tag=\Yii::$app->request->get("tag");
+        }
         $startPrice="";
         $endPrice="";
         if(!empty($amount)){
@@ -73,7 +86,7 @@ class WechatTripController extends WController {
         {
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$page->getList()));
         }
-        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,'peopleCount'=>$peopleCount,"amount"=>$amount,"tag"=>$tag]);
+        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,'peopleCount'=>$peopleCount,"amount"=>$amount,"startPrice"=>$startPrice,"tag"=>$tag]);
     }
 
     public function actionSearch()

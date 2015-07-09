@@ -26,12 +26,12 @@
     <p class="agr"><input type="checkbox" id="agreement"><label for="agreement">自动登陆</label> </p>
     <div class="clearfix">
         <a href="javascript:;" class="btn bgOrange" id="loginBtn">登录</a>
-        <a href="#" class="colOrange forgot fl">忘记密码？</a><a href="/we-chat/register" class="colBlue log fr">立即注册？</a>
+        <a href="/we-chat/password-view" class="colOrange forgot fl">忘记密码？</a><a href="/we-chat/register" class="colBlue log fr">立即注册？</a>
     </div>
     <div class="down clearfix">
         <div class="line"></div>
         <span >快速登录</span>
-        <div class="ddd clearfix"><a href="/access/connect-weibo?str=wap" class="icon sina"></a><a href="#" class="icon wei"></a><a href="#" class="icon qq"></a></div>
+        <div class="ddd clearfix"><a href="/access/connect-weibo?str=wap" class="icon sina"></a><a href="/access/connect-wechat-js" class="icon wei"></a><a href="#" class="icon qq"></a></div>
 
 
     </div>

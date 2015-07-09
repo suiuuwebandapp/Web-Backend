@@ -193,7 +193,7 @@ class WechatInterface {
              $rst = Common::CurlHandel($url);
                 if ($rst['status'] == Code::SUCCESS) {
                     $rstJson = json_decode($rst['data'],true);
-                    if(!isset($rstJson->openid)){
+                    if(!isset($rstJson['openid'])){
                         return Code::statusDataReturn(Code::FAIL,$rstJson);
                     }else{
                         return Code::statusDataReturn(Code::SUCCESS,$rstJson);

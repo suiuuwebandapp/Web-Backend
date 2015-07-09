@@ -34,7 +34,7 @@ use common\entity\WeChat;
 use common\components\Common;
 use yii\web\Cookie;
 
-class WeChatController extends SController
+class WeChatController extends WController
 {
 
 
@@ -155,11 +155,11 @@ class WeChatController extends SController
                                 break;
                             }
                         }
-                        $str=Yii::$app->redis->get("roll_".$keyword);
+                        /*$str=Yii::$app->redis->get("roll_".$keyword);
                         if(!empty($str))
                         {
                             $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, 'http://www.suiuu.com/we-chat/get-reward?r='.$keyword);
-                        }
+                        }*/
                         if($bo){
                             if (($date_H == WeChat::TIME_OUT && $date_I >= WeChat::TIME_OUT_I) ||($date_H > WeChat::TIME_OUT))
                             {
@@ -275,16 +275,32 @@ class WeChatController extends SController
     public function actionWxpayJs()
     {
         try{
-        $orderNumber=Yii::$app->request->get('n');
-        $type=Yii::$app->request->get('t');;//1支付类型为定制
+            $this->loginValid();
+            $userSign=$this->userObj->userSign;
+            $orderNumber=Yii::$app->request->get('n');
+            $type=Yii::$app->request->get('t');//1支付类型为定制
+            $json=Yii::$app->request->get('json');
+            $arr=array('n'=>$orderNumber,'t'=>$type);
+            if(empty($json))
+            {
+                $json=json_encode($arr);
+            }
         $wxpay = new JsApiCall();
-        $jsApiParameters=$wxpay->createCode($orderNumber,$type);
+        $jsApiParameters=$wxpay->createCode($json,$userSign);
         /*echo json_encode($jsApiParameters);
         exit;*/
 
         if($jsApiParameters['status']==Code::SUCCESS)
         {
-            return $this->renderPartial('jspay',['jsApiParameters'=>$jsApiParameters['data']]);
+            $type=$jsApiParameters['message'];
+            if($type==1)
+            {
+                $rUrl=Yii::$app->params['weChatUrl']."/we-chat-order-list/order-manage";
+            }else
+            {
+                $rUrl=Yii::$app->params['weChatUrl']."/wechat-user-center/my-order";
+            }
+            return $this->renderPartial('jspay',['jsApiParameters'=>$jsApiParameters['data'],'rUrl'=>$rUrl]);
         }else
         {
             return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
@@ -930,7 +946,105 @@ class WeChatController extends SController
         }
     }
 
-    public function actionCreateRoll()
+
+    public function actionPasswordView()
+    {
+        $countrySer=new CountryService();
+        $countryList = $countrySer->getCountryList();
+        return $this->renderPartial("getPassword",['countryList'=>$countryList,'areaCode'=>"+86"]);
+    }
+
+
+    public function actionPasswordCode()
+    {
+        $phone = Yii::$app->request->post('phone');//用户名
+        if (empty($phone) || strlen($phone) > 50 || strlen($phone) < 5) {
+            $errors = "用户名格式不正确";
+            return json_encode(Code::statusDataReturn(Code::FAIL, $errors));
+        }
+        $count = Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX . $phone);
+        if ($count > Code::MAX_SEND_COUNT) {
+            return json_encode(Code::statusDataReturn(Code::FAIL, '发送次数过多24小时后将继续发送'));
+        } else {
+           if(empty(Validate::validatePhone($phone))){
+                //手机验证
+                $areaCode = Yii::$app->request->post('areaCode');
+                $userBase = $this->userBaseService->findUserByPhone($phone);
+                if (empty($userBase)) {
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '用户不存在，请先注册'));
+                }
+                $code = $this->randomPhoneCode();
+                //设置验证码 和 有效时长
+                \Yii::$app->redis->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $phone, $code);
+                Yii::$app->redis->expire(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $phone, Code::USER_PHONE_VALIDATE_CODE_EXPIRE_TIME);
+                //调用发送短信接口 测试默认为成功
+                $smsUtils = new SmsUtils();
+                $rst = $smsUtils->sendMessage($phone, $areaCode,$code,SmsUtils::SEND_MESSAGE_TYPE_PASSWORD);
+                if(!empty($rst))
+                {
+                    Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
+                    Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, Code::USER_LOGIN_VERIFY_CODE_EXPIRE_TIME);
+                    return json_encode(Code::statusDataReturn(Code::SUCCESS));
+                }else {
+                    return json_encode(Code::statusDataReturn(Code::FAIL, "发送信息失败，请稍后重试"));
+                }
+            } else {
+                $errors = "用户名格式不正确";
+                return json_encode(Code::statusDataReturn(Code::FAIL, $errors));
+            }
+        }
+    }
+
+
+    public function actionUpdatePassword()
+    {
+        $phone = Yii::$app->request->post('phone');//用户名
+        if (empty($phone) || strlen($phone) > 50 || strlen($phone) < 5) {
+            $errors = "用户名格式不正确";
+            return json_encode(Code::statusDataReturn(Code::FAIL, $errors));
+        }
+        $code = Yii::$app->request->post('code');//验证码
+        $password= Yii::$app->request->post('password');
+        if(empty($password))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL,'密码不能为空'));
+        }
+        $count = Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX . $phone);
+        if ($count > Code::MAX_SEND_COUNT) {
+            return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误次数过多'));
+        }
+        $phoneCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $phone);
+        if(empty($phoneCode)||$code!=$phoneCode)
+        {
+            Yii::$app->redis->set(Code::USER_SEND_COUNT_PREFIX . $phone, ++$count);
+            Yii::$app->redis->expire(Code::USER_SEND_COUNT_PREFIX . $phone, 1800);
+            return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误'));
+        }
+        try{
+            $rst = $this->userBaseService->findUserByPhone($phone);
+            if(empty($rst))
+            {
+                $error='未发现该用户';
+                return json_encode(Code::statusDataReturn(Code::FAIL,$error));
+            }
+            $r=$this->userBaseService->updatePassword($rst->userSign,$password);
+            if($r==1)
+            {
+                Yii::$app->session->set(Code::USER_NAME_SESSION,'');
+                Yii::$app->redis->del(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE_FOR_PASSWORD . $phone);
+                return json_encode(Code::statusDataReturn(Code::SUCCESS,'修改成功'));
+            }else
+            {
+                //密码重复
+                return json_encode(Code::statusDataReturn(Code::FAIL,'密码重复无需修改'));
+            }
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+   /* public function actionCreateRoll()
     {
 
         $time=86400*2;
@@ -974,5 +1088,5 @@ class WeChatController extends SController
             echo "Ok";
         }
 
-    }
+    }*/
 }

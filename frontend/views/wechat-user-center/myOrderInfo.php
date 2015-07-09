@@ -60,7 +60,7 @@ $serviceInfo=json_decode($info->serviceInfo,true);
         </div>
         <div class="part mrTop60 clearfix">
             <?php if($info->status==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
-                    <a href="javascript:;" class="btn bgOrange"  id="payC"  onclick="pay('<?= $info->orderId;?>')">支付</a>
+                    <a href="javascript:;" class="btn bgOrange"  id="payC"  onclick="pay('<?= $info->orderNumber;?>')">支付</a>
                     <a href="javascript:;" class="btn bgBlue" onclick="cancelOrder('<?= $info->orderId;?>')">取消订单</a>
             <?php }elseif($info->status==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
                 <a href="javascript:;" class="btn bgOrange one"   onclick="refundOrder('<?= $info->orderId;?>')">申请退款</a>

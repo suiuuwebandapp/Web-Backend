@@ -169,7 +169,7 @@ class WeChatOrderListController extends WController {
             return $this->renderPartial('noOrder',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
         }
         $page = new Page(Yii::$app->request);
-        $data = $this->orderListSer->getOrderListByUserSign(    $userSign,$page);
+        $data = $this->orderListSer->getOrderListByUserSign(  $userSign,$page);
         if(empty($data->getList())){
             return $this->renderPartial('noOrder',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
         }else{

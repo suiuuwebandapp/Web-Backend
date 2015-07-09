@@ -18,7 +18,7 @@ class WxPayConf_pub
 	//=======【JSAPI路径设置】===================================
 	//获取access_token过程中的跳转uri，通过跳转将code传入jsapi支付页面
 	//const JS_API_CALL_URL = 'http://test.suiuu.com/we-chat-order-list/test/';
-    const JS_API_CALL_URL = 'http://pay.jiebanyouni.com/we-chat/wxpay-js/';
+    const JS_API_CALL_URL = 'http://www.suiuu.com/we-chat/wxpay-js/';
 	//=======【证书路径设置】=====================================
 	//证书路径,注意应该填写绝对路径
 	const SSLCERT_PATH = '/xxx/xxx/xxxx/WxPayPubHelper/cacert/apiclient_cert.pem';
@@ -26,7 +26,7 @@ class WxPayConf_pub
 	
 	//=======【异步通知url设置】===================================
 	//异步通知url，商户根据实际开发过程设定
-	const NOTIFY_URL = 'http://pay.jiebanyouni.com/pay-return/wxpay-return/';
+	const NOTIFY_URL = 'http://www.suiuu.com/pay-return/wxpay-return/';
 
 	//=======【curl超时设置】===================================
 	//本例程通过curl使用HTTP POST方法，此处可修改其超时时间，默认为30秒

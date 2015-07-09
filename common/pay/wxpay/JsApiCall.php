@@ -12,6 +12,7 @@ use common\components\Code;
 use common\entity\UserOrderInfo;
 use common\entity\WeChatOrderList;
 use common\entity\WeChatUserInfo;
+use frontend\services\UserOrderService;
 use frontend\services\WeChatOrderListService;
 use frontend\services\WeChatService;
 use yii\base\Exception;
@@ -23,7 +24,7 @@ class JsApiCall {
 
     }
 
-    public function createCode($orderNumber,$type)
+    public function createCode($json,$userSign)
     {
         /**
          * JS_API支付demo
@@ -44,7 +45,7 @@ class JsApiCall {
         if (!isset($_GET['code']))
         {
             //触发微信返回code码
-            $url = $jsApi->createOauthUrlForCode(\WxPayConf_pub::JS_API_CALL_URL."?n=".$orderNumber);
+            $url = $jsApi->createOauthUrlForCode(\WxPayConf_pub::JS_API_CALL_URL."?json=".$json);
             header("Location: $url");
             exit;
         }else
@@ -55,7 +56,13 @@ class JsApiCall {
             $openid = $jsApi->getOpenId();
 
         }
-
+        $type=null;
+        if(!empty($json))
+        {
+            $arr=json_decode($json,true);
+            $type=$arr['t'];
+            $orderNumber=$arr['n'];
+        }
         $wxSer=new WeChatService();
         $userInfo=new WeChatUserInfo();
         $userInfo->openId=$openid;
@@ -63,8 +70,7 @@ class JsApiCall {
         {
             return Code::statusDataReturn(Code::FAIL,"无法获取openId");
         }
-        $user = $wxSer->getUserInfo($userInfo);
-        if(empty($user))
+        if(empty($userSign))
         {
             return Code::statusDataReturn(Code::FAIL,"无效用户");
         }
@@ -75,7 +81,7 @@ class JsApiCall {
         }
         if($type==1){
             $orderSer=new WeChatOrderListService();
-            $orderInfo =$orderSer->getOrderInfoByOrderNumber($orderNumber,$user['userSign']);
+            $orderInfo =$orderSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
             if(empty($orderInfo))
             {
                 return Code::statusDataReturn(Code::FAIL,"订单不存在");
@@ -84,9 +90,28 @@ class JsApiCall {
             {
                 return Code::statusDataReturn(Code::FAIL,"订单状态不为待支付");
             }
+            $out_trade_no = $orderInfo['wOrderNumber'];
+            $money=$orderInfo['wMoney']*100;
+            $body=$orderInfo['wOrderSite']."定制旅行";
         }else
         {
-            return Code::statusDataReturn(Code::FAIL,"暂无该类型支付");
+            $orderSer=new UserOrderService();
+            $orderInfo=$orderSer->findOrderByOrderNumber(trim($orderNumber));
+            if(empty($orderInfo)){
+                return Code::statusDataReturn(Code::FAIL,$orderNumber);
+            }
+            if($orderInfo->userId!=$userSign){
+                return Code::statusDataReturn(Code::FAIL,"订单用户不匹配");
+            }
+            if($orderInfo->status!=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT)
+            {
+                return Code::statusDataReturn(Code::FAIL,"订单状态不为待支付");
+            }
+            $travelTripInfo=json_decode($orderInfo->tripJsonInfo,true);
+            $tripInfo=$travelTripInfo['info'];
+            $out_trade_no=$orderInfo->orderNumber;
+            $body=$tripInfo['title'];
+            $money=$orderInfo->totalPrice*100;
         }
 
 //=========步骤2：使用统一支付接口，获取prepay_id============
@@ -101,9 +126,10 @@ class JsApiCall {
 //sign已填,商户无需重复填写
 
         //自定义订单号，此处仅作举例
-        $out_trade_no = $orderInfo['wOrderNumber'];
-        $money=$orderInfo['wMoney']*100;
-        $body=$orderInfo['wOrderSite']."定制旅行";
+
+        try{
+
+
         if(empty($money))
         {
             return Code::statusDataReturn(Code::FAIL,"金额不能为空");
@@ -137,6 +163,10 @@ class JsApiCall {
 
 
         $jsApiParameters = $jsApi->getParameters();
-         return Code::statusDataReturn(Code::SUCCESS,$jsApiParameters);
+         return Code::statusDataReturn(Code::SUCCESS,$jsApiParameters,$type);
+        }catch (Exception $e)
+        {
+            return  Code::statusDataReturn(Code::FAIL,"支付异常请重试");
+        }
     }
 }

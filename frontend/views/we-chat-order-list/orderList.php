@@ -23,10 +23,10 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
-        我的订单
+        我的定制
     </div>
 <div class="con cdzOder clearfix">
-    <a href="/we-chat-order-list/order-view" class="bgBlue colWit dbtnfixed">添加订单</a>
+    <a href="/we-chat-order-list/order-view" class="bgBlue colWit dbtnfixed">添加定制</a>
     <?php
         $i=0;
         foreach($list as $val){

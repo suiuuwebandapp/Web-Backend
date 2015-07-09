@@ -145,5 +145,36 @@ class CountryService extends BaseDb{
         }
         return $cityInfo;
     }
+    public function getAllCity()
+    {
+        $rst=null;
+        try {
+            $conn = $this->getConnection();
+            $this->countryDb = new CountryDb($conn);
+            $rst =$this->countryDb->getAllCity();
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $rst;
+    }
+    //得到已有随游的国家城市
+    public function getAllTripCC()
+    {
+        $rst=null;
+        try {
+            $conn = $this->getConnection();
+            $this->countryDb = new CountryDb($conn);
+            $c =$this->countryDb->getTripCountry();
+            $ct =$this->countryDb->getTripCity();
+            $rst=array('c'=>$c,'ct'=>$ct);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $rst;
+    }
 
 }

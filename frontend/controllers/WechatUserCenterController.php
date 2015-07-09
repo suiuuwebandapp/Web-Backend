@@ -79,8 +79,9 @@ class WechatUserCenterController extends WController {
 
         try{
             $userSign=$this->userObj->userSign;
-            $list=$this->userOrderService->getUnFinishOrderList($userSign);
-            return $this->renderPartial('myOrder',['list'=>$list,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
+            $unList=$this->userOrderService->getUnFinishOrderList($userSign);
+            $list=$this->userOrderService->getFinishOrderList($userSign);
+            return $this->renderPartial('myOrder',['list'=>$list,'unList'=>$unList,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str="系统异常"');

@@ -25,7 +25,7 @@
             <input type="password" id="wechat_password" placeholder="密码">
         </li>
         <li class="clearfix">
-            <input type="text" class="w70" placeholder="图形验证码" id="wechat_valNum"><a href="" class="code"><img onclick="changeCode()" src="/index/get-code"></a>
+            <input type="text" class="w70" placeholder="图形验证码" id="wechat_valNum"><a href="" class="code"><img style="height:2.7rem;" onclick="changeCode()" src="/index/get-code"></a>
         </li>
         <li class="clearfix">
             <input type="text" class="w70" placeholder="手机验证码" id="wechat_code"><a href="javascript:;" class="code colBlue" onclick="getCode()">获取验证码</a>

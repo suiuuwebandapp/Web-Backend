@@ -82,6 +82,7 @@ class Code
 
     const USER_WECHAT_ACCOUNT='USER_WECHAT_ACCOUNT';//用户绑定微信账户的KEY
 
+    const TRIP_COUNTRY_CITY = "TRIP_COUNTRY_CITY";//已有随游的国家城市
 
     /**
      * 异常信息（后台）

@@ -18,7 +18,7 @@
                 <?php echo $jsApiParameters; ?>,
                 function(res){
                     WeixinJSBridge.log(res.err_msg);
-                    var url ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/order-manage";
+                    var url ="<?php echo $rUrl;?>";
                     window.location.href=url;
                 }
             );

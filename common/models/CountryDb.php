@@ -205,8 +205,43 @@ class CountryDb extends ProxyDb{
         $this->setSql($sql);
         return $this->find($page);
     }
+    /**
+     * 获取城市列表
+     * @return array
+     */
+    public function getAllCity()
+    {
+        $sql=sprintf("
+            SELECT * FROM city
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        return $command->queryAll();
+    }
 
-
+    /**得到随游已有国家
+     * @return array
+     */
+    public function getTripCountry()
+    {
+        $sql=sprintf("
+           SELECT b.cname ,b.id  FROM (SELECT countryId FROM travel_trip a GROUP BY a.countryId) as a
+LEFT JOIN country b ON a.countryId = b.id
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        return $command->queryAll();
+    }
+    /**得到随游已有城市
+     * @return array
+     */
+    public function getTripCity()
+    {
+        $sql=sprintf("
+           SELECT b.cname ,b.id FROM (SELECT cityId FROM travel_trip a GROUP BY a.cityId) as a
+LEFT JOIN city b ON a.cityId = b.id
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        return $command->queryAll();
+    }
     /**
      * 根据Id获取国家
      * @param $id

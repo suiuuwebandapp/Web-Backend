@@ -23,9 +23,9 @@
         </li>
         <li><label for="">验证码</label></li>
         <li class="clearfix">
-            <input type="text" class="w70" placeholder="图形验证码" id="valNum"><a href="" class="code"><img onclick="changeCode()" src="/index/get-code"></a>
+            <input type="text" class="w70" placeholder="图形验证码" id="valNum"><a href="" class="code"><img style="height:2.7rem;" onclick="changeCode()" src="/index/get-code"></a>
         </li>
-        <li class="btns clearfix"><a href="javascript:;" class="btn colWit bgOrange" onclick="binding()">绑定账号</a><a href="###" class="fr forget">忘记密码？</a></li>
+        <li class="btns clearfix"><a href="javascript:;" class="btn colWit bgOrange" onclick="binding()">绑定账号</a><a href="/we-chat/password-view" class="fr forget">忘记密码？</a></li>
     </ul>
     <div class="down clearfix">
         <ul class="lists clearfix">

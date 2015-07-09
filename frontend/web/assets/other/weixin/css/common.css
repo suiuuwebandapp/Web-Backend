@@ -8,7 +8,7 @@ h1,h2,h3,h4,h5,h6{font-weight:normal;font-size:100%;}
 em,i{font-style:normal;}
 table{border-collapse:collapse;border-spacing:0;}
 img{border:none;}
-a{ text-decoration:none;}
+a{ text-decoration:none; color:#858585;}
 ol,ul,li{vertical-align:middle;}
 input,textarea{font-family:"Microsoft YaHei"; outline:none; font-size:0.85rem; -webkit-appearance: none; background:none;}
 textarea{resize:none;}
@@ -27,6 +27,7 @@ input:focus{outline-width:0;box-shadow:none;-webkit-box-shadow:none;-moz-box-sha
 .colBlue{ color:#73b9ff ;}
 .colOrange{ color:#FFAA00;}
 .colWit{ color:#FFF;}
+.colGrey{color:#BABABA;}
 .bgOrange{ background:#FFAA00; }
 .bgBlue{ background:#73b9ff ; }
 .bgGrey{ background:#ddd;}
