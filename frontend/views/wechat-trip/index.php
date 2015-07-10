@@ -45,7 +45,7 @@
             <p class="detail">和神兽一起玩耍</p>
 
             <div class="search_out" onclick="gotoSelect('')" >
-                <input type="text" placeholder="你的旅行目的地" class="search">
+                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
                 <a href="javascript:;" class="btn"><img  src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
 
@@ -57,7 +57,7 @@
             <h2 class="title">香港</h2>
             <p class="detail">校园行一起做学霸</p>
             <div class="search_out"  onclick="gotoSelect('')">
-                <input type="text" placeholder="你的旅行目的地" class="search">
+                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
                 <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
         </div>
@@ -68,7 +68,7 @@
             <h2 class="title">新加坡</h2>
             <p class="detail">不只有鱼尾狮</p>
             <div class="search_out"  onclick="gotoSelect('')">
-                <input type="text" placeholder="你的旅行目的地" class="search">
+                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
                 <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
         </div>
@@ -79,7 +79,7 @@
             <h2 class="title">意大利</h2>
             <p class="detail">买买买</p>
             <div class="search_out"  onclick="gotoSelect('')">
-                <input type="text" placeholder="你的旅行目的地" class="search" >
+                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
                 <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
             </div>
         </div>

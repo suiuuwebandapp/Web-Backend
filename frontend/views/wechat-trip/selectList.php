@@ -39,6 +39,7 @@
                 <ul class="sets" id="tagLi">
                     <li class="titles bgBlue">类型</li>
                     <li onclick="tagHandle('家庭',this)">家庭</li>
+                    <li onclick="tagHandle('美食',this)">美食</li>
                     <li onclick="tagHandle('购物',this)">购物</li>
                     <li onclick="tagHandle('自然',this)">自然</li>
                     <li onclick="tagHandle('惊险',this)">惊险</li>

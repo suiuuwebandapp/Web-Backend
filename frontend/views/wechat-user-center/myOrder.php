@@ -31,7 +31,7 @@
             我的订单
         </div>
         <div class="content">
-            <?php if(count($list)==0){?>
+            <?php if(count($list)==0&&count($unList)==0){?>
                 <img src="/assets/other/weixin/images/logo02.png" class="logo">
             <p class="noOrder">你还没有订单哦</p>
                 <a href="/wechat-trip" class="btn">任性随游</a>

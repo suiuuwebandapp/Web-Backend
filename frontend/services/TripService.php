@@ -59,21 +59,13 @@ class TripService extends BaseDb{
                 $tagList=explode(',',$tag);
                 foreach($tagList as $val){
                     $valArr=json_decode(\Yii::$app->redis->get(Code::TRAVEL_TRIP_TAG_PREFIX.md5($val)),true);
-                    if(empty($intersection)){
-                        $intersection= $valArr;
-                    }
-                    if(!empty($valArr)){
-                        $intersection=array_intersect($intersection,$valArr);
-                    }else{
-                        $intersection=array();
-                    }
-                    if(empty($intersection))
-                    {
-                        break;
-                    }
+                    $intersection=array_merge($intersection,$valArr);
                 }
                 if(!empty($intersection)){
-                    $tagStr=implode(',',$intersection);
+                    $arr = array_count_values($intersection);
+                    arsort($arr);
+                    $result = array_keys($arr);
+                    $tagStr=implode(',',$result);
                 }else{
                     $tagStr='-1';
                 }
