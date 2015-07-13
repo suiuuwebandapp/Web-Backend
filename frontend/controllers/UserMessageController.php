@@ -49,6 +49,7 @@ class UserMessageController extends  CController{
         $userMessage->senderId=$senderId;
         $userMessage->receiveId=$receiveId;
         $userMessage->content=$content;
+        $userMessage->isShield=false;
 
         try{
             $this->userMessageService->addUserMessage($userMessage);
@@ -67,8 +68,8 @@ class UserMessageController extends  CController{
     public function actionMessageSessionList()
     {
         try{
-            $userSign=$this->userObj->userSign;
-            $list=$this->userMessageService->getUserMessageSessionList($userSign);
+            $userId=$this->userObj->userSign;
+            $list=$this->userMessageService->getUserMessageSessionList($userId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
         }catch (Exception $e){
             LogUtils::log($e);

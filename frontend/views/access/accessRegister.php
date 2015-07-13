@@ -14,7 +14,7 @@ $bindFlag=1;
 if($userBase==null||$userAccess==null){
     $bindFlag=0;
 }
-?>v
+?>
 <script type="text/javascript">
     var bindFlag="<?=$bindFlag?>";
     if(bindFlag==0){

@@ -12,11 +12,13 @@ namespace common\entity;
 
 class UserMessageSession {
 
+
+
     public $sessionId;
 
-    public $senderId;
+    public $userId;
 
-    public $receiveId;
+    public $relateUserId;
 
     public $sessionKey;
 

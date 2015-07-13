@@ -102,7 +102,7 @@
                     <li><a href="/view-trip/list">随游</a></li>
                     <li><a href="/destination/list">目的地</a></li>
                     <li><a href="/article">专栏</a></li>
-                    <li><a href="javascript:$('#denglu').click();">发布随游</a></li>
+                    <li><a href="javascript:;" onclick="$('#denglu').click()">发布随游</a></li>
                 </ul>
             </div>
             <div class="nav-right">

@@ -308,7 +308,7 @@ function buildMessageSessionHtml(list){
         html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
         if(tempSession.userId!=SystemMessage.userId){
-            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.userId+'\')">屏蔽</b>';
+            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
         }
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
         html+='</li>';
@@ -384,7 +384,7 @@ function rebuildMessageSessionList(list){
         html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
         if(tempSession.userId!=SystemMessage.userId){
-            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.userId+'\')">屏蔽</b>';
+            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
         }
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
         html+='</li>';
@@ -2187,7 +2187,7 @@ function addUserMessageShield(userId){
         success:function(data){
             var datas=eval('('+data+')');
             if(datas.status==1){
-                initMessageSession();
+                Main.showTip("添加屏蔽成功");
             }else{
                 Main.showTip("添加屏蔽失败");
             }

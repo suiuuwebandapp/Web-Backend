@@ -60,7 +60,7 @@ class SysMessageUtils {
         }
         try{
             $userMessageService=new UserMessageService();
-            $userMessageService->addUserMessageList($messageList);
+            $userMessageService->addSysMessageList($messageList);
         }catch (Exception $messageException){
         }
         //2.短信消息

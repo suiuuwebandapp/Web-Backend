@@ -12,11 +12,11 @@ namespace common\entity;
 
 class UserMessage {
 
+
+
     public $messageId;
 
-    public $sessionKeyOne;
-
-    public $sessionKeyTwo;
+    public $sessionKey;
 
     public $receiveId;
 
@@ -32,6 +32,6 @@ class UserMessage {
 
     public $isRead;
 
-    public $isRefused;
+    public $isShield;
 
 }
