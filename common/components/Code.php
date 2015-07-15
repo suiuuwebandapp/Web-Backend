@@ -73,7 +73,11 @@ class Code
     const USER_SEND_MESSAGE_IP_EXPIRE_TIME='86400';//IP发送验证码限制时间(24小时)
 
 
-    const TRAVEL_TRIP_TAG_PREFIX='T_T_T_P';
+    const TRAVEL_TRIP_TAG_PREFIX='T_T_T_P';//随游标签前缀
+
+    const QUESTION_COMMUNITY_TAG_PREFIX='Q_C_T_P';//问答标签前缀
+    const TRAVEL_PICTURE_TAG_PREFIX='T_P_T_P';//旅图标签前缀
+
     const USER_COMMENT_SUPPORT='USER_COMMENT_SUPPORT';
 
     const USER_ORDER_PAY_STATS='U_O_P_S';//用户订单支付状态 1.完成 0.未完成
@@ -138,6 +142,7 @@ class Code
 
 
 
+    const RECOMMEND_ANSWER_USER = 'a4c1406ff4cc382389f19bf6ec3e55c1';//推荐用户
     /**
      * 错误信息
      */

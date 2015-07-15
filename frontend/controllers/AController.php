@@ -33,7 +33,7 @@ class AController extends SController{
 
         parent::__construct($id, $module);
     }
-    public function loginValid($bo=true,$isApp=true)
+    public function loginValid($bo=false,$isApp=true)
     {
         if($isApp) {
             if ($bo) {
@@ -58,19 +58,18 @@ class AController extends SController{
                 }
             } else {
                 $appSign = \Yii::$app->request->post(\Yii::$app->params['app_suiuu_sign']);
-                //$appSign='6wE3hviwUVUcV6amFN0mODP1N8Yn95fly8oIznYYw+x/LIL/s1ygug==';
                 $currentUser = json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION . $appSign)));
                 if (isset($currentUser)) {
                     if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
                         $this->userObj=new UserBase();
-                        $this->userObj->userSign='';
+                        $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';
                     } else {
                         $this->userObj = $currentUser;
                     }
                 }else
                 {
                     $this->userObj=new UserBase();
-                    $this->userObj->userSign='';
+                    $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';
                 }
             }
             if($currentUser!=null&&$currentUser->isPublisher){

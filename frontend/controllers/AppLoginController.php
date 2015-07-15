@@ -39,6 +39,7 @@ class AppLoginController extends SController{
      */
     public function actionAccessLogin()
     {
+        try{
         $openId=\Yii::$app->request->post("openId");
         $nickname=\Yii::$app->request->post("nickname");
         $sex=\Yii::$app->request->post("sex");
@@ -99,7 +100,6 @@ class AppLoginController extends SController{
         }
 
         $userBase=null;
-        try{
 
         }catch (Exception $e){
             LogUtils::log($e);

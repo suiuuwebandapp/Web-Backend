@@ -59,6 +59,10 @@ class UserAttention
      */
     const TYPE_PRAISE_FOR_CIRCLE_ARTICLE=12;
     /**
+     * 关注类型为问答社区
+     */
+    const TYPE_FOR_QA=13;
+    /**
      * @var 关注id
      */
     public $attentionId;

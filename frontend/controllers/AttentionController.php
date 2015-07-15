@@ -335,4 +335,25 @@ class AttentionController extends AController
         }
     }
 
+
+    /**关注问答社区
+     * @return string
+     */
+    public function actionAttentionQa()
+    {
+        try {
+            $this->loginValid();
+            $userSign = $this->userObj->userSign;
+            if (empty($userSign)) {
+                return json_encode(Code::statusDataReturn(Code::FAIL, "未知用户"));
+            }
+            $id = \Yii::$app->request->post('id');
+            $attentionSer = new UserAttentionService();
+            $atId = $attentionSer->createAttentionToQa($id, $userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $atId));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"关注异常"));
+        }
+    }
 }

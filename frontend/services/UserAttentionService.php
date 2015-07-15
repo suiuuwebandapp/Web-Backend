@@ -560,4 +560,28 @@ class UserAttentionService extends BaseDb
         }
     }
 
+    public function createAttentionToQa($id,$userSign)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $attention =new UserAttention();
+            $attention->relativeType=UserAttention::TYPE_FOR_QA;
+            $attention->relativeId=$id;
+            $attention->userSign = $userSign;
+            $result = $this->AttentionDb->getAttentionResult($attention);
+            if(empty($result)||$result==false)
+            {
+                return $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
+            }else{
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
+                exit;
+            }
+        } catch (Exception $e) {
+            throw new Exception('添加关注异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
 }
