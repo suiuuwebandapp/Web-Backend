@@ -14,6 +14,7 @@ use common\components\Code;
 use common\components\LogUtils;
 use common\entity\AnswerCommunity;
 use common\entity\QuestionCommunity;
+use common\entity\TagList;
 use frontend\components\Page;
 use frontend\services\QaCommunityService;
 use frontend\services\TagListService;
@@ -114,6 +115,7 @@ class AppQaController extends AController {
                 return json_encode(Code::statusDataReturn(Code::FAIL, "未知用户"));
             }
             $id=Yii::$app->request->post("id");
+            $id=3;
             if(empty($id)){return json_encode(Code::statusDataReturn(Code::FAIL, "id不能为空"));}
 
             $rst =$this->qaSer->getQaInfoById($id,$userSign);
@@ -136,7 +138,7 @@ class AppQaController extends AController {
         $name=Yii::$app->request->post('name');
         if(!empty($name))
         {
-            $id = $this->tagSer->addTagList($name);
+            $id = $this->tagSer->addTagList($name,TagList::TYPE_Q_A_USER);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$id));
         }
         return json_encode(Code::statusDataReturn(Code::FAIL,"标签名称不能为空"));

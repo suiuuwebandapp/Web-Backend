@@ -38,7 +38,7 @@ class TagListDb extends ProxyDb {
     public function getAllTag($tType)
     {
         $sql = sprintf("
-            SELECT *  FROM tag_list WHERE 1=1;
+            SELECT *  FROM tag_list WHERE 1=1
         ");
         if(!empty($tType))
         {

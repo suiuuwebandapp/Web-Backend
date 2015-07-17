@@ -136,4 +136,29 @@ class QaCommunityService  extends BaseDb {
             $this->closeLink();
         }
     }
+
+    public function updateQaAttentionCount($conn,$id,$add)
+    {
+        try{
+            $this->qaCommunityDb=new QaCommunityDb($conn);
+            $info = $this->qaCommunityDb->getQuestionById($id);
+            $count = $info['attentionNumber']?$info['attentionNumber']:0;
+            if($add)
+            {
+                $count++;
+            }else
+            {
+                $count--;
+                if($count<1)
+                {
+                    $count=0;
+                }
+            }
+            $this->qaCommunityDb->updateAttentionNumber($id,$count);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 }

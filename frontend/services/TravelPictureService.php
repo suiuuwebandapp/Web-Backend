@@ -9,11 +9,13 @@
 namespace frontend\services;
 
 
+use common\components\Code;
 use common\entity\TravelPicture;
 use common\entity\TravelPictureComment;
+use common\entity\UserAttention;
 use common\models\BaseDb;
-use common\models\TravelPictureCommentDb;
 use common\models\TravelPictureDb;
+use common\models\UserAttentionDb;
 use yii\base\Exception;
 
 class TravelPictureService  extends BaseDb {
@@ -39,8 +41,115 @@ class TravelPictureService  extends BaseDb {
     {
         $conn=$this->getConnection();
         try{
-            $this->tpcDb=new TravelPictureCommentDb($conn);
+            $this->tpcDb=new TravelPictureDb($conn);
             $this->tpcDb->addTravelPictureComment($travelPictureComment);
+            $this->updateTravelPictureCommentCount($conn,$travelPictureComment->tpId,true);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function getInfoById($page,$id,$userSign)
+    {
+        $conn=$this->getConnection();
+        try{
+            $this->tpDb=new TravelPictureDb($conn);
+            $info = $this->tpDb->getTravelPictureInfoById($id);
+            $comment = $this->tpDb->getCommentListByTpId($page,$id);
+            $attentionDb =new UserAttentionDb($conn);
+            $attentionEntity = new UserAttention();
+            $attentionEntity->relativeId=$id;
+            $attentionEntity->relativeType=UserAttention::TYPE_COLLECT_FOR_TRAVEL_PICTURE;
+            $attentionEntity->userSign = $userSign;
+            $attention = $attentionDb->getAttentionResult($attentionEntity);
+            $attention = $attention==false?array():$attention;
+            return array('info'=>$info,'comment'=>$comment->getList(),'attention'=>$attention);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function getList($page,$tags,$search)
+    {
+        $conn=$this->getConnection($page);
+        try{
+            $tagStr='';
+            if(!empty($tags)&&$tags!='全部')
+            {
+                $intersection=array();
+                $tagList=explode(',',$tags);
+                foreach($tagList as $val){
+                    $valArr=json_decode(\Yii::$app->redis->get(Code::TRAVEL_PICTURE_TAG_PREFIX.md5($val)),true);
+                    if(!empty($valArr)){
+                        $intersection=array_merge($intersection,$valArr);
+                    }
+                }
+                if(!empty($intersection)){
+                    $arr = array_count_values($intersection);
+                    arsort($arr);
+                    $result = array_keys($arr);
+                    $tagStr=implode(',',$result);
+                }else{
+                    $tagStr='-1';
+                }
+            }
+            $this->tpDb=new TravelPictureDb($conn);
+            $page= $this->tpDb->getTravelPictureList($page,$tagStr,$search);
+            return array('data'=>$page->getList(),'msg'=>$page);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function updateTravelPictureCommentCount($conn,$id,$add)
+    {
+        try{
+            $this->tpDb=new TravelPictureDb($conn);
+            $info = $this->tpDb->getTravelPictureInfoById($id);
+            $count = $info['commentCount']?$info['commentCount']:0;
+            if($add)
+            {
+                $count++;
+            }else
+            {
+                $count--;
+                if($count<1)
+                {
+                    $count=0;
+                }
+            }
+            $this->tpDb->updateCommentCount($id,$count);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function updateTravelPictureAttentionCount($conn,$id,$add)
+    {
+        try{
+            $this->tpDb=new TravelPictureDb($conn);
+            $info = $this->tpDb->getTravelPictureInfoById($id);
+            $count = $info['attentionCount']?$info['attentionCount']:0;
+            if($add)
+            {
+                $count++;
+            }else
+            {
+                $count--;
+                if($count<1)
+                {
+                    $count=0;
+                }
+            }
+            $this->tpDb->updateAttentionCount($id,$count);
         }catch (Exception $e){
             throw $e;
         }finally{

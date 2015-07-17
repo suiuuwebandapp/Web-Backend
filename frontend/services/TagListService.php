@@ -22,7 +22,7 @@ class TagListService extends BaseDb{
     {
     }
 
-    public function addTagList($name)
+    public function addTagList($name,$type)
     {
 
         try{
@@ -32,7 +32,7 @@ class TagListService extends BaseDb{
             if(empty($rst)){
                 $tagList= new TagList();
                 $tagList->tName=$name;
-                $tagList->tType=TagList::TYPE_TRIP_PIC_USER;
+                $tagList->tType=$type;
                 return $this->tagDb->addTagList($tagList);
             }else
             {
@@ -47,6 +47,22 @@ class TagListService extends BaseDb{
 
     //得到问答系统标签
     public function getQaSysTag()
+    {
+
+        $rst=null;
+        try{
+            $conn=$this->getConnection();
+            $this->tagDb=new TagListDb($conn);
+            $rst = $this->tagDb->getAllTag(TagList::TYPE_Q_A_SYS);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $rst;
+    }
+    //得到旅途系统标签
+    public function getTpSysTag()
     {
 
         $rst=null;

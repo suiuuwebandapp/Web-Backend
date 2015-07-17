@@ -58,4 +58,8 @@ class QuestionCommunity {
      * @var浏览量
      */
     public $pvNumber=0;
+    /**
+     * @var int 关注总数
+     */
+    public $attentionNumber=0;
 }

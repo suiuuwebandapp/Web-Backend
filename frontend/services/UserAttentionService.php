@@ -260,6 +260,15 @@ class UserAttentionService extends BaseDb
                         $allTotalizeSer=new AllTotalizeService();
                         $allTotalizeSer->updateTotalize($totalize,false);
                         break;
+                    case UserAttention::TYPE_COLLECT_FOR_TRAVEL_PICTURE:
+                        $tpSer = new TravelPictureService();
+                        $tpSer->updateTravelPictureAttentionCount($conn,$rId,false);
+                        break;
+                    case UserAttention::TYPE_FOR_QA:
+                        $qaSer = new QaCommunityService();
+                        $qaSer->updateQaAttentionCount($conn,$rId,false);
+                        break;
+
                 }
 
             }
@@ -572,6 +581,8 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
+                $qaSer = new QaCommunityService();
+                $qaSer->updateQaAttentionCount($conn,$id,true);
                 return $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
@@ -583,5 +594,29 @@ class UserAttentionService extends BaseDb
             $this->closeLink();
         }
     }
-
+    public function createAttentionToTp($id,$userSign)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $attention =new UserAttention();
+            $attention->relativeType=UserAttention::TYPE_COLLECT_FOR_TRAVEL_PICTURE;
+            $attention->relativeId=$id;
+            $attention->userSign = $userSign;
+            $result = $this->AttentionDb->getAttentionResult($attention);
+            if(empty($result)||$result==false)
+            {
+                $tpSer = new TravelPictureService();
+                $tpSer->updateTravelPictureAttentionCount($conn,$id,true);
+                return $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
+            }else{
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
+                exit;
+            }
+        } catch (Exception $e) {
+            throw new Exception('添加关注异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
 }

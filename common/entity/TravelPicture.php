@@ -22,4 +22,6 @@ class TravelPicture {
     public $tags;
     public $userSign;
     public $createTime;
+    public $commentCount=0;
+    public $attentionCount=0;
 }

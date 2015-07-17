@@ -21,11 +21,11 @@ class QaCommunityDb extends ProxyDb  {
         $sql = sprintf("
             INSERT INTO question_community
             (
-             qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber
+             qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber,attentionNumber
             )
             VALUES
             (
-            :qTitle,:qContent,:qAddr,:qCountryId,:qCityId,:qTag,:qUserSign,now(),:qInviteAskUser,:pvNumber
+            :qTitle,:qContent,:qAddr,:qCountryId,:qCityId,:qTag,:qUserSign,now(),:qInviteAskUser,:pvNumber,:attentionNumber
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -38,6 +38,7 @@ class QaCommunityDb extends ProxyDb  {
         $command->bindParam(":qUserSign", $questionCommunity->qUserSign, PDO::PARAM_STR);
         $command->bindParam(":qInviteAskUser", $questionCommunity->qInviteAskUser, PDO::PARAM_STR);
         $command->bindParam(":pvNumber", $questionCommunity->pvNumber, PDO::PARAM_INT);
+        $command->bindParam(":attentionNumber", $questionCommunity->attentionNumber, PDO::PARAM_INT);
         $command->execute();
         return $this->getConnection()->lastInsertID;
     }
@@ -67,7 +68,9 @@ class QaCommunityDb extends ProxyDb  {
     public function  getQuestionById($id)
     {
         $sql = sprintf("
-            SELECT qId,qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber FROM question_community WHERE qId=:qId;
+            SELECT qId,qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber,attentionNumber,c.headImg FROM question_community a
+            LEFT JOIN user_base c ON a.qUserSign = c.userSign
+             WHERE qId=:qId;
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":qId", $id, PDO::PARAM_INT);
@@ -77,7 +80,9 @@ class QaCommunityDb extends ProxyDb  {
     public function getAnswerByQid($id)
     {
         $sql = sprintf("
-            SELECT * FROM answer_community WHERE qId=:qId;
+            SELECT a.*,b.headImg FROM answer_community a
+            LEFT JOIN user_base b ON a.aUserSign =b.userSign
+             WHERE qId=:qId;
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":qId", $id, PDO::PARAM_INT);
@@ -111,8 +116,9 @@ GROUP BY aUserSign ORDER BY COUNT(aUserSign) DESC) as ss LEFT JOIN user_base u O
     public function getQaList($page,$countryId,$cityId,$tag,$search)
     {
         $sql=sprintf("
-        FROM (SELECT a.*,COUNT(b.qId ) as Number FROM question_community a
+        FROM (SELECT a.*,COUNT(b.qId) as aNumber,c.headImg  FROM question_community a
         LEFT JOIN answer_community b ON a.qId = b.qId
+        LEFT JOIN user_base c ON a.qUserSign = c.userSign
         GROUP BY a.qId) as ls WHERE 1=1
         ");
         if(!empty($countryId))
@@ -137,5 +143,16 @@ GROUP BY aUserSign ORDER BY COUNT(aUserSign) DESC) as ss LEFT JOIN user_base u O
         }
         $this->setSql($sql);
         return $this->find($page);
+    }
+
+    public function updateAttentionNumber($id,$number)
+    {
+        $sql = sprintf("
+            UPDATE question_community a SET a.attentionNumber = :attentionNumber WHERE a.qId=:qId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":qId", $id, PDO::PARAM_INT);
+        $command->bindParam(":attentionNumber", $number, PDO::PARAM_INT);
+        $command->execute();
     }
 }

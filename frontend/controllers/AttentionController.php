@@ -356,4 +356,23 @@ class AttentionController extends AController
             return json_encode(Code::statusDataReturn(Code::FAIL,"关注异常"));
         }
     }
+
+    //关注旅图
+    public function actionAttentionTp()
+    {
+        try {
+            $this->loginValid();
+            $userSign = $this->userObj->userSign;
+            if (empty($userSign)) {
+                return json_encode(Code::statusDataReturn(Code::FAIL, "未知用户"));
+            }
+            $id = \Yii::$app->request->post('id');
+            $attentionSer = new UserAttentionService();
+            $atId = $attentionSer->createAttentionToTp($id, $userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $atId));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"关注异常"));
+        }
+    }
 }

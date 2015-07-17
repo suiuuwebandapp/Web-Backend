@@ -15,5 +15,5 @@ class TravelPictureComment {
     public $comment;
     public $userSign;
     public $createTime;
-    public $supportCount;
+    public $supportCount=0;
 }
