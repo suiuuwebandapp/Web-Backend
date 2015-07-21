@@ -260,7 +260,7 @@ class UserAttentionService extends BaseDb
                         $allTotalizeSer=new AllTotalizeService();
                         $allTotalizeSer->updateTotalize($totalize,false);
                         break;
-                    case UserAttention::TYPE_COLLECT_FOR_TRAVEL_PICTURE:
+                    case UserAttention::TYPE_FOR_TRAVEL_PICTURE:
                         $tpSer = new TravelPictureService();
                         $tpSer->updateTravelPictureAttentionCount($conn,$rId,false);
                         break;
@@ -333,6 +333,46 @@ class UserAttentionService extends BaseDb
             return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
             throw new Exception('获取收藏的随游异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    /**得到关注旅图
+     * @param $userSign
+     * @param $page
+     * @return array
+     * @throws Exception
+     */
+    public function getUserAttentionTp($userSign,$page)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $data = $this->AttentionDb->getUserAttentionTp($userSign,$page);
+            return array('data'=>$data->getList(),'msg'=>$data);
+        } catch (Exception $e) {
+            throw new Exception('获取关注旅图异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+    /**得到关注问答社区
+     * @param $userSign
+     * @param $page
+     * @return array
+     * @throws Exception
+     */
+    public function getUserAttentionQa($userSign,$page)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->AttentionDb = new UserAttentionDb($conn);
+            $data = $this->AttentionDb->getUserAttentionQa($userSign,$page);
+            return array('data'=>$data->getList(),'msg'=>$data);
+        } catch (Exception $e) {
+            throw new Exception('获取关注问答社区异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }
@@ -600,7 +640,7 @@ class UserAttentionService extends BaseDb
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
             $attention =new UserAttention();
-            $attention->relativeType=UserAttention::TYPE_COLLECT_FOR_TRAVEL_PICTURE;
+            $attention->relativeType=UserAttention::TYPE_FOR_TRAVEL_PICTURE;
             $attention->relativeId=$id;
             $attention->userSign = $userSign;
             $result = $this->AttentionDb->getAttentionResult($attention);

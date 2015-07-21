@@ -594,13 +594,6 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syDetailBanner .banners{ width:100%; overflow:hidden;}
 .syDetailBanner .banners li{ float:left; width:100%;  }
 .syDetailBanner .banners li img{   width:100%; display:block; }
-
-/*
-.syDetailBanner .banner-btn{position:absolute;top:330px; width:100%; }
-.syDetailBanner .banner-btn a{display:block;width:40px;height:48px;position:absolute;top:0;}
-.syDetailBanner .banner-btn a.prev{left:20px; background:url(../images/index/bannerbtn.png) no-repeat 0 0;} 
-.syDetailBanner .banner-btn a.next{ background:url(../images/index/bannerbtn.png) no-repeat 0 bottom; right:20px;}
-*/
 .syDetailBanner .hd {position:absolute;bottom:10px; left:50%; margin-left:-20px;}
 .syDetailBanner .hd ul li{width:12px;height:12px;border-radius :50%;text-indent:-9999px;margin-right:5px;background:#ccc;float:left;cursor:pointer;}
 .syDetailBanner .hd ul li.on{background:#DA324D;}
@@ -623,11 +616,52 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syContent .map{ width:100%;  }
 .syContent .map .mapPic{ width:100%;}
 .syContent .details li{ width:33%; float:left;}
-.syContent .details li .icon{    display:block; padding-left:1.25rem;background:url(../images/syxq.png) no-repeat 0 0; background-size:1rem 9.5rem;}
+.syContent .details li .icon{   display:block; padding-left:1.25rem;background:url(../images/syxq.png) no-repeat 0 0; background-size:1rem 9.5rem;}
+.syContent .details li .icon2{ background-position:0 -4.25rem;}
+.syContent .details li .icon3{ background-position:0 -8.53rem;}
 .syContent .contian span{ margin-right:10px;   }
 .syContent .contian span img{ width:0.9rem; height:0.9rem; display:inline-block; }
 .syContent .btns{ padding:15px;  width:100%; margin:20px auto 0; border-top:1px solid #ddd; }
 .syContent .btns a{ border-radius:5px; text-align:center; color:#fff; font-size:1rem; display:block;   height:2.14rem; line-height:2.14rem; width:7rem; }
+/*-----------随游详情A02------------*/
+.syDetailBanner02{ width:100%; max-width:640px; margin:0 auto;   position:relative;}
+.syDetailBanner02 .banners{ width:100%; overflow:hidden;}
+.syDetailBanner02 .banners li{ float:left; width:100%;  }
+.syDetailBanner02 .banners li img{   width:100%; display:block; }
+.syDetailBanner02 .hd {position:absolute;bottom:10px; left:50%; margin-left:-20px;}
+.syDetailBanner02 .hd ul li{width:12px;height:12px;border-radius :50%;text-indent:-9999px;margin-right:5px;background:#ccc;float:left;cursor:pointer;}
+.syDetailBanner02 .hd ul li.on{background:#DA324D;}
+.syDetailBanner02 .banners p{  position:absolute; color:#fff; font-size:30px; left:50%; margin-left:-170px; }
+.syDetailBanner02 .banners .p1{ top:350px;}
+.syDetailBanner02 .banners .banner01 .p2{ top:390px; text-indent:2em;}
+.syDetailBanner02 .banners .banner02 .p2{ top:390px; text-indent:6em;}
+.syDetailBanner02 .banners .banner02 .p2 a{ color:#fff; font-size:16px; text-decoration:none; position:absolute; top:-20px; right:-60px;}
+.syDetailBanner02 .banners .banner02 .p2 a:hover{ color:#FF7F00;}
+.syDetailBanner02 .banners .banner03 .p2{ top:390px; text-indent:2em;}
+.syDetailBanner02 .banners .banner04 .p0{ top:270px;}
+.syContent02{ margin-top:15px;}
+.syContent02 .top{ height:2.85rem; position:relative;   }
+.syContent02 .top .collect{  position:absolute; top:1rem; right:5px; display:block; height:1.571rem; width:1.671rem; background:url(../images/syD02.png) no-repeat center 0; background-size:1.571rem 6.285rem;}
+.syContent02 .top .collect.active{  background-position:  center -5rem; }
+
+.syContent02 .top .userPic{ height:2.85rem; width:2.85rem; border-radius:50%; display:block; overflow:hidden; float:left;   }
+
+.syContent02 .top .userPic img{ width:100%; display:block; }
+.syContent02 .top .userName{ float:left; margin-top:0.9rem; margin-left:3px; font-size:0.85rem; }
+.syContent02 p{ line-height:1.5rem; font-size:0.85rem; }
+.syContent02 .line b{ font-size:0.85rem;}
+.syContent02 .line img{ float:right; margin-left:3px; margin-top:5px;}
+.syContent02 .title{ line-height:2rem; font-size:0.9rem;}
+.syContent02 .map{ width:100%;  }
+.syContent02 .map .mapPic{ width:100%;}
+.syContent02 .details li{ width:33%; float:left;}
+.syContent02 .details li .icon{   display:block; padding-left:1.25rem;background:url(../images/syxq.png) no-repeat 0 0; background-size:1rem 9.5rem;}
+.syContent02 .details li .icon2{ background-position:0 -4.25rem;}
+.syContent02 .details li .icon3{ background-position:0 -8.53rem;}
+.syContent02 .contian span{ margin-right:10px;   }
+.syContent02 .contian span img{ width:0.9rem; height:0.9rem; display:inline-block; }
+.syContent02 .btns{ padding:15px;  width:100%; margin:20px auto 0; border-top:1px solid #ddd; }
+.syContent02 .btns a{ border-radius:5px; text-align:center; color:#fff; font-size:1rem; display:block;   height:2.14rem; line-height:2.14rem; width:7rem; }
 
 /*-----------支付------------*/
 .payfor .top{ background:#fff; padding:10px 10px 20px; margin-top:10px;}

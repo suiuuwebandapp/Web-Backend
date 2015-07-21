@@ -16,6 +16,7 @@ use common\entity\UserAttention;
 use common\models\BaseDb;
 use common\models\TravelPictureDb;
 use common\models\UserAttentionDb;
+use frontend\components\Page;
 use yii\base\Exception;
 
 class TravelPictureService  extends BaseDb {
@@ -61,11 +62,14 @@ class TravelPictureService  extends BaseDb {
             $attentionDb =new UserAttentionDb($conn);
             $attentionEntity = new UserAttention();
             $attentionEntity->relativeId=$id;
-            $attentionEntity->relativeType=UserAttention::TYPE_COLLECT_FOR_TRAVEL_PICTURE;
+            $attentionEntity->relativeType=UserAttention::TYPE_FOR_TRAVEL_PICTURE;
             $attentionEntity->userSign = $userSign;
             $attention = $attentionDb->getAttentionResult($attentionEntity);
             $attention = $attention==false?array():$attention;
-            return array('info'=>$info,'comment'=>$comment->getList(),'attention'=>$attention);
+            $likePage = new Page();
+            $likePage->pageSize=5;
+            $rst = $this->getLike($likePage,$id);
+            return array('info'=>$info,'comment'=>$comment->getList(),'attention'=>$attention,'like'=>$rst['data']);
         }catch (Exception $e){
             throw $e;
         }finally{
@@ -150,6 +154,51 @@ class TravelPictureService  extends BaseDb {
                 }
             }
             $this->tpDb->updateAttentionCount($id,$count);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function getLike($page,$id)
+    {
+        try{
+            $conn=$this->getConnection($page);
+            $this->tpDb=new TravelPictureDb($conn);
+            $info = $this->tpDb->getTravelPictureInfoById($id);
+            $city = $info['city'];
+            $country = $info['country'];
+            $tags = $info['tags'];
+            $tagStr='';
+            if(!empty($tags))
+            {
+                $intersection=array();
+                $tagList=explode(',',$tags);
+                foreach($tagList as $val){
+                    $valArr=json_decode(\Yii::$app->redis->get(Code::TRAVEL_PICTURE_TAG_PREFIX.md5($val)),true);
+                    if(!empty($valArr)){
+                        $intersection=array_merge($intersection,$valArr);
+                    }
+                }
+                if(!empty($intersection)){
+                    $arr = array_count_values($intersection);
+                    arsort($arr);
+                    $result = array_keys($arr);
+                    $tagStr=implode(',',$result);
+                }else{
+                    $tagStr='-1';
+                }
+            }
+            if(empty($city))
+            {
+                $search=$country;
+            }else
+            {
+                $search=$city;
+            }
+            $page= $this->tpDb->getTravelPictureList($page,$tagStr,$search);
+            return array('data'=>$page->getList(),'msg'=>$page);
         }catch (Exception $e){
             throw $e;
         }finally{

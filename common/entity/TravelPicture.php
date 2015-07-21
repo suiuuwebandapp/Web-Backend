@@ -24,4 +24,5 @@ class TravelPicture {
     public $createTime;
     public $commentCount=0;
     public $attentionCount=0;
+    public $titleImg;
 }

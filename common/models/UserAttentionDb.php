@@ -195,6 +195,54 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
         $this->setSql($sql);
         return $this->find($page);
     }
+
+    /**
+     * 得到关注的旅图
+     * @param $userSign
+     * @return array
+     */
+    public function getUserAttentionTp($userSign,$page)
+    {
+
+        $sql=sprintf("
+        FROM travel_picture a
+LEFT JOIN user_base b ON b.userSign=a.userSign
+LEFT JOIN user_attention d ON d.relativeId = a.id
+WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
+        ");
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("relativeType", UserAttention::TYPE_FOR_TRAVEL_PICTURE);
+        $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
+        $this->setParam("userSign", $userSign);
+
+        $this->setSelectInfo('a.*,b.userSign,b.headImg,b.nickname');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
+    /**
+     * 得到关注的问答社区
+     * @param $userSign
+     * @return array
+     */
+    public function getUserAttentionQa($userSign,$page)
+    {
+
+        $sql=sprintf("
+        FROM question_community a
+LEFT JOIN user_base b ON b.userSign=a.qUserSign
+LEFT JOIN user_attention d ON d.relativeId = a.qId
+WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
+        ");
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("relativeType", UserAttention::TYPE_FOR_QA);
+        $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.*,b.userSign,b.headImg,b.nickname');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
     /**
      * 得到收藏圈子文章列表
      * @param $page

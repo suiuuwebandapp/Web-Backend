@@ -20,11 +20,11 @@ class TravelPictureDb extends ProxyDb {
         $sql = sprintf("
             INSERT INTO travel_picture
             (
-             title,contents,picList,country,city,lon,lat,tags,userSign,createTime,commentCount,attentionCount
+             title,contents,picList,country,city,lon,lat,tags,userSign,createTime,commentCount,attentionCount,titleImg
             )
             VALUES
             (
-            :title,:contents,:picList,:country,:city,:lon,:lat,:tags,:userSign,now(),:commentCount,:attentionCount
+            :title,:contents,:picList,:country,:city,:lon,:lat,:tags,:userSign,now(),:commentCount,:attentionCount,:titleImg
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -39,6 +39,7 @@ class TravelPictureDb extends ProxyDb {
         $command->bindParam(":userSign", $travelPicture->userSign, PDO::PARAM_STR);
         $command->bindParam(":commentCount", $travelPicture->commentCount, PDO::PARAM_INT);
         $command->bindParam(":attentionCount", $travelPicture->attentionCount, PDO::PARAM_INT);
+        $command->bindParam(":titleImg", $travelPicture->titleImg, PDO::PARAM_STR);
         $command->execute();
         return $this->getConnection()->getLastInsertID();
     }
@@ -90,7 +91,7 @@ class TravelPictureDb extends ProxyDb {
             $sql.=" AND userSign = :userSign ";
             $this->setParam("userSign",$userSign);
         }
-        $this->setSelectInfo('a.*,b.headImg');
+        $this->setSelectInfo('a.*,b.headImg,b.nickname');
         $this->setSql($sql);
         return $this->find($page);
     }
@@ -104,11 +105,11 @@ class TravelPictureDb extends ProxyDb {
         ");
         if(!empty($search))
         {
-            $sql.=" AND (country like :search OR city like :search )";
+            $sql.=" AND (a.country like :search OR a.city like :search )";
             $this->setParam('search','%'.$search.'%');
         }
         if(!empty($tags)){
-            $sql.=" AND id IN (";
+            $sql.=" AND a.id IN (";
             $sql.=$tags;
             $sql.=")";
         }
@@ -136,5 +137,16 @@ class TravelPictureDb extends ProxyDb {
         $command->bindParam(":attentionCount", $attentionCount, PDO::PARAM_INT);
         $command->bindParam(":id", $id, PDO::PARAM_INT);
         $command->execute();
+    }
+
+    public function getLikeTravelPicture($page,$id)
+    {
+        $sql=sprintf("
+        FROM travel_picture a
+        WHERE 1=1
+        ");
+        $this->setSelectInfo('a.*');
+        $this->setSql($sql);
+        return $this->find($page);
     }
 }

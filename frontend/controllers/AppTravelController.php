@@ -29,6 +29,7 @@ use frontend\services\CountryService;
 use frontend\services\PublisherService;
 use frontend\services\TravelTripCommentService;
 use frontend\services\TripService;
+use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use frontend\services\UserOrderService;
 use yii\base\Exception;
@@ -122,28 +123,50 @@ class AppTravelController extends AController
         }
 
     }
+    public function actionTest()
+    {
+        return $this->renderPartial('test');
+    }
     //得到随游详情
     public function actionGetTravelInfo()
     {
-        $this->loginValid();
+
         try{
+            $appSign = \Yii::$app->request->get(\Yii::$app->params['app_suiuu_sign']);
+            $currentUser = json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION . $appSign)));
+
+            if (!isset($currentUser) && empty($appSign)) {
+                return $this->renderPartial('error',['str1'=>'appSign不能为空','str2'=>'返回','url'=>"#"]);
+            } else if (isset($currentUser)) {
+                if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
+                    return $this->renderPartial('error',['str1'=>'用户已经被删除','str2'=>'返回','url'=>"#"]);
+                } else {
+                    $this->userObj = $currentUser;
+                }
+            } else {
+                return $this->renderPartial('error',['str1'=>'登陆已过期请重新登陆','str2'=>'返回','url'=>"#"]);
+            }
             $userSign=$this->userObj->userSign;
-            $trId=Yii::$app->request->post('trId');
+            /*$appSign = "d";
+            $userSign='085963dc0af031709b032725e3ef18f5';*/
+            $trId=Yii::$app->request->get('trId');
+            if(empty($trId)){  return $this->renderPartial('error',['str1'=>'未知随游','str2'=>'返回','url'=>"#"]);}
             $data=$this->travelSer->getTravelTripInfoById($trId,$userSign);
             $tripInfo=$data['info'];
             $publisherService=new PublisherService();
             $tripPublisherId=$tripInfo['createPublisherId'];
+
             $createPublisherId=$publisherService->findById($tripPublisherId);
             if(empty($createPublisherId)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知的随友'));
+                return $this->renderPartial('error',['str1'=>'无法得到未知的随友','str2'=>'返回','url'=>"#"]);
             }
-            return json_encode(Code::statusDataReturn(Code::SUCCESS,$this->unifyReturn($data)));
+            return $this->renderPartial('info',['info'=>$data,'sign'=>$appSign]);
         }catch (Exception $e){
             LogUtils::log($e);
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"error"));
+            return $this->renderPartial('error',['str1'=>'获取详情异常','url'=>"#"]);
+
         }
     }
-
 
     public function actionGetCommentList()
     {

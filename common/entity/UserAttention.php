@@ -63,9 +63,9 @@ class UserAttention
      */
     const TYPE_FOR_QA=13;
     /**
-     * 收藏类型为旅图
+     * 关注类型为旅图
      */
-    const TYPE_COLLECT_FOR_TRAVEL_PICTURE=14;
+    const TYPE_FOR_TRAVEL_PICTURE=14;
     /**
      * @var 关注id
      */

@@ -20,7 +20,7 @@ use frontend\services\TravelPictureService;
 use yii;
 use yii\base\Exception;
 
-class TravelPictureController  extends AController {
+class AppTravelPictureController  extends AController {
 
     private $tpSer;
     private $tagSer;
@@ -47,6 +47,7 @@ class TravelPictureController  extends AController {
             $tags = Yii::$app->request->post('tags');
             $contents= Yii::$app->request->post('contents');
             $picList= Yii::$app->request->post('picList');
+            $titleImg= Yii::$app->request->post('titleImg');
             if(empty($title)){return json_encode(Code::statusDataReturn(Code::FAIL, "标题不能为空"));}
             if(empty($country)){return json_encode(Code::statusDataReturn(Code::FAIL, "国家不能为空"));}
             if(empty($city)){return json_encode(Code::statusDataReturn(Code::FAIL, "城市不能为空"));}
@@ -54,6 +55,7 @@ class TravelPictureController  extends AController {
             if(empty($lat)){return json_encode(Code::statusDataReturn(Code::FAIL, "纬度不能为空"));}
             if(empty($tags)){return json_encode(Code::statusDataReturn(Code::FAIL, "标签不能为空"));}
             if(empty($picList)){return json_encode(Code::statusDataReturn(Code::FAIL, "图片不能为空"));}
+            if(empty($titleImg)){return json_encode(Code::statusDataReturn(Code::FAIL, "封面不能为空"));}
             $tpEntity = new TravelPicture();
             $tpEntity->title=$title;
             $tpEntity->country=$country;
@@ -164,6 +166,22 @@ class TravelPictureController  extends AController {
             }
             $page->sortType="DESC";
             $rst = $this->tpSer->getList($page,$tags,$search);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取异常"));
+        }
+    }
+
+    public function actionGetLike()
+    {
+        $this->loginValid();
+        try {
+            $tpId = Yii::$app->request->post('tpId');
+            $page = new Page();
+            $page->sortName='id';
+            $page->sortType="DESC";
+            $rst = $this->tpSer->getLike($page,$tpId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
         }catch (Exception $e) {
             LogUtils::log($e);

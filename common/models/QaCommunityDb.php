@@ -80,7 +80,7 @@ class QaCommunityDb extends ProxyDb  {
     public function getAnswerByQid($id)
     {
         $sql = sprintf("
-            SELECT a.*,b.headImg FROM answer_community a
+            SELECT a.*,b.headImg,b.nickname FROM answer_community a
             LEFT JOIN user_base b ON a.aUserSign =b.userSign
              WHERE qId=:qId;
         ");

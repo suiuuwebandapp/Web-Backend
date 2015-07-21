@@ -98,6 +98,34 @@ class AttentionController extends AController
         }
     }
 
+    //得到关注旅图
+    public function  actionGetAttentionTp()
+    {
+        $this->loginValid();
+        try {
+            $page = new Page(\Yii::$app->request);
+            $userSign = $this->userObj->userSign;
+            $data = $this->AttentionService->getUserAttentionTp($userSign, $page);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+    //得到关注问答社区
+    public function  actionGetAttentionQa()
+    {
+        $this->loginValid();
+        try {
+            $page = new Page(\Yii::$app->request);
+            $userSign = $this->userObj->userSign;
+            $data = $this->AttentionService->getUserAttentionQa($userSign, $page);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
     //关注圈子
     public function actionAddAttentionCircle()
     {

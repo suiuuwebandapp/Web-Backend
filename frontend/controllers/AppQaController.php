@@ -184,7 +184,7 @@ class AppQaController extends AController {
             $tags = Yii::$app->request->post('tags');
             $sortName=Yii::$app->request->post('sortName');
             $search = Yii::$app->request->post('search');
-            $page = new Page();
+            $page = new Page(Yii::$app->request);
             if($sortName==1){
                 $page->sortName='qCreateTime';
             }else
