@@ -238,3 +238,9 @@ input,textarea{
     color: white;
     background-color: #eee;
 }
+
+.tog .fr{
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+}

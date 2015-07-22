@@ -120,12 +120,12 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 /*------------myLogins /登录--------------*/
 
-.myLogins{ position:fixed; top:100px; left:50%; width:591px; height:500px; margin-left:-295px; background:#fff; z-index:999; display:none;}
+.myLogins{ position:fixed; top:100px; left:50%; width:591px; height:525px;  margin-left:-295px; background:#fff; z-index:999; display:none;}
 .myLogins .box{ position:relative; display:none;}
 .myLogins .top{ height:40px; width:100%;}
 .myLogins .top li{ height:40px; width:197px; float:left;}
 .myLogins .top a{ height:40px; line-height:40px; font-size:22px; text-align:center;width:100%; display:block; color:#fff; background:#B1B1B1;}
-.myLogins .top a.active{color:#FFA64D; background:#fff;}
+.myLogins .top a.active{color:#3dd9c3; background:#fff;}
 .myLogins .down{ padding-top:45px; }
 .myLogins .down .left{ width:394px; float:left; background:url(../images/loginIcon.png) no-repeat 345px 0; }
 .myLogins .down ul{ padding-left:35px; padding-right:71px; }
@@ -133,20 +133,19 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .myLogins .down ul li.country{ background:#eee;width:100%; }
 .myLogins .down ul li.country select{ width:100%; height:40px; line-height:40px; border:none; outline:none; }
 .myLogins .down li input{ width:268px; height:40px; background:#EEEEEE;  font-size:16px; padding:0 10px; }
-.myLogins .down li .btn{ background:#FFA64D; display:block;width:288px;height:40px; line-height:40px; text-align:center; color:#fff; margin-top:15px; font-size:20px;}
-.myLogins .down li .btn.blue{ background:#69B5FF; }
-
-.myLogins .down li .forgot{ color:#FFA64D; float:left;}
+.myLogins .down li .btn{ border-radius:5px; background:#FFA64D; display:block;width:288px;height:40px; line-height:40px; text-align:center; color:#fff; margin-top:15px; font-size:20px;}
+.myLogins .down li .btn.blue{ background:#3dd9c3; }
+.myLogins .down li .forgot{ color:#FFA64D; float:right;}
 .myLogins .down li .forgot:hover{ text-decoration:underline;}
 .myLogins .down .rows label{ padding-left:25px; background:url(../images/check.png) no-repeat 0 -102px; cursor:pointer;}
 .myLogins .down .rows label.fleft{ float:left;}
-.myLogins .down .rows label.fright{ float:right;}
+.myLogins .down .rows label.fright{ float:left;}
 .myLogins .down .rows .agreen{ margin-left:25px;color:#69B5FF;}
 .myLogins .down .rows .agreen:hover{ text-decoration:underline;}
 .myLogins .down .rows input{ position:absolute; right:0;width:0; height:0; opacity:0;   }
 .myLogins .down .zrow input{ float:left;width:128px; height:40px; line-height:40px; padding:0 10px;  }
 .myLogins .down .zrow .codeimg{ float:right;width:136px; height:40px; cursor:pointer; }
-.myLogins .down .zrow .pas{ float:right; width:136px;height:40px; line-height:40px; text-align:center; color:#69B5FF; }
+.myLogins .down .zrow .pas{ border-radius:5px; background:#FFAA00; color:#fff;float:right; width:136px;height:40px; line-height:40px; text-align:center;   }
 .myLogins .down .zrow .pas:hover{ text-decoration:underline; }
 
 .myLogins .down .right{ width:197px; float:left; }
@@ -1192,6 +1191,7 @@ transition:1s;
 .bjy-bj5{height:auto;  width:1200px;margin:80px auto 90px; position:relative; }
 .bjy-bj5 span img{ vertical-align:middle;}
 .bjy-bj5 span{width:440px; height:40px; margin:0px auto; display:block; line-height:40px; text-align:left;}
+.bjy-bj5 span a{ text-decoration:underline;}
 .bjy-bj5 textarea{ width:410px; height:240px; border:none; resize:none; background:#eee; margin:0px auto; display:block; padding:15px; line-height:21px; color:#B9B9B9;}
 
 
@@ -1227,6 +1227,13 @@ transition:1s;
 	margin:20px auto; 
 }
 .bjy-bj5 .btn.colGreen:hover{ text-decoration:underline; background:#3dd9c3;; border:1px solid #3dd9c3; color:#fff;}
+.syBjPro{ display:none; background:#fff;width:1200px; position:fixed; top:100px; left:50%; margin-left:-600px; z-index:899999;}
+.syBjPro ul{ padding:100px 0 0 25px;  }
+.syBjPro ul li{ float:left; _display:inline; height:113px; width:203px; overflow:hidden; border:5px solid #fff; margin-right:20px; margin-bottom:20px; }
+.syBjPro ul li:hover{   border:5px solid #3dd9c3; }
+.syBjPro .btn{ margin:55px auto 30px;   border:1px solid #ddd; border-radius:5px; display:block; height:36px; line-height:36px; text-align:center; width:165px; }
+.syBjPro .btn:hover{  border:1px solid #fff; color:#fff; background:#FFAA00; }
+
 /*---------------随友编辑-end------------*/
 
 
@@ -1291,7 +1298,64 @@ transition:1s;
 .sydetailPop .p2{ line-height:50px;text-align:center;}
 .sydetailPop .p1{ color:#D86C00; height:44px; line-height:44px; text-align:center; background:#FFD590;}
 
+
 /*-----------随游页-end---------*/
+
+/*-----------个人主页---------*/
+.grzy .top{ margin:40px auto;}
+.grzy .top .Pic{width:200px;  float:left;}
+.grzy .top .userPic{ overflow:hidden; width:133px; height:133px; margin:0 auto; display:block; border:5px solid #3dd9c3; border-radius:50%; }
+.grzy .top .userPic img{ width:100%;  display:block;}
+.grzy .top .user{ width:995px; float:right; }
+.grzy .top .user .userName{ font-size:24px; }
+.grzy .top .user .btn{ margin:0 20px; font-size:14px; border:1px solid #ddd; border-radius:3px; padding:2px 3px; }
+.grzy .top .user .btn:hover{  border:1px solid #fff; color:#fff; background:#3dd9c3; }
+.grzy .top .user p{ line-height:24px; }
+.grzy .top .user p .icon{ height:18px; width:22px; display:inline-block; background:url(../images/position.png) no-repeat 0 0; }
+.grzy .top .user .p1 span{ margin-right:45px; }
+.grzy .top .user .p2 a.change{ color:#3dd9c3; font-size:17px; float:right; text-decoration:underline; }
+.grzy .top .user .p1,.grzy .top .user .p2{ margin-bottom:15px; }
+
+.grzy .con .left{ float:left; width:200px;}
+.grzy .con .left .box{  border:1px solid #ddd; margin-bottom:20px;}
+.grzy .con .left .box .top{height:40px; line-height:40px; margin:-1px;  color:#fff; text-align:center; font-size:18px;}
+.grzy .con .left .box ul{ padding:20px 0 35px;}
+.grzy .con .left .box ul li{color:#AAAAAA;height:40px; line-height:40px; text-align:center; font-size:18px; }
+.grzy .con .left .box ul li.have{ background:url(../images/icongz.png) no-repeat 20px 12px; }
+.grzy .con .left .down p span{color:#AAAAAA; float:left; font-size:18px; height:40px; line-height:40px;  }
+.grzy .con .left .down p .icon{  width:60px; display:inline-block; height:40px; line-height:40px;   }
+.grzy .con .left .down p .icon.icon01{  background:url(../images/icongz.png) no-repeat 13px -112px; }
+.grzy .con .left .down p .icon.icon02{  background:url(../images/pinglun2.png) no-repeat center
+ center; }
+.grzy .con .right{ float:right; width:945px;}
+.grzy .con .right .title01{ font-size:18px; color:#AAAAAA; }
+.grzy .con .right .sy{margin:0px auto;}
+.grzy .con .right .sy .web-tuijian{width:410px; position:relative;  overflow:hidden; margin-right:60px; margin-top:15px; }
+.grzy .con .right .sy .web-tuijian .pic{ position:relative; width:100%; height:267px; overflow:hidden;  display:block;}
+.grzy .con .right .sy .web-tuijian .pic img{   width:100%;  display:block;}
+.grzy .con .right .sy .web-tuijian .user{ position:absolute; top:238px; right:0;  width:52px; height:52px; overflow:hidden; border-radius:50%; border:4px solid #3dd9c3; display:block;}
+.grzy .con .right .sy .web-tuijian .user img{   width:100%;  display:block;}
+
+.grzy .con .right .sy .web-tuijian .title{ line-height:25px; font-size:18px; margin:15px 0 5px;}
+.grzy .con .right .sy .web-tuijian p{ line-height:25px; font-size:14px;}
+.grzy .con .right .sy .web-tuijian .p4{ padding:8px 15px; font-size:18px;background:rgba(0,0,0,0.6);color:#fff; position:absolute; left:0; bottom:45px;}
+.grzy .con .right .sy .web-tuijian .p4 span{ color:#FFDD6B; font-size:18px; margin-right:15px;}
+.grzy .con .right .sy .web-tuijian .pic img{ width:100%; display:block;}
+.grzy .con .right .sy .web-tuijian .xing{ margin:0;}
+.grzy .con .right .sy .web-tuijian .xing span{ font-size:14px; color:#AAAAAA; margin-left:15px;}
+.grzy .con .right .PL{ width:880px;   }
+.grzy .con .right .PL li{ overflow:hidden;  }
+.grzy .con .right .PL li .Pic{ margin-top:20px; width:65px; height:65px; display:block; float:left; border-radius:50%; overflow:hidden;  }
+.grzy .con .right .PL li .Pic img{ width:100%;display:block;  }
+.grzy .con .right .PL li .picRight{ float:right; width:795px; border-bottom:1px solid #ddd; padding:20px 0; }
+.grzy .con .right .PL li p{ color:#AAAAAA;word-break:break-all; }
+.grzy .con .right .PL li .line{ margin-top:20px; }
+.grzy .con .right .PL li .line .datas{ float:left; font-size:14px; color:#AAAAAA;  }
+.grzy .con .right .PL li .line .a1{ float:right; font-size:14px; color:#3dd9c3;  }
+.grzy .con .right .PL li .line .a1{ float:right; font-size:14px; color:#3dd9c3;  }
+.grzy .con .right .PL .more{ text-align:center; margin:50px auto;  }
+.grzy .con .right .PL .more a{  color:#3dd9c3;  }
+/*-----------个人主页-end--------*/
 
 /*-------------随游详情---------*/
 .sydetailBanner{ width:100%;margin:0 auto; height:333px; position:relative; overflow:hidden;}
@@ -1313,6 +1377,7 @@ transition:1s;
 
 .sydetail{margin:30px auto 0; position:relative;}
 .sydetail .titTop{ width:830px; height:auto; overflow:hidden;  position:relative;}
+.sydetail .titTop .change{ float:right; color:#3dd9c3; font-size:18px; text-decoration:underline;}
 
 .sydetail .titTop .title{ color:#858585; font-size:24px; margin-bottom:15px;}
 .sydetail .titTop .xing{ margin-top:5px;  }

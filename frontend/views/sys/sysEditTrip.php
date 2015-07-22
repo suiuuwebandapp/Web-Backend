@@ -475,6 +475,7 @@
                             <textarea id="special_info" placeholder="最多150个字" maxlength="150"></textarea>
                             <span>上传图片</span>
                             <a href="javascript:;" onclick="NewTrip.showChoseSpecialDiv();" class="fr colGreen selPic">从已上传图片中选取</a>
+
                             <div id="special_div" class="pic fPic">
                                 <p class="special_upload_tip"></p>
                                 <img src="/assets/images/addd.png" width="380">

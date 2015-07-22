@@ -27,6 +27,8 @@
 <script type="text/javascript" src="/assets/js/xcbjy.js"></script>
 
 
+
+
 <div class="bjy clearfix" id="bjy-box">
     <ul id="bz">
         <li class="active"><a href="javascript:;">上传封面</a></li>
@@ -336,8 +338,7 @@
                             <span>亮点描述</span>
                             <textarea id="special_info" placeholder="最多150个字" maxlength="150"></textarea>
                             <span>上传图片</span>
-                            <a href="#" class="fr colGreen selPic">从已上传图片中选取</a>
-                            <span id="special_img_tip" class="form_tip"></span>
+                            <a href="javascript:;" onclick="NewTrip.showChoseSpecialDiv();" class="fr colGreen selPic">从已上传图片中选取</a>
                             <div id="special_div" class="pic fPic">
                                 <p class="special_upload_tip"></p>
                                 <img src="/assets/images/addd.png" width="380">
@@ -380,6 +381,13 @@
     </div>
     <a href="###" class="btn sure" id="show_img_confirm">确定</a>
     <a href="javascript:;" class="btn cancle" id="show_img_cancel">取消</a>
+</div>
+
+
+<div class="syBjPro screens" id="choseSpecialDiv" style="display: none;">
+    <ul class="clearfix pics">
+    </ul>
+    <a href="javascript:;" onclick="NewTrip.closeChoseSpecialDiv()" class="btn">取消</a>
 </div>
 
 
@@ -742,6 +750,29 @@
                 initTimePicker();
                 initTripTag();
                 initBtnClick();
+            },
+            showChoseSpecialDiv:function(){
+                var html='';
+                $("#upload_div a[class='imgs'][id!='uploadPic'] img").each(function () {
+                    html+='<li><a href="javascript:;" onclick="NewTrip.choseSpecialImg(this)"><img src="'+$(this).attr("src")+'" width="203" height="113"></a></li>'
+                });
+                if(html==''){
+                    Main.showTip("您还有没上传随游照片哦");
+                    return;
+                }
+                $("#choseSpecialDiv ul").html(html);
+                $(".mask").show();
+                $("#choseSpecialDiv").show();
+            },
+            choseSpecialImg:function(obj){
+                var src=$(obj).find("img").attr("src");
+                $("#special_div img").attr("src",src);
+                $("#choseSpecialDiv").hide();
+                $(".mask").hide();
+            },
+            closeChoseSpecialDiv:function(){
+                $("#choseSpecialDiv").hide();
+                $(".mask").hide();
             },
             /**
              * 添加特殊亮点
@@ -1431,7 +1462,7 @@
             'uploadScript': '/upload/upload-trip-title-img',
             'multi': false,
             'onAddQueueItem': function (file) {
-                $("#special_div img").hide();
+                $("#choseSpecialImg img").hide();
                 $(".special_upload_tip").show();
                 $(".special_upload_tip").html("正在上传，请稍后...");
             },
