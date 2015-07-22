@@ -1,5 +1,6 @@
 <?php
 namespace common\models;
+use common\entity\AllTotalize;
 use common\entity\CircleArticle;
 use common\entity\RecommendList;
 use common\entity\TravelTrip;
@@ -183,15 +184,19 @@ class UserAttentionDb extends ProxyDb
 LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
 LEFT JOIN user_base b ON b.userSign=c.userId
 LEFT JOIN user_attention d ON d.relativeId = a.tripId
-WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
+LEFT JOIN all_totalize  e ON e.rId = a.tripId
+LEFT JOIN all_totalize  f ON f.rId = a.tripId
+WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign AND e.tType=:typeCollect AND f.tType=:typeComment
         ");
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         $this->setParam("relativeType", UserAttention::TYPE_COLLECT_FOR_TRAVEL);
         $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
+        $this->setParam("typeCollect", AllTotalize::TYPE_COLLECT_FOR_TRIP);
+        $this->setParam("typeComment", AllTotalize::TYPE_COMMENT_FOR_TRIP);
         $this->setParam("userSign", $userSign);
 
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname,e.totalize as collectCount,f.totalize as commentCount');
         $this->setSql($sql);
         return $this->find($page);
     }

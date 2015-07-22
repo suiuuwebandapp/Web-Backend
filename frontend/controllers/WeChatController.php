@@ -70,8 +70,9 @@ class WeChatController extends WController
     }
 
     //todo @test
-    public function actionTest()
+    public function actionTest1()
     {
+
     }
 
 
@@ -405,7 +406,8 @@ class WeChatController extends WController
             $msg = '';
             $errCode =  $pc->decryptMsg($msg_signature, $timeStamp, $nonce, $postStr, $msg);
             if ($errCode == 0) {
-                return $this->xmlToArr($msg);
+                $rst = $this->xmlToArr($msg);
+                return $rst;
             } else {
                 $this->wechatInterface->write_to_log(WeChat::LOG_XXX_NAME, "@".$errCode."@");
             }

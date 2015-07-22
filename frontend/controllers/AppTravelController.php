@@ -168,6 +168,38 @@ class AppTravelController extends AController
         }
     }
 
+    //得到随游详情
+    public function actionGetTravelInfoJson()
+    {
+        $this->loginValid();
+        try{
+            $userSign=$this->userObj->userSign;
+            $trId=Yii::$app->request->post('trId');
+            if(empty($trId)){ return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"未知随游id"));}
+            $data=$this->travelSer->getTravelTripInfoById($trId,$userSign);
+            $tripInfo=$data['info'];
+            $publisherService=new PublisherService();
+            $tripPublisherId=$tripInfo['createPublisherId'];
+            $createPublisherId=$publisherService->findById($tripPublisherId);
+            if(empty($createPublisherId)){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知的随友'));
+            }
+                $page=new Page(Yii::$app->request);
+                if(empty($this->userObj))
+                {
+                    $userSign='';
+                }else
+                {
+                    $userSign=$this->userObj->userSign;
+                }
+                $rst= $this->tripCommentSer->getTravelComment($trId,$page,$userSign);
+            $data['comment'] =$rst;
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"获取详情异常"));
+        }
+    }
     public function actionGetCommentList()
     {
         $this->loginValid(false);

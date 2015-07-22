@@ -51,7 +51,7 @@ class WeChat {
      */
     const APP_ID = 'wxe7a1b295cc37081e';
     const APP_SECRET = '8eeae1bbbedbe6f9cbd7545ef3afea6e';
-    const EncodingAESKey='I3w9EcOsLlLuujVyvJJ5T7L4Fco7P7LiHPg8vJGmVYf';
+    const EncodingAESKey='mUtuVfdLTFxbDz0utc63GMuCKLifL72L0pSZVdu1OIj';
     /*
      * 模板id
      * */
