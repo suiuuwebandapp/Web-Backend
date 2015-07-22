@@ -34,6 +34,9 @@ class ViewTripController extends UnCController{
     public $tripCommentSer;
     public $AttentionService;
 
+    public $isTripList;
+    public $search;
+
 
     public function __construct($id, $module = null)
     {
@@ -58,7 +61,7 @@ class ViewTripController extends UnCController{
         $page->setCurrentPage(1);
         $page->pageSize=4;
 
-        $recommendTravel =$this->AttentionService->getRecommendTravel($page);
+        //$recommendTravel =$this->AttentionService->getRecommendTravel($page);
         //查询基本
         $tripPage=new Page();
         $tripPage->pageSize=16;
@@ -69,9 +72,11 @@ class ViewTripController extends UnCController{
         $pageResult=new PageResult($tripPage);
         $pageResult->pageHtml=$pageHtml;
 
+        $this->isTripList=true;
+        $this->search=$search;
         return $this->render("list",[
             'tagList' => $tagList,
-            'rTravel'=>$recommendTravel['data'],
+            //'rTravel'=>$recommendTravel['data'],
             'pageResult'=>$pageResult,
             'search'=>$search
         ]);

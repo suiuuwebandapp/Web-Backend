@@ -35,16 +35,18 @@ $(function(){
 })
 
 
-/*----导航效果----*/
+/*----详情页滚动中间导航效果----*/
 
 
 $(function(){
 	$(window).scroll(function(e) {
 		var h1=$(window).scrollTop();
-		if(h1>10){
-			$('.nav-out,.header').css('box-shadow','1px 3px 5px rgba(0,0,0,0.6)')
+		if(h1>400){
+			$('.sydetailNav').addClass('fixed')
+			$('.sydetail .web-right').addClass('fixed')
 		}else{
-			$('.nav-out,.header').css('box-shadow','none')
+			$('.sydetailNav').removeClass('fixed')
+			$('.sydetail .web-right').removeClass('fixed')
 		}
         
     });
@@ -71,35 +73,6 @@ $(function(){
 })
 
 
-/*---header--top 搜索-----*/
-$(function(){
-	$('.header-right .search-btn').click(function(e) {
-		if($('.header-right .search').width()==0){
-			$('.header-right .search input.text-xqy').animate({width:135},500);
-			$('.header-right .search').animate({width:155},500);
-        }else{
-			$('.header-right .search,.header-right .search input.text-xqy').animate({width:0},500);
-        }
-    });
-
-
-
-})
-/*---nav-top 搜索-----*/
-$(function(){
-	$('.nav-right .search-btn').click(function(e) {
-		if($('.nav-right .search').width()==0){
-			$('.nav-right .search input.text-xqy').animate({width:135},500);
-			$('.nav-right .search').animate({width:155},500);
-        }else{
-			$('.nav-right .search,.nav-right .search input.text-xqy').animate({width:0},500);
-        }
-    });
-
-
-
-})
-
 /*-----header弹框效果-----*/
 $(function(){
 	$('.header-right .xitong>a').click(function(e) {
@@ -120,17 +93,19 @@ $(function(){
 $(function(){
 	var num=0;
 	var timer=null;
-	var maxnum=$('.web-banner #banner li').size()-1;
+	var maxnum=$('.sydetailBanner .banner li').size()-1;
+	var area=$('.sydetailBanner .banner');
+	$(area).html($(area).html()+$(area).html());
+
 
 	function fn(){
 		
 		num++;
 		if(num>maxnum){num=0}
-		$('.web-banner ul').stop().animate({left:num*-830},1000)
-		$('.web-banner ol').stop().animate({left:num*-195},1000)
+		$('.web-banner .banner').stop().animate({left:num*-600},1000)
 	}
 	timer=setInterval(fn,2000)
-	$('.web-banner ul li,.web-banner ol li').hover(function(e) {
+	$('.web-banner ul li').hover(function(e) {
         clearInterval(timer)
 		
     },function(){
@@ -139,18 +114,16 @@ $(function(){
     
     });
 	
-	$('.web-banner .nex').click(function(e) {
+	$('.web-banner .next').click(function(e) {
         num++;
 		if(num>maxnum){num=0}
-		$('.web-banner ul').stop().animate({left:num*-830},500)
-		$('.web-banner ol').stop().animate({left:num*-195},500)
+		$('.web-banner .banner').stop().animate({left:num*-600},500)
 
     });
 	$('.web-banner .pre').click(function(e) {
         num--;
 		if(num<0){num=maxnum}
-		$('.web-banner ul').stop().animate({left:num*-830},500)
-		$('.web-banner ol').stop().animate({left:num*-195},500)
+		$('.web-banner .banner').stop().animate({left:num*-600},500)
     });
 	$('.web-banner .nex,.web-banner .pre').hover(function(e) {
 		clearInterval(timer)
@@ -164,9 +137,7 @@ $(function(){
 	});
 	
 	
-	
 })
-
 
 
 /*-----专栏qq分享-----*/
@@ -188,6 +159,14 @@ $(function(){
 
 })
 
+
+/*-----随游 select---*/
+$(function(){
+	$('.sylx .containers .select .math').click(function(e) {
+        $(this).children('.sel').toggle();
+    });
+
+})
 
 /*-----随游-类型选择----*/
 /*$(function(){
@@ -234,16 +213,122 @@ $(function(){
         $(this).css('display','none')
         $('.screens').css('display','none')
     });
-
+	
 
 })
 
-/*-----弹出浮层-----*/
-/*$(function(){ 
-	$('.tanchuBtn,.tanchu-list ul li').click(function(e) {
-        $('.mask,.tanchu-main').css('display','block')
+
+/*-----syhPro弹出浮层-----*/
+$(function(){
+	$('.suiyouHelp .btn').click(function(e) {
+        $('.syhPro,.mask').css('display','block')
     });
 
 })
 
-*/
+
+/*-----sy编辑step1提示-----*/
+$(function(){
+	$('.bjy-bj1 .name').hover(function(e) {
+        $('.bjy-bj1 .bj1Pro01').css('display','block');
+		
+    },function(){
+        $('.bjy-bj1 .bj1Pro01').css('display','none');
+    });
+	$('.bjy-bj1 .fPic').hover(function(e) {
+        $('.bjy-bj1 .bj1Pro02').css('display','block');
+		
+    },function(){
+        $('.bjy-bj1 .bj1Pro02').css('display','none');
+    });
+	
+	
+	$('.bjy-bj2 .jings').hover(function(e) {
+        $('.bjy-bj2 .bj2Pro01').css('display','block');
+		
+    },function(){
+        $('.bjy-bj2 .bj2Pro01').css('display','none');
+    });
+	
+	
+	$('.bjy-bj4 .price1').hover(function(e) {
+        $('.bjy-bj4 .bj4Pro01').css('display','block');
+		
+    },function(){
+        $('.bjy-bj4 .bj4Pro01').css('display','none');
+    });
+	
+	$('.bjy-bj4 .price2').hover(function(e) {
+        $('.bjy-bj4 .bj4Pro02').css('display','block');
+		
+    },function(){
+        $('.bjy-bj4 .bj4Pro02').css('display','none');
+    });
+	
+	$('.bjy-bj4 .creat').hover(function(e) {
+        $('.bjy-bj4 .bj4Pro03').css('display','block');
+		
+    },function(){
+        $('.bjy-bj4 .bj4Pro03').css('display','none');
+    });
+	
+	$('.bjy-bj4 .start-time').hover(function(e) {
+        $('.bjy-bj4 .bj4Pro04').css('display','block');
+		
+    },function(){
+        $('.bjy-bj4 .bj4Pro04').css('display','none');
+    });
+	
+	$('.bjy-bj5 .box01').hover(function(e) {
+        $('.bjy-bj5 .bj5Pro01').css('display','block');
+		
+    },function(){
+        $('.bjy-bj5 .bj5Pro01').css('display','none');
+    });
+	
+	$('.bjy-bj5 .box02').hover(function(e) {
+        $('.bjy-bj5 .bj5Pro02').css('display','block');
+		
+    },function(){
+        $('.bjy-bj5 .bj5Pro02').css('display','none');
+    });
+	
+	$('.bjy-bj5 .box03').hover(function(e) {
+        $('.bjy-bj5 .bj5Pro03').css('display','block');
+		
+    },function(){
+        $('.bjy-bj5 .bj5Pro03').css('display','none');
+    });
+	
+	
+	$('.bjy-bj5 .biaoqian ul li.add').click(function(e) {
+        $('.bjy-bj5 .bj5Add,.mask').css('display','block');
+    });
+	$('.bjy-bj5 .biaoqian a.addL').click(function(e) {
+        $('.bjy-bj5 .tog').slideToggle();
+    });
+	
+})
+
+/*-----sy资料补全页name提示-----*/
+
+$(function(){
+	$('.syInformation .forms .name').hover(function(e) {
+        $('.syInformation .forms .name .nameTip').css('display','block');
+		
+    },function(){
+        $('.syInformation .forms .name .nameTip').css('display','none');
+    });
+
+})
+
+
+
+
+
+
+
+
+
+
+

@@ -40,7 +40,7 @@ var Main = function() {
             var r = window.location.search.substr(1).match(reg);
             if (r != null) return unescape(r[2]); return null;
         },
-    /**
+        /**
          * yyyy-MM-dd hh:mm:ss
          * @param strDate
          * @param format
@@ -210,12 +210,7 @@ var Main = function() {
                 }
             });
         }
-
-
-
-
-};
-
+    };
 
 }();
 
@@ -262,6 +257,20 @@ var UserCashRecordType={
     'USER_CASH_RECORD_STATUS_SUCCESS':2,//转出成功
     'USER_CASH_RECORD_STATUS_FAIL':3//转出失败
 };
+
+/**
+ * 页面地址管理
+ */
+var UrlManager=function(){
+    return{
+        getTripSearchUrl:function(keywords){
+            return "/view-trip/list?s="+encodeURIComponent(keywords);
+        },
+        getTripInfoUrl:function(tripId){
+            return "/view-trip/info?trip="+tripId;
+        }
+    }
+}();
 
 /*******************************************************************************
  * Usage
@@ -334,6 +343,8 @@ jQuery.fn.extend({
         })
     }
 });
+
+
 /**
  * 构造 Replace All 方法
  * @param reallyDo

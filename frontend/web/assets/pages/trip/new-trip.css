@@ -7,6 +7,10 @@
     float: right;
     width: 250px !important;
 }
+.title_p{
+    width: 440px;
+    margin: auto;
+}
 .spn_title{
     display: inline !important;
 }
@@ -28,10 +32,10 @@
     text-align: center;
 }
 .p_chose_title_img {
-    height: 260px;
-    width: 285px;
+    height: 267px;
+    width: 410px;
     text-align: center;
-    line-height:260px;
+    line-height:267px;
     background-color: #ECECFC;
 }
 .upload_tip {
@@ -41,13 +45,13 @@
 }
 .imgPic {
     cursor: pointer;
-    height: 260px;
-    width: 285px;
+    height: 267px;
+    width: 410px;
     margin: auto;
 }
 .showImg {
-    height: 260px;
-    width: 285px;
+    height: 267px;
+    width: 410px;
 }
 #uploadifive-titleImgFile {
     display: none;
@@ -62,6 +66,7 @@
     color: #ffffff;
     cursor: pointer;
     text-align: center;
+    margin: auto;
 }
 input,textarea{
     font-size: 14px;
@@ -77,9 +82,6 @@ input,textarea{
     background-color: #ffffff !important;
 }
 
-.upload_div{
-    min-height: 400px;
-}
 #uploadifive-picFile{
     display: none;
 }
@@ -101,7 +103,7 @@ input,textarea{
     padding-left: 0px !important;
 }
 .timepicker_wrap{
-    top: 90px !important;
+
     border-radius:0 !important;
 }
 .prev, .next{
@@ -115,13 +117,11 @@ input,textarea{
     float: left;
     line-height: 36px;
     height: 36px;
-    margin-right: 10px;
+    margin: 0 10px;
 }
 .timepicker_start, .timepicker_end{
-    width: 177px !important;
-}
-.trip_time{
-    width: 288px !important;
+    width: 197px !important;
+    margin-right: 0px !important;
 }
 
 .service_price .select2-search{
@@ -131,7 +131,8 @@ input,textarea{
     margin: 0px !important;
 }
 .sect .serviceSelect .select2-choice{
-    width: 90px !important;
+    position: initial;
+    width: 100px !important;
 }
 .sect .serviceSelect a{
     height: 36px !important;
@@ -142,6 +143,9 @@ input,textarea{
 .sect .serviceSelect .select2-choice{ padding-top: 0; border: 0;}
 .sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
 .sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
+.select2-container .select2-arrow b{
+    padding-right: 0px;
+}
 .bjy-bj4 p a{
     color: #858585;
 }
@@ -184,4 +188,53 @@ input,textarea{
     height: 30px;
     margin-bottom: 0px;
     line-height: 30px;
+}
+
+.bjy-bj4 span{
+    font-size: 16px !important;
+    width: 150px;
+    display: inline-block;
+}
+.bjy-bj4 p input.text01{
+    width: 300px;
+}
+#stepDiv .step_price{
+    width: 70px;
+    margin-left: 10px;
+}
+#basePrice{
+    margin-right: 10px;
+}
+.bjy-bj4 p b{
+    margin-right: 0px !important;
+}
+.bj4-main p input{
+    width: 94px;
+}
+.bjy-bj4 .creat dl dt span{
+    width: auto;
+}
+.step_title_span{
+    width: 166px !important;
+}
+#special_form span{
+    width: auto;
+    display: inline-block;
+}
+.bjy-bj5 .tog textarea{
+    margin-bottom: 0px;
+}
+
+.uploadifive-button{
+    display: none;
+}
+
+.special_upload_tip{
+    width: 380px;
+    height: 247px;
+    line-height: 247px;
+    text-align: center;
+    display: none;
+    color: white;
+    background-color: #eee;
 }

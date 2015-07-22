@@ -32,7 +32,7 @@ class IndexController extends UnCController
 
 
     private $userBaseService;
-
+    public $isIndex;
 
     public function __construct($id, $module = null)
     {
@@ -51,13 +51,18 @@ class IndexController extends UnCController
 
         $page=new Page();
         $page->setCurrentPage(1);
-        $page->pageSize=4;
+        $page->pageSize=3;
         $attentionService=new UserAttentionService();
         $recommendTravel =$attentionService->getRecommendTravel($page);
-
+        $this->isIndex=true;
         return $this->render('index',[
             'recommendTravel'=>$recommendTravel['data']
         ]);
+    }
+
+    public function actionTripHelp()
+    {
+        return $this->render("tripHelp");
     }
 
     /**

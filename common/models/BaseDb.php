@@ -124,7 +124,7 @@ class BaseDb {
         }catch(Exception $e){
             throw new Exception("Undefined PrimaryKey Exception");
         }
-        $sqlBody='';
+        $values=[];
         $params=[];
         $paramArray=[];
 
@@ -139,15 +139,12 @@ class BaseDb {
         }
         //循环生成SQL
         foreach($params as $p){
-            $sqlBody.=$p."=:".$p.",";
-        }
-        if(empty($sqlBody)){
-            throw new Exception("Invalid Sql Body");
+            $values[]=":".$p;
         }
         $sql=sprintf("
              INSERT INTO  %s (%s) VALUES (%s)
-          ",$tableName,implode(",",$params),implode(":",$params));
-
+          ",$tableName,implode(",",$params),implode(",",$values)
+        );
         $conn=self::getConnection();
         $command=$conn->createCommand($sql);
         $this->commandSetParam($command,$paramArray);

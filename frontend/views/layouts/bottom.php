@@ -10,12 +10,8 @@
 ?>
 
 <!-----footer------>
-<style>
-.copyright{color: #ddd;text-align: center;margin-top: 12px;font-size: 14px;}
-.copyright a{color: #ddd;}
-</style>
 
-<div id="footer-out" class="clearfix">
+<div id="footer-out" class="clearfix bgGreen">
     <div class="footer w1200 clearfix">
         <div class="left fl">
             <a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/footer-pic.png" width="174" height="122"></a>
@@ -50,7 +46,12 @@
 
         </div>
     </div>
-    <p class="copyright"><?=Yii::$app->params['copyright']; ?></p>
+    <div class="line">
+        <p class="copyright">
+            © 2015 Suiuu.com All Rights Reserved.
+            <a target="_blank" href="www.miitbeian.gov.cn">沪ICP备15030059号-1</a>
+        </p>
+    </div>
 
 </div>
 <!-----footer--end---->
@@ -86,6 +87,25 @@
     <textarea placeholder="请填写退款原因" id="show_refund_message"></textarea>
     <p class="blue">点击确认后请耐心等待审核，随游的工作人员会在稍后同您联系</p>
     <a href="javascript:refundOrderByMessage();" class="btn">提交申请</a>
+</div>
+
+
+<!------sy活动详情弹出层------>
+<div class="sydetailPop screens">
+    <div class="title"></div>
+    <div class="text">
+        <p class="p1">活动时间</p>
+        <p class="p2">2015年6月1日—2015年9月30日</p>
+        <p class="p1">活动内容</p>
+        <p>凡在随游网成功预定随游产品的用户即<br>可获赠由游友提供的出境随身WIFI（1天）</p>
+        <p class="p1">活动规则</p>
+        <p>1.用户在成功预定随游产品后，无需单独领取
+            小游会根据您的订单联系方式，尽快与您联
+            系安排WIFI设备领取事宜</p>
+        <p>2.WIFI领取可选择机场自提，或邮寄方式</p>
+        <p>3.WIFI设备由游友移动提供，产品本身任何问题，请登陆进行咨询</p>
+        <p>4.在法律许可范围内，随游网对本次活动拥有最终解释权。</p>
+    </div>
 </div>
 
 <?php if (!isset($this->context->userObj)){ ?>
@@ -178,3 +198,13 @@
         </div>
     </div>
 <?php  } ?>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $(".activityBanner").bind("click",function(){
+            $(".sydetailPop").show();
+            $(".mask").show();
+        });
+    });
+</script>

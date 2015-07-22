@@ -147,7 +147,7 @@ class Common{
         }
         if($nowPage>1)
         {
-            $str .= '<li><a  page="' . ($nowPage - 1) . '" href="javascript:;">上一页</a></li>';
+            $str .= '<li class="active"><a  page="' . ($nowPage - 1) . '" href="javascript:;">&lt;</a></li>';
         }
         if($count<=9){
             for($i=1;$i<=$count;$i++) {
@@ -193,7 +193,7 @@ class Common{
 
         if($count>1)
         {
-            if($nowPage<$count){  $str .= '<li><a  page="' . ($nowPage + 1) . '" href="javascript:;">下一页</a></li>';}
+            if($nowPage<$count){  $str .= '<li class="active"><a  page="' . ($nowPage + 1) . '" href="javascript:;" >&gt;</a></li>';}
         }
         return $str;
     }

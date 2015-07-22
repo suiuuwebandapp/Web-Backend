@@ -11,115 +11,92 @@
 
 <link type="text/css" rel="stylesheet" href="/assets/css/jquery-ui.css">
 <style>
-    body{
-        background-color: #F7F7F7;
-    }
 </style>
 
 
 <script type="text/javascript" src="/assets/js/UI/jquery-ui.js"></script>
 <script type="text/javascript" src="/assets/js/jquery.lazyload.min.js"></script>
 
-<!--sylx-->
-<div class="sylx w1200 clearfix">
-    <div class="syBanner">
-        <a href="###" class="detailBtn">活动详情</a>
-        <div class="sylx-serch">
-            <input type="text" value="<?=empty($search)?"":$search?>" class="text1" id="search">
-            <input type="button" value="搜索" class="btn1" id="searchBtn">
-        </div>
-    </div>
-    <div class="sylx-xiangxi clearfix">
-        <p class="p1 clearfix">
-            <label>成员:</label>
-            <a href="javascript:;" class="icon jian" id="subtract"></a>
-            <input type="text" id="peopleCount">
-            <a href="javascript:;" class="icon add" id="add"></a>
-        </p>
-        <p class="p2 clearfix" id="tagList"><label>类型:</label>
 
-            <?php foreach($tagList as $tag){ ?>
-            <span><?=$tag?></span>
-            <?php }?>
-        </p>
-        <div class="price-select">
-            <p>
-                <label for="amount">价格:</label>
-                <input type="text" id="amount">
+<div class="sylx w1200 clearfix">
+    <div class="sylx-xiangxi clearfix">
+        <h3 class="tit bgGreen">更多筛选条件</h3>
+        <div class="box clearfix">
+            <p class="ptitle">分类：</p>
+            <p class="p3 clearfix"><span class="active">慢行探索</span><span>个性玩法</span><span>交通服务</span></p>
+            <p class="ptitle">成员:</p>
+            <p class="p1 clearfix">
+                <a href="javascript:;" class="icon jian" id="subtract"></a>
+                <input type="text" id="peopleCount">
+                <a href="javascript:;" class="icon add" id="add"></a>
             </p>
-            <div id="slider-range"></div>
+            <p class="ptitle">类型:</p>
+            <p class="p2 clearfix">
+                <?php foreach($tagList as $tag){ ?>
+                    <span><?=$tag?></span>
+                <?php }?>
+            </p>
+            <div class="price-select">
+                <p>
+                    <label for="amount">价格:</label>
+                    <input type="text" id="amount">
+                </p>
+                <div id="slider-range"></div>
+            </div>
         </div>
     </div>
-    <div class="sylx-list" id="trip_base_list">
-        <ul>
+    <div class="containers clearfix">
+        <div class="select" style="padding-top: 10px">
+            <a href="###" class="btns fl">热门</a>
+            <p class="result fl"><span id="searchResultCount"><?=$pageResult->totalCount>100?'100+':$pageResult->totalCount.'条';?></span>&nbsp;&nbsp;搜索结果</p>
+            <div class="math fr">
+                <p>排序：默认</p>
+                <ul class="sel fl">
+                    <li>预订数</li>
+                    <li>评论数</li>
+                    <li>推荐分数</li>
+                </ul>
+            </div>
+        </div>
+        <div class="sylx-list clearfix" id="trip_base_list">
             <?php if($pageResult->result!=null&&count($pageResult->result)>0){ ?>
-                <?php foreach($pageResult->result as $trip){?>
-                    <li>
-                        <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/loading.gif" data-original="<?=$trip['titleImg']?>" ></a>
-                        <p class="posi"><img src="<?=$trip['headImg'] ?>" alt=""><span><?=$trip['nickname']?></span></p>
-                        <div>
-                            <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
-                            <p class="xing">
-                                <span><img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                                <span><img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                                <span><img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span
-                                <span><img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                                <span><img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                                <b>￥<?= intval($trip['basePrice']) ?></b>
-                            </p></div>
-                    </li>
+                <?php foreach($pageResult->result as $key=> $trip){?>
+                    <div class="web-tuijian fl <?=($key+1)%2==0?'nomg':''?>">
+                        <a href="<?=\common\components\SiteUrl::getTripUrl($trip['tripId'])?>" class="pic">
+                            <img src="<?=$trip['titleImg']?>" width="410" height="267">
+                            <p class="p4"><span>￥<?= intval($trip['basePrice']) ?></span>
+                                <?=$trip['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
+                            </p>
+                        </a>
+                        <a href="javascript:;" class="user"><img src="<?=$trip['headImg'];?>" ></a>
+                        <p class="title"><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,20,"UTF-8")."...":$trip['title'] ?></p>
+                        <p class="xing">
+                            <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                            <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                            <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                            <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                            <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                            <span><?=$trip['tripCount']?>人去过</span><span><?=empty($trip['commentCount'])?'0':$trip['commentCount']?>条评论</span>
+                        </p>
+                    </div>
                 <?php } ?>
             <?php }else{
                 echo "<div style='text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>";
             }?>
-        </ul>
-        <ol id="spage">
+        </div>
+        <ol id="spage" class="clearfix">
             <?= $pageResult->pageHtml?>
         </ol>
     </div>
-    <h2 class="title">热门推荐</h2>
-    <div class="sylx-list h400">
-        <ul>
-            <?php foreach($rTravel as $trip){?>
-                <li>
-                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="/assets/images/loading.gif" data-original="<?=$trip['titleImg']?>" ></a>
-                    <p class="posi"><img src="<?=$trip['headImg'] ?>" alt=""><span><?=$trip['nickname']?></span></p>
-                    <div>
-                        <h4><?=mb_strlen($trip['title'],"UTF-8")>15?mb_substr($trip['title'],0,15,"UTF-8")."...":$trip['title'] ?></h4>
-                        <p class="xing">
-                            <span><img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                            <span><img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                            <span><img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span
-                            <span><img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                            <span><img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt=""></span>
-                            <b>￥<?= intval($trip['basePrice']) ?></b>
-                        </p></div>
-                </li>
-            <?php }?>
-        </ul>
+    <div class="syBanner clearfix">
+        <a href="javascript:;" class="detailBtn">活动详情</a>
     </div>
+
 </div>
-<!--sylx-->
 
 
 
-<!------sy活动详情弹出层------>
-<div class="sydetailPop screens">
-    <div class="title"></div>
-    <div class="text">
-        <p class="p1">活动时间</p>
-        <p class="p2">2015年6月1日—2015年9月30日</p>
-        <p class="p1">活动内容</p>
-        <p>凡在随游网成功预定随游产品的用户即<br>可获赠由游友提供的出境随身WIFI（1天）</p>
-        <p class="p1">活动规则</p>
-        <p>1.用户在成功预定随游产品后，无需单独领取
-            小游会根据您的订单联系方式，尽快与您联
-            系安排WIFI设备领取事宜</p>
-        <p>2.WIFI领取可选择机场自提，或邮寄方式</p>
-        <p>3.WIFI设备由游友移动提供，产品本身任何问题，请登陆进行咨询</p>
-        <p>4.在法律许可范围内，随游网对本次活动拥有最终解释权。</p>
-    </div>
-</div>
+
 
 <script type="text/javascript">
     var currentPage=1;
@@ -212,7 +189,7 @@
     {
         var scroll_offset=$("#trip_base_list").offset();
         $("body,html").animate({
-            scrollTop:scroll_offset.top-60
+            scrollTop:0
         },800);
     }
 
@@ -255,10 +232,15 @@
                 data=eval("("+data+")");
                 if(data.status==1){
 
-                    $("#trip_base_list ul").html("");
+                    $("#trip_base_list").html("");
                     var list=data.data.result;
+                    if(data.data.totalCount>100){
+                        $("#searchResultCount").val(data.data.totalCount+"+");
+                    }else{
+                        $("#searchResultCount").val(data.data.totalCount);
+                    }
                     if(list.length==0){
-                        $("#trip_base_list ul").html("<div style='text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>")
+                        $("#trip_base_list").html("<div style='text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>")
                         $("#spage").html("");
                         return;
                     }
@@ -267,43 +249,47 @@
                     for(var i=0;i<list.length;i++){
                         trip=list[i];
                         var title=trip.title;
-                        if(title.length>13){
-                            title=title.substring(0,13)+"...";
+                        var tripClass='';
+                        var basePriceType='';
+                        var commentCount=0;
+                        if(title.length>20){
+                            title=title.substring(0,20)+"...";
+                        }
+                        if((i+1)%2==0){
+                            tripClass='nomg'
+                        }
+                        if(trip.basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
+                            basePriceType='每次'
+                        }else{
+                            basePriceType='每人';
+                        }
+                        if(Main.isNotEmpty(trip.commentCount)){
+                            commentCount=trip.commentCount
                         }
 
-                        html+='<li>' +
-                        '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="/assets/images/loading.gif" data-original="'+trip.titleImg+'" alt=""></a>' +
-                        '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
-                        '<div><h4>'+title+'</h4><p class="xing">';
-                        if(trip.score>=2){
-                            html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
-                        }else{
-                            html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
-                        }
-                        if(trip.score>=4){
-                            html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
-                        }else{
-                            html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
-                        }
-                        if(trip.score>=6){
-                            html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
-                        }else{
-                            html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
-                        }
-                        if(trip.score>=8){
-                            html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
-                        }else{
-                            html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
-                        }
-                        if(trip.score>=10){
-                            html+='<span><img src="/assets/images/start1.fw.png" alt=""></span>';
-                        }else{
-                            html+='<span><img src="/assets/images/start2.fw.png" alt=""></span>';
-                        }
-                        html+='<b>￥'+trip.basePrice+'</b>';
-                        html+='</p></div></li>';
+                        html+=' <div class="web-tuijian fl '+tripClass+'">';
+                        html+='     <a href="'+UrlManager.getTripInfoUrl(trip.tripId)+'" class="pic">'
+                        html+='         <img src="'+trip.titleImg+'" width="410" height="267">';
+                        html+='         <p class="p4"><span>￥'+trip.basePrice+'</span>';
+                        html+='             '+basePriceType;
+                        html+='         </p>';
+                        html+='     </a>';
+                        html+='     <a href="javascript:;" class="user"><img src="'+trip.headImg+'" ></a>';
+                        html+='     <p class="title">'+title+'</p>';
+                        html+='     <p class="xing">'
+
+                        if(trip.score>=2){html+='<img src="/assets/images/start1.fw.png" alt="">';}else{html+='<img src="/assets/images/start2.fw.png" alt="">';}
+                        if(trip.score>=4){html+='<img src="/assets/images/start1.fw.png" alt="">';}else{html+='<img src="/assets/images/start2.fw.png" alt="">';}
+                        if(trip.score>=6){html+='<img src="/assets/images/start1.fw.png" alt="">';}else{html+='<img src="/assets/images/start2.fw.png" alt="">';}
+                        if(trip.score>=8){html+='<img src="/assets/images/start1.fw.png" alt="">';}else{html+='<img src="/assets/images/start2.fw.png" alt="">';}
+                        if(trip.score>=10){html+='<img src="/assets/images/start1.fw.png" alt="">';}else{html+='<img src="/assets/images/start2.fw.png" alt="">';}
+
+                        html+='         <span>'+trip.tripCount+'人去过</span><span>'+commentCount+'条评论</span>';
+                        html+='     </p>';
+                        html+=' </div>';
                     }
-                    $("#trip_base_list ul").html(html);
+
+                    $("#trip_base_list").html(html);
                     $("#spage").html(data.data.pageHtml);
                     $("#spage li a").bind("click",function(){
                         currentPage=$(this).attr("page");

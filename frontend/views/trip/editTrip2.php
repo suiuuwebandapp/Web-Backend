@@ -125,7 +125,7 @@
                 if($travelInfo['picList']!=null){
                     foreach($travelInfo['picList'] as $pic){
                 ?>
-                    <a href="#" class="imgs"><span class="delet" onclick="removePic(this)"></span><img src="<?=$pic['url']?>"></a>
+                    <a href="javascript:;" class="imgs"><span class="delet" onclick="removePic(this)"></span><img src="<?=$pic['url']?>"></a>
                 <?php
                     }
                 }
@@ -806,7 +806,7 @@
         }
 
         $.ajax({
-            url :'/sys/update-trip',
+            url :'/trip/update-trip',
             type:'post',
             data:{
                 tripId:tripId,

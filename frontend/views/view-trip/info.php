@@ -64,47 +64,64 @@
     .btn-link,.input-group-btn{
         display: none !important;
     }
+
+    .bdsharebuttonbox .icon{
+        padding: 0;float: none;margin: 0;
+    }
+    .sydetailBanner .pre{
+        border:none;
+    }
+    .sydetailBanner .next{
+        border:none;
+    }
+    .sydetailBanner .next:hover{
+        background-color:transparent;
+    }
 </style>
 
+<?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
+<input type="hidden" id="tripId" value="<?=$travelInfo['info']['tripId'];?>" />
+<div class="sydetailBanner web-banner">
+    <div class="banner">
+        <ul class="clearfix">
+            <?php foreach($travelInfo['picList'] as $pic ){?>
+                <li><a href="javascript:;"><img src="<?= $pic['url'];?>" width="100%" alt=""></a></li>
+            <?php }?>
+        </ul>
+    </div>
+    <a href="javascript:;" class="pre"></a>
+    <a href="javascript:;" class="next"></a>
+</div>
+
+<div class="bgGreen sydetailNav clearfix">
+    <div class="w1200 clearfix">
+        <ul class="clearfix">
+            <li><a href="#imgs">照片</a></li>
+            <li><a href="#detail">详情描述</a></li>
+            <li><a href="#price">价格内容</a></li>
+            <li><a href="#pinglun">评论</a></li>
+        </ul>
+    </div>
+</div>
+
 <div class="sydetail w1200 clearfix">
-    <div class="titTop clearfix">
+    <div class="titTop clearfix fl">
         <h3 class="title"><?=$travelInfo['info']['title'];?></h3>
+        <p><img src="/assets/images/position.png" width="14" height="18">&nbsp;<?=$travelInfo['info']['countryCname']?>，<?=$travelInfo['info']['cityCname']?></p>
         <p class="xing">
+            <img src="/assets/images/biaoqian.png" width="16" height="16">
+            <?php foreach(explode(",",$travelInfo['info']['tags']) as $tag){ ?>
+                <span><?=$tag;?></span>
+            <?php } ?>
             <img src="<?= $travelInfo['info']['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
             <img src="<?= $travelInfo['info']['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
             <img src="<?= $travelInfo['info']['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
             <img src="<?= $travelInfo['info']['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
             <img src="<?= $travelInfo['info']['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
         </p>
-        <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
-        <?php if($isOwner){?>
-            <a id="backEdit" href="/trip/edit-trip?trip=<?=$travelInfo['info']['tripId']?>" class="bjBtn">返回编辑</a>
-        <?php } ?>
     </div>
-    <div class="web-content">
+    <div class="web-content fl">
         <div class="web-left">
-            <?php if(empty($attention)||$attention==false){?>
-            <a href="javascript:;" class="collection" attentionIdTrip="0" id="collection_trip"></a>
-            <?php  }else{?>
-                <a href="javascript:;" class="collection active" attentionIdTrip="<?php echo $attention['attentionId']?>" id="collection_trip"></a>
-            <?php  }?>
-            <div class="web-banner" id="ban">
-                <ul id="banner">
-                    <?php foreach($travelInfo['picList'] as $pic ){?>
-                        <li><img src="<?= $pic['url'];?>" alt=""></li>
-                    <?php }?>
-                </ul>
-                <ol id="btn">
-                    <?php foreach($travelInfo['picList'] as $pic ){?>
-                        <li><a href="javascript:;"><img src="<?= $pic['url'];?>" alt=""></a></li>
-                    <?php }?>
-                    <?php foreach($travelInfo['picList'] as $pic ){?>
-                        <li><a href="javascript:;"><img src="<?= $pic['url'];?>" alt=""></a></li>
-                    <?php }?>
-                </ol>
-                <a href="javascript:;" class="pre" id="pre"><img src="/assets/images/prev.png" alt=""></a>
-                <a href="javascript:;" class="nex" id="nex"><img src="/assets/images/next.png" alt=""></a>
-            </div>
             <div class="map">
                 <ul class="details">
                     <li>
@@ -120,18 +137,27 @@
                 <div class="map-pic">
                     <iframe id="mapFrame" name="mapFrame" src="/google-map/view-scenic-map?tripId=<?=$travelInfo['info']['tripId'];?>" width="893px" height="330px;" frameborder="0" scrolling="no"></iframe>
                 </div>
-                <?php if(!empty($travelInfo['highlightList'])&&count($travelInfo['highlightList'])>0){ ?>
-                    <p class="title02">随游亮点</p>
-                    <?php foreach($travelInfo['highlightList'] as $highlight){ ?>
-                        <p class="p3"><b></b><?=$highlight['value']?></p>
-                    <?php } ?>
-                <?php } ?>
-                <p class="title02">详情描述</p>
+
+                <p class="title02" id="detail">详情描述</p>
                 <div class="trip_info">
                     <?=str_replace("\n","</br>",$travelInfo['info']['info']);?>
                 </div>
+                <?php if(!empty($travelInfo['specialList'])){ ?>
+                    <?php foreach($travelInfo['specialList'] as $special){ ?>
+                        <div><img src="<?=$special['picUrl']?>" width="830" height="460"></div>
+                        <p class="title"><?=$special['title']?></p>
+                        <p><?=$special['info']?></p>
+                    <?php } ?>
+                <?php } ?>
+                <div class="bgGreen idea clearfix">
+                    <a href="#" class="cir fl"><img src="<?=$createUserInfo->headImg;?>" width="66" height="66"></a>
+                    <div class="fl">
+                        <p>推荐理由：</p>
+                        <p>依然保留了初建时的许多历史遗迹，如威斯敏斯特厅</p>
+                    </div>
+                </div>
                 <?php if(!empty($travelInfo['includeDetailList'])&&!empty($travelInfo['unIncludeDetailList'])){ ?>
-                    <p class="title02">价格内容</p>
+                    <p class="title02" id="price">价格内容</p>
                     <div class="contian clearfix">
                         <?php foreach($travelInfo['includeDetailList'] as $detail){ ?>
                             <span><b class="icon icon01"></b><?=$detail['name']?></span>
@@ -142,11 +168,11 @@
                     </div>
                 <?php } ?>
                 <ul class="detNav tabTitle clearfix">
-                    <li><a href="###" class="icon icon01 active">预定流程</a></li>
-                    <li><a href="###" class="icon icon02">退款说明</a></li>
-                    <li><a href="###" class="icon icon03">保险保障</a></li>
+                    <li><a href="javascript:;" class="icon icon01 active">预定流程</a></li>
+                    <li><a href="javascript:;" class="icon icon02">退款说明</a></li>
+                    <li><a href="javascript:;" class="icon icon03">保险保障</a></li>
                 </ul>
-                <div class="detCon con01 tabCon" style="display: block;">
+                <div class="detCon con01 tabCon" style="display:block;">
                     <div class="line"></div>
                     <p><span>1</span> 咨询随游的发布者，确认游玩细节。</p>
                     <p><span>2</span> 填写日期，人数等信息并预支付订单。</p>
@@ -155,8 +181,8 @@
                     <p><span>5</span> 完成游玩后进行确认，评价您选择的随游及服务提供者。</p>
                 </div>
                 <div class="detCon tabCon">
-                    <p>作为用户，您的权益会在随游得到充分保障。</p>
-                    <p>作为旅行者，您如果选择预订随游产品，可以享受以下的退款政策</p>
+                    <h3 class="title03">作为用户，您的权益会在随游得到充分保障。</h3>
+                    <h3 class="title03">作为旅行者，您如果选择预订随游产品，可以享受以下的退款政策</h3>
                     <p>1.支付并提交订单后48小时无人接单，则订单自动取消，全额返还服务费</p>
                     <p>2.订单提交时间未满48小时，但超过订单预期服务时间的，全额返还服务费</p>
                     <p>3.在订单被接单之前取消订单，全额返还所支付费用</p>
@@ -173,159 +199,140 @@
             </div>
 
             <?php if($isOwner&&count($travelInfo['publisherList'])>1){?>
-            <div class="newsLists clearfix" id="publisherList">
-                <h2 class="title">随友处理</h2>
-                <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
-                    <?php if($publisherInfo['publisherId']==$travelInfo['info']['createPublisherId']){continue;} ?>
-                    <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
+                <div class="newsLists clearfix" id="publisherList">
+                    <h2 class="title">随友处理</h2>
+                    <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
+                        <?php if($publisherInfo['publisherId']==$travelInfo['info']['createPublisherId']){continue;} ?>
+                        <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
 
-                    <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">
-                        <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
-                        <ul class="clearfix">
-                            <li class="li01"><?=$publisherInfo['nickname'];?><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$publisherInfo['userSign']?>')">
-                                <br>性别:<b><?php if($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b>
-                            </li>
-                            <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($publisherInfo['birthday']);?></b></li>
-                            <li>职业:<b><?=$publisherInfo['profession']?></b></li>
-                            <li>随游次数:<b><?=$publisherInfo['travelCount']?></b></li>
-                        </ul>
-                        <a href="javascript:;" tripPublisherId="<?=$publisherInfo['tripPublisherId']?>" class="sureBtn">移除</a>
-                    </div>
-                <?php } ?>
-            </div>
+                        <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">
+                            <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
+                            <ul class="clearfix">
+                                <li class="li01"><?=$publisherInfo['nickname'];?><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$publisherInfo['userSign']?>')">
+                                    <br>性别:<b><?php if($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b>
+                                </li>
+                                <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($publisherInfo['birthday']);?></b></li>
+                                <li>职业:<b><?=$publisherInfo['profession']?></b></li>
+                                <li>随游次数:<b><?=$publisherInfo['travelCount']?></b></li>
+                                <li><a href="###" class="colGreen">申请理由</a></li>
+                            </ul>
+                            <a href="javascript:;" tripPublisherId="<?=$publisherInfo['tripPublisherId']?>" class="sureBtn colOrange">移除</a>
+                            <!--
+                            <a href="javascript:;" class="sureBtn posis colGreen">接受</a>
+                            <a href="javascript:;" class="sureBtn colOrange">忽略</a>
+                            -->
+                        </div>
+                    <?php } ?>
+                </div>
             <?php }else{ ?>
                 <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
                     <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
                 <?php } ?>
             <?php } ?>
-            <div  id="buyTrip"></div>
-            <form action="/user-order/add-order" method="post" id="orderForm">
-                <input type="hidden" name="tripId" value="<?=$travelInfo['info']['tripId'];?>" id="tripId"/>
-                <input type="hidden" name="serviceIds" id="serviceIds" />
-            <div class="route">
-                <h2 class="title">购买路线</h2>
-                <ul>
-                    <li><span>出发日期：</span><p><input type="text" class="text" name="beginDate" id="beginTime"><a href="javascript:;" class="cal-icon" id="calendar"></a></p></li>
-                    <li><span>出游人数: </span><p><input type="text"  class="text" name="peopleCount" id="peopleCount"></p></li>
-                    <li><span>起始时间：</span><p><input type="text"  class="text" name="startTime" id="startTime"></p></li>
-                    <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
-                        <li id="serviceLi">
-                            <span><?=$key==0?'附加服务：':''?></span>
-                            <p><input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>"
-                                      serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>"
-                                    >
-                                <label for="radio<?=$service['serviceId']?>" ><?=$service['title']?></label>
-                                <span><b>￥<?=intval($service['money'])?></b></span>
-                                <span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span>
-                            </p>
-                        </li>
-                    <?php } ?>
-                </ul>
-                <div class="pay">
-                    <p>
-                        <span>总价：<b id="allPrice">￥<?=intval($travelInfo['info']['basePrice']);?></span>
-                        <a href="javascript:;" id="addOrder" class="btn" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >支付</a>
-                    </p>
-                </div>
-            </div>
-            </form>
             <div class="web-con">
-                <div id="pllist" class="web-bar">
-                    <ol>
-                        <li><a href="#pinglun">评论</a></li>
-                        <li></li>
-                        <li id="fenxiang"><a href="javascript:;">分享</a>
-                            <div id="other-line" class="bdsharebuttonbox" data-tag="share_1">
-                                <a href="javascript:;" class="icon sina" data-cmd="tsina"></a>
-                                <a href="javascript:;" class="icon wei" data-cmd="weixin"></a>
-                                <a href="javascript:;" class="icon qq" data-cmd="qzone"></a>
-                            </div>
-                        </li>
-                    </ol>
-
-                </div>
+                <p class="title" id="pinglun"><img src="/assets/images/pinglun2.png" width="25" height="28" style="display: inline-block;">&nbsp;有<span>12</span>条评论</p>
                 <div class="zhuanlan-web">
                     <ul id="tanchu_pl">
                     </ul>
                     <ol id="spage">
                     </ol>
                 </div>
-                <div class="zhuanlan-text">
+                <a href="###" class="zl-btn colGreen more">更多评论</a>
 
-                    <textarea id="pinglun"></textarea>
-                    <a href="javascript:;" class="zl-btn" onclick="submitComment()">发表评论</a>
+                <div class="zhuanlan-text clearfix">
+                    <textarea id="pinglun" placeholder="说点什么吧"></textarea>
+                    <a href="javascript:;" class="zl-btn bgGreen colWit" onclick="submitComment()">发表评论</a>
                 </div>
             </div>
 
+
+            <p class="title02"><img src="/assets/images/ss.png" width="20" height="20">&nbsp;相似推荐</p>
+            <div class="clearfix">
+                <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
+                    <?php foreach ($relateRecommend as $trip) {?>
+                        <?php if($trip['tripId']==$travelInfo['info']['tripId']){continue;} ?>
+                        <div class="web-tuijian fl" style="cursor: pointer" onclick="window.location.href='<?=\common\components\SiteUrl::getTripUrl($trip['tripId'])?>'">
+                            <a href="javascript:;" class="pic">
+                                <img src="<?=$trip['titleImg']?>" width="270" height="176">
+                                <p class="p4"><span>￥<?=intval($trip['basePrice'])?></span>
+                                    <?=$trip['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
+                                </p>
+                            </a>
+                            <p><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,20,'UTF-8')."...":$trip['title']?></p>
+                            <p class="xing">
+                                <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
+                                <span><?=$trip['tripCount']?>人去过</span><span>20条评论</span>
+                            </p>
+                        </div>
+                    <?php } ?>
+                <?php } ?>
+            </div>
         </div>
-        <div class="web-right">
-            <div class="user">
+    </div>
+    <div class="web-right">
+        <div class="kuang clearfix">
+            <h3 class="title bgGreen clearfix"><span class="colOrange fl">￥<?=$travelInfo['info']['basePrice']?></span>
+                <span class="colWit fr"><?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?></span></h3>
+            <ul class="ul01 clearfix">
+                <li class="tit"><span>出发日期</span><span>起始时间</span><span class="last">&nbsp;人数</span></li>
+                <li class="tit tit02"><span><input type="text"></span><span><input type="text"></span>
+                    <span class="last">
+                     <select>
+                        <?php for($i=1;$i<=$travelInfo['info']['maxUserCount'];$i++){echo '<option value="'.$i.'">'.$i.'</option>';} ?>
+                     </select>
+                    </span>
+                </li>
+            </ul>
+            <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
+                <p>附加服务</p>
+                <ul class="ul02 clearfix" id="serviceLi">
+                    <li>
+                        <span><?=$service['title']?></span><span><b>￥<?=intval($service['money'])?></b></span>
+                        <span class="last"><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'每人':'每次' ?>
+                            <input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>" serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>" >
+                            <label for="radio<?=$service['serviceId']?>" ><?=$service['title']?></label>
+                        </span>
+                    </li>
+                </ul>
+            <?php } ?>
+            <p class="colOrange money">￥<?=intval($travelInfo['info']['basePrice']);?></p>
+            <input id="toBuy" type="button" value="立即预定" class="btn web-btn6 bgOrange" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+            <input id="toApply" type="button" value="申请加入" class="btn web-btn5 bgGreen" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
+            <a href="###" class="colGreen fr">如何预订？</a>
+        </div>
+
+        <div class="kuang clearfix">
+            <div class="user bgGreen">
                 <div class="user-name">
                     <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
                     <span><?=$createUserInfo->nickname;?></span>
-                    <a href="javascript:Main.showSendMessage('<?=$createUserInfo->userSign?>')" class="message"><img src="/assets/images/xf.fw.png" width="18" height="12"></a>
                 </div>
                 <p><?=$createUserInfo->intro;?></p>
+                <a href="javascript:;" onclick="Main.showSendMessage('<?=$createUserInfo->userSign;?>')" class="icon"></a>
             </div>
-            <div class="pf">
-                <ul>
-                    <li class="fen">
-                        <p class="xing">
-                            <img src="<?= $createPublisherInfo->score>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $createPublisherInfo->score>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $createPublisherInfo->score>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $createPublisherInfo->score>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $createPublisherInfo->score>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                        </p>
-                    </li>
-                    <li>行程数:<b><?=$createPublisherInfo->tripCount;?></b></li>
-                    <li>随游次数:<b><?=$createUserInfo->travelCount;?></b></li>
-                </ul>
+            <div class="text clearfix">
+                <h3>分享</h3>
+                <div class="share bdsharebuttonbox">
+                    <a href="javascript:;" class="icon sina" data-cmd="tsina" title="分享到新浪微博"></a>
+                    <a href="javascript:;" class="icon weixin" data-cmd="weixin" title="分享到微信"></a>
+                    <a href="javascript:;" class="icon qq" data-cmd="qzone" title="分享到QQ空间"></a>
+                </div>
+                <?php if(empty($attention)||$attention==false){?>
+                    <p class="colGreen adds"><i class="addIicon" attentionIdTrip="0" id="collection_trip"></i>添加到心愿单</p>
+                <?php  }else{?>
+                    <p class="colGreen adds"><i class="addIicon active" attentionIdTrip="<?php echo $attention['attentionId']?>" id="collection_trip"v></i>从心愿单中移除</p>
+                <?php }?>
             </div>
-            <div class="kuang">
-                <?php if($travelInfo['serviceList']!=null){ ?>
-                    <p>附加服务</p>
-                    <ul class="ul01" id="stepPriceList">
-                        <li class="tit"><span>服务</span><span>价格</span><span>单位</span></li>
-                        <?php foreach($travelInfo['serviceList'] as $service){  ?>
-                            <li>
-                                <span title="<?=$service['title'];?>"><?=mb_strlen($service['title'],"UTF-8")>5?(mb_substr($service['title'],0,5,"UTF-8")."..."):$service['title']?></span>
-                                <span><b>¥<?=intval($service['money'])?></b></span>
-                                <span><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'人':'次' ?></span>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                <?php } ?>
-            </div>
-            <p class="price">基础价格:<b id="basePrice">¥<?=intval($travelInfo['info']['basePrice']);?></b>
-                <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
-            </p>
-            <?php if($travelInfo['priceList']!=null){ ?>
-                <p class="price orange">多人预定享受优惠价格</p>
-            <?php } ?>
-            <input id="toBuy" type="button" value="购买路线" class="btn web-btn5" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-            <input id="toApply" type="button" value="申请加入路线" class="btn web-btn6" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
-            <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
-                <?php foreach ($relateRecommend as $trip) {?>
-                    <?php if($trip['tripId']==$travelInfo['info']['tripId']){continue;} ?>
-                    <div class="web-tuijian" style="cursor: pointer" onclick="javascript:window.location.href='/view-trip/info?trip=<?=$trip['tripId']?>'">
-                        <a href="###" class="pic"><img src="<?=$trip['titleImg']?>" alt=""></a>
-                        <p><?=mb_strlen($trip['title'],"UTF-8")>33?mb_substr($trip['title'],0,33,'UTF-8')."...":$trip['title']?></p>
-                        <p class="xing">
-                            <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                            <span>¥<?=intval($trip['basePrice'])?></span>
-                        </p>
-
-                    </div>
-                <?php } ?>
-            <?php } ?>
         </div>
     </div>
+
 </div>
+
+
 
 
 <script type="text/javascript">
@@ -598,18 +605,15 @@
             return;
         }
        var isCollection=false;
-        if($('#collection_trip').attr('class')=='collection')
-        {
-            $('#collection_trip').attr('class','collection active');
+        if($('#collection_trip').attr('class')=='addIicon'){
+            $('#collection_trip').addClass('active');
             isCollection = true;
-        }else
-        {
-            $('#collection_trip').attr('class','collection');
+        }else{
+            $('#collection_trip').removeClass('active');
             isCollection=false;
         }
 
-        if(isCollection)
-        {
+        if(isCollection){
             //添加收藏
             $.ajax({
                 url :'/view-trip/add-collection-travel',
@@ -621,7 +625,7 @@
                 error:function(){
                     //hide load
                     Main.showTip("收藏随游失败");
-                    $('#collection_trip').attr('class','collection');
+                    $('#collection_trip').removeClass('active');
                     isCollection=false;
                 },
                 success:function(data){
@@ -632,13 +636,12 @@
                         $('#collection_trip').attr('attentionIdTrip',data.data);
                     }else{
                         Main.showTip(data.data);
-                        $('#collection_trip').attr('class','collection');
+                        $('#collection_trip').removeClass('active');
                         isCollection=false;
                     }
                 }
             });
-        }else
-        {
+        }else{
             //取消收藏
             $.ajax({
                 url :'/view-trip/delete-attention',
@@ -649,7 +652,7 @@
                 },
                 error:function(){
                     //hide load
-                    $('#collection_trip').attr('class','collection active');
+                    $('#collection_trip').addClass('active');
                     isCollection = true;
                     Main.showTip("收藏随游失败");
                 },
@@ -659,7 +662,7 @@
                     if(data.status==1){
                         Main.showTip("取消成功");
                     }else{
-                        $('#collection_trip').attr('class','collection active');
+                        $('#collection_trip').addClass('active');
                         isCollection = true;
                         Main.showTip(data.data);
                     }

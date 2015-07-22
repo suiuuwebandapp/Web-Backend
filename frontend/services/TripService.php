@@ -116,11 +116,12 @@ class TripService extends BaseDb{
      * @param $serviceList
      * @param $detailList
      * @param $highlightList
+     * @param $specialList
      * @return array|bool
      * @throws Exception
      * @throws \Exception
      */
-    public function addTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,TravelTripPublisher $travelTripPublisher,$serviceList,$detailList,$highlightList)
+    public function addTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,TravelTripPublisher $travelTripPublisher,$serviceList,$detailList,$highlightList,$specialList)
     {
         $conn = $this->getConnection();
         $tran=$conn->beginTransaction();
@@ -173,6 +174,16 @@ class TripService extends BaseDb{
                     $this->tripTravelDb->addTravelTripHighLight($highlight);
                 }
             }
+
+            if($specialList!=null){
+                foreach($specialList as $special)
+                {
+                    $special->tripId=$tripId;
+                    $this->saveObject($special);
+                }
+            }
+
+
             $this->commit($tran);
             return $this->tripTravelDb->findTravelTripById($tripId);
         } catch (Exception $e) {
@@ -192,11 +203,12 @@ class TripService extends BaseDb{
      * @param $serviceList
      * @param $detailList
      * @param $highlightList
+     * @param $specialList
      * @return array|bool
      * @throws Exception
      * @throws \Exception
      */
-    public function updateTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,$serviceList,$detailList,$highlightList)
+    public function updateTravelTrip(TravelTrip $travelTrip,$scenicList,$picList,$priceList,$serviceList,$detailList,$highlightList,$specialList)
     {
         $conn = $this->getConnection();
         $tran=$conn->beginTransaction();
@@ -253,6 +265,17 @@ class TripService extends BaseDb{
                     $this->tripTravelDb->addTravelTripHighLight($highlight);
                 }
             }
+
+            $this->tripTravelDb->deleteTravelTripSpecialByTripId($travelTrip->tripId);
+            if($specialList!=null){
+                foreach($specialList as $special)
+                {
+                    $special->tripId=$travelTrip->tripId;
+                    $this->saveObject($special);
+                }
+            }
+
+
             $this->commit($tran);
             return $this->tripTravelDb->findTravelTripById($travelTrip->tripId);
         } catch (Exception $e) {
@@ -292,8 +315,8 @@ class TripService extends BaseDb{
             $attentionEntity->userSign = $userSign;
             $praise=$attention->getAttentionResult($attentionEntity);
             $collect=$attention->getAttentionResult($userAttention);
-            $tripInfo['praise']=$praise==false?array():$praise;
-            $tripInfo['attention']=$collect==false?array():$collect;
+            $tripInfo['praise']=$praise==false?array():array($praise);
+            $tripInfo['attention']=$collect==false?array():array($collect);
             $tripInfo['info']=$this->tripTravelDb->findTravelTripById($tripId);
             if($tripInfo['info']['status']==TravelTrip::TRAVEL_TRIP_STATUS_DELETE){
                 throw new Exception("随游不存在");
@@ -304,6 +327,7 @@ class TripService extends BaseDb{
             $tripInfo['scenicList']=$this->tripTravelDb->getTravelTripScenicList($tripId);
             $tripInfo['serviceList']=$this->tripTravelDb->getTravelTripServiceList($tripId);
             $tripInfo['highlightList']=$this->tripTravelDb->getTravelTripHighlightList($tripId);
+            $tripInfo['specialList']=$this->tripTravelDb->getTravelTripSpecialList($tripId);
             //所有明细
             $detailList=$this->tripTravelDb->getTravelTripDetailList($tripId);
             $includeDetailList=[];

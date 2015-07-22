@@ -53,6 +53,12 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '无效的订单号']);
         }
         $orderInfo=$this->userOrderService->findOrderByOrderNumber($orderNumber);
+        if($orderInfo==null){
+            return $this->redirect(['/result', 'result' => '无效的订单号']);
+        }
+        if($orderInfo->userId!=$this->userObj->userSign){
+            return $this->redirect(['/result', 'result' => '无效的用户']);
+        }
         return $this->render("info",[
            'orderInfo'=> $orderInfo
         ]);

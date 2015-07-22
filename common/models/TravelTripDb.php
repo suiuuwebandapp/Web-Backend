@@ -439,6 +439,40 @@ class TravelTripDb extends ProxyDb{
     }
 
     /**
+     * 批量删除随游特殊亮点
+     * @param $tripId
+     * @throws \yii\db\Exception
+     */
+    public function deleteTravelTripSpecialByTripId($tripId)
+    {
+        $sql=sprintf("
+            DELETE FROM travel_trip_special
+            WHERE tripId=:tripId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->execute();
+    }
+
+    /**
+     * 获取随游特殊亮点列表
+     * @param $tripId
+     * @return array
+     */
+    public function getTravelTripSpecialList($tripId)
+    {
+        $sql=sprintf("
+            SELECT * FROM travel_trip_special
+            WHERE tripId=:tripId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        return $command->queryAll();
+    }
+
+    /**
      * 查找随游随友列表
      * @param $tripId
      * @return array

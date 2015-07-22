@@ -142,7 +142,7 @@ class UserMessageService extends BaseDb
 
                 $userMessage->sessionKey=$sessionKey;
 
-                $userMessageSession=$this->userMessageDb->findUserMessageSessionByKey($userMessage->receiverId,$sessionKey);
+                $userMessageSession=$this->userMessageDb->findUserMessageSessionByKey($userMessage->receiveId,$sessionKey);
                 if($userMessageSession==null||$userMessageSession === false){
                     $userMessageSession=new UserMessageSession();
                     $userMessageSession->sessionKey=$sessionKey;

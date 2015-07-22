@@ -21,7 +21,7 @@
 <input type="hidden" class="form-control" id="us3-lon" value="<?= $lon ?>"/>
 
 
-<div id="us3" style="width: 360px; height: 320px;"></div>
+<div id="us3" style="width: 440px; height: 260px;"></div>
 
 <script>
 
