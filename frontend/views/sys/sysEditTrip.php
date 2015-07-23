@@ -134,7 +134,7 @@
 
         <!--step3 begin-->
         <div class="bjy-bj3 bjy-bj">
-            <h2 class="titles">添加您的随游所涉及的位置地点，帮助旅行者更好的作出决策</h2>
+            <h2 class="titles">照片是旅行者在预定时最重要的参考依据，好的照片会让你的随游看起来更加精彩</h2>
 
             <div id="upload_div" class="upload_div clearfix">
                 <?php
@@ -397,17 +397,19 @@
                 <input id="cusTagTitle" type="text" maxlength="5">
                 <a href="javascript:;" class="btn" id="addTag">提交</a>
             </div>
-            <h2 class="titles">设置一个能体现随游的价值和好客之道的价格</h2>
+            <h2 class="titles">每个随游都与众不同，通过添加描述，让你的随游给游客留下深刻的印象</h2>
 
             <div class="box01">
                 <span>详情描述<b class="form_tip" id="infoTip"></b></span>
                 <textarea id="info" placeholder="更近一步的介绍您的随游，讲讲您亲身的体验经历，告知旅行者注意事项"><?=$travelInfo['info']['info']?></textarea>
 
-                <div class="bjyPro bj5Pro01">
-                    <h2 class="tit bgGreen">基本价格</h2>
+                <!--
+               <div class="bjyPro bj5Pro01">
+                   <h2 class="tit bgGreen">基本价格</h2>
 
-                    <p>你可以通过设置低廉的价格吸引到头一批游客从而积攒好评，之后可以适当提高价格</p>
-                </div>
+                   <h2 class="titles">每个随游都与众不同，通过添加描述，让你的随游给游客留下深刻的印象</h2>
+               </div>
+               -->
             </div>
 
             <div class="biaoqian clearfix">
@@ -432,11 +434,13 @@
                         <?php } ?>
                         <li class="add"><img src="/assets/images/addG.png" width="25" height="25"></li>
                     </ul>
-                    <div class="bjyPro bj5Pro02">
-                        <h2 class="tit bgGreen">基本价格</h2>
+                    <!--
+                       <div class="bjyPro bj5Pro02">
+                           <h2 class="tit bgGreen">基本价格</h2>
 
-                        <p>你可以通过设置低廉的价格吸引到头一批游客从而积攒好评，之后可以适当提高价格</p>
-                    </div>
+                           <h2 class="titles">每个随游都与众不同，通过添加描述，让你的随游给游客留下深刻的印象</h2>
+                       </div>
+                       -->
                 </div>
                 <div class="box03">
                     <span>随游亮点</span>
@@ -475,7 +479,6 @@
                             <textarea id="special_info" placeholder="最多150个字" maxlength="150"></textarea>
                             <span>上传图片</span>
                             <a href="javascript:;" onclick="NewTrip.showChoseSpecialDiv();" class="fr colGreen selPic">从已上传图片中选取</a>
-
                             <div id="special_div" class="pic fPic">
                                 <p class="special_upload_tip"></p>
                                 <img src="/assets/images/addd.png" width="380">
@@ -908,6 +911,7 @@
             choseSpecialImg:function(obj){
                 var src=$(obj).find("img").attr("src");
                 $("#special_div img").attr("src",src);
+                $("#special_img").val(src);
                 $("#choseSpecialDiv").hide();
                 $(".mask").hide();
             },
@@ -941,8 +945,6 @@
                     Main.showTip("请上传亮点图片");
                     return;
                 }
-                var special=[name,info,img];
-                specialList.push(special);
                 var shortName=name;
                 var shortInfo=info;
                 if(name.length>13){
@@ -1169,7 +1171,7 @@
                 }
 
                 $.ajax({
-                    url: '/trip/update-trip',
+                    url: '/sys/update-trip',
                     type: 'post',
                     data: {
                         tripId:tripId,

@@ -83,16 +83,16 @@ function bz(id,sClass){
 
 
     oBjyprev.onclick = function(){
+        if(iNow==4){
+            NewTrip.saveTrip(2);
+            return;
+        }
         if(iNow==3){
             $("#bjy-prev").html("预览");
             $("#bjy-next").html("立即发布");
         }else{
             $("#bjy-prev").html("上一步");
             $("#bjy-next").html("下一步");
-        }
-        if(iNow==4){
-            NewTrip.saveTrip(2);
-            return;
         }
         iNow--;
         if(iNow == -1){
@@ -109,16 +109,16 @@ function bz(id,sClass){
     oBjynext.onclick = next;
 
     function next(){
+        if(iNow==4){
+            NewTrip.saveTrip(1);
+            return;
+        }
         if(iNow==3){
             $("#bjy-prev").html("预览");
             $("#bjy-next").html("立即发布");
         }else{
             $("#bjy-prev").html("上一步");
             $("#bjy-next").html("下一步");
-        }
-        if(iNow==4){
-            NewTrip.saveTrip(1);
-            return;
         }
         iNow++;
         if(iNow == oBtn.length){

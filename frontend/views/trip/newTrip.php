@@ -115,7 +115,7 @@
 
         <!--step3 begin-->
         <div class="bjy-bj3 bjy-bj">
-            <h2 class="titles">添加您的随游所涉及的位置地点，帮助旅行者更好的作出决策</h2>
+            <h2 class="titles">照片是旅行者在预定时最重要的参考依据，好的照片会让你的随游看起来更加精彩</h2>
 
             <div id="upload_div" class="upload_div clearfix">
                 <a id="uploadPic" class="imgs"><img src="/assets/images/addPic.gif"></a>
@@ -294,11 +294,13 @@
                 <span>详情描述<b class="form_tip" id="infoTip"></b></span>
                 <textarea id="info" placeholder="更近一步的介绍您的随游，讲讲您亲身的体验经历，告知旅行者注意事项"></textarea>
 
+                <!--
                 <div class="bjyPro bj5Pro01">
                     <h2 class="tit bgGreen">基本价格</h2>
 
-                    <p>你可以通过设置低廉的价格吸引到头一批游客从而积攒好评，之后可以适当提高价格</p>
+                    <h2 class="titles">每个随游都与众不同，通过添加描述，让你的随游给游客留下深刻的印象</h2>
                 </div>
+                -->
             </div>
 
             <div class="biaoqian clearfix">
@@ -311,11 +313,13 @@
                         <?php } ?>
                         <li class="add"><img src="/assets/images/addG.png" width="25" height="25"></li>
                     </ul>
+                    <!--
                     <div class="bjyPro bj5Pro02">
                         <h2 class="tit bgGreen">基本价格</h2>
 
                         <p>你可以通过设置低廉的价格吸引到头一批游客从而积攒好评，之后可以适当提高价格</p>
                     </div>
+                    -->
                 </div>
                 <div class="box03">
                     <span>随游亮点</span>
@@ -767,6 +771,7 @@
             choseSpecialImg:function(obj){
                 var src=$(obj).find("img").attr("src");
                 $("#special_div img").attr("src",src);
+                $("#special_img").val(src);
                 $("#choseSpecialDiv").hide();
                 $(".mask").hide();
             },
@@ -793,8 +798,6 @@
                     Main.showTip("请上传亮点图片");
                     return;
                 }
-                var special=[name,info,img];
-                specialList.push(special);
                 var shortName=name;
                 var shortInfo=info;
                 if(name.length>13){

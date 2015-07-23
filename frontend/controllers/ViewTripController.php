@@ -115,7 +115,7 @@ class ViewTripController extends UnCController{
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
 
         $recommendPage=new Page();
-        $recommendPage->pageSize=4;
+        $recommendPage->pageSize=3;
         $recommendPage->sortName="score";
         $recommendPage->sortType="DESC";
         $recommendPage=$this->tripService->getRelateRecommendTrip($recommendPage,$travelInfo['info']['countryId'],$travelInfo['info']['cityId']);

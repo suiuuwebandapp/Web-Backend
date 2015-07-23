@@ -159,7 +159,7 @@ class TripController extends CController
         $tripKind = trim(\Yii::$app->request->post("tripKind", TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR));
         $info = trim(\Yii::$app->request->post("info", ""));
         $tagList = \Yii::$app->request->post("tagList", "");
-        $cusTagList = \Yii::$app->request->post("cusTagList", "");
+        $cusTagList = \Yii::$app->request->post("cusTagList", []);
         $specialList = \Yii::$app->request->post("specialList", "");
 
         $highlightList = \Yii::$app->request->post("highlightList", "");
@@ -385,7 +385,7 @@ class TripController extends CController
         $tripKind = trim(\Yii::$app->request->post("tripKind", TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR));
         $info = trim(\Yii::$app->request->post("info", ""));
         $tagList = \Yii::$app->request->post("tagList", "");
-        $cusTagList = \Yii::$app->request->post("cusTagList", "");
+        $cusTagList = \Yii::$app->request->post("cusTagList", []);
         $specialList = \Yii::$app->request->post("specialList", "");
 
         $highlightList = \Yii::$app->request->post("highlightList", "");

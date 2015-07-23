@@ -21,6 +21,7 @@ use common\entity\TravelTripPicture;
 use common\entity\TravelTripPrice;
 use common\entity\TravelTripScenic;
 use common\entity\TravelTripService;
+use common\entity\TravelTripSpecial;
 use frontend\services\CountryService;
 use frontend\services\TripService;
 use yii\web\Controller;
@@ -91,6 +92,9 @@ class SysController extends Controller{
         $tripKind = trim(\Yii::$app->request->post("tripKind", TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR));
         $info = trim(\Yii::$app->request->post("info", ""));
         $tagList = \Yii::$app->request->post("tagList", "");
+        $cusTagList = \Yii::$app->request->post("cusTagList", []);
+        $specialList = \Yii::$app->request->post("specialList", "");
+
         $highlightList = \Yii::$app->request->post("highlightList", "");
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
@@ -151,6 +155,7 @@ class SysController extends Controller{
         $tripServiceList = array();
         $tripDetailList=array();
         $tripHighlightList=array();
+        $tripSpecialList=array();
 
         //随游基本信息
         $travelTrip = $this->tripService->getTravelTripById($tripId);
@@ -169,7 +174,7 @@ class SysController extends Controller{
         $travelTrip->travelTimeType = $tripKind;
         $travelTrip->startTime = $tripStartTime;
         $travelTrip->endTime = $tripEndTime;
-        $travelTrip->tags = implode(",", $tagList);
+        $travelTrip->tags = implode(",", array_merge($tagList,$cusTagList));
 
 
         //设置景区列表
@@ -247,9 +252,24 @@ class SysController extends Controller{
                 $tripHighlightList[] = $tempHighlight;
             }
         }
+        //特色
+        if(!empty($specialList)){
+            foreach ($specialList as $special) {
+                if(empty($special)){
+                    continue;
+                }
+                $tempSpecial = new TravelTripSpecial();
+                $tempSpecial->title=$special[0];
+                $tempSpecial->info=$special[1];
+                $tempSpecial->picUrl=$special[2];
+
+                $tripSpecialList[] = $tempSpecial;
+            }
+        }
+
 
         try {
-            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList,$tripDetailList,$tripHighlightList);
+            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList,$tripDetailList,$tripHighlightList,$tripSpecialList);
             if($status==TravelTrip::TRAVEL_TRIP_STATUS_NORMAL&&$travelTrip['status']==TravelTrip::TRAVEL_TRIP_STATUS_DRAFT){
                 $this->tripService->changeTripStatus($travelTrip['tripId'],TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
             }
@@ -257,7 +277,6 @@ class SysController extends Controller{
             $t->updateTagValList($tagList,$travelTrip['tripId']);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
-            var_dump($e);exit;
             //LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
