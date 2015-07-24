@@ -1465,7 +1465,7 @@
             'uploadScript': '/upload/upload-trip-title-img',
             'multi': false,
             'onAddQueueItem': function (file) {
-                $("#choseSpecialImg img").hide();
+                $("#special_div img").hide();
                 $(".special_upload_tip").show();
                 $(".special_upload_tip").html("正在上传，请稍后...");
             },

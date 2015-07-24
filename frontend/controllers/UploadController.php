@@ -160,18 +160,33 @@ class UploadController extends Controller
         if (!array_key_exists('Filedata', $_FILES)) {
             return json_encode(['status']);
         } else {
+            $img_info = getimagesize($_FILES['Filedata']['tmp_name']);
+            $w=$img_info[0];
+            $h=$img_info[1];
+            $type=$img_info['mime'];
+            //判断是否大于900 尺寸  如果大于 或者是PNG 的图片 进行压缩处理
+
             $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxTripImgSize, $this->tripImgTypes, $this->localDir);
             if ($result['status'] == Code::SUCCESS) {
-                $rst=$this->uploadService->resetImg($result['data'],550,500,2);
-                if($rst['status']!=Code::SUCCESS){
-                    return $rst;
+                $newWidth=$w;
+                $newHeight=$h;
+                if($w>900){
+                    $newWidth=900;
+                    $newHeight=(900/$w)*$h;
                 }
-                $ossUpload=new OssUpload();
-                $rst=$ossUpload->putObject($rst['data'],OssUpload::OSS_SUIUU_TRIP_DIR,basename($rst['data']));
+                $rst=$this->uploadService->resetImg($result['data'],$newWidth,$newHeight,2);
+                if($rst['status']==Code::SUCCESS){
+                    $ext=explode("/",$type)[1];
+                    $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $ext;
+                    $ossUpload=new OssUpload();
+                    $rst=$ossUpload->putObject($rst['data'],OssUpload::OSS_SUIUU_TRIP_DIR,$new_file_name);
+                    return json_encode($rst);
+                }
                 return json_encode($rst);
             }else{
                 return json_encode($result);
             }
+
         }
     }
 

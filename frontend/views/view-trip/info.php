@@ -85,7 +85,7 @@
     <div class="banner">
         <ul class="clearfix">
             <?php foreach($travelInfo['picList'] as $pic ){?>
-                <li><a href="javascript:;"><img src="<?= $pic['url'];?>" width="100%" alt=""></a></li>
+                <li style="width:auto"><a href="javascript:;"><img src="<?= $pic['url'];?>" height="335px" alt=""></a></li>
             <?php }?>
         </ul>
     </div>
@@ -144,7 +144,7 @@
                 </div>
                 <?php if(!empty($travelInfo['specialList'])){ ?>
                     <?php foreach($travelInfo['specialList'] as $special){ ?>
-                        <div><img src="<?=$special['picUrl']?>" width="830" height="460"></div>
+                        <div><img src="<?=$special['picUrl']?>" style="max-width: 830px"></div>
                         <p class="title"><?=$special['title']?></p>
                         <p><?=$special['info']?></p>
                     <?php } ?>
