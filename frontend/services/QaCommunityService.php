@@ -137,8 +137,9 @@ class QaCommunityService  extends BaseDb {
         }
     }
 
-    public function updateQaAttentionCount($conn,$id,$add)
+    public function updateQaAttentionCount($id,$add)
     {
+        $conn=$this->getConnection();
         try{
             $this->qaCommunityDb=new QaCommunityDb($conn);
             $info = $this->qaCommunityDb->getQuestionById($id);
@@ -155,6 +156,20 @@ class QaCommunityService  extends BaseDb {
                 }
             }
             $this->qaCommunityDb->updateAttentionNumber($id,$count);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function getUserQa($page,$userSign)
+    {
+        try{
+            $conn=$this->getConnection();
+            $this->qaCommunityDb=new QaCommunityDb($conn);
+            $page = $this->qaCommunityDb->getUserQa($page,$userSign);
+            return array('data'=>$page->getList(),'msg'=>$page);
         }catch (Exception $e){
             throw $e;
         }finally{

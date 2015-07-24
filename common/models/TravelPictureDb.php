@@ -139,13 +139,25 @@ class TravelPictureDb extends ProxyDb {
         $command->execute();
     }
 
-    public function getLikeTravelPicture($page,$id)
+    public function getLikeTravelPicture($page)
     {
         $sql=sprintf("
         FROM travel_picture a
         WHERE 1=1
         ");
         $this->setSelectInfo('a.*');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+    public function getUserTp($page,$userSign)
+    {
+        $sql=sprintf("
+        FROM travel_picture a
+        LEFT JOIN user_base b ON a.userSign =b.userSign
+        WHERE a.userSign=:userSign
+        ");
+        $this->setParam('userSign',$userSign);
+        $this->setSelectInfo('a.*,b.nickname,b.headImg,b.intro,b.info');
         $this->setSql($sql);
         return $this->find($page);
     }

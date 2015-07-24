@@ -288,6 +288,7 @@ class AppTravelController extends AController
     public function actionGetUnFinishOrder()
     {
         try{
+            $this->loginValid();
             $userSign=$this->userObj->userSign;
             $list=$this->userOrderService->getUnFinishOrderList($userSign);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
@@ -303,6 +304,7 @@ class AppTravelController extends AController
     public function actionGetFinishOrder()
     {
         try{
+            $this->loginValid();
             $userSign=$this->userObj->userSign;
             $list=$this->userOrderService->getFinishOrderList($userSign);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
@@ -1170,7 +1172,89 @@ class AppTravelController extends AController
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"系统未知异常"));
         }
     }
+//随友订单详情
+    public function actionTripOrderInfo()
+    {
+        try{
 
+            $this->loginValid();
+            $userSign=$this->userObj->userSign;
+            $userBaseService = new UserBaseService();
+            $userPublisherObj=$userBaseService->findUserPublisherByUserSign($userSign);
+            if(empty($userPublisherObj)){
+                return json_encode(Code::statusDataReturn(Code::FAIL,'无效的随友信息'));
+            }
+            $publisherId=$userPublisherObj->userPublisherId;
+            $orderNumber=\Yii::$app->request->post('id');
+            if(empty($orderNumber)){
+                return json_encode(Code::statusDataReturn(Code::FAIL,'未知的订单'));
+            }
+            $info = $this->userOrderService->findOrderByOrderNumber($orderNumber);
+            if(empty($info))
+            {
+                return json_encode(Code::statusDataReturn(Code::FAIL,'未知的订单'));
+            }
+            $tripId = $info->tripId;
+            $lstPublisher =$this->travelSer->getTravelTripPublisherList($tripId);
+            $bo=true;
+            foreach($lstPublisher as $publisherInfo)
+            {
+                if($publisherInfo['publisherId']==$publisherId)
+                {
+                    $bo=false;
+                }
+            }
+            $orderList = $this->userOrderService->getPublisherOrderList($publisherId);
+            foreach($orderList as $orderInfo)
+            {
+                if($orderInfo['orderNumber']==$orderNumber)
+                {
+                    $bo=false;
+                }
+            }
+            if($bo)
+            {
+                return json_encode(Code::statusDataReturn(Code::FAIL,'无关订单详情'));
+            }
+            $userSer =new UserBaseService();
+            $userInfo = $userSer->findUserByUserSign($info->userId);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,array('info'=>$info,'userInfo'=>$userInfo)));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,'系统异常'));
+        }
+    }
+
+    //用户订单详情
+    public function actionUserOrderInfo()
+    {
+        try{
+            $this->loginValid();
+            $userSign=$this->userObj->userSign;
+            $orderNumber=\Yii::$app->request->post('id');
+            if(empty($orderNumber)){
+                return json_encode(Code::statusDataReturn(Code::FAIL,'未知的订单'));
+            }
+            $info = $this->userOrderService->findOrderByOrderNumber($orderNumber);
+            $orderId=$info->orderId;
+            $publisherInfo =$this->userOrderService->findPublisherByOrderId($orderId);
+            if($userSign!=$info->userId)
+            {
+                return json_encode(Code::statusDataReturn(Code::FAIL,'订单用户不匹配'));
+            }
+            $publisherBase=null;
+            if(!empty($publisherInfo))
+            {
+                $sign=$publisherInfo->userId;
+                $userBaseService = new UserBaseService();
+                $publisherBase=$userBaseService->findUserByUserSign($sign);
+            }
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,array('info'=>$info,'publisherBase'=>$publisherBase)));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,'系统异常'));
+        }
+    }
     private function unifyReturn($data)
     {
         if($data==false)

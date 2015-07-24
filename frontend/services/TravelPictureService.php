@@ -44,7 +44,7 @@ class TravelPictureService  extends BaseDb {
         try{
             $this->tpcDb=new TravelPictureDb($conn);
             $this->tpcDb->addTravelPictureComment($travelPictureComment);
-            $this->updateTravelPictureCommentCount($conn,$travelPictureComment->tpId,true);
+            $this->updateTravelPictureCommentCount($travelPictureComment->tpId,true);
         }catch (Exception $e){
             throw $e;
         }finally{
@@ -111,9 +111,10 @@ class TravelPictureService  extends BaseDb {
         }
     }
 
-    public function updateTravelPictureCommentCount($conn,$id,$add)
+    public function updateTravelPictureCommentCount($id,$add)
     {
         try{
+            $conn=$this->getConnection();
             $this->tpDb=new TravelPictureDb($conn);
             $info = $this->tpDb->getTravelPictureInfoById($id);
             $count = $info['commentCount']?$info['commentCount']:0;
@@ -136,8 +137,9 @@ class TravelPictureService  extends BaseDb {
         }
     }
 
-    public function updateTravelPictureAttentionCount($conn,$id,$add)
+    public function updateTravelPictureAttentionCount($id,$add)
     {
+        $conn=$this->getConnection();
         try{
             $this->tpDb=new TravelPictureDb($conn);
             $info = $this->tpDb->getTravelPictureInfoById($id);
@@ -198,6 +200,20 @@ class TravelPictureService  extends BaseDb {
                 $search=$city;
             }
             $page= $this->tpDb->getTravelPictureList($page,$tagStr,$search);
+            return array('data'=>$page->getList(),'msg'=>$page);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function getUserTp($page,$userSign)
+    {
+        try{
+            $conn=$this->getConnection();
+            $this->tpDb=new TravelPictureDb($conn);
+            $page = $this->tpDb->getUserTp($page,$userSign);
             return array('data'=>$page->getList(),'msg'=>$page);
         }catch (Exception $e){
             throw $e;

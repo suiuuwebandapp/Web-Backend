@@ -155,4 +155,17 @@ GROUP BY aUserSign ORDER BY COUNT(aUserSign) DESC) as ss LEFT JOIN user_base u O
         $command->bindParam(":attentionNumber", $number, PDO::PARAM_INT);
         $command->execute();
     }
+
+    public function getUserQa($page,$userSign)
+    {
+        $sql=sprintf("
+        FROM question_community a
+        LEFT JOIN user_base b ON a.qUserSign =b.userSign
+        WHERE a.qUserSign=:userSign
+        ");
+        $this->setParam('userSign',$userSign);
+        $this->setSelectInfo('a.*,b.nickname,b.headImg,b.intro,b.info');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
 }

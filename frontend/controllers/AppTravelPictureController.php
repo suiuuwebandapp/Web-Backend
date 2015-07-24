@@ -66,6 +66,7 @@ class AppTravelPictureController  extends AController {
             $tpEntity->contents=$contents;
             $tpEntity->picList=$picList;
             $tpEntity->userSign=$userSign;
+            $tpEntity->titleImg=$titleImg;
             $this->tpSer->addTravelPicture($tpEntity);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,""));
         }catch (Exception $e) {
@@ -157,7 +158,7 @@ class AppTravelPictureController  extends AController {
             $tags = Yii::$app->request->post('tags');
             $sortName=Yii::$app->request->post('sortName');
             $search = Yii::$app->request->post('search');
-            $page = new Page();
+            $page = new Page(Yii::$app->request);
             if($sortName==1){
                 $page->sortName='id';
             }else
@@ -178,7 +179,7 @@ class AppTravelPictureController  extends AController {
         $this->loginValid();
         try {
             $tpId = Yii::$app->request->post('tpId');
-            $page = new Page();
+            $page = new Page(Yii::$app->request);
             $page->sortName='id';
             $page->sortType="DESC";
             $rst = $this->tpSer->getLike($page,$tpId);
@@ -189,5 +190,18 @@ class AppTravelPictureController  extends AController {
         }
     }
 
+    public function actionGetUserTp()
+    {
+        $this->loginValid();
+        try {
+            $userSign = Yii::$app->request->post('userSign');
+            $page = new Page(Yii::$app->request);
+            $rst = $this->tpSer->getUserTp($page,$userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取用户旅图异常"));
+        }
+    }
 
 }

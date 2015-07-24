@@ -619,10 +619,11 @@ class UserAttentionService extends BaseDb
             $attention->relativeId=$id;
             $attention->userSign = $userSign;
             $result = $this->AttentionDb->getAttentionResult($attention);
+
             if(empty($result)||$result==false)
             {
                 $qaSer = new QaCommunityService();
-                $qaSer->updateQaAttentionCount($conn,$id,true);
+                $qaSer->updateQaAttentionCount($id,true);
                 return $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
@@ -647,7 +648,7 @@ class UserAttentionService extends BaseDb
             if(empty($result)||$result==false)
             {
                 $tpSer = new TravelPictureService();
-                $tpSer->updateTravelPictureAttentionCount($conn,$id,true);
+                $tpSer->updateTravelPictureAttentionCount($id,true);
                 return $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));

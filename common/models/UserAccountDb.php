@@ -121,7 +121,7 @@ class UserAccountDb extends ProxyDb{
      * @param $type
      * @return Page
      */
-    public function getUserAccountRecordList(Page $page,$userId,$startTime,$endTime,$type)
+    public function getUserAccountRecordList( $page,$userId,$startTime,$endTime,$type)
     {
         $sql=sprintf("
             FROM user_account_record uar
@@ -234,7 +234,7 @@ class UserAccountDb extends ProxyDb{
      * @param $status
      * @return Page|null
      */
-    public function getAllUserCashList(Page $page,$search,$type,$status)
+    public function getAllUserCashList( $page,$search,$type,$status)
     {
         $sql=sprintf("
             FROM user_cash_record ucr

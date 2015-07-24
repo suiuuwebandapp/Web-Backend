@@ -376,6 +376,9 @@ class AttentionController extends AController
                 return json_encode(Code::statusDataReturn(Code::FAIL, "未知用户"));
             }
             $id = \Yii::$app->request->post('id');
+            if (empty($id)) {
+                return json_encode(Code::statusDataReturn(Code::FAIL, "未知问题"));
+            }
             $attentionSer = new UserAttentionService();
             $atId = $attentionSer->createAttentionToQa($id, $userSign);
             return json_encode(Code::statusDataReturn(Code::SUCCESS, $atId));
@@ -395,6 +398,9 @@ class AttentionController extends AController
                 return json_encode(Code::statusDataReturn(Code::FAIL, "未知用户"));
             }
             $id = \Yii::$app->request->post('id');
+            if (empty($id)) {
+                return json_encode(Code::statusDataReturn(Code::FAIL, "未知旅图"));
+            }
             $attentionSer = new UserAttentionService();
             $atId = $attentionSer->createAttentionToTp($id, $userSign);
             return json_encode(Code::statusDataReturn(Code::SUCCESS, $atId));

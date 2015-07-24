@@ -200,4 +200,17 @@ class AppQaController extends AController {
         }
     }
 
+    public function actionGetUserQa()
+    {
+        $this->loginValid();
+        try {
+            $userSign = Yii::$app->request->post('userSign');
+            $page = new Page(Yii::$app->request);
+            $rst = $this->qaSer->getUserQa($page,$userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取用户旅图异常"));
+        }
+    }
 }

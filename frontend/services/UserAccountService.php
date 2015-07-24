@@ -42,7 +42,7 @@ class UserAccountService extends BaseDb{
      * @throws Exception
      * @throws \Exception
      */
-    public function getUserAccountRecordList(Page $page,$userId,$startTime,$endTime,$type)
+    public function getUserAccountRecordList( $page,$userId,$startTime,$endTime,$type)
     {
         try {
             $conn = $this->getConnection();

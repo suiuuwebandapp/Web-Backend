@@ -12,6 +12,7 @@ use common\components\Code;
 use common\components\LogUtils;
 use common\entity\UserBase;
 use frontend\components\Page;
+use frontend\services\AppMainService;
 use frontend\services\CircleService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
@@ -104,8 +105,7 @@ class AppMainController extends AController
     public function actionGetHomepageInfo()
     {
         //确实当前用户是否关注
-        //需要验证 true
-        $this->loginValid(false);
+        $this->loginValid();
         try{
             $userSign=\Yii::$app->request->post('userSign');
             //$userSign='085963dc0af031709b032725e3ef18f5';
@@ -123,7 +123,6 @@ class AppMainController extends AController
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
-
     //得到参与随游列表
     public function actionGetTravelListByUserSign()
     {
@@ -270,4 +269,5 @@ class AppMainController extends AController
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$e->getHttpBody()));
         }
     }
+
 }

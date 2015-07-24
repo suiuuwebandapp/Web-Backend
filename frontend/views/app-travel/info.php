@@ -50,7 +50,7 @@
         <?php if(empty($info['attention'])||$info['attention']==false){?>
             <a href="javascript:;" class="collect" attentionIdTrip="0" id="collection_trip"  onclick="tripCollection()"></a>
         <?php  }else{?>
-            <a href="javascript:;" class="collect active" attentionIdTrip="<?php echo $info['attention']['attentionId']?>" id="collection_trip"  onclick="tripCollection()"></a>
+            <a href="javascript:;" class="collect active" attentionIdTrip="<?php echo $info['attention'][0]['attentionId']?>" id="collection_trip"  onclick="tripCollection()"></a>
         <?php  }?>
     </div>
     <p><?= $info['info']['title'];?></p>
