@@ -57,6 +57,13 @@ class Page {
         }
     }
 
+    public function initPage($currentPage,$pageSize)
+    {
+        $this->currentPage=$currentPage;
+        $this->pageSize=$pageSize;
+        $this->startRow = (($currentPage - 1) * $pageSize);
+    }
+
 
     public function getList(){
         return $this->list;

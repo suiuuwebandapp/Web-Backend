@@ -1888,7 +1888,7 @@ transition:1s;
 .syInformation .forms{ margin:auto;  width:440px; }
 .syInformation .forms input{ margin-bottom:20px; position:relative; background:#eee; display:block;height:36px; line-height:36px; padding:0 10px; width:420px; }
 .syInformation .forms div.makes{ position:relative; }
-.syInformation .forms div.makes span{ position:absolute; top:0; left:-20px; display:block; height:36px; line-height:36px; color:#FF7F00; font-size:28px; }
+.syInformation .forms div.makes .star{ position:absolute; top:0; left:-20px; display:block; height:36px; line-height:36px; color:#FF7F00; font-size:28px; }
 .syInformation .forms p{width:440px; }
 .syInformation .forms .sexs input{ margin:0; opacity:0;  width:0; height:0; display:inline-block;  }
 .syInformation .forms .sexs span{ line-height:36px; height:36px; margin-right:50px; }

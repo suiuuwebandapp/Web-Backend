@@ -15,6 +15,7 @@ use common\components\DateUtils;
 use common\components\LogUtils;
 use common\entity\UserAccount;
 use common\entity\UserBase;
+use common\entity\UserPublisher;
 use frontend\components\Page;
 use frontend\interfaces\WechatInterface;
 use frontend\services\CountryService;
@@ -25,6 +26,7 @@ use frontend\services\UserAccountService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
+use yii\debug\models\search\Log;
 
 class UserInfoController extends CController{
 
@@ -193,66 +195,9 @@ class UserInfoController extends CController{
         $pHeight = \Yii::$app->request->post('pHeight');
         $rotate = 360 - $rotate;
         try {
-            if ($ext == "png") {
-                $img = imagecreatefrompng($source);
-            }
-            if ($ext == "jpg") {
-                $img = imagecreatefromjpeg($source);
-            }
 
-            list($width, $height) = getimagesize($source);
-            $newImg = imagecreatetruecolor($pWidth, $pHeight);
-            //把图片扩充到300*300
-            imagecopyresampled($newImg, $img, 0, 0, 0, 0, $pWidth, $pHeight, $width, $height);
-
-            $resultImg = imagecreatetruecolor($viewPortW, $viewPortH);
-
-            //裁剪
-            imagecopy($resultImg, $newImg, 0, 0, $selectorX, $selectorY, $viewPortW, $viewPortH);
-
-            if ($ext == "png") {
-                imagesavealpha($resultImg, true);
-            }
-
-            if ($ext == "png") {
-                $white = imagecolorallocatealpha($resultImg, 0, 0, 0, 127);
-                imagealphablending($resultImg, false);
-                imagefill($resultImg, 0, 0, $white);
-                imagefill($resultImg, $viewPortW, 0, $white);
-                imagefill($resultImg, 0, $viewPortH, $white);
-                imagefill($resultImg, $viewPortW, $viewPortH, $white);
-            }
-
-            //旋转
-            if ($rotate != 0 && $rotate != 360) {
-                $resultImg = imagerotate($resultImg, $rotate, 0);
-            }
-
-            //获得文件扩展名
-            $fileFolder = UploadController::LOCAL_IMAGE_DIR; //图片目录路径
-
-            $fileFolder .= date("Ymd");
-            if (!file_exists($fileFolder)) { // 判断存放文件目录是否存在
-                mkdir($fileFolder, 0777, true);
-            }
-            $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $ext;
-            $picName = $fileFolder . "/" . $new_file_name;
-            if ($ext == "png") {
-                header('Content-type: image/png');
-                imagepng($resultImg, $picName);
-            }
-            if ($ext == "jpg") {
-                header('Content-type: image/jpg');
-                imagejpeg($resultImg, $picName);
-            }
-
-            imagedestroy($resultImg);
-
-            $ossUpload=new OssUpload();
-            $rst=$ossUpload->putObject($picName,OssUpload::OSS_SUIUU_HEAD_DIR,$new_file_name);
-
+            $rst=$this->uploadUserHeadImg($selectorX,$selectorY,$viewPortW,$viewPortH,$rotate,$source,$ext,$pWidth,$pHeight,$rotate);
             if($rst['status']==Code::SUCCESS){
-                unlink($picName);
                 $this->userBaseService->updateUserHeadImg($userId, $rst['data']);
                 $this->refreshUserInfo();
                 return json_encode(Code::statusDataReturn(Code::SUCCESS, $rst['data']));
@@ -367,5 +312,270 @@ class UserInfoController extends CController{
         }
 
     }
+
+    /**
+     * 创建随游线路
+     * @throws \Exception
+     */
+    public function actionCreateTravel()
+    {
+        //判断用户是否是随友，不是的话，跳转到随游注册页面
+        if ($this->userObj->isPublisher) {
+            return $this->redirect("/trip/new-trip");
+        } else {
+
+            $email = "";
+            $phone = "";
+            $areaCode = "";
+            $nickname="";
+            $countryService = new CountryService();
+            $countryList=$countryService->getCountryList();
+            $userPublisher=null;
+
+            if (isset($this->userObj)) {
+                $email = $this->userObj->email;
+                $phone = $this->userObj->phone;
+                $nickname=$this->userObj->nickname;
+                $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+            }
+            if ($areaCode == "") {
+                $areaCode = "+86";
+            }
+            return $this->render("registerPublisher", [
+                'email' => $email,
+                'phone' => $phone,
+                'areaCode' => $areaCode,
+                'nickname'=>$nickname,
+                'countryList'=>$countryList,
+                'userPublisher'=>$userPublisher
+            ]);
+        }
+    }
+
+    public function actionTest(){
+        $this->refreshUserInfo();
+    }
+
+    /**
+     * 注册随友
+     */
+    public function actionRegisterPublisher()
+    {
+        $nickname = trim(\Yii::$app->request->post("nickname", ""));
+        $surname = trim(\Yii::$app->request->post("surname", ""));
+        $name = trim(\Yii::$app->request->post("name", ""));
+        $countryId = trim(\Yii::$app->request->post("countryId", ""));
+        $cityId = trim(\Yii::$app->request->post("cityId", ""));
+        $areaCode = trim(\Yii::$app->request->post("areaCode", ""));
+        $phone = trim(\Yii::$app->request->post("phone", ""));
+        $code = trim(\Yii::$app->request->post("code", ""));
+
+        if (empty($nickname)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "昵称不能为空"));
+        }
+        if (empty($surname)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "姓氏不能为空"));
+        }
+        if (empty($name)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "名字不能为空"));
+        }
+        if (empty($countryId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不能为空"));
+        }
+        if (empty($cityId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不能为空"));
+        }
+        if (empty($areaCode)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机区号不能为空"));
+        }
+        if (empty($phone)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机号码不能为空"));
+        }
+
+        $userBase=null;
+        if($this->userObj==null){
+            $userBase=new UserBase();
+            $userPublisher=new UserPublisher();
+        }else{
+            $userBase= clone $this->userObj;
+            $userPublisher=$this->userBaseService->findUserPublisherByUserSign($userBase->userSign);
+            if($userPublisher==null){
+                $userPublisher=new UserPublisher();
+            }
+        }
+        $userBase->nickname=$nickname;
+        $userBase->surname=$surname;
+        $userBase->name=$name;
+        $userBase->countryId=$countryId;
+        $userBase->cityId=$cityId;
+        $userBase->profession='';
+
+
+
+        try{
+            if(empty($userBase->phone)){
+                $userBase->phone = $phone;
+                $userBase->areaCode = $areaCode;
+                //判断验证码是否正确
+                if(!$this->validatePhoneCode($phone,$code)){
+                    return json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
+                }
+                //验证手机是否存在
+                if($this->userBaseService->validatePhoneExist($phone,$userBase->userId)){
+                    return json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
+                }
+            }
+
+            $this->userBaseService->updateUserBase($userBase);
+            $this->refreshUserInfo();//刷新缓存
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'/user-info/register-publisher-next'));
+
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
+    public function actionRegisterPublisherNext()
+    {
+        return $this->render("registerPublisherNext");
+    }
+
+    public function actionRegisterPublisherFinish()
+    {
+        $userId = $this->userObj->userSign;
+        $selectorX = \Yii::$app->request->post('x');
+        $selectorY = \Yii::$app->request->post('y');
+        $viewPortW = \Yii::$app->request->post('w');
+        $viewPortH = \Yii::$app->request->post('h');
+        $rotate = \Yii::$app->request->post('rotate');
+        $source = \Yii::$app->request->post('src','');
+        $extArr=explode(".", $source);
+        $ext = end($extArr);
+        $pWidth = \Yii::$app->request->post('pWidth');
+        $pHeight = \Yii::$app->request->post('pHeight');
+        $rotate = 360 - $rotate;
+        try {
+
+            $rst=$this->uploadUserHeadImg($selectorX,$selectorY,$viewPortW,$viewPortH,$rotate,$source,$ext,$pWidth,$pHeight,$rotate);
+            if($rst['status']==Code::SUCCESS){
+                $userBase=$this->userBaseService->findUserByUserSign($userId);
+                $userBase->headImg=$rst['data'];
+
+                $userPublisher=new UserPublisher();
+                $userPublisher->countryId=$userBase->countryId;
+                $userPublisher->cityId=$userBase->cityId;
+                $userPublisher->kind=UserPublisher::USER_PUBLISHER_CARD_KIND_NO;
+
+                $this->userBaseService->updateUserBaseAndAddUserPublisher($userBase,$userPublisher);
+                $this->refreshUserInfo();
+                return json_encode(Code::statusDataReturn(Code::SUCCESS));
+            }else{
+                return json_encode(Code::statusDataReturn(Code::FAIL));
+            }
+
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
+    /**
+     * 上传用户头像
+     * @param $selectorX
+     * @param $selectorY
+     * @param $viewPortW
+     * @param $viewPortH
+     * @param $rotate
+     * @param $source
+     * @param $ext
+     * @param $pWidth
+     * @param $pHeight
+     * @param $rotate
+     * @return array
+     */
+    private function uploadUserHeadImg($selectorX,$selectorY,$viewPortW,$viewPortH,$rotate,$source,$ext,$pWidth,$pHeight,$rotate){
+        try{
+            $source=".".$source;
+            if ($ext == "png") {
+                $img = imagecreatefrompng($source);
+            }
+            if ($ext == "jpg") {
+                $img = imagecreatefromjpeg($source);
+            }
+
+            list($width, $height) = getimagesize($source);
+            $newImg = imagecreatetruecolor($pWidth, $pHeight);
+            //把图片扩充到300*300
+            imagecopyresampled($newImg, $img, 0, 0, 0, 0, $pWidth, $pHeight, $width, $height);
+
+            $resultImg = imagecreatetruecolor($viewPortW, $viewPortH);
+
+            //裁剪
+            imagecopy($resultImg, $newImg, 0, 0, $selectorX, $selectorY, $viewPortW, $viewPortH);
+
+            if ($ext == "png") {
+                imagesavealpha($resultImg, true);
+            }
+
+            if ($ext == "png") {
+                $white = imagecolorallocatealpha($resultImg, 0, 0, 0, 127);
+                imagealphablending($resultImg, false);
+                imagefill($resultImg, 0, 0, $white);
+                imagefill($resultImg, $viewPortW, 0, $white);
+                imagefill($resultImg, 0, $viewPortH, $white);
+                imagefill($resultImg, $viewPortW, $viewPortH, $white);
+            }
+
+            //旋转
+            if ($rotate != 0 && $rotate != 360) {
+                $resultImg = imagerotate($resultImg, $rotate, 0);
+            }
+
+            //获得文件扩展名
+            $fileFolder = UploadController::LOCAL_IMAGE_DIR; //图片目录路径
+
+            $fileFolder .= date("Ymd");
+            if (!file_exists($fileFolder)) { // 判断存放文件目录是否存在
+                mkdir($fileFolder, 0777, true);
+            }
+            $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $ext;
+            $picName = $fileFolder . "/" . $new_file_name;
+            if ($ext == "png") {
+                header('Content-type: image/png');
+                imagepng($resultImg, $picName);
+            }
+            if ($ext == "jpg") {
+                header('Content-type: image/jpg');
+                imagejpeg($resultImg, $picName);
+            }
+
+            imagedestroy($resultImg);
+
+            $ossUpload=new OssUpload();
+            $rst=$ossUpload->putObject($picName,OssUpload::OSS_SUIUU_HEAD_DIR,$new_file_name);
+            unlink($picName);
+            return $rst;
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return Code::statusDataReturn(Code::FAIL);
+        }
+    }
+
+
+    /**
+     * 验证手机验证码
+     * @param $phone
+     * @param $code
+     * @return bool
+     */
+    private function validatePhoneCode($phone,$code)
+    {
+        $vCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
+        return $vCode==$code?true:false;
+    }
+
 
 }

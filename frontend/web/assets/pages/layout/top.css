@@ -1,0 +1,22 @@
+#emailTime input{
+    font-size: 14px !important;
+}
+#unReadSystemMessageList p{
+    width: 240px;
+}
+#unReadSystemMessageList a{
+    height: auto;
+}
+.select2-container .select2-choice{
+    height: 40px !important;
+}
+.myLogins .select2-container .select2-choice>.select2-chosen{
+    color: #858585;
+}
+.myLogins .select2-container .select2-choice>.select2-chosen:hover{
+    color: #858585;
+}
+.myLogins .down .rows .agreen{
+    font-size: 12px;
+    margin: 0;
+}

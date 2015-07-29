@@ -20,7 +20,7 @@
 <script type="text/javascript" src="/assets/plugins/jquery-validation/dist/jquery.validate.js"></script>
 
 <style type="text/css">
-    .syRegister span {
+    .syInformation .syRegister span {
         display: inline;
     }
     .select2-container .select2-choice {
@@ -28,8 +28,8 @@
         border-radius: 0px;
         font-size: 14px;
         color: dimgray;
+        height: 33px !important;
     }
-
     .select2-drop {
         font-size: 14px;
     }
@@ -48,30 +48,46 @@
         margin-left: 40px;
         width: 190px;
     }
+    .select2-container .select2-choice > .select2-chosen{
+        margin-top: 3px;
+    }
+    .syInformation .forms div.makes .star{
+        top: 7px;
+    }
+    .syInformation .forms p{
+        height: 22px;
+        margin-top: 20px;
+    }
+    .syInformation .forms .name input{
+        margin: 0px;
+        width: 198px;
+    }
 
-    .syzcy-text {
+
+
+    .syInformation .syzcy-text {
         font-size: 14px;
     }
 
 
-    .p_chose_card_front {
+    .syInformation .p_chose_card_front {
         height: 170px;
         width: 286px;
         text-align: center;
         line-height: 170px;
     }
-    .upload_tip {
+    .syInformation .upload_tip {
         font-size: 12px;
         text-align: center;
     }
 
-    .imgPic {
+    .syInformation .imgPic {
         cursor: pointer;
         width: 286px;
         height: 170px;
     }
 
-    .showImg {
+    .syInformation .showImg {
         width: 286px;
         height: 170px;
     }
@@ -79,18 +95,11 @@
     #uploadifive-fileCardFront {
         display: none;
     }
-    .queue {
+    .syInformation .queue {
         display: none;
     }
 
-    #code {
-        width: 100px !important;
-    }
-
-    #getCode {
-        width: 130px;
-    }
-    .form_tip{
+    .syInformation .form_tip{
         font-size: 14px;
         padding-left: 20px;
         color: red;
@@ -99,6 +108,23 @@
         float: right;
         width: 250px !important;
     }
+    .syInformation .forms .phones input{
+        width: 197px;
+    }
+    .syInformation .forms .nick_name_p{
+        margin-top: 0px;
+    }
+    .syInformation .forms div.sexs{
+        margin-bottom: 10px;
+    }
+    .syInformation .forms div.codes{
+        margin-top: 10px;
+    }
+    .syInformation .forms .name_div{
+        width: 218px;
+        display: inline-block;
+    }
+
 
 
 </style>
@@ -111,64 +137,76 @@
 ?>
 <!--初始化select-->
 <!-------随友注册------>
-<div class="syRegister">
-    <form id="validateForm">
-        <div>
-            <span>昵称:</span><span id="nicknameTip" class="form_tip"></span>
-            <input type="text" id="nickname" name="nickname" value="<?= $nickname ?>" class="syzcy-text" maxlength="10" required>
 
-        </div>
-        <input id="userCardFront" type="hidden" value="<?=$idCardImg?>">
-        <div>
-            <span>邮箱:</span><span id="emailTip" class="form_tip"></span>
-            <input type="text" id="email" name="email" value="<?= $email ?>" class="syzcy-text" maxlength="50" required>
 
-        </div>
-        <div id="password_div">
-            <div>
-                <span>密码:</span><span class="form_tip"></span>
-                <input type="password" value="" name="password" class="syzcy-text" maxlength="20" id="password" required>
-            </div>
-            <div>
-                <span>确认密码:</span><span class="form_tip"></span>
-                <input type="password" value="" name="confirm_password" class="syzcy-text" maxlength="20" id="passwordConfirm" required>
+<div class="w1200 syInformation clearfix">
+    <form id="validateForm" method="post" action="/register-publisher">
+    <h2 class="title">在发布随游之前，您需要补充一些个人信息，让您的随游更加可信</h2>
+    <div class="forms clearfix">
+        <div>
+            <p class="nick_name_p">昵称<span id="nicknameTip" class="form_tip"></span></p>
+            <div class="makes">
+                <span class="star">*</span>
+                <input type="text" value="<?=$this->context->userObj->nickname?>" name="nickname" id="nickname">
             </div>
         </div>
-        <div>
-            <span>国家:</span><span class="form_tip" id="countryTip"></span>
-            <select id="countryId" name="country" class="select2" required>
-                <option value=""></option>
-                <?php foreach ($countryList as $c) { ?>
-                    <option value="<?= $c['id'] ?>"><?= $c['cname'] . "/" . $c['ename'] ?></option>
-
-                <?php } ?>
-            </select>
+        <div class="clearfix sexs">
+            <span>性别</span>
+            <input type="radio" id="sex01" name="sex" value="<?=\common\entity\UserBase::USER_SEX_MALE?>"><label for="sex01" style="background-position: 0px -47px;">男</label>
+            <input type="radio" id="sex02" name="sex" value="<?=\common\entity\UserBase::USER_SEX_FEMALE?>"><label for="sex02">女</label>
         </div>
-        <div>
-            <span>城市:</span><span class="form_tip" id="cityTip"></span>
-            <select id="cityId" name="city" class="select2" required></select>
-        </div>
-        <div>
-            <span id="cardTip" class="form_tip"></span>
-            <div id="divCardFront" class="imgPic">
-                <img src="<?=$idCardImg?>" id="imgFront" style="display: none" class="showImg"/>
-
-                <p class="p_chose_card_front">点击上传护照</p>
+        <div class="clearfix name">
+            <div class="name_div">
+                <span style="width: 33px"> 姓氏</span><span id="surnameTip" class="form_tip" style="width: 160px !important; "></span>
             </div>
-            <input id="fileCardFront" type="file"/>
+            <div class="name_div">
+                <span style="width: 33px"> 名字</span><span id="nameTip" class="form_tip" style="width: 160px !important; "></span>
+            </div>
 
-            <div id="frontQueue" class="queue"></div>
-
-            <p class="upload_tip">上传文件大小请不能大于1M，支持格式png、jpg、jpeg</p> <br/>
-            <input type="button" value="上传" class="schuan" id="uploadAll">
+            <div class="makes">
+                <span class="star">*</span>
+                <input type="text" class="makes" maxlength="20" name="surname" id="surname" data-tip-id="surname" value="<?=$this->context->userObj->surname?>">
+                <input type="text" maxlength="20" name="name" id="name" data-tip-id="name" value="<?=$this->context->userObj->name?>">
+                <div class="nameTip">
+                    <h2 class="tit bgGreen">姓名</h2>
+                    <p>作为随游服务的重要保障，只有预订确认后，您的名字才会对预订者显示。</p>
+                </div>
+            </div>
         </div>
-
-        <div id="phone_div">
-            <span>手机:</span><span id="phoneTip" class="form_tip"></span>
-
-            <div class="phone-select">
-                <div class="sect">
-                    <select id="codeId" name="countryIds" class="areaCodeSelect" required>
+        <div>
+            <p>国家<span class="form_tip" id="countryTip"></span></p>
+            <div class="makes">
+                <span class="star">*</span>
+                <select id="countryId" name="country" class="select_country" required>
+                    <option value=""></option>
+                    <?php foreach ($countryList as $c) { ?>
+                        <option value="<?= $c['id'] ?>"
+                            <?php  if($c['id']==$this->context->userObj->countryId){echo "selected";} ?>
+                            ><?= $c['cname'] . "/" . $c['ename'] ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+        <div>
+            <p>城市<span class="form_tip" id="cityTip"></span></p>
+            <div class="makes">
+                <span class="star">*</span>
+                <select id="cityId" name="city" class="select_city" required></select>
+            </div>
+        </div>
+        <div>
+            <?php if(!empty($phone)){ ?>
+            <p>手机验证<span id="phoneTip" class="form_tip"></span></p>
+            <div class="makes">
+                <span class="star">*</span>
+                <input type="text" placeholder="请输入您的手机号码" name="phone" value="<?=$areaCode." ".$phone;?>" readonly />
+            </div>
+        <?php }else{ ?>
+            <p>手机验证<span id="phoneTip" class="form_tip"></span></p>
+            <div class="phones clearfix">
+                <div class="set makes">
+                    <span class="star">*</span>
+                    <select id="codeId" name="areaCode" class="areaCodeSelect" required>
                         <option value=""></option>
                         <?php foreach ($countryList as $c) { ?>
                             <?php if(empty($c['areaCode'])){continue;} ?>
@@ -182,21 +220,22 @@
                         <?php } ?>
                     </select>
                 </div>
-                <input type="text" name="phone" value="<?=$phone;?>" class="phone fl syzcy-text" id="phone" maxlength="11">
+                <input type="text" id="phone"  name="phone" placeholder="请输入您的手机号码" value="<?=$phone;?>" />
             </div>
-
+            <div class="codes clearfix">
+                <div class="makes"><span class="star">*</span>
+                    <input type="text"  maxlength="6" name="code" id="code" placeholder="请输入验证码">
+                </div>
+                <a href="javascript:;" class="btn bgOrange" id="getCode">获取验证码</a>
+            </div>
+        <?php } ?>
         </div>
-        <div id="code_div">
-            <p class="p1">
-                <span class="fl">输入验证码</span>
-                <input type="text" class="text fl syzcy-text" maxlength="6" id="code">
-                <input type="button" value="获取验证码" class="btn fl" id="getCode">
-            </p>
-        </div>
-
-        <input type="button" value="注册" class="zbtn" id="createPublisher">
-    </form>
+        <p>仅当您和另一名随游用户确认预订时，此资料才会被分享。这是我们帮助大家联系彼此的方式</p>
+        <a href="javascript:;" id="createPublisher" class="nextBtn">下一步</a>
+    </div>
 </div>
+
+
 <!-------随友注册------>
 
 <script type="text/javascript">
@@ -204,56 +243,46 @@
     var phoneTime = 0;
     var phoneTimer;
     var finishPhone=false;
+    var cityId='<?=$this->context->userObj->cityId; ?>';
+    var oldPhone='<?=$this->context->userObj->phone; ?>';
+    var oldAreaCode='<?=$this->context->userObj->areaCode; ?>';
+
 
     $(document).ready(function () {
         var email = $("#email").val();
         var phone = $("#phone").val();
-        var areaCode = $("#areaCodeSelect").val();
 
-        //初始化Form内容，判断是否已经绑定相关信息
-        if (email != "" && phone == "") {
-            $("#email").attr("disabled", "disabled");
-            $("#emailTip").html("（您已经绑定邮箱，无需验证）");
-            $("#password_div").hide();
-            $("#password").val("password");
-            $("#passwordConfirm").val("password");
-
-        } else if (email == "" && phone != "") {
-            $("#phone").attr("disabled", "disabled");
-            $("#phoneTip").html("（您已经绑定手机，无需验证）");
-            $("#areaCodeSelect").val(areaCode);
-            $("#code_div").hide();
-            $("#password_div").hide();
-            $("#password").val("password");
-            $("#passwordConfirm").val("password");
-            finishPhone=true;
-
-        }else if(email != "" && phone != ""){
-            $("#email").attr("disabled", "disabled");
-            $("#emailTip").html("（您已经绑定邮箱，无需验证）");
-            $("#phoneTip").html("（您已经绑定手机，无需验证）");
-            $("#areaCodeSelect").val(areaCode);
-            $("#code_div").hide();
-            $("#password_div").hide();
-            $("#password").val("password");
-            $("#passwordConfirm").val("password");
-            finishPhone=true;
-
-        }
         //初始化区号选择
         $(".areaCodeSelect").select2({
-            'width':'130px',
+            'width':'218px',
+            'placeholder':'请选择区号',
             formatNoMatches: function () {
                 return "暂无匹配";
             }
         });
         //初始化国家，城市
-        $(".select2").select2({
-            'width':'350px',
+        $(".select_country").select2({
+            'placeholder':'您所常驻的国家',
+            'width':'440px',
             formatNoMatches: function () {
                 return "暂无匹配数据";
             }
         });
+        $(".select_city").select2({
+            'placeholder':'您所居住的城市',
+            'width':'440px',
+            formatNoMatches: function () {
+                return "暂无匹配数据";
+            }
+        });
+
+        //绑定获取城市列表
+        $("#countryId").on("change", function () {
+            getCityList();
+        });
+        $("#countryId").change();
+
+
 
         //初始化上传身份证等功能
         $(".p_chose_card_front").bind("click", function () {
@@ -285,16 +314,6 @@
             $("#validateForm").submit();
         });
 
-        //绑定获取城市列表
-        $("#countryId").on("change", function () {
-            getCityList();
-        });
-        $("#cityId").on("change", function () {
-           if($("#cityId").val()!=""){
-               $("#cityTip").html("");
-           }
-        });
-
         initUploadfive();
         initValidate();
 
@@ -316,19 +335,19 @@
                     required: true,
                     email: true
                 },
-                password: {
-                    required: true,
-                    minlength: 5
-                },
-                confirm_password: {
-                    required: true,
-                    minlength: 5,
-                    equalTo: "#password"
-                },
                 country: {
                     required: true
                 },
                 city: {
+                    required: true
+                },
+                phone:{
+                    required: true
+                },
+                name:{
+                    required: true
+                },
+                surname:{
                     required: true
                 }
             },
@@ -340,30 +359,51 @@
                     required: "请输入Email地址",
                     email: "请输入正确的email地址"
                 },
-                password: {
-                    required: "请输入密码",
-                    minlength: jQuery.format("密码不能小于{0}个字符")
-                },
-                confirm_password: {
-                    required: "请输入确认密码",
-                    minlength: "确认密码不能小于5个字符",
-                    equalTo: "两次输入密码不一致不一致"
-                },
                 country:{
                     required: "请选择国家"
                 },
                 city:{
                     required: "请选择城市"
+                },
+                phone:{
+                    required: "请输入有效的手机号和验证码"
+                },
+                name:{
+                    required: "请输入您的名字"
+                },
+                surname:{
+                    required: "请输入您的姓氏"
                 }
 
             },
             errorPlacement: function (error, element) { // render error
-                var span = $(element).parent().find("span[class='form_tip']");
-                $(span).html(error.text());
+                var tip=$(element).attr("data-tip-id")
+                if(Main.isNotEmpty(tip)){
+                    $("#"+tip+"Tip").html(error.text());
+                }else{
+                    var span = $(element).parent().find("span[class='form_tip']");
+                    if(span[0]){
+                        $(span).html(error.text());
+                    }else{
+                        span = $(element).parent().parent().find("span[class='form_tip']");
+                        $(span).html(error.text());
+                    }
+                }
             },
             success : function(label, element) {
-                var span = $(element).parent().find("span[class='form_tip']");
-                $(span).html("");
+                var tip=$(element).attr("data-tip-id");
+                if(Main.isNotEmpty(tip)){
+                    $("#"+tip+"Tip").html("");
+                }else{
+                    var span = $(element).parent().find("span[class='form_tip']");
+                    if(span[0]){
+                        $(span).html("");
+                    }else{
+                        span = $(element).parent().parent().find("span[class='form_tip']");
+                        $(span).html("");
+                    }
+                }
+
             },
             submitHandler: function (form) {
                 createPublisher();
@@ -441,15 +481,15 @@
     function initPhoneTime() {
 
         if (phoneTime != "" && phoneTime > 0) {
-            $("#getCode").val(+phoneTime + "秒后重新发送");
+            $("#getCode").html(+phoneTime + "秒后重新发送");
             $("#getCode").attr("disabled", "disabled");
 
             $("#getCode").css("background", "gray");
             $("#getCode").unbind("click");
         } else {
-            $("#getCode").val("获取验证码");
+            $("#getCode").html("获取验证码");
             $("#getCode").removeAttr("disabled");
-            $("#getCode").css("background", "#ff7a4d");
+            $("#getCode").css("background", "#FFAA00");
             $("#getCode").unbind("click");
             $("#getCode").bind("click", function () {
                 sendTravelCode();
@@ -487,6 +527,9 @@
                         html+='<option value="'+city.id+'">'+city.cname+"/"+city.ename+'</option>';
                     }
                     $("#cityId").append(html);
+                    if(cityId!=""){
+                        $("#cityId").val(cityId).trigger("change");
+                    }
                 }else{
                     $("#cityTip").html("获取城市列表失败");
                 }
@@ -529,19 +572,19 @@
 
             },
             beforeSend: function () {
-                $("#getCode").val("正在发送...");
+                $("#getCode").html("正在发送...");
             },
             error: function () {
-                $("#getCode").val("发送失败...");
+                $("#getCode").html("发送失败...");
             },
             success: function (data) {
                 var datas = eval('(' + data + ')');
                 if (datas.status == 1) {
-                    $("#getCode").val("发送成功");
+                    $("#getCode").html("发送成功");
                     phoneTime = 60;
                     initPhoneTimer();
                 } else {
-                    $("#getCode").val("发送失败...");
+                    $("#getCode").html("发送失败...");
                     $("#phoneTip").html(datas.data);
                 }
             }
@@ -552,42 +595,41 @@
     function createPublisher() {
 
         var nickname=$("#nickname").val();
-        var email = $("#email").val();
-        var cardImgFront = $("#userCardFront").val();
-        var password = $("#password").val();
-        var passwordConfirm = $("#passwordConfirm").val();
+        var surname = $("#surname").val();
+        var name = $("#name").val();
         var countryId = $("#countryId").val();
         var cityId = $("#cityId").val();
         var areaCode = $("#codeId").val();
         var phone = $("#phone").val();
         var code = $("#code").val();
+        var sex=$('input:radio[name="sex"]:checked').val();
 
-        if(cardImgFront==""){
-            $("#cardTip").html("请上传有效的护照并验证");
-            $("#cardTip").focus();
-            return;
+        if(oldPhone!=''){
+            phone=oldPhone;
+            areaCode=oldAreaCode;
+            code='code';
         }
-        if(!finishPhone&&(phone==""||code=="")){
+        if(phone==""||code==""){
             $("#phoneTip").html("请输入有效的手机号和验证码");
             $("#phoneTip").focus();
             return;
         }
 
 
+
         $.ajax({
-            url :'/index/register-publisher',
+            url :'/user-info/register-publisher',
             type:'post',
             data:{
                 nickname:nickname,
-                email:email,
-                userCard:cardImgFront,
-                password:password,
-                passwordConfirm:passwordConfirm,
+                surname:surname,
+                name:name,
                 countryId:countryId,
                 cityId:cityId,
                 areaCode:areaCode,
                 phone:phone,
                 code:code,
+                sex:sex,
                 _csrf: $('input[name="_csrf"]').val()
             },
             beforeSend:function()
@@ -608,9 +650,6 @@
                 }
             }
         });
-
-
-
 
     }
 

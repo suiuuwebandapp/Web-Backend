@@ -55,7 +55,7 @@
         </div>
     </div>
     <?php if (isset($this->context->userObj)) { ?>
-        <a href="/index/create-travel" class="btn bgGreen colWit">现在就试试吧！</a>
+        <a href="/user-info/create-travel" class="btn bgGreen colWit">现在就试试吧！</a>
     <?php }else{ ?>
         <a href="javascript:;" onclick="$('#denglu').click()" class="btn bgGreen colWit">现在就试试吧！</a>
     <?php } ?>

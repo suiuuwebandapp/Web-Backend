@@ -71,12 +71,12 @@ class UserBaseService extends BaseDb
             $userBase=$this->initRegisterUserInfo($userBase,$userAccess,$userPublisher);
 
             //环信im注册
-            $im=new Easemob(\Yii::$app->params['imConfig']);
-            $imPassword = \Yii::$app->params['imPassword'];
-            $options=array('username'=>$userBase->userSign,'password'=>$imPassword,'nickname'=>$userBase->nickname);
-            $imRes=$im->accreditRegister($options);
-            $arrRes=json_decode($imRes,true);
-            if(isset($arrRes['error']))
+            //$im=new Easemob(\Yii::$app->params['imConfig']);
+            //$imPassword = \Yii::$app->params['imPassword'];
+            //$options=array('username'=>$userBase->userSign,'password'=>$imPassword,'nickname'=>$userBase->nickname);
+            //$imRes=$im->accreditRegister($options);
+            //$arrRes=json_decode($imRes,true);
+            if(false)//&&isset($arrRes['error']
             {
                 throw new Exception(Code::USER_IM_REGISTER_ERROR);
             }else
@@ -162,11 +162,11 @@ class UserBaseService extends BaseDb
                     $userPublisherDb->updateUserPublisher($userPublisher);
                 }
             }
-            $im=new Easemob(\Yii::$app->params['imConfig']);
-            $options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
-            $imRes=$im->updateNickname($options);
-            $arrRes=json_decode($imRes,true);
-            if(isset($arrRes['error']))
+            //$im=new Easemob(\Yii::$app->params['imConfig']);
+            //$options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
+            //$imRes=$im->updateNickname($options);
+            //$arrRes=json_decode($imRes,true);
+            if(false)//&&isset($arrRes['error'])
             {
                 throw new Exception('修改环信昵称错误');
             }
@@ -292,11 +292,38 @@ class UserBaseService extends BaseDb
     public function findUserByUserSign($userSign)
     {
         $userBase=null;
+        if(empty($userSign)){
+            throw new Exception("UserSign Is  Not Allow Empty");
+        }
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $result = $this->userBaseDb->findByUserSign($userSign);
             $userBase=$this->arrayCastObject($result,UserBase::class);
+        } catch (Exception $e) {
+            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
+
+    /**
+     * 查找用户（根据userSign） 返回数组结果
+     * @param $userSign
+     * @return mixed|null
+     * @throws Exception
+     */
+    public function findUserByUserSignArray($userSign)
+    {
+        $userBase=null;
+        if(empty($userSign)){
+            throw new Exception("UserSign Is  Not Allow Empty");
+        }
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $userBase = $this->userBaseDb->findByUserSign($userSign);
         } catch (Exception $e) {
             throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
         } finally {
@@ -348,6 +375,8 @@ class UserBaseService extends BaseDb
         return $userBase;
     }
 
+
+
     /**
      * 获取用户基本信息
      * @param $userSign
@@ -360,13 +389,13 @@ class UserBaseService extends BaseDb
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
-            $result = $this->userBaseDb->findBaseInfoBySignArray($userSign);
+            $userBase = $this->userBaseDb->findBaseInfoBySign($userSign);
         } catch (Exception $e) {
             throw $e;
         } finally {
             $this->closeLink();
         }
-        return $result;
+        return $userBase;
     }
     /**
      * 获取用户所有信息
@@ -596,11 +625,11 @@ class UserBaseService extends BaseDb
     public function updateUserBase(UserBase $userBase)
     {
         try {
-            $im=new Easemob(\Yii::$app->params['imConfig']);
-            $options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
-            $imRes=$im->updateNickname($options);
-            $arrRes=json_decode($imRes,true);
-            if(isset($arrRes['error']))
+            //$im=new Easemob(\Yii::$app->params['imConfig']);
+            //$options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
+            //$imRes=$im->updateNickname($options);
+            //$arrRes=json_decode($imRes,true);
+            if(false)//isset($arrRes['error'])
             {
                 throw new Exception('修改环信昵称错误');
             }

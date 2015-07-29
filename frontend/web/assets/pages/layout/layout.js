@@ -148,7 +148,7 @@ function buildUserMessageListHtml(list)
             break;
         }
         messageInfo=list[i];
-        if(messageInfo.userId!=SystemMessage.userId){
+        if(messageInfo.relateId!=SystemMessage.userId){
             nickname=messageInfo.nickname;
             if(nickname.length>5){
                 nickname=nickname.substring(0,5);

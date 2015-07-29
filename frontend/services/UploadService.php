@@ -132,6 +132,7 @@ class UploadService {
             {
                 //图片处理完毕存库
                 @chmod($picName, 0777);
+                $picName=substr($picName,1,strlen($picName));
                 return Code::statusDataReturn(Code::SUCCESS,$picName);
             }
         }catch (Exception $e){
@@ -230,6 +231,9 @@ class UploadService {
                 $width = $w * $Dh / $h;
                 $IntNW = $width - $Dw;
                 imagecopyresampled($nImg, $Img, -$IntNW / 1.8, 0, 0, 0, $width, $Dh, $w, $h);
+            }
+            if(strtolower(end(explode(".",$Image)))=="png"){
+                $Image=substr(0,strlen($Image-3))."jpg";
             }
             imagejpeg($nImg, $Image);
             return Code::statusDataReturn(Code::SUCCESS,$Image);

@@ -16,6 +16,7 @@ class UserPublisher {
      * 用户中证件类型 1：护照
      */
     const USER_PUBLISHER_CARD_KIND_PASSPORT=1;
+    const USER_PUBLISHER_CARD_KIND_NO=0;
 
     /**
      * @var主键Id

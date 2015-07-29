@@ -8,35 +8,10 @@
  */
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
-<script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
-<style type="text/css">
+<link rel="stylesheet" type="text/css" href="/assets/pages/layout/top.css">
 
-    #emailTime input{
-        font-size: 14px !important;
-    }
-    /*input:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px #858585 inset;
-    }*/
-    #unReadSystemMessageList p{
-        width: 240px;
-    }
-    #unReadSystemMessageList a{
-        height: auto;
-    }
-    .select2-container .select2-choice{
-        height: 40px !important;
-    }
-    .myLogins .select2-container .select2-choice>.select2-chosen{
-        color: #858585;
-    }
-    .myLogins .select2-container .select2-choice>.select2-chosen:hover{
-        color: #858585;
-    }
-    .myLogins .down .rows .agreen{
-        font-size: 12px;
-        margin: 0;
-    }
-</style>
+<script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
+
 <?php if (isset($this->context->userObj)) { ?>
     <!--header开始-->
     <div  class="header<?= isset($this->context->isIndex)?' indexHeader':''?><?=isset($this->context->isTripList)?' fixedBar':''?>" >

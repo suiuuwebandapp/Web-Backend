@@ -29,13 +29,12 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO user_base
             (
-              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,
-
+              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,surname,name,
               headImg,hobby,profession,school,intro,info,travelCount,userSign,status,isPublisher,countryId,cityId,lon,lat
             )
             VALUES
             (
-              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,
+              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,:surname,:name,
               :headImg,:hobby,:profession,:school,:intro,:info,0,:userSign,:status,:isPublisher,:countryId,:cityId,:lon,:lat
             )
         ");
@@ -47,6 +46,8 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":areaCode", $userBase->areaCode, PDO::PARAM_STR);
         $command->bindParam(":email", $userBase->email, PDO::PARAM_STR);
         $command->bindParam(":nickname", $userBase->nickname, PDO::PARAM_STR);
+        $command->bindParam(":surname", $userBase->surname, PDO::PARAM_STR);
+        $command->bindParam(":name", $userBase->name, PDO::PARAM_STR);
         $command->bindParam(":registerIp", $userBase->registerIp, PDO::PARAM_STR);
         $command->bindParam(":lastLoginIp", $userBase->lastLoginIp, PDO::PARAM_STR);
         $command->bindParam(":sex", $userBase->sex, PDO::PARAM_INT);
@@ -160,29 +161,6 @@ class UserBaseDb extends ProxyDb
         return $command->queryOne();
     }
 
-    /**
-     * 查找用户（根据用户标示）
-     * @param $userSign
-     * @param null $status
-     * @return array|bool
-     */
-    public function findByUserSign($userSign, $status = null)
-    {
-        $sql = sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,status,
-            registerTime,lastLoginTime,userSign,isPublisher,cityId,countryId,lon,lat,profession,balance
-            FROM user_base WHERE userSign=:userSign
-        ");
-        if ($status != null) {
-            $sql .= " AND status=:status";
-        }
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
-        if ($status != null) {
-            $command->bindParam(":status", $status, PDO::PARAM_INT);
-        }
-        return $command->queryOne();
-    }
 
     /**
      * 查找用户（根据用户标示）
@@ -209,6 +187,34 @@ class UserBaseDb extends ProxyDb
     }
 
     /**
+     * 查找用户（根据用户标示）
+     * @param $userSign
+     * @param null $status
+     * @return array|bool
+     */
+    public function findByUserSign($userSign, $status = null)
+    {
+        $sql = sprintf("
+            SELECT userId,nickname,surname,name,email,phone,ub.areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,status,
+            registerTime,lastLoginTime,userSign,isPublisher,ub.cityId,ub.countryId,lon,lat,profession,balance,
+            co.cname AS countryCname,co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname
+            FROM user_base AS ub
+            LEFT JOIN country AS co ON co.id=ub.countryId
+            LEFT JOIN city AS ci ON ci.id=ub.cityId
+            WHERE userSign=:userSign
+        ");
+        if ($status != null) {
+            $sql .= " AND status=:status";
+        }
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        if ($status != null) {
+            $command->bindParam(":status", $status, PDO::PARAM_INT);
+        }
+        return $command->queryOne();
+    }
+
+    /**
      * 根据UserSign获取用户基本信息
      * @param $userSign
      * @return array|bool
@@ -218,7 +224,7 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             SELECT ub.nickname,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,
             ub.isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,ub.profession,co.cname AS countryCname,
-            co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname
+            co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname,surname,name
             FROM user_base ub
             LEFT JOIN country AS co ON co.id=ub.countryId
             LEFT JOIN city AS ci ON ci.id=ub.cityId
@@ -229,7 +235,6 @@ class UserBaseDb extends ProxyDb
         $command->bindValue(":status", UserBase::USER_STATUS_NORMAL, PDO::PARAM_INT);
 
         return $command->queryOne();
-
     }
 
     /**
@@ -265,7 +270,7 @@ class UserBaseDb extends ProxyDb
     public function findUserByOpenIdAndType($openId, $type)
     {
         $sql = sprintf("
-            SELECT userId,nickname,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,status,isPublisher
+            SELECT userId,nickname,surname,name,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,status,isPublisher
             FROM user_base WHERE userSign=
             (
               SELECT userId FROM user_access WHERE openId=:openId AND type=:type
@@ -315,16 +320,17 @@ class UserBaseDb extends ProxyDb
             UPDATE user_base SET
             nickname=:nickname,phone=:phone,areaCode=:areaCode,email=:email,lastLoginIp=:lastLoginIp,sex=:sex,profession=:profession,
             birthday=:birthday,headImg=:headImg,hobby=:hobby,school=:school,intro=:intro,info=:info,isPublisher=:isPublisher,
-            countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat
+            countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,surname=:surname,name=:name
             WHERE userId=:userId
         ");
-
         $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":phone", $userBase->phone, PDO::PARAM_STR);
         $command->bindParam(":areaCode", $userBase->areaCode, PDO::PARAM_STR);
         $command->bindParam(":email", $userBase->email, PDO::PARAM_STR);
         $command->bindParam(":nickname", $userBase->nickname, PDO::PARAM_STR);
+        $command->bindParam(":name", $userBase->name, PDO::PARAM_STR);
+        $command->bindParam(":surname", $userBase->surname, PDO::PARAM_STR);
         $command->bindParam(":lastLoginIp", $userBase->lastLoginIp, PDO::PARAM_STR);
         $command->bindParam(":sex", $userBase->sex, PDO::PARAM_INT);
         $command->bindParam(":birthday", $userBase->birthday, PDO::PARAM_STR);
@@ -393,7 +399,7 @@ class UserBaseDb extends ProxyDb
     public function getUserBaseByUserIds($userIds)
     {
         $sql=sprintf("
-            SELECT nickname,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,userSign,isPublisher,
+            SELECT nickname,surname,name,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,userSign,isPublisher,
             cityId,countryId,lon,lat,profession
             FROM user_base
             WHERE userSign in (".$userIds.");

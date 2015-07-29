@@ -28,6 +28,14 @@ class UserBase {
      */
     public $nickname;
     /**
+     * @var姓氏
+     */
+    public $surname;
+    /**
+     * @var名字
+     */
+    public $name;
+    /**
      * @var密码
      */
     public $password;

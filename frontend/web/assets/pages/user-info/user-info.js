@@ -293,7 +293,7 @@ function buildMessageSessionHtml(list){
         currentPageMessageSessionKeyList.push(tempSession.sessionKey);
         var nickname=tempSession.nickname;
         var headImg=tempSession.headImg;
-        if(tempSession.userId==SystemMessage.userId){
+        if(tempSession.relateId==SystemMessage.userId){
             nickname=SystemMessage.nickname;
             headImg=SystemMessage.headImg;
         }
@@ -307,7 +307,7 @@ function buildMessageSessionHtml(list){
         html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
         html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
-        if(tempSession.userId!=SystemMessage.userId){
+        if(tempSession.relateId!=SystemMessage.userId){
             html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
         }
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
@@ -367,7 +367,7 @@ function rebuildMessageSessionList(list){
         }
         var nickname=tempSession.nickname;
         var headImg=tempSession.headImg;
-        if(tempSession.userId==SystemMessage.userId){
+        if(tempSession.relateId==SystemMessage.userId){
             nickname=SystemMessage.nickname;
             headImg=SystemMessage.headImg;
         }
@@ -383,7 +383,7 @@ function rebuildMessageSessionList(list){
         html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
         html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
         html+='<p class="words">'+content+'</p>';
-        if(tempSession.userId!=SystemMessage.userId){
+        if(tempSession.relateId!=SystemMessage.userId){
             html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
         }
         html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
@@ -655,7 +655,7 @@ function initSelect(){
             if(search.indexOf("/")!=-1){
                 search=search.split("/")[0];
             }
-            findCityInfo(search);
+            //findCityInfo(search);
         }
     });
     $("#countryId").change();
@@ -855,15 +855,17 @@ function selectImg(){
             "pHeight":$("#img_origin").height()
         },
         error:function(){
-            alert("上传头像异常，请刷新重试！");
+            Main.showTip("上传头像异常，请刷新重试！");
         },
         success: function(data){
             var result=eval("("+data+")");
             if(result.status==1){
                 $(".userPic img").attr("src",result.data);
+                $(".header img.user").attr("src",result.data);
+                Main.showTip("上传头像成功!");
                 resetUploadHeadImg();
             }else{
-                alert("上传头像异常，请刷新重试！");
+                Main.showTip("上传头像异常，请刷新重试！");
             }
         }
     });
@@ -1843,7 +1845,7 @@ function initMyComment(page){
             _csrf: $('input[name="_csrf"]').val()
         },
         error:function(){
-            Main.showTip('得到收藏异常');
+            Main.showTip('获取评论异常');
         },
         success: function(data){
             var result=eval("("+data+")");

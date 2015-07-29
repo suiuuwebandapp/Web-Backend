@@ -34,6 +34,12 @@
         color: dimgray;
         text-align: center;
     }
+    .index .topTip li{
+        margin-top: 9px;
+    }
+    .index-banner .serch-out .serch .helps{
+        bottom: 2px;
+    }
 
 </style>
 
