@@ -23,8 +23,21 @@ class UserMessageRemind
 
     const  TYPE_ATTENTION=4;//类型为关注
 
+    const  TYPE_JOIN=5 ;//加入
+
+    const  TYPE_BUY=6;//购买
+
+    const  TYPE_ANSWER=7;//回答
+
+    const  TYPE_INVITED=8;//邀请
+
+
+
     const R_TYPE_TRIP=1;//随游
     const R_TYPE_CIRCLE_ARTICLE=2;//圈子文章
+    const R_TYPE_USER=3;//用户
+    const R_TYPE_TRAVEL_PICTURE=4;//旅图
+    const R_TYPE_QUESTION_ANSWER=5;//问答
 
     /**
      * @var消息id

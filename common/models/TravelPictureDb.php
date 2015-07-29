@@ -20,11 +20,11 @@ class TravelPictureDb extends ProxyDb {
         $sql = sprintf("
             INSERT INTO travel_picture
             (
-             title,contents,picList,country,city,lon,lat,tags,userSign,createTime,commentCount,attentionCount,titleImg
+             title,contents,picList,country,city,lon,lat,tags,userSign,createTime,commentCount,attentionCount,titleImg,address
             )
             VALUES
             (
-            :title,:contents,:picList,:country,:city,:lon,:lat,:tags,:userSign,now(),:commentCount,:attentionCount,:titleImg
+            :title,:contents,:picList,:country,:city,:lon,:lat,:tags,:userSign,now(),:commentCount,:attentionCount,:titleImg,:address
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -40,6 +40,7 @@ class TravelPictureDb extends ProxyDb {
         $command->bindParam(":commentCount", $travelPicture->commentCount, PDO::PARAM_INT);
         $command->bindParam(":attentionCount", $travelPicture->attentionCount, PDO::PARAM_INT);
         $command->bindParam(":titleImg", $travelPicture->titleImg, PDO::PARAM_STR);
+        $command->bindParam(":address", $travelPicture->address, PDO::PARAM_STR);
         $command->execute();
         return $this->getConnection()->getLastInsertID();
     }
@@ -67,7 +68,7 @@ class TravelPictureDb extends ProxyDb {
     public function getTravelPictureInfoById($id)
     {
         $sql = sprintf("
-            SELECT a.*,b.headImg FROM travel_picture a
+            SELECT a.*,b.headImg,b.nickname FROM travel_picture a
             LEFT JOIN user_base b ON a.userSign = b.userSign
             WHERE id=:id;
         ");

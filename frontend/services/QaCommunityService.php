@@ -13,9 +13,11 @@ use common\components\Code;
 use common\entity\AnswerCommunity;
 use common\entity\QuestionCommunity;
 use common\entity\UserAttention;
+use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\models\QaCommunityDb;
 use common\models\UserAttentionDb;
+use common\models\UserMessageRemindDb;
 use yii\base\Exception;
 
 class QaCommunityService  extends BaseDb {
@@ -29,9 +31,16 @@ class QaCommunityService  extends BaseDb {
             $this->qaCommunityDb=new QaCommunityDb($conn);
             $qId = $this->qaCommunityDb->addQuestion($questionCommunity);
             //给邀请回答的人发送消息
+            $remindDb = new UserMessageRemindDb($conn);
+            $arr=explode(',',$questionCommunity->qInviteAskUser);
+            foreach($arr as $val)
+            {
+                $remindDb->addUserMessageRemind($questionCommunity->qId,UserMessageRemind::TYPE_INVITED,$questionCommunity->qUserSign,$val,UserMessageRemind::R_TYPE_QUESTION_ANSWER);
+            }
             $this->commit($tran);
             $tagSer = new TagListService();
             $tagSer->updateQaTagValList($questionCommunity->qTag,$qId);
+
         }catch (Exception $e){
             $this->rollback($tran);
             throw $e;
@@ -45,8 +54,17 @@ class QaCommunityService  extends BaseDb {
         $tran = $conn->beginTransaction();
         try{
             $this->qaCommunityDb=new QaCommunityDb($conn);
+            $info = $this->qaCommunityDb->getQuestionById($answerCommunity->qId);
+            if(empty($info))
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'未知问题内容'));
+                exit;
+            }
             $this->qaCommunityDb->addAnswer($answerCommunity);
+
             //给提问人发送消息
+            $remindDb = new UserMessageRemindDb($conn);
+            $remindDb->addUserMessageRemind($answerCommunity->qId,UserMessageRemind::TYPE_ANSWER,$answerCommunity->aUserSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER);
             $this->commit($tran);
         }catch (Exception $e){
             $this->rollback($tran);
@@ -156,6 +174,7 @@ class QaCommunityService  extends BaseDb {
                 }
             }
             $this->qaCommunityDb->updateAttentionNumber($id,$count);
+            return $info;
         }catch (Exception $e){
             throw $e;
         }finally{

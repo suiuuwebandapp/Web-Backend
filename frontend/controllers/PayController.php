@@ -7,6 +7,7 @@ use common\entity\UserOrderInfo;
 use common\entity\UserPayRecord;
 use common\pay\alipay\create\AlipayCreateApi;
 use common\pay\alipay\send\AlipaySendApi;
+use common\pay\alipaywap\create\AlipaywapCreateApi;
 use common\pay\wxpay\NativeDynamicQrcode;
 use frontend\services\UserOrderService;
 use frontend\services\UserPayService;
@@ -82,6 +83,7 @@ class PayController extends CController{
 
     public function actionTest()
     {
+
         //$out_trade_no="2015051499575755";
         //$trade_no="2015051400001000880050810772";
         //$userPayService=new UserPayService();

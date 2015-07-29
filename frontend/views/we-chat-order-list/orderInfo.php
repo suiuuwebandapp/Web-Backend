@@ -110,7 +110,7 @@
     function callpay(orderNumber)
     {
         urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?t=1&n="+orderNumber;
-        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat-order-list/ali-pay-url?t=1&o="+orderNumber;
+        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/ali-pay-url?t=1&o="+orderNumber;
 
     }
     function payUrl()
@@ -124,8 +124,6 @@
     }
     function aliPayUrl()
     {
-        alert("暂无");
-        return;
         if(urlA=="")
         {
             alert("未知的订单");

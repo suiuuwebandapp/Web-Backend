@@ -89,7 +89,7 @@ class UserAttentionService extends BaseDb
             if(empty($result)||$result==false)
             {
                 $rstId = $this->AttentionDb ->addUserAttention($rId,UserAttention::TYPE_FOR_USER,$cUserSign);
-                $this->remindDb->addUserMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign);
+                $this->remindDb->addUserMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign,UserMessageRemind::R_TYPE_USER);
                 return $rstId;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注无需继续关注'));
@@ -623,8 +623,16 @@ class UserAttentionService extends BaseDb
             if(empty($result)||$result==false)
             {
                 $qaSer = new QaCommunityService();
-                $qaSer->updateQaAttentionCount($id,true);
-                return $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
+                $info = $qaSer->updateQaAttentionCount($id,true);
+                if(empty($info))
+                {
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,'未知问题'));
+                    exit;
+                }
+                $rst = $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
+                $remindDb = new UserMessageRemindDb($conn);
+                $remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER);
+                return $rst;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
                 exit;
@@ -648,8 +656,16 @@ class UserAttentionService extends BaseDb
             if(empty($result)||$result==false)
             {
                 $tpSer = new TravelPictureService();
-                $tpSer->updateTravelPictureAttentionCount($id,true);
-                return $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
+                $info = $tpSer->updateTravelPictureAttentionCount($id,true);
+                if(empty($info))
+                {
+                    echo json_encode(Code::statusDataReturn(Code::FAIL,'未知旅图'));
+                    exit;
+                }
+                $remindDb = new UserMessageRemindDb($conn);
+                $rst =$this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
+                $remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['userSign'],UserMessageRemind::R_TYPE_TRAVEL_PICTURE);
+                return $rst;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
                 exit;

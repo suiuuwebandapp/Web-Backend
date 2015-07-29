@@ -13,9 +13,11 @@ use common\components\Code;
 use common\entity\TravelPicture;
 use common\entity\TravelPictureComment;
 use common\entity\UserAttention;
+use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\models\TravelPictureDb;
 use common\models\UserAttentionDb;
+use common\models\UserMessageRemindDb;
 use frontend\components\Page;
 use yii\base\Exception;
 
@@ -44,7 +46,14 @@ class TravelPictureService  extends BaseDb {
         try{
             $this->tpcDb=new TravelPictureDb($conn);
             $this->tpcDb->addTravelPictureComment($travelPictureComment);
-            $this->updateTravelPictureCommentCount($travelPictureComment->tpId,true);
+            $info = $this->updateTravelPictureCommentCount($travelPictureComment->tpId,true);
+            if(empty($info))
+            {
+                echo json_encode(Code::statusDataReturn(Code::FAIL,'未知旅图'));
+                exit;
+            }
+            $remindDb = new UserMessageRemindDb($conn);
+            $remindDb->addUserMessageRemind($travelPictureComment->tpId,UserMessageRemind::TYPE_COMMENT,$travelPictureComment->userSign,$info['userSign'],UserMessageRemind::R_TYPE_TRAVEL_PICTURE);
         }catch (Exception $e){
             throw $e;
         }finally{
@@ -130,6 +139,7 @@ class TravelPictureService  extends BaseDb {
                 }
             }
             $this->tpDb->updateCommentCount($id,$count);
+            return $info;
         }catch (Exception $e){
             throw $e;
         }finally{
@@ -156,6 +166,7 @@ class TravelPictureService  extends BaseDb {
                 }
             }
             $this->tpDb->updateAttentionCount($id,$count);
+            return $info;
         }catch (Exception $e){
             throw $e;
         }finally{

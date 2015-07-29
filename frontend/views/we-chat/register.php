@@ -57,7 +57,7 @@
         var password = $('#wechat_password').val();
         if(areaCode=="")
         {
-            alert('验证码不能为空');
+            alert('国家不能为空');
             return;
         }
         if(phone=="")

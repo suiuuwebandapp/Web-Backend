@@ -26,6 +26,7 @@ class WController extends SController {
 
     public function __construct($id, $module = null)
     {
+        $this->userObj=new UserBase();
         $this->userBaseService=new UserBaseService();
         parent::__construct($id, $module);
     }

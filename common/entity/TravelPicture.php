@@ -25,4 +25,5 @@ class TravelPicture {
     public $commentCount=0;
     public $attentionCount=0;
     public $titleImg;
+    public $address;
 }

@@ -48,6 +48,7 @@ class AppTravelPictureController  extends AController {
             $contents= Yii::$app->request->post('contents');
             $picList= Yii::$app->request->post('picList');
             $titleImg= Yii::$app->request->post('titleImg');
+            $address= Yii::$app->request->post('address');
             if(empty($title)){return json_encode(Code::statusDataReturn(Code::FAIL, "标题不能为空"));}
             if(empty($country)){return json_encode(Code::statusDataReturn(Code::FAIL, "国家不能为空"));}
             if(empty($city)){return json_encode(Code::statusDataReturn(Code::FAIL, "城市不能为空"));}
@@ -56,6 +57,7 @@ class AppTravelPictureController  extends AController {
             if(empty($tags)){return json_encode(Code::statusDataReturn(Code::FAIL, "标签不能为空"));}
             if(empty($picList)){return json_encode(Code::statusDataReturn(Code::FAIL, "图片不能为空"));}
             if(empty($titleImg)){return json_encode(Code::statusDataReturn(Code::FAIL, "封面不能为空"));}
+            if(empty($address)){return json_encode(Code::statusDataReturn(Code::FAIL, "详细地址不能为空"));}
             $tpEntity = new TravelPicture();
             $tpEntity->title=$title;
             $tpEntity->country=$country;
@@ -67,6 +69,7 @@ class AppTravelPictureController  extends AController {
             $tpEntity->picList=$picList;
             $tpEntity->userSign=$userSign;
             $tpEntity->titleImg=$titleImg;
+            $tpEntity->address=$address;
             $this->tpSer->addTravelPicture($tpEntity);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,""));
         }catch (Exception $e) {

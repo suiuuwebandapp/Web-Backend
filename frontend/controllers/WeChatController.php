@@ -10,13 +10,18 @@ namespace frontend\controllers;
 use common\components\Aes;
 use common\components\Code;
 use common\components\LogUtils;
-use common\components\SmsUtils;
+use common\components\SMSUtils;
 use common\components\Validate;
 use common\components\wx\WXBizMsgCrypt;
 use common\entity\UserAccess;
 use common\entity\UserBase;
+use common\entity\UserOrderInfo;
 use common\entity\WeChatNewsList;
+use common\entity\WeChatOrderList;
 use common\entity\WeChatUserInfo;
+use common\pay\alipaywap\create\AlipaywapConfig;
+use common\pay\alipaywap\create\AlipaywapCreateApi;
+use common\pay\alipaywap\lib\AlipaywapNotify;
 use common\pay\wxpay\JsApiCall;
 use common\pay\wxpay\Log_;
 use common\pay\wxpay\NativeDynamicQrcode;
@@ -24,6 +29,7 @@ use frontend\interfaces\WechatInterface;
 use frontend\interfaces\WeiboInterface;
 use frontend\services\CountryService;
 use frontend\services\UserBaseService;
+use frontend\services\UserOrderService;
 use frontend\services\WeChatNewsListService;
 use frontend\services\WeChatOrderListService;
 use frontend\services\WeChatService;
@@ -70,9 +76,8 @@ class WeChatController extends WController
     }
 
     //todo @test
-    public function actionTest1()
+    public function actionTest()
     {
-
     }
 
 
@@ -304,15 +309,92 @@ class WeChatController extends WController
             return $this->renderPartial('jspay',['jsApiParameters'=>$jsApiParameters['data'],'rUrl'=>$rUrl]);
         }else
         {
-            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'返回','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
         }catch (Exception $e)
         {
             LogUtils::log($e);
-            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'返回','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
     }
+    public function actionAliPay()
+    {
+        if($this->is_weixin())
+        {
+            return $this->renderPartial('alipay',['str2'=>'返回','url'=>"javascript:history.go(-1);"]);
+        }
+        $c=Yii::$app->request->get('c');
+        $v=Aes::decrypt($c,"alipay9527",128);
+        $arr= explode('_',$v);
+        if(!isset($arr[1])){
+            return $this->renderPartial('errorHint',array('str1'=>'未知订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+        }else
+        {
+            $userSign = $arr[0];
+            $orderNumber = $arr[1];
+            $type = $arr[2];
+            if($type==1)
+            {
+                $orderListSer = new WeChatOrderListService();
+                $data = $orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+            }else
+            {
+                $orderSer = new UserOrderService();
+                $data = $orderSer->findOrderByOrderNumber($orderNumber);
+            }
+            if(empty($data)||$data==false)
+            {
+                return $this->renderPartial('errorHint',array('str1'=>'无效订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+            }
+        }
 
+        $alipayCreateApi=new AlipaywapCreateApi();
+        header("Content-type:text/html;charset=utf-8");
+        if($type==1)
+        {
+            if($data['wStatus']!=WeChatOrderList::STATUS_PROCESSED)
+            {
+                return $this->renderPartial('errorHint',array('str1'=>'不是可支付订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+            }
+            $orderEntity=new WeChatOrderList();
+            $orderEntity->wOrderNumber=$data['wOrderNumber'];
+            $orderEntity->wMoney=$data['wMoney'];
+            $orderEntity->wOrderSite=$data['wOrderSite'];
+            $orderEntity->wOrderContent=$data['wOrderContent'];
+
+            $alipayCreateApi->createWxOrder($orderEntity);
+        }else
+        {
+            if($data->status!=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT)
+            {
+                return $this->renderPartial('errorHint',array('str1'=>'不是可支付订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+            }
+            $userbase = new UserBase();
+            $userbase->userSign=$userSign;
+            $alipayCreateApi->createOrder($data,$userbase);
+        }
+
+    }
+
+    public function actionAliPayUrl()
+    {
+        $this->loginValid();
+        $userSign=$this->userObj->userSign;
+        $orderNumber=Yii::$app->request->get('o');
+        $type=Yii::$app->request->get('t');//1支付类型为定制
+        if(empty($userSign))
+        {
+            return $this->renderPartial('errorHint',array('str1'=>'用户名不能为空','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+        }
+        if(empty($orderNumber))
+        {
+            return $this->renderPartial('errorHint',array('str1'=>'订单号不能为空','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+        }
+        $str=$userSign."_".$orderNumber."_".$type;
+        $c=Aes::encrypt($str,"alipay9527",128);
+        $url= Yii::$app->params['base_dir']."/we-chat/ali-pay?c=".urlencode($c);
+        header("location: " . $url);
+    }
 
 
     private function msgHandle( $fromUsername, $toUsername, $time, $rst,$bak=null)
@@ -503,7 +585,6 @@ class WeChatController extends WController
 
     private function is_weixin()
     {
-        return true;
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false) {
             return true;
         }

@@ -17,6 +17,7 @@ use frontend\services\CircleService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use frontend\services\UserOrderService;
+use frontend\services\WeChatOrderListService;
 use Yii;
 use yii\base\Exception;
 use yii\debug\models\search\Log;
@@ -187,80 +188,103 @@ class AppMainController extends AController
 
     public function actionPay()
     {
-        //$this->loginValid();
+        $this->loginValid();
         require_once(dirname(__FILE__) . '/../../common/pay/pingpp/init.php');
         $channel = Yii::$app->request->post("channel");
         $number = Yii::$app->request->post("orderNumber");
-        $orderService=new UserOrderService();
+        $type = Yii::$app->request->post("type");
         if(empty(trim($number))){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无效的订单号'));
         }
-        $orderInfo=$orderService->findOrderByOrderNumber(trim($number));
-        if(empty($orderInfo)){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无效的订单号'));
-        }
-        /*if($orderInfo->userId!=$this->userObj->userSign){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'订单用户不匹配'));
-        }*/
-        $amount = intval($orderInfo->totalPrice*100);//价格
 //$extra 在使用某些渠道的时候，需要填入相应的参数，其它渠道则是 array() .具体见以下代码或者官网中的文档。其他渠道时可以传空值也可以不传。
         $extra = array();
-        switch ($channel) {
-            //这里值列举了其中部分渠道的，具体的extra所需参数请参见官网中的 API 文档
-            case 'alipay_wap':
-                $extra = array(
-                    'success_url' => 'http://www.suiuu.com/success',
-                    'cancel_url' => 'http://www.suiuu.com/cancel'
-                );
-                break;
-            case 'upmp_wap':
-                $extra = array(
-                    'result_url' => 'http://www.suiuu.com/result?code='
-                );
-                break;
-            case 'bfb_wap':
-                $extra = array(
-                    'result_url' => 'http://www.suiuu.com/result?code='
-                );
-                break;
-            case 'upacp_wap':
-                $extra = array(
-                    'result_url' => 'http://www.suiuu.com/result?code='
-                );
-                break;
-            case 'wx_pub':
-                $extra = array(
-                    'open_id' => 'open_id'
-                );
-                break;
-            case 'wx_pub_qr':
-                $extra = array(
-                    'product_id' => 'Productid'
-                );
-                break;
-            case 'jdpay_wap':
-                $extra = array(
-                    'success_url'=>'http://www.suiuu.com',
-                    'fail_url'=>'http://www.suiuu.com'
-                );
-                break;
-        }
 
-        \Pingpp\Pingpp::setApiKey('sk_live_dMQIp9BoYtDRtbYIfylNUxnT');
+
+        \Pingpp\Pingpp::setApiKey('sk_test_8m9Wr9OerbrDG08GC40qTWvL');//sk_test_8m9Wr9OerbrDG08GC40qTWvL  sk_live_dMQIp9BoYtDRtbYIfylNUxnT
         try {
-            $travelTripInfo=json_decode($orderInfo->tripJsonInfo,true);
-            $tripInfo=$travelTripInfo['info'];
+            //description 附加参数1定制2随游
+            $userSign = $this->userObj->userSign;
+            if($type==1)
+            {
+                $wxOrderServer = new WeChatOrderListService();
+                $orderInfo = $wxOrderServer->getOrderInfoByOrderNumber(trim($number),$userSign);
+                if(empty($orderInfo))
+                {
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无效的订单号'));
+                }
+                $showUrl='http://www.suiuu.com/we-chat-order-list/order-manage';
+                $amount = intval($orderInfo['wMoney']*100);//价格
+                $subject=htmlspecialchars($orderInfo['wOrderSite']."定制旅行");
+                $body=htmlspecialchars("您的专属".$orderInfo['wOrderSite']."行程");
+            }else
+            {
+                $orderService=new UserOrderService();
+                $orderInfo=$orderService->findOrderByOrderNumber(trim($number));
+                if(empty($orderInfo)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无效的订单号'));
+                }
+                if($orderInfo->userId!=$userSign){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'订单用户不匹配'));
+                }
+                $amount = intval($orderInfo->totalPrice*100);//价格
+                $travelTripInfo=json_decode($orderInfo->tripJsonInfo,true);
+                $tripInfo=$travelTripInfo['info'];
+                $showUrl='http://www.suiuu.com/wechat-trip/info?tripId='.$orderInfo->tripId;
+                $subject=htmlspecialchars($tripInfo['title']);
+                $body=htmlspecialchars($tripInfo['intro']);
+            }
+            switch ($channel) {
+                //这里值列举了其中部分渠道的，具体的extra所需参数请参见官网中的 API 文档
+                case 'alipay_wap':
+                    $extra = array(
+                        'success_url' => $showUrl,
+                        'cancel_url' => $showUrl
+                    );
+                    break;
+                case 'upmp_wap':
+                    $extra = array(
+                        'result_url' => 'http://www.suiuu.com/result?code='
+                    );
+                    break;
+                case 'bfb_wap':
+                    $extra = array(
+                        'result_url' => 'http://www.suiuu.com/result?code='
+                    );
+                    break;
+                case 'upacp_wap':
+                    $extra = array(
+                        'result_url' => 'http://www.suiuu.com/result?code='
+                    );
+                    break;
+                case 'wx_pub':
+                    $extra = array(
+                        'open_id' => 'open_id'
+                    );
+                    break;
+                case 'wx_pub_qr':
+                    $extra = array(
+                        'product_id' => 'Productid'
+                    );
+                    break;
+                case 'jdpay_wap':
+                    $extra = array(
+                        'success_url'=>'http://www.suiuu.com',
+                        'fail_url'=>'http://www.suiuu.com'
+                    );
+                    break;
+            }
             $ch = \Pingpp\Charge::create(
                 array(
-                    "subject"   => htmlspecialchars($tripInfo['title']),
-                    "body"      =>htmlspecialchars($tripInfo['intro']),
-                    "amount"    => 10,
+                    "subject"   => $subject,
+                    "body"      =>$body,
+                    "amount"    => $amount,
                     "order_no"  => $number,
                     "currency"  => "cny",
                     "extra"     => $extra,
                     "channel"   => $channel,
                     "client_ip" => $_SERVER["REMOTE_ADDR"],
-                    "app"       => array("id" => "app_04Ky94P0Wf1Km1uz")
+                    "app"       => array("id" => "app_04Ky94P0Wf1Km1uz"),
+                    "description"=>$type
                 )
             );
             return $ch;
