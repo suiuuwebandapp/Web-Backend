@@ -171,22 +171,25 @@ class UserAttentionDb extends ProxyDb
         $command->bindParam(":attentionId", $id, PDO::PARAM_INT);
         return $command->queryOne();
     }
+
     /**
      * 得到收藏随游列表
      * @param $userSign
+     * @param $page
      * @return array
      */
     public function getCollectTravelList($userSign,$page)
     {
 
         $sql=sprintf("
-        FROM travel_trip a
-LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
-LEFT JOIN user_base b ON b.userSign=c.userId
-LEFT JOIN user_attention d ON d.relativeId = a.tripId
-LEFT JOIN all_totalize  e ON e.rId = a.tripId
-LEFT JOIN all_totalize  f ON f.rId = a.tripId
-WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign AND e.tType=:typeCollect AND f.tType=:typeComment
+            FROM travel_trip a
+            LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
+            LEFT JOIN user_base b ON b.userSign=c.userId
+            LEFT JOIN user_attention d ON d.relativeId = a.tripId
+            LEFT JOIN all_totalize  e ON e.rId = a.tripId AND e.tType=:typeCollect
+            LEFT JOIN all_totalize  f ON f.rId = a.tripId AND f.tType=:typeComment
+            WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType
+            AND d.`status`=:attentionStatus AND d.userSign=:userSign
         ");
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
@@ -196,7 +199,7 @@ WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativ
         $this->setParam("typeComment", AllTotalize::TYPE_COMMENT_FOR_TRIP);
         $this->setParam("userSign", $userSign);
 
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname,e.totalize as collectCount,f.totalize as commentCount');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,a.tripCount,b.userSign,b.headImg,b.nickname,e.totalize as collectCount,f.totalize as commentCount');
         $this->setSql($sql);
         return $this->find($page);
     }
