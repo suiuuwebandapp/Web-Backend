@@ -1,4 +1,5 @@
 <?php $tripInfo=json_decode($info->tripJsonInfo,true);
+$serviceArr = $info->serviceInfo;
 ?>
 <!doctype html>
 <html lang="zh-CN">
@@ -49,9 +50,9 @@
         </div>
         <div class="part clearfix">
             <p>附加服务：</p>
-            <?php if(count($tripInfo['serviceList'])==0){?>
+            <?php if(count($serviceArr)==0){?>
                 <p> 暂无附加服务</p>
-            <?php }else{foreach($tripInfo['serviceList'] as $val){?>
+            <?php }else{foreach($serviceArr as $val){?>
                 <p><?php echo $val['title'];?>：<b>￥<?php echo intval($val['money']);?></b></p>
             <?php }}?>
             <a href="#" class="btnfr colOrange">总价￥<?php echo intval($info->totalPrice);?></a>

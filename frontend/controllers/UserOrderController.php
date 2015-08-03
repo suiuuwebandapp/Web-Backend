@@ -175,7 +175,7 @@ class UserOrderController extends  CController{
             $this->userOrderService->addUserOrder($userOrderInfo);
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendNewOrderMessage($tripPublisherList,$userOrderInfo->orderNumber);
+            $sysMessageUtils->sendNewOrderMessage($this->userObj->userSign,$tripPublisherList,$userOrderInfo->orderNumber);
             return $this->redirect(["/user-order/info",
                 'orderNumber'=>$userOrderInfo->orderNumber
             ]);
@@ -454,7 +454,7 @@ class UserOrderController extends  CController{
             }
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendUserConfirmPlayMessage($userPublisher->userId,$orderInfo->orderNumber);
+            $sysMessageUtils->sendUserConfirmPlayMessage($this->userObj->userSign,$userPublisher->userId,$orderInfo->orderNumber);
             //刷新用户信息
             $this->refreshUserInfo();
             //TODO 刷新随友用户信息

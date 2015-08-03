@@ -24,12 +24,16 @@ class UserMessageRemindDb extends ProxyDb
      * @param $relativeType
      * @param $relativeUserSign
      * @param $userSign
+     * @param $rType
+     * @param $content
+     * @param $url
      * @return int
      */
-    public function addUserMessageRemind($relativeId,$relativeType,$userSign,$relativeUserSign,$rType=0)
+    public function addUserMessageRemind($relativeId,$relativeType,$userSign,$relativeUserSign,$rType,$content,$url)
     {
         $sql=sprintf("
-          INSERT INTO user_message_remind (relativeId,relativeUserSign,relativeType,createUserSign,createTime,rStatus,rType) VALUES (:relativeId,:relativeUserSign,:relativeType,:userSign,now(),:rStatus,:rType);
+          INSERT INTO user_message_remind (relativeId,relativeUserSign,relativeType,createUserSign,createTime,rStatus,rType,content,url)
+          VALUES (:relativeId,:relativeUserSign,:relativeType,:userSign,now(),:rStatus,:rType,:content,:url);
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":relativeId", $relativeId, PDO::PARAM_INT);
@@ -38,6 +42,8 @@ class UserMessageRemindDb extends ProxyDb
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
         $command->bindValue(":rStatus", UserMessageRemind::REMIND_STATUS_NORMAL, PDO::PARAM_INT);
         $command->bindParam(":rType", $rType, PDO::PARAM_INT);
+        $command->bindParam(":content", $content, PDO::PARAM_STR);
+        $command->bindParam(":url", $url, PDO::PARAM_STR);
         $command->execute();
         return $this->getConnection()->lastInsertID;
     }
@@ -76,11 +82,155 @@ class UserMessageRemindDb extends ProxyDb
         ");
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
-        $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
         $this->setParam("userSign", $userSign);
         $this->setParam("relativeType", $type);
-        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,b.headImg,b.nickname');
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,b.headImg,b.nickname');
         $this->setSql($sql);
         return $this->find($page);
     }
+
+    /**
+     * 查找订单消息
+     * @param $userSign
+     * @param $page
+     * @param $type
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getOrderRemind($userSign,$page,$type)
+    {
+        $sql=sprintf("
+        FROM user_message_remind a
+            LEFT JOIN user_base b ON b.userSign = a.createUserSign
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND b.status=:userStatus AND rType=:rType
+        ");
+        if(!empty($type))
+        {
+            $sql.= " AND relativeType=:relativeType ";
+            $this->setParam("relativeType", $type);
+        }
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
+        $this->setParam("rType", UserMessageRemind::R_TYPE_ORDER);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.content,a.url,a.rType,b.headImg,b.nickname');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+    /**
+     * 查找随游消息
+     * @param $userSign
+     * @param $page
+     * @param $type
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getTripRemind($userSign,$page,$type)
+    {
+        $sql=sprintf("
+        FROM user_message_remind a
+            LEFT JOIN user_base b ON b.userSign = a.createUserSign
+            LEFT JOIN travel_trip c ON c.tripId=a.relativeId
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND b.status=:userStatus AND rType=:rType
+        ");
+        if(!empty($type))
+        {
+            $sql.= " AND relativeType=:relativeType ";
+            $this->setParam("relativeType", $type);
+        }
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
+        $this->setParam("rType", UserMessageRemind::R_TYPE_TRIP);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,b.headImg,b.nickname,c.title');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+    /**
+     * 查找旅图消息
+     * @param $userSign
+     * @param $page
+     * @param $type
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getTpRemind($userSign,$page,$type)
+    {
+        $sql=sprintf("
+        FROM user_message_remind a
+            LEFT JOIN user_base b ON b.userSign = a.createUserSign
+            LEFT JOIN travel_picture c ON a.relativeId=c.id
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND b.status=:userStatus AND rType=:rType
+        ");
+        if(!empty($type))
+        {
+            $sql.= " AND relativeType=:relativeType ";
+            $this->setParam("relativeType", $type);
+        }
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
+        $this->setParam("rType", UserMessageRemind::R_TYPE_TRAVEL_PICTURE);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,b.headImg,b.nickname,c.id,c.title');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+    /**
+     * 查找问答消息
+     * @param $userSign
+     * @param $page
+     * @param $type
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getQaRemind($userSign,$page,$type)
+    {
+        $sql=sprintf("
+        FROM user_message_remind a
+            LEFT JOIN user_base b ON b.userSign = a.createUserSign
+            LEFT JOIN question_community c ON a.relativeId=c.qId
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND b.status=:userStatus AND rType=:rType
+        ");
+        if(!empty($type))
+        {
+            $sql.= " AND relativeType=:relativeType ";
+            $this->setParam("relativeType", $type);
+        }
+        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
+        $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
+        $this->setParam("rType", UserMessageRemind::R_TYPE_QUESTION_ANSWER);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,b.headImg,b.nickname,c.qId,c.qTitle');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
+
+    /**
+     * 查找系统消息
+     * @param $userSign
+     * @param $page
+     * @param $type
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getSysRemind($userSign,$page,$type)
+    {
+        $sql=sprintf("
+        FROM user_message_remind a
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND rType=:rType
+        ");
+        if(!empty($type))
+        {
+            $sql.= " AND relativeType=:relativeType ";
+            $this->setParam("relativeType", $type);
+        }
+        $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
+        $this->setParam("rType", UserMessageRemind::R_TYPE_SYS);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
 }

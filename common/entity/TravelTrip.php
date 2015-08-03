@@ -142,4 +142,13 @@ class TravelTrip {
      */
     public $status;
 
+    /**
+     * @var随游评论数
+     */
+    public $commentCount;
+    /**
+     * @var随游收藏数
+     */
+    public $collectCount;
+
 }

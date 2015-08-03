@@ -9,7 +9,6 @@ use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\entity\CircleComment;
 use common\models\UserAttentionDb;
-use common\models\UserMessageRemindDb;
 use frontend\components\Page;
 use frontend\models\CircleDb;
 use frontend\models\UserBaseDb;
@@ -244,14 +243,12 @@ class CircleService extends BaseDb
      */
     public function CreateArticleComment(CircleComment $CircleComment,$relativeUserSign,$isReply,$isAt)
     {
-
+        $conn = $this->getConnection();
+        $transaction = $conn->beginTransaction();
         try {
 
-            $conn = $this->getConnection();
             $this->CircleDb = new CircleDb($conn);
-            $transaction = $conn->beginTransaction();
             $rst = $this->CircleDb ->addComment($CircleComment);
-            $this->remindDb =new UserMessageRemindDb($conn);
             if(empty($rst))
             {
                 throw new Exception('添加圈子文章评论失败',Code::FAIL);
@@ -264,7 +261,9 @@ class CircleService extends BaseDb
                 }
                 $articleRst =$this->upDateArticleCommentNumb($article,true);
                 $this->CircleDb->upDateArticleCommentNumb($articleRst);
-                if($isAt)
+               /*
+               $this->remindDb =new UserMessageRemindDb($conn);
+               if($isAt)
                 {
                     $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_AT,$CircleComment->userSign,$relativeUserSign,UserMessageRemind::R_TYPE_CIRCLE_ARTICLE);
                 }
@@ -273,7 +272,7 @@ class CircleService extends BaseDb
                 }else
                 {
                     $this->remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_COMMENT,$CircleComment->userSign,$relativeUserSign,UserMessageRemind::R_TYPE_CIRCLE_ARTICLE);
-                }
+                }*/
                 $transaction->commit();
             }
 

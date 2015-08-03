@@ -14,8 +14,8 @@ use common\entity\UserAttention;
 use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\models\TravelTripCommentDb;
+use common\models\TravelTripDb;
 use common\models\UserAttentionDb;
-use common\models\UserMessageRemindDb;
 use yii\base\Exception;
 
 class TravelTripCommentService extends BaseDb
@@ -23,7 +23,6 @@ class TravelTripCommentService extends BaseDb
 
     public $TravelTripCommentDb;
     public $AttentionDb;
-    public $remindDb;
 
     /**得到评论列表
      * @param $tripId
@@ -50,12 +49,8 @@ class TravelTripCommentService extends BaseDb
         try {
             $conn = $this->getConnection();
             $this->TravelTripCommentDb = new TravelTripCommentDb($conn);
-            $this->remindDb = new  UserMessageRemindDb($conn);
-            $totalize=new AllTotalize();
-            $totalize->tType=AllTotalize::TYPE_COMMENT_FOR_TRIP;
-            $totalize->rId=$tripId;
-            $allTotalizeSer=new AllTotalizeService();
-            $allTotalizeSer->updateTotalize($totalize,true);
+            $tripDb = new TravelTripDb($conn);
+            $tripDb->addCommentCount($tripId);
             $comment=new TravelTripComment();
             $comment->tripId=$tripId;
             $comment->userSign=$userSign;
@@ -76,7 +71,10 @@ class TravelTripCommentService extends BaseDb
             }
             if(!empty($rUserSign))
             {
-                $this->remindDb->addUserMessageRemind($tripId,UserMessageRemind::TYPE_AT,$userSign,$rUserSign,UserMessageRemind::R_TYPE_TRIP);
+                $messageRemindSer = new UserMessageRemindService();
+                $content="###";
+                $url="###";
+                $messageRemindSer->addMessageRemind($tripId,UserMessageRemind::TYPE_AT,$userSign,$rUserSign,UserMessageRemind::R_TYPE_TRIP,$content,$url);
             }
 
             $comment->rUserSign=$rUserSign;

@@ -562,7 +562,7 @@ class AppTravelController extends AController
             }
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendUserConfirmPlayMessage($userPublisher->userId,$orderInfo->orderNumber);
+            $sysMessageUtils->sendUserConfirmPlayMessage($this->userObj->userSign,$userPublisher->userId,$orderInfo->orderNumber);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -832,7 +832,7 @@ class AppTravelController extends AController
         $travelTripApply->info=$info;
         $travelTripApply->status=TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT;
 
-        $this->travelSer->addTravelTripApply($travelTripApply);
+        $this->travelSer->addTravelTripApply($this->userObj->userSign,$travelTripApply);
         return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"您的申请已经提交，请耐心等待审核"));
     }
 
@@ -865,7 +865,7 @@ class AppTravelController extends AController
             $travelTripPublisher->tripId=$tripId;
             $travelTripPublisher->tripPublisherId=$tripPublisherId;
 
-            $this->travelSer->deleteTravelTriPublisher($travelTripPublisher);
+            $this->travelSer->deleteTravelTriPublisher($this->userObj->userSing,$travelTripPublisher);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -965,7 +965,7 @@ class AppTravelController extends AController
         }
 
         try{
-            $this->travelSer->agreePublisherApply($applyId,$publisherId,$this->userPublisherObj->userPublisherId);
+            $this->travelSer->agreePublisherApply($this->userObj->userSing,$applyId,$publisherId,$this->userPublisherObj->userPublisherId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -986,7 +986,7 @@ class AppTravelController extends AController
         }
 
         try{
-            $this->travelSer->opposePublisherApply($applyId,$this->userPublisherObj->userPublisherId);
+            $this->travelSer->opposePublisherApply($this->userObj->userSing,$applyId,$this->userPublisherObj->userPublisherId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -1165,7 +1165,7 @@ class AppTravelController extends AController
             $this->userOrderService->addUserOrder($userOrderInfo);
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendNewOrderMessage($tripPublisherList,$userOrderInfo->orderNumber);
+            $sysMessageUtils->sendNewOrderMessage($userSign,$tripPublisherList,$userOrderInfo->orderNumber);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$userOrderInfo->orderNumber));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -1185,7 +1185,7 @@ class AppTravelController extends AController
                 return json_encode(Code::statusDataReturn(Code::FAIL,'无效的随友信息'));
             }
             $publisherId=$userPublisherObj->userPublisherId;
-            $orderNumber=\Yii::$app->request->post('id');
+            $orderNumber=\Yii::$app->request->post('orderNumber');
             if(empty($orderNumber)){
                 return json_encode(Code::statusDataReturn(Code::FAIL,'未知的订单'));
             }
@@ -1231,11 +1231,14 @@ class AppTravelController extends AController
         try{
             $this->loginValid();
             $userSign=$this->userObj->userSign;
-            $orderNumber=\Yii::$app->request->post('id');
+            $orderNumber=\Yii::$app->request->post('orderNumber');
             if(empty($orderNumber)){
                 return json_encode(Code::statusDataReturn(Code::FAIL,'未知的订单'));
             }
             $info = $this->userOrderService->findOrderByOrderNumber($orderNumber);
+            if(empty($info)){
+                return json_encode(Code::statusDataReturn(Code::FAIL,'未知的订单'));
+            }
             $orderId=$info->orderId;
             $publisherInfo =$this->userOrderService->findPublisherByOrderId($orderId);
             if($userSign!=$info->userId)

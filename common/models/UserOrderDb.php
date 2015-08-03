@@ -118,7 +118,6 @@ class UserOrderDb extends ProxyDb
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":orderNumber", $orderNumber, PDO::PARAM_STR);
-
         return $command->queryOne();
     }
 

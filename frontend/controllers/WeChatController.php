@@ -78,6 +78,12 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
+        exit;
+        $userSing="085963dc0af031709b032725e3ef18f5";
+        $orderNumber="2015062697971014";
+        $type = 2;
+        $rst = $this->wechatInterface->sendStatusChangeTemplateMessage($userSing,$type,$orderNumber);
+        var_dump($rst);
     }
 
 

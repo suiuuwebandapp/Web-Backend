@@ -41,7 +41,7 @@ class Code
     const APP_USER_LOGIN_SESSION='A_U_L_S';//用户是否登录 SESSION KEY
     const APP_USER_LOGIN_ERROR_COUNT_PREFIX='A_U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
     const APP_USER_LOGIN_VERIFY_CODE='A_U_L_V_C'; //用户登录验证码 SESSION KEY
-    const APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='86400';
+    const APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='604800';
 
     const APP_USER_LOGOUT_SUCCESS_STR='注销成功';
     const APP_USER_LOGOUT_FAIL_STR='注销失败';
@@ -83,6 +83,8 @@ class Code
     const USER_ORDER_PAY_STATS='U_O_P_S';//用户订单支付状态 1.完成 0.未完成
 
     const USER_SYSTEM_MESSAGE_ID='SYSTEM_MESSAGE';//系统消息KEY
+
+    const USER_SYSTEM_TRIP_MESSAGE_ID='SYSTEM_TRIP_MESSAGE';//系统随游消息KEY
 
     const USER_WECHAT_ACCOUNT='USER_WECHAT_ACCOUNT';//用户绑定微信账户的KEY
 

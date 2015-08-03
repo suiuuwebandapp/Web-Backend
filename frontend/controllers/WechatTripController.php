@@ -232,7 +232,7 @@ class WechatTripController extends WController {
             $this->userOrderService->addUserOrder($userOrderInfo);
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendNewOrderMessage($tripPublisherList,$userOrderInfo->orderNumber);
+            $sysMessageUtils->sendNewOrderMessage($userSign,$tripPublisherList,$userOrderInfo->orderNumber);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$userOrderInfo->orderNumber));
         }catch (Exception $e){
             LogUtils::log($e);

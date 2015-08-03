@@ -173,6 +173,10 @@ class WechatUserCenterController extends WController {
                 return $this->redirect('/we-chat/error?str=未知的订单&url=javascript:history.go(-1);');
             }
             $info = $this->userOrderService->findOrderByOrderNumber($orderNumber);
+            if(empty($info))
+            {
+                return $this->redirect('/we-chat/error?str=未知订单');
+            }
             $orderId=$info->orderId;
             $publisherInfo =$this->userOrderService->findPublisherByOrderId($orderId);
             if($userSign!=$info->userId)
@@ -425,7 +429,7 @@ class WechatUserCenterController extends WController {
             }
             //给随友发送消息
             $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendUserConfirmPlayMessage($userPublisher->userId,$orderInfo->orderNumber);
+            $sysMessageUtils->sendUserConfirmPlayMessage($this->userObj->userSign,$userPublisher->userId,$orderInfo->orderNumber);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);

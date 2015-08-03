@@ -56,6 +56,8 @@ class WeChat {
      * 模板id
      * */
     const TEMPLATE_ID_FOR_RESERVE="yWu0jQ8QB6HM-CQrVUYhu232TAMGi-uGQnTTnr4OjJc";
+    //状态变更
+    const TEMPLATE_ID_FOR_STATUS_CHANGE='526NMMRJEoXa1WtavjekxRjyMTR7jtlZWNme0FlgzNs';
     /**
      * 记录token信息
      */

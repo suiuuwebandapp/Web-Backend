@@ -31,11 +31,13 @@ class QaCommunityService  extends BaseDb {
             $this->qaCommunityDb=new QaCommunityDb($conn);
             $qId = $this->qaCommunityDb->addQuestion($questionCommunity);
             //给邀请回答的人发送消息
-            $remindDb = new UserMessageRemindDb($conn);
             $arr=explode(',',$questionCommunity->qInviteAskUser);
             foreach($arr as $val)
             {
-                $remindDb->addUserMessageRemind($questionCommunity->qId,UserMessageRemind::TYPE_INVITED,$questionCommunity->qUserSign,$val,UserMessageRemind::R_TYPE_QUESTION_ANSWER);
+                $messageRemindSer = new UserMessageRemindService();
+                $content="###";
+                $url="###";
+                $messageRemindSer->addMessageRemind($questionCommunity->qId,UserMessageRemind::TYPE_INVITED,$questionCommunity->qUserSign,$val,UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
             }
             $this->commit($tran);
             $tagSer = new TagListService();
@@ -63,8 +65,10 @@ class QaCommunityService  extends BaseDb {
             $this->qaCommunityDb->addAnswer($answerCommunity);
 
             //给提问人发送消息
-            $remindDb = new UserMessageRemindDb($conn);
-            $remindDb->addUserMessageRemind($answerCommunity->qId,UserMessageRemind::TYPE_ANSWER,$answerCommunity->aUserSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER);
+            $userRemind = new UserMessageRemindService();
+            $content="###".$info['qTitle'];
+            $url="###";
+            $userRemind->addMessageRemind($answerCommunity->qId,UserMessageRemind::TYPE_ANSWER,$answerCommunity->aUserSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
             $this->commit($tran);
         }catch (Exception $e){
             $this->rollback($tran);

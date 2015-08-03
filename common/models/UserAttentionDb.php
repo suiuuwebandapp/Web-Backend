@@ -186,8 +186,6 @@ class UserAttentionDb extends ProxyDb
             LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
             LEFT JOIN user_base b ON b.userSign=c.userId
             LEFT JOIN user_attention d ON d.relativeId = a.tripId
-            LEFT JOIN all_totalize  e ON e.rId = a.tripId AND e.tType=:typeCollect
-            LEFT JOIN all_totalize  f ON f.rId = a.tripId AND f.tType=:typeComment
             WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType
             AND d.`status`=:attentionStatus AND d.userSign=:userSign
         ");
@@ -199,7 +197,7 @@ class UserAttentionDb extends ProxyDb
         $this->setParam("typeComment", AllTotalize::TYPE_COMMENT_FOR_TRIP);
         $this->setParam("userSign", $userSign);
 
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,a.tripCount,b.userSign,b.headImg,b.nickname,e.totalize as collectCount,f.totalize as commentCount');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,a.tripCount,b.userSign,b.headImg,b.nickname,a.collectCount,a.commentCount');
         $this->setSql($sql);
         return $this->find($page);
     }

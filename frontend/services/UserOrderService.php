@@ -244,7 +244,7 @@ class UserOrderService extends BaseDb
             $this->commit($tran);
             //随友确认订单，给用户发送消息提醒
             $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendPublisherConfirmOrderMessage($orderInfo['userId'],$orderInfo['orderNumber']);
+            $sysMessageUtils->sendPublisherConfirmOrderMessage($publisherUserSign,$orderInfo['userId'],$orderInfo['orderNumber']);
         }catch (Exception $e){
             $this->rollback($tran);
             throw $e;
@@ -588,7 +588,7 @@ class UserOrderService extends BaseDb
 
             //给随友发送消息
             $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendPublisherCancelOrderMessage($orderInfo->userId,$orderInfo->orderNumber);
+            $sysMessageUtil->sendPublisherCancelOrderMessage($userPublisher->userId,$orderInfo->userId,$orderInfo->orderNumber);
 
         }catch (Exception $e){
             $this->rollback($tran);

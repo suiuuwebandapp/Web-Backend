@@ -200,7 +200,7 @@ class AppMainController extends AController
         $extra = array();
 
 
-        \Pingpp\Pingpp::setApiKey('sk_test_8m9Wr9OerbrDG08GC40qTWvL');//sk_test_8m9Wr9OerbrDG08GC40qTWvL  sk_live_dMQIp9BoYtDRtbYIfylNUxnT
+        \Pingpp\Pingpp::setApiKey('sk_live_dMQIp9BoYtDRtbYIfylNUxnT');//sk_test_8m9Wr9OerbrDG08GC40qTWvL  sk_live_dMQIp9BoYtDRtbYIfylNUxnT
         try {
             //description 附加参数1定制2随游
             $userSign = $this->userObj->userSign;

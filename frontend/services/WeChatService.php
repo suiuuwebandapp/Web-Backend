@@ -98,59 +98,7 @@ class WeChatService extends BaseDb{
 
 
 
-    public function getVsinsInfo($type,$imageHost)
-    {
-        $strItem   = '';
-        $countItem = 0;
-        $rstData   = $this->_objVsinsDB->getVsinsInfo($type);
 
-        if ($rstData['status'] == Code::SUCCESS) {
-            if (empty($rstData['data'][0])) {
-
-            } else {
-
-
-                foreach ($rstData['data'] as $value) {
-                    $rstBodyUrl = $this->getBodyLink($value['id']);
-
-                    $strItem .= '<item>
-                    <Title><![CDATA[' . $value['title'] . ']]></Title>
-                    <Description><![CDATA[' . $value['abstract'] . ']]></Description>
-                    <PicUrl><![CDATA[' . $imageHost . $value['picurl'] . ']]></PicUrl>
-                    <Url><![CDATA[' . $rstBodyUrl . ']]></Url>
-                    </item>|';
-                }
-                $countItem = count($rstData['data']);
-
-                //5显示条数
-                //之类的数字应该提出来，暂时先这样写
-                if($countItem>5)
-                {
-                    $strItem1="";
-                    $this->strItemRemain="";
-                    $ar=preg_split("/\|/",$strItem);
-                    array_pop($ar);
-                    $arr1=array_slice($ar,0,5);
-                    $arr2=array_slice($ar,5,5);
-                    foreach ($arr1 as $key => $value) {
-                        $strItem1.=$value;
-                    }
-                    foreach ($arr2 as $key => $value) {
-                        $this->strItemRemain.=$value;
-                    }
-                    $strItem1.=$this->addStr;
-                    $this->numbItemRemain=$countItem-5;
-                    $strItem1 =str_replace("|","",$strItem1);
-                    return Code::statusDataReturn(Code::SUCCESS, $strItem1, 6);
-                }
-            }
-            $strItem =str_replace("|","",$strItem);
-            return Code::statusDataReturn(Code::SUCCESS, $strItem, $countItem);
-
-        } else {
-            return Code::statusDataReturn(Code::FAIL);
-        }
-    }
     /**
      * 发送消息
      * @param $toUsername
@@ -172,57 +120,6 @@ class WeChatService extends BaseDb{
         return $json_data;
     }
 
-    public function sendTemplateMessage($access_token,$toUser,$backUrl,$userName,$cmName,$date,$remark)
-    {
-        $url = WeChat::MESSAGE_SEN_TEMPLATE . $access_token;
-        $templateId=WeChat::TEMPLATE_ID_FOR_RESERVE;
-        $rst = $this->CurlHandel($url, $this->getTemplate($toUser,$templateId,$backUrl,$userName,$cmName,$date,$remark));
-        return $rst;
-    }
-    /**
-     * 获取内容链接
-     * @param $wid
-     * @return string
-     */
-    private function getBodyLink($id)
-    {
-        if (is_numeric($id)) {
-
-            return  $this->baseUrl . "/we-chat/get-info-cont/id/" . $id;
-        } else {
-
-            return   $this->baseUrl;
-        }
-    }
-
-    private function getTemplate($toUser,$templateId,$backUrl,$userName,$cmName,$date,$remark)
-    {
-        $json='{
-                        "touser":"%s",
-                        "template_id":"%s",
-                        "url":"%s",
-                        "topcolor":"#FF0000",
-                        "data":{
-                            "userName": {
-                            "value":"%s",
-                            "color":"#173177"
-                            },
-                            "courseName":{
-                            "value":"%s",
-                            "color":"#173177"
-                            },
-                            "date":{
-                            "value":"%s",
-                            "color":"#173177"
-                            },
-                            "remark":{
-                            "value":"%s",
-                            "color":"#173177"
-                            }
-                        }
-                    }';
-        return sprintf($json,$toUser,$templateId,$backUrl,$userName,$cmName,$date,$remark);
-    }
 
 
     public function getUserInfo(WeChatUserInfo $weChatUserInfo)

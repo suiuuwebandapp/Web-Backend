@@ -14,6 +14,8 @@ use common\components\Common;
 use common\components\UrlUtil;
 use common\entity\WeChat;
 use common\entity\WeChatUserInfo;
+use frontend\services\UserOrderService;
+use frontend\services\WeChatOrderListService;
 use frontend\services\WeChatService;
 use yii\base\Exception;
 
@@ -245,5 +247,158 @@ class WechatInterface {
             }
         }
         return Code::statusDataReturn(Code::FAIL);
+    }
+
+    public function sendStatusChangeTemplateMessage($userSign,$type,$orderNumber)
+    {
+        $wechatSer = new WeChatService();
+        $wechatInfo = new WeChatUserInfo();
+        $wechatInfo->userSign=$userSign;
+        $userInfo = $wechatSer->getUserInfo($wechatInfo);
+        if(empty($userInfo))
+        {
+            return Code::statusDataReturn(Code::FAIL,"未知用户");
+        }
+        $toUser=$userInfo['openId'];
+        if(empty($toUser))
+        {
+            return Code::statusDataReturn(Code::FAIL,"未知用户");
+        }
+        $orderStatus="状态已变更";
+        if($type==1)
+        {
+            $first="亲爱的用户，您的定制已变更";
+            //定制
+            $backUrl=\Yii::$app->params['weChatUrl']."/we-chat-order-list/order-info?orderNumber=".$orderNumber;
+            $orderSer = new WeChatOrderListService();
+            $info = $orderSer->getOrderInfoByOrderNumber($orderNumber,null);
+            if(empty($info))
+            {
+                return Code::statusDataReturn(Code::FAIL,"未知订单");
+            }
+            $orderPrice=$info['wMoney'];
+            $productName=$info['wOrderSite']."定制";
+            $status=$info['wStatus'];
+            switch($status)
+            {
+                case 1:
+                    $orderStatus="待处理";
+                    break;
+                case 2:
+                    $orderStatus="已经处理待支付";
+                    break;
+                case 3:
+                    $orderStatus="已支付";
+                    break;
+                case 4:
+                    $orderStatus="游玩结束";
+                    break;
+                case 5:
+                    $orderStatus="申请退款中";
+                    break;
+                case 6:
+                    $orderStatus="退款结束";
+                    break;
+                case 7:
+                    $orderStatus="拒绝退款";
+                    break;
+            }
+        }else
+        {
+            if($userInfo['isPublisher'])
+            {
+                $first="亲爱的随友，您接的订单已改变";
+            }else
+            {
+                $first="亲爱的随游，您的订单已改变";
+            }
+            $backUrl=\Yii::$app->params['weChatUrl']."/wechat-user-center/my-order-info?id=".$orderNumber;
+            $orderSer = new UserOrderService();
+            $info = $orderSer->findOrderByOrderNumber($orderNumber);
+            if(empty($info))
+            {
+                return Code::statusDataReturn(Code::FAIL,"未知订单");
+            }
+            $orderPrice=$info->totalPrice;
+            $jsonInfo = $info->tripJsonInfo;
+            $infoArr=json_decode($jsonInfo,true);
+            $productName=$infoArr['info']['title'];
+            $status=$info->status;
+            switch($status)
+            {
+                case 0:
+                    $orderStatus="待支付";
+                    break;
+                case 1:
+                    $orderStatus="等待随友接单";
+                    break;
+                case 2:
+                    $orderStatus="随友已经接待";
+                    break;
+                case 3:
+                    $orderStatus="已取消";
+                    break;
+                case 4:
+                    $orderStatus="待退款";
+                    break;
+                case 5:
+                    $orderStatus="退款成功";
+                    break;
+                case 6:
+                    $orderStatus="游玩结束,待等待结算";
+                    break;
+                case 7:
+                    $orderStatus="结算完成，订单关闭";
+                    break;
+                case 8:
+                    $orderStatus="退款审核中";
+                    break;
+                case 9:
+                    $orderStatus="拒绝退款";
+                    break;
+                case 10:
+                    $orderStatus="随友取消订单";
+                    break;
+            }
+        }
+        $remark="如有任何问题请及时联系";
+        $url = WeChat::MESSAGE_SEN_TEMPLATE . $this->readToken();
+        $templateId=WeChat::TEMPLATE_ID_FOR_STATUS_CHANGE;
+        $data =  $this->getStatusChangeTemplate($toUser,$templateId,$backUrl,$first,$orderNumber,$orderPrice,$orderStatus,$productName,$remark);
+        $rst =  $this->curlHandel($url,$data);
+        return $rst;
+    }
+    private function getStatusChangeTemplate($toUser,$templateId,$backUrl,$first,$orderNumber,$orderPrice,$orderStatus,$productName,$remark)
+    {
+        $arr=array(
+            "touser"=>$toUser,
+            "template_id"=>$templateId,
+            "url"=>$backUrl,
+            "topcolor"=>"#FF0000",
+            "data"=>array(
+                "first"=>array("value"=>$first,"color"=>"#173177"),
+                "orderId"=>array("value"=>$orderNumber,"color"=>"#173177"),
+                "orderPrice"=>array("value"=>$orderPrice,"color"=>"#173177"),
+                "orderStatus"=>array("value"=>$orderStatus,"color"=>"#173177"),
+                "productName"=>array("value"=>$productName,"color"=>"#173177"),
+                "remark"=>array("value"=>$remark,"color"=>"#173177")
+            )
+        );
+        return json_encode($arr);
+    }
+    private function curlHandel($url,$data)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if (!empty($data)){
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return Code::statusDataReturn(Code::SUCCESS,$output);
     }
 }

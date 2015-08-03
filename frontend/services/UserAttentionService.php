@@ -15,6 +15,7 @@ use common\entity\UserBase;
 use common\entity\UserMessageRemind;
 use common\models\BaseDb;
 use common\models\RecommendListDb;
+use common\models\TravelTripDb;
 use common\models\UserAttentionDb;
 use common\models\UserMessageRemindDb;
 use frontend\models\UserBaseDb;
@@ -26,7 +27,6 @@ class UserAttentionService extends BaseDb
     private $AttentionDb;
     private $userBaseDb;
     private $recommendDb;
-    private $remindDb;
     public function __construct()
     {
 
@@ -78,7 +78,6 @@ class UserAttentionService extends BaseDb
             $conn = $this->getConnection();
             $this->AttentionDb = new UserAttentionDb($conn);
             $this->userBaseDb =new UserBaseDb($conn);
-            $this->remindDb =new UserMessageRemindDb($conn);
             $userInfo = $this->userBaseDb->findByUserSign($userSign);
             $rId =isset($userInfo['userId'])?$userInfo['userId']:0;
             $attention =new UserAttention();
@@ -89,7 +88,10 @@ class UserAttentionService extends BaseDb
             if(empty($result)||$result==false)
             {
                 $rstId = $this->AttentionDb ->addUserAttention($rId,UserAttention::TYPE_FOR_USER,$cUserSign);
-                $this->remindDb->addUserMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign,UserMessageRemind::R_TYPE_USER);
+                $userRemind = new UserMessageRemindService();
+                $content="###";
+                $url="###";
+                $userRemind->addMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign,UserMessageRemind::R_TYPE_USER,$content,$url);
                 return $rstId;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注无需继续关注'));
@@ -153,11 +155,8 @@ class UserAttentionService extends BaseDb
             $result = $this->AttentionDb->getAttentionResult($attention);
             if(empty($result)||$result==false)
             {
-                $totalize=new AllTotalize();
-                $totalize->tType=AllTotalize::TYPE_COLLECT_FOR_TRIP;
-                $totalize->rId=$travelId;
-                $allTotalizeSer=new AllTotalizeService();
-                $allTotalizeSer->updateTotalize($totalize,true);
+                $tripDb = new TravelTripDb($conn);
+                $tripDb->addCollectCount($travelId);
                return $this->AttentionDb ->addUserAttention($travelId,UserAttention::TYPE_COLLECT_FOR_TRAVEL,$userSign);
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经收藏无需继续收藏'));
@@ -250,15 +249,12 @@ class UserAttentionService extends BaseDb
                 {
                     throw new Exception('取消收藏关注操作异常',Code::FAIL);
                 }
-                $totalize=new AllTotalize();
                 switch($rest['relativeType'])
                 {
                     case UserAttention::TYPE_COLLECT_FOR_TRAVEL:
 
-                        $totalize->tType=AllTotalize::TYPE_COLLECT_FOR_TRIP;
-                        $totalize->rId=$rest['relativeId'];
-                        $allTotalizeSer=new AllTotalizeService();
-                        $allTotalizeSer->updateTotalize($totalize,false);
+                        $tripDb = new TravelTripDb($conn);
+                        $tripDb->removeCollectCount($rest['relativeId']);
                         break;
                     case UserAttention::TYPE_FOR_TRAVEL_PICTURE:
                         $tpSer = new TravelPictureService();
@@ -557,7 +553,6 @@ class UserAttentionService extends BaseDb
     {
         try {
             $conn = $this->getConnection();
-            $this->remindDb=new UserMessageRemindDb($conn);
             $data=$this->remindDb->getAttentionCircleArticleRemind($userSign,$page,$type);
             return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
@@ -568,19 +563,6 @@ class UserAttentionService extends BaseDb
     }
 
 
-    public function deleteUserMessageRemind($rid,$userSign)
-    {
-        try {
-            $conn = $this->getConnection();
-            $this->remindDb=new UserMessageRemindDb($conn);
-
-            return $this->remindDb->deleteUserMessageRemind($rid,$userSign);
-        } catch (Exception $e) {
-            throw new Exception('删除用户消息异常',Code::FAIL,$e);
-        } finally {
-            $this->closeLink();
-        }
-    }
 
     /**
      * 得到关注收藏结果
@@ -630,8 +612,10 @@ class UserAttentionService extends BaseDb
                     exit;
                 }
                 $rst = $this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
-                $remindDb = new UserMessageRemindDb($conn);
-                $remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER);
+                $userRemind = new UserMessageRemindService();
+                $content="###";
+                $url="###";
+                $userRemind->addMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
                 return $rst;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
@@ -662,9 +646,11 @@ class UserAttentionService extends BaseDb
                     echo json_encode(Code::statusDataReturn(Code::FAIL,'未知旅图'));
                     exit;
                 }
-                $remindDb = new UserMessageRemindDb($conn);
                 $rst =$this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
-                $remindDb->addUserMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['userSign'],UserMessageRemind::R_TYPE_TRAVEL_PICTURE);
+                $userRemind = new UserMessageRemindService();
+                $content="###";
+                $url="###";
+                $userRemind->addMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['userSign'],UserMessageRemind::R_TYPE_TRAVEL_PICTURE,$content,$url);
                 return $rst;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));

@@ -20,6 +20,7 @@ use common\entity\TravelTripPrice;
 use common\entity\TravelTripPublisher;
 use common\entity\TravelTripScenic;
 use common\entity\TravelTripService;
+use yii\base\Exception;
 use yii\db\mssql\PDO;
 
 class TravelTripDb extends ProxyDb{
@@ -842,6 +843,62 @@ class TravelTripDb extends ProxyDb{
         $command->execute();
     }
 
+
+    /**
+     * 添加评论次数
+     * @param $tripId
+     * @throws \yii\db\Exception
+     */
+    public function addCommentCount($tripId)
+    {
+        $sql = sprintf("
+            UPDATE travel_trip SET
+            commentCount=commentCount+1
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->execute();
+    }
+
+    /**
+     * 添加收藏次数
+     * @param $tripId
+     * @throws \yii\db\Exception
+     */
+    public function addCollectCount($tripId)
+    {
+        $sql = sprintf("
+            UPDATE travel_trip SET
+            collectCount=collectCount+1
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->execute();
+    }
+    /**
+     * 减少收藏次数
+     * @param $tripId
+     * @throws \yii\db\Exception
+     */
+    public function removeCollectCount($tripId)
+    {
+        try{
+        $sql = sprintf("
+            UPDATE travel_trip SET
+            collectCount=collectCount-1
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->execute();
+        }catch (Exception $e)
+        {}
+    }
     /**
      * 获取是否有申请正在等待审核
      * @param $tripId

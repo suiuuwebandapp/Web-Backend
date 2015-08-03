@@ -477,11 +477,12 @@ class TripService extends BaseDb{
 
     /**
      * 添加随游申请
+     * @param $userSign
      * @param TravelTripApply $travelTripApply
      * @throws Exception
      * @throws \Exception
      */
-    public function addTravelTripApply(TravelTripApply $travelTripApply)
+    public function addTravelTripApply($userSign,TravelTripApply $travelTripApply)
     {
         try{
             $conn = $this->getConnection();
@@ -492,7 +493,7 @@ class TripService extends BaseDb{
             $publisherUserInfo=$publisherDb->findUserBaseByPublisherId($tripInfo['createPublisherId']);
             //给创建人发送申请消息
             $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendUserJoinTripMessage($publisherUserInfo['userSign'],$tripInfo['tripId'],$tripInfo['title']);
+            $sysMessageUtil->sendUserJoinTripMessage($userSign,$publisherUserInfo['userSign'],$tripInfo['tripId'],$tripInfo['title']);
         }catch (Exception $e){
             throw $e;
         }finally {
@@ -550,11 +551,12 @@ class TripService extends BaseDb{
 
     /**
      * 删除随友
+     * @param $userSign
      * @param TravelTripPublisher $travelTripPublisher
      * @throws Exception
      * @throws \Exception
      */
-    public function deleteTravelTriPublisher(TravelTripPublisher $travelTripPublisher)
+    public function deleteTravelTriPublisher($userSign,TravelTripPublisher $travelTripPublisher)
     {
         if($travelTripPublisher==null)
         {
@@ -569,7 +571,7 @@ class TripService extends BaseDb{
             $tripInfo=$this->tripTravelDb->findTravelTripById($travelTripPublisher->tripId);
             //给被移除这发送消息提醒
             $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendRemoveUserForTripMessage($publisherUserInfo['userSign'],$tripInfo['title']);
+            $sysMessageUtil->sendRemoveUserForTripMessage($userSign,$publisherUserInfo['userSign'],$travelTripPublisher->tripId,$tripInfo['title']);
         }catch (Exception $e){
             throw $e;
         }finally {
@@ -653,13 +655,14 @@ class TripService extends BaseDb{
 
     /**
      * 通过随友申请加入随游
+     * @param $userSign
      * @param $applyId
      * @param $publisherId
      * @param $currentPublisherId
      * @throws Exception
      * @throws \Exception
      */
-    public function agreePublisherApply($applyId,$publisherId,$currentPublisherId)
+    public function agreePublisherApply($userSign,$applyId,$publisherId,$currentPublisherId)
     {
         if(empty($applyId))
         {
@@ -689,7 +692,7 @@ class TripService extends BaseDb{
             $this->commit($tran);
             //发送消息提醒
             $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendAgreePublisherApplyMessage($publisherUserInfo['userSign'],$travelInfo['tripId'],$travelInfo['title']);
+            $sysMessageUtil->sendAgreePublisherApplyMessage($userSign,$publisherUserInfo['userSign'],$travelInfo['tripId'],$travelInfo['title']);
         }catch (Exception $e){
             $this->rollback($tran);
             throw $e;
@@ -700,12 +703,13 @@ class TripService extends BaseDb{
 
     /**
      * 拒绝随友加入随游的申请
+     * @param $userSign
      * @param $applyId
      * @param $currentPublisherId
      * @throws Exception
      * @throws \Exception
      */
-    public function opposePublisherApply($applyId,$currentPublisherId)
+    public function opposePublisherApply($userSign,$applyId,$currentPublisherId)
     {
         if(empty($applyId))
         {
@@ -725,7 +729,7 @@ class TripService extends BaseDb{
             $publisherUserInfo=$publisherDb->findUserBaseByPublisherId($applyInfo['publisherId']);
             //给申请人发送消息提醒
             $sysMessageUtil=new SysMessageUtils();
-            $sysMessageUtil->sendOpposePublisherApplyMessage($publisherUserInfo['userSign'],$travelInfo['tripId'],$travelInfo['title']);
+            $sysMessageUtil->sendOpposePublisherApplyMessage($userSign,$publisherUserInfo['userSign'],$travelInfo['tripId'],$travelInfo['title']);
         }catch (Exception $e){
             throw $e;
         }finally{
