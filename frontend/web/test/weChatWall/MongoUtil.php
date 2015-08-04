@@ -10,7 +10,7 @@ class MongoUtil{
     private $connection;
     private $db;
     function __construct($my_db){
-        $this->connection = new MongoClient( "mongodb://ip" );
+        $this->connection = new MongoClient();// "mongodb://ip"
         $this->db = $this->connection->$my_db;
     }
 
@@ -30,6 +30,7 @@ class MongoUtil{
 
     function finone($colloction,$doc){
         $res = $this->getColloction($colloction)->findOne($doc);
+        var_dump( $res );
         return $res;
     }
 
