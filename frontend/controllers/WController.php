@@ -44,12 +44,13 @@ class WController extends SController {
             $enDigit = \Yii::$app->params['encryptDigit'];
 
             if(!isset($currentUser)&&empty($cookieSign)) {
-                return $this->redirect(['/we-chat/login']);
+                return false;
             }else if(isset($currentUser)){
                 if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
-                    return $this->redirect(['/we-chat/login']);
+                    return false;
                 }
                 $this->userObj=$currentUser;
+                return true;
             }else if(!empty($cookieSign)){
                 $aes=new Aes();
                 $userSign=$aes->decrypt($cookieSign,$enPassword,$enDigit);
@@ -58,8 +59,9 @@ class WController extends SController {
                 if(isset($currentUser)){
                     $this->userObj=$currentUser;
                     \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
+                    return true;
                 }else{
-                    return $this->redirect(['/we-chat/login']);
+                    return false;
                 }
             }
         }else {
@@ -92,6 +94,7 @@ class WController extends SController {
                     $this->userObj->userSign='';
                 }
             }
+            return true;
         }
 
 

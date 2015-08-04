@@ -36,20 +36,26 @@ class WechatUserCenterController extends WController {
 
     public function actionIndex()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $userSign=$this->userObj->userSign;
         $publisherService=new PublisherService();
         $createPublisherInfo = $publisherService->findUserPublisherByUserSign($userSign);
         if(isset($createPublisherInfo->userPublisherId)){
-            $this->redirect(['/wechat-user-center/my-trip']);
+             $this->redirect(['/wechat-user-center/my-trip']);
         }else{
-            $this->redirect(['/wechat-user-center/my-order']);
+             $this->redirect(['/wechat-user-center/my-order']);
         }
     }
 
     public function actionMyTrip()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $userSign=$this->userObj->userSign;
         $publisherService=new PublisherService();
         $createPublisherInfo = $publisherService->findUserPublisherByUserSign($userSign);
@@ -75,8 +81,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionMyOrder()
     {
-        $this->loginValid();
-
+        $login = $this->loginValid();
+        if(!$login){
+        return $this->redirect(['/we-chat/login']);
+        }
         try{
             $userSign=$this->userObj->userSign;
             $unList=$this->userOrderService->getUnFinishOrderList($userSign);
@@ -97,7 +105,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionTripOrder()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $userSign=$this->userObj->userSign;
         $userBaseService = new UserBaseService();
         $userPublisherObj=$userBaseService->findUserPublisherByUserSign($userSign);
@@ -114,7 +125,10 @@ class WechatUserCenterController extends WController {
     {
         try{
 
-            $this->loginValid();
+            $login = $this->loginValid();
+            if(!$login){
+                return $this->redirect(['/we-chat/login']);
+            }
             $userSign=$this->userObj->userSign;
             $userBaseService = new UserBaseService();
             $userPublisherObj=$userBaseService->findUserPublisherByUserSign($userSign);
@@ -158,14 +172,17 @@ class WechatUserCenterController extends WController {
             return $this->renderPartial('tripOrderInfo',['info'=>$info,'userInfo'=>$userInfo]);
         }catch (Exception $e){
             LogUtils::log($e);
-            return $this->redirect('/we-chat/error?str="系统异常"');
+            return $this->redirect('/we-chat/error?str=系统异常');
         }
     }
 
     public function actionMyOrderInfo()
     {
         try{
-            $this->loginValid();
+            $login = $this->loginValid();
+            if(!$login){
+                return $this->redirect(['/we-chat/login']);
+            }
             $userSign=$this->userObj->userSign;
             $orderNumber=\Yii::$app->request->get('id');
 
@@ -202,7 +219,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionPublisherConfirmOrder()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
         try{
             $userSign=$this->userObj->userSign;
@@ -232,7 +252,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionPublisherIgnoreOrder()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
         $userSign=$this->userObj->userSign;
         $userBaseService = new UserBaseService();
@@ -264,7 +287,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionCancelOrder()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
         if(empty($orderId)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
@@ -297,7 +323,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionRefundOrder()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
 
         if(empty($orderId)){
@@ -329,7 +358,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionRefundOrderByMessage()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
         $message=trim(\Yii::$app->request->post("message", ""));
 
@@ -360,7 +392,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionDeleteOrder()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
 
         if(empty($orderId)){
@@ -382,7 +417,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionPublisherCancelOrder()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
         $message=trim(\Yii::$app->request->post("message", ""));
         $publisherId=$this->userPublisherObj->userPublisherId;
@@ -412,7 +450,10 @@ class WechatUserCenterController extends WController {
      */
     public function actionUserConfirmPlay()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
         if(empty($orderId)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));

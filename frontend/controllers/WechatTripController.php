@@ -242,7 +242,10 @@ class WechatTripController extends WController {
 
     public function actionAddOrderView()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $userSign=$this->userObj->userSign;
         $userBaseService = new UserBaseService();
         $userPublisherObj=$userBaseService->findUserPublisherByUserSign($userSign);

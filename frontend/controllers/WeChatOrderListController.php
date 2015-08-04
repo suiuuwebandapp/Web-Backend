@@ -162,7 +162,10 @@ class WeChatOrderListController extends WController {
 
     public function actionOrderManage()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $userSign=$this->userObj->userSign;
         if(empty($userSign))
         {
@@ -179,7 +182,10 @@ class WeChatOrderListController extends WController {
 
     public function actionOrderInfo()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $userSign=$this->userObj->userSign;
         $orderNumber=Yii::$app->request->get("orderNumber");
         $data = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);

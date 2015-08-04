@@ -287,7 +287,10 @@ class WeChatController extends WController
     public function actionWxpayJs()
     {
         try{
-            $this->loginValid();
+            $login = $this->loginValid();
+            if(!$login){
+                return $this->redirect(['/we-chat/login']);
+            }
             $userSign=$this->userObj->userSign;
             $orderNumber=Yii::$app->request->get('n');
             $type=Yii::$app->request->get('t');//1支付类型为定制
@@ -384,7 +387,10 @@ class WeChatController extends WController
 
     public function actionAliPayUrl()
     {
-        $this->loginValid();
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $userSign=$this->userObj->userSign;
         $orderNumber=Yii::$app->request->get('o');
         $type=Yii::$app->request->get('t');//1支付类型为定制
