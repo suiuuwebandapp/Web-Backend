@@ -17,22 +17,25 @@
             <a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/footer-pic.png" width="174" height="122"></a>
         </div>
         <dl class="fl middle">
-            <dt>公司信息</dt>
+            <dt>关于我们</dt>
             <dd><a href="/static?about-aboutSuiuu">关于随游</a></dd>
-            <dd><a href="/static?about-services">服务协议</a></dd>
             <dd><a href="/static?about-concatUs">联系我们</a></dd>
-            <dd><a href="http://www.jobtong.com/e/15004">加入我们</a></dd>
+            <dd><a href="/static?about-joinUs">加入随游</a></dd>
         </dl>
         <dl class="fl ">
             <dt>帮助中心</dt>
+            <dd><a href="/static?help-newUser">新手上路</a></dd>
+            <dd><a href="/static?help-userFlow">游客指南</a></dd>
+            <dd><a href="/static?help-publisherFlow">随友指南</a></dd>
+            <dd><a href="/static?help-question">常见问题</a></dd>
             <dd><a href="/static?help-feedback">反馈</a></dd>
-            <dd><a href="/static?help-useFlow">使用流程</a></dd>
-            <dd><a href="/static?help-refundPolicy">退款政策</a></dd>
+
         </dl>
         <dl class="fl ">
             <dt>声明</dt>
-            <dd><a href="/static?statement-copyright">版权声明</a></dd>
-            <dd><a href="/static?statement-disclaimer">免责声明</a></dd>
+            <dd><a href="/static?agreement-service">版权声明</a></dd>
+            <dd><a href="/static?agreement-copyright">版权声明</a></dd>
+            <dd><a href="/static?agreement-disclaimer">免责声明</a></dd>
         </dl>
         <dl class="fl ">
             <dt>随游移动端</dt>
@@ -59,7 +62,7 @@
 
 <!-----------邮件弹层--------------->
 <div class="mask" id="myMask"></div>
-<div id="showMessageDiv" class="smessages screens" style="display: none">
+<div id="showMessageDiv" class="smessages screens" style="display: none;z-index: 100000;">
     <form id="sendMessageForm">
         <input id="show_message_receiverId" type="hidden"/>
         <div class="top clearfix">
@@ -200,7 +203,7 @@
 <?php  } ?>
 
 <script type="text/javascript">
-
+    var isLogin=<?=empty($this->context->userObj)?0:1;?>
     $(document).ready(function(){
         $(".activityBanner").bind("click",function(){
             $(".sydetailPop").show();

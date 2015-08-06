@@ -300,10 +300,10 @@ class ViewTripController extends UnCController{
             {
 
                 $count=intval($totalCount);
-                $str=Common::pageHtml($cPage,$numb,$count);
+                //$str=$count;//Common::pageHtml($cPage,$numb,$count);
             }
             //
-            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$str));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$rst['msg']));
         }catch (Exception $e){
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));

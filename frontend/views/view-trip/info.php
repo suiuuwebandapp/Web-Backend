@@ -25,11 +25,13 @@
     .timepicki-input{
         width: 45px !important;
         padding-left: 0px !important;
+        margin-left: 7px !important;
     }
 
     .timepicker_wrap{
         top: 40px !important;
         border-radius:0 !important;
+        width: 240px;
     }
     .prev, .next{
         border-radius: 0 !important;
@@ -77,10 +79,15 @@
     .sydetailBanner .next:hover{
         background-color:transparent;
     }
+    .sydetail .web-right.fixed{
+        z-index: 99;
+    }
+    .sydetailNav.fixed{
+        z-index: 99;
+    }
 </style>
 
 <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
-<input type="hidden" id="tripId" value="<?=$travelInfo['info']['tripId'];?>" />
 <div class="sydetailBanner web-banner">
     <div class="banner">
         <ul class="clearfix">
@@ -230,14 +237,16 @@
                 <?php } ?>
             <?php } ?>
             <div class="web-con">
-                <p class="title" id="pinglun"><img src="/assets/images/pinglun2.png" width="25" height="28" style="display: inline-block;">&nbsp;有<span>12</span>条评论</p>
+                <p class="title" id="pinglunCount">
+                    <img src="/assets/images/pinglun2.png" width="25" height="28" style="display: inline-block;">
+                    &nbsp;有<span><?=$travelInfo['info']['commentCount'];?></span> 条评论
+                </p>
                 <div class="zhuanlan-web">
                     <ul id="tanchu_pl">
                     </ul>
-                    <ol id="spage">
-                    </ol>
+                   <!-- <ol id="spage"> </ol>-->
                 </div>
-                <a href="###" class="zl-btn colGreen more">更多评论</a>
+                <a href="javascript:;" class="zl-btn colGreen more" id="showMoreComment">更多评论</a>
 
                 <div class="zhuanlan-text clearfix">
                     <textarea id="pinglun" placeholder="说点什么吧"></textarea>
@@ -265,7 +274,7 @@
                                 <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                                 <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                                 <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
-                                <span><?=$trip['tripCount']?>人去过</span><span>20条评论</span>
+                                <span><?=$trip['tripCount']?>人去过</span><span><?=$trip['commentCount']?>条评论</span>
                             </p>
                         </div>
                     <?php } ?>
@@ -274,36 +283,40 @@
         </div>
     </div>
     <div class="web-right">
-        <div class="kuang clearfix">
-            <h3 class="title bgGreen clearfix"><span class="colOrange fl">￥<?=$travelInfo['info']['basePrice']?></span>
-                <span class="colWit fr"><?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?></span></h3>
-            <ul class="ul01 clearfix">
-                <li class="tit"><span>出发日期</span><span>起始时间</span><span class="last">&nbsp;人数</span></li>
-                <li class="tit tit02"><span><input type="text"></span><span><input type="text"></span>
-                    <span class="last">
-                     <select>
-                        <?php for($i=1;$i<=$travelInfo['info']['maxUserCount'];$i++){echo '<option value="'.$i.'">'.$i.'</option>';} ?>
-                     </select>
-                    </span>
-                </li>
-            </ul>
-            <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
-                <p>附加服务</p>
-                <ul class="ul02 clearfix" id="serviceLi">
-                    <li>
-                        <span><?=$service['title']?></span><span><b>￥<?=intval($service['money'])?></b></span>
-                        <span class="last"><?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'每人':'每次' ?>
-                            <input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>" serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>" >
-                            <label for="radio<?=$service['serviceId']?>" ><?=$service['title']?></label>
+        <form id="orderForm" method="post" action="/user-order/add-order">
+            <input type="hidden" name="tripId" id="tripId" value="<?=$travelInfo['info']['tripId'];?>" />
+            <div class="kuang clearfix">
+                <h3 class="title bgGreen clearfix"><span class="colOrange fl">￥<?=$travelInfo['info']['basePrice']?></span>
+                    <span class="colWit fr"><?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?></span></h3>
+                <ul class="ul01 clearfix" style="overflow:inherit">
+                    <li class="tit"><span>出发日期</span><span>起始时间</span><span class="last">&nbsp;人数</span></li>
+                    <li class="tit tit02"><span><input type="text" name="beginDate" id="beginTime"></span><span><input type="text" name="startTime" id="startTime"></span>
+                        <span class="last">
+                         <select id="peopleCount" name="peopleCount">
+                            <?php for($i=1;$i<=$travelInfo['info']['maxUserCount'];$i++){echo '<option value="'.$i.'">'.$i.'</option>';} ?>
+                         </select>
                         </span>
                     </li>
                 </ul>
-            <?php } ?>
-            <p class="colOrange money">￥<?=intval($travelInfo['info']['basePrice']);?></p>
-            <input id="toBuy" type="button" value="立即预定" class="btn web-btn6 bgOrange" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-            <input id="toApply" type="button" value="申请加入" class="btn web-btn5 bgGreen" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
-            <a href="###" class="colGreen fr">如何预订？</a>
-        </div>
+                <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
+                    <p>附加服务</p>
+                    <ul class="ul02 clearfix" id="serviceLi">
+                        <li>
+                            <span><?=$service['title']?></span><span><b>￥<?=intval($service['money'])?></b></span>
+                            <span class="last">
+                                <?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'每人':'每次' ?>
+                                <input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>" serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>" >
+                                <label for="radio<?=$service['serviceId']?>" ></label>
+                            </span>
+                        </li>
+                    </ul>
+                <?php } ?>
+                <p class="colOrange money" id="allPrice">￥<?=intval($travelInfo['info']['basePrice']);?></p>
+                <input id="toApply" type="button" value="申请加入" class="btn web-btn5 bgGreen" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
+                <input id="addOrder" type="button" value="立即预定" class="btn web-btn6 bgOrange" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
+                <a href="###" class="colGreen fr">如何预订？</a>
+            </div>
+        </form>
 
         <div class="kuang clearfix">
             <div class="user bgGreen">
@@ -311,7 +324,7 @@
                     <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
                     <span><?=$createUserInfo->nickname;?></span>
                 </div>
-                <p><?=$createUserInfo->intro;?></p>
+                <p style="max-width: 215px"><?=$createUserInfo->intro;?></p>
                 <a href="javascript:;" onclick="Main.showSendMessage('<?=$createUserInfo->userSign;?>')" class="icon"></a>
             </div>
             <div class="text clearfix">
@@ -353,7 +366,37 @@
     var userId='<?= $this->context->userObj!=null?$this->context->userObj->userSign:''?>';
     var isOwner='<?=$isOwner;?>';
     $(document).ready(function(){
+        $(document).scroll(function () {
+            var scrollTop = $(document).scrollTop();
+            resetDatePicker();
+            var documentHeight=$(document).height();//浏览器时下窗口可视区域高度
+            var fixHeight=$(".web-right").offset().top+$(".web-right").height();
+            var footHeight=$("#footer-out").height();
+
+            var maxHeight=documentHeight-footHeight;
+            //console.info($(".web-right").offset().top+"-"+fixHeight+"-"+maxHeight);
+            if(scrollTop>400){
+                $('.sydetail .web-right').addClass('fixed')
+            }else{
+                $('.sydetail .web-right').removeClass('fixed')
+            }
+
+            if(fixHeight>maxHeight){
+                $(".sydetail .web-right").hide();
+                $(".datetimepicker").hide();
+            }else{
+                $(".sydetail .web-right").show();
+            }
+
+
+            if(scrollTop+fixHeight>documentHeight-maxHeight){
+                $(".sylx-xiangxi").css("position","absolute");
+            }else{
+                $(".sylx-xiangxi").css("position","fixed");
+            }
+        });
         $('#startTime').timepicki({
+            step_size_minutes:15,
             format_output: function(tim, mini, meri) {
                 return tim + ":" + mini + " " + meri;
             }
@@ -369,7 +412,7 @@
             submitCollection();
         });
         getComment(1);
-        $("#peopleCount").bind("blur",function(){
+        $("#peopleCount").bind("change",function(){
             showPrice();
         });
         $("#serviceLi input[type='checkbox']").bind("click",function(){
@@ -391,6 +434,11 @@
                 return;
             }
             window.location.href='/trip/to-apply-trip?trip='+$("#tripId").val();
+        });
+
+        $("#showMoreComment").bind("click",function(){
+            var showPage=$(this).attr("showPage");
+            getComment(showPage);
         });
 
         $("#toBuy").bind("click",function(){
@@ -519,22 +567,41 @@
         $('#beginTime').unbind("focus");
 
         $("#beginTime").bind("focus",function(){
-            var top=$("#beginTime").offset().top;
-            var left=$("#beginTime").offset().left;
-            $(".datetimepicker").css({
-                'top':top+40,
-                'left':left,
-                'position':'absolute',
-                'background-color':'white',
-                'border':'1px solid gray',
-                'font-size':'14px'
-            });
+            resetDatePicker();
             $(".datetimepicker").show();
         });
 
         $(".table-condensed tbody").bind("click",function(){
             $(".datetimepicker").hide();
         });
+    }
+
+    function resetDatePicker(){
+        var top=$("#beginTime").offset().top;
+        var left=$("#beginTime").offset().left;
+
+        if($(".web-right").hasClass("fixed")){
+            $(".datetimepicker").css({
+                'top':'120px',
+                'left':'50%',
+                'margin-left':'283px',
+                'position':'fixed',
+                'background-color':'white',
+                'border':'1px solid gray',
+                'font-size':'14px'
+            });
+        }else{
+            $(".datetimepicker").css({
+                'top':top+40,
+                'left':left,
+                'margin-left':'0px',
+                'position':'absolute',
+                'background-color':'white',
+                'border':'1px solid gray',
+                'font-size':'14px'
+            });
+        }
+
     }
     //显示价格
     function showPrice()
@@ -698,22 +765,19 @@
                 var obj=eval('('+data+')');
                 if(obj.status==1)
                 {
-                    $('#tanchu_pl').html('');
+                    //$('#tanchu_pl').html('');
                     var str='';
                     for(var i=0;i<obj.data.length;i++)
                     {
                         var r="@";
-                        if(obj.data[i].rTitle==null)
-                        {
+                        if(obj.data[i].rTitle==null){
                             r='';
-                        }else
-                        {
+                        }else{
                             r+=obj.data[i].rTitle;
                         }
                         var c='';
                         var status=obj.data[i].status;
-                        if(status==1)
-                        {
+                        if(status==1) {
                             c='active'
                         }
                         str+='<li>';
@@ -732,14 +796,19 @@
                         str+="</div></li>";
                     }
                     $('#tanchu_pl').append(str);
+                    if(obj.message.currentPage<(obj.message.totalCount/obj.message.pageSize)){
+                        $("#showMoreComment").show();
+                        $("#showMoreComment").attr("showPage",parseInt(obj.message.currentPage)+1);
+                    }else{
+                        $("#showMoreComment").hide();
+                    }
+                    //$('#spage').html('');
+                    //$('#spage').append(obj.message);
 
-                    $('#spage').html('');
-                    $('#spage').append(obj.message);
-
-                    $("#spage li").click(function() {
-                        var page=$(this).find('a').attr('page');
-                        getComment(page);
-                    });
+                    //$("#spage li").click(function() {
+                    //    var page=$(this).find('a').attr('page');
+                    //    getComment(page);
+                    //});
 
                 }else
                 {
@@ -762,21 +831,11 @@
     {
         var s=$('#pinglun').val();
         var i =s.indexOf('@');
-        if(i==-1){
-            var content= s;
-            var t='';
-        }else
-        {
-
+        var content='';
+        var t='';
+        if(i==-1){ content= s; t=''; }else{
             var j=s.indexOf(':');
-            if(j==-1){
-                var content= s;
-                var t='';
-            }else
-            {
-            var t=s.slice(0,j);
-            var content= s.slice(j);
-            }
+            if(j==-1){ content= s; t=''; }else{ t=s.slice(0,j); content= s.slice(j); }
         }
 
         $.ajax({

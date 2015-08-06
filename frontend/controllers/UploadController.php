@@ -13,13 +13,15 @@ namespace frontend\controllers;
 use common\components\Code;
 use common\components\LogUtils;
 use common\components\OssUpload;
+use common\entity\UserPhoto;
 use common\entity\UserPublisher;
+use common\models\BaseDb;
 use frontend\services\UploadService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\web\Controller;
 
-class UploadController extends Controller
+class UploadController extends UnCController
 {
 
     public $enableCsrfValidation = false;
@@ -62,6 +64,16 @@ class UploadController extends Controller
         'jpg', 'png', 'jpeg'
     ];
 
+
+    private $maxUserPhotoSize=2048000;
+    private $userPhotoTypes = [
+        'jpg', 'png', 'jpeg'
+    ];
+
+    /**
+     * ./带代表根目录
+     * @var string
+     */
     private $localDir = './uploads/image/';
 
     /**
@@ -71,13 +83,12 @@ class UploadController extends Controller
     public function actionUploadCardImg()
     {
         if (!array_key_exists('Filedata', $_FILES)) {
-            echo json_encode(['status']);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         } else {
             $result = $this->uploadService->uploadOssFile($_FILES['Filedata'], $this->maxHeadImgSize, $this->headImgTypes, OssUpload::OSS_SUIUU_CARD_DIR);
             return json_encode($result);
         }
     }
-
 
     /**
      * 上传随游图片
@@ -86,15 +97,12 @@ class UploadController extends Controller
     public function actionUploadTripImg()
     {
         if (!array_key_exists('Filedata', $_FILES)) {
-            echo json_encode(['status']);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         } else {
             $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxTripImgSize, $this->tripImgTypes, $this->localDir);
             return json_encode($result);
         }
     }
-
-
-
 
     /**
      * 更新随友证件
@@ -103,26 +111,15 @@ class UploadController extends Controller
     public function actionUploadCardImgByUser()
     {
         if (!array_key_exists('Filedata', $_FILES)) {
-            echo json_encode(['status']);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         } else {
             $result = $this->uploadService->uploadOssFile($_FILES['Filedata'], $this->maxHeadImgSize, $this->headImgTypes, OssUpload::OSS_SUIUU_CARD_DIR);
             if ($result['status'] == Code::SUCCESS) {
-                $currentUser = \Yii::$app->session->get(Code::USER_LOGIN_SESSION);
-
                 try {
-                    if ($currentUser != null) {
+                    if ( $this->userObj!= null) {
                         $userBaseService = new UserBaseService();
-                        $userPublisher = $userBaseService->findUserPublisherByUserSign($currentUser->userSign);
-                        if ($userPublisher == null) {
-                            $userPublisher = new UserPublisher();
-                            $userPublisher->userId = $currentUser->userSign;
-                            $userPublisher->idCardImg = $result['data'];
-                            $userBaseService->addUserPublisher($userPublisher);
-                        } else {
-                            $userPublisher->idCardImg = $result['data'];
-                            $userBaseService->updateUserPublisher($userPublisher);
-                        }
-
+                        $userBaseService->saveUserCard($this->userObj->userSign,$result['data']);
+                        $result = Code::statusDataReturn(Code::SUCCESS);
                     } else {
                         $result = Code::statusDataReturn(Code::FAIL);
                     }
@@ -135,7 +132,6 @@ class UploadController extends Controller
         }
     }
 
-
     /**
      * 上传用户头像（上传到本地）
      * @return string
@@ -143,13 +139,12 @@ class UploadController extends Controller
     public function actionUploadHeadImg()
     {
         if (!array_key_exists('Filedata', $_FILES)) {
-            return json_encode(['status']);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         } else {
             $result = $this->uploadService->uploadLocalImg($_FILES['Filedata'], $this->maxCardImgSize, $this->cardImgTypes, $this->localDir);
             return json_encode($result);
         }
     }
-
 
     /**
      * 上传随游标题图像 压缩
@@ -158,7 +153,7 @@ class UploadController extends Controller
     public function actionUploadTripTitleImg()
     {
         if (!array_key_exists('Filedata', $_FILES)) {
-            return json_encode(['status']);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         } else {
             $img_info = getimagesize($_FILES['Filedata']['tmp_name']);
             $w=$img_info[0];
@@ -189,9 +184,6 @@ class UploadController extends Controller
 
         }
     }
-
-
-
 
     /**
      * 截取随游并更新
@@ -303,6 +295,34 @@ class UploadController extends Controller
         } catch (Exception $e) {
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL, $e));
+        }
+    }
+
+    /**
+     * 上传用户相册
+     */
+    public function actionUploadUserPhoto()
+    {
+        if (!array_key_exists('Filedata', $_FILES)) {
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        } else {
+            $result = $this->uploadService->uploadOssFile($_FILES['Filedata'], $this->maxUserPhotoSize, $this->userPhotoTypes, OssUpload::OSS_SUIUU_USER_PHOTO);
+            if($result['status']==Code::SUCCESS){
+                $userPhoto=new UserPhoto();
+                $userPhoto->url=$result['data'];
+                $userPhoto->userId=$this->userObj->userSign;
+                $userPhoto->createTime=BaseDb::DB_PARAM_NOW;
+
+                try{
+                    $userBaseService=new UserBaseService();
+                    $userPhoto=$userBaseService->addUserPhoto($userPhoto);
+                    return json_encode(Code::statusDataReturn(Code::SUCCESS,$userPhoto));
+                }catch (Exception $e){
+                    throw $e;
+                    return json_encode(Code::statusDataReturn(Code::FAIL));
+                }
+            }
+            return json_encode($result);
         }
     }
 

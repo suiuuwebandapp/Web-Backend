@@ -132,6 +132,22 @@
     });
 
     $(document).ready(function(){
+
+        $(document).scroll(function () {
+            var documentHeight=$(document).height();//浏览器时下窗口可视区域高度
+            var top=parseInt($(".sylx-xiangxi").css("top").replace("px",''));
+            var fixHeight=$(".sylx-xiangxi").height()+top;
+            var myTop=$(".syBanner").offset().top;
+            var maxHeight=documentHeight-myTop;
+            var scrollTop=$(document).scrollTop();
+            if(scrollTop+fixHeight>documentHeight-maxHeight){
+                $(".sylx-xiangxi").css("position","absolute");
+            }else{
+                $(".sylx-xiangxi").css("position","fixed");
+            }
+        });
+
+
         $("img").lazyload({
             placeholder : "/assets/images/loading.gif", //加载图片前的占位图片
             effect      : "fadeIn"//, //加载图片使用的效果(淡入)

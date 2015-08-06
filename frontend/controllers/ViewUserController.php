@@ -10,6 +10,7 @@
 namespace frontend\controllers;
 
 
+use common\components\Code;
 use common\components\LogUtils;
 use frontend\components\Page;
 use frontend\services\TravelTripCommentService;
@@ -38,12 +39,21 @@ class ViewUserController extends UnCController{
                 $tripService=new TripService();
                 $tripList=$tripService->getMyTripList($userPublisher->userPublisherId);
 
-                $page=new Page();
-                $page->initPage(1,10);
-                $travelSer =new TravelTripCommentService();
-                $recommendList = $travelSer->getCommentTripList($page,$userSign);
 
             }
+
+            $page=new Page();
+            $page->initPage(1,2);
+            $travelSer =new TravelTripCommentService();
+            $commentList = $travelSer->getCommentTripList($page,$userSign);
+
+
+            //获取用户证件信息
+            $userCard=$userBaseService->findUserCardByUserId($userSign);
+            //获取用户资历信息
+            $userAptitude=$userBaseService->findUserAptitudeByUserId($userSign);
+
+
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect(['/result', 'result' => '获取用户信息失败']);
@@ -51,8 +61,32 @@ class ViewUserController extends UnCController{
         return $this->render("info",[
             'userInfo'=>$userInfo,
             'tripList'=>$tripList,
-            'recommendList'=>$recommendList
+            'commentList'=>$commentList,
+            'userCard'=>$userCard,
+            'userAptitude'=>$userAptitude
         ]);
+    }
+
+    /**
+     * 获取用户评论详情
+     * @return string
+     * @throws Exception
+     */
+    public function actionGetUserCommentList()
+    {
+        $currentPage=\Yii::$app->request->post('p',1);
+        $userSign=\Yii::$app->request->post('u');
+        $page=new Page();
+        $page->initPage($currentPage,2);
+        $travelSer =new TravelTripCommentService();
+        try{
+            $commentList = $travelSer->getCommentTripList($page,$userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$commentList));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
     }
 
 }

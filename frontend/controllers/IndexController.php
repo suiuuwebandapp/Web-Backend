@@ -97,7 +97,7 @@ class IndexController extends UnCController
 
                 $code = Yii::$app->request->post('code');//用户名
                 $codeSession = yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
-                if($code!=$codeSession||empty($codeSession)){
+                if(strtolower($code)!=strtolower($codeSession)||empty($codeSession)){
                     return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误'));
                 }
 
@@ -217,7 +217,7 @@ class IndexController extends UnCController
         $confirmPassword = Yii::$app->request->post('confirmPassword');
         $code = Yii::$app->request->post('code');//用户名
         $codeSession = yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
-        if($code!=$codeSession||empty($codeSession)){
+        if(strtolower($code)!=strtolower($codeSession)||empty($codeSession)){
             return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误'));
         }
         $error='';
@@ -738,7 +738,7 @@ class IndexController extends UnCController
             $rst=$this->userBaseService->findBaseAllBySign($userBase->userSign);
             if(empty($rst)||$rst==false)
             {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的用户"));
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERRORi, "未知的用户"));
             }
             $rst->phone=$phone;
             $this->userBaseService->updateUserBase($rst);
@@ -792,8 +792,15 @@ class IndexController extends UnCController
     public function actionSendValidateMail()
     {
         $mail=trim(\Yii::$app->request->post("mail", ""));
+        $val=Validate::validateEmail($mail);
+        if(!empty($val)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $val));
+        }
         if(empty($mail)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的邮箱"));
+        }
+        if($this->userObj!=null&&$this->userObj->email==$mail){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '修改邮箱不能和旧邮箱相同'));
         }
         $count = Yii::$app->redis->get(Code::USER_SEND_COUNT_PREFIX .$mail );
         if ($count > Code::MAX_SEND_COUNT) {

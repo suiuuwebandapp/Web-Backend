@@ -45,6 +45,10 @@ class UserFeedbackController extends AController
     public function actionWebCreateFeedback()
     {
         $this->loginValid(false,false);
+        $username=Yii::$app->request->post("username");
+        $phone=Yii::$app->request->post("phone");
+        $email=Yii::$app->request->post("email");
+
         try{
             $feedback = new UserFeedback();
             $feedback->content=Yii::$app->request->post('content');
@@ -52,6 +56,8 @@ class UserFeedbackController extends AController
             {return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'不能反馈空信息'));}
 
             $feedback->userSign=isset($this->userObj->userSign)?$this->userObj->userSign:'';
+            $feedback->fName=$username;
+            $feedback->contact=$phone.",".$email;
             $feedback->imgList=Yii::$app->request->post('imgList');
             $feedback->fLevel=Yii::$app->request->post('level');
             $feedback->fType=UserFeedback::TYPE_WEB;

@@ -25,4 +25,10 @@ class SiteUrl {
         return $baseUrl."/view-trip/list?s=".$keywords;
     }
 
+    public static function getViewUserUrl($userId)
+    {
+        $baseUrl=\Yii::$app->params['base_dir'];
+        return $baseUrl."/view-user/info?u=".$userId;
+    }
+
 }

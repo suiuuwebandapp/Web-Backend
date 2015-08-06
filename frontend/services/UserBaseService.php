@@ -2,8 +2,12 @@
 namespace frontend\services;
 
 use common\components\Code;
+use common\components\LogUtils;
 use common\components\SysMessageUtils;
 use common\entity\UserAccess;
+use common\entity\UserAptitude;
+use common\entity\UserCard;
+use common\entity\UserPhoto;
 use common\entity\UserPublisher;
 use common\models\BaseDb;
 use common\entity\UserBase;
@@ -42,33 +46,33 @@ class UserBaseService extends BaseDb
      * @return array|bool|UserBase
      * @throws Exception
      */
-    public function addUser(UserBase $userBase,UserAccess $userAccess=null,UserPublisher $userPublisher=null)
+    public function addUser(UserBase $userBase, UserAccess $userAccess = null, UserPublisher $userPublisher = null)
     {
         $conn = $this->getConnection();
-        $tran=$conn->beginTransaction();
+        $tran = $conn->beginTransaction();
 
         try {
 
             $this->userBaseDb = new UserBaseDb($conn);
             //验证手机或邮箱格式是否正确
-            $userInfo=null;
+            $userInfo = null;
             //验证手机或者邮箱是否存在
-            if(!empty($userBase->phone)&&!empty($userBase->email)){
-                $userInfo=$this->userBaseDb->findByEmail($userBase->email);
-                if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
-                $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
-                if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
-            }else  if(!empty($userBase->email)){
-                $userInfo=$this->userBaseDb->findByEmail($userBase->email);
-                if($userInfo!=false) throw new Exception(Code::USER_EMAIL_EXIST);
+            if (!empty($userBase->phone) && !empty($userBase->email)) {
+                $userInfo = $this->userBaseDb->findByEmail($userBase->email);
+                if ($userInfo != false) throw new Exception(Code::USER_EMAIL_EXIST);
+                $userInfo = $this->userBaseDb->findByPhone($userBase->phone);
+                if ($userInfo != false) throw new Exception(Code::USER_PHONE_EXIST);
+            } else if (!empty($userBase->email)) {
+                $userInfo = $this->userBaseDb->findByEmail($userBase->email);
+                if ($userInfo != false) throw new Exception(Code::USER_EMAIL_EXIST);
 
-            }else if(!empty($userBase->phone)){
-                $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
-                if($userInfo!=false) throw new Exception(Code::USER_PHONE_EXIST);
+            } else if (!empty($userBase->phone)) {
+                $userInfo = $this->userBaseDb->findByPhone($userBase->phone);
+                if ($userInfo != false) throw new Exception(Code::USER_PHONE_EXIST);
             }
             //对用户密码进行加密
             $userBase->password = $this->encryptPassword($userBase->password);
-            $userBase=$this->initRegisterUserInfo($userBase,$userAccess,$userPublisher);
+            $userBase = $this->initRegisterUserInfo($userBase, $userAccess, $userPublisher);
 
             //环信im注册
             //$im=new Easemob(\Yii::$app->params['imConfig']);
@@ -76,27 +80,26 @@ class UserBaseService extends BaseDb
             //$options=array('username'=>$userBase->userSign,'password'=>$imPassword,'nickname'=>$userBase->nickname);
             //$imRes=$im->accreditRegister($options);
             //$arrRes=json_decode($imRes,true);
-            if(false)//&&isset($arrRes['error']
+            if (false)//&&isset($arrRes['error']
             {
                 throw new Exception(Code::USER_IM_REGISTER_ERROR);
-            }else
-            {
+            } else {
                 $this->userBaseDb->addUser($userBase);
-                if($userAccess!=null){
-                    $userAccess->userId=$userBase->userSign;//用户关联Id为UUID
+                if ($userAccess != null) {
+                    $userAccess->userId = $userBase->userSign;//用户关联Id为UUID
                     $this->userBaseDb->addUserAccess($userAccess);
                 }
-                if($userPublisher!=null){
-                    $userPublisherDb=new UserPublisherDb($conn);
-                    $userPublisher->userId=$userBase->userSign;
+                if ($userPublisher != null) {
+                    $userPublisherDb = new UserPublisherDb($conn);
+                    $userPublisher->userId = $userBase->userSign;
                     $userPublisherDb->addPublisher($userPublisher);
                 }
-                $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
-                $userBase=$this->arrayCastObject($userBase,UserBase::class);
+                $userBase = $this->userBaseDb->findByUserSign($userBase->userSign);
+                $userBase = $this->arrayCastObject($userBase, UserBase::class);
             }
             $this->commit($tran);
 
-            $sysMessageUtil=new SysMessageUtils();
+            $sysMessageUtil = new SysMessageUtils();
             $sysMessageUtil->sendUserRegisterUserInfoMessage($userBase->userSign);
         } catch (Exception $e) {
             $this->rollback($tran);
@@ -134,31 +137,31 @@ class UserBaseService extends BaseDb
      * @return array|bool|UserBase|mixed
      * @throws Exception
      */
-    public function updateUserBaseAndAddUserPublisher(UserBase $userBase,UserPublisher $userPublisher=null)
+    public function updateUserBaseAndAddUserPublisher(UserBase $userBase, UserPublisher $userPublisher = null)
     {
         $conn = $this->getConnection();
-        $tran=$conn->beginTransaction();
+        $tran = $conn->beginTransaction();
 
         try {
 
             $this->userBaseDb = new UserBaseDb($conn);
             //验证手机或邮箱格式是否正确
-            $userInfo=null;
-            if(!empty($userBase->email)){
-                $userInfo=$this->userBaseDb->findByEmail($userBase->email);
-                if($userInfo!=false&&$userInfo['userId']!=$userBase->userId) throw new Exception(Code::USER_EMAIL_EXIST);
+            $userInfo = null;
+            if (!empty($userBase->email)) {
+                $userInfo = $this->userBaseDb->findByEmail($userBase->email);
+                if ($userInfo != false && $userInfo['userId'] != $userBase->userId) throw new Exception(Code::USER_EMAIL_EXIST);
 
-            }else{
-                $userInfo=$this->userBaseDb->findByPhone($userBase->phone);
-                if($userInfo!=false&&$userInfo['userId']!=$userBase->userId) throw new Exception(Code::USER_PHONE_EXIST);
+            } else {
+                $userInfo = $this->userBaseDb->findByPhone($userBase->phone);
+                if ($userInfo != false && $userInfo['userId'] != $userBase->userId) throw new Exception(Code::USER_PHONE_EXIST);
             }
-            if($userPublisher!=null){
-                $userPublisherDb=new UserPublisherDb($conn);
-                $userBase->isPublisher=true;
-                $userPublisher->userId=$userBase->userSign;
-                if(empty($userPublisher->userPublisherId)){
+            if ($userPublisher != null) {
+                $userPublisherDb = new UserPublisherDb($conn);
+                $userBase->isPublisher = true;
+                $userPublisher->userId = $userBase->userSign;
+                if (empty($userPublisher->userPublisherId)) {
                     $userPublisherDb->addPublisher($userPublisher);
-                }else{
+                } else {
                     $userPublisherDb->updateUserPublisher($userPublisher);
                 }
             }
@@ -166,25 +169,24 @@ class UserBaseService extends BaseDb
             //$options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
             //$imRes=$im->updateNickname($options);
             //$arrRes=json_decode($imRes,true);
-            if(false)//&&isset($arrRes['error'])
+            if (false)//&&isset($arrRes['error'])
             {
                 throw new Exception('修改环信昵称错误');
             }
             //添加顺序不要移动
             $this->userBaseDb->updateUserBase($userBase);
 
-            $userBase=$this->userBaseDb->findByUserSign($userBase->userSign);
-            $userBase=$this->arrayCastObject($userBase,UserBase::class);
+            $userBase = $this->userBaseDb->findByUserSign($userBase->userSign);
+            $userBase = $this->arrayCastObject($userBase, UserBase::class);
             $this->commit($tran);
         } catch (Exception $e) {
             $this->rollback($tran);
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
         return $userBase;
     }
-
 
 
     /**
@@ -196,25 +198,25 @@ class UserBaseService extends BaseDb
      */
     public function findUserByUserNameAndPwd($userName, $password)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             //对用户密码进行加密
             $password = $this->encryptPassword($password);
-            if(!empty($userName)&&strpos($userName,"@")){
+            if (!empty($userName) && strpos($userName, "@")) {
                 $result = $this->userBaseDb->findByEmailAndPwd($userName, $password);
-            }else{
+            } else {
                 $result = $this->userBaseDb->findByPhoneAndPwd($userName, $password);
             }
 
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
-       return $userBase;
+        return $userBase;
     }
 
     /**
@@ -225,14 +227,14 @@ class UserBaseService extends BaseDb
      */
     public function findUserByEmail($email)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $result = $this->userBaseDb->findByEmail($email);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -247,14 +249,14 @@ class UserBaseService extends BaseDb
      */
     public function findUserById($userId)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
-            $result = $this->userBaseDb->findById($userId,UserBase::USER_STATUS_NORMAL);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $result = $this->userBaseDb->findById($userId, UserBase::USER_STATUS_NORMAL);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -269,14 +271,14 @@ class UserBaseService extends BaseDb
      */
     public function findUserByPhone($phone)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $result = $this->userBaseDb->findByPhone($phone);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -291,17 +293,17 @@ class UserBaseService extends BaseDb
      */
     public function findUserByUserSign($userSign)
     {
-        $userBase=null;
-        if(empty($userSign)){
+        $userBase = null;
+        if (empty($userSign)) {
             throw new Exception("UserSign Is  Not Allow Empty");
         }
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $result = $this->userBaseDb->findByUserSign($userSign);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -316,8 +318,8 @@ class UserBaseService extends BaseDb
      */
     public function findUserByUserSignArray($userSign)
     {
-        $userBase=null;
-        if(empty($userSign)){
+        $userBase = null;
+        if (empty($userSign)) {
             throw new Exception("UserSign Is  Not Allow Empty");
         }
         try {
@@ -325,7 +327,7 @@ class UserBaseService extends BaseDb
             $this->userBaseDb = new UserBaseDb($conn);
             $userBase = $this->userBaseDb->findByUserSign($userSign);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -340,19 +342,20 @@ class UserBaseService extends BaseDb
      */
     public function findPasswordByUserSign($userSign)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
-            $result = $this->userBaseDb->findPasswordByUserSign($userSign,UserBase::USER_STATUS_NORMAL);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $result = $this->userBaseDb->findPasswordByUserSign($userSign, UserBase::USER_STATUS_NORMAL);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
         return $userBase;
     }
+
     /**
      * 获取用户基本信息
      * @param $userSign
@@ -361,12 +364,12 @@ class UserBaseService extends BaseDb
      */
     public function findBaseInfoBySign($userSign)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $result = $this->userBaseDb->findBaseInfoBySign($userSign);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
             throw $e;
         } finally {
@@ -374,7 +377,6 @@ class UserBaseService extends BaseDb
         }
         return $userBase;
     }
-
 
 
     /**
@@ -385,7 +387,7 @@ class UserBaseService extends BaseDb
      */
     public function findBaseInfoBySignArray($userSign)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
@@ -397,6 +399,7 @@ class UserBaseService extends BaseDb
         }
         return $userBase;
     }
+
     /**
      * 获取用户所有信息
      * @param $userSign
@@ -405,12 +408,12 @@ class UserBaseService extends BaseDb
      */
     public function findBaseAllBySign($userSign)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
             $result = $this->userBaseDb->findBaseAllBySign($userSign);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
             throw $e;
         } finally {
@@ -438,27 +441,27 @@ class UserBaseService extends BaseDb
      * @param UserPublisher $userPublisher
      * @return UserBase
      */
-    private function initRegisterUserInfo(UserBase $userBase,UserAccess $userAccess=null,UserPublisher $userPublisher=null)
+    private function initRegisterUserInfo(UserBase $userBase, UserAccess $userAccess = null, UserPublisher $userPublisher = null)
     {
 
-        if($userAccess==null){
-            $userBase->sex=UserBase::USER_SEX_SECRET;
-            $userBase->headImg=\Yii::$app->params["base_dir"].'/assets/images/user_default.png';
+        if ($userAccess == null) {
+            $userBase->sex = UserBase::USER_SEX_SECRET;
+            $userBase->headImg = \Yii::$app->params["base_dir"] . '/assets/images/user_default.png';
 
-            if(!empty($userBase->email)){
-                if($userPublisher==null){
-                    $userBase->phone=null;
+            if (!empty($userBase->email)) {
+                if ($userPublisher == null) {
+                    $userBase->phone = null;
                 }
-                if(empty($userBase->nickname)){
-                    $str=$userBase->email;
-                    $arr= explode('@',$str);
-                    $userBase->nickname= substr($arr[0],0,4).'*****'.$arr[1];
+                if (empty($userBase->nickname)) {
+                    $str = $userBase->email;
+                    $arr = explode('@', $str);
+                    $userBase->nickname = substr($arr[0], 0, 4) . '*****' . $arr[1];
                 }
-            }else{
-                if($userPublisher==null){
-                    $userBase->email=null;
+            } else {
+                if ($userPublisher == null) {
+                    $userBase->email = null;
                 }
-                if(empty($userBase->nickname)) {
+                if (empty($userBase->nickname)) {
                     $str1 = $userBase->phone;
                     $userBase->nickname = substr($str1, 0, 4) . '*****' . substr($str1, -2);
                 }
@@ -466,23 +469,27 @@ class UserBaseService extends BaseDb
             }
         }
 
-        if($userPublisher!=null){
-            $userBase->isPublisher=true;
-        }else{
-            $userBase->isPublisher=false;
+        if ($userPublisher != null) {
+            $userBase->isPublisher = true;
+        } else {
+            $userBase->isPublisher = false;
         }
 
 
-        $userBase->hobby='';
-        $userBase->info='';
-        $userBase->intro='';
-        $userBase->school='';
-        $userBase->birthday='0000-00-00';
-        $userBase->userSign=Code::getUUID();
-        $userBase->status=UserBase::USER_STATUS_NORMAL;
-        $userBase->registerIp=$_SERVER['REMOTE_ADDR'];
-        $userBase->lastLoginIp=$_SERVER['REMOTE_ADDR'];
-        $userBase->profession='';
+        $userBase->hobby = '';
+        $userBase->info = '';
+        $userBase->intro = '';
+        $userBase->school = '';
+        $userBase->surname = '';
+        $userBase->name = '';
+        $userBase->qq = '';
+        $userBase->wechat = '';
+        $userBase->birthday = '0000-00-00';
+        $userBase->userSign = Code::getUUID();
+        $userBase->status = UserBase::USER_STATUS_NORMAL;
+        $userBase->registerIp = $_SERVER['REMOTE_ADDR'];
+        $userBase->lastLoginIp = $_SERVER['REMOTE_ADDR'];
+        $userBase->profession = '';
         return $userBase;
     }
 
@@ -494,14 +501,14 @@ class UserBaseService extends BaseDb
      * @return mixed|null
      * @throws Exception
      */
-    public function findUserAccessByOpenIdAndType($openId,$type)
+    public function findUserAccessByOpenIdAndType($openId, $type)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
-            $result = $this->userBaseDb->findUserByOpenIdAndType($openId,$type);
-            $userBase=$this->arrayCastObject($result,UserBase::class);
+            $result = $this->userBaseDb->findUserByOpenIdAndType($openId, $type);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
             throw $e;
         } finally {
@@ -517,11 +524,11 @@ class UserBaseService extends BaseDb
      * @return bool
      * @throws Exception
      */
-    public function validatePhoneExist($phone,$userId)
+    public function validatePhoneExist($phone, $userId)
     {
-        $userInfo=$this->findUserByPhone($phone);
-        if($userInfo!=null){
-            if($userInfo->userId!=$userId){
+        $userInfo = $this->findUserByPhone($phone);
+        if ($userInfo != null) {
+            if ($userInfo->userId != $userId) {
                 return true;
             }
         }
@@ -535,11 +542,11 @@ class UserBaseService extends BaseDb
      * @return bool
      * @throws Exception
      */
-    public function validateEmailExist($email,$userId)
+    public function validateEmailExist($email, $userId)
     {
-        $userInfo=$this->findUserByEmail($email);
-        if($userInfo!=null){
-            if($userInfo->userId!=$userId){
+        $userInfo = $this->findUserByEmail($email);
+        if ($userInfo != null) {
+            if ($userInfo->userId != $userId) {
                 return true;
             }
         }
@@ -552,24 +559,24 @@ class UserBaseService extends BaseDb
      * @param $p
      * @return bool
      */
-    public function validatePassword($password,$p)
+    public function validatePassword($password, $p)
     {
-      return $p==$this->encryptPassword($password);
+        return $p == $this->encryptPassword($password);
     }
 
-    public function updatePassword($userSign,$password)
+    public function updatePassword($userSign, $password)
     {
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
-            $userBase =new UserBase();
+            $userBase = new UserBase();
             $userBase->password = $this->encryptPassword($password);
-            $userBase->userSign=$userSign;
-           return $this->userBaseDb->updatePassword($userBase);
+            $userBase->userSign = $userSign;
+            return $this->userBaseDb->updatePassword($userBase);
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
-        }finally{
+        } finally {
             $this->closeLink();
         }
     }
@@ -577,14 +584,14 @@ class UserBaseService extends BaseDb
 
     public function findUserPublisherByUserSign($userSign)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
-            $userPublisherDb=new UserPublisherDb($conn);
-            $result=$userPublisherDb->findUserPublisherByUserId($userSign);
-            $userBase=$this->arrayCastObject($result,UserPublisher::class);
+            $userPublisherDb = new UserPublisherDb($conn);
+            $result = $userPublisherDb->findUserPublisherByUserId($userSign);
+            $userBase = $this->arrayCastObject($result, UserPublisher::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -593,14 +600,14 @@ class UserBaseService extends BaseDb
 
     public function findUserPublisherByPublisherId($publisherId)
     {
-        $userBase=null;
+        $userBase = null;
         try {
             $conn = $this->getConnection();
-            $userPublisherDb=new UserPublisherDb($conn);
-            $result=$userPublisherDb->findUserPublisherById($publisherId);
-            $userBase=$this->arrayCastObject($result,UserPublisher::class);
+            $userPublisherDb = new UserPublisherDb($conn);
+            $result = $userPublisherDb->findUserPublisherById($publisherId);
+            $userBase = $this->arrayCastObject($result, UserPublisher::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION,Code::FAIL,$e);
+            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
         } finally {
             $this->closeLink();
         }
@@ -608,12 +615,12 @@ class UserBaseService extends BaseDb
     }
 
 
-    public function updateUserHeadImg($userId,$headImg)
+    public function updateUserHeadImg($userId, $headImg)
     {
         try {
             $conn = $this->getConnection();
             $this->userBaseDb = new UserBaseDb($conn);
-            $this->userBaseDb->uploadHeadImg($userId,$headImg);
+            $this->userBaseDb->uploadHeadImg($userId, $headImg);
         } catch (Exception $e) {
             throw $e;
         } finally {
@@ -629,7 +636,7 @@ class UserBaseService extends BaseDb
             //$options=array('username'=>$userBase->userSign,'nickname'=>$userBase->nickname);
             //$imRes=$im->updateNickname($options);
             //$arrRes=json_decode($imRes,true);
-            if(false)//isset($arrRes['error'])
+            if (false)//isset($arrRes['error'])
             {
                 throw new Exception('修改环信昵称错误');
             }
@@ -680,6 +687,193 @@ class UserBaseService extends BaseDb
         } finally {
             $this->closeLink();
         }
+    }
+
+    /**
+     * 添加用户相册
+     * @param UserPhoto $userPhoto
+     * @throws Exception
+     * @throws \Exception
+     * @return UserPhoto
+     */
+    public function addUserPhoto(UserPhoto $userPhoto)
+    {
+        try {
+            $this->saveObject($userPhoto);
+            $userPhoto->photoId=$this->getLastInsertId();
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $userPhoto;
+    }
+
+
+    /**
+     * 获取用户相册列表
+     * @param $userId
+     * @return array|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getUserPhotoList($userId)
+    {
+        $photoList=null;
+        try{
+            $photoList=$this->findObjectByType(UserPhoto::class,"userId",$userId);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $photoList;
+    }
+
+    /**
+     * 删除用户照片
+     * @param $photoId
+     * @param $userId
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function deleteUserPhoto($photoId,$userId)
+    {
+        try {
+            $conn = $this->getConnection();
+            $userBaseDb = new UserBaseDb($conn);
+            $userBaseDb->deleteUserPhoto($photoId,$userId);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
+    /**
+     * 存储用户UserCard
+     * @param $userId
+     * @param $url
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function saveUserCard($userId,$url)
+    {
+        if(empty($url)){
+            throw new Exception("Invalid Url ");
+        }
+        try{
+            $rst=$this->findObjectByType(UserCard::class,"userId",$userId);
+            if(empty($rst)){
+                $userCard=new UserCard();
+                $userCard->userId=$userId;
+                $userCard->img=$url;
+                $userCard->status=UserCard::USER_CARD_STATUS_WAIT;
+                $userCard->authHistory="";
+                $userCard->name="";
+                $userCard->number="";
+                $userCard->updateTime=BaseDb::DB_PARAM_NOW;
+
+                $this->saveObject($userCard);
+            }else{
+                $userCard=$this->arrayCastObject($rst[0],UserCard::class);
+                //如果不等于失败 那么是没办法更新用户证件信息
+                if($userCard->status!=UserCard::USER_CARD_STATUS_FAIL){
+                    throw new Exception("Invalid User Card Status");
+                }
+                $userCard->status=UserCard::USER_CARD_STATUS_WAIT;
+                $userCard->img=$url;
+                $userCard->updateTime=BaseDb::DB_PARAM_NOW;
+                $this->updateObject($userCard);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+
+    /**
+     * 获取用户证件信息
+     * @param $userId
+     * @return mixed|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function findUserCardByUserId($userId)
+    {
+        if(empty($userId)){
+            throw new Exception("UserId Is Not Allow Empty");
+        }
+        $userCard=null;
+        try{
+            $rst=$this->findObjectByType(UserCard::class,"userId",$userId);
+            if(!empty($rst)){
+                $userCard=$this->arrayCastObject($rst[0],UserCard::class);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $userCard;
+    }
+
+
+    /**
+     * 添加用户资历审核
+     * @param $userId
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function addUserAptitude($userId)
+    {
+        try{
+            $rst=$this->findObjectByType(UserAptitude::class,"userId",$userId);
+            if(!empty($rst)){
+              throw new Exception("User Aptitude Existing");
+            }
+
+            $userAptitude=new UserAptitude();
+            $userAptitude->userId=$userId;
+            $userAptitude->applyTime=BaseDb::DB_PARAM_NOW;
+            $userAptitude->status=UserAptitude::USER_APTITUDE_STATUS_WAIT;
+
+            $this->saveObject($userAptitude);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+
+    /**
+     * 获取用户资历
+     * @param $userId
+     * @return mixed|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function findUserAptitudeByUserId($userId)
+    {
+        if(empty($userId)){
+            throw new Exception("UserId Is Not Allow Empty");
+        }
+        $userAptitude=null;
+        try{
+            $rst=$this->findObjectByType(UserAptitude::class,"userId",$userId);
+            if(!empty($rst)){
+                $userAptitude=$this->arrayCastObject($rst[0],UserAptitude::class);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $userAptitude;
     }
 
 }

@@ -8,7 +8,8 @@ var messageSessionTimer;
 
 var rotate;
 var rotateCount=0;
-var containerDivWidth=300;
+var containerDivWidth=350;
+var containerDivHeight=210;
 var imgAreaSelectApi;
 
 $(document).ready(function(){
@@ -98,10 +99,13 @@ $(document).ready(function(){
 
     //初始化上传身份证等功能
     $(".p_chose_card_front").bind("click", function () {
-        $("#uploadAll").val("上 传");
+        $("#uploadAll").val("立即验证");
         $("#userCardFront").val("");
         var file = $("#uploadifive-fileCardFront input[type='file']").last();
         $(file).click();
+    });
+    $("#resetUploadFront").bind("click",function(){
+        resetUploadFront()
     });
     if($("#imgFront").attr("src")!=''){
         $(".p_chose_card_front").hide();
@@ -114,6 +118,10 @@ $(document).ready(function(){
     //绑定上传事件
     $("#uploadAll").bind("click", function () {
         uploadAll();
+    });
+    //绑定申请资质认证
+    $("#applyUserAptitudeBtn").bind("click",function(){
+        applyUserAptitude();
     });
 
     getUnFinishList();
@@ -129,6 +137,7 @@ $(document).ready(function(){
 });
 
 function initUploadfive(){
+    //证件信息上传
     $('#fileCardFront').uploadifive({
         'auto': false,
         'queueID': 'frontQueue',
@@ -140,9 +149,15 @@ function initUploadfive(){
             if (datas.status == 1) {
                 $("#userCardFront").val(datas.data);
                 $("#cardTip").html("");
-                $("#uploadAll").val("上传成功！");
+                $(".upload_front_process").html("上传成功！");
+                $(".upload_front_process").css("color","#3dd9c3");
             } else {
-                $("#uploadAll").val("上传失败，请稍后重试。。。");
+                if(datas.status==-2){
+                    $(".upload_front_process").html(datas.data);
+                }else{
+                    $(".upload_front_process").html("上传失败，请稍后重试");
+                }
+                $(".upload_front_process").css("color","red");
             }
 
         },
@@ -182,7 +197,41 @@ function initUploadfive(){
             });
         }
     });
+
+    //用户照片上传
+    $('#userPhotoFile').uploadifive({
+        'auto': true,
+        'queueID': 'frontQueue',
+        'uploadScript': '/upload/upload-user-photo',
+        'multi': false,
+        'dnd': false,
+        'onAddQueueItem': function (file) {
+            var html = '<li><a href="javascript:;" class="imgs" pic="' + file.name + file.size + '"><span class="upload_show_info">正在上传...</span><span class="delet" onclick="removeUserPhoto(this)"></span><img /></a></li>';
+            $("#user_photo_list").prepend(html);
+        },
+        'onUploadComplete': function (file, data) {
+            var datas = eval('(' + data + ')');
+            var pic = file.name + file.size;
+            var a = $("#user_photo_list").find("a[pic='" + pic + "']");
+            if (datas.status == 1) {
+                var photo= datas.data;
+                $(a).find("img").attr("src", photo.url);
+                $(a).find("span").eq(0).hide();
+                $(a).find("span[class='upload_show_info']").remove();
+            } else {
+                $(a).find("span").eq(0).html("上传失败");
+                $(a).remove();
+
+            }
+        }
+    });
+
+    $('#userPhotoUpload').bind('click',function(){
+        $("#uploadifive-userPhotoFile input[type='file']").last().click();
+    });
 }
+
+
 
 /**
  *  初始化修改密码
@@ -533,6 +582,8 @@ function buildMessageSessionInfo(list,sessionKey){
  * 更新用户基本资料
  */
 function updateUserInfo(){
+    var surname=$("#surname").val();
+    var name=$("#name").val();
     var sex=$('input:radio[name="sex"]:checked').val();
     var nickname=$("#nickname").val();
     var birthday=$("#birthday").val();
@@ -543,6 +594,8 @@ function updateUserInfo(){
     var lon=$("#lon").val();
     var lat=$("#lat").val();
     var profession=$("input:radio[name='profession']:checked").val();
+    var qq=$("#qq").val();
+    var wx=$("#wx").val();
     if(profession=='其他'){
         profession=$("#other").val();
     }
@@ -563,6 +616,10 @@ function updateUserInfo(){
         url :'/user-info/update-user-info',
         type:'post',
         data:{
+            surname:surname,
+            name:name,
+            qq:qq,
+            wechat:wx,
             sex:sex,
             nickname:nickname,
             birthday:birthday,
@@ -631,7 +688,7 @@ function findCityInfo(name) {
 function initSelect(){
     //初始化国家，城市
     $(".select2").select2({
-        'width':'350px',
+        'width':'169px',
         containerCss: {
             'margin-bottom':'20px'
         },
@@ -662,7 +719,8 @@ function initSelect(){
 
     //初始化区号选择
     $(".areaCodeSelect").select2({
-        'width':'130px',
+        'width':'150px',
+        'placeholder':'请选择区号',
         formatNoMatches: function () {
             return "暂无匹配";
         }
@@ -795,6 +853,7 @@ function initUploadImg(){
             }
         }
     });
+
     $("#uploadBtn").bind("click",function(){
         $("#uploadifive-reImg input[type='file'][id!='titleImgFile']").last().click();
     });
@@ -816,6 +875,8 @@ function resetUploadHeadImg(){
     $("#uploadBtn").show();
     $("#img_origin").hide();
     $("#img_origin").attr("src","");
+    $(".upload_front_process").html("");
+    $(".upload_front_process").css("color","rosybrown");
     $("#img_src").val();
 }
 
@@ -823,6 +884,7 @@ function resetUploadHeadImg(){
  * 上传头像选择IMG（截头像）
  */
 function selectImg(){
+    alert("selectImg");
     var x=$("#img_x").val();
     var y=$("#img_y").val();
     var w=$("#img_w").val();
@@ -924,28 +986,46 @@ $('#img_origin').load(function(){
     imgAreaSelectApi.update();
 
     //图片居中
-    var imgWidth=$("#img_origin").width();
-    var imgHeight=$("#img_origin").height();
-    $("#img_origin").css("margin","0")
-    if(imgWidth<containerDivWidth&&imgHeight<containerDivWidth){
-        if(imgWidth>imgHeight){
-            $("#img_origin").width(containerDivWidth);
-        }else{
-            $("#img_origin").height(containerDivWidth);
+    var imgWidth = $("#img_origin").width();
+    var imgHeight = $("#img_origin").height();
+    $("#img_origin").css("margin", "0");
+    $("#img_origin").attr("oldWidth", imgWidth);
+    $("#img_origin").attr("oldHeight", imgHeight);
+
+    if ((containerDivWidth / containerDivHeight) < (imgWidth / imgHeight)) {
+        $("#img_origin").width(containerDivWidth);
+    } else {
+        $("#img_origin").height(containerDivHeight);
+    }
+
+    imgWidth = $("#img_origin").width();
+    imgHeight = $("#img_origin").height();
+
+    var padding=0;
+
+    if (imgWidth == containerDivWidth) {
+         padding = (containerDivHeight - imgHeight) / 2;
+        $("#img_origin").css("margin-top", padding);
+        //imgAreaSelectApi.setSelection((imgWidth/2)-(imgHeight/4), (imgHeight/2)-(imgHeight/4), (imgWidth/2)+(imgHeight/4), (imgHeight/2)+(imgHeight/4), true);
+
+    }
+    if (imgHeight ==containerDivHeight) {
+        padding = (containerDivWidth - imgWidth) / 2;
+        $("#img_origin").css("margin-left", padding);
+        //imgAreaSelectApi.setSelection((imgHeight/2)-(imgWidth/4)-padding, (imgHeight/2)-(imgWidth/4), (imgHeight/2)+(imgWidth/4)-padding, (imgHeight/2)+(imgWidth/4), true);
+    }
+
+    alert(padding);
+    if (imgHeight == imgWidth) {
+        if (containerDivHeight > containerDivWidth) {
+            $("#img_origin").css("margin-top", (containerDivHeight - imgHeight) / 2);
+        } else {
+            $("#img_origin").css("margin-left", (containerDivWidth - imgWidth) / 2);
         }
     }
-    imgWidth=$("#img_origin").width();
-    imgHeight=$("#img_origin").height();
 
-    if(imgWidth>=imgHeight){
-        var padding=(imgWidth-imgHeight)/2;
-        $("#img_origin").css("margin-top",padding);
-        imgAreaSelectApi.setSelection((imgWidth/2)-(imgHeight/4), (imgHeight/2)-(imgHeight/4), (imgWidth/2)+(imgHeight/4), (imgHeight/2)+(imgHeight/4), true);
-    }
-    if(imgHeight>imgWidth){
-        var padding=(imgHeight-imgWidth)/2;
-        $("#img_origin").css("margin-left",padding);
-        imgAreaSelectApi.setSelection((imgHeight/2)-(imgWidth/4)-padding, (imgHeight/2)-(imgWidth/4), (imgHeight/2)+(imgWidth/4)-padding, (imgHeight/2)+(imgWidth/4), true);
+    if (imgWidth > 100 && imgHeight > 100) {
+        imgAreaSelectApi.setSelection(0, 0, 100, 100, true);
     }
 
 
@@ -1613,7 +1693,7 @@ function  getCityList(){
                 var html = "";
                 for(var i=0;i<datas.data.length;i++){
                     var city=datas.data[i];
-                    html+='<option value="'+city.id+'">'+city.cname+"/"+city.ename+'</option>';
+                    html+='<option value="'+city.id+'">'+city.cname+'</option>';
                 }
                 $("#cityId").append(html);
                 if(cityId!=""){
@@ -1650,19 +1730,19 @@ function sendTravelCode() {
 
         },
         beforeSend: function () {
-            $("#getCode").val("正在发送...");
+            $("#getCode").html("正在发送...");
         },
         error: function () {
-            $("#getCode").val("发送失败...");
+            $("#getCode").html("发送失败...");
         },
         success: function (data) {
             var datas = eval('(' + data + ')');
             if (datas.status == 1) {
-                $("#getCode").val("发送成功");
+                $("#getCode").html("发送成功!");
                 phoneTime = 60;
                 initPhoneTimer();
             } else {
-                $("#getCode").val("发送失败...");
+                $("#getCode").html("获取验证码");
                 $("#phoneTip").html(datas.data);
             }
         }
@@ -1702,11 +1782,12 @@ function initValidatePhone(){
         success: function (data) {
             var datas = eval('(' + data + ')');
             if (datas.status == 1) {
+                $("#phone_val").val(phone);
+                $("#phone_show_btn").click();
                 Main.showTip('验证成功');
                 $("#phone").val('');
                 $("#code_p").val('');
-                $("#validatePhone").val('立即修改');
-
+                $("#validatePhone").html('立即修改');
             } else {
                 Main.showTip(datas.data);
             }
@@ -1719,9 +1800,9 @@ function initValidatePhone(){
  */
 function initValidateEmail_info(){
     var email = $("#email_info").val();
-
+    $("#emailTip").html('');
     if (email == "") {
-        Main.showTip('邮箱不能为空');
+        $("#emailTip").html('邮箱不能为空');
         return;
     }
     $.ajax({
@@ -1730,10 +1811,8 @@ function initValidateEmail_info(){
         data: {
             mail: email,
             _csrf: $('input[name="_csrf"]').val()
-
         },
         beforeSend: function () {
-
         },
         error: function () {
             Main.showTip('验证失败');
@@ -1743,7 +1822,7 @@ function initValidateEmail_info(){
             if (datas.status == 1) {
                 Main.showTip(datas.data);
             } else {
-                Main.showTip(datas.data);
+                $("#emailTip").html(datas.data);
             }
         }
     });
@@ -1770,15 +1849,15 @@ function initPhoneTimer() {
 function initPhoneTime() {
 
     if (phoneTime != "" && phoneTime > 0) {
-        $("#getCode").val(+phoneTime + "秒后重新发送");
+        $("#getCode").html(+phoneTime + "秒后重新发送");
         $("#getCode").attr("disabled", "disabled");
 
         $("#getCode").css("background", "gray");
         $("#getCode").unbind("click");
     } else {
-        $("#getCode").val("获取验证码");
+        $("#getCode").html("获取验证码");
         $("#getCode").removeAttr("disabled");
-        $("#getCode").css("background", "#ff7a4d");
+        $("#getCode").css("background", "#FFAA00");
         $("#getCode").unbind("click");
         $("#getCode").bind("click", function () {
             sendTravelCode();
@@ -1814,15 +1893,34 @@ function initCollect(){
                 for(var i=0;i<l;i++)
                 {
                     var rst= result.data.data[i];
-                    str+=' <li>';
-                    str+='  <a href="/view-trip/info?trip='+rst.tripId+'"><img src="'+rst.titleImg+'" alt=""></a>';
-                    str+='<div class="userPic">';
-                    str+='<a href="#"><img src="'+rst.headImg+'" alt=""></a>';
-                    str+='<span>'+rst.nickname+'</span>';
+                    var commentCount=0;
+                    var title=rst.title;
+                    if(Main.isNotEmpty(rst.commentCount)){
+                        commentCount=rst.commentCount;
+                    }
+                    if((i+1)%3==0){
+                        str+='<div class="web-tuijian fl nomg">';
+                    }else{
+                        str+='<div class="web-tuijian fl">';
+                    }
+                    if(title.length>15){
+                        title=title.substring(0,15)+"...";
+                    }
+                    str+='<a href="/view-trip/info?trip='+rst.tripId+'" class="pic">';
+                    str+='  <img src="'+rst.titleImg+'" width="410" height="267">';
+                    str+='  <p class="p4"><span>￥'+rst.basePrice+'</span>每次</p>';
+                    str+='</a>';
+                    str+='<a href="/view-user/info?u='+rst.userSign+'" target="_blank" class="user"><img src="'+rst.headImg+'"></a>';
+                    str+='  <p class="title">'+rst.title+'</p>';
+                    str+='<p class="xing">';
+                    if(rst.score>=2){str+='<img src="/assets/images/start1.fw.png" alt="">';}else{str+='<img src="/assets/images/start2.fw.png" alt="">';}
+                    if(rst.score>=4){str+='<img src="/assets/images/start1.fw.png" alt="">';}else{str+='<img src="/assets/images/start2.fw.png" alt="">';}
+                    if(rst.score>=6){str+='<img src="/assets/images/start1.fw.png" alt="">';}else{str+='<img src="/assets/images/start2.fw.png" alt="">';}
+                    if(rst.score>=8){str+='<img src="/assets/images/start1.fw.png" alt="">';}else{str+='<img src="/assets/images/start2.fw.png" alt="">';}
+                    if(rst.score>=10){str+='<img src="/assets/images/start1.fw.png" alt="">';}else{str+='<img src="/assets/images/start2.fw.png" alt="">';}
+                    str+='<span>'+rst.tripCount+'人去过</span><span>'+commentCount+'条评论</span>';
+                    str+='</p>';
                     str+='</div>';
-                    str+='<p>'+rst.title+'</p>';
-                    str+='</li>';
-
                 }
                 $('#myCollectList').append(str);
             }else{
@@ -1863,7 +1961,7 @@ function initMyComment(page){
                     var rst= result.data.data[i];
                     str+='<li>';
                     str+='<div class="userPic">';
-                    str+='<a href="#"><img alt="" src="'+rst.headImg+'"></a>';
+                    str+='<a href="/view-user/info?u='+rst.userSign+'" target="_blank"><img alt="" src="'+rst.headImg+'"></a>';
                     str+='<span>'+rst.nickname+'</span>';
                     str+='</div>';
                     if(rst.rnickname!=null){
@@ -2276,12 +2374,24 @@ function showCancelWindow(orderId){
  * 个人中心，上传护照
  */
 function uploadAll() {
-    if ($("#imgFront").attr("src") == "") {
-        Main.showTip("请选择护照图片");
+    var src=$("#imgFront").attr("src");
+    //判断你是否从新选择了图片
+    if ( src== ""||!src.startWith("blob:")) {
+        Main.showTip("请选择证件图片");
         return;
     }
+    $(".upload_front_process").html("正在上传，请稍后...");
     $('#fileCardFront').uploadifive('upload');
-    $("#uploadAll").val("正在上传，请稍后...");
+}
+
+/**
+ * 重置上传护照认证
+ */
+function resetUploadFront(){
+    $("#imgFront").hide();
+    $(".upload_front_process").html("");
+    $(".p_chose_card_front").html("点击上传护照");
+    $(".p_chose_card_front").show();
 }
 
 
@@ -2536,4 +2646,75 @@ function drawMoney(){
             }
         }
     });
+}
+
+/**
+ * 添加资质申请
+ */
+function applyUserAptitude(){
+    $.ajax({
+        url :'/user-info/apply-user-aptitude',
+        type:'post',
+        data:{
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("申请资质认证失败");
+        },
+        success:function(data){
+            data= $.parseJSON(data);
+            if(data.status==1){
+                Main.showTip("申请资质认证失成功，我们的工作人员会尽快与您联系！");
+                $("#applyUserAptitudeBtn").html("工作人员审核中");
+                $("#applyUserAptitudeBtn").disable();
+                $("#applyUserAptitudeBtn").unbind("click");
+                $("#applyUserAptitudeBtn").css("background","gainsboro");
+            }else{
+                Main.showTip("申请资质认证失败");
+            }
+        }
+    });
+}
+
+/**
+ *删除用户照片
+ * @param obj
+ */
+function removeUserPhoto(obj){
+    var photoId=$(obj).parent().attr("photoId");
+    if(photoId==''){
+        Main.showTip("无效的照片");
+        return;
+    }
+    $.ajax({
+        url :'/user-info/remove-user-photo',
+        type:'post',
+        data:{
+            photoId:photoId,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("删除照片失败");
+        },
+        success:function(data){
+            data= $.parseJSON(data);
+            if(data.status==1){
+                $(obj).parent().parent().remove();
+            }else{
+                Main.showTip("删除照片失败");
+            }
+        }
+    });
+}
+
+
+function toValidateEmail(){
+    $("#myUserInfo").click();
+    $('html,body').animate({scrollTop:$('#validateEmail_info').offset().top-200}, 800);
+
+}
+
+function toValidatePhone() {
+    $("#myUserInfo").click();
+    $('html,body').animate({scrollTop:$('#phone_show_btn').offset().top-100}, 800);
 }

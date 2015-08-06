@@ -120,7 +120,7 @@
             <div id="upload_div" class="upload_div clearfix">
                 <a id="uploadPic" class="imgs"><img src="/assets/images/addPic.gif"></a>
             </div>
-            <p>这里上传的照片都会显示在随游详情页的嘴周要位置，请好好挑选照片上传吧！</p>
+            <p>这里上传的照片都会显示在随游详情页的最重要位置，请好好挑选照片上传吧！</p>
 
             <p>有您自己上镜的照片会让随游的可信度更高哦！</p>
 
@@ -1203,9 +1203,11 @@
              */
             removePic: function (obj) {
                 $(obj).parent().remove();
-                var size = $("#upload_div a[class='imgs']").size();
+                var size = $("#upload_div a[class='imgs'][id!='uploadPic'] img").size();
                 if (size >= 10) {
                     $("#uploadPic").hide();
+                }else{
+                    $("#uploadPic").show();
                 }
             },
 
@@ -1434,15 +1436,6 @@
                             $("#titleImg").attr("src", result.data);
 
                             return;
-
-                            var span = $("#upload_div span[picName='" + imgSrc + "']");
-                            var img = $(span).next().next();
-                            $(span).remove();
-                            $(img).attr("src", result.data);
-                            var size = $("#upload_div a[class='imgs']").size();
-                            if (size >= 10) {
-                                $("#uploadPic").hide();
-                            }
                         } else {
                             $(".p_chose_title_img").val("上传失败，请稍后重试。。。");
                         }
@@ -1502,6 +1495,13 @@
                     $(a).find("img").attr("src", datas.data);
                     $(a).find("span").eq(0).hide();
                     $(a).find("span[class='upload_show_info']").remove();
+                    var size = $("#upload_div a[class='imgs'][id!='uploadPic'] img").size();
+                    if (size >= 10) {
+                        $("#uploadPic").hide();
+                    }else{
+                        $("#uploadPic").show();
+                    }
+
                 } else {
                     $(a).find("span").eq(0).html("上传失败");
                     $(a).remove();

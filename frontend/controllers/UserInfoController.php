@@ -15,7 +15,9 @@ use common\components\DateUtils;
 use common\components\LogUtils;
 use common\entity\UserAccount;
 use common\entity\UserBase;
+use common\entity\UserPhoto;
 use common\entity\UserPublisher;
+use common\models\BaseDb;
 use frontend\components\Page;
 use frontend\interfaces\WechatInterface;
 use frontend\services\CountryService;
@@ -27,8 +29,10 @@ use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\debug\models\search\Log;
+use yii\web\Cookie;
 
-class UserInfoController extends CController{
+class UserInfoController extends CController
+{
 
     public function __construct($id, $module = null)
     {
@@ -45,52 +49,60 @@ class UserInfoController extends CController{
      */
     public function actionIndex()
     {
-        $tab=\Yii::$app->request->get("tab",$_SERVER['QUERY_STRING']);
-        $tabInfo=\Yii::$app->request->get("tabInfo","");
-        $bindWechat=\Yii::$app->request->get("bindWechat",0);
+        $tab = \Yii::$app->request->get("tab", $_SERVER['QUERY_STRING']);
+        $tabInfo = \Yii::$app->request->get("tabInfo", "");
+        $bindWechat = \Yii::$app->request->get("bindWechat", 0);
 
         $countryService = new CountryService();
         $countryList = $countryService->getCountryList();
-        $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
-        $cityInfo=null;
-        $userAccountList=null;
-        $openId=null;//微信绑定回调 用户微信OpenId
-        $nickname=null;//微信绑定回调 用户微信昵称
-        $bindAlipayAccount=false;
-        $bindWechatAccount=false;
+        $userPublisher = $this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+        $cityInfo = null;
+        $userAccountList = null;
+        $openId = null;//微信绑定回调 用户微信OpenId
+        $nickname = null;//微信绑定回调 用户微信昵称
+        $bindAlipayAccount = false;
+        $bindWechatAccount = false;
         //获取用户城市详情
-        if(!empty($this->userObj->cityId)){
-            $cityInfo=$countryService->findCityById($this->userObj->cityId);
+        if (!empty($this->userObj->cityId)) {
+            $cityInfo = $countryService->findCityById($this->userObj->cityId);
         }
         //获取用户账户收款信息
-        if($this->userObj->isPublisher){
-            $userAccountService=new UserAccountService();
-            $userAccountList=$userAccountService->getUserAccountList($this->userObj->userSign);
+        if ($this->userObj->isPublisher) {
+            $userAccountService = new UserAccountService();
+            $userAccountList = $userAccountService->getUserAccountList($this->userObj->userSign);
         }
-        if(!empty($userAccountList)){
-            foreach($userAccountList as $userAccount){
-                if($userAccount['type']==UserAccount::USER_ACCOUNT_TYPE_WECHAT){
-                    $bindWechatAccount=true;
+        if (!empty($userAccountList)) {
+            foreach ($userAccountList as $userAccount) {
+                if ($userAccount['type'] == UserAccount::USER_ACCOUNT_TYPE_WECHAT) {
+                    $bindWechatAccount = true;
                 }
-                if($userAccount['type']==UserAccount::USER_ACCOUNT_TYPE_ALIPAY){
-                    $bindAlipayAccount=true;
+                if ($userAccount['type'] == UserAccount::USER_ACCOUNT_TYPE_ALIPAY) {
+                    $bindAlipayAccount = true;
                 }
             }
         }
+        //获取我的相册列表
+        $photoList = $this->userBaseService->getUserPhotoList($this->userObj->userSign);
+        //获取用户证件信息
+        $userCard=$this->userBaseService->findUserCardByUserId($this->userObj->userSign);
+        //获取用户资历信息
+        $userAptitude=$this->userBaseService->findUserAptitudeByUserId($this->userObj->userSign);
 
-        $wechatAccount=\Yii::$app->getSession()->get(Code::USER_WECHAT_ACCOUNT);
-        return $this->render("info",[
-            'countryList'=>$countryList,
-            'userPublisher'=>$userPublisher,
-            'cityInfo'=>$cityInfo,
-            'userAccountList'=>$userAccountList,
-            'tab'=>$tab,
-            'tabInfo'=>$tabInfo,
-            'wechatAccount'=>$wechatAccount,
-            'bindWechat'=>$bindWechat,
-            'bindWechatAccount'=>$bindWechatAccount,
-            'bindAlipayAccount'=>$bindAlipayAccount
-
+        $wechatAccount = \Yii::$app->getSession()->get(Code::USER_WECHAT_ACCOUNT);
+        return $this->render("info", [
+            'countryList' => $countryList,
+            'userPublisher' => $userPublisher,
+            'cityInfo' => $cityInfo,
+            'userAccountList' => $userAccountList,
+            'tab' => $tab,
+            'tabInfo' => $tabInfo,
+            'wechatAccount' => $wechatAccount,
+            'bindWechat' => $bindWechat,
+            'bindWechatAccount' => $bindWechatAccount,
+            'bindAlipayAccount' => $bindAlipayAccount,
+            'photoList' => $photoList,
+            'userCard'=>$userCard,
+            'userAptitude'=>$userAptitude
         ]);
     }
 
@@ -101,22 +113,22 @@ class UserInfoController extends CController{
      */
     public function actionFindUserInfo()
     {
-        $userSign=\Yii::$app->request->post("userSign");
-        if(empty($userSign)){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户"));
+        $userSign = \Yii::$app->request->post("userSign");
+        if (empty($userSign)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "无效的用户"));
         }
-        try{
-            $userInfo=$this->userBaseService->findBaseInfoBySign($userSign);
-            if($userInfo->sex==UserBase::USER_SEX_MALE){
-                $userInfo->sex='男';
-            }else if($userInfo->sex==UserBase::USER_SEX_FEMALE){
-                $userInfo->sex='女';
-            }else{
-                $userInfo->sex='保密';
+        try {
+            $userInfo = $this->userBaseService->findBaseInfoBySign($userSign);
+            if ($userInfo->sex == UserBase::USER_SEX_MALE) {
+                $userInfo->sex = '男';
+            } else if ($userInfo->sex == UserBase::USER_SEX_FEMALE) {
+                $userInfo->sex = '女';
+            } else {
+                $userInfo->sex = '保密';
             }
-            $userInfo->birthday=DateUtils::convertBirthdayToAge($userInfo->birthday);
-            return json_encode(Code::statusDataReturn(Code::SUCCESS,$userInfo));
-        }catch (Exception $e){
+            $userInfo->birthday = DateUtils::convertBirthdayToAge($userInfo->birthday);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $userInfo));
+        } catch (Exception $e) {
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
@@ -130,7 +142,11 @@ class UserInfoController extends CController{
     public function actionUpdateUserInfo()
     {
         $userId = $this->userObj->userId;
-        $sex = trim(\Yii::$app->request->post('sex',UserBase::USER_SEX_SECRET));
+        $surname = trim(\Yii::$app->request->post('surname'));
+        $name = trim(\Yii::$app->request->post('name'));
+        $qq = trim(\Yii::$app->request->post('qq'));
+        $wechat = trim(\Yii::$app->request->post('wechat'));
+        $sex = trim(\Yii::$app->request->post('sex', UserBase::USER_SEX_SECRET));
         $nickname = trim(\Yii::$app->request->post('nickname'));
         $birthday = trim(\Yii::$app->request->post('birthday'));
         $intro = trim(\Yii::$app->request->post('intro'));
@@ -141,34 +157,38 @@ class UserInfoController extends CController{
         $lat = \Yii::$app->request->post('lat');
         $profession = trim(\Yii::$app->request->post('profession'));
 
-        if(empty($nickname)||strlen($nickname)>30){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"昵称格式不正确"));
+        if (empty($nickname) || strlen($nickname) > 30) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "昵称格式不正确"));
         }
-        if(empty($countryId)){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地国家"));
+        if (empty($countryId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请选择居住地国家"));
         }
-        if(empty($cityId)){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"请选择居住地城市"));
+        if (empty($cityId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请选择居住地城市"));
         }
-        try{
-            $userInfo=$this->userBaseService->findUserById($userId);
-            $userInfo->sex=$sex;
-            $userInfo->nickname=$nickname;
-            $userInfo->birthday=$birthday;
-            $userInfo->intro=$intro;
-            $userInfo->info=$info;
-            $userInfo->countryId=$countryId;
-            $userInfo->cityId=$cityId;
-            $userInfo->lon=$lon;
-            $userInfo->lat=$lat;
-            $userInfo->profession=$profession;
+        try {
+            $userInfo = $this->userBaseService->findUserById($userId);
+            $userInfo->surname = $surname;
+            $userInfo->name = $name;
+            $userInfo->qq = $qq;
+            $userInfo->wechat = $wechat;
+            $userInfo->sex = $sex;
+            $userInfo->nickname = $nickname;
+            $userInfo->birthday = $birthday;
+            $userInfo->intro = $intro;
+            $userInfo->info = $info;
+            $userInfo->countryId = $countryId;
+            $userInfo->cityId = $cityId;
+            $userInfo->lon = $lon;
+            $userInfo->lat = $lat;
+            $userInfo->profession = $profession;
 
             $this->userBaseService->updateUserBase($userInfo);
             $this->refreshUserInfo();
 
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
@@ -189,19 +209,19 @@ class UserInfoController extends CController{
         $viewPortH = \Yii::$app->request->post('h');
         $rotate = \Yii::$app->request->post('rotate');
         $source = \Yii::$app->request->post('src');
-        $extArr=explode(".", $source);
+        $extArr = explode(".", $source);
         $ext = end($extArr);
         $pWidth = \Yii::$app->request->post('pWidth');
         $pHeight = \Yii::$app->request->post('pHeight');
         $rotate = 360 - $rotate;
         try {
 
-            $rst=$this->uploadUserHeadImg($selectorX,$selectorY,$viewPortW,$viewPortH,$rotate,$source,$ext,$pWidth,$pHeight,$rotate);
-            if($rst['status']==Code::SUCCESS){
+            $rst = $this->uploadUserHeadImg($selectorX, $selectorY, $viewPortW, $viewPortH, $rotate, $source, $ext, $pWidth, $pHeight, $rotate);
+            if ($rst['status'] == Code::SUCCESS) {
                 $this->userBaseService->updateUserHeadImg($userId, $rst['data']);
                 $this->refreshUserInfo();
                 return json_encode(Code::statusDataReturn(Code::SUCCESS, $rst['data']));
-            }else{
+            } else {
                 return json_encode(Code::statusDataReturn(Code::FAIL));
             }
 
@@ -219,13 +239,12 @@ class UserInfoController extends CController{
     {
 
         try {
-            if(empty($this->userObj))
-            {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'请登陆后再收藏'));
+            if (empty($this->userObj)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '请登陆后再收藏'));
             }
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
-            $AttentionService =new UserAttentionService();
+            $AttentionService = new UserAttentionService();
             $data = $AttentionService->getUserCollectionTravel($userSign, $page);
             return json_encode(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
@@ -242,31 +261,28 @@ class UserInfoController extends CController{
     public function actionGetComment()
     {
         try {
-            if(empty($this->userObj))
-            {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才有发言'));
+            if (empty($this->userObj)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '登陆后才有发言'));
             }
-            $cPage=\Yii::$app->request->post('cPage');
-            if(empty($cPage)||$cPage<1)
-            {
-                $cPage=1;
+            $cPage = \Yii::$app->request->post('cPage');
+            if (empty($cPage) || $cPage < 1) {
+                $cPage = 1;
             }
-            $numb=5;
-            $page=new Page();
-            $page->currentPage=$cPage;
-            $page->pageSize=$numb;
+            $numb = 5;
+            $page = new Page();
+            $page->currentPage = $cPage;
+            $page->pageSize = $numb;
             $page->startRow = (($page->currentPage - 1) * $page->pageSize);
             $userSign = $this->userObj->userSign;
-            $travelSer =new TravelTripCommentService();
-            $rst = $travelSer->getCommentTripList($page,$userSign);
-            $str='';
-            $totalCount=$rst['msg']->totalCount;
-            if(intval($totalCount)!=0)
-            {
-                $count=intval($totalCount);
-                $str=Common::pageHtml($cPage,$numb,$count);
+            $travelSer = new TravelTripCommentService();
+            $rst = $travelSer->getCommentTripList($page, $userSign);
+            $str = '';
+            $totalCount = $rst['msg']->totalCount;
+            if (intval($totalCount) != 0) {
+                $count = intval($totalCount);
+                $str = Common::pageHtml($cPage, $numb, $count);
             }
-            return json_encode(Code::statusDataReturn(Code::SUCCESS, $rst,$str));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, $rst, $str));
         } catch (Exception $e) {
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
@@ -281,31 +297,31 @@ class UserInfoController extends CController{
     public function actionUpdatePassword()
     {
         try {
-            if(empty($this->userObj))
-            {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'登陆后才可以修改密码'));
+            if (empty($this->userObj)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '登陆后才可以修改密码'));
             }
             $userSign = $this->userObj->userSign;
-            $password=\Yii::$app->request->post('password');
-            $qPassword=\Yii::$app->request->post('qPassword');
-            $oPassword=\Yii::$app->request->post('oPassword');
-            if(empty($oPassword)){ return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'旧密码不能为空'));}
-            if(empty($password)){ return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'新密码不能为空'));}
-            if($password!=$qPassword)
-            {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'两次密码不统一'));
+            $password = \Yii::$app->request->post('password');
+            $qPassword = \Yii::$app->request->post('qPassword');
+            $oPassword = \Yii::$app->request->post('oPassword');
+            if (empty($oPassword)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '旧密码不能为空'));
             }
-            $rst=$this->userBaseService->findPasswordByUserSign($userSign);
-            if(empty($rst)||$rst==false)
-            {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'未找到用户'));
+            if (empty($password)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '新密码不能为空'));
             }
-            if(!$this->userBaseService->validatePassword($oPassword,$rst->password))
-            {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'旧密码不正确'));
+            if ($password != $qPassword) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '两次密码不统一'));
             }
-            $r=$this->userBaseService->updatePassword($userSign,$password);
-            return json_encode(Code::statusDataReturn(Code::SUCCESS,'修改成功'));
+            $rst = $this->userBaseService->findPasswordByUserSign($userSign);
+            if (empty($rst) || $rst == false) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '未找到用户'));
+            }
+            if (!$this->userBaseService->validatePassword($oPassword, $rst->password)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, '旧密码不正确'));
+            }
+            $r = $this->userBaseService->updatePassword($userSign, $password);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, '修改成功'));
         } catch (Exception $e) {
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
@@ -327,16 +343,16 @@ class UserInfoController extends CController{
             $email = "";
             $phone = "";
             $areaCode = "";
-            $nickname="";
+            $nickname = "";
             $countryService = new CountryService();
-            $countryList=$countryService->getCountryList();
-            $userPublisher=null;
+            $countryList = $countryService->getCountryList();
+            $userPublisher = null;
 
             if (isset($this->userObj)) {
                 $email = $this->userObj->email;
                 $phone = $this->userObj->phone;
-                $nickname=$this->userObj->nickname;
-                $userPublisher=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
+                $nickname = $this->userObj->nickname;
+                $userPublisher = $this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
             }
             if ($areaCode == "") {
                 $areaCode = "+86";
@@ -345,14 +361,15 @@ class UserInfoController extends CController{
                 'email' => $email,
                 'phone' => $phone,
                 'areaCode' => $areaCode,
-                'nickname'=>$nickname,
-                'countryList'=>$countryList,
-                'userPublisher'=>$userPublisher
+                'nickname' => $nickname,
+                'countryList' => $countryList,
+                'userPublisher' => $userPublisher
             ]);
         }
     }
 
-    public function actionTest(){
+    public function actionTest()
+    {
         $this->refreshUserInfo();
     }
 
@@ -392,45 +409,44 @@ class UserInfoController extends CController{
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机号码不能为空"));
         }
 
-        $userBase=null;
-        if($this->userObj==null){
-            $userBase=new UserBase();
-            $userPublisher=new UserPublisher();
-        }else{
-            $userBase= clone $this->userObj;
-            $userPublisher=$this->userBaseService->findUserPublisherByUserSign($userBase->userSign);
-            if($userPublisher==null){
-                $userPublisher=new UserPublisher();
+        $userBase = null;
+        if ($this->userObj == null) {
+            $userBase = new UserBase();
+            $userPublisher = new UserPublisher();
+        } else {
+            $userBase = clone $this->userObj;
+            $userPublisher = $this->userBaseService->findUserPublisherByUserSign($userBase->userSign);
+            if ($userPublisher == null) {
+                $userPublisher = new UserPublisher();
             }
         }
-        $userBase->nickname=$nickname;
-        $userBase->surname=$surname;
-        $userBase->name=$name;
-        $userBase->countryId=$countryId;
-        $userBase->cityId=$cityId;
-        $userBase->profession='';
+        $userBase->nickname = $nickname;
+        $userBase->surname = $surname;
+        $userBase->name = $name;
+        $userBase->countryId = $countryId;
+        $userBase->cityId = $cityId;
+        $userBase->profession = '';
 
 
-
-        try{
-            if(empty($userBase->phone)){
+        try {
+            if (empty($userBase->phone)) {
                 $userBase->phone = $phone;
                 $userBase->areaCode = $areaCode;
                 //判断验证码是否正确
-                if(!$this->validatePhoneCode($phone,$code)){
-                    return json_encode(Code::statusDataReturn(Code::FAIL,"手机验证码输入有误"));
+                if (!$this->validatePhoneCode($phone, $code)) {
+                    return json_encode(Code::statusDataReturn(Code::FAIL, "手机验证码输入有误"));
                 }
                 //验证手机是否存在
-                if($this->userBaseService->validatePhoneExist($phone,$userBase->userId)){
-                    return json_encode(Code::statusDataReturn(Code::FAIL,"手机号码已经注册"));
+                if ($this->userBaseService->validatePhoneExist($phone, $userBase->userId)) {
+                    return json_encode(Code::statusDataReturn(Code::FAIL, "手机号码已经注册"));
                 }
             }
 
             $this->userBaseService->updateUserBase($userBase);
             $this->refreshUserInfo();//刷新缓存
-            return json_encode(Code::statusDataReturn(Code::SUCCESS,'/user-info/register-publisher-next'));
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, '/user-info/register-publisher-next'));
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
@@ -450,28 +466,28 @@ class UserInfoController extends CController{
         $viewPortW = \Yii::$app->request->post('w');
         $viewPortH = \Yii::$app->request->post('h');
         $rotate = \Yii::$app->request->post('rotate');
-        $source = \Yii::$app->request->post('src','');
-        $extArr=explode(".", $source);
+        $source = \Yii::$app->request->post('src', '');
+        $extArr = explode(".", $source);
         $ext = end($extArr);
         $pWidth = \Yii::$app->request->post('pWidth');
         $pHeight = \Yii::$app->request->post('pHeight');
         $rotate = 360 - $rotate;
         try {
 
-            $rst=$this->uploadUserHeadImg($selectorX,$selectorY,$viewPortW,$viewPortH,$rotate,$source,$ext,$pWidth,$pHeight,$rotate);
-            if($rst['status']==Code::SUCCESS){
-                $userBase=$this->userBaseService->findUserByUserSign($userId);
-                $userBase->headImg=$rst['data'];
+            $rst = $this->uploadUserHeadImg($selectorX, $selectorY, $viewPortW, $viewPortH, $rotate, $source, $ext, $pWidth, $pHeight, $rotate);
+            if ($rst['status'] == Code::SUCCESS) {
+                $userBase = $this->userBaseService->findUserByUserSign($userId);
+                $userBase->headImg = $rst['data'];
 
-                $userPublisher=new UserPublisher();
-                $userPublisher->countryId=$userBase->countryId;
-                $userPublisher->cityId=$userBase->cityId;
-                $userPublisher->kind=UserPublisher::USER_PUBLISHER_CARD_KIND_NO;
+                $userPublisher = new UserPublisher();
+                $userPublisher->countryId = $userBase->countryId;
+                $userPublisher->cityId = $userBase->cityId;
+                $userPublisher->kind = UserPublisher::USER_PUBLISHER_CARD_KIND_NO;
 
-                $this->userBaseService->updateUserBaseAndAddUserPublisher($userBase,$userPublisher);
+                $this->userBaseService->updateUserBaseAndAddUserPublisher($userBase, $userPublisher);
                 $this->refreshUserInfo();
                 return json_encode(Code::statusDataReturn(Code::SUCCESS));
-            }else{
+            } else {
                 return json_encode(Code::statusDataReturn(Code::FAIL));
             }
 
@@ -496,9 +512,10 @@ class UserInfoController extends CController{
      * @param $rotate
      * @return array
      */
-    private function uploadUserHeadImg($selectorX,$selectorY,$viewPortW,$viewPortH,$rotate,$source,$ext,$pWidth,$pHeight,$rotate){
-        try{
-            $source=".".$source;
+    private function uploadUserHeadImg($selectorX, $selectorY, $viewPortW, $viewPortH, $rotate, $source, $ext, $pWidth, $pHeight, $rotate)
+    {
+        try {
+            $source = "." . $source;
             if ($ext == "png") {
                 $img = imagecreatefrompng($source);
             }
@@ -554,11 +571,11 @@ class UserInfoController extends CController{
 
             imagedestroy($resultImg);
 
-            $ossUpload=new OssUpload();
-            $rst=$ossUpload->putObject($picName,OssUpload::OSS_SUIUU_HEAD_DIR,$new_file_name);
+            $ossUpload = new OssUpload();
+            $rst = $ossUpload->putObject($picName, OssUpload::OSS_SUIUU_HEAD_DIR, $new_file_name);
             unlink($picName);
             return $rst;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             LogUtils::log($e);
             return Code::statusDataReturn(Code::FAIL);
         }
@@ -571,11 +588,52 @@ class UserInfoController extends CController{
      * @param $code
      * @return bool
      */
-    private function validatePhoneCode($phone,$code)
+    private function validatePhoneCode($phone, $code)
     {
-        $vCode=\Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
-        return $vCode==$code?true:false;
+        $vCode = \Yii::$app->redis->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE . $phone);
+        return $vCode == $code ? true : false;
     }
+
+
+    /**
+     * 删除用户照片
+     * @return string
+     */
+    public function actionRemoveUserPhoto()
+    {
+        $userId = $this->userObj->userSign;
+        $photoId = \Yii::$app->request->post("photoId");
+
+        if (empty($photoId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "无效的图片"));
+        }
+        try {
+            $this->userBaseService->deleteUserPhoto($photoId, $userId);
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+    }
+
+
+    /**
+     * 添加用户资质认证申请
+     * @return string
+     */
+    public function actionApplyUserAptitude()
+    {
+        $userId = $this->userObj->userSign;
+
+        try {
+            $this->userBaseService->addUserAptitude( $userId);
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+    }
+
 
 
 }

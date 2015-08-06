@@ -12,23 +12,6 @@ var _isCode=false;
 var phoneTimer;
 var phoneTime=0;
 
-$(document).ready(function(){
-    initEmailTimer();
-    initPhoneRegister();
-    initTopMessage();
-    initBreadcrumb();
-    $("#userpassword").keypress(function(e){
-        if(e.keyCode==13){
-            $("#login-check").click();
-        }
-    });
-    $("#search-ipt").keypress(function(e){
-        if(e.keyCode==13){
-            $(".search-btn").click();
-        }
-    });
-
-});
 
 function initBreadcrumb(){
     var href=window.location.href;
@@ -43,6 +26,7 @@ function initBreadcrumb(){
         }
     });
 }
+
 function initTopMessage(){
     //如果用户登录了，查询是否有新私信
     if(isLogin==1){
@@ -75,8 +59,7 @@ function initTopMessage(){
     });
 }
 
-function initUserMessageInfoList()
-{
+function initUserMessageInfoList(){
     $.ajax({
         type: 'post',
         url: '/user-message/un-read-message-info-list',
@@ -100,8 +83,8 @@ function initUserMessageInfoList()
         }
     });
 }
-function buildSysMessageListHtml(list)
-{
+
+function buildSysMessageListHtml(list){
     if(list==""||list.length==0){
         $("#unReadSystemMessageList").html('<li><p style="text-align: center">暂无系统消息</p></li>');
         return;
@@ -123,6 +106,7 @@ function buildSysMessageListHtml(list)
     }
     $("#unReadSystemMessageList").html(sysHtml);
 }
+
 function initTopMessageSelect(){
 
     if(sys_message_count>0){
@@ -136,8 +120,7 @@ function initTopMessageSelect(){
     }
 }
 
-function buildUserMessageListHtml(list)
-{
+function buildUserMessageListHtml(list){
     if(list==""||list.length==0){
         $("#unReadUserMessageList").html('<li><p style="text-align: center;width: 240px">暂无私信消息</p></li>');
         return;
@@ -192,8 +175,7 @@ function changeSystemMessageRead(messageId,url){
     });
 }
 
-function initEmailTimer()
-{
+function initEmailTimer(){
     emailTimer=window.setInterval(function(){
         if(emailTime>0){
             emailTime--;
@@ -280,6 +262,7 @@ function emailRegister() {
         }
     });
 }
+
 function gt_custom_ajax(result, selector, message) {
     if (result) {
         challenge = selector(".geetest_challenge").value;
@@ -292,8 +275,8 @@ function gt_custom_ajax(result, selector, message) {
         _isCode=true;
     }
 }
-function login()
-{
+
+function login(){
     var username = $("#username").val();
     var password = $("#userpassword").val();
     var remember = $("#logo-check").is(":checked");
@@ -349,8 +332,8 @@ function login()
         });
     }
 }
-function initPhoneRegister()
-{
+
+function initPhoneRegister(){
     phoneTimer=window.setInterval(function(){
         if(phoneTime>0){
             phoneTime--;
@@ -366,8 +349,8 @@ function initPhoneRegister()
         }
     },1000);
 }
-function getCodePhoneRegister()
-{
+
+function getCodePhoneRegister(){
     var phone=$('#phone_top').val();
     var password=$('#phone_password_top').val();
     var areaCode = $("#codeId_top").val();
@@ -421,8 +404,8 @@ function getCodePhoneRegister()
         });
     }
 }
-function phoneRegister()
-{
+
+function phoneRegister(){
     var code=$('#phoneCode_top').val();
     var password=$("#phone_password_top").val();
     if(code=='')
@@ -466,6 +449,58 @@ function phoneRegister()
         });
     }
 }
+
+function initTab(){
+    var href=window.location.href;
+    var tabId='';
+    var tabArr=[]
+    if(href.indexOf("?")!=-1){
+        tabId=href.substring(href.indexOf("?")+1,href.length);
+        tabArr=tabId.split("-");
+        $("#"+tabArr[0]).click();
+        $("#"+tabArr[1]).click();
+    }
+}
+
+function sendFeedback(){
+    var content =$('#feedback_content').val();
+    var username=$('#username').val();
+    var phone=$('#phone').val();
+    var email=$('#email').val();
+    var chkType=$("input[type='radio'][name='rad']:checked").val();
+    if(content=='')
+    {
+        Main.showTip('请输入反馈后提交');
+        return;
+    }
+    if(chkType==1&&phone==''&&email==''){
+        Main.showTip("手机或者邮箱必须填写一种");
+        return;
+    }
+    $.ajax({
+        url: "/user-feedback/web-create-feedback",
+        type: "post",
+        data:{
+            content:content,
+            username:username,
+            email:email,
+            phone:phone,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip('反馈异常');
+        },
+        success: function(data){
+            var result=eval("("+data+")");
+            if(result.status==1){
+                Main.showTip('反馈成功，感谢您的反馈');
+            }else{
+                Main.showTip(result.data);
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
     //初始化区号选择
     $(".areaCodeSelect_top").select2({
@@ -476,6 +511,31 @@ $(document).ready(function () {
         }
     });
 
+    initEmailTimer();
+    initPhoneRegister();
+    initTopMessage();
+    initBreadcrumb();
+    initTab();
+
+    $("#userpassword").keypress(function(e){
+        if(e.keyCode==13){
+            $("#login-check").click();
+        }
+    });
+    $("#search-ipt").keypress(function(e){
+        if(e.keyCode==13){
+            $(".search-btn").click();
+        }
+    });
+
+    $("#sendFeedback").bind("click",function(){
+        sendFeedback();
+    });
+
+
+
 });
+
+
 
 

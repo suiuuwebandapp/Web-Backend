@@ -30,17 +30,17 @@ class UploadService {
         try{
             if(empty($file))
             {
-                return Code::statusDataReturn(Code::FAIL,'file error!');
+                return Code::statusDataReturn(Code::PARAMS_ERROR,'无效的文件!');
             }
             //判断上传文件是否存在
             if (!is_uploaded_file($file['tmp_name']))
             {
-                return Code::statusDataReturn(Code::FAIL,'no file find');
+                return Code::statusDataReturn(Code::PARAMS_ERROR,'文件不存在');
             }
             //判断文件大小是否大于规定大小
             if (!empty($fileMaxSize)&&($file['size'] >= $fileMaxSize))
             {
-                return Code::statusDataReturn(Code::FAIL,'image max size error');
+                return Code::statusDataReturn(Code::PARAMS_ERROR,'上传文件大于规定大小');
             }
             if(empty($fileFolder))
             {
@@ -58,9 +58,8 @@ class UploadService {
             //判断图片文件的格式
             if (!in_array($file_ext, $fileTypes))
             {
-                return Code::statusDataReturn(Code::FAIL,'image type error');
+                return Code::statusDataReturn(Code::PARAMS_ERROR,'无效的文件格式');
             }
-
             //新文件名
             $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $file_ext;
 
@@ -111,6 +110,8 @@ class UploadService {
             $file_ext = array_pop($temp_arr);
             $file_ext = trim($file_ext);
             $file_ext = strtolower($file_ext);
+
+            $fileFolder .= date("Ymd");
             if (!file_exists($fileFolder))
             { // 判断存放文件目录是否存在
                 mkdir($fileFolder, 0777, true);
@@ -153,6 +154,10 @@ class UploadService {
      */
     public function resetImg($Image, $Dw = 550, $Dh = 500, $Type = 1)
     {
+        //判断是否是以 “.” 开头
+        IF(!empty($Image)&&substr($Image,0,1)!="."){
+            $Image='.'.$Image;
+        }
         IF (!file_exists($Image)) {
             return Code::statusDataReturn(Code::FAIL);
         }
@@ -232,7 +237,8 @@ class UploadService {
                 $IntNW = $width - $Dw;
                 imagecopyresampled($nImg, $Img, -$IntNW / 1.8, 0, 0, 0, $width, $Dh, $w, $h);
             }
-            if(strtolower(end(explode(".",$Image)))=="png"){
+            $ext_arr=explode(".",$Image);
+            if(strtolower(end($ext_arr))=="png"){
                 $Image=substr(0,strlen($Image-3))."jpg";
             }
             imagejpeg($nImg, $Image);

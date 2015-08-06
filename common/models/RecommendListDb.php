@@ -132,16 +132,17 @@ class RecommendListDb extends ProxyDb
         $this->clearParam();
         $sql=sprintf("
         FROM travel_trip a
-LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
-LEFT JOIN user_base b ON b.userSign=c.userId
-LEFT JOIN recommend_list d ON d.relativeId = a.tripId
-WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:rStatus
+        LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
+        LEFT JOIN user_base b ON b.userSign=c.userId
+        LEFT JOIN recommend_list d ON d.relativeId = a.tripId
+        LEFT JOIN country co ON a.countryId=co.id
+        WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:rStatus
         ");
         $this->setParam("relativeType", RecommendList::TYPE_FOR_TRAVEL);
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("rStatus", RecommendList::RECOMMEND_STATUS_NORMAL);
         $this->setParam("tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname,co.cname as countryName');
         $this->setSql($sql);
         return $this->find($page);
     }

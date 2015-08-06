@@ -984,15 +984,15 @@ transition:1s;
 .sycon .accountCon .myOder .top input{ float:left; display:block; width:140px; height:36px; line-height:36px; padding:0 10px;   background:#eee; margin-right:20px;}
 .sycon .accountCon .myOder .top .btnBlue{ float:left; background:#3dd9c3; color:#fff;}
 .sycon .accountCon .myOder .listTit{ text-align:left; padding:0 40px;border-top:1px solid #ddd; margin-top:20px; line-height:65px; height:65px;  }
-
-
 .sycon .accountCon .orderList{margin-bottom:30px; height:auto; position:relative; background:#fff;}
-
 .sycon .accountCon .orderList .order{ padding-bottom:40px;}
 .sycon .accountCon .orderList .order .title{ padding:0 40px; height:36px; background:#ffbc68; color:#fff;}
 .sycon .accountCon .orderList .order .title span{ width:25%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px; font-size:18px;}
 .sycon .accountCon .orderList .order dd{ height:65px; line-height:65px;  padding:0 40px;  margin:0 auto;}
 .sycon .accountCon .orderList .order dd span{border-bottom:1px solid #ddd; text-align:center;width:25%; display:inline-block; float:left;  height:65px; line-height:65px; }
+
+.sycoNothing{  margin:0 auto; width:400px; height:200px; text-align:center; padding:200px 0; }
+.sycoNothing p{ color:#ddd; font-size:18px;}
 
 /*-------------随友个人中心--end-----------*/
 
@@ -1461,10 +1461,12 @@ transition:1s;
 .sydetail .web-content .web-left .line{border-bottom:1px solid #3dd9c3;}
 .sydetail .web-content .web-left .web-con .title img{ display:table-cell; vertical-align:middle;}	
 .sydetail .web-content .web-left .web-con .zhuanlan-web ul{  overflow:hidden; padding-bottom:20px;}
-.sydetail .web-content .web-left .web-con .zhuanlan-web li{ overflow:hidden;padding:25px 0 15px; border-bottom:1px solid #ddd;}
+.sydetail .web-content .web-left .web-con .zhuanlan-web li{ position:relative; overflow:hidden;padding:25px 0 15px; border-bottom:1px solid #ddd;}
 .sydetail .web-content .web-left .web-con .zhuanlan-web .user-pic{ width:50px; height:45px; position:relative;}
 .sydetail .web-content .web-left .web-con .zhuanlan-web .user-pic .user-name{ position:absolute; top:0;left:50px; width:400px;}
 .sydetail .web-content .web-left .web-con .zhuanlan-web .user-pic .user-name b{ color:#FFB96D; font-size:14px; margin-left:7px;}
+.sydetail .web-content .web-left .web-con .zhuanlan-web .hf{ position:absolute; right:0; bottom:15px; height:20px; width:20px; background:url(../images/resp.png) no-repeat 0 0; display:block;}
+.sydetail .web-content .web-left .web-con .zhuanlan-web .hf:hover{ background-position:0 -37px;}
 
 
 .sydetail .web-content .web-left .web-con .zhuanlan-web img{ width:45px; height:45px; border-radius:360px; display:block; float:left; margin:0 3px 0 0;}
@@ -1667,7 +1669,7 @@ transition:1s;
 
 
 		/*----专栏弹出层----*/
-.mask{ background:rgba(0,0,0,.78); position:fixed; top:0;left:0; z-index:5; display:none; }
+.mask{ background:rgba(0,0,0,.78); position:fixed; top:0;left:0; z-index:999; display:none; }
 .tanchu-main{width:874px; height:auto; overflow:hidden; background:#FFF; position:absolute; left:50%; top:0px; margin-left:-437px; display:none;z-index:66; padding-bottom:30px; padding-top:110px;}
 .tanchu-main img{  width:100%;  }
 .tanchu-main p{ padding:10px 49px; line-height:24px;}

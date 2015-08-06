@@ -76,6 +76,14 @@ class UserBase {
      */
     public $school;
     /**
+     * @varQQ
+     */
+    public $qq;
+    /**
+     * @var微信
+     */
+    public $wechat;
+    /**
      * @var简介
      */
     public $intro;
@@ -111,24 +119,33 @@ class UserBase {
      * @var状态
      */
     public $status;
-
     /**
      * @var是否是随友
      */
     public $isPublisher;
-
-
+    /**
+     * @var国家Id
+     */
     public $countryId;
-
+    /**
+     * @var城市ID
+     */
     public $cityId;
-
+    /**
+     * @var经度
+     */
     public $lon;
-
+    /**
+     * @var维度
+     */
     public $lat;
-
-
+    /**
+     * @var余额
+     */
     public $balance;
-
+    /**
+     * @var版本号
+     */
     public $version;
 
 }

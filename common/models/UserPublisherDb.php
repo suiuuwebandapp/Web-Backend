@@ -177,4 +177,5 @@ class UserPublisherDb extends ProxyDb
 
         $command->execute();
     }
+
 }

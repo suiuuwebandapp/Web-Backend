@@ -193,8 +193,6 @@ class UserAttentionDb extends ProxyDb
         $this->setParam("tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         $this->setParam("relativeType", UserAttention::TYPE_COLLECT_FOR_TRAVEL);
         $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
-        $this->setParam("typeCollect", AllTotalize::TYPE_COLLECT_FOR_TRIP);
-        $this->setParam("typeComment", AllTotalize::TYPE_COMMENT_FOR_TRIP);
         $this->setParam("userSign", $userSign);
 
         $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,a.tripCount,b.userSign,b.headImg,b.nickname,a.collectCount,a.commentCount');

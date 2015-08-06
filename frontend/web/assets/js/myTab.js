@@ -1,7 +1,7 @@
 $(function(){
 
 	var tabs = function(e1, e2, e3){
-	  var e1 = $('a', e1);
+	  var e1 = $('li>a', e1);
 	  var e2 = $(e2);
 	  e1.click(function(){
 	  	$('.error').remove();/*在本页面中没用--移除错误类---*/

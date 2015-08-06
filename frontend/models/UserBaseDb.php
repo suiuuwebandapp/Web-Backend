@@ -29,12 +29,12 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO user_base
             (
-              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,surname,name,
-              headImg,hobby,profession,school,intro,info,travelCount,userSign,status,isPublisher,countryId,cityId,lon,lat
+              nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,birthday,surname,
+              name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,isPublisher,countryId,cityId,lon,lat
             )
             VALUES
             (
-              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,:surname,:name,
+              :nickname,:password,:phone,:areaCode,:email,now(),:registerIp,now(),:lastLoginIp,:sex,:birthday,:surname,:name,:qq,:wechat,
               :headImg,:hobby,:profession,:school,:intro,:info,0,:userSign,:status,:isPublisher,:countryId,:cityId,:lon,:lat
             )
         ");
@@ -56,6 +56,8 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":hobby", $userBase->hobby, PDO::PARAM_STR);
         $command->bindParam(":profession", $userBase->profession, PDO::PARAM_STR);
         $command->bindParam(":school", $userBase->school, PDO::PARAM_STR);
+        $command->bindParam(":qq", $userBase->qq, PDO::PARAM_STR);
+        $command->bindParam(":wechat", $userBase->wechat, PDO::PARAM_STR);
         $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
@@ -195,8 +197,8 @@ class UserBaseDb extends ProxyDb
     public function findByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT userId,nickname,surname,name,email,phone,ub.areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,status,
-            registerTime,lastLoginTime,userSign,isPublisher,ub.cityId,ub.countryId,lon,lat,profession,balance,
+            SELECT userId,nickname,surname,name,email,phone,ub.areaCode,sex,birthday,headImg,hobby,school,qq,wechat,intro,info,
+            travelCount,registerIp,status,registerTime,lastLoginTime,userSign,isPublisher,ub.cityId,ub.countryId,lon,lat,profession,balance,
             co.cname AS countryCname,co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname
             FROM user_base AS ub
             LEFT JOIN country AS co ON co.id=ub.countryId
@@ -270,7 +272,7 @@ class UserBaseDb extends ProxyDb
     public function findUserByOpenIdAndType($openId, $type)
     {
         $sql = sprintf("
-            SELECT userId,nickname,surname,name,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,status,isPublisher
+            SELECT userId,nickname,surname,name,qq,wechat,email,phone,areaCode,sex,birthday,headImg,hobby,school,intro,info,travelCount,registerIp,registerTime,lastLoginTime,userSign,status,isPublisher
             FROM user_base WHERE userSign=
             (
               SELECT userId FROM user_access WHERE openId=:openId AND type=:type
@@ -319,7 +321,7 @@ class UserBaseDb extends ProxyDb
         $sql = sprintf("
             UPDATE user_base SET
             nickname=:nickname,phone=:phone,areaCode=:areaCode,email=:email,lastLoginIp=:lastLoginIp,sex=:sex,profession=:profession,
-            birthday=:birthday,headImg=:headImg,hobby=:hobby,school=:school,intro=:intro,info=:info,isPublisher=:isPublisher,
+            birthday=:birthday,headImg=:headImg,hobby=:hobby,school=:school,qq=:qq,wechat=:wechat,intro=:intro,info=:info,isPublisher=:isPublisher,
             countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,surname=:surname,name=:name
             WHERE userId=:userId
         ");
@@ -338,6 +340,8 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":hobby", $userBase->hobby, PDO::PARAM_STR);
         $command->bindParam(":profession", $userBase->profession, PDO::PARAM_STR);
         $command->bindParam(":school", $userBase->school, PDO::PARAM_STR);
+        $command->bindParam(":qq", $userBase->qq, PDO::PARAM_STR);
+        $command->bindParam(":wechat", $userBase->wechat, PDO::PARAM_STR);
         $command->bindParam(":intro", $userBase->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $userBase->info, PDO::PARAM_STR);
         $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
@@ -423,6 +427,26 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
 
         $command->execute();
+    }
+
+    /**
+     * 删除用户相册
+     * @param $photoId
+     * @param $userId
+     * @return int
+     */
+    public function deleteUserPhoto($photoId,$userId)
+    {
+        $sql = sprintf("
+            DELETE FROM user_photo
+            WHERE userId=:userId AND photoId=:photoId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":photoId", $photoId, PDO::PARAM_INT);
+        $command->bindParam(":userId", $userId, PDO::PARAM_STR);
+
+        return $command->execute();
     }
 
 

@@ -141,7 +141,10 @@ var Main = function() {
             return result;
         },
         showSendMessage:function(userSign){
-
+            if(isLogin==0||isLogin=="0"){
+                $("#denglu").click();
+                return;
+            }
             $.ajax({
                 url :'/user-info/find-user-info',
                 type:'post',

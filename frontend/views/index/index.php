@@ -85,55 +85,85 @@
         </ul>
     </div>
 
-    <!--list开始-->
+    <p class="title">世界从此不同</p>
+    <div class="index-tuijian w1200 clearfix">
+        <ul class="countrys clearfix">
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('新加坡');?>"><img src="/assets/images/index/01.jpg"></a><span>新加坡<br>不只有鱼尾狮</span></li>
+            <?php if(!empty($recommendTravel)){ ?>
+                <?php $recommend=$recommendTravel[0]?>
+                <li class="product">
+                    <img src="<?=$recommend['titleImg']?>" height="370px"><span><?=$recommend['countryName']?></span>
+                    <div class="div01"><p><?=$recommend['title']?></p></div>
+                    <div class="div02">
+                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
+                        <p class="p1"><?=$recommend['title']?></p>
+                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
+                    </div>
+                </li>
+            <?php } ?>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('意大利');?>"><img src="/assets/images/index/03.jpg"></a><span>意大利</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('法国');?>"><img src="/assets/images/index/04.jpg"></a><span>法国</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('日本');?>"><img src="/assets/images/index/05.jpg"></a><span>日本</span></li>
+            <?php if(!empty($recommendTravel)){ ?>
+            <?php $recommend=$recommendTravel[1]?>
+            <li class="product">
+                <img src="<?=$recommend['titleImg']?>" height="370px"><span><?=$recommend['countryName']?></span>
+                <div class="div01"><p><?=$recommend['title']?></p></div>
+                <div class="div02">
+                    <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
+                    <p class="p1"><?=$recommend['title']?></p>
+                    <p class="colGreen"><?=$recommend['basePrice']?></p>
+                    <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
+                </div>
+            </li>
+            <?php } ?>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('澳大利亚');?>"><img src="/assets/images/index/01.jpg"></a><span>澳大利亚<br>驰骋在蔚蓝的路</span></li>
+
+        </ul>
+    </div>
+
     <div class="index_list w1200 clearfix">
         <p class="title">旅行，发现与体验</p>
         <ul id="ul1" class="clearfix">
-            <?php if(!empty($recommendTravel)){ ?>
-                <?php foreach($recommendTravel as $key=>$recommend){ ?>
-                    <li <?=($key+1)%3==0?"class='nomg'":""; ?>>
-                        <img src="<?=$recommend['titleImg']?>" width="380px" height="290px">
-                        <div class="div01"><p><?=$recommend['title']?></p></div>
-                        <div class="div02">
-                            <a href="javascript:;" class="user"><img src="<?=$recommend['headImg']?>"></a>
-                            <p class="p1"><?=$recommend['title']?></p>
-                            <p class="colGreen">￥<?=$recommend['basePrice']?></p>
-                            <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
-                        </div>
-                    </li>
-                <?php } ?>
-            <?php } ?>
-        </ul>
-    </div>
-    <!--list结束-->
-    <p class="title">世界从此不同</p>
-
-    <div class="index-tuijian w1200 clearfix">
-        <ul class="countrys">
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('香港');?>"><img src="/assets/images/index/01.jpg"></a><span>香港</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('西班牙');?>"><img src="/assets/images/index/02.jpg"></a><span>西班牙</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('澳大利亚');?>"><img src="/assets/images/index/03.jpg"></a><span>澳大利亚</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('新加坡');?>"><img src="/assets/images/index/04.jpg"></a><span>新加坡</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('美国');?>"><img src="/assets/images/index/05.jpg"></a><span>美国</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('法国');?>"><img src="/assets/images/index/06.jpg"></a><span>法国</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('意大利');?>"><img src="/assets/images/index/07.jpg"></a><span>意大利</span></li>
+            <li>
+                <img src="/assets/images/index/T01.png">
+                <div class="div01"><a href="###"><p>慢行探索</p></a></div>
+            </li>
+            <li>
+                <img src="/assets/images/index/T02.png">
+                <div class="div01"><a href="###"><p>个性玩法</p></a></div>
+            </li>
+            <li class="nomg">
+                <img src="/assets/images/index/T03.png">
+                <div class="div01"><a href="###"><p>交通服务</p></a></div>
+            </li>
         </ul>
     </div>
 
     <p class="title">TA们的故事</p>
-
     <div class="story clearfix w1200">
-        <div class="fl left"><a href="#"><img src="/assets/images/index/vide.jpg" width="400" height="257"></a></div>
-        <div class="fr right clearfix">
-            <p>谁是随友 ？</p>
-            <p> TA们不是简单导游、伴游或者语言翻译，他们是在当地生活多年的人，熟知自己的生活领域从而在门道分享该领域的体验，他们是历史控、音乐玩咖、运动健将、购物狂、吃货……他们是任何人，他们带你深入当地生活，让你不虚此行。 随游，致力于打造为全世界用户提供体验目的地独特服务的在线平台。。。</p>
-            <a href="###" class="bgGreen btn colWit fr">详情</a>
-        </div>
+        <ul class="list clearfix">
+            <li class="fl">
+                <img src="/assets/images/index/storyPic01.jpg">
+                <div class="div01">
+                    <h2 class="title01">他使用随游旅行</h2>
+                    <p>在世界各地找到独特的体验，尝试和当地专家一起旅行</p>
+                    <a href="###" class="btn colGreen">了解如何用随游的方式去旅行&gt;</a>
+                </div>
+            </li>
+            <li class="fr">
+                <img src="/assets/images/index/storyPic02.jpg">
+                <div class="div01">
+                    <h2 class="title01">他通过随游赚取收入</h2>
+                    <p>通过随游网发布你熟悉的目的地线路活动及服务，或者带领游客旅行从而获取丰厚收入。</p>
+                    <a href="###" class="btn colGreen">如何发布随游&gt;</a>
+                </div>
+            </li>
+        </ul>
     </div>
-
-
-    <div class="w1200 ad">
-        <a class="detailBtn activityBanner" href="javascript:;">活动详情</a>
+    <div class="ad">
+        <a class="detailBtn" href="javascript:;">活动详情</a>
     </div>
 
 </div>

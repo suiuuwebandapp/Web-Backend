@@ -45,6 +45,11 @@ class OssUpload
      */
     const OSS_SUIUU_CARD_DIR='user_card';
 
+    /**
+     * 用户相册目录
+     */
+    const OSS_SUIUU_USER_PHOTO='user_photo';
+
 
     public $oss_sdk_service;
 

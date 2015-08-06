@@ -79,7 +79,7 @@ class UserOrderController extends  CController{
         $serviceIds=trim(\Yii::$app->request->post("serviceIds", ""));
 
         if(empty($tripId)){
-            return $this->redirect(['/result', 'result' => '随友编号不正确']);
+            return $this->redirect(['/result', 'result' => '随游编号不正确']);
         }
         if(empty($peopleCount)||$peopleCount==0){
             return $this->redirect(['/result', 'result' => '出行人数不正确']);

@@ -35,6 +35,8 @@ $(function(){
 })
 
 
+
+
 /*----详情页滚动中间导航效果----*/
 
 
@@ -43,12 +45,35 @@ $(function(){
 		var h1=$(window).scrollTop();
 		if(h1>400){
 			$('.sydetailNav').addClass('fixed')
-			$('.sydetail .web-right').addClass('fixed')
 		}else{
 			$('.sydetailNav').removeClass('fixed')
-			$('.sydetail .web-right').removeClass('fixed')
 		}
         
+    });
+
+})
+
+/*----帮助中心-导航---*/
+
+
+$(function(){
+	$(window).scroll(function(e) {
+		var h1=$(window).scrollTop();
+		if(h1>20){
+			$('#aboutCon-out .aboutNav-out').addClass('fixed')
+			$('#aboutCon-out .leftNav').addClass('fixed')
+		}else{
+			$('#aboutCon-out .aboutNav-out').removeClass('fixed')
+			$('#aboutCon-out .leftNav').removeClass('fixed')
+		}
+        
+    });
+	
+	$('#aboutCon-out .aboutCon .leftNav li .drop02 a').click(function(e) {
+			$(this).addClass('active').siblings().removeClass('active');        
+		
+		
+		
     });
 
 })
@@ -330,6 +355,43 @@ $(function(){
     })
 
 })
+
+/*-----帮助中心-----*/
+$(function(){
+	$('#aboutCon-out .helps .feedBack .choose .sel').click(function(e) {
+		if( $('#aboutCon-out .helps .feedBack .choose .sel #rad02').prop("checked")){
+			$('#aboutCon-out .helps .feedBack .choose .drop').css('display','block');
+		}else{
+			$('#aboutCon-out .helps .feedBack .choose .drop').css('display','none');
+		}
+	});
+})
+/*-----帮助中心侧导航 三级下拉菜单-----*/
+$(function(){
+	$('#aboutCon-out .aboutCon .leftNav li>a').click(function(e) {
+		if( $('#aboutCon-out .aboutCon .leftNav li>a').hasClass('active')){
+			$('#aboutCon-out .aboutCon .leftNav li .drop02').css('display','none');
+			$(this).parent().children('.drop02').css('display','block');
+		}else{
+			$(this).parent().children('.drop02').css('display','none');
+		}
+	});
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

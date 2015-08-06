@@ -17,6 +17,9 @@ use yii\base\Exception;
 
 class BaseDb {
 
+    //默认 当前时间  参数
+    const DB_PARAM_NOW="db_param_now";
+
     private $connection;
 
     public function getConnection(){
@@ -80,10 +83,15 @@ class BaseDb {
         $sqlBody='';
         $params=[];
         $paramArray=[];
+        $replaceParam=[];
 
         if(class_exists(get_class($object))) {
             foreach($object as $prop =>$val){
                 $params[]=$prop;
+                if($val===self::DB_PARAM_NOW){
+                    $replaceParam[$prop]="now()";
+                    continue;
+                }
                 $paramArray[$prop]=$val;
             }
         }else{
@@ -91,6 +99,10 @@ class BaseDb {
         }
         //循环生成SQL
         foreach($params as $p){
+            if(array_key_exists($p,$replaceParam)){
+                $sqlBody.=$p."=".$replaceParam[$p].",";
+                continue;
+            }
             $sqlBody.=$p."=:".$p.",";
         }
         if(empty($sqlBody)){
@@ -106,7 +118,6 @@ class BaseDb {
         $command=$conn->createCommand($sql);
         $this->commandSetParam($command,$paramArray);
         $command->execute();
-
     }
 
 
@@ -127,11 +138,17 @@ class BaseDb {
         $values=[];
         $params=[];
         $paramArray=[];
+        $replaceParam=[];
 
         if(class_exists(get_class($object))) {
             foreach($object as $prop =>$val){
                 if($prop==$primaryKey){continue;}
                 $params[]=$prop;
+
+                if($val===self::DB_PARAM_NOW){
+                    $replaceParam[$prop]="now()";
+                    continue;
+                }
                 $paramArray[$prop]=$val;
             }
         }else{
@@ -139,6 +156,10 @@ class BaseDb {
         }
         //循环生成SQL
         foreach($params as $p){
+            if(array_key_exists($p,$replaceParam)){
+                $values[]=$replaceParam[$p];
+                continue;
+            }
             $values[]=":".$p;
         }
         $sql=sprintf("
@@ -149,6 +170,7 @@ class BaseDb {
         $command=$conn->createCommand($sql);
         $this->commandSetParam($command,$paramArray);
         $command->execute();
+        return $object;
     }
 
 

@@ -152,8 +152,10 @@
         </div>
         <div class="clearfix sexs">
             <span>性别</span>
-            <input type="radio" id="sex01" name="sex" value="<?=\common\entity\UserBase::USER_SEX_MALE?>"><label for="sex01" style="background-position: 0px -47px;">男</label>
+            <input type="radio" id="sex01" name="sex" value="<?=\common\entity\UserBase::USER_SEX_MALE?>"><label for="sex01">男</label>
             <input type="radio" id="sex02" name="sex" value="<?=\common\entity\UserBase::USER_SEX_FEMALE?>"><label for="sex02">女</label>
+            <input type="radio" id="sex03" name="sex" checked value="<?=\common\entity\UserBase::USER_SEX_FEMALE?>"><label for="sex03" style="background-position: 0px -47px;">保密<label>
+
         </div>
         <div class="clearfix name">
             <div class="name_div">
