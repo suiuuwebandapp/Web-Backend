@@ -68,7 +68,7 @@
                                 <?=$trip['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
                             </p>
                         </a>
-                        <a href="javascript:;" class="user"><img src="<?=$trip['headImg'];?>" ></a>
+                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($trip['userSign'])?>" class="user"><img src="<?=$trip['headImg'];?>" ></a>
                         <p class="title"><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,20,"UTF-8")."...":$trip['title'] ?></p>
                         <p class="xing">
                             <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
@@ -290,7 +290,7 @@
                         html+='             '+basePriceType;
                         html+='         </p>';
                         html+='     </a>';
-                        html+='     <a href="javascript:;" class="user"><img src="'+trip.headImg+'" ></a>';
+                        html+='     <a href="/view-user/info?u='+trip.userSign+'" class="user"><img src="'+trip.headImg+'" ></a>';
                         html+='     <p class="title">'+title+'</p>';
                         html+='     <p class="xing">'
 

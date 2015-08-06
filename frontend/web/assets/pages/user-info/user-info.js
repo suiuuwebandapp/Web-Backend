@@ -1327,7 +1327,7 @@ function buildOrderList(list,type){
             html+='<span>未接单</span>';
             html+='<span>未接单</span>';
         }else{
-            html+='<span><a href="javascript:;" class="user"><img src="'+orderInfo.headImg+'" ></a><a href="javascript:;" onclick="Main.showSendMessage(\''+orderInfo.userSign+'\')" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+            html+='<span><a href="/view-user/info?u='+orderInfo.userSign+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'" ></a><a href="javascript:;" onclick="Main.showSendMessage(\''+orderInfo.userSign+'\')" class="message"><b>'+orderInfo.nickname+'</b><br><img src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
             html+='<span>'+orderInfo.phone+'</span>';
         }
 
@@ -1441,7 +1441,7 @@ function buildPublisherOrderList(list){
         html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"/></span>';
         html+='<span>'+travelInfo.info.title+'</span>';
         html+='<span>'+Main.convertTimePicker(orderInfo.startTime,2)+'</span>';
-        html+='<span><a href="javascript:;" class="user"><img src="'+orderInfo.headImg+'" width="50" height="50"></a><a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br><img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')" src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+        html+='<span><a href="/view-user/info?u='+orderInfo.userId+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'" width="50" height="50"></a><a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br><img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')" src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
         html+='<span>'+orderInfo.beginDate+'</span>';
         html+='<span>'+orderInfo.personCount+'</span>';
         html+='<span>';
@@ -1519,7 +1519,7 @@ function buildUnConfirmList(list){
         html+='<span class="pic"><img src="'+travelInfo.info.titleImg+'"></span>';
         html+='<span>'+travelInfo.info.title+'</span>';
         html+='<span>'+Main.convertTimePicker(orderInfo.startTime,2)+'</span>';
-        html+='<span><a href="javascript:;" class="user"><img src="'+orderInfo.headImg+'"></a><a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br><img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
+        html+='<span><a  href="/view-user/info?u='+orderInfo.userId+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'"></a><a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br><img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a></span>';
         html+='<span>'+orderInfo.beginDate+'</span>';
         html+='<span>'+orderInfo.personCount+'</span>';
         html+='<span>';

@@ -31,7 +31,7 @@
         <div class="pjy-right">
             <div class="user">
                 <div class="user-name">
-                    <img class="user-pic" alt="" src="<?=$publisherUserInfo->headImg?>">
+                    <a href="<?=\common\components\SiteUrl::getViewUserUrl($publisherUserInfo->userSing)?>" target="_blank"><img class="user-pic" alt="" src="<?=$publisherUserInfo->headImg?>"></a>
                     <span><?=$publisherUserInfo->nickname?></span>
                 </div>
                 <p><?=$publisherUserInfo->intro?></p>

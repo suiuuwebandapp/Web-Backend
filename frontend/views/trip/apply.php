@@ -22,7 +22,7 @@
 <div class="syApply clearfix">
     <div class="user">
         <div class="user-name">
-            <img class="user-pic" alt="" src="<?=$createUserInfo->headImg?>">
+            <a href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>" target="_blank"></a><img class="user-pic" alt="" src="<?=$createUserInfo->headImg?>">
             <span><?=$createUserInfo->nickname?></span>
         </div>
         <p><?=$createUserInfo->intro?></p>

@@ -25,7 +25,7 @@
         <div class="Pic"><a href="javascript:;" class="userPic"><img src="<?=$userInfo['headImg']?>"></a></div>
         <div class="user">
             <p class="p2"><span class="userName"><?=$userInfo['nickname']?></span>
-                <a href="javascript:;" class="btn" onclick="Main.showSendMessage('<?=$userInfo['userSign']?>')">联系TA</a>
+                <a href="<?=\common\components\SiteUrl::getViewUserUrl($userInfo['userSign']);?>" class="btn" onclick="Main.showSendMessage('<?=$userInfo['userSign']?>')">联系TA</a>
                 <?php if(!empty($this->context->userObj)&&$userInfo['userSign']==$this->context->userObj->userSign){ ?>
                 <a href="#" class="change">编辑个人信息</a></p>
             <?php } ?>
@@ -96,7 +96,7 @@
                                     <?=$trip['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
                                 </p>
                             </a>
-                            <a href="javascript:;" class="user"><img src="<?=$trip['headImg'];?>" ></a>
+                            <a href="<?=\common\components\SiteUrl::getViewUserUrl($trip['userSign'])?>" class="user"><img src="<?=$trip['headImg'];?>" ></a>
                             <p class="title"><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,20,"UTF-8")."...":$trip['title'] ?></p>
                             <p class="xing">
                                 <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">

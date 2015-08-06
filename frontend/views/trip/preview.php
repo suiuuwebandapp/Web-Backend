@@ -152,7 +152,7 @@
         <div class="web-right">
             <div class="user">
                 <div class="user-name">
-                    <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
+                    <a href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>" target="_blank"><img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic"></a>
                     <span><?=$createUserInfo->nickname;?></span>
                 </div>
                 <p><?=$createUserInfo->intro;?></p>

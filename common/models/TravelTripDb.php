@@ -119,7 +119,7 @@ class TravelTripDb extends ProxyDb{
             $sql.=")";
         }
         $this->setSql($sql);
-        $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename ");
+        $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename,u.userSign ");
 
         return $this->find($page);
     }
@@ -756,7 +756,7 @@ class TravelTripDb extends ProxyDb{
         $this->setParam("tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
 
         $this->setSql($sql);
-        $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");
+        $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names,u.userSign");
 
         return $this->findListBySql();
     }
