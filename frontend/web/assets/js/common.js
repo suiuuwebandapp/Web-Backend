@@ -321,6 +321,15 @@ $(function(){
     });
 
 })
+/*-----个人中心-----*/
+
+$(function(){
+	$('.sycon .myInformation .past01 .box .tog .adds').click(function(e) {
+		$(this).parents().children('.togT').toggle();
+        
+    })
+
+})
 
 
 
