@@ -84,7 +84,20 @@ class UserMessageRemindService extends BaseDb
             $data=$this->remindDb->getSysRemind($userSign,$page,$type);
             return array('data'=>$data->getList(),'msg'=>$data);
         } catch (Exception $e) {
-            throw new Exception('获取问答消息异常',Code::FAIL,$e);
+            throw new Exception('获取系统消息异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+    public function getNoticeMessage($userSign,$page,$type)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->remindDb=new UserMessageRemindDb($conn);
+            $data=$this->remindDb->getNoticeMessage($userSign,$page,$type);
+            return array('data'=>$data->getList(),'msg'=>$data);
+        } catch (Exception $e) {
+            throw new Exception('获取通知消息异常',Code::FAIL,$e);
         } finally {
             $this->closeLink();
         }

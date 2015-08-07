@@ -23,6 +23,21 @@ class AppUserMessageController extends AController {
         parent::__construct($id, $module);
         $this->msgSer=new UserMessageRemindService();
     }
+    //得到通知
+    public function actionGetNoticeMessages()
+    {
+        $this->loginValid();
+        try{
+            $page = new Page(\Yii::$app->request);
+            $userSign = $this->userObj->userSign;
+            $type = \Yii::$app->request->post('type');
+            $data =$this->msgSer->getNoticeMessage($userSign,$page,$type);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
 
     //得到订单提醒
     public function actionGetOrderMessages()
@@ -32,9 +47,7 @@ class AppUserMessageController extends AController {
             $page = new Page(\Yii::$app->request);
             $userSign = $this->userObj->userSign;
             $type = \Yii::$app->request->post('type');
-            $orderData =$this->msgSer->getOrderMessage($userSign,$page,$type);
-            $tripData =$this->msgSer->getTripMessage($userSign,$page,$type);
-            $data=array('order'=>$orderData,'trip'=>$tripData);
+            $data =$this->msgSer->getOrderMessage($userSign,$page,$type);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
         }catch (Exception $e){
             LogUtils::log($e);

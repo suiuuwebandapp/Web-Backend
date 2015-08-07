@@ -148,7 +148,7 @@ class TravelTripCommentDb extends ProxyDb
         $command=$this->getConnection()->createCommand($sql);
         $command->bindValue(":successStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS, PDO::PARAM_INT);
         $command->bindValue(":finishStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH, PDO::PARAM_INT);
-        $command->bindParam(":userSign", $userSign, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryOne();
     }

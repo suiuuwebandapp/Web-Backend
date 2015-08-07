@@ -8,6 +8,7 @@
 
 namespace common\components;
 
+use yii;
 
 class RequestValidate
 {
@@ -22,14 +23,15 @@ class RequestValidate
         }
     }
 
-    private function arrWalk($arr)
+    private function arrWalk(&$arr)
     {
         if (isset($arr) && !empty($arr)) {
             array_walk($arr, function (&$value, $key) {
                 if (is_array($value)) {
                     $this->arrWalk($value);
                 } else {
-                    $value = $this->checkhtml($value);
+                    $value= yii\helpers\HtmlPurifier::process($value);
+                    //$value = $this->checkhtml($value);
                 }
             });
         }
@@ -41,7 +43,6 @@ class RequestValidate
         //if(!checkperm('allowhtml')) {
 
         preg_match_all("/\<([^\<]+)\>/is", $html, $ms);
-
         $searchs[] = '<';
         $replaces[] = '&lt;';
         $searchs[] = '>';
@@ -75,9 +76,9 @@ class RequestValidate
                 $replaces[] = empty($value) ? '' : "<" . str_replace('&quot;', '"', $value) . ">";
             }
         }
+
         $html = str_replace($searchs, $replaces, $html);
         //}
-
         return $html;
     }
 
@@ -90,8 +91,10 @@ class RequestValidate
         } else {
             if ($flags === null) {
                 $string = str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $string);
+                var_dump($string);
                 if (strpos($string, '&amp;#') !== false) {
                     $string = preg_replace('/&amp;((#(\d{3,5}|x[a-fA-F0-9]{4}));)/', '&\\1', $string);
+
                 }
             } else {
                 if (PHP_VERSION < '5.4.0') {
