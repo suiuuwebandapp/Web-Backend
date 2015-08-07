@@ -37,7 +37,7 @@
                         </div>
                     </li>
                     <li class="name" id="suiuu-btn2">
-                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($this->context->userObj->userSing)?>"><img src="<?= $this->context->userObj->headImg; ?>" alt="" class="user"></a>
+                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($this->context->userObj->userSign)?>"><img src="<?= $this->context->userObj->headImg; ?>" alt="" class="user"></a>
                         <a href="javascript:;" class="colGreen aname"><?= $this->context->userObj->nickname; ?></a>
                         <div class="my-suiuu" style="display: none;">
                             <span class="jiao"></span>

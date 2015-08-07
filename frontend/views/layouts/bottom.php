@@ -203,7 +203,7 @@
 <?php  } ?>
 
 <script type="text/javascript">
-    var isLogin=<?=empty($this->context->userObj)?0:1;?>
+    var isLogin=<?=empty($this->context->userObj)?0:1;?>;
     $(document).ready(function(){
         $(".activityBanner").bind("click",function(){
             $(".sydetailPop").show();

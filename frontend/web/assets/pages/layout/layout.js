@@ -450,16 +450,19 @@ function phoneRegister(){
     }
 }
 
-function initTab(){
+function initBottomTab(){
     var href=window.location.href;
     var tabId='';
     var tabArr=[]
-    if(href.indexOf("?")!=-1){
-        tabId=href.substring(href.indexOf("?")+1,href.length);
-        tabArr=tabId.split("-");
-        $("#"+tabArr[0]).click();
-        $("#"+tabArr[1]).click();
-    }
+    try{
+        if(href.indexOf("/static")!=-1&&href.indexOf("?")!=-1){
+            tabId=href.substring(href.indexOf("?")+1,href.length);
+            tabArr=tabId.split("-");
+            $("#"+tabArr[0]).click();
+            $("#"+tabArr[1]).click();
+        }
+    }catch (e){}
+
 }
 
 function sendFeedback(){
@@ -515,7 +518,7 @@ $(document).ready(function () {
     initPhoneRegister();
     initTopMessage();
     initBreadcrumb();
-    initTab();
+    initBottomTab();
 
     $("#userpassword").keypress(function(e){
         if(e.keyCode==13){

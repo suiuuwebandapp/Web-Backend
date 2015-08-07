@@ -314,27 +314,15 @@
 <div class="sycon w1200 clearfix">
     <!-----------con-nav-------------->
     <ul class="con-nav synav">
-        <li><a href="javascript:;"  <?php if ($tab == "" || $tab == "myMessage") {
-                echo "class='active'";
-            }; ?> id="myMessage">收件箱</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "myComment") {
-                echo "class='active'";
-            }; ?> id="myComment">发言</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "myCollect") {
-                echo "class='active'";
-            }; ?> id="myCollect">收藏</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "myOrderManager") {
-                echo "class='active'";
-            }; ?> id="myOrderManager">我的预定</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "tripManager") {
-                echo "class='active'";
-            }; ?> id="tripManager">随游管理</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "userInfo") {
-                echo "class='active'";
-            }; ?> id="userInfo">个人资料</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "userAccount") {
-                echo "class='active'";
-            }; ?> id="userAccount">个人账户</a></li>
+        <li><a href="javascript:;"  <?php if ($tab == "" || $tab == "myMessage") {echo "class='active'";}; ?> id="myMessage">收件箱</a></li>
+        <li><a href="javascript:;" <?php if ($tab == "myComment") {echo "class='active'";}; ?> id="myComment">发言</a></li>
+        <li><a href="javascript:;" <?php if ($tab == "myCollect") { echo "class='active'";}; ?> id="myCollect">收藏</a></li>
+        <li><a href="javascript:;" <?php if ($tab == "myOrderManager") { echo "class='active'";}; ?> id="myOrderManager">我的预定</a></li>
+        <?php if ($this->context->userObj->isPublisher) { ?>
+            <li><a href="javascript:;" <?php if ($tab == "tripManager") {echo "class='active'";}; ?> id="tripManager">随游管理</a></li>
+        <?php } ?>
+        <li><a href="javascript:;" <?php if ($tab == "userInfo") { echo "class='active'";}; ?> id="userInfo">个人资料</a></li>
+        <li><a href="javascript:;" <?php if ($tab == "userAccount") {echo "class='active'";}; ?> id="userAccount">个人账户</a></li>
     </ul>
     <!-------------TabCon1-我的邮件------------>
     <div class="tab-div myEmail TabCon clearfix" <?php if ($tab == "" || $tab == "myMessage") {
@@ -347,9 +335,9 @@
             <li><a href="javascript:;" id="userMessageSetting">设置</a></li>
         </ul>
         <div class="emailCon past01 slideRec" style="display:block;">
+            <div id="messageNothing" style="padding-top: 80px;margin-left:290px;" class="sycoNothing"><img src="/assets/images/N01.png" width="78" height="78"><p>您还没有消息哦</p></div>
             <div class="left" id="messageSessionDiv">
-                <ul>
-                </ul>
+                <ul style="height: auto"></ul>
                 <div class="pages" style="display: none">
                     <ol>
                         <li>1</li>
@@ -363,10 +351,11 @@
             </div>
             <div class="right" id="messageInfoDiv">
                 <div class="con">
-                    <ul>
-                    </ul>
-                    <div class="write" id="write_div"><input type="text" class="txt" id="messageContent"><input
-                            type="button" class="btn" value="发送" id="sendMessageBtn"></div>
+                    <ul></ul>
+                    <div class="write" id="write_div">
+                        <input type="text" class="txt" id="messageContent">
+                        <input type="button" class="btn" value="发送" id="sendMessageBtn">
+                    </div>
                 </div>
             </div>
         </div>
@@ -391,43 +380,30 @@
     </div>
 
     <!-------------TabCon2-发言------------->
-    <div class="tab-div huifu TabCon clearfix" <?php if ($tab == "myComment") {
-        echo "style='display:block'";
-    } else {
-        echo "style='display:none'";
-    }; ?>>
-
+    <div class="tab-div huifu TabCon clearfix" <?=$tab == "myComment"?"style='display:block'":"style='display:none'"?> >
         <div class="huifu-list">
-            <ul id="commentList_51">
-            </ul>
+            <ul id="commentList_51"></ul>
             <ol id="spage"></ol>
         </div>
+        <div id="commentNothing" style="padding-top: 0px" class="sycoNothing"><img src="/assets/images/N02.png" width="78" height="78"><p>您还没有发言哦</p></div>
     </div>
 
     <!-------------TabCon3-收藏------------->
-    <div class="tab-div shoucang TabCon clearfix" <?php if ($tab == "myCollect") {
-        echo "style='display:block'";
-    } else {
-        echo "style='display:none'";
-    }; ?> >
+    <div class="tab-div shoucang TabCon clearfix" <?=$tab == "myCollect"?"style='display:block'":"style='display:none'"?> >
         <ul class="clearfix" id="myCollectList">
         </ul>
+        <div id="collectNothing" style="padding-top: 90px" class="sycoNothing"><img src="/assets/images/N03.png" width="78" height="78"><p>您还没有收藏哦</p></div>
     </div>
 
     <!-------------TabCon4-我的预定------------->
-    <div class="tab-div orderCon TabCon clearfix" <?php if ($tab == "myOrderManager") {
-        echo "style='display:block'";
-    } else {
-        echo "style='display:none'";
-    }; ?> >
+    <div class="tab-div orderCon TabCon clearfix" <?=$tab == "myOrderManager"?"style='display:block'":"style='display:none'"?> >
         <ul class="myOderNav innerNav">
             <li><a href="javascript:;" class="active" id="unFinishOrderManager">未完成订单</a></li>
             <li><a href="javascript:;" id="finishOrderManager">过往订单</a></li>
         </ul>
-        <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList">
-        </div>
-        <div class="myOder pastOder innerCon" id="finishList">
-        </div>
+        <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList"></div>
+        <div class="myOder pastOder innerCon" id="finishList"></div>
+        <div id="myOrderNothing" style="padding-top: 90px;padding-bottom: 20px" class="sycoNothing"><img src="/assets/images/N04.png" width="78" height="78"><p>您还没有行程，去随游预定吧</p></div>
         <div class="advertising"><img src="/assets/images/ad.jpg" width="1201" height="401"></div>
     </div>
 
@@ -451,7 +427,7 @@
         </div>
         <div class="myOder past03 tabCon" id="myJoinTripList">
         </div>
-
+        <div id="tripNothing" style="padding-top: 90px;" class="sycoNothing"><img src="/assets/images/N05.png" width="78" height="78"><p></p></div>
 
     </div>
 
@@ -798,17 +774,17 @@
                             <div class="pic">
                                 <div class="sel-pic">
                                     <div id="divCardFront" class="imgPic">
-                                        <?php if($idCardStatus==\common\entity\UserCard::USER_CARD_STATUS_WAIT){ ?>
+                                        <?php if($idCardStatus!=""&&$idCardStatus==\common\entity\UserCard::USER_CARD_STATUS_WAIT){ ?>
                                             <img src="<?= $idCardImg ?>" class="showImg" />
                                         <?php }else{ ?>
                                             <img src="<?= $idCardImg ?>" id="imgFront" style="display: none" class="showImg" />
                                         <?php } ?>
-                                        <p class="p_chose_card_front">点击上传护照</p>
+                                        <p class="p_chose_card_front" style="background: #ddd">点击上传护照</p>
                                     </div>
                                     <input id="fileCardFront" type="file"/>
                                     <div id="frontQueue" class="queue"></div>
                                 </div>
-                                <?php if($idCardStatus==0){ ?>
+                                <?php if($idCardStatus!=""&&$idCardStatus==0){ ?>
                                     <a href="javascript:;" class="colOrange"  style="background: gainsboro;color: #ffffff">等待审核</a>
                                 <?php }else{?>
                                     <a href="javascript:;" class="colOrange" id="resetUploadFront">重新上传</a>
@@ -895,7 +871,7 @@
             <li><a href="javascript:;" class="active" id="accountList">账户信息</a></li>
             <li><a href="javascript:;" id="accountHistory">历史交易</a></li>
         </ul>
-        <div class="myOder nowOder actCon" style="display:block;">
+        <div id="accountDiv" class="myOder nowOder actCon" style="display:block;">
             <div class="top clearfix">
                 <p class="row clearfix">账户余额：<span class="orange"
                                                    style="float: none">￥<?= intval($this->context->userObj->balance); ?></span>
@@ -933,7 +909,7 @@
                 </dl>
             </div>
         </div>
-        <div class="myOder nowOder actCon">
+        <div id="accountHistoryDiv" class="myOder nowOder actCon">
             <div class="top clearfix">
                 <div class="row clearfix" id="accountSearch">
                     <div class="selets">
@@ -982,6 +958,8 @@
                 </dl>
             </div>
         </div>
+
+
     </div>
 </div>
 

@@ -167,7 +167,45 @@
     </div>
 
 </div>
+
+<!--index弹层------->
+<div class="indexPro clearfix">
+    <a href="#" class="colses"></a>
+    <ul class="icon clearfix">
+        <li class="fl"><div class="pic">
+                <img src="/assets/images/inP01.png" width="132" height="92">
+                <p class="p1">我是游客</p>
+            </div>
+            <div class="text clearfix">
+                <div class="line bgGreen"></div>
+                <p><span class="bgGreen icon"></span><span>注册并进行身份验证</span></p>
+                <p><span class="bgGreen icon"></span><span>找到适合您的旅行目的地产品</span></p>
+                <p><span class="bgGreen icon"></span><span>预订并享受独特体验</span></p>
+            </div>
+        </li>
+        <li class="fr">
+            <div class="pic">
+                <img src="/assets/images/inP02.png" width="116" height="93">
+                <p class="p1">我想发布随游</p>
+            </div>
+            <div class="text clearfix">
+                <div class="line bgGreen"></div>
+                <p><span class="bgGreen icon"></span><span>注册并进行身份验证</span></p>
+                <p><span class="bgGreen icon"></span><span>上传文字描述及图片，完成随游发布</span></p>
+                <p><span class="bgGreen icon"></span><span>接收订单，获取收入</span></p>
+            </div>
+        </li>
+    </ul>
+</div>
 <script type="text/javascript">
+    $(function(){
+        $('.index-banner .serch-out .serch .helps').click(function(e) {
+            $('.indexPro').animate({top:0},"slow");
+        });
+        $('.indexPro a.colses').click(function(e) {
+            $('.indexPro').animate({top:-700},"slow");
+        });
+    })
     $(document).ready(function(){
 
         $(".prev,.next").hover(function(){

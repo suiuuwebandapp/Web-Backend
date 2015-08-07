@@ -27,7 +27,7 @@
             <p class="p2"><span class="userName"><?=$userInfo['nickname']?></span>
                 <a href="<?=\common\components\SiteUrl::getViewUserUrl($userInfo['userSign']);?>" class="btn" onclick="Main.showSendMessage('<?=$userInfo['userSign']?>')">联系TA</a>
                 <?php if(!empty($this->context->userObj)&&$userInfo['userSign']==$this->context->userObj->userSign){ ?>
-                <a href="#" class="change">编辑个人信息</a></p>
+                <a href="/user-info?tab=userInfo" class="change">编辑个人信息</a></p>
             <?php } ?>
             <p class="p1">
 

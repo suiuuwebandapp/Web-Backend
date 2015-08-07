@@ -292,7 +292,7 @@ function initMessageSession(){
     $.ajax({
         url :'/user-message/message-session-list',
         type:'post',
-        data:{},
+        data:{u:1},
         beforeSend:function(){
         },
         error:function(){
@@ -331,11 +331,13 @@ function initUserMessageSessionTimer(){
 function buildMessageSessionHtml(list){
     $("#messageSessionDiv ul").html("");
     $("#messageInfoDiv ul").html("");//清空
-
+    var html='',tempSession='',content='';
     if(list==''||list.length==0){
+        $("#messageNothing").show();
         return;
     }
-    var html='',tempSession='',content='';
+    $("#messageNothing").hide();
+
     for(var i=0;i<list.length;i++){
         tempSession=list[i];
         content=tempSession.lastContentInfo;
@@ -379,7 +381,7 @@ function getUserUnReadMessageSession(){
             data=eval("("+data+")");
             if(data.status==1){
                 rebuildMessageSessionList(data.data);
-               // $("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
+                //$("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
                 //$(obj).removeClass("new");
                 //buildMessageSessionInfo(data.data)
             }else{
@@ -1122,11 +1124,13 @@ function getMyTripList(){
  * @returns {string}
  */
 function buildMyTripHtml(tripList){
+    var tripInfo,html='';
     if(tripList==''||tripList.length==0){
-        html="<p class='no_result'><a>您还没有发布过随游哦~</a></p>";
+        $("#tripNothing p").html("您还没有发布过随游哦");
+        $("#tripNothing").show();
         return html;
     }
-    var tripInfo,html='';
+    $("#tripNothing").hide();
     for(var i=0;i<tripList.length;i++){
         tripInfo=tripList[i];
         var count=tripInfo.count==null?'':tripInfo.count;
@@ -1202,11 +1206,14 @@ function getMyJoinTripList(){
  * @returns {string}
  */
 function buildMyJoinTripHtml(tripList){
+    var tripInfo,html='';
+
     if(tripList==''||tripList.length==0){
-        html="<p class='no_result'><a>您还没有申请加入过随游哦~</a></p>";
+        $("#tripNothing p").html("您还没有申请加入过随游哦");
+        $("#tripNothing").show();
         return html;
     }
-    var tripInfo,html='';
+    $("#tripNothing").hide();
     for(var i=0;i<tripList.length;i++){
         tripInfo=tripList[i];
         var info=tripInfo.info;
@@ -1302,9 +1309,10 @@ function getFinishList(){
 function buildOrderList(list,type){
     var html="";
     if(list==""||list.length==0){
-        html="<p class='no_result'><a>暂时没有找到您的订单哦~</a></p>";
+        $("#myOrderNothing").show();
         return html;
     }
+    $("#myOrderNothing").hide();
     for(var i=0;i<list.length;i++){
         var orderInfo=list[i];
         var travelInfo=orderInfo.tripJsonInfo;
@@ -1422,9 +1430,11 @@ function getPublisherOrderList(){
 function buildPublisherOrderList(list){
     var html="";
     if(list==""||list.length==0){
-        html="<p class='no_result'><a>您暂时还没有随游订单哦~</a></p>";
+        $("#tripNothing p").html("您暂时还没有随游订单哦");
+        $("#tripNothing").show();
         return html;
     }
+    $("#tripNothing").hide();
     for(var i=0;i<list.length;i++){
         var orderInfo=list[i];
         var travelInfo=orderInfo.tripJsonInfo;
@@ -1500,9 +1510,11 @@ function getUnConfirmOrderByPublisher(){
 function buildUnConfirmList(list){
     var html="";
     if(list==""||list.length==0){
-        html="<p class='no_result'><a>暂时没有可接的订单哦~</a></p>";
+        $("#tripNothing p").html("暂时没有可接的订单哦");
+        $("#tripNothing").show();
         return html;
     }
+    $("#tripNothing").hide();
     for(var i=0;i<list.length;i++){
         var orderInfo=list[i];
         var travelInfo=orderInfo.tripJsonInfo;
@@ -1883,9 +1895,10 @@ function initCollect(){
             if(result.status==1){
                 var l =  result.data.data.length;
                 if(l==0){
-                    $('#myCollectList').html('<p class="no_result" style="padding-bottom: 20px">您还没有收藏过随游哦~</p>');
+                    $("#collectNothing").show();
                     return;
                 }else{
+                    $("#collectNothing").hide();
                     $('#myCollectList').html('');
                 }
 
@@ -1950,9 +1963,10 @@ function initMyComment(page){
             if(result.status==1){
                 var l =  result.data.data.length;
                 if(l==0){
-                    $('#commentList_51').html('<p>您还没有发言哦~</p>');
+                    $("#commentNothing").show();
                     return;
                 }else{
+                    $("#commentNothing").hide();
                     $('#commentList_51').html('');
                 }
                 var str ='';
@@ -2426,12 +2440,11 @@ function getUserAccountRecordList(){
 function buildUserAccountListHtml(data,id) {
     var html='',type='',status='',flag=false;
     if(data.totalCount==0){
-        html='<dd><p>暂无数据</p></dd>';
+        html='<dd><div id="accountNothing" style="padding-top: 30px;" class="sycoNothing"><img src="/assets/images/N07.png" width="78" height="78"><p style="line-height: normal">您还没有收入/支出</p></div></dd>';
         $("#"+id+" dd").remove();
         $("#"+id).append(html);
         return;
     }
-
     for(var i=0;i<data.result.length;i++){
         var record=data.result[i];
         html+='<dd>';
