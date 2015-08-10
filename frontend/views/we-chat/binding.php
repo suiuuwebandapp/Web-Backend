@@ -36,7 +36,7 @@
         </ul>
 
     </div>
-
+    <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
 </div>
 <script>
     function changeCode()
@@ -82,6 +82,11 @@
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
+                    if($('#r_url').val())
+                    {
+                        window.location.href=$('#r_url').val();
+                        return;
+                    }
                     window.location.href="/wechat-trip";
                 }else{
                     alert(data.data);

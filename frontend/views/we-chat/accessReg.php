@@ -88,7 +88,7 @@
     </ul>
     <a href="javascript:;" class="btn" id="register">立即注册</a>
     <p class="agr"><input type="checkbox" id="agreement"><label for="agreement">同意<a href="###">《网站注册协议》</a></label></p>
-
+    <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
 </div>
 <script>
     $(document).ready(function () {
@@ -183,6 +183,11 @@
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
+                    if($('#r_url').val())
+                    {
+                        window.location.href=$('#r_url').val();
+                        return;
+                    }
                     window.location.href="/wechat-trip/index";
                 }else{
                     alert(data.data);

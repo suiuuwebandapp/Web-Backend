@@ -13,6 +13,7 @@ use backend\components\Page;
 use common\components\Aes;
 use common\components\LogUtils;
 use common\components\Mail;
+use common\components\RequestValidate;
 use common\components\SMSUtils;
 use common\components\Validate;
 use common\entity\UserBase;
@@ -42,6 +43,13 @@ class IndexController extends UnCController
 
     public function actionIndex()
     {
+
+
+        if (RequestValidate::is_mobile_request()) {
+
+           return $this->redirect('/wechat-trip');
+
+        }
 
         //获取用户邮件定时器
         $emailTime = $this->getEmailTime();

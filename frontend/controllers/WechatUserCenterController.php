@@ -67,14 +67,6 @@ class WechatUserCenterController extends WController {
         return $this->renderPartial('myTrip',['list'=>$myList,'userObj'=>$this->userObj,'active'=>5,'newMsg'=>0]);
     }
 
-    /**
-     *随游详情
-     */
-    public function actionTripInfo()
-    {
-        $tripId=\Yii::$app->request->get('id');
-
-    }
 
     /**
      * 我的订单  //只有未完成订单列表

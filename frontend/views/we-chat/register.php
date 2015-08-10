@@ -38,7 +38,7 @@
         <span>快速登录</span>
         <div class="ddd clearfix"><a href="/access/connect-weibo?str=wap" class="icon sina"></a><a href="" class="icon wei"></a><a href="#" class="icon qq"></a></div>
 
-
+        <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
     </div>
 </div>
 <script>
@@ -98,6 +98,11 @@
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
+                    if($('#r_url').val())
+                    {
+                        window.location.href=$('#r_url').val();
+                        return;
+                    }
                     window.location.href="/wechat-trip/index";
                 }else{
                     alert(data.data);
