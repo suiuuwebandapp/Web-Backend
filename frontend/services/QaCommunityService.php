@@ -34,10 +34,10 @@ class QaCommunityService  extends BaseDb {
             $arr=explode(',',$questionCommunity->qInviteAskUser);
             foreach($arr as $val)
             {
-                $messageRemindSer = new UserMessageRemindService();
+                $userRemind = new UserMessageRemindDb($conn);
                 $content="###";
                 $url="###";
-                $messageRemindSer->addMessageRemind($questionCommunity->qId,UserMessageRemind::TYPE_INVITED,$questionCommunity->qUserSign,$val,UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
+                $userRemind->addUserMessageRemind($questionCommunity->qId,UserMessageRemind::TYPE_INVITED,$questionCommunity->qUserSign,$val,UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
             }
             $this->commit($tran);
             $tagSer = new TagListService();
@@ -65,10 +65,10 @@ class QaCommunityService  extends BaseDb {
             $this->qaCommunityDb->addAnswer($answerCommunity);
 
             //给提问人发送消息
-            $userRemind = new UserMessageRemindService();
+            $userRemind = new UserMessageRemindDb($conn);
             $content="###".$info['qTitle'];
             $url="###";
-            $userRemind->addMessageRemind($answerCommunity->qId,UserMessageRemind::TYPE_ANSWER,$answerCommunity->aUserSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
+            $userRemind->addUserMessageRemind($answerCommunity->qId,UserMessageRemind::TYPE_ANSWER,$answerCommunity->aUserSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
             $this->commit($tran);
         }catch (Exception $e){
             $this->rollback($tran);
