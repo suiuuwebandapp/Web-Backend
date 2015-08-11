@@ -115,7 +115,6 @@ class AppQaController extends AController {
                 return json_encode(Code::statusDataReturn(Code::FAIL, "未知用户"));
             }
             $id=Yii::$app->request->post("id");
-            $id=3;
             if(empty($id)){return json_encode(Code::statusDataReturn(Code::FAIL, "id不能为空"));}
 
             $rst =$this->qaSer->getQaInfoById($id,$userSign);

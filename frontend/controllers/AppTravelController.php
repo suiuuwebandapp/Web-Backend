@@ -174,7 +174,7 @@ class AppTravelController extends AController
         $this->loginValid();
         try{
             $userSign=$this->userObj->userSign;
-            $trId=Yii::$app->request->post('trId');
+            $trId=Yii::$app->request->post('tripId');
             if(empty($trId)){ return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"未知随游id"));}
             $data=$this->travelSer->getTravelTripInfoById($trId,$userSign);
             $tripInfo=$data['info'];

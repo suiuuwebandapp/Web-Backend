@@ -33,7 +33,7 @@ class AController extends SController{
 
         parent::__construct($id, $module);
     }
-    public function loginValid($bo=false,$isApp=true)
+    public function loginValid($bo=true,$isApp=true)
     {
         if($isApp) {
             if ($bo) {
@@ -62,14 +62,14 @@ class AController extends SController{
                 if (isset($currentUser)) {
                     if ($currentUser->status != UserBase::USER_STATUS_NORMAL) {
                         $this->userObj=new UserBase();
-                        $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';//085963dc0af031709b032725e3ef18f5
+                        $this->userObj->userSign='';//085963dc0af031709b032725e3ef18f5
                     } else {
                         $this->userObj = $currentUser;
                     }
                 }else
                 {
                     $this->userObj=new UserBase();
-                    $this->userObj->userSign='085963dc0af031709b032725e3ef18f5';//085963dc0af031709b032725e3ef18f5
+                    $this->userObj->userSign='';//085963dc0af031709b032725e3ef18f5
                 }
             }
             if($currentUser!=null&&$currentUser->isPublisher){

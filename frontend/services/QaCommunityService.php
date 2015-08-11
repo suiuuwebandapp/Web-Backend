@@ -97,8 +97,8 @@ class QaCommunityService  extends BaseDb {
             $attentionEntity->relativeType=UserAttention::TYPE_FOR_QA;
             $attentionEntity->userSign = $userSign;
             $attention = $attentionDb->getAttentionResult($attentionEntity);
-            $qaInfo['attention']=$attention==false?array():$attention;
-            $qaInfo['question']=$question;
+            $qaInfo['attention']=$attention==false?array():array($attention);
+            $qaInfo['question']=$question==false?array():array($question);
             $qaInfo['answer']=$answer;
             return $qaInfo;
         }catch (Exception $e){
