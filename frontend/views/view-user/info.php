@@ -42,7 +42,7 @@
                     <?=\common\components\DateUtils::convertBirthdayToAge($userInfo['birthday'])=="保密"?'':\common\components\DateUtils::convertBirthdayToAge($userInfo['birthday'])?>
                 </span>
             </p>
-            <p>个人简介：<?=$userInfo['info']?></p>
+            <p>个人简介：<?=nl2br($userInfo['info'])?></p>
         </div>
     </div>
     <div class="con clearfix">
@@ -157,7 +157,7 @@
                 _csrf: $('input[name="_csrf"]').val()
             },
             error:function(){
-                Main.showTip("抢单失败");
+                Main.showTip("获取用户评论失败");
             },
             success:function(data){
                 data=eval("("+data+")");

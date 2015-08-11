@@ -22,7 +22,7 @@
 <div class="syApply clearfix">
     <div class="user">
         <div class="user-name">
-            <a href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>" target="_blank"></a><img class="user-pic" alt="" src="<?=$createUserInfo->headImg?>">
+            <a href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>" target="_blank"><img class="user-pic" alt="" src="<?=$createUserInfo->headImg?>"></a>
             <span><?=$createUserInfo->nickname?></span>
         </div>
         <p><?=$createUserInfo->intro?></p>
@@ -52,7 +52,7 @@
             <span class="trip_info">随游 <?=$tripInfo->startTime?>-<?=$tripInfo->endTime?></span>
             <span class="trip_info">随游时长 <?=$tripInfo->startTime?>-<?=$tripInfo->endTime?></span>
             <p>
-                <?= str_replace(" ","&nbsp;",str_replace("\n","</br>",$tripInfo->info));?>
+                <?=nl2br($tripInfo->info);?>
             </p>
         </div>
     </div>

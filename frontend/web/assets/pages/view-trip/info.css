@@ -1,0 +1,67 @@
+.trip_info{
+    font-size: 18px;
+    line-height: 35px
+}
+
+.timepicki-input{
+    width: 45px !important;
+    padding-left: 0px !important;
+    margin-left: 7px !important;
+}
+
+.timepicker_wrap{
+    top: 40px !important;
+    border-radius:0 !important;
+    width: 240px;
+}
+.prev, .next{
+    border-radius: 0 !important;
+}
+.timepicker_start, .timepicker_end{
+    width: 177px !important;
+}
+
+.datetimepicker .prev{
+    background-image: url('../images/day_left.png');
+    width:20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding:0;
+}
+.datetimepicker .next{
+    background-image: url('../images/day_right.png');
+    width:20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding:0;
+}
+.datetimepicker th ,td{
+    padding: 3px 5px;
+}
+.datetimepicker table{
+    margin-top: 10px;
+}
+.btn-link,.input-group-btn{
+    display: none !important;
+}
+
+.bdsharebuttonbox .icon{
+    padding: 0;float: none;margin: 0;
+}
+.sydetailBanner .pre{
+    border:none;
+}
+.sydetailBanner .next{
+    border:none;
+}
+.sydetailBanner .next:hover{
+    background-color:transparent;
+}
+.sydetail .web-right.fixed{
+    z-index: 99;
+}
+.sydetailNav.fixed{
+    z-index: 99;
+}

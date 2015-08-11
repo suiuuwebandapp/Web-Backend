@@ -20,6 +20,7 @@ use common\entity\UserMessage;
 use common\entity\UserOrderComment;
 use common\entity\UserOrderInfo;
 use frontend\services\TripService;
+use frontend\services\UserBaseService;
 use frontend\services\UserMessageService;
 use frontend\services\UserOrderService;
 use yii\base\Exception;
@@ -53,6 +54,18 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '无效的订单号']);
         }
         $orderInfo=$this->userOrderService->findOrderByOrderNumber($orderNumber);
+        $userBaseService=new UserBaseService();
+        $tripJsonInfo=json_decode($orderInfo->tripJsonInfo,true);
+        $publisher=null;
+        $publisherInfo=null;
+
+        $publisher=$this->userOrderService->findPublisherByOrderId($orderInfo->orderId);
+        if(isset($publisher)){
+            $publisherInfo=$userBaseService->findUserByPublisherId($publisher->userPublisheId);
+        }else{
+            $publisherInfo=$userBaseService->findUserByPublisherId($tripJsonInfo['info']['createPublisherId']);
+        }
+
         if($orderInfo==null){
             return $this->redirect(['/result', 'result' => '无效的订单号']);
         }
@@ -60,7 +73,8 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '无效的用户']);
         }
         return $this->render("info",[
-           'orderInfo'=> $orderInfo
+           'orderInfo'=> $orderInfo,
+            'userPublisherInfo'=>$publisherInfo
         ]);
     }
 

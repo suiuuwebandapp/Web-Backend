@@ -34,9 +34,9 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
                     <?=$travelInfo['info']['travelTimeType']==\common\entity\TravelTrip::TRAVEL_TRIP_TIME_TYPE_DAY?'天':'小时';?>
                 </span>
                 <span>
-                    <a href="<?=\common\components\SiteUrl::getViewUserUrl($travelInfo['createPublisherInfo']['userSign'])?>" class="user"> <img src="<?=$travelInfo['createPublisherInfo']['headImg']?>" ></a>
-                    <a href="#" class="message"><b><?=$travelInfo['createPublisherInfo']['nickname']?></b><br>
-                        <img src="/assets/images/xf.fw.png" width="18" height="12" onclick="Main.showSendMessage('<?=$travelInfo['createPublisherInfo']['userSign']?>')">
+                    <a href="<?=\common\components\SiteUrl::getViewUserUrl($userPublisherInfo->userSign)?>" class="user"> <img src="<?=$userPublisherInfo->headImg?>" ></a>
+                    <a href="#" class="message"><b><?=$userPublisherInfo->nickname?></b><br>
+                        <img src="/assets/images/xf.fw.png" width="18" height="12" onclick="Main.showSendMessage('<?=$userPublisherInfo->userSign?>')">
                     </a>
                 </span>
                 <span><?=$orderInfo->beginDate?></span>

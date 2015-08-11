@@ -810,17 +810,38 @@
                 var html='';
                 html+='<li>';
                 html+='     <a href="javascript:;" class="addPic" onclick="NewTrip.removeSpecial(this)"><img src="/assets/images/minO.png" width="25" height="25"></a>';
-                html+='     <a href="javascript:;" class="pic"><img src="'+img+'" width="145" height="81"></a>';
+                html+='     <a href="javascript:;" class="pic" onclick="NewTrip.editSpecial(this)"><img src="'+img+'" width="145" height="81"></a>';
                 html+='     <div class="text">';
                 html+='         <h3 class="tit special_list_name" data="'+name+'">'+shortName+'</h3>';
                 html+='         <p class="special_list_info" data="'+info+'">'+shortInfo+'</p>';
                 html+='     </div>';
                 html+=' </li>'
 
-                $("#tripSpecialList").append(html);
-
+                var editLi=$("#tripSpecialList li[edit=1]")[0];
+                if($(editLi).html()==undefined){
+                    $("#tripSpecialList").append(html);
+                }else{
+                    $(editLi).after(html);
+                    $(editLi).remove();
+                }
 
                 resetSpecialForm();
+            },
+            editSpecial:function(obj){
+
+                $("#tripSpecialList li").attr("edit",0);
+                $(obj).parent().attr("edit",1);
+
+                var img=$(obj).parent().find("a[class='pic']").find("img").attr("src");
+                var name=$(obj).parent().find("h3").attr("data");
+                var info=$(obj).parent().find("p").attr("data");
+
+                $("#special_name").val(name);
+                $("#special_info").val(info);
+                $("#special_img").val(img);
+                $("#special_div img").attr("src",img);
+
+                $(".tog").show();
             },
 
             /**

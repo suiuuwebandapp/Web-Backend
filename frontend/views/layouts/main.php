@@ -18,6 +18,15 @@ AppAsset::register($this);
     <title><?= Yii::$app->params['name'] ?> <?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <script type="text/javascript" src="/assets/js/jquery-1.10.2.min.js"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?7f949e4cb777fc26ff22fc86b0f20ee0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body>
 <?php $this->beginBody() ?>

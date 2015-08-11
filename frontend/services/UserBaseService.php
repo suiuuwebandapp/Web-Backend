@@ -598,6 +598,22 @@ class UserBaseService extends BaseDb
         return $userBase;
     }
 
+    public function findUserByPublisherId($publisherId)
+    {
+        $userBase = null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result=$this->userBaseDb->findByPublisherId($publisherId);
+            $userBase = $this->arrayCastObject($result, UserBase::class);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $userBase;
+    }
+
     public function findUserPublisherByPublisherId($publisherId)
     {
         $userBase = null;

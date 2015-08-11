@@ -31,4 +31,11 @@ class SiteUrl {
         return $baseUrl."/view-user/info?u=".$userId;
     }
 
+
+    public static function getEditTripUrl($tripId)
+    {
+        $baseUrl=\Yii::$app->params['base_dir'];
+        return $baseUrl."/trip/edit-trip?trip=".$tripId;
+    }
+
 }

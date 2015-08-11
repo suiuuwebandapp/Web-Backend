@@ -55,7 +55,7 @@ class Validate {
     public static function validateNickname($nickname)
     {
         $error='';
-        if(empty($nickname)||strlen($nickname)>30){
+        if(empty($nickname)||mb_strlen($nickname,"UTF-8")>20){
             $error='昵称格式不正确';
         }
         return $error;

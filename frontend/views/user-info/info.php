@@ -398,7 +398,7 @@
     <!-------------TabCon4-我的预定------------->
     <div class="tab-div orderCon TabCon clearfix" <?=$tab == "myOrderManager"?"style='display:block'":"style='display:none'"?> >
         <ul class="myOderNav innerNav">
-            <li><a href="javascript:;" class="active" id="unFinishOrderManager">未完成订单</a></li>
+            <li><a href="javascript:;" class="active" id="unFinishOrderManager">随游订单</a></li>
             <li><a href="javascript:;" id="finishOrderManager">过往订单</a></li>
         </ul>
         <div class="myOder nowOder innerCon" style="display:block;" id="unFinishList"></div>
@@ -414,7 +414,7 @@
         echo "style='display:none'";
     }; ?>>
         <ul class="myOderNav tabTitle">
-            <li><a href="javascript:;" class="active" id="unConfirmOrderManager">待接订单</a></li>
+            <li><a href="javascript:;" class="active" id="unConfirmOrderManager">新订单</a></li>
             <li><a href="javascript:;" id="myPublisherOrder">随游订单</a></li>
             <li><a href="javascript:;" id="myTripManager">我的随游</a></li>
             <li><a href="javascript:;" id="myJoinTripManager">我加入的随游</a></li>
@@ -423,7 +423,7 @@
         </div>
         <div class="myOder past01 tabCon" id="myPublisherOrderList">
         </div>
-        <div class="myOder past02 tabCon" id="myTripList">
+        <div class="myOder past03 tabCon" id="myTripList">
         </div>
         <div class="myOder past03 tabCon" id="myJoinTripList">
         </div>

@@ -193,14 +193,14 @@ function initEmailTime(){
         $("#emailTime").show();
         $("#emailTime input").val("发送成功，"+emailTime+"秒后可重新发送");
         $("#emailRegister").attr("disabled","disabled");
-
-        $("#emailRegister").css("color","gray");
+        $("#emailRegister").removeAttr("disabled");
+        $("#emailRegister").css("background","#858585");
         $("#emailRegister").unbind("click");
     }else{
         $("#emailTime input").val("");
-        $("#emailRegister").removeAttr("disabled");
-        $("#emailRegister").css("color","white");
         $("#emailTime").hide();
+        $("#emailRegister").removeAttr("disabled");
+        $("#emailRegister").css("background","#3dd9c3");
         $("#emailRegister").unbind("click");
         $("#emailRegister").bind("click",function(){
             emailRegister();
@@ -213,10 +213,15 @@ function initEmailTime(){
  * @returns {boolean}
  */
 function emailRegister() {
+    var nickname = $("#regNickname").val();
     var email = $("#regEmail").val();
     var password = $("#regEmailPwd").val();
 
 
+    if(nickname.length>20){
+        Main.showTip("昵称不能大于20字符");
+        return false;
+    }
     if(email.length>30||email.length<6){
         Main.showTip("邮箱长度必须在6~30个字符之间");
         return false;
@@ -240,12 +245,16 @@ function emailRegister() {
         type: 'post',
         url: '/index/send-email',
         data: {
+            nickname:nickname,
             email: email,
             password: password,
             _csrf: $('input[name="_csrf"]').val()
         },
         beforeSend: function () {
-            //Main.showTip('正在提交，请稍后。。。');
+            $("#emailRegister").attr("disabled","disabled");
+            $("#emailRegister").css("background","#858585");
+            $("#emailTime").show();
+            $("#emailTime input").val("正在发送验证邮件，请稍后...");
         },
         error:function(){
             Main.showTip("系统异常。。。");
@@ -256,7 +265,9 @@ function emailRegister() {
                 emailTime=datas.data;
                 initEmailTimer();
             }else{
-                //do something
+                $("#emailRegister").removeAttr("disabled");
+                $("#emailRegister").css("background","#3dd9c3");
+                $("#emailTime").hide();
                 Main.showTip(datas.data);
             }
         }
@@ -338,12 +349,13 @@ function initPhoneRegister(){
         if(phoneTime>0){
             phoneTime--;
             $("#getCodePhoneRegister").html(phoneTime+"秒后可发送");
-
             $("#getCodePhoneRegister").unbind("click");
         }else{
             window.clearInterval(phoneTimer);
             $("#getCodePhoneRegister").html("发送验证码");
             $("#getCodePhoneRegister").bind("click",function(){
+                $("#getCodePhoneRegister").removeAttr("disabled");
+                $("#getCodePhoneRegister").css("background","#FFAA00");
                 getCodePhoneRegister();
             });
         }
@@ -351,28 +363,32 @@ function initPhoneRegister(){
 }
 
 function getCodePhoneRegister(){
+    var nickname=$('#nickname_top').val();
     var phone=$('#phone_top').val();
     var password=$('#phone_password_top').val();
     var areaCode = $("#codeId_top").val();
     var valNum = $("#valNum").val();
-
-    if(phone=='')
-    {
+    if(nickname==''){
+        Main.showTip("昵称不能为空");
+        return false;
+    }else if(phone==''){
         Main.showTip("手机号不能为空");
-    }else if(password=='')
-    {
+        return false;
+    }else if(password==''){
         Main.showTip("密码不能为空");
-    }else if(areaCode=='')
-    {
+        return false;
+    }else if(areaCode==''){
         Main.showTip("国家区号不能为空");
+        return false;
     }else if(valNum==''){
         Main.showTip("请输入图形验证码");
-    }else
-    {
+        return false;
+    }else{
         $.ajax({
             type: 'post',
             url: '/index/send-message',
             data: {
+                nickname:nickname,
                 phone:phone,
                 password:password,
                 areaCode:areaCode,
@@ -381,6 +397,8 @@ function getCodePhoneRegister(){
             },
             beforeSend: function () {
                 //Main.showTip('正在提交，请稍后。。。');
+                $("#getCodePhoneRegister").attr("disabled","disbaled");
+                $("#getCodePhoneRegister").css("background","#858585");
             },
             error:function(){
                 Main.showTip("系统异常。。。");
@@ -397,8 +415,9 @@ function getCodePhoneRegister(){
                     Main.showTip("发送成功请注意查收。。。");
                 }else
                 {
+                    $("#getCodePhoneRegister").removeAttr("disabled");
+                    $("#getCodePhoneRegister").css("background","#FFAA00");
                     Main.showTip(obj.data);
-
                 }
             }
         });
@@ -408,6 +427,8 @@ function getCodePhoneRegister(){
 function phoneRegister(){
     var code=$('#phoneCode_top').val();
     var password=$("#phone_password_top").val();
+    var nickname=$('#nickname_top').val();
+
     if(code=='')
     {
         Main.showTip('验证码不能为空');
@@ -420,6 +441,7 @@ function phoneRegister(){
             type: 'post',
             url: '/index/phone-register',
             data: {
+                nickname:nickname,
                 code:code,
                 password:password,
                 _csrf: $('input[name="_csrf"]').val()

@@ -40,6 +40,7 @@
         enableAutocomplete: true,
         zoom:6,
         onchanged: function (currentLocation, radius, isMarkerDropped) {
+            alert("drag");
             // Uncomment line below to show alert on each Location Changed event
             //alert("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
         }

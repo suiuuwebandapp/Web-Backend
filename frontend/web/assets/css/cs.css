@@ -74,8 +74,8 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .header-right ul li.xitong .email{ margin-top:27px;}
 .header-right ul li.xitong.active{ background-position:-124px 0px;}
 .header-right ul li.xitong .newTip{ display:block; height:18px; width:18px; background:#fff; color:#FF7F00; border:2px solid #FFDD6B;  font-size:12px; text-align:center; line-height:18px; border-radius:50%;position:absolute; top:14px; right:-20px; }
-.header-right ul li.xitong a{ background:url(../images/header/email02.png) no-repeat center 30px; display:block; width:36px; height:70px; }
-.header-right ul li.name{line-height:70px; margin-right:30px;}
+.header-right ul li.xitong a{ background:url(../images/header/email02.png) no-repeat center 25px; display:block; width:36px; height:70px; }
+.header-right ul li.name{line-height:70px; margin-right:10px;}
 .header-right ul li a{ padding:0px 6px; float:left;}
 .header-right ul li.name .aname{ padding-right:21px;background:url(../images/header/drops02.png) no-repeat right center;}
 .header-right  ul li.pubsy a{ margin-top:23px; color:#fff; display:block; border-radius:20px; height:30px;   line-height:30px; text-align:center; padding:0 10px;}
@@ -87,35 +87,26 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .header.indexHeader .header-right ul li.xitong a{ background:url(../images/header/email.png) no-repeat center 30px;  }
 
 			/*-----------弹框-------------*/
-.xit-sz{ border-radius:10px; width:240px; height:auto;position:absolute; right:-11px; top:74px; background:rgba(0,0,0,0.8); padding:10px;  display:none; z-index:99999;}
-.jiao{ border:20px solid; border-color:transparent transparent rgba(0,0,0,0.8) transparent; position:absolute; right:10px; top:-40px;}
-.xit-sz ol{ width:240px; line-height:30px; height:30px; border-bottom:1px solid #999;}
-.xit-sz ol li{ float:left; height:30px; text-align:center;}
-.xit-sz ol li.sx{ background:url(../images/ico3.png) no-repeat 6px 6px; padding-left:5px; width:114px; border-right:1px solid #999; }
-.xit-sz ol li.sx.active{ background-position:-249px 6px; color:#ffeb81 }
-.xit-sz ol li.xtxx{background:url(../images/ico3.png) no-repeat 4px -34px; padding-left:5px; width:115px;}
-.xit-sz ol li.xtxx.active{ background-position:-256px -34px;color:#ffeb81;}
-.xit-sz ul{width:240px; height:auto; }
-.xit-sz ul li{ cursor:pointer; height:30px; line-height:30px; margin:5px 0px;}
-.xit-sz ul li:hover{color:#ffeb81;}
+.xit-sz{ border-radius:10px; width:240px; height:auto;position:absolute; right:-11px; top:74px; background:#fff; border:1px solid #ddd; padding:10px;  display:none; z-index:99999;}
+.jiao{ height:7px; width:14px; display:block; position:absolute; right:10px; top:-6px; background:url(../images/index/jiao.png) no-repeat center center;}
+.xit-sz ol{ width:240px; line-height:30px; height:30px; border-bottom:1px solid #ddd;}
+.xit-sz ol li{ float:left; width:44%; height:30px; text-align:center; background:#fff;  }
+.xit-sz ol li.sx{  border-right:1px solid #ddd; }
+.xit-sz ol li.active{ color:#3dd9c3; border-bottom:2px solid #3dd9c3; }
+.xit-sz ul{  width:240px; height:auto; }
+.xit-sz ul li{ width:100%; cursor:pointer; height:30px; line-height:30px; margin:5px 0px;}
+.xit-sz ul li:hover{color:#3dd9c3;}
 .xit-sz ul li img{ width:30px; height:30px; border-radius:360px; display:block; float:left; margin:0px 4px;}
-.xit-sz ul li span{ width:80px; height:30px; line-height:30px; display:block; float:left; overflow:hidden;}
-.xit-sz ul li p{ width:112px; height:30px; line-height:30px; margin-left:10px; overflow:hidden; float:left;}
+.xit-sz ul li span{ height:30px; line-height:30px; display:block; float:left; overflow:hidden; color:#3dd9c3;}
+.xit-sz ul li p{  height:36px; line-height:36px; margin-left:10px; overflow:hidden; float:left;}
 
-.my-suiuu{ z-index:99999; display:none; width:118px; height:auto; padding-bottom:5px; position:absolute; right:10px; top:90px; background:rgba(0,0,0,0.8); border-radius:6px; }
+.my-suiuu{ z-index:99999; display:none; width:118px; height:auto; padding-bottom:5px; position:absolute; right:-8px; top:62px; background:#fff; border-radius:6px; border:1px solid #ddd; }
 .my-suiuu ul{width:118px; height:auto;}
-.my-suiuu ul li{ width:88px; height:30px; line-height:30px; margin-top:4px; padding-left:30px;}
-.my-suiuu ul li.bg1{ background:url(../images/ico3.png) no-repeat 8px -72px;}
-.my-suiuu ul li.bg1:hover,.my-suiuu ul li.bg1.active{ background-position:-249px -72px;}
-.my-suiuu ul li.bg2{ background:url(../images/ico3.png) no-repeat 8px -108px;}
-.my-suiuu ul li.bg2:hover,.my-suiuu ul li.bg2.active{ background-position:-256px -108px;}
-.my-suiuu ul li.bg3{ background:url(../images/ico3.png) no-repeat 8px -146px;}
-.my-suiuu ul li.bg3:hover,.my-suiuu ul li.bg3.active{ background-position:-255px -147px;}
-.my-suiuu ul li.bg4{ background:url(../images/ico3.png) no-repeat 8px -182px;}
-.my-suiuu ul li.bg4:hover,.my-suiuu ul li.bg4.active{ background-position:-256px -182px;}
-.my-suiuu ul li a{width:88px; height:30px; display:block;}
-.my-suiuu ul li a:hover{ color:#ffeb81;}
-.my-suiuu ul li.active a{ color:#ffeb81;}
+.my-suiuu ul li{ width:100%; height:36px; line-height:36px;   }
+.my-suiuu ul li a{ border-bottom:1px solid #ddd;width:100%; height:36px; line-height:36px; display:block; text-align:center; padding:0;}
+.my-suiuu ul li:last-child a{ border-bottom:1px solid #fff;}
+.my-suiuu ul li a:hover{ color:#fff; background:#3dd9c3;}
+.my-suiuu ul li.active a{ color:#fff;background:#3dd9c3;}
 /*------------header--end-------------*/
 
 /*------------myLogins /登录--------------*/
@@ -314,6 +305,10 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .indexPro .icon li .text p{ display:table; font-size:20px; line-height:28px; margin-bottom:45px;}
 .indexPro .icon li .text p span{ font-size:20px; display:table-cell; vertical-align:top;  width:185px;}
 .indexPro .icon li .text p span.icon{ margin-top:8px; border-radius:50%; display:inline-block; margin-right:20px; height:17px; width:17px;}
+
+.indexAd{ display:none;  position:fixed; bottom:0; left:0; width:100%; height:260px; background:rgba(0,0,0,0.8);}
+.indexAd .closed{ height:50px; width:50px; display:block; position:absolute; top:0; right:30px; background:url(../images/index/close.png) no-repeat center center; }
+.indexAd .inner{ position:absolute; top:-100px; left:50%; margin-left:-600px; height:350px; width:1200px; background:url(../images/index/adFixed.png) no-repeat center top; }
 
 /*----------index页面样式-end---------*/
 
@@ -709,17 +704,22 @@ transition:1s;
 .sycon .orderCon .myOder{ width:1070px; float:left; _display:inline; display:none; }
 .sycon .orderCon .orderList{ padding:15px 0 6px; border:1px solid #ddd;   margin-bottom:30px; height:auto; position:relative; background:#fff;}
 .sycon .orderCon .orderList .rubbish{ position:absolute; top:0; right:0; cursor:pointer;}
-.sycon .orderCon .orderList .order{ padding-bottom:40px;}
+.sycon .orderCon .orderList .order{ padding-bottom:25px;}
 .sycon .orderCon .orderList .order .title{ margin-bottom:20px; height:36px;  }
-.sycon .orderCon .orderList .order .title span{ width:12.5%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px; font-size:18px;}
-.sycon .orderCon .orderList .order dd span{ text-align:center;width:12.5%; display:inline-block; float:left; line-height:22px;}
+.sycon .orderCon .orderList .order .title span{ width:16.6%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px; }
+.sycon .orderCon .orderList .order dd span{ overflow:hidden; text-align:center;width:16.6%; display:inline-block; float:left; line-height:22px;}
 .sycon .orderCon .orderList .order dd .pic img{ width:50%; margin:0 auto; display:block;}
-.sycon .orderCon .orderList .order dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; float:left; margin-left:10px;}
+
+
+.sycon .orderCon .orderList .order dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; margin:0 auto;}
 .sycon .orderCon .orderList .order dd a.user img{ width:50px;}
-.sycon .orderCon .orderList .order dd span .message{ float:left;}
+.sycon .orderCon .orderList .order dd span .message{ display:block;}
 .sycon .orderCon .orderList .order .message b{ color:#858585; font-size:14px;}
 .sycon .orderCon .orderList p{height:36px; line-height:36px; position:relative;}
-.sycon .orderCon .orderList p span{ font-size:18px; float:right; margin-right:50px; _display:inline;  }
+.sycon .orderCon .orderList p span{  float:right; margin-right:50px; _display:inline;  }
+.sycon .orderCon .orderList p span.data01{ margin-left:20px; float:left; text-align:left; }
+.sycon .orderCon .orderList p span.data01 b{ display:block;  font-size:12px; color:#AAAAAA; line-height:22px;}
+
 .sycon .orderCon .orderList p .cancel{ margin-right:10px; font-size:16px;float:right; width:90px; height:36px; line-height:36px; color:#FFAA00; border:1px solid #ddd;   text-align:center; }
 .sycon .orderCon .orderList p .cancel:hover{    color:#fff; border:1px solid #fff; background:#FFAA00;  }
 .sycon .orderCon .orderList p .sure{ margin-right:10px; font-size:16px;float:right; width:90px; height:36px; line-height:36px; color:#3dd9c3; border:1px solid #ddd; text-align:center; }
@@ -730,7 +730,8 @@ transition:1s;
 .sycon .orderCon .orderList p span.blue{ color:#3dd9c3; }
 .sycon .orderCon .orderList p span.orange{ color:#FFAA00;}
 .sycon .orderCon .orderList p span a{ float:left;  color:#FF7A4D; }
-.sycon .orderCon .orderList p span b{  color:#FFAA00; font-size:18px; }
+.sycon .orderCon .orderList p span b{  color:#FFAA00; font-size:16px;}
+.sycon .orderCon .orderList p span b{  color:#FFAA00; font-size:16px;}
 	
 .sycon .orderCon .orderList #other-line{ text-align:center; display:none; margin-top:10px; position:absolute; bottom:-55px; right:10px; }
 .sycon .orderCon .orderList #other-line .icon{background:url("../images/footer-icon.png") no-repeat 0 0; height:44px; width:44px; display:inline-block; margin-right:25px;}
@@ -750,23 +751,30 @@ transition:1s;
 .sycon .mySuiyou .myOder{ width:1070px; float:left; _display:inline; display:none; }
 .sycon .mySuiyou .orderList{margin-bottom:30px; height:auto; position:relative; background:#fff; border:1px solid #ddd; padding:15px 0 6px;}
 .sycon .mySuiyou .orderList .rubbish{ position:absolute; top:0;right:0; cursor:pointer;}
-.sycon .mySuiyou .orderList .order{ padding-bottom:40px;}
-.sycon .mySuiyou .orderList .order .title{ margin-bottom:20px; height:36px;  }
+.sycon .mySuiyou .orderList .order{ padding-bottom:20px;}
+.sycon .mySuiyou .orderList .order .title{ margin-bottom:10px; height:36px;  }
 .sycon .mySuiyou .orderList .order .title.grey{ background:#cacaca;}
-.sycon .mySuiyou .orderList .order .title span{ width:14.28%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px; font-size:18px;}
-.sycon .mySuiyou .orderList .order dd span{ text-align:center;width:14.28%; display:inline-block; float:left; line-height:22px;}
-.sycon .mySuiyou .orderList .order dd .pic img{ width:50%; margin:0 auto; display:block;}
-.sycon .mySuiyou .orderList .order dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; float:left; margin-left:10px;}
-.sycon .mySuiyou .orderList .order dd a.user img{ width:50px;}
-.sycon .mySuiyou .orderList .order dd span .message{ float:left;}
+.sycon .mySuiyou .orderList .order .title span{ width:16.6%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px;  }
+.sycon .mySuiyou .orderList .order dd span{ text-align:center;width:16.6%; display:inline-block; float:left; line-height:22px;}
+.sycon .mySuiyou .orderList .order dd .pic img{ width:100%;  display:block;}
+.sycon .mySuiyou .orderList .order dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; margin:0 auto;}
+.sycon .mySuiyou .orderList .order dd a.user img{ width:100%; display:block;}
+.sycon .mySuiyou .orderList .order dd span .message{ display:block; }
 .sycon .mySuiyou .orderList .order .message b{ color:#858585; font-size:14px;}
 .sycon .mySuiyou .orderList p{height:36px; line-height:36px; position:relative;}
-.sycon .mySuiyou .orderList p .cancel{ color:#FFAA00; border:1px solid #ddd; font-size:16px; position:absolute; right:6px; bottom:0; width:90px; height:36px; line-height:36px;   text-align:center; }
+.sycon .mySuiyou .orderList p span{  float:right; margin-right:50px; _display:inline;  }
+.sycon .mySuiyou .orderList p span.data01{ margin-left:20px; float:left; text-align:left; }
+.sycon .mySuiyou .orderList p span.data01 b{ display:block;  font-size:12px; color:#AAAAAA; line-height:22px;}
+
+
+.sycon .mySuiyou .orderList p .cancel{ color:#FFAA00; border:1px solid #ddd; font-size:16px;  float:right; width:90px; height:36px; line-height:36px;   text-align:center; }
 .sycon .mySuiyou .orderList p .cancel:hover{ color:#fff; border:1px solid #fff; background:#FFAA00; }
-.sycon .mySuiyou .orderList p .nosure{ font-size:16px; position:absolute; right:5px; bottom:0; width:90px; height:36px; line-height:36px; border:1px solid #ddd; color:#FFAA00;   text-align:center; }
+.sycon .mySuiyou .orderList p .nosure{ font-size:16px; float:right; width:90px; height:36px; line-height:36px; border:1px solid #ddd; color:#FFAA00;   text-align:center; }
 .sycon .mySuiyou .orderList p .nosure:hover{  border:1px solid #fff; color:#fff; background:#FFAA00; }
-.sycon .mySuiyou .orderList p .sure{ font-size:16px; position:absolute; bottom:0; right:100px; width:90px; height:36px; line-height:36px; color:#3dd9c3; border:1px solid #ddd; text-align:center; }
+.sycon .mySuiyou .orderList p .sure{ font-size:16px; float:right;  width:90px; height:36px; line-height:36px; color:#3dd9c3; border:1px solid #ddd; text-align:center; }
 .sycon .mySuiyou .orderList p .sure:hover{ background:#3dd9c3;color:#fff; border:1px solid #fff;  }
+.sycon .mySuiyou .orderList p .grey{ font-size:16px; float:right;  width:90px; height:36px; line-height:36px; color:#aaa; border:1px solid #ddd; text-align:center; }
+.sycon .mySuiyou .orderList p .grey:hover{ background:#aaa;color:#fff; border:1px solid #fff;  }
 
 .sycon .mySuiyou .orderList p .btn02{ font-size:18px;float:right; color:#858585; margin-right:50px;  }
 .sycon .mySuiyou .orderList p .btn02:hover{ font-size:18px; float:right;color:#FF7945; margin-right:50px;  }
@@ -774,7 +782,7 @@ transition:1s;
 .sycon .mySuiyou .orderList p span.orange{ color:#FF7945;}
 .sycon .mySuiyou .orderList p span a{ float:left;  color:#FF7A4D; }
 
-.sycon .mySuiyou .past01 .orderList p .zno{ color:#FFAA00; position:absolute; left:20px; bottom:0; color:##FFAA00; font-size:18px;}
+.sycon .mySuiyou .past01 .orderList p .zno{ color:#FFAA00; position:absolute; left:20px; bottom:0; color:##FFAA00; }
 .sycon .mySuiyou .past01 .orderList p .zsure{ position:absolute; left:20px; bottom:0; color:#3dd9c3; font-size:18px;}
 .sycon .mySuiyou .past01 .orderList p .zcancel{ position:absolute; left:20px; bottom:0; color:#3dd9c3; font-size:18px;}
 
@@ -782,9 +790,9 @@ transition:1s;
 .sycon .mySuiyou .past02 .orderList .order dd span{ width:25%; }
 .sycon .mySuiyou .past02 .orderList p .sure b{ font-size:16px;float:right; width:24px; height:24px; border-radius:80px;  line-height:24px; text-align:center; color:#FFEB79; background:#FF2626; float:left; margin-top:-12px; margin-left:-12px; }
 
-.sycon .mySuiyou .past03 .orderList .order .title span{ width:20%;}
-.sycon .mySuiyou .past03 .orderList .order dd span{ width:20%; }
-
+.sycon .mySuiyou .past03 .orderList .order .title span{ width:25%;}
+.sycon .mySuiyou .past03 .orderList .order dd span{ width:25%; color:#BABABA; }
+.sycon .mySuiyou .past03 .orderList .order dd span.pic{ padding:0 20px; height:136px; width:210px; overflow:hidden;}
 
 
     /*----TabCon6-个人资料-----*/
@@ -1502,18 +1510,13 @@ transition:1s;
 .sydetail .web-right .ul01 li span input{ height:36px; line-height:36px; width:100%; display:block;}
 .sydetail .web-right .ul01 li span select{ border:none; outline:none; height:36px; line-height:36px; width:100%; display:block;}
 .sydetail .web-right .ul01 li span.last{ width:60px; margin:0; }
-.sydetail .web-right .ul02{ padding:0 10px;}
-.sydetail .web-right .ul02 li span{ line-height:36px; float:left; font-size:16px; display:block; width:110px;}
-.sydetail .web-right .ul02 li span.last{ width:80px;}
-.sydetail .web-right .ul02 li span.last input+label{ float:right; display:block; height:30px;background: rgba(0, 0, 0, 0) url("../images/check.png") no-repeat scroll 0 -102px;
-    cursor: pointer; 
-    padding-left: 25px;}
-.sydetail .web-right .ul02 li span.last input{ position:absolute; opacity:0;}
-	
-.sydetail .web-right .ul02 li span b{ font-size:18px; color:#3dd9c3;}
 .sydetail .web-right .money{ font-size:24px; margin:20px 0;  }
 .sydetail .web-right p b{ font-size:18px; color:#ff7945; margin:0 10px;}
-
+.sydetail .web-right .servers{ padding:0 10px; display:block; height:30px; line-height:30px;}
+.sydetail .web-right .servers:hover{ color:#3dd9c3;}
+.sydetail .web-right .servers span{ float:left;}
+.sydetail .web-right .servers .icon{ float:left; height:26px; width:30px; background:url(../images/syadd.png) no-repeat 0 4px; display:block; }
+.sydetail .web-right .servers:hover .icon{ background-position:0 -56px;}
 
 
 .sydetail .web-right .kuang .user{height:60px; padding:10px;}
@@ -1545,16 +1548,29 @@ transition:1s;
 .sydetail .web-right ol{width:285px; height:120px; }
 .sydetail .web-right ol li{ width:140px; height:40px; line-height:40px; float:left; overflow:hidden;}
 .sydetail .web-right ol li span{ display:block; float:left; width:68px;height:40px; margin-right:8px;}
-.sydetail .web-right .btn{ margin-bottom:25px; clear:both; width:150px; height:40px; color:#fff; border:none; font-size:18px;  text-align:center; line-height:40px;  }
-.sydetail .web-right input.web-btn5{  margin-right:8px; margin-left:10px;}
+.sydetail .web-right .mr{ margin-right:12px;}
+.sydetail .web-right .btn{ border-radius:3px; margin-bottom:25px; clear:both; width:145px; height:40px; color:#fff; border:none; font-size:18px;  text-align:center; line-height:40px;  }
+.sydetail .web-right input.web-btn5{  margin-right:8px; margin-left:12px;}
 
 	/*---------------随游详情pro----------*/
-	
 .syxqPro{ display:none; padding-bottom:25px; width:330px; height:auto; border:1px solid #ddd; position:fixed; top:100px; left:50%; margin-left:-165px; background:#fff; z-index:999999;}
 .syxqPro .tit02{ height:40px; line-height:40px; color:#fff; padding:0 10px; font-size:16px;}
 .syxqPro p{   line-height:24px;  padding:0 15px; font-size:16px; margin:15px auto;}
 	
+.serverSelct{ display:none; width:600px; height:400px; background:#fff; position:fixed; top:100px; left:50%; margin-left:-300px;}
+.serverSelct .title{ position:relative;  height:40px; line-height:40px; color:#fff; font-size:18px; text-align:center;}
+.serverSelct .title .close{ position:absolute; right:5px; top:4px; }
+.serverSelct .ul02{ padding:0 25px; }
+.serverSelct .ul02 li{ padding:10px; display:table; width:100%; height:40px; border-bottom:1px solid #ddd; vertical-align:middle}
+.serverSelct .ul02 li span{ line-height:22px; width:33.3%; display:block; float:left; font-size:16px;  }
+.serverSelct .ul02 li span.last input+label{ float:right; display:block; height:30px;background: rgba(0, 0, 0, 0) url("../images/check.png") no-repeat scroll 0 -102px;
+    cursor: pointer; 
+    padding-left: 50px;
+	margin-top:-6px;}
+.serverSelct .ul02 li span.last input{ position:absolute; opacity:0;}
 	
+.serverSelct .ul02 li span b{ font-size:18px; color:#3dd9c3;}
+.serverSelct .btn{ position:absolute; bottom:30px; left:50%; margin-left:-61px; font-size:18px;  border-radius:5px;display:block;   width:145px; height:40px; color:#fff; line-height:40px; text-align:center;}
 /*---------------随游详情--end----------*/
 
 

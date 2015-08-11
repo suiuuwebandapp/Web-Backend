@@ -8,84 +8,9 @@
  */
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" />
-<link rel="stylesheet" type="text/css" href="/assets/plugins/time-picki/css/timepicki.css">
-<script type="text/javascript" src="/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" ></script>
-<script type="text/javascript" src="/assets/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/time-picki/css/timepicki.css" />
+<link rel="stylesheet" type="text/css" href="/assets/pages/view-trip/info.css" />
 
-<script type="text/javascript" src="/assets/plugins/time-picki/js/timepicki.js"></script>
-<script type="text/javascript" src="/assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
-
-<style type="text/css">
-
-    .trip_info{
-        font-size: 18px;
-        line-height: 35px
-    }
-
-    .timepicki-input{
-        width: 45px !important;
-        padding-left: 0px !important;
-        margin-left: 7px !important;
-    }
-
-    .timepicker_wrap{
-        top: 40px !important;
-        border-radius:0 !important;
-        width: 240px;
-    }
-    .prev, .next{
-        border-radius: 0 !important;
-    }
-    .timepicker_start, .timepicker_end{
-        width: 177px !important;
-    }
-
-
-    .datetimepicker .prev{
-        background-image: url('/assets/images/day_left.png');
-        width:20px;
-        height: 20px;
-        background-repeat: no-repeat;
-        background-position: center;
-        padding:0;
-    }
-    .datetimepicker .next{
-        background-image: url('/assets/images/day_right.png');
-        width:20px;
-        height: 20px;
-        background-repeat: no-repeat;
-        background-position: center;
-        padding:0;
-    }
-    .datetimepicker th ,td{
-        padding: 3px 5px;
-    }
-    .datetimepicker table{
-        margin-top: 10px;
-    }
-    .btn-link,.input-group-btn{
-        display: none !important;
-    }
-
-    .bdsharebuttonbox .icon{
-        padding: 0;float: none;margin: 0;
-    }
-    .sydetailBanner .pre{
-        border:none;
-    }
-    .sydetailBanner .next{
-        border:none;
-    }
-    .sydetailBanner .next:hover{
-        background-color:transparent;
-    }
-    .sydetail .web-right.fixed{
-        z-index: 99;
-    }
-    .sydetailNav.fixed{
-        z-index: 99;
-    }
-</style>
 
 <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
 <div class="sydetailBanner web-banner">
@@ -113,6 +38,9 @@
 
 <div class="sydetail w1200 clearfix">
     <div class="titTop clearfix fl">
+        <?php if($isOwner){ ?>
+            <a href="<?=\common\components\SiteUrl::getEditTripUrl($travelInfo['info']['tripId'])?>" class="change">修改随游</a>
+        <?php }?>
         <h3 class="title"><?=$travelInfo['info']['title'];?></h3>
         <p><img src="/assets/images/position.png" width="14" height="18">&nbsp;<?=$travelInfo['info']['countryCname']?>，<?=$travelInfo['info']['cityCname']?></p>
         <p class="xing">
@@ -298,18 +226,8 @@
                         </span>
                     </li>
                 </ul>
-                <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
-                    <p>附加服务</p>
-                    <ul class="ul02 clearfix" id="serviceLi">
-                        <li>
-                            <span><?=$service['title']?></span><span><b>￥<?=intval($service['money'])?></b></span>
-                            <span class="last">
-                                <?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'每人':'每次' ?>
-                                <input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>" serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>" >
-                                <label for="radio<?=$service['serviceId']?>" ></label>
-                            </span>
-                        </li>
-                    </ul>
+                <?php if(!empty($travelInfo['serviceList'])){ ?>
+                    <a href="javascript:;" id="showServiceDiv" class="servers"><span>该随游可选择的附加服务</span><b class="icon"></b></a>
                 <?php } ?>
                 <p class="colOrange money" id="allPrice">￥<?=intval($travelInfo['info']['basePrice']);?></p>
                 <input id="toApply" type="button" value="申请加入" class="btn web-btn5 bgGreen" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
@@ -321,8 +239,10 @@
         <div class="kuang clearfix">
             <div class="user bgGreen">
                 <div class="user-name">
-                    <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
-                    <span><?=$createUserInfo->nickname;?></span>
+                    <a target="_blank" href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>">
+                        <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
+                    </a>
+                <span><?=$createUserInfo->nickname;?></span>
                 </div>
                 <p style="max-width: 215px"><?=$createUserInfo->intro;?></p>
                 <a href="javascript:;" onclick="Main.showSendMessage('<?=$createUserInfo->userSign;?>')" class="icon"></a>
@@ -342,20 +262,35 @@
             </div>
         </div>
     </div>
-
 </div>
 
 
+<div class="serverSelct screens" style="z-index: 1000;">
+    <h2 class="bgGreen title">附加服务 <a href="javascript:;" class="close" id="closeServiceDiv"><img src="/assets/images/syxClose.png" width="22" height="22"></a></h2>
+    <ul class="ul02 clearfix" id="serviceLi">
+        <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
+            <li>
+                <span><?=$service['title']?></span>
+                <span><b>￥<?=intval($service['money'])?></b></span>
+                <span class="last">
+                    <?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'每人':'每次' ?>
+                    <input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>" serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>" >
+                    <label for="radio<?=$service['serviceId']?>" ></label>
+                </span>
+            </li>
+        <?php } ?>
+    </ul>
+    <a href="javascript:;" class="bgGreen btn" id="confirmServiceDiv">确定</a>
+</div>
 
+<?php
+    $stepPriceJson='';
+    if(!empty($travelInfo['priceList'])){
+        $stepPriceJson=json_encode($travelInfo['priceList']);
+    }
+?>
 
 <script type="text/javascript">
-
-    <?php
-        $stepPriceJson='';
-        if(!empty($travelInfo['priceList'])){
-            $stepPriceJson=json_encode($travelInfo['priceList']);
-        }
-    ?>
     var basePrice='<?=intval($travelInfo['info']['basePrice']);?>';
     var basePriceType='<?=$travelInfo['info']['basePriceType'];?>';
     var maxPeopleCount='<?=$travelInfo['info']['maxUserCount'];?>';
@@ -365,552 +300,11 @@
     var userPublisherId='<?= $this->context->userPublisherObj!=null?$this->context->userPublisherObj->userPublisherId:''?>';
     var userId='<?= $this->context->userObj!=null?$this->context->userObj->userSign:''?>';
     var isOwner='<?=$isOwner;?>';
-    $(document).ready(function(){
-        $(document).scroll(function () {
-            var scrollTop = $(document).scrollTop();
-            resetDatePicker();
-            var documentHeight=$(document).height();//浏览器时下窗口可视区域高度
-            var fixHeight=$(".web-right").offset().top+$(".web-right").height();
-            var footHeight=$("#footer-out").height();
-
-            var maxHeight=documentHeight-footHeight;
-            //console.info($(".web-right").offset().top+"-"+fixHeight+"-"+maxHeight);
-            if(scrollTop>400){
-                $('.sydetail .web-right').addClass('fixed')
-            }else{
-                $('.sydetail .web-right').removeClass('fixed')
-            }
-
-            if(fixHeight>maxHeight){
-                $(".sydetail .web-right").hide();
-                $(".datetimepicker").hide();
-            }else{
-                $(".sydetail .web-right").show();
-            }
-
-
-            if(scrollTop+fixHeight>documentHeight-maxHeight){
-                $(".sylx-xiangxi").css("position","absolute");
-            }else{
-                $(".sylx-xiangxi").css("position","fixed");
-            }
-        });
-        $('#startTime').timepicki({
-            step_size_minutes:15,
-            format_output: function(tim, mini, meri) {
-                return tim + ":" + mini + " " + meri;
-            }
-        });
-
-        $("#peopleCount").TouchSpin({
-            buttondown_class: "btn-link",
-            buttonup_class: "btn-link",
-            max:10000
-        });
-        initDatePicker();
-        $("#collection_trip").bind("click",function(){
-            submitCollection();
-        });
-        getComment(1);
-        $("#peopleCount").bind("change",function(){
-            showPrice();
-        });
-        $("#serviceLi input[type='checkbox']").bind("click",function(){
-            showPrice();
-        });
-        $("#calendar").bind("click",function(){
-            $("#beginTime").focus();
-        });
-        $("#toApply").bind("click",function(){
-            if(userId==''){
-                $("#denglu").click();
-                //Main.showTip("登录后才能购买哦~！");
-                return;
-            }
-            if(userPublisherId==''){
-
-                Main.showTip("成为随友后才能加入线路！");
-                window.location.href='/index/create-travel';
-                return;
-            }
-            window.location.href='/trip/to-apply-trip?trip='+$("#tripId").val();
-        });
-
-        $("#showMoreComment").bind("click",function(){
-            var showPage=$(this).attr("showPage");
-            getComment(showPage);
-        });
-
-        $("#toBuy").bind("click",function(){
-            if(userId==''){
-                $("#denglu").click();
-                //Main.showTip("登录后才能购买哦~！");
-                return;
-            }
-            $("html,body").animate({scrollTop: $("#buyTrip").offset().top-30}, 500);
-        });
-        if(isOwner==1){
-
-        }
-        $("#addOrder").bind("click",function(){
-            if(isOwner==1){
-                Main.showTip("您无法购买自己的随游哦~");
-                return;
-            }
-            var peopleCount=$("#peopleCount").val();
-            var tripId=$("#tripId").val();
-            var beginDate=$("#beginTime").val();
-            var startTime=$("#startTime").val();
-            var serviceArr=[];
-            var serviceIds='';
-
-
-            if(userId==''){
-                $("#denglu").click();
-                //Main.showTip("登录后才能购买哦~！");
-                return;
-            }
-            if(beginDate==''){
-                Main.showTip("请选择您的出行日期");
-                return;
-            }
-            if(peopleCount==''||peopleCount==0){
-                Main.showTip("请输入你的出行人数");
-                return;
-            }
-            peopleCount=parseInt(peopleCount);
-            maxPeopleCount=parseInt(maxPeopleCount);
-
-            if(peopleCount>maxPeopleCount){
-                Main.showTip("这个随友最多之能接待"+maxPeopleCount+"个小伙伴呦~");
-                return;
-            }
-            if(startTime==''){
-                Main.showTip("请输入您的起始时间");
-                return;
-            }
-
-            $("#serviceLi input[type='checkbox']").each(function(){
-                if($(this).is(":checked")){
-                    serviceArr.push($(this).attr("serviceId"));
-                }
-            });
-            if(serviceArr!=''&&serviceArr.length>0){
-                serviceIds=serviceArr.join(",");
-            }
-
-            $("#serviceIds").val(serviceIds);
-            $("#orderForm").submit();
-
-        });
-
-        //绑定移除
-        $("#publisherList div a").bind("click",function(){
-            var tripPublisherId=$(this).attr("tripPublisherId");
-            var tripId=$("#tripId").val();
-            if(!confirm("确认要删除随友的申请吗？")){
-                return;
-            }
-            $.ajax({
-                url :'/trip/remove-publisher',
-                type:'post',
-                data:{
-                    tripId:tripId,
-                    tripPublisherId:tripPublisherId,
-                    _csrf: $('input[name="_csrf"]').val()
-                },
-                error:function(){
-                    //hide load
-                    Main.showTip("移除随友失败");
-                },
-                success:function(data){
-                    //hide load
-                    data=eval("("+data+")");
-                    if(data.status==1){
-                        $("#div_trip_publisher_"+tripPublisherId).remove();
-                    }else{
-                        Main.showTip("移除随友失败");
-                    }
-                }
-            });
-
-        });
-        //隐藏日期选择
-        $(document).bind("click",function(e){
-            var target = $(e.target);
-            if(target.closest("#beginTime").length != 1){
-                if(target.closest(".datetimepicker").length == 0){
-                    $(".datetimepicker").hide();
-                }
-            }
-        });
-    });
-
-
-    /**
-     * 初始化日期控件
-     */
-    function initDatePicker(){
-        $('#beginTime').datetimepicker({
-            language:  'zh-CN',
-            autoclose:1,
-            startView: 2,
-            minView: 2,
-            forceParse: 0,
-            format:'yyyy-mm-dd',
-            weekStart: 1,
-            startDate:'<?=date('Y-m-d',time()); ?>'
-        });
-        $(".datetimepicker").hide();
-
-
-        $('#beginTime').unbind("focus");
-
-        $("#beginTime").bind("focus",function(){
-            resetDatePicker();
-            $(".datetimepicker").show();
-        });
-
-        $(".table-condensed tbody").bind("click",function(){
-            $(".datetimepicker").hide();
-        });
-    }
-
-    function resetDatePicker(){
-        var top=$("#beginTime").offset().top;
-        var left=$("#beginTime").offset().left;
-
-        if($(".web-right").hasClass("fixed")){
-            $(".datetimepicker").css({
-                'top':'120px',
-                'left':'50%',
-                'margin-left':'283px',
-                'position':'fixed',
-                'background-color':'white',
-                'border':'1px solid gray',
-                'font-size':'14px'
-            });
-        }else{
-            $(".datetimepicker").css({
-                'top':top+40,
-                'left':left,
-                'margin-left':'0px',
-                'position':'absolute',
-                'background-color':'white',
-                'border':'1px solid gray',
-                'font-size':'14px'
-            });
-        }
-
-    }
-    //显示价格
-    function showPrice()
-    {
-        var peopleCount=$("#peopleCount").val();
-        var tripTime=$("#tripTime").val();
-        var allPrice=0;
-        var stepFlag=false;
-
-        if(peopleCount==''||peopleCount==0){
-            return;
-        }
-
-        peopleCount=parseInt(peopleCount);
-        maxPeopleCount=parseInt(maxPeopleCount);
-
-        if(peopleCount>maxPeopleCount){
-            Main.showTip("这个随友最多之能接待"+maxPeopleCount+"个小伙伴呦~");
-            return;
-        }
-        //判断有没有阶梯价格
-        var stepPriceList=[];
-        if(stepPriceJson!=''){
-            stepPriceList=eval("("+stepPriceJson+")");
-        }
-        if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
-            allPrice=basePrice;
-        }else{
-            if(stepPriceList.length>0){
-                for(var i=0;i<stepPriceList.length;i++){
-                    var stepPrice=stepPriceList[i];
-                    if(peopleCount>=stepPrice['minCount']&&peopleCount<=stepPrice['maxCount']){
-                        allPrice=parseInt(stepPrice['price'])*peopleCount;
-                        stepFlag=true;
-                        break;
-                    }
-                }
-            }else{
-                allPrice=parseInt(basePrice)*peopleCount;
-            }
-            if(!stepFlag){
-                allPrice=parseInt(basePrice)*peopleCount;
-            }
-        }
-
-        //判断有没有附加服务
-        $("#serviceLi input[type='checkbox']").each(function(){
-            var tempPrice=parseInt($(this).attr("servicePrice"));
-            if($(this).is(":checked")){
-                //如果TRUE每次 FALSE 每人
-                if($(this).attr("serviceType")==serviceTypeCount){
-                    allPrice+=tempPrice;
-                }else{
-                    allPrice+=(tempPrice*peopleCount);
-                }
-            }
-        });
-        allPrice=parseInt(allPrice);
-        $("#allPrice").html("￥"+allPrice);
-    }
-
-    function submitCollection()
-    {
-        var tripId=$("#tripId").val();
-        if(tripId==''||tripId==undefined||tripId==0)
-        {
-            Main.showTip('未知的随游');
-            return;
-        }
-       var isCollection=false;
-        if($('#collection_trip').attr('class')=='addIicon'){
-            $('#collection_trip').addClass('active');
-            isCollection = true;
-        }else{
-            $('#collection_trip').removeClass('active');
-            isCollection=false;
-        }
-
-        if(isCollection){
-            //添加收藏
-            $.ajax({
-                url :'/view-trip/add-collection-travel',
-                type:'post',
-                data:{
-                    travelId:tripId,
-                    _csrf: $('input[name="_csrf"]').val()
-                },
-                error:function(){
-                    //hide load
-                    Main.showTip("收藏随游失败");
-                    $('#collection_trip').removeClass('active');
-                    isCollection=false;
-                },
-                success:function(data){
-                    //hide load
-                    data=eval("("+data+")");
-                    if(data.status==1){
-                        Main.showTip("收藏成功");
-                        $('#collection_trip').attr('attentionIdTrip',data.data);
-                    }else{
-                        Main.showTip(data.data);
-                        $('#collection_trip').removeClass('active');
-                        isCollection=false;
-                    }
-                }
-            });
-        }else{
-            //取消收藏
-            $.ajax({
-                url :'/view-trip/delete-attention',
-                type:'post',
-                data:{
-                    attentionId:$('#collection_trip').attr('attentionIdTrip'),
-                    _csrf: $('input[name="_csrf"]').val()
-                },
-                error:function(){
-                    //hide load
-                    $('#collection_trip').addClass('active');
-                    isCollection = true;
-                    Main.showTip("收藏随游失败");
-                },
-                success:function(data){
-                    //hide load
-                    data=eval("("+data+")");
-                    if(data.status==1){
-                        Main.showTip("取消成功");
-                    }else{
-                        $('#collection_trip').addClass('active');
-                        isCollection = true;
-                        Main.showTip(data.data);
-                    }
-                }
-            });
-        }
-    }
-</script>
-<script>
     var rid=0;
     var tripId=$("#tripId").val();
     var page=1;
     var rSign='';
-    function getComment(page)
-    {
-        rid=0;
-        rSign='';
-        $.ajax({
-            type: 'post',
-            url: '/view-trip/get-comment-list',
-            data: {
-                tripId: tripId,
-                cPage:page,
-                _csrf: $('input[name="_csrf"]').val()
-            },
-            beforeSend: function () {
-                //Main.showTip('正在提交，请稍后。。。');
-            },
-            error:function(){
-                Main.showTip("系统异常。。。");
-            },
-            success: function (data) {
-                var obj=eval('('+data+')');
-                if(obj.status==1)
-                {
-                    //$('#tanchu_pl').html('');
-                    var str='';
-                    for(var i=0;i<obj.data.length;i++)
-                    {
-                        var r="@";
-                        if(obj.data[i].rTitle==null){
-                            r='';
-                        }else{
-                            r+=obj.data[i].rTitle;
-                        }
-                        var c='';
-                        var status=obj.data[i].status;
-                        if(status==1) {
-                            c='active'
-                        }
-                        str+='<li>';
-                        str+='<div class="user-pic fl">';
-                        str+='<img src=\"'+obj.data[i].headImg+'\" alt=\"\">';
-                        str+='<span class=\"user-name\">';
-                        str+=obj.data[i].nickname;
-                        if(obj.data[i].travelCount>0){
-                            str+='<b>玩过该路线</b>';
-                        }
-                        str+="</span></div><p class='fl'><b>";
-                        str+=r;
-                        str+="</b>";
-                        str+=' '+obj.data[i].content;
-                        str+="</p><div class='fr resp'><a href='javascript:;' onclick='sumbmitZan("+obj.data[i].commentId+","+"this)' class='picon zan "+c+"'></a><a href='#pllist' rSign='"+obj.data[i].userSign+"' id='"+obj.data[i].commentId+"' class='picon huifu' onclick='reply(this)'></a>";
-                        str+="</div></li>";
-                    }
-                    $('#tanchu_pl').append(str);
-                    if(obj.message.currentPage<(obj.message.totalCount/obj.message.pageSize)){
-                        $("#showMoreComment").show();
-                        $("#showMoreComment").attr("showPage",parseInt(obj.message.currentPage)+1);
-                    }else{
-                        $("#showMoreComment").hide();
-                    }
-                    //$('#spage').html('');
-                    //$('#spage').append(obj.message);
-
-                    //$("#spage li").click(function() {
-                    //    var page=$(this).find('a').attr('page');
-                    //    getComment(page);
-                    //});
-
-                }else
-                {
-                    Main.showTip(obj.data);
-
-                }
-            }
-        });
-    }
-    function reply(obj)
-    {
-        rid=$(obj).attr('id');
-        rSign=$(obj).attr('rSign');
-        var t=$(obj).parent("div").prev().prev().find("span").html();
-        $("#pinglun").val('@'+t+'   :');
-
-    }
-
-    function submitComment()
-    {
-        var s=$('#pinglun').val();
-        var i =s.indexOf('@');
-        var content='';
-        var t='';
-        if(i==-1){ content= s; t=''; }else{
-            var j=s.indexOf(':');
-            if(j==-1){ content= s; t=''; }else{ t=s.slice(0,j); content= s.slice(j); }
-        }
-
-        $.ajax({
-            type: 'post',
-            url: '/view-trip/add-comment',
-            data: {
-                tripId: tripId,
-                content: content,
-                rTitle: t,
-                rId: rid,
-                rSign:rSign,
-                _csrf: $('input[name="_csrf"]').val()
-            },
-            beforeSend: function () {
-                //Main.showTip('正在提交，请稍后。。。');
-            },
-            error:function(){
-                Main.showTip("系统异常。。。");
-            },
-            success: function (data) {
-                var obj=eval('('+data+')');
-                if(obj.status==1)
-                {
-                    //Main.showTip("发表成功。。。");
-                    getComment(page);
-                    $("#pinglun").val('');
-                }else
-                {
-                    Main.showTip(obj.data);
-
-                }
-            }
-        });
-    }
-
-    function sumbmitZan(id,obj)
-    {
-        var s =$(obj).attr('class');
-        var i =s.indexOf('active');
-        if(i!=-1){
-            Main.showTip('已经点赞');
-            return;
-        }
-        $(obj).addClass('active');
-        $.ajax({
-            type: 'post',
-            url: '/view-trip/add-support',
-            data: {
-                tripId: tripId,
-                rId: id,
-                _csrf: $('input[name="_csrf"]').val()
-            },
-            beforeSend: function () {
-                //Main.showTip('正在提交，请稍后。。。');
-            },
-            error:function(){
-                Main.showTip("系统异常。。。");
-            },
-            success: function (data) {
-                var data=eval('('+data+')');
-                if(data.status==1)
-                {
-                    //Main.showTip("发表成功。。。");
-                    getComment(page);
-                }else
-                {
-                    Main.showTip(data.data);
-                    $(obj).removeClass('active');
-
-                }
-            }
-        });
-    }
-
-
+    var nowDate='<?=date('Y-m-d',time()); ?>';
     window._bd_share_config = {
         common : {
             bdText : '随游网-<?=htmlspecialchars(str_replace("\n"," ",$travelInfo['info']['intro']))?>',
@@ -922,7 +316,12 @@
             "bdSize" : 16
         }]
     }
-
     //以下为js加载部分
     with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
 </script>
+
+<script type="text/javascript" src="/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" ></script>
+<script type="text/javascript" src="/assets/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" ></script>
+<script type="text/javascript" src="/assets/plugins/time-picki/js/timepicki.js"></script>
+<script type="text/javascript" src="/assets/pages/view-trip/info.js" ></script>
+

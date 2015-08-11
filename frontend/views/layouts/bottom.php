@@ -14,7 +14,7 @@
 <div id="footer-out" class="clearfix bgGreen">
     <div class="footer w1200 clearfix">
         <div class="left fl">
-            <a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/footer-pic.png" width="174" height="122"></a>
+            <a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/footer-pic.png" width="174" ></a>
         </div>
         <dl class="fl middle">
             <dt>关于我们</dt>
@@ -38,17 +38,23 @@
             <dd><a href="/static?agreement-disclaimer">免责声明</a></dd>
         </dl>
         <dl class="fl ">
-            <dt>随游移动端</dt>
-            <dd><a href="http://image.suiuu.com/suiuu_index/Suiuu.apk">Android App 下载</a></dd>
-        </dl>
-        <div class="fr right">
-            <ul>
-                <li class="fl"><a href="#" class="icon sina"></a><img src="/assets/images/weiboCoda.png" width="110" height="110" class="weiboCoda"></li>
-                <li class="fl" id="wei"><a href="#" class="icon weixin"></a><img src="/assets/images/weixinCoda.png" width="110" height="110" class="weixinCoda"></li>
-            </ul>
+            <dt>发现</dt>
+            <dd><a href="javascript:;">Android 客户端</a></dd>
+            <dd><a href="javascript:;"> ios 客户端</a></dd>
 
-        </div>
+        </dl>
     </div>
+    <div class="box w1200 clearfix" style="padding-top: 30px">
+        <ul class="clearfix list">
+            <li><a href="javascript:;" class="icon sina"></a></li>
+            <li class="wei"><a href="javascript:;" class="icon weixin"></a><img src="/assets/images/weixinCoda.png" width="130" height="135" class="weixinCoda"></li>
+            <li><a href="javascript:;" class="icon db"></a></li>
+            <li><a href="javascript:;" class="icon ff"></a></li>
+        </ul>
+
+    </div>
+
+
     <div class="line">
         <p class="copyright">
             © 2015 Suiuu.com All Rights Reserved.
@@ -122,6 +128,7 @@
             <div class="left">
                 <div class="box myCon box1">
                     <ul>
+                        <li><input id="nickname_top" type="text" value="" maxlength="20" placeholder="昵称"></li>
                         <li class="country">
                             <select id="codeId_top" name="countryIds" class="areaCodeSelect_top" required>
                                 <option value=""></option>
@@ -177,6 +184,7 @@
                 </div>
                 <div class="box myCon box3">
                     <ul>
+                        <li><input id="regNickname" type="text" value="" maxlength="20" placeholder="昵称"></li>
                         <li><input type="text" placeholder="邮箱" id="regEmail" maxlength="30"></li>
                         <li><input type="password" placeholder="密码" id="regEmailPwd" maxlength="30"></li>
                         <li><a href="javascript:;" id="emailRegister" class="btn blue">注册</a></li>

@@ -382,6 +382,7 @@ class IndexController extends UnCController
 
         $sendCode=Yii::$app->request->post('code');
         $password=Yii::$app->request->post('password');
+        $nickname=Yii::$app->request->post('nickname');
 
         if(empty($sendCode))
         {
@@ -392,9 +393,13 @@ class IndexController extends UnCController
         {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$valPassword));
         }
+        $valNickname=Validate::validateNickname($nickname);
+        if(!empty($valNickname))
+        {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,$valNickname));
+        }
 
         $session = \Yii::$app->session->get(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE);
-
         if (empty($session)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_PHONE_CODE_ERROR));
         }
@@ -402,6 +407,7 @@ class IndexController extends UnCController
         $phone = $array[0];
         $areaCode = $array[1];
         $validateCode = $array[2];
+
         $error = "";//错误信息
         $valMsg = Validate::validatePhone($phone);
         if (!empty($valMsg)) {
@@ -422,6 +428,7 @@ class IndexController extends UnCController
             $userBase = new UserBase();
             $userBase->phone = $phone;
             $userBase->password = $password;
+            $userBase->nickname=$nickname;
             $userBase = $this->userBaseService->addUser($userBase);
             //添加用户登录状态
             \Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
@@ -443,6 +450,7 @@ class IndexController extends UnCController
         $phone = \Yii::$app->request->post('phone');//发送给用户的手机
         $areaCode = \Yii::$app->request->post('areaCode');//区号
         $password = \Yii::$app->request->post('password');
+        $nickname = \Yii::$app->request->post('nickname');//用户输入的昵称
         $valNum=\Yii::$app->request->post("valNum");
         $sysNum= \Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
         //$passwordConfirm = \Yii::$app->request->post('passwordConfirm');
@@ -451,9 +459,12 @@ class IndexController extends UnCController
         }*/
         $error = "";//错误信息
         $valMsg = Validate::validatePhone($phone);
+        $valNicknameMsg=Validate::validateNickname($nickname);
         if (!empty($valMsg)) {
             $error = $valMsg;
-        } else if (empty($password) || strlen($password) > 30) {
+        } else if(!empty($valNicknameMsg)){
+            $error = $valNicknameMsg;
+        }else if (empty($password) || strlen($password) > 30) {
             $error = '密码格式不正确';
         } else if (empty($areaCode)) {
             $error = '手机区号格式不正确';
@@ -474,7 +485,7 @@ class IndexController extends UnCController
             }
             $code = $this->randomPhoneCode();//验证码
             //分割可能会有问题，测试阶段
-            \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE, $phone . "-" . $areaCode . "-" . $code. "-" . $password);
+            \Yii::$app->session->set(Code::USER_PHONE_VALIDATE_CODE_AND_PHONE, $phone . "-" . $areaCode . "-" . $code);
             //调用发送短信接口 测试默认为成功
             //调用发送短信接口 测试默认为成功
             $smsUtils = new SmsUtils();
@@ -551,15 +562,21 @@ class IndexController extends UnCController
      */
     public function actionSendEmail()
     {
+        $nickname = \Yii::$app->request->post('nickname');//用户输入的昵称
         $email = \Yii::$app->request->post('email');//用户输入的邮箱
         $password = \Yii::$app->request->post('password');//用户输入的密码
         $error = "";//错误信息
         $valMsg = Validate::validateEmail($email);
+        $valNicknameMsg=Validate::validateNickname($nickname);
         if (!empty($valMsg)) {
             $error = $valMsg;
         } else if (empty($password) || strlen($password) > 30) {
             $error = '密码格式不正确';
         }
+        if(!empty($valNicknameMsg)){
+            $error = $valNicknameMsg;
+        }
+
         if (!empty($error)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
         }
@@ -573,8 +590,8 @@ class IndexController extends UnCController
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, Code::USER_EMAIL_EXIST));
             }
             $enPwd = $this->getEncryptPassword($password);
-            $code = $this->getEmailCode($email, $enPwd);
-            $url = \Yii::$app->params['base_dir'] . '/index/active?e=' . urlencode($email) . '&p=' . urlencode($enPwd) . '&c=' . urlencode($code);
+            $code = $this->getEmailCode($email, $enPwd,$nickname);
+            $url = \Yii::$app->params['base_dir'] . '/index/active?e=' . urlencode($email) . '&p=' . urlencode($enPwd) . '&c=' . urlencode($code). '&n=' . urlencode($nickname);
             //最终发送的地址内容
             $rst = Mail::sendRegisterMail($email, $url);
             //
@@ -599,9 +616,10 @@ class IndexController extends UnCController
     {
         $email = \Yii::$app->request->get('e');//用户输入的邮箱
         $password = \Yii::$app->request->get('p');//用户输入的密码
+        $nickname = \Yii::$app->request->get('n');//用户输入的昵称
         $code = \Yii::$app->request->get('c');//用户输入的密码
 
-        $valCode = $this->getEmailCode($email, $password);
+        $valCode = $this->getEmailCode($email, $password,$nickname);
         $password = $this->getDecryptPassword($password);
 
         if ($code != $valCode) {
@@ -611,7 +629,7 @@ class IndexController extends UnCController
             $userBase = new UserBase();
             $userBase->email = $email;
             $userBase->password = $password;
-
+            $userBase->nickname=$nickname;
             $userBase=$this->userBaseService->addUser($userBase);
             //设置SESSION 登录状态
             Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
@@ -627,11 +645,12 @@ class IndexController extends UnCController
      * 根据邮件获取邮件验证Code
      * @param $email
      * @param $password
+     * @param $nickname
      * @return string
      */
-    private function getEmailCode($email, $password)
+    private function getEmailCode($email, $password,$nickname)
     {
-        return md5(md5($email . \Yii::$app->params['emailEncryptPassword'] . $password) . \Yii::$app->params['emailEncryptPassword']);
+        return md5(md5($email . \Yii::$app->params['emailEncryptPassword'] . $password) . \Yii::$app->params['emailEncryptPassword'].$nickname);
     }
 
     /**

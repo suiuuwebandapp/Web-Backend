@@ -18,6 +18,22 @@ use yii\db\mssql\PDO;
 
 class UserBaseDb extends ProxyDb
 {
+
+    /**
+     * 详细查询
+     */
+    const FIND_USER_INFO_SELECT='ub.userId,nickname,surname,name,email,phone,ub.areaCode,sex,birthday,headImg,hobby,school,qq,wechat,intro,info,
+            travelCount,registerIp,status,ub.registerTime,lastLoginTime,userSign,isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,profession,balance,
+            co.cname AS countryCname,co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname';
+
+    /**
+     * 基础查询
+     */
+    const FIND_USER_BASE_INFO_SELECT='ub.nickname,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,
+            ub.isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,ub.profession,co.cname AS countryCname,
+            co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname,surname,name';
+
+
     /**
      * 添加用户
      * @param UserBase $userBase
@@ -173,8 +189,7 @@ class UserBaseDb extends ProxyDb
     public function findPasswordByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT *
-            FROM user_base WHERE userSign=:userSign
+            SELECT * FROM user_base WHERE userSign=:userSign
         ");
         if ($status != null) {
             $sql .= " AND status=:status";
@@ -197,9 +212,7 @@ class UserBaseDb extends ProxyDb
     public function findByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT userId,nickname,surname,name,email,phone,ub.areaCode,sex,birthday,headImg,hobby,school,qq,wechat,intro,info,
-            travelCount,registerIp,status,registerTime,lastLoginTime,userSign,isPublisher,ub.cityId,ub.countryId,lon,lat,profession,balance,
-            co.cname AS countryCname,co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname
+            SELECT ".self::FIND_USER_INFO_SELECT."
             FROM user_base AS ub
             LEFT JOIN country AS co ON co.id=ub.countryId
             LEFT JOIN city AS ci ON ci.id=ub.cityId
@@ -216,6 +229,30 @@ class UserBaseDb extends ProxyDb
         return $command->queryOne();
     }
 
+
+    /**
+     * 根据随友Id 获取用户详情
+     * @param $publisherId
+     * @return array|bool
+     */
+    public function findByPublisherId($publisherId)
+    {
+        $sql = sprintf("
+            SELECT ".self::FIND_USER_INFO_SELECT."
+            FROM user_base AS ub
+            LEFT JOIN user_publisher AS up ON up.userId=ub.userSign
+            LEFT JOIN country AS co ON co.id=ub.countryId
+            LEFT JOIN city AS ci ON ci.id=ub.cityId
+            WHERE up.userPublisherId=:userPublisherId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userPublisherId", $publisherId, PDO::PARAM_INT);
+
+        return $command->queryOne();
+    }
+
+
     /**
      * 根据UserSign获取用户基本信息
      * @param $userSign
@@ -224,9 +261,7 @@ class UserBaseDb extends ProxyDb
     public function findBaseInfoBySign($userSign)
     {
         $sql = sprintf("
-            SELECT ub.nickname,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,
-            ub.isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,ub.profession,co.cname AS countryCname,
-            co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname,surname,name
+            SELECT ".self::FIND_USER_BASE_INFO_SELECT."
             FROM user_base ub
             LEFT JOIN country AS co ON co.id=ub.countryId
             LEFT JOIN city AS ci ON ci.id=ub.cityId

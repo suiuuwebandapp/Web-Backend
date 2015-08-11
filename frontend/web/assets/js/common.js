@@ -39,20 +39,22 @@ $(function(){
 
 /*----详情页滚动中间导航效果----*/
 
-
+/*
 $(function(){
 	$(window).scroll(function(e) {
 		var h1=$(window).scrollTop();
 		if(h1>400){
 			$('.sydetailNav').addClass('fixed')
+			$('.sydetail .web-right').addClass('fixed')
 		}else{
 			$('.sydetailNav').removeClass('fixed')
+			$('.sydetail .web-right').removeClass('fixed')
 		}
         
     });
 
 })
-
+*/
 /*----帮助中心-导航---*/
 
 
@@ -77,6 +79,28 @@ $(function(){
     });
 
 })
+/*----首页广告---*/
+
+
+$(function(){
+	 var appDownloadClosed = false;
+    $(window).on("scroll", function () {
+        if ($(window).scrollTop() >= 300) {
+            if (!appDownloadClosed) {
+                $(".indexAd").show();
+            }
+        } else {
+            $(".indexAd").hide();
+        }
+    });
+
+    $(".indexAd .closed").on("click", function () {
+        $(".indexAd").hide();
+        appDownloadClosed = true;
+    });
+});
+	
+
 
 /*----nav-index登录、注册弹框-----*/
 
