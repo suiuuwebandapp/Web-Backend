@@ -113,7 +113,7 @@ class ViewTripController extends UnCController{
     {
         $tripId=\Yii::$app->request->get("trip");
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
-
+        $applyList=$this->tripService->getPublisherApplyList($tripId);
         $recommendPage=new Page();
         $recommendPage->pageSize=3;
         $recommendPage->sortName="score";
@@ -126,6 +126,9 @@ class ViewTripController extends UnCController{
         $tripPublisherId=$tripInfo['createPublisherId'];
         $createPublisherId=$publisherService->findById($tripPublisherId);
         $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
+
+        $userRecommend=$this->tripService->findTravelTripRecommendByTripId($tripId);
+
         $attention =new UserAttentionService();
         if(empty($this->userObj))
         {
@@ -142,7 +145,9 @@ class ViewTripController extends UnCController{
             'createUserInfo'=>$createUserInfo,
             'createPublisherInfo'=>$createPublisherId,
             'attention'=>$rst,
-            'relateRecommend'=>$recommendPage->getList()
+            'relateRecommend'=>$recommendPage->getList(),
+            'applyList'=>$applyList,
+            'userRecommend'=>$userRecommend
         ]);
     }
 

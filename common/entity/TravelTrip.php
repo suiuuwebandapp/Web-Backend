@@ -22,6 +22,7 @@ class TravelTrip {
     const TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON=1;//随游基础价格类别：每人
     const TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT=2; //随游基础价格类别：每次
 
+    const PRIMARY_KEY="tripId";
     /**
      * @var主键
      */

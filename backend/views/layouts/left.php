@@ -89,6 +89,9 @@
                     <li>
                         <a href="#~/user-base/to-add-publisher"> 添加随友</a>
                     </li>
+                    <li>
+                        <a href="#~/user-recommend/to-list"> 推荐用户</a>
+                    </li>
                 </ul>
             </li>
             <li class="menu_top">

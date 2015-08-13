@@ -40,7 +40,10 @@
         enableAutocomplete: true,
         zoom:6,
         onchanged: function (currentLocation, radius, isMarkerDropped) {
-            alert("drag");
+            console.info(currentLocation);
+            $("#us3-lon").val(currentLocation.longitude);
+            $("#us3-lat").val(currentLocation.latitude);
+
             // Uncomment line below to show alert on each Location Changed event
             //alert("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
         }
@@ -54,6 +57,10 @@
             $('#us3-lat').val(lat);
             $('#us3-lon').val(lon);
         }
+    }
+
+    function getMapSite() {
+        return $("#us3-lon").val()+","+$("#us3-lat").val();
     }
 
     function test() {

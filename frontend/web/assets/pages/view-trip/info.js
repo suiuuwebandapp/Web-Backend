@@ -50,6 +50,16 @@ function initScroll(){
  *
  */
 function initBtnClick(){
+    $(".removeBtn").bind("click",function(){
+        var applyId=$(this).attr("applyId");
+        opposeApply(applyId);
+    });
+
+    $(".sure").bind("click",function(){
+        var applyId=$(this).attr("applyId");
+        var publisherId=$(this).attr("publisherId");
+        agreeApply(applyId,publisherId);
+    });
     /**
      * 时间选择器控件处理
      */
@@ -74,7 +84,7 @@ function initBtnClick(){
         $(".serverSelct").show();
         $(".mask").show();
     });
-    $("#closeServiceDiv").bind("click", function () {
+    $("#closeServiceDiv,#confirmServiceDiv").bind("click", function () {
         $(".serverSelct").hide();
         $(".mask").hide();
     });
@@ -172,10 +182,10 @@ function initBtnClick(){
     /**
      * 绑定随友移除
      */
-    $("#publisherList div a").bind("click", function () {
+    $("#publisherList div[type='publisherList'] a").bind("click", function () {
         var tripPublisherId = $(this).attr("tripPublisherId");
         var tripId = $("#tripId").val();
-        if (!confirm("确认要删除随友的申请吗？")) {
+        if (!confirm("确认要移除随友吗？")) {
             return;
         }
         $.ajax({
@@ -194,7 +204,8 @@ function initBtnClick(){
                 //hide load
                 data = eval("(" + data + ")");
                 if (data.status == 1) {
-                    $("#div_trip_publisher_" + tripPublisherId).remove();
+                    window.location.href=window.location.href;
+                    //$("#div_trip_publisher_" + tripPublisherId).remove();
                 } else {
                     Main.showTip("移除随友失败");
                 }
@@ -333,7 +344,7 @@ function showPrice() {
         }
     });
     allPrice = parseInt(allPrice);
-    $("#allPrice").html("￥" + allPrice);
+    $("#allPrice").html("总价：￥" + allPrice);
 }
 
 /**
@@ -431,7 +442,7 @@ function getComment(page) {
             //Main.showTip('正在提交，请稍后。。。');
         },
         error: function () {
-            Main.showTip("系统异常。。。");
+            //Main.showTip("系统异常。。。");
         },
         success: function (data) {
             var obj = eval('(' + data + ')');
@@ -590,6 +601,69 @@ function sumbmitZan(id, obj) {
                 Main.showTip(data.data);
                 $(obj).removeClass('active');
 
+            }
+        }
+    });
+}
+
+
+/**
+ * 同意加入随游
+ * @param applyId
+ * @param publisherId
+ */
+function agreeApply(applyId,publisherId)
+{
+    $.ajax({
+        url :'/trip/agree-apply',
+        type:'post',
+        data:{
+            applyId:applyId,
+            publisherId:publisherId,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("同意加入随游失败");
+        },
+        success:function(data){
+            data=eval("("+data+")");
+            if(data.status==1){
+                Main.showTip("同意加入随游成功");
+                window.location.href=window.location.href;
+            }else{
+                Main.showTip("同意加入随游失败");
+            }
+        }
+    });
+}
+
+
+/**
+ * 拒绝加入随游
+ * @param applyId
+ */
+function opposeApply(applyId)
+{
+    if (!confirm("确认要忽略随友的申请吗？")) {
+        return;
+    }
+    $.ajax({
+        url :'/trip/oppose-apply',
+        type:'post',
+        data:{
+            applyId:applyId,
+            _csrf: $('input[name="_csrf"]').val()
+        },
+        error:function(){
+            Main.showTip("拒绝加入随游失败");
+        },
+        success:function(data){
+            data=eval("("+data+")");
+            if(data.status==1){
+                Main.showTip("拒绝加入随游成功");
+                window.location.href=window.location.href;
+            }else{
+                Main.showTip("拒绝加入随游失败");
             }
         }
     });

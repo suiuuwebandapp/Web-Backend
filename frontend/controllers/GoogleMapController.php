@@ -58,11 +58,34 @@ class GoogleMapController extends UnCController{
         ]);
     }
 
+
+    /**
+     * 编辑景区  获取景区地图
+     * @return string
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function actionEditScenicMap()
+    {
+        $tripId=\Yii::$app->request->get("tripId");
+        $scenicList=null;
+        if(!empty($tripId)){
+            $tripService=new TripService();
+            $scenicList=$tripService->getTravelTripScenicList($tripId);
+        }
+        return $this->render("editScenicMap",[
+            'scenicList'=>$scenicList
+        ]);
+    }
+
     /**
      * 获取地点详细信息
      */
     public function actionSearchMapInfo()
     {
+
+        //return json_encode(Code::statusDataReturn(Code::SUCCESS,json_decode('{"lat" : 35.3605555,"lng" : 138.7277777} ')));
+
         $search=\Yii::$app->request->get("search");
         try{
             $googleMap=GoogleMap::getInstance();

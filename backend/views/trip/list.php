@@ -49,7 +49,6 @@
                     <tr>
                         <th>编号</th>
                         <th>标题</th>
-                        <th>封皮</th>
                         <th>国家城市</th>
                         <th>创建人</th>
                         <th>状态</th>
@@ -88,7 +87,7 @@
             'tableOrder':[],
             'tableColumn':[
                 {"targets": [0],"data": "tripId",
-                    "width":"150px","bSortable": false},
+                    "width":"50px","bSortable": false},
                 {
                     "targets": [1],
                     "data": "title",
@@ -97,35 +96,21 @@
                 },
                 {
                     "targets": [2],
-                    "data": "titleImg",
-                    "bSortable": false,
-                    "width":"150px",
-                    "render": function(data, type, full) {
-                        if(data!=""&&data!=null){
-                            return '<a  class="titleImgGroup"  href="'+data+'"><img alt="" src="'+data+'" style="max-height:50px;"/></a>'
-                        }else
-                        {
-                            return "暂无封皮";
-                        }
-                    }
-                },
-                {
-                    "targets": [3],
                     "data": "cname",
                     "width":"150px",
                     "bSortable": false,
                     "render": function(data, type, full) {
-                        return data+full.ctName;
+                        return data+"/"+full.ctName;
                     }
                 },
                 {
-                    "targets": [4],
+                    "targets": [3],
                     "data": "nickname",
                     "bSortable": false,
                     "width":"150px"
                 },
                 {
-                    "targets": [5],
+                    "targets": [4],
                     "data": "status",
                     "width":"100px",
                     "bSortable": false,
@@ -145,12 +130,14 @@
                     }
                 },
                 {
-                    "targets": [6],
+                    "targets": [5],
                     "data": "tripId",
                     "bSortable": false,
-                    "width":"200px",
+                    "width":"300px",
                     "render": function(data, type, full) {
                         var html='';
+                        html +='<a href="javascript:;" onclick="editUserRecommend('+data+')" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 推荐信息</a>&nbsp;&nbsp;';
+                        html +='<a href="javascript:;" onclick="editTripInfo('+data+');" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 展示设置</a>&nbsp;&nbsp;';
                         html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/view-trip/info?trip="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
                         html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/sys/edit-trip?trip="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="deleteHandle(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
@@ -163,14 +150,19 @@
             }
         };
         TableAjax.init(tableInfo);
-        /*$("#addRe").bind("click",function(){
-            Main.openModal("/circle/show-add")
-        });*/
-
         $("#refresh,#search").bind("click",function(){
             TableAjax.refresh();
         });
     });
+
+
+    function editUserRecommend(tripId){
+        Main.openModal("/trip/to-edit-user-recommend?tripId="+tripId)
+    }
+
+    function editTripInfo(tripId){
+        Main.openModal("/trip/to-update-trip-info?tripId="+tripId)
+    }
 
     function deleteHandle(id){
 

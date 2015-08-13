@@ -13,6 +13,7 @@ namespace backend\services;
 use backend\components\Page;
 use backend\models\UserBaseDb;
 use common\entity\UserBase;
+use common\entity\UserRecommend;
 use common\models\BaseDb;
 use common\models\UserPublisherDb;
 use yii\base\Exception;
@@ -39,6 +40,29 @@ class UserBaseService extends BaseDb{
             $this->closeLink();
         }
         return $page;
+    }
+
+
+    public function addUserRecommend(UserRecommend $userRecommend)
+    {
+        try{
+            $this->saveObject($userRecommend);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function deleteUserRecommend($recommendId)
+    {
+        try{
+            $this->deleteObjectById(UserRecommend::class,$recommendId);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
     }
 
 
@@ -95,5 +119,28 @@ class UserBaseService extends BaseDb{
             $this->closeLink();
         }
         return $userInfo;
+    }
+
+
+    /**
+     * 获取推荐用户列表
+     * @param Page $page
+     * @param $search
+     * @return Page|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getUserRecommendListByPage(Page $page,$search)
+    {
+        try{
+            $conn=$this->getConnection();
+            $userBaseDb=new UserBaseDb($conn);
+            $page=$userBaseDb->getUserRecommendListByPage($page,$search);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $page;
     }
 }

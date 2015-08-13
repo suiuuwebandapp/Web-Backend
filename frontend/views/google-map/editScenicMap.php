@@ -9,7 +9,6 @@
 
 ?>
 
-
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -36,19 +35,21 @@
 
 <body style="margin: 0 auto">
 <div id="custom_places" class="maps" style="width: 100%;height: 300px;"></div>
+<input type="button" value="+" onclick="add()" />
+
 <?php
-    $scenicObj="[";
-    if($scenicList!=null){
-        $arrPush=array();
-        foreach($scenicList as $scenic){
-            if(!empty($scenic['lon'])&&!empty($scenic['lat'])){
-                $temp="{autoShow:true,lat:".$scenic['lat'].",lng:".$scenic['lon'].",name:'".$scenic['name']."'}";
-                $arrPush[]=$temp;
-            }
+$scenicObj="[";
+if($scenicList!=null){
+    $arrPush=array();
+    foreach($scenicList as $scenic){
+        if(!empty($scenic['lon'])&&!empty($scenic['lat'])){
+            $temp="{autoShow:true,lat:".$scenic['lat'].",lng:".$scenic['lon'].",name:'".$scenic['name']."'}";
+            $arrPush[]=$temp;
         }
-        $scenicObj.=implode(",",$arrPush);
     }
-    $scenicObj.="]";
+    $scenicObj.=implode(",",$arrPush);
+}
+$scenicObj.="]";
 ?>
 <input type="hidden" />
 <script src="/assets/plugins/jquery-google-map/map.js"></script>
@@ -56,16 +57,28 @@
 <script src="/assets/plugins/jquery-google-map/mapsed/mapsed.js"></script>
 <script>
 
-    $(function(){
-        var list=<?=$scenicObj;?>;
-        $("#custom_places").mapsed({
+    var interval,list;
+    var googleMap,map,m;
+
+    function add(){
+        googleMap.setZoom(5);
+    }
+
+    $(document).ready(function(){
+
+        list=<?=$scenicObj;?>;
+
+        m=$("#custom_places").mapsed({
             showOnLoad:list
         });
+        googleMap= m.getGoogleMap();
+
+        initInterval();
     });
 
-    var interval;
-    $(document).ready(function(){
-        //return;
+
+    function initInterval()
+    {
         interval=window.setInterval(function(){
             if($("div[class='gm-style-iw']").size()>0){
                 var showInfoDiv=$("div[class='gm-style-iw']");
@@ -77,9 +90,30 @@
                 });
                 window.clearInterval(interval);
             }
-        },30);
+            if(googleMap.getZoom()==0){
+                googleMap.setZoom(15);
+            }
 
-    });
+        },30);
+    }
+
+
+    function clearMarker()
+    {
+        list=[];
+        m.clearMarker();
+    }
+
+    function addMarker(lon,lat,title)
+    {
+        var marker={autoShow:true,lat:lat,lng:lon,name:title};
+        list.push(marker);
+
+        m.resetMarker(list);
+
+        initInterval();
+
+    }
 </script>
 
 </body>

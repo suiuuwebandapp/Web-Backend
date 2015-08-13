@@ -18,6 +18,7 @@ use common\components\Code;
 use common\components\Common;
 use common\entity\UserBase;
 use common\entity\UserPublisher;
+use common\entity\UserRecommend;
 use common\entity\WeChat;
 use common\entity\WeChatUserInfo;
 use yii\base\Exception;
@@ -176,4 +177,6 @@ class UserBaseController extends CController{
     {
         return $this->render("addPublisher");
     }
+
+
 }

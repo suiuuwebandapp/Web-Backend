@@ -177,6 +177,14 @@
 		}, options || {});
 
 
+        this.clearMarker=function(){
+            clearMarkers();
+        };
+        this.resetMarker=function(list){
+            settings.showOnLoad=list;
+            addInitialPlaces();
+        };
+
 		//
 		// PUBLIC METHODS
 		//

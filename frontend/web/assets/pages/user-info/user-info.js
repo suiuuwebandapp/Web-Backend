@@ -1166,7 +1166,8 @@ function buildMyTripHtml(tripList){
         if(tripInfo.status==TripStatus.TRAVEL_TRIP_STATUS_DRAFT){
             html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">编辑发布</a>';
         }else{
-            if(count!=''){ html+='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请<b>'+count+'</b></a>';};
+            //<b>'+count+'</b>
+            if(count!=''){ html+='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a>';};
         }
         html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
         html+=' </p>';

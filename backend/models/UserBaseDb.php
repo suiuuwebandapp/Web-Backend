@@ -238,7 +238,8 @@ class UserBaseDb extends ProxyDb
     public function getUserBaseListByPage(Page $page,$search)
     {
         $sql=sprintf("
-            FROM user_base
+            FROM user_base ub
+            LEFT JOIN user_recommend ur ON ub.userSign=ur.userId
             WHERE 1=1
         ");
 
@@ -246,7 +247,32 @@ class UserBaseDb extends ProxyDb
             $sql.=" AND (nickname like :search or phone like :search OR email like :search)";
             $this->setParam("search",$search."%");
         }
+        $this->setSelectInfo("DISTINCT ub.*,ur.userRecommendId");
+        $this->setSql($sql);
+        $page=$this->find($page);
+        return $page;
+    }
 
+
+    /**
+     * 获取推荐用户列表
+     * @param Page $page
+     * @param $search
+     * @return Page|null
+     */
+    public function getUserRecommendListByPage(Page $page,$search)
+    {
+        $sql=sprintf("
+            FROM user_recommend ur
+            LEFT JOIN user_base ub ON ur.userId=ub.userSign
+            WHERE 1=1
+        ");
+
+        if(!empty($search)){
+            $sql.=" AND (nickname like :search or phone like :search OR email like :search)";
+            $this->setParam("search",$search."%");
+        }
+        $this->setSelectInfo("DISTINCT ub.*,ur.userRecommendId");
         $this->setSql($sql);
         $page=$this->find($page);
         return $page;

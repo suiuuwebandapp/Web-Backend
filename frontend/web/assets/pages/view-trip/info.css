@@ -48,7 +48,7 @@
 }
 
 .bdsharebuttonbox .icon{
-    padding: 0;float: none;margin: 0;
+    padding: 0px 5px;float: none;margin: 0;
 }
 .sydetailBanner .pre{
     border:none;
@@ -64,4 +64,26 @@
 }
 .sydetailNav.fixed{
     z-index: 99;
+}
+.sydetail .titTop .xing{
+    margin-top: 15px;
+}
+
+.trip_info{
+    font-size: 16px;
+}
+.sydetail .web-right .money{
+    font-size: 20px;
+    margin: 0px;
+}
+.sydetail .web-right .ul01{
+    margin-top: 5px;
+}
+#buyHelp{
+    text-decoration: underline;
+    margin-right: 20px;
+}
+
+.sydetail .web-right .btn{
+    margin-bottom: 10px;
 }

@@ -12,7 +12,10 @@ namespace backend\controllers;
 use backend\components\Page;
 use backend\components\TableResult;
 use backend\services\TripService;
+use backend\services\UserBaseService;
 use common\components\Code;
+use common\entity\TravelTrip;
+use common\entity\TravelTripRecommend;
 use Yii;
 use yii\base\Exception;
 
@@ -71,5 +74,61 @@ class TripController extends CController {
         }
         return json_encode(Code::statusDataReturn(Code::SUCCESS));
 
+    }
+
+    public function actionToEditUserRecommend()
+    {
+        $tripId=Yii::$app->request->get("tripId");
+        $userBaseService=new UserBaseService();
+        $page=new Page();
+        $page->showAll=true;
+        $userRecommendList=$userBaseService->getUserRecommendListByPage($page,null);
+        $tripService=new TripService();
+        $recommendInfo=$tripService->findTravelTripRecommendByTripId($tripId);
+        return $this->render('editUserRecommend',[
+            'userRecommendList'=>$userRecommendList->getList(),
+            'tripId'=>$tripId,
+            'recommendInfo'=>$recommendInfo
+        ]);
+    }
+
+
+    public function actionUpdateUserRecommend()
+    {
+        $tripId=Yii::$app->request->post("tripId");
+        $userId=Yii::$app->request->post("userId");
+        $content=Yii::$app->request->post("content");
+
+        $tripRecommend=new TravelTripRecommend();
+        $tripRecommend->userId=$userId;
+        $tripRecommend->tripId=$tripId;
+        $tripRecommend->content=$content;
+
+        $this->tripSer->updateTravelTripRecommend($tripRecommend);
+
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+
+    }
+
+
+    public function actionToUpdateTripInfo()
+    {
+        $tripId=Yii::$app->request->get("tripId");
+        $tripInfo=$this->tripSer->findObjectById(TravelTrip::class,$tripId);
+
+        return $this->render("update-trip-info",[
+            'tripInfo'=>$tripInfo
+        ]);
+    }
+
+    public function actionUpdateTripInfo()
+    {
+        $trip=Yii::$app->request->post("tripId");
+        $tripCount=Yii::$app->request->post("tripCount");
+        $score=Yii::$app->request->post("score");
+
+        $this->tripSer->updateTravelTripScoreAndCount($trip,$score,$tripCount);
+
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
     }
 }

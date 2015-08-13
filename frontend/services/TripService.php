@@ -805,4 +805,26 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
     }
+
+    /**
+     * 获取用户推荐详情
+     * @param $tripId
+     * @return mixed|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function findTravelTripRecommendByTripId($tripId)
+    {
+        $rst=null;
+        try {
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $rst=$this->tripTravelDb->findTravelTripRecommendByTripId($tripId);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $rst;
+    }
 }

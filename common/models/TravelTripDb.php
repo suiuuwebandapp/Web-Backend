@@ -23,7 +23,8 @@ use common\entity\TravelTripService;
 use yii\base\Exception;
 use yii\db\mssql\PDO;
 
-class TravelTripDb extends ProxyDb{
+class TravelTripDb extends ProxyDb
+{
 
 
     /**
@@ -33,25 +34,25 @@ class TravelTripDb extends ProxyDb{
      * @param $cityId
      * @return Page|null
      */
-    public function getRelateRecommendTrip(Page $page,$countryId,$cityId)
+    public function getRelateRecommendTrip(Page $page, $countryId, $cityId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip
             WHERE 1=1
         ");
-        $sql.=" AND status=:status";
-        $this->setParam("status",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
-        if(!empty($countryId)&&!empty($cityId)){
-            $sql.=" AND (countryId =:countryId or cityId=:cityId) ";
-            $this->setParam("cityId",$cityId);
-            $this->setParam("countryId",$countryId);
-        }else if(!empty($countryId)){
+        $sql .= " AND status=:status";
+        $this->setParam("status", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+        if (!empty($countryId) && !empty($cityId)) {
+            $sql .= " AND (countryId =:countryId or cityId=:cityId) ";
+            $this->setParam("cityId", $cityId);
+            $this->setParam("countryId", $countryId);
+        } else if (!empty($countryId)) {
 
-            $sql.=" AND countryId =:countryId";
-            $this->setParam("countryId",$countryId);
-        }else if(!empty($cityId)){
-            $sql.=" AND cityId =:cityId";
-            $this->setParam("cityId",$cityId);
+            $sql .= " AND countryId =:countryId";
+            $this->setParam("countryId", $countryId);
+        } else if (!empty($cityId)) {
+            $sql .= " AND cityId =:cityId";
+            $this->setParam("cityId", $cityId);
         }
 
         $this->setSql($sql);
@@ -72,10 +73,10 @@ class TravelTripDb extends ProxyDb{
      * @param $status
      * @return Page|null
      */
-    public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$status)
+    public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $status)
     {
 
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip AS t
             LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
             LEFT JOIN user_base AS u ON uo.userId=u.userSign
@@ -83,40 +84,40 @@ class TravelTripDb extends ProxyDb{
             LEFT JOIN city AS ci ON ci.id=t.cityId
             WHERE 1=1
         ");
-        $sql.=" AND t.status=:status";
-        $this->setParam("status",$status);
+        $sql .= " AND t.status=:status";
+        $this->setParam("status", $status);
 
-        if(!empty($countryId)||!empty($cityId)){
-            if(!empty($countryId)){
-                $sql.=" AND t.countryId =:countryId";
-                $this->setParam("countryId",$countryId);
+        if (!empty($countryId) || !empty($cityId)) {
+            if (!empty($countryId)) {
+                $sql .= " AND t.countryId =:countryId";
+                $this->setParam("countryId", $countryId);
             }
-            if(!empty($cityId)){
-                $sql.=" AND t.cityId =:cityId";
-                $this->setParam("cityId",$cityId);
+            if (!empty($cityId)) {
+                $sql .= " AND t.cityId =:cityId";
+                $this->setParam("cityId", $cityId);
             }
-        }else{
-            if(!empty($title)){
-                $sql.=" AND t.title like :title ";
-                $this->setParam("title","%".$title."%");
+        } else {
+            if (!empty($title)) {
+                $sql .= " AND t.title like :title ";
+                $this->setParam("title", "%" . $title . "%");
             }
         }
-        if(!empty($peopleCount)&&$peopleCount!=0){
-            $sql.=" AND t.maxUserCount>=:peopleCount ";
-            $this->setParam("peopleCount",$peopleCount);
+        if (!empty($peopleCount) && $peopleCount != 0) {
+            $sql .= " AND t.maxUserCount>=:peopleCount ";
+            $this->setParam("peopleCount", $peopleCount);
         }
-        if(!empty($startPrice)){
-            $sql.=" AND t.basePrice>=:startPrice ";
-            $this->setParam("startPrice",$startPrice);
+        if (!empty($startPrice)) {
+            $sql .= " AND t.basePrice>=:startPrice ";
+            $this->setParam("startPrice", $startPrice);
         }
-        if(!empty($endPrice)){
-            $sql.=" AND t.basePrice<=:endPrice ";
-            $this->setParam("endPrice",$endPrice);
+        if (!empty($endPrice)) {
+            $sql .= " AND t.basePrice<=:endPrice ";
+            $this->setParam("endPrice", $endPrice);
         }
-        if(!empty($tag)){
-            $sql.=" AND t.tripId IN (";
-            $sql.=$tag;
-            $sql.=")";
+        if (!empty($tag)) {
+            $sql .= " AND t.tripId IN (";
+            $sql .= $tag;
+            $sql .= ")";
         }
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename,u.userSign ");
@@ -130,10 +131,10 @@ class TravelTripDb extends ProxyDb{
      * @param $tripIds
      * @return \backend\components\Page|null
      */
-    public function getListBySearch($page,$tripIds)
+    public function getListBySearch($page, $tripIds)
     {
 
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip AS t
             LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
             LEFT JOIN user_base AS u ON uo.userId=u.userSign
@@ -142,7 +143,7 @@ class TravelTripDb extends ProxyDb{
             WHERE 1=1
         ");
 
-        $sql.=" AND t.tripId in (".$tripIds.")";
+        $sql .= " AND t.tripId in (" . $tripIds . ")";
 
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename ");
@@ -171,7 +172,7 @@ class TravelTripDb extends ProxyDb{
             )
         ");
 
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":createPublisherId", $travelTrip->createPublisherId, PDO::PARAM_INT);
         $command->bindParam(":title", $travelTrip->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $travelTrip->titleImg, PDO::PARAM_STR);
@@ -213,7 +214,7 @@ class TravelTripDb extends ProxyDb{
             intro=:intro,info=:info,tags=:tags,status=:status
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":title", $travelTrip->title, PDO::PARAM_STR);
         $command->bindParam(":titleImg", $travelTrip->titleImg, PDO::PARAM_STR);
         $command->bindParam(":countryId", $travelTrip->countryId, PDO::PARAM_INT);
@@ -247,14 +248,14 @@ class TravelTripDb extends ProxyDb{
      * @param $status
      * @throws \yii\db\Exception
      */
-    public function changeTravelStatus($tripId,$status)
+    public function changeTravelStatus($tripId, $status)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             UPDATE  travel_trip SET
             status=:status
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":status", $status, PDO::PARAM_INT);
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
@@ -267,13 +268,13 @@ class TravelTripDb extends ProxyDb{
      */
     public function findTravelTripById($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT t.*,c.cname AS countryCname,c.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname FROM travel_trip AS t
             LEFT JOIN country AS c ON c.id=t.countryId
             LEFT JOIN city AS ci ON ci.id=t.cityId
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
 
         return $command->queryOne();
@@ -296,7 +297,7 @@ class TravelTripDb extends ProxyDb{
               :tripId,:title,:url
             )
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $travelTripPicture->tripId, PDO::PARAM_INT);
         $command->bindParam(":title", $travelTripPicture->title, PDO::PARAM_STR);
         $command->bindParam(":url", $travelTripPicture->url, PDO::PARAM_STR);
@@ -311,11 +312,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripPicByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_picture
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
@@ -328,11 +329,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripPicList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_picture
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId);
         return $command->queryAll();
@@ -355,7 +356,7 @@ class TravelTripDb extends ProxyDb{
               :tripId,:minCount,:maxCount,:price
             )
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $travelTripPrice->tripId, PDO::PARAM_INT);
         $command->bindParam(":minCount", $travelTripPrice->minCount, PDO::PARAM_INT);
         $command->bindParam(":maxCount", $travelTripPrice->maxCount, PDO::PARAM_INT);
@@ -371,11 +372,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripPriceByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_price
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
@@ -388,11 +389,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripPriceList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_price
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryAll();
@@ -415,7 +416,7 @@ class TravelTripDb extends ProxyDb{
               :tripId,:publisherId
             )
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $travelTripPublisher->tripId, PDO::PARAM_INT);
         $command->bindParam(":publisherId", $travelTripPublisher->publisherId, PDO::PARAM_INT);
 
@@ -429,11 +430,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripPublisherByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_publisher
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
@@ -446,11 +447,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripSpecialByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_special
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
@@ -463,11 +464,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripSpecialList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_special
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryAll();
@@ -480,7 +481,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripPublisherList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT  ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.countryId,ub.cityId,
             ub.profession,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,t.*,cit.cname as cityName,cty.cname as countryName
             FROM travel_trip_publisher t
@@ -490,7 +491,7 @@ class TravelTripDb extends ProxyDb{
 			LEFT JOIN country cty ON cty.id=ub.countryId
             WHERE t.tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryAll();
@@ -513,7 +514,7 @@ class TravelTripDb extends ProxyDb{
               :tripId,:name,:lon,:lat
             )
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $travelTripScenic->tripId, PDO::PARAM_INT);
         $command->bindParam(":name", $travelTripScenic->name, PDO::PARAM_STR);
         $command->bindParam(":lon", $travelTripScenic->lon, PDO::PARAM_STR);
@@ -529,11 +530,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripScenicByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_scenic
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
@@ -546,11 +547,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripScenicList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_scenic
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryAll();
@@ -573,7 +574,7 @@ class TravelTripDb extends ProxyDb{
               :tripId,:title,:money,:type
             )
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $travelTripService->tripId, PDO::PARAM_INT);
         $command->bindParam(":title", $travelTripService->title, PDO::PARAM_STR);
         $command->bindParam(":money", $travelTripService->money, PDO::PARAM_STR);
@@ -589,11 +590,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripServiceByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_service
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
@@ -606,11 +607,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripServiceList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_service
             WHERE tripId=:tripId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         return $command->queryAll();
@@ -623,7 +624,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function addTravelTripApply(TravelTripApply $travelTripApply)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             INSERT INTO travel_trip_apply
             (
               tripId,publisherId,sendTime,info,status
@@ -633,7 +634,7 @@ class TravelTripDb extends ProxyDb{
               :tripId,:publisherId,now(),:info,:status
             )
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $travelTripApply->tripId, PDO::PARAM_INT);
         $command->bindParam(":publisherId", $travelTripApply->publisherId, PDO::PARAM_INT);
@@ -651,11 +652,11 @@ class TravelTripDb extends ProxyDb{
      */
     public function findTravelTripApplyById($applyId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_apply
             WHERE applyId=:applyId
         ");
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":applyId", $applyId, PDO::PARAM_INT);
         return $command->queryOne();
@@ -667,15 +668,15 @@ class TravelTripDb extends ProxyDb{
      * @param $status
      * @throws \yii\db\Exception
      */
-    public function changeTravelTripApplyStatus($applyId,$status)
+    public function changeTravelTripApplyStatus($applyId, $status)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             UPDATE travel_trip_apply SET
             status=:status
             WHERE applyId=:applyId
         ");
 
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":applyId", $applyId, PDO::PARAM_INT);
         $command->bindParam(":status", $status, PDO::PARAM_INT);
@@ -688,18 +689,17 @@ class TravelTripDb extends ProxyDb{
      * @param $tripId
      * @param $status
      */
-    public function getTelTripApplyList($tripId,$status)
+    public function getTelTripApplyList($tripId, $status)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip_apply
             WHERE tripId=:tripId
         ");
 
-        $this->setParam("tripId",$tripId);
-        if(!empty($tripId))
-        {
-            $this->setParam("status",$status);
-            $sql.=" AND status=:status";
+        $this->setParam("tripId", $tripId);
+        if (!empty($tripId)) {
+            $this->setParam("status", $status);
+            $sql .= " AND status=:status";
         }
 
         $this->setSql($sql);
@@ -713,12 +713,12 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripPublisher(TravelTripPublisher $travelTripPublisher)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_publisher
             WHERE tripId=:tripId AND tripPublisherId=:tripPublisherId
         ");
 
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $travelTripPublisher->tripId, PDO::PARAM_INT);
         $command->bindParam(":tripPublisherId", $travelTripPublisher->tripPublisherId, PDO::PARAM_INT);
@@ -733,7 +733,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function getMyTripList($createPublisherId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip AS t
             LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
             LEFT JOIN user_base AS u ON uo.userId=u.userSign
@@ -751,9 +751,9 @@ class TravelTripDb extends ProxyDb{
             WHERE t.createPublisherId=:createPublisherId AND t.status!=:tripStatus
             ORDER BY t.status ASC
         ");
-        $this->setParam("createPublisherId",$createPublisherId);
-        $this->setParam("status",TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
-        $this->setParam("tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
+        $this->setParam("createPublisherId", $createPublisherId);
+        $this->setParam("status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
+        $this->setParam("tripStatus", TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
 
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names,u.userSign");
@@ -768,7 +768,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function getMyJoinTripList($publisherId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip AS t
             LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
             LEFT JOIN user_base AS u ON uo.userId=u.userSign
@@ -790,9 +790,9 @@ class TravelTripDb extends ProxyDb{
 			)
 			AND t.createPublisherId!=:publisherId  AND t.status=:tripStatus
         ");
-        $this->setParam("publisherId",$publisherId);
-        $this->setParam("status",TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
-        $this->setParam("tripStatus",TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+        $this->setParam("publisherId", $publisherId);
+        $this->setParam("status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT);
+        $this->setParam("tripStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
 
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");
@@ -807,16 +807,16 @@ class TravelTripDb extends ProxyDb{
      */
     public function getPublisherApplyList($tripId)
     {
-        $sql=sprintf("
-            SELECT up.*,tta.* ,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,
-            ub.profession,ub.school,ub.intro,ub.info,ub.cityId,ub.countryId,ub.travelCount
+        $sql = sprintf("
+            SELECT up.*,tta.* ,ub.nickname,ub.phone,ub.areaCode,ub.email,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.userSign,
+            ub.profession,ub.school,ub.intro,ub.cityId,ub.countryId,ub.travelCount
             FROM user_publisher up
             LEFT JOIN user_base ub ON ub.userSign=up.userId
             LEFT JOIN travel_trip_apply tta ON tta.publisherId=up.userPublisherId
             WHERE tta.tripId=:tripId AND tta.status=:status
         ");
 
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->bindValue(":status", TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT, PDO::PARAM_INT);
@@ -879,6 +879,7 @@ class TravelTripDb extends ProxyDb{
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
     }
+
     /**
      * 减少收藏次数
      * @param $tripId
@@ -886,33 +887,34 @@ class TravelTripDb extends ProxyDb{
      */
     public function removeCollectCount($tripId)
     {
-        try{
-        $sql = sprintf("
+        try {
+            $sql = sprintf("
             UPDATE travel_trip SET
             collectCount=collectCount-1
             WHERE tripId=:tripId
         ");
 
-        $command = $this->getConnection()->createCommand($sql);
-        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
-        $command->execute();
-        }catch (Exception $e)
-        {}
+            $command = $this->getConnection()->createCommand($sql);
+            $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+            $command->execute();
+        } catch (Exception $e) {
+        }
     }
+
     /**
      * 获取是否有申请正在等待审核
      * @param $tripId
      * @param $publisherId
      * @return array|bool
      */
-    public function findTravelTripApplyByTripIdAndUser($tripId,$publisherId)
+    public function findTravelTripApplyByTripIdAndUser($tripId, $publisherId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_apply
             WHERE tripId=:tripId AND publisherId=:publisherId AND status=:status
         ");
 
-        $command=$this->getConnection()->createCommand($sql);
+        $command = $this->getConnection()->createCommand($sql);
 
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->bindParam(":publisherId", $publisherId, PDO::PARAM_INT);
@@ -927,7 +929,7 @@ class TravelTripDb extends ProxyDb{
      * @param $titleImg
      * @throws \yii\db\Exception
      */
-    public function updateTravelTripTitleImg($tripId,$titleImg)
+    public function updateTravelTripTitleImg($tripId, $titleImg)
     {
         $sql = sprintf("
             UPDATE travel_trip SET titleImg=:titleImg
@@ -951,10 +953,10 @@ class TravelTripDb extends ProxyDb{
      * @param $status
      * @return Page|null
      */
-    public function sysGetList($page,$search,$peopleCount,$startPrice,$endPrice,$status)
+    public function sysGetList($page, $search, $peopleCount, $startPrice, $endPrice, $status)
     {
 
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip AS t
             LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId
             LEFT JOIN user_base AS u ON uo.userId=u.userSign
@@ -962,25 +964,25 @@ class TravelTripDb extends ProxyDb{
             LEFT JOIN city AS ci ON ci.id=t.cityId
             WHERE 1=1
         ");
-        if(!empty($status)){
-            $sql.=" AND t.status=:status" ;
-            $this->setParam("status",$status);
+        if (!empty($status)) {
+            $sql .= " AND t.status=:status";
+            $this->setParam("status", $status);
         }
-        if(!empty($search)){
-            $sql.=" AND ( t.title like :search OR c.cname like :search OR ci.cname like :search OR u.nickname like :search ) ";
-            $this->setParam("search","%".$search."%");
+        if (!empty($search)) {
+            $sql .= " AND ( t.title like :search OR c.cname like :search OR ci.cname like :search OR u.nickname like :search ) ";
+            $this->setParam("search", "%" . $search . "%");
         }
-        if(!empty($peopleCount)&&$peopleCount!=0){
-            $sql.=" AND t.maxUserCount>=:peopleCount ";
-            $this->setParam("peopleCount",$peopleCount);
+        if (!empty($peopleCount) && $peopleCount != 0) {
+            $sql .= " AND t.maxUserCount>=:peopleCount ";
+            $this->setParam("peopleCount", $peopleCount);
         }
-        if(!empty($startPrice)){
-            $sql.=" AND t.basePrice>=:startPrice ";
-            $this->setParam("startPrice",$startPrice);
+        if (!empty($startPrice)) {
+            $sql .= " AND t.basePrice>=:startPrice ";
+            $this->setParam("startPrice", $startPrice);
         }
-        if(!empty($endPrice)){
-            $sql.=" AND t.basePrice<=:endPrice ";
-            $this->setParam("endPrice",$endPrice);
+        if (!empty($endPrice)) {
+            $sql .= " AND t.basePrice<=:endPrice ";
+            $this->setParam("endPrice", $endPrice);
         }
         $this->setSql($sql);
         $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname as ctName,ci.ename as cteName ");
@@ -994,17 +996,17 @@ class TravelTripDb extends ProxyDb{
      * @param $search
      * @return Page|null
      */
-    public function getComment($page,$search)
+    public function getComment($page, $search)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             FROM travel_trip_comment a
             LEFT JOIN travel_trip b ON a.tripId=b.tripId
             LEFT JOIN user_base c ON a.userSign = c.userSign
             WHERE 1=1
         ");
-        if(!empty($search)){
-            $sql.=" AND ( b.title like :search OR c.nickname like :search OR a.content like :search ) ";
-            $this->setParam("search","%".$search."%");
+        if (!empty($search)) {
+            $sql .= " AND ( b.title like :search OR c.nickname like :search OR a.content like :search ) ";
+            $this->setParam("search", "%" . $search . "%");
         }
         $this->setSql($sql);
         $this->setSelectInfo("a.*,b.title,c.nickname");
@@ -1036,7 +1038,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function addTravelTripDetail(TravelTripDetail $travelTripDetail)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             INSERT INTO travel_trip_detail
             (
               tripId,name,type
@@ -1063,7 +1065,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripDetailByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_detail
             WHERE tripId=:tripId
         ");
@@ -1080,7 +1082,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function addTravelTripHighLight(TravelTripHighlight $travelTripHighlight)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             INSERT INTO travel_trip_highlight
             (
               tripId,value
@@ -1106,7 +1108,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function deleteTravelTripHighLightByTripId($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             DELETE FROM travel_trip_highlight
             WHERE tripId=:tripId
         ");
@@ -1124,7 +1126,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripDetailList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_detail
             WHERE tripId=:tripId
         ");
@@ -1141,7 +1143,7 @@ class TravelTripDb extends ProxyDb{
      */
     public function getTravelTripHighlightList($tripId)
     {
-        $sql=sprintf("
+        $sql = sprintf("
             SELECT * FROM travel_trip_highlight
             WHERE tripId=:tripId
         ");
@@ -1151,7 +1153,45 @@ class TravelTripDb extends ProxyDb{
         return $command->queryAll();
     }
 
+    /**
+     * 获取用户推荐信息
+     * @return array|bool
+     */
+    public function findTravelTripRecommendByTripId($tripId)
+    {
+        $sql = sprintf("
+            SELECT ub.userSign,ub.nickname,ub.headImg,ttr.content FROM travel_trip_recommend ttr
+            LEFT JOIN user_base ub ON ttr.userId=ub.userSign
+            WHERE ttr.tripId=:tripId
+        ");
 
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+
+        return $command->queryOne();
+    }
+
+
+    /**
+     * 更新随游评分和随游次数
+     * @param $tripId
+     * @param $score
+     * @param $tripCount
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function updateTravelTripScoreAndCount($tripId, $score, $tripCount)
+    {
+        $sql = sprintf("
+            UPDATE travel_trip SET score=:score , tripCount=:tripCount
+            WHERE tripId=:tripId
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->bindParam(":score", $score, PDO::PARAM_INT);
+        $command->bindParam(":tripCount", $tripCount, PDO::PARAM_INT);
+        return $command->execute();
+    }
 
 
 }

@@ -16,9 +16,11 @@
             <img src="<?=$travelInfo['info']['titleImg'];?>" alt="">
         </div>
         <div class="pic-right fl">
-            <h3 class="title02"><?=$travelInfo['info']['title'];?></h3>
+            <a target="_blank" href="<?=\common\components\SiteUrl::getTripUrl($travelInfo['info']['tripId'])?>">
+                <h3 class="title02"><?=$travelInfo['info']['title'];?></h3>
+            </a>
             <dl>
-                <dt>基本价：<b><?=$travelInfo['info']['basePrice'];?></b></dt>
+                <dt>基本价格：<b><?=$travelInfo['info']['basePrice'];?></b></dt>
                 <dt>评分:&nbsp;&nbsp;
                     <img src="<?= $travelInfo['info']['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                     <img src="<?= $travelInfo['info']['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
@@ -51,7 +53,7 @@
                         $age=\common\components\DateUtils::convertBirthdayToAge($apply['birthday']);
                     ?>
                 <div class="lists" id="apply_div_<?=$apply['applyId']?>"">
-                    <img src="<?=$apply['headImg']?>" width="66" height="66" alt="">
+                    <a target="_blank" href="<?=\common\components\SiteUrl::getViewUserUrl($apply['userSign'])?>"><img src="<?=$apply['headImg']?>" width="66" height="66" alt=""></a>
                     <ul>
                         <li><?=$apply['nickname']?></li>
                         <li>性别:<b><?=$sex?></b></li>

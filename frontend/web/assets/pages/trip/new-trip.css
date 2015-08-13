@@ -19,6 +19,7 @@
     border-radius: 0px;
     font-size: 14px;
     color: dimgray;
+    height: 30px !important;
 }
 .select2-drop {
     font-size: 14px;
@@ -243,4 +244,7 @@ input,textarea{
     display: inline-block;
     height: 40px;
     line-height: 40px;
+}
+.picPop{
+    z-index: 1001 !important;
 }

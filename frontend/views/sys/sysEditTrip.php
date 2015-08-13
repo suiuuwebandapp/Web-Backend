@@ -74,41 +74,20 @@
 
         <!--step2 begin-->
         <div class="bjy-bj2 bjy-bj">
-            <h2 class="titles">添加您的随游所涉及的位置地点，帮助旅行者更好的作出决策</h2>
-            <select id="countryId" name="country" class="select2" placeholder="国家" required>
-                <option value=""></option>
-                <?php foreach ($countryList as $c) { ?>
-                    <option value="<?= $c['id'] ?>"
-                        <?php  if($c['id']==$travelInfo['info']['countryId']){echo "selected";} ?>>
-                        <?= $c['cname'] . "/" . $c['ename'] ?>
-                    </option>
-                <?php } ?>
-            </select>
-            <select id="cityId" name="city" class="select2" placeholder="城市" required></select>
-
-            <p class="title_p">
-                <span class="spn_title">景点名称</span>
-                <span class="form_tip" id="scenicTip"></span>
-            </p>
-
-            <div id="scenicList" class="jings clearfix">
+            <h2 class="titles" style="margin-bottom: 10px">添加您的随游所涉及的位置地点，帮助旅行者更好的作出决策</h2>
+            <span id="scenicTip" style="color: red;font-size: 14px;text-align: center"></span>
+            <div id="scenicList" class="jings clearfix" style="display: none">
                 <?php
                 if($travelInfo['scenicList']!=null){
                     foreach($travelInfo['scenicList'] as $key=> $scenic){
                         if($key==0){
                             ?>
                             <div class="jing">
-                                <input type="text" placeholder="景点" onfocus="NewTrip.loadLocation(this)" onblur="NewTrip.searchLocation(this)"
-                                       lon="<?=$scenic['lon']?>" lat="<?=$scenic['lat']?>" title="<?=$scenic['name']?>" value="<?=$scenic['name']?>"
-                                    />
-                                <a id="addScenic" href="javascript:;" class="add"></a>
+                                <input type="hidden"  lon="<?=$scenic['lon']?>" lat="<?=$scenic['lat']?>" title="<?=$scenic['name']?>" value="<?=$scenic['name']?>" />
                             </div>
                         <?php }else{?>
                             <div class="jing">
-                                <input type="text" placeholder="景点" onfocus="NewTrip.loadLocation(this)" onblur="NewTrip.searchLocation(this)"
-                                       lon="<?=$scenic['lon']?>" lat="<?=$scenic['lat']?>" title="<?=$scenic['name']?>" value="<?=$scenic['name']?>"
-                                    />
-                                <a href="javascript:;" onclick="NewTrip.removeScenic(this)" class="remove"></a>
+                                <input type="hidden"  lon="<?=$scenic['lon']?>" lat="<?=$scenic['lat']?>" title="<?=$scenic['name']?>" value="<?=$scenic['name']?>" />
                             </div>
                         <?php }?>
                     <?php
@@ -116,9 +95,14 @@
                 }
                 ?>
             </div>
-            <div class="map">
-                <iframe  onload="NewTrip.initMap()" id="mapFrame" name="mapFrame" src="/google-map/to-map" width="440px" height="330px;"
-                         frameborder="0" scrolling="no"></iframe>
+            <div style="width: 100%;text-align: center">
+                <iframe id="editMapFrame" name="editMapFrame" src="/google-map/edit-scenic-map?tripId=<?=$travelInfo['info']['tripId']?>"
+                        width="830px" height="300px;" frameborder="0" scrolling="no" <?=$travelInfo['scenicList']==null?'style="display:none;"':''?>></iframe>
+                <img id="editMapImg" src="/assets/images/my_map.jpg" <?=$travelInfo['scenicList']!=null?'style="display:none;"':''?>/>
+                <div class="jing">
+                    <a href="javascript:;" id="showAddScenic" class="add colGreen">添加景点</a>
+                    <a href="javascript:;" id="resetAllScenic" class="colOrange">重新添加景点</a>
+                </div>
             </div>
 
             <div class="bjyPro bj2Pro01">
@@ -476,7 +460,7 @@
                             <span>亮点名称</span>
                             <input type="text" id="special_name"  maxlength="30">
                             <span>亮点描述</span>
-                            <textarea id="special_info" placeholder="最多150个字" maxlength="150"></textarea>
+                            <textarea id="special_info" placeholder="最多250个字" maxlength="250"></textarea>
                             <span>上传图片</span>
                             <a href="javascript:;" onclick="NewTrip.showChoseSpecialDiv();" class="fr colGreen selPic">从已上传图片中选取</a>
                             <div id="special_div" class="pic fPic">
@@ -529,6 +513,35 @@
     <a href="javascript:;" onclick="NewTrip.closeChoseSpecialDiv()" class="btn">取消</a>
 </div>
 
+
+<div class="syBj2Pro01 screens" style="z-index: 1000">
+    <h2 class="title">景点位置及名称</h2>
+    <select id="countryId" name="country" class="select2" placeholder="国家" required>
+        <option value=""></option>
+        <?php foreach ($countryList as $c) { ?>
+            <option value="<?= $c['id'] ?>"
+                <?php  if($c['id']==$travelInfo['info']['countryId']){echo "selected";} ?>>
+                <?= $c['cname'] . "/" . $c['ename'] ?>
+            </option>
+        <?php } ?>
+    </select>
+    <select id="cityId" name="city" class="select2" placeholder="城市" required></select>
+    <span class="form_tip" id="scenic_name_tip" style="float: left;text-align: left !important;position: absolute;top: 203px;padding-left: 81px"></span>
+    <input type="text" placeholder="景点名称" id="scenic_name" style="margin-bottom: 10px">
+    <div class="stepBtn clearfix">
+        <a href="javascript:;" class="bjy-prev colOrange" id="scenicCancel">取消</a>
+        <a href="javascript:;" class="bjy-next colGreen" id="scenicNext">下一步</a>
+    </div>
+</div>
+<div class="syBj2Pro02 screens" style="z-index: 1000">
+    <h2 class="title" id="scenicTitleTip">地图上的位置是否正确？</h2>
+    <div class="map">
+        <iframe id="mapFrame" name="mapFrame" src="/google-map/to-map" width="440px" height="330px;" frameborder="0" scrolling="no"></iframe></div>
+    <div class="stepBtn clearfix">
+        <a href="javascript:;" class="bjy-prev bgOrange" id="scenicChangeLocation">调整位置</a>
+        <a href="javascript:;" class="bjy-next bgGreen" id="scenicConfirm">看上去不错</a>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -804,6 +817,44 @@
 
 
         var initBtnClick = function () {
+
+            $("#showAddScenic").bind("click",function(){
+                $(".syBj2Pro01").show();
+                $(".mask").show();
+            });
+            $("#scenicCancel").bind("click",function(){
+                $(".mask").hide();
+                $(".syBj2Pro01").hide();
+            });
+            $("#scenicNext").bind("click",function(){
+                if($("#scenic_name").val()==''){
+                    $("#scenic_name_tip").html("景点名称不能为空");
+                    return;
+                }else{
+                    $("#scenic_name_tip").html("");
+                }
+                $(".syBj2Pro01").hide();
+                $(".syBj2Pro02").show();
+
+                findScenicInfo($("#scenic_name"));
+            });
+            $("#scenicChangeLocation").bind("click",function(){
+                var img='<img src="http://maps.gstatic.cn/mapfiles/api-3/images/spotlight-poi.png" style="height: 30px; position: absolute; top: 13px;left:256px" />';
+                $("#scenicTitleTip").html("拖动&nbsp;&nbsp;&nbsp;"+img+"&nbsp;&nbsp;&nbsp;标记准确位置");
+                $("#scenicChangeLocation").hide();
+                $("#scenicConfirm").html("确定");
+            });
+            $("#scenicConfirm").bind("click",function(){
+                NewTrip.addScenic();
+            });
+
+            $("#resetAllScenic").bind("click",function(){
+                window.frames['editMapFrame'].clearMarker()
+                $("#editMapImg").show();
+                $("#editMapFrame").hide();
+                $("#scenicList").html("");
+                $("#resetAllScenic").hide();
+            });
 
             $("#uploadPic").bind("click", function () {
                 var file = $("#picFile");
@@ -1388,10 +1439,30 @@
              * 添加景区
              */
             addScenic: function () {
-                var html = '<div class="jing"><input type="text" placeholder="景点" onfocus="NewTrip.loadLocation(this)" onblur="NewTrip.searchLocation(this)" /><a href="javascript:;" onclick="NewTrip.removeScenic(this)" class="remove"></a></div>';
+                var lon,lat,title;
+                var rst=window.frames['mapFrame'].getMapSite();
+                title=$("#scenic_name").val();
+                rst=rst.split(",");
+                lon=rst[0];
+                lat=rst[1];
+                var html = '<div class="jing"><input type="hidden" placeholder="景点" lon="'+lon+'" lat="'+lat+'" title="'+title+'" value="'+title+'" /><a href="javascript:;" onclick="NewTrip.removeScenic(this)" class="remove"></a></div>';
                 $("#scenicList").append(html);
-                //同时删除选中坐标
+
+                window.frames['editMapFrame'].addMarker(lon,lat,title);
+
+                $("#scenic_name").val("");
+                $("#scenicTitleTip").html("地图上的位置是否正确？");
+                $("#scenicConfirm").html("看上去不错");
+                $("#scenicChangeLocation").show();
+
+                $("#editMapImg").hide();
+                $("#editMapFrame").show();
+                $("#resetAllScenic").show();
+
+                $(".syBj2Pro02").hide();
+                $(".mask").hide();
             },
+
 
             /**
              * 删除景区

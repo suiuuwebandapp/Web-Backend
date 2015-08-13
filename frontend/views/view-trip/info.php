@@ -84,13 +84,15 @@
                         <p><?=$special['info']?></p>
                     <?php } ?>
                 <?php } ?>
-                <div class="bgGreen idea clearfix">
-                    <a href="#" class="cir fl"><img src="<?=$createUserInfo->headImg;?>" width="66" height="66"></a>
-                    <div class="fl">
-                        <p>推荐理由：</p>
-                        <p>依然保留了初建时的许多历史遗迹，如威斯敏斯特厅</p>
+                <?php if($userRecommend!=null&&!empty($userRecommend['content'])){ ?>
+                    <div class="bgGreen idea clearfix">
+                        <a href="javascript:;" class="cir fl"><img src="<?=$userRecommend['headImg'];?>" width="66" height="66"></a>
+                        <div class="fl">
+                            <p>推荐理由：</p>
+                            <p><?=nl2br($userRecommend['content']);?></p>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
                 <?php if(!empty($travelInfo['includeDetailList'])&&!empty($travelInfo['unIncludeDetailList'])){ ?>
                     <p class="title02" id="price">价格内容</p>
                     <div class="contian clearfix">
@@ -133,29 +135,42 @@
                 </div>
             </div>
 
-            <?php if($isOwner&&count($travelInfo['publisherList'])>1){?>
+            <?php if($isOwner&&(count($travelInfo['publisherList'])>1||!empty($applyList))){?>
                 <div class="newsLists clearfix" id="publisherList">
-                    <h2 class="title">随友处理</h2>
+                    <h2 class="title line">随游管理</h2>
                     <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
                         <?php if($publisherInfo['publisherId']==$travelInfo['info']['createPublisherId']){continue;} ?>
                         <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
-
-                        <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>">
+                        <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>" type="publisherList">
                             <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
                             <ul class="clearfix">
-                                <li class="li01"><?=$publisherInfo['nickname'];?><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$publisherInfo['userSign']?>')">
-                                    <br>性别:<b><?php if($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b>
+                                <li class="li01">
+                                    <p class="name"><span><?=$publisherInfo['nickname'];?></span><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$publisherInfo['userSign']?>')"></p>
+                                    <p>性别:<b><?php if($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></p>
                                 </li>
                                 <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($publisherInfo['birthday']);?></b></li>
                                 <li>职业:<b><?=$publisherInfo['profession']?></b></li>
                                 <li>随游次数:<b><?=$publisherInfo['travelCount']?></b></li>
-                                <li><a href="###" class="colGreen">申请理由</a></li>
+                                <li></li>
                             </ul>
                             <a href="javascript:;" tripPublisherId="<?=$publisherInfo['tripPublisherId']?>" class="sureBtn colOrange">移除</a>
-                            <!--
-                            <a href="javascript:;" class="sureBtn posis colGreen">接受</a>
-                            <a href="javascript:;" class="sureBtn colOrange">忽略</a>
-                            -->
+                        </div>
+                    <?php } ?>
+                    <?php foreach($applyList as $apply){?>
+                        <div class="lists clearfix" id="apply_div_<?=$apply['applyId']?>">
+                            <img src="<?= $apply['headImg']?>" alt="" class="userpic">
+                            <ul class="clearfix">
+                                <li class="li01">
+                                    <p class="name"><span><?=$apply['nickname'];?></span><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$apply['userSign']?>')"></p>
+                                    <p>性别:<b><?php if($apply['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($apply['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></p>
+                                </li>
+                                <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($apply['birthday']);?></b></li>
+                                <li>职业:<b><?=$apply['profession']?></b></li>
+                                <li>随游次数:<b><?=$apply['travelCount']?></b></li>
+                                <li><a href="javascript:;" data="<?=$apply['info']?>"  onclick="showApplyInfo(this)" class="colGreen">申请理由</a></li>
+                            </ul>
+                            <a href="javascript:;" class="sureBtn posis colGreen sure" applyId="<?=$apply['applyId']?>" publisherId="<?=$apply['publisherId']?>">接受</a>
+                            <a href="javascript:;" class="sureBtn colOrange removeBtn" applyId="<?=$apply['applyId']?>">忽略</a>
                         </div>
                     <?php } ?>
                 </div>
@@ -176,7 +191,7 @@
                 </div>
                 <a href="javascript:;" class="zl-btn colGreen more" id="showMoreComment">更多评论</a>
 
-                <div class="zhuanlan-text clearfix">
+                <div class="zhuanlan-text clearfix" id="pllist">
                     <textarea id="pinglun" placeholder="说点什么吧"></textarea>
                     <a href="javascript:;" class="zl-btn bgGreen colWit" onclick="submitComment()">发表评论</a>
                 </div>
@@ -195,7 +210,7 @@
                                     <?=$trip['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
                                 </p>
                             </a>
-                            <p><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,20,'UTF-8')."...":$trip['title']?></p>
+                            <p><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,14,'UTF-8')."...":$trip['title']?></p>
                             <p class="xing">
                                 <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
                                 <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
@@ -229,10 +244,10 @@
                 <?php if(!empty($travelInfo['serviceList'])){ ?>
                     <a href="javascript:;" id="showServiceDiv" class="servers"><span>该随游可选择的附加服务</span><b class="icon"></b></a>
                 <?php } ?>
-                <p class="colOrange money" id="allPrice">￥<?=intval($travelInfo['info']['basePrice']);?></p>
+                <p class="colOrange money" id="allPrice">总价：￥<?=intval($travelInfo['info']['basePrice']);?></p>
                 <input id="toApply" type="button" value="申请加入" class="btn web-btn5 bgGreen" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
                 <input id="addOrder" type="button" value="立即预定" class="btn web-btn6 bgOrange" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-                <a href="###" class="colGreen fr">如何预订？</a>
+                <a href="javascript:;" id="buyHelp" class="colGreen fr">如何预订?</a>
             </div>
         </form>
 

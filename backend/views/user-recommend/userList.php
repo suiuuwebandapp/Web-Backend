@@ -21,9 +21,9 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-red-sunglo"></i>
-                    <span class="caption-subject font-red-sunglo bold uppercase">用户列表</span>
+                    <span class="caption-subject font-red-sunglo bold uppercase">推荐用户列表</span>
                             <span class="caption-helper">
-                                所有用户列表，基本信息
+                                所有推荐用户列表，基本信息
                             </span>
                 </div>
                 <div class="actions">
@@ -84,7 +84,7 @@
             'formObj'  :'#datatables_form',
             'tableDiv' :'#table_div',
             'tableObj' :'#table_list',
-            'tableUrl' :'/user-base/user-list',
+            'tableUrl' :'/user-recommend/user-list',
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
@@ -94,7 +94,11 @@
                     "data": "nickname",
                     "bSortable": false,
                     "render": function(data, type, full) {
-                        return data.length<20?data:data.substring(0,20);
+                        if(data==null){
+                            return '';
+                        }else{
+                            return data.length<20?data:data.substring(0,20);
+                        }
                     }
                 },
                 {"targets": [2],"data": "phone","bSortable": false,"width":"180px"},
@@ -132,15 +136,10 @@
                     "targets": [7],
                     "data": "userSign",
                     "bSortable": false,
-                    "width":"300px",
+                    "width":"200px",
                     "render": function(data, type, full) {
                         var html='';
                         html +='<a href="javascript:;" onclick="showUserInfo(\''+full.userSign+'\')" class="btn default btn-xs blue-hoki"><i class="fa fa-cog"></i> 查看</a>&nbsp;&nbsp;';
-                        if(full.userRecommendId!=null){
-                            html +='<a href="javascript:;" onclick="deleteUserRecommend(\''+full.userRecommendId+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 移除推荐</a>&nbsp;&nbsp;';
-                        }else{
-                            html +='<a href="javascript:;" onclick="addUserRecommend(\''+data+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 设置推荐</a>&nbsp;&nbsp;';
-                        }
                         if(full.status==1){
                             html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 禁用</a>&nbsp;&nbsp;';
                         }else if(full.status==2){
@@ -166,7 +165,7 @@
 
     var showUserInfo=function(userSign){
         Main.openModal("/user-base/to-user-info?id="+userSign);
-    };
+    }
 
     /**
      * 改变用户状态
@@ -202,57 +201,4 @@
                 }
             }
         });
-    };
-
-    var addUserRecommend=function(id){
-        var url='/user-recommend/add-user-recommend';
-        $.ajax({
-            type:"POST",
-            url:url,
-            data:{
-                id:id
-            },beforeSend:function(){
-                Main.showWait("#table_list");
-            },
-            error:function(){
-                Main.errorTip("系统异常");
-            },
-            success:function(data){
-                data=eval("("+data+")");
-                Main.hideWait("#table_list");
-                if(data.status==1){
-                    Main.refrenshTableCurrent();
-                    Main.successTip("设置为推荐用户成功");
-                }else{
-                    Main.errorTip("操作失败");
-                }
-            }
-        });
-    };
-
-    var deleteUserRecommend=function(id){
-        var url='/user-recommend/delete-user-recommend';
-        $.ajax({
-            type:"POST",
-            url:url,
-            data:{
-                id:id
-            },beforeSend:function(){
-                Main.showWait("#table_list");
-            },
-            error:function(){
-                Main.errorTip("系统异常");
-            },
-            success:function(data){
-                data=eval("("+data+")");
-                Main.hideWait("#table_list");
-                if(data.status==1){
-                    Main.refrenshTableCurrent();
-                    Main.successTip("移除推荐用户成功");
-                }else{
-                    Main.errorTip("操作失败");
-                }
-            }
-        });
-    };
-
+    }

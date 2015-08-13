@@ -670,7 +670,7 @@ class TripController extends CController
         $travelTripApply->info=$info;
         $travelTripApply->status=TravelTripApply::TRAVEL_TRIP_APPLY_STATUS_WAIT;
 
-        $this->tripService->addTravelTripApply($this->userObj->userSing,$travelTripApply);
+        $this->tripService->addTravelTripApply($this->userObj->userSign,$travelTripApply);
 
         return $this->redirect(['/result', 'result' => '您的申请已经提交，请耐心等待审核']);
     }
@@ -703,7 +703,7 @@ class TripController extends CController
             $travelTripPublisher->tripId=$tripId;
             $travelTripPublisher->tripPublisherId=$tripPublisherId;
 
-            $this->tripService->deleteTravelTriPublisher($this->userObj->userSing,$travelTripPublisher);
+            $this->tripService->deleteTravelTriPublisher($this->userObj->userSign,$travelTripPublisher);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -786,7 +786,7 @@ class TripController extends CController
         }
 
         try{
-            $this->tripService->agreePublisherApply($this->userObj->userSing,$applyId,$publisherId,$this->userPublisherObj->userPublisherId);
+            $this->tripService->agreePublisherApply($this->userObj->userSign,$applyId,$publisherId,$this->userPublisherObj->userPublisherId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -806,7 +806,7 @@ class TripController extends CController
         }
 
         try{
-            $this->tripService->opposePublisherApply($this->userObj->userSing,$applyId,$this->userPublisherObj->userPublisherId);
+            $this->tripService->opposePublisherApply($this->userObj->userSign,$applyId,$this->userPublisherObj->userPublisherId);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
@@ -857,7 +857,7 @@ class TripController extends CController
             $travelTripPublisher->tripId=$tripId;
             $travelTripPublisher->tripPublisherId=$this->userPublisherObj->userPublisherId;
 
-            $this->tripService->deleteTravelTriPublisher($this->userObj->userSing,$travelTripPublisher);
+            $this->tripService->deleteTravelTriPublisher($this->userObj->userSign,$travelTripPublisher);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);

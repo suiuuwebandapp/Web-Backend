@@ -1108,7 +1108,7 @@ transition:1s;
 .bjy-bj1 .bj1Pro01{ left:505px; top:34px;}
 .bjy-bj1 .bj1Pro02{ left:505px; top:106px;}
 
-.bjy-bj2 .bj2Pro01{ left:870px; top:256px;}
+.bjy-bj2 .bj2Pro01{ left:870px; top:0;}
 
 .bjy-bj4 .price1{ margin:0 auto; position:relative; width:440px;}
 .bjy-bj4 .price2{ margin:0 auto; position:relative; width:440px;}
@@ -1135,12 +1135,37 @@ transition:1s;
 .bjy-bj1 .pic{width:410px; height:267px; overflow:hidden; margin:0px auto;}
 .bjy-bj1 .pic img{width:410px; display:block;}
 .bjy-bj2{ position:relative; width:1200px;margin:80px auto 20px;}
-.bjy-bj2 .jing{ position:relative;}
-.bjy-bj2 .jing a{ position:absolute; left:825px; top:0; display:inline-block; width:36px; height:36px;}
-.bjy-bj2 .jing a.add{ background:url(../images/addG.png) no-repeat 0 center;}
-.bjy-bj2 .jing a.remove{ background:url(../images/minO.png) no-repeat 0 center;}
+.bjy-bj2 .jings{ position:relative;}
+.bjy-bj2 .jings .map{ width:438px; height:241px; margin:0 auto; background:url(../images/map.png) no-repeat center center;}
+.bjy-bj2 .jing{  position:relative; height:40px; width:438px; margin:15px auto;}
+.bjy-bj2 .jing a{ font-size:18px; padding-left:30px;  height:36px; line-height:36px;}
+.bjy-bj2 .jing a.add{ float:left; background:url(../images/addG.png) no-repeat 0 center;}
+.bjy-bj2 .jing a.remove{ float:right; background:url(../images/minO.png) no-repeat 0 center;}
 .bjy-bj2 .map{width:440px; height:240px; background:#ececec; margin:0px auto;}
 .bjy-bj2 .map img{width:440px; display:block;}
+
+.syBj2Pro01{ display:none; background:#fff; z-index:99999; position:fixed; top:100px; left:50%; margin-left:-300px; width:600px; height:400px; box-shadow:3px 3px 3px rgba(0,0,0,0.3);}
+.syBj2Pro01 .title{ font-size:18px; text-align:center; height:75px; line-height:75px;  }
+.syBj2Pro01 input{ height:36px; line-height:36px; width:420px; padding:0 10px; display:block; margin:0 auto 20px; background:#eee; }
+.syBj2Pro01 .stepBtn{ margin:30px auto; position:relative; height:40px; text-align:center;}
+.syBj2Pro01 .stepBtn .bjy-prev,.syBj2Pro01 .stepBtn.bjy-next{ margin:0 10px; border:1px solid #ddd; border-radius:5px; display:inline-block;   width:165px; height:36px;  line-height:36px; text-align:center; }
+.syBj2Pro01 .stepBtn a.colOrange:hover{ background:#ffaa00; border-color:#ffaa00; color:#fff;}
+.syBj2Pro01 .stepBtn a.colGreen:hover{ background:#3dd9c3; border-color:#3dd9c3; color:#fff;}
+
+.syBj2Pro02{ display:none;  background:#fff; z-index:99999; position:fixed; top:100px; left:50%; margin-left:-300px; width:600px; height:400px; box-shadow:3px 3px 3px rgba(0,0,0,0.3);}
+.syBj2Pro02 .title{ font-size:18px; text-align:center; height:60px; line-height:60px;  }
+.syBj2Pro02 .map{ width:438px; height:248px; margin:0 auto; background:#eee; }
+.syBj2Pro02 .stepBtn{ margin:30px auto; position:relative; height:40px; text-align:center;}
+.syBj2Pro02 .stepBtn .bjy-prev,.syBj2Pro02 .stepBtn .bjy-next{ border:none; color:#fff; margin:0 10px;  border-radius:5px; display:inline-block;   width:165px; height:36px;  line-height:36px; text-align:center; }
+
+.syBj2Pro03{ display:none; background:#fff; z-index:99999; position:fixed; top:100px; left:50%; margin-left:-300px; width:600px; height:400px; box-shadow:3px 3px 3px rgba(0,0,0,0.3);}
+.syBj2Pro03 .title{ font-size:18px; text-align:center; height:60px; line-height:60px;  }
+.syBj2Pro03 .map{ width:438px; height:248px; margin:0 auto; background:#eee; }
+.syBj2Pro03 .stepBtn{ margin:30px auto; position:relative; height:40px; text-align:center;}
+.syBj2Pro03 .stepBtn .bjy-prev,.syBj2Pro03 .stepBtn .bjy-next{ border:none; color:#fff; margin:0 10px;  border-radius:5px; display:inline-block;   width:165px; height:36px;  line-height:36px; text-align:center; }
+
+
+
 
 .bjy-bj3{ width:1200px;margin:80px auto 20px; }
 .bjy-bj3 p{ text-align:center; line-height:26px;}
@@ -1149,7 +1174,6 @@ transition:1s;
 .bjy-bj3 .imgs .delet{ background:rgba(0,0,0,0.3) url(../images/delete02.png) no-repeat 182px 4px; height:115px; width:205px; display:block; position:absolute; left:0; top:0; display:none;}
 .bjy-bj3 .imgs:hover .delet{ display:block; }
 .picPop{ height:495px; width:520px; position:fixed; top:100px; left:50%; margin-left:-225px; z-index:999; display:none; }
-.picPop .pic{ height:450px; width:520px; background:#D6D6D6;   }
 .picPop .pic p{   text-align:center; margin-top:210px; color:#fff; font-size:22px;    }
 .picPop .btn{ height:36px; width:90px; line-height:36px; text-align:center; display:block; position:absolute; font-size:16px;  color:#FFF;    }
 .picPop .btn.sure{background:#73b9ff; bottom:0; right:0px;  }

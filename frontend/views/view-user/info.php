@@ -119,7 +119,7 @@
                         <li>
                             <a href="<?=\common\components\SiteUrl::getViewUserUrl($comment['userSign'])?>" class="Pic"><img src="<?=$comment['headImg'] ?>"></a>
                             <div class="picRight">
-                                <span class="name"><?=$recommend['nickname']?></span>
+                                <span class="name"><?=$comment['nickname']?></span>
                                 <p><?=$comment['content'] ?></p>
                                 <div class="line clearfix">
                                     <span class="datas"><?=date("Y-m-d H:s",strtotime($comment['cTime']))?></span>

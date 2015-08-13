@@ -197,6 +197,11 @@
         </li>
     </ul>
 </div>
+<div class="indexAd" style="z-index: 9">
+    <a href="javascript:;" class="closed"></a>
+    <div class="inner"></div>
+</div>
+
 <script type="text/javascript">
     $(function(){
         $('.index-banner .serch-out .serch .helps').click(function(e) {

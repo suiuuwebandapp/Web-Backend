@@ -122,6 +122,30 @@ class BaseDb {
 
 
     /**
+     * 根据主键删除数据
+     * @param $className
+     * @param $id
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function deleteObjectById($className,$id)
+    {
+        $object=new $className;
+        $tableName=$this->object2TableName($object);
+
+        $sqlWhere=" ".$object::PRIMARY_KEY."=:".$object::PRIMARY_KEY;
+        $sql=sprintf("
+             DELETE FROM  %s  WHERE %s
+          ",$tableName,$sqlWhere);
+
+        $conn=self::getConnection();
+        $command=$conn->createCommand($sql);
+        $command->bindParam($object::PRIMARY_KEY,$id);
+        return $command->execute();
+    }
+
+
+    /**
      * 保存OBJECT 对象到数据库
      * @param $object
      * @throws Exception
@@ -214,7 +238,6 @@ class BaseDb {
         $sql=sprintf("
              SELECT * FROM  %s  WHERE %s
           ",$tableName,$sqlWhere);
-
         $conn=self::getConnection();
         $command=$conn->createCommand($sql);
         $command->bindParam($queryKey,$value);

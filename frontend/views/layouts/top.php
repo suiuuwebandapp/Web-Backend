@@ -23,19 +23,6 @@
             </div>
             <div class="header-right fr">
                 <ul>
-                    <li class="xitong" id="suiuu-btn1"><a href="javascript:;"><span style="display: none" class="newTip"></span></a>
-                        <div class="xit-sz">
-                            <span class="jiao"></span>
-                            <ol>
-                                <li class="sx active" id="userMessageLiBtn">私信</li>
-                                <li class="xtxx" id="sysMessageLiBtn">系统消息</li>
-                            </ol>
-                            <ul id="unReadUserMessageList">
-                            </ul>
-                            <ul id="unReadSystemMessageList" style="display: none">
-                            </ul>
-                        </div>
-                    </li>
                     <li class="name" id="suiuu-btn2">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($this->context->userObj->userSign)?>"><img src="<?= $this->context->userObj->headImg; ?>" alt="" class="user"></a>
                         <a href="javascript:;" class="colGreen aname"><?= $this->context->userObj->nickname; ?></a>
@@ -52,7 +39,20 @@
 
                         </div>
                     </li>
-                    <li class="pubsy"><a href="/index/trip-help" class="bgGreen">如何发布随游</a></li>
+                    <li class="xitong" id="suiuu-btn1"><a href="javascript:;"><span style="display: none" class="newTip"></span></a>
+                        <div class="xit-sz">
+                            <span class="jiao"></span>
+                            <ol>
+                                <li class="sx active" id="userMessageLiBtn">私信</li>
+                                <li class="xtxx" id="sysMessageLiBtn">系统消息</li>
+                            </ol>
+                            <ul id="unReadUserMessageList">
+                            </ul>
+                            <ul id="unReadSystemMessageList" style="display: none">
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="pubsy"><a href="/index/trip-help" class="bgGreen">发布随游</a></li>
                 </ul>
             </div>
         </div>
@@ -71,7 +71,7 @@
                 <ol>
                     <li class="zhuces"><a href="javascript:;" id="zhuce">注册</a></li>
                     <li class="logins"><a href="javascript:;" id="denglu">登录</a></li>
-                    <li class="pubsy"><a href="/index/trip-help" class="bgGreen">如何发布随游</a></li>
+                    <li class="pubsy"><a href="/index/trip-help" class="bgGreen">发布随游</a></li>
                 </ol>
             </div>
         </div>
