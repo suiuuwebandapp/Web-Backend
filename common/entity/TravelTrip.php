@@ -22,6 +22,11 @@ class TravelTrip {
     const TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON=1;//随游基础价格类别：每人
     const TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT=2; //随游基础价格类别：每次
 
+
+    const TRAVEL_TRIP_TYPE_EXPLORE=1; //慢行探索
+    const TRAVEL_TRIP_TYPE_PERSONALITY=2;//个性玩法
+    const TRAVEL_TRIP_TYPE_TRAFFIC=3;//交通服务
+
     const PRIMARY_KEY="tripId";
     /**
      * @var主键
@@ -139,11 +144,6 @@ class TravelTrip {
     public $tags;
 
     /**
-     * @var随游状态
-     */
-    public $status;
-
-    /**
      * @var随游评论数
      */
     public $commentCount;
@@ -151,5 +151,20 @@ class TravelTrip {
      * @var随游收藏数
      */
     public $collectCount;
+
+    /**
+     * @var是否是热门
+     */
+    public $isHot;
+
+    /**
+     * @var随游分类
+     */
+    public $type;
+
+    /**
+     * @var随游状态
+     */
+    public $status;
 
 }

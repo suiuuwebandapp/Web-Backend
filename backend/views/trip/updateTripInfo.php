@@ -37,6 +37,26 @@
                                         <span></span>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-md-3 control-label">随游分类<span class="required">*</span></label>
+                                        <div class="col-md-7 valdate">
+                                            <div class="input-icon right">
+                                                <i class="fa"></i>
+                                                <select id="tripType"  class="form-control muti_select" placeholder=" 请选择随游分类"  required>
+                                                    <option value="0"></option>
+                                                    <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?>"
+                                                        <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?'selected':''?>
+                                                        >慢行探索</option>
+                                                    <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?>"
+                                                        <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?'selected':''?>
+                                                        >个性玩法</option>
+                                                    <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>"
+                                                        <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?'selected':''?>
+                                                        >交通服务</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-md-3 control-label">随游评分<span class="required">*</span></label>
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
@@ -51,6 +71,17 @@
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
                                                 <input type="text" id="tripCount" value="<?=$tripInfo['tripCount']?>" class="form-control" placeholder="请输入随游评分" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">热门<span class="required">*</span></label>
+                                        <div class="col-md-7 valdate">
+                                            <div class="input-icon right">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" id="tripHot" value="1"  <?=$tripInfo['isHot']==1?'checked':'';?>  />是否为热门随游
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -92,6 +123,11 @@
         var score=$("#score").val();
         var tripCount=$("#tripCount").val();
         var tripId=$("#tripId").val();
+        var hot=0;
+        var type=$("#tripType").val();
+        if($("input[type='checkbox']:checked").val()==1){
+            hot=1;
+        }
         if(isNaN(score)){
             alert("请输入正确的随游评分");
             return;
@@ -106,7 +142,9 @@
             data:{
                 tripId:tripId,
                 tripCount:tripCount,
-                score:score
+                score:score,
+                hot:hot,
+                type:type
             },
             beforeSend:function(){
                 Main.showWait();

@@ -60,10 +60,6 @@ $scenicObj.="]";
     var interval,list;
     var googleMap,map,m;
 
-    function add(){
-        googleMap.setZoom(5);
-    }
-
     $(document).ready(function(){
 
         list=<?=$scenicObj;?>;
@@ -91,7 +87,7 @@ $scenicObj.="]";
                 window.clearInterval(interval);
             }
             if(googleMap.getZoom()==0){
-                googleMap.setZoom(15);
+                googleMap.setZoom(10);
             }
 
         },30);

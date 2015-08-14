@@ -23,7 +23,13 @@
         <h3 class="tit bgGreen">更多筛选条件</h3>
         <div class="box clearfix">
             <p class="ptitle">分类：</p>
-            <p class="p3 clearfix"><span class="active">慢行探索</span><span>个性玩法</span><span>交通服务</span></p>
+            <p class="p3 clearfix" id="typeList">
+                <span <?=$type==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?'class="active"':''?>
+                    dataType="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?>">慢行探索</span>
+                <span <?=$type==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?'class="active"':''?>
+                    dataType="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?>">个性玩法</span>
+                <span <?=$type==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?'class="active"':''?>
+                    dataType="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>">交通服务</span></p>
             <p class="ptitle">成员:</p>
             <p class="p1 clearfix">
                 <a href="javascript:;" class="icon jian" id="subtract"></a>
@@ -31,7 +37,7 @@
                 <a href="javascript:;" class="icon add" id="add"></a>
             </p>
             <p class="ptitle">类型:</p>
-            <p class="p2 clearfix">
+            <p class="p2 clearfix" id="tagList">
                 <?php foreach($tagList as $tag){ ?>
                     <span><?=$tag?></span>
                 <?php }?>
@@ -47,14 +53,14 @@
     </div>
     <div class="containers clearfix">
         <div class="select" style="padding-top: 10px">
-            <a href="###" class="btns fl">热门</a>
+            <a href="javascript:;" class="btns fl" id="showHot">热门</a>
             <p class="result fl"><span id="searchResultCount"><?=$pageResult->totalCount>100?'100+':$pageResult->totalCount.'条';?></span>&nbsp;&nbsp;搜索结果</p>
             <div class="math fr">
-                <p>排序：默认</p>
-                <ul class="sel fl">
-                    <li>预订数</li>
-                    <li>评论数</li>
-                    <li>推荐分数</li>
+                <p id="orderType" data-order="1">排序：默认</p>
+                <ul class="sel fl" id="orderList">
+                    <li data-order="1">推荐分数</li>
+                    <li data-order="2">预订数</li>
+                    <li data-order="3">评论数</li>
                 </ul>
             </div>
         </div>
@@ -63,12 +69,15 @@
                 <?php foreach($pageResult->result as $key=> $trip){?>
                     <div class="web-tuijian fl <?=($key+1)%2==0?'nomg':''?>">
                         <a href="<?=\common\components\SiteUrl::getTripUrl($trip['tripId'])?>" class="pic">
+                            <?php if($trip['isHot']==1){ ?>
+                                <span class="hot"></span>
+                            <?php } ?>
                             <img src="<?=$trip['titleImg']?>" width="410" height="267">
                             <p class="p4"><span>￥<?= intval($trip['basePrice']) ?></span>
                                 <?=$trip['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
                             </p>
                         </a>
-                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($trip['userSign'])?>" class="user"><img src="<?=$trip['headImg'];?>" ></a>
+                        <a target="_blank" href="<?=\common\components\SiteUrl::getViewUserUrl($trip['userSign'])?>" class="user"><img src="<?=$trip['headImg'];?>" ></a>
                         <p class="title"><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,20,"UTF-8")."...":$trip['title'] ?></p>
                         <p class="xing">
                             <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
@@ -81,7 +90,7 @@
                     </div>
                 <?php } ?>
             <?php }else{
-                echo "<div style='text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>";
+                echo "<div style='min-height:400px;text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>";
             }?>
         </div>
         <ol id="spage" class="clearfix">
@@ -145,6 +154,33 @@
             }else{
                 $(".sylx-xiangxi").css("position","fixed");
             }
+        });
+
+        $("#orderList li").bind("click",function(){
+            $("#orderType").attr("data-order",$(this).attr("data-order"));
+            $("#orderType").html("排序："+$(this).html());
+            currentPage=1;
+            searchTip();
+        });
+
+        $("#showHot").bind("click",function(){
+            if($(this).hasClass("active")){
+                $(this).removeClass("active");
+            }else{
+                $(this).addClass("active");
+            }
+            currentPage=1;
+            searchTip();
+        });
+
+        $("#typeList span").bind("click",function(){
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+            }else{
+                $(this).addClass('active');
+            }
+            currentPage=1;
+            searchTip();
         });
 
 
@@ -213,15 +249,22 @@
         var title=$("#search").val();
         var peopleCount=$("#peopleCount").val();
         var tagList="";
+        var orderType= $("#orderType").attr("data-order");
+        var hot="";
+        var dataType=[];
+        if($("#showHot").hasClass("active")){
+            hot=1;
+        }
         $("#tagList span[class='active']").each(function(){
-            if(tagList=='')
-            {
+            if(tagList==''){
                 tagList+=$(this).html();
-            }else
-            {
+            }else{
                 tagList+=',';
                 tagList+=$(this).html();
             }
+        });
+        $("#typeList span[class='active']").each(function(){
+            dataType.push($(this).attr("dataType"));
         });
         var amount=$("#amount").val();
 
@@ -234,6 +277,9 @@
                 peopleCount:peopleCount,
                 tag:tagList,
                 amount:amount,
+                orderType:orderType,
+                hot:hot,
+                type:dataType,
                 _csrf: $('input[name="_csrf"]').val()
             },
             beforeSend:function(){
@@ -251,12 +297,12 @@
                     $("#trip_base_list").html("");
                     var list=data.data.result;
                     if(data.data.totalCount>100){
-                        $("#searchResultCount").val(data.data.totalCount+"+");
+                        $("#searchResultCount").html("100+");
                     }else{
-                        $("#searchResultCount").val(data.data.totalCount);
+                        $("#searchResultCount").html(data.data.totalCount);
                     }
                     if(list.length==0){
-                        $("#trip_base_list").html("<div style='text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>")
+                        $("#trip_base_list").html("<div style='min-height:400px;text-align: center;height: 200px;line-height: 200px;'>暂时没有找到相关随游</div>")
                         $("#spage").html("");
                         return;
                     }
@@ -284,13 +330,16 @@
                         }
 
                         html+=' <div class="web-tuijian fl '+tripClass+'">';
-                        html+='     <a href="'+UrlManager.getTripInfoUrl(trip.tripId)+'" class="pic">'
+                        html+='     <a href="'+UrlManager.getTripInfoUrl(trip.tripId)+'" class="pic">';
+                        if(trip.isHot==1){
+                            html+='         <span class="hot"></span>';
+                        }
                         html+='         <img src="'+trip.titleImg+'" width="410" height="267">';
                         html+='         <p class="p4"><span>￥'+trip.basePrice+'</span>';
                         html+='             '+basePriceType;
                         html+='         </p>';
                         html+='     </a>';
-                        html+='     <a href="/view-user/info?u='+trip.userSign+'" class="user"><img src="'+trip.headImg+'" ></a>';
+                        html+='     <a target="_blank" href="/view-user/info?u='+trip.userSign+'" class="user"><img src="'+trip.headImg+'" ></a>';
                         html+='     <p class="title">'+title+'</p>';
                         html+='     <p class="xing">'
 

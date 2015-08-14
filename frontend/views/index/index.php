@@ -128,15 +128,15 @@
         <ul id="ul1" class="clearfix">
             <li>
                 <img src="/assets/images/index/T01.png">
-                <div class="div01"><a href="###"><p>慢行探索</p></a></div>
+                <div class="div01"><a href="/view-trip/list?t=<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?>"><p>慢行探索</p></a></div>
             </li>
             <li>
                 <img src="/assets/images/index/T02.png">
-                <div class="div01"><a href="###"><p>个性玩法</p></a></div>
+                <div class="div01"><a href="/view-trip/list?t=<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?>"><p>个性玩法</p></a></div>
             </li>
             <li class="nomg">
                 <img src="/assets/images/index/T03.png">
-                <div class="div01"><a href="###"><p>交通服务</p></a></div>
+                <div class="div01"><a href="/view-trip/list?t=<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>"><p>交通服务</p></a></div>
             </li>
         </ul>
     </div>
@@ -217,6 +217,11 @@
             $(this).stop(true,false).fadeTo("show",1);
         },function(){
             $(this).stop(true,false).fadeTo("show",1);
+        });
+
+        $(".detailBtn").bind("click",function(){
+            $(".sydetailPop").show();
+            $(".mask").show();
         });
 
         $(".index-banner").slide({

@@ -70,10 +70,12 @@ class TravelTripDb extends ProxyDb
      * @param $startPrice
      * @param $endPrice
      * @param $tag
+     * @param $isHot
      * @param $status
+     * @param $typeArray
      * @return Page|null
      */
-    public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $status)
+    public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $isHot,$typeArray, $status)
     {
 
         $sql = sprintf("
@@ -106,6 +108,10 @@ class TravelTripDb extends ProxyDb
             $sql .= " AND t.maxUserCount>=:peopleCount ";
             $this->setParam("peopleCount", $peopleCount);
         }
+        if (!empty($isHot) ) {
+            $sql .= " AND t.isHot=:isHot ";
+            $this->setParam("isHot", $isHot);
+        }
         if (!empty($startPrice)) {
             $sql .= " AND t.basePrice>=:startPrice ";
             $this->setParam("startPrice", $startPrice);
@@ -117,6 +123,11 @@ class TravelTripDb extends ProxyDb
         if (!empty($tag)) {
             $sql .= " AND t.tripId IN (";
             $sql .= $tag;
+            $sql .= ")";
+        }
+        if(!empty($typeArray&&count($typeArray)>0)){
+            $sql .= " AND t.type IN (";
+            $sql .= implode(",",$typeArray);
             $sql .= ")";
         }
         $this->setSql($sql);
@@ -1177,19 +1188,24 @@ class TravelTripDb extends ProxyDb
      * @param $tripId
      * @param $score
      * @param $tripCount
+     * @param $isHot
+     * @param $type
      * @return int
      * @throws \yii\db\Exception
      */
-    public function updateTravelTripScoreAndCount($tripId, $score, $tripCount)
+    public function updateTravelTripBase($tripId, $score, $tripCount,$isHot,$type)
     {
         $sql = sprintf("
-            UPDATE travel_trip SET score=:score , tripCount=:tripCount
+            UPDATE travel_trip SET score=:score , tripCount=:tripCount,isHot=:isHot,type=:type
             WHERE tripId=:tripId
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->bindParam(":score", $score, PDO::PARAM_INT);
         $command->bindParam(":tripCount", $tripCount, PDO::PARAM_INT);
+        $command->bindParam(":isHot", $isHot, PDO::PARAM_INT);
+        $command->bindParam(":type", $type, PDO::PARAM_INT);
+
         return $command->execute();
     }
 

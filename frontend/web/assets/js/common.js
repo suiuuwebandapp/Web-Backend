@@ -270,7 +270,7 @@ $(function(){
 /*-----syhPro弹出浮层-----*/
 $(function(){
 	$('.suiyouHelp .btn').click(function(e) {
-        $('.syhPro,.mask').css('display','block')
+        //$('.syhPro,.mask').css('display','block')
     });
 
 })

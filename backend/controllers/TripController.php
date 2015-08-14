@@ -116,7 +116,7 @@ class TripController extends CController {
         $tripId=Yii::$app->request->get("tripId");
         $tripInfo=$this->tripSer->findObjectById(TravelTrip::class,$tripId);
 
-        return $this->render("update-trip-info",[
+        return $this->render("updateTripInfo",[
             'tripInfo'=>$tripInfo
         ]);
     }
@@ -126,9 +126,13 @@ class TripController extends CController {
         $trip=Yii::$app->request->post("tripId");
         $tripCount=Yii::$app->request->post("tripCount");
         $score=Yii::$app->request->post("score");
+        $isHot=Yii::$app->request->post("hot",0);
+        $type=Yii::$app->request->post("type",0);
 
-        $this->tripSer->updateTravelTripScoreAndCount($trip,$score,$tripCount);
+        $this->tripSer->updateTravelTripBase($trip,$score,$tripCount,$isHot,$type);
 
         return json_encode(Code::statusDataReturn(Code::SUCCESS));
     }
+
+
 }

@@ -43,13 +43,24 @@ class TripService extends BaseDb{
      * @param $startPrice
      * @param $endPrice
      * @param $tag
+     * @param null $isHot
+     * @param null $typeArray
      * @return Page|null
      * @throws Exception
      * @throws \Exception
      */
-    public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag)
+    public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$isHot=null,$typeArray=null)
     {
         try {
+
+            if(!empty($typeArray)){
+                foreach($typeArray as $t){
+                    if(!is_numeric($t)){
+                        throw new Exception("Invalid TripType");
+                    }
+                }
+            }
+
             $conn = $this->getConnection();
             $this->tripTravelDb = new TravelTripDb($conn);
             $tagStr='';
@@ -76,7 +87,7 @@ class TripService extends BaseDb{
                 $countryId=$cc[0];
                 $cityId=$cc[1];
             }
-            return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tagStr,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+            return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tagStr,$isHot,$typeArray,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         } catch (Exception $e) {
             throw $e;
         } finally {
@@ -128,6 +139,8 @@ class TripService extends BaseDb{
         try {
 
             $this->tripTravelDb = new TravelTripDb($conn);
+            //随游价格提高 5%
+            //$travelTrip->basePrice=$travelTrip->basePrice+$travelTrip->basePrice*0.05;
             $this->tripTravelDb->addTravelTrip($travelTrip);
             $tripId=$conn->getLastInsertID();
             $travelTripPublisher->tripId=$tripId;
@@ -215,6 +228,8 @@ class TripService extends BaseDb{
         try {
 
             $this->tripTravelDb = new TravelTripDb($conn);
+            //随游价格提高 5%
+            //$travelTrip->basePrice=$travelTrip->basePrice+$travelTrip->basePrice*0.05;
             $this->tripTravelDb->updateTravelTrip($travelTrip);
             //删除 ，添加
             $this->tripTravelDb->deleteTravelTripScenicBytripId($travelTrip->tripId);

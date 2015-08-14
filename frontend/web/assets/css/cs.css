@@ -1324,7 +1324,10 @@ transition:1s;
 .sylx .sylx-list .web-tuijian p{ line-height:25px; font-size:14px;}
 .sylx .sylx-list .web-tuijian .p4{ padding:8px 15px; font-size:18px;background:rgba(0,0,0,0.6);color:#fff; position:absolute; left:0; bottom:45px;}
 .sylx .sylx-list .web-tuijian .p4 span{ color:#FFDD6B; font-size:18px; margin-right:15px;}
+.sylx .sylx-list .web-tuijian .pic{ position:relative;}
 .sylx .sylx-list .web-tuijian .pic img{ width:100%; display:block;}
+.sylx .sylx-list .web-tuijian .pic .hot{ display:block; position:absolute; top:0; right:0; z-index:2; width:48px; height:48px; background:url(../images/hotIcon.png) no-repeat center center;}
+
 .sylx .sylx-list .web-tuijian .xing{ margin:0;}
 .sylx .sylx-list .web-tuijian .xing span{ margin-left:15px;}
 

@@ -103,16 +103,13 @@ class TripService extends BaseDb{
     }
 
 
-    public function updateTravelTripScoreAndCount($tripId,$score,$tripCount)
+    public function updateTravelTripBase($tripId,$score,$tripCount,$isHot,$type)
     {
         $conn = $this->getConnection();
-        $tran=$conn->beginTransaction();
         try {
             $this->tripDb = new TravelTripDb($conn);
-            $this->tripDb->updateTravelTripScoreAndCount($tripId,$score,$tripCount);
-            $this->commit($tran);
+            $this->tripDb->updateTravelTripBase($tripId,$score,$tripCount,$isHot,$type);
         } catch (Exception $e) {
-            $this->rollback($tran);
             throw $e;
         } finally {
             $this->closeLink();

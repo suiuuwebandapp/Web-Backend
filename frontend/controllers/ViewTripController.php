@@ -55,6 +55,9 @@ class ViewTripController extends UnCController{
     public function actionList()
     {
         $search=\Yii::$app->request->get("s",null);
+        $type=\Yii::$app->request->get("t",null);
+
+        $typeArray=null;
         //查询热门推荐
         $tagList = TagUtil::getInstance()->getTagList();
         $page=new Page();
@@ -67,7 +70,10 @@ class ViewTripController extends UnCController{
         $tripPage->pageSize=16;
         $tripPage->setCurrentPage(1);
         $this->tripService=new TripService();
-        $tripPage= $this->tripService->getList($tripPage,$search,null,null,null,null,null,null);
+        if(!empty($type)){
+            $typeArray=[$type];
+        }
+        $tripPage= $this->tripService->getList($tripPage,$search,null,null,null,null,null,null,null,$typeArray);
         $pageHtml=Common::pageHtml($tripPage->currentPage,$tripPage->pageSize,$tripPage->totalCount);
         $pageResult=new PageResult($tripPage);
         $pageResult->pageHtml=$pageHtml;
@@ -78,7 +84,8 @@ class ViewTripController extends UnCController{
             'tagList' => $tagList,
             //'rTravel'=>$recommendTravel['data'],
             'pageResult'=>$pageResult,
-            'search'=>$search
+            'search'=>$search,
+            'type'=>$type
         ]);
     }
 
@@ -215,6 +222,11 @@ class ViewTripController extends UnCController{
         $peopleCount=\Yii::$app->request->post("peopleCount");
         $amount=\Yii::$app->request->post("amount");
         $tag=\Yii::$app->request->post("tag");
+        $orderType=\Yii::$app->request->post("orderType","1");
+        $isHot=\Yii::$app->request->post("hot");
+        $type=\Yii::$app->request->post("type");
+
+
         $startPrice="";
         $endPrice="";
         if(!empty($amount)){
@@ -231,9 +243,18 @@ class ViewTripController extends UnCController{
             $page=new Page();
             $page->pageSize=16;
             $page->setCurrentPage($c);
+
+            if($orderType==2){
+                $page->sortName="tripCount";
+            }else if($orderType==3){
+                $page->sortName="commentCount";
+            }else{
+                $page->sortName="score";
+            }
+            $page->sortType="DESC";
             $this->tripService=new TripService();
             //查询基本
-            $page= $this->tripService->getList($page,$title,null,null,$peopleCount,$startPrice,$endPrice,$tag);
+            $page= $this->tripService->getList($page,$title,null,null,$peopleCount,$startPrice,$endPrice,$tag,$isHot,$type);
 
             //查询热门推荐
             $pageHtml=Common::pageHtml($page->currentPage,$page->pageSize,$page->totalCount);
