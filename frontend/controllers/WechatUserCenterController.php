@@ -15,9 +15,11 @@ use common\components\SysMessageUtils;
 use common\entity\TravelTripService;
 use common\entity\UserOrderInfo;
 use common\entity\WeChatUserInfo;
+use frontend\components\Page;
 use frontend\services\PublisherService;
 use frontend\services\TripService;
 use frontend\services\UserBaseService;
+use frontend\services\UserMessageRemindService;
 use frontend\services\UserOrderService;
 use frontend\services\WeChatService;
 use yii\base\Exception;
@@ -467,6 +469,24 @@ class WechatUserCenterController extends WController {
         }catch (Exception $e){
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"确认游玩失败"));
+        }
+    }
+
+    public function actionGetUserRemind()
+    {
+        try{
+            $login = $this->loginValid();
+            if(!$login){
+                return $this->redirect(['/we-chat/login']);
+            }
+            $userSign=$this->userObj->userSign;
+            $userMessageSer = new UserMessageRemindService();
+            $page  = new Page(\Yii::$app->request);
+            $rst = $userMessageSer->getWebSysMessage($userSign,$page,null);
+            return $this->renderPartial('messageRemind',['list'=>$rst,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return $this->redirect('/we-chat/error?str=获取消息异常');
         }
     }
 }

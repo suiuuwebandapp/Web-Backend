@@ -387,18 +387,22 @@ class PayReturnController extends Controller {
     {
         $raw_data=file_get_contents("php://input");
         $input_data = json_decode($raw_data, true);
-        $headers = \Yii::$app->request->headers;
-        $signature = $headers->get('x-pingplusplus-signature');
+        $signature = isset($_SERVER['HTTP_X_PINGPLUSPLUS_SIGNATURE'])?$_SERVER['HTTP_X_PINGPLUSPLUS_SIGNATURE']:"";
+
+        //$signature = $headers->get('x-pingplusplus-signature');
         $pub_key_path = "../../common/pay/pingpp/lib/rsa_public_key.pem";
         $pub_key_contents = file_get_contents($pub_key_path);
+        $log_ = new Log_();
+        $log_name="pingppLog.txt";//log文件路径
         if(empty($signature)||empty($pub_key_contents))
         {
-            echo 'verification failed';
+            echo "verification failed";
+            $log_->log_result($log_name,"【ping++支付支付失败】:\n"."verification failed"."\n");
             exit;
         }
         $result = openssl_verify($raw_data, base64_decode($signature), $pub_key_contents, OPENSSL_ALGO_SHA256);
-        $log_ = new Log_();
-        $log_name="pingppLog.txt";//log文件路径
+
+
         if ($result === 1) {
             if($input_data['type'] == 'charge.succeeded'&& $input_data['data']['object']['paid'] == true)
             {
@@ -423,6 +427,7 @@ class PayReturnController extends Controller {
                     LogUtils::log($e);
                 }
                 http_response_code(200);// PHP 5.4 or greater
+                exit;
             }else{
                 $log_->log_result($log_name,"【ping++支付失败】:\n".$raw_data."|".$input_data['type']."#"."\n");
             }

@@ -247,19 +247,48 @@ class UserMessageRemindDb extends ProxyDb
         FROM user_message_remind a
             LEFT JOIN user_base b ON b.userSign = a.createUserSign
             LEFT JOIN travel_trip c ON c.tripId=a.relativeId
-            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND b.status=:userStatus AND (rType=:rType OR rType=:sysType)
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus  AND (rType=:rType OR rType=:sysType)
         ");
         if(!empty($type))
         {
             $sql.= " AND relativeType=:relativeType ";
             $this->setParam("relativeType", $type);
         }
-        $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
         $this->setParam("rType", UserMessageRemind::R_TYPE_TRIP);
         $this->setParam("sysType", UserMessageRemind::R_TYPE_SYS);
         $this->setParam("userSign", $userSign);
         $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,b.headImg,b.nickname,c.title');
+        $this->setSql($sql);
+        return $this->find($page);
+    }
+
+    /**
+     * 查找web系统消息
+     * @param $userSign
+     * @param $page
+     * @param $type
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getWebSysMessage($userSign,$page,$type)
+    {
+        $sql=sprintf("
+        FROM user_message_remind a
+            LEFT JOIN user_base b ON b.userSign = a.createUserSign
+            WHERE a.relativeUserSign=:userSign AND a.rStatus=:rStatus AND (rType=:rType OR rType=:sysType OR rType=:orderType)
+        ");
+        if(!empty($type))
+        {
+            $sql.= " AND relativeType=:relativeType ";
+            $this->setParam("relativeType", $type);
+        }
+        $this->setParam("rStatus", UserMessageRemind::REMIND_STATUS_NORMAL);
+        $this->setParam("rType", UserMessageRemind::R_TYPE_TRIP);
+        $this->setParam("sysType", UserMessageRemind::R_TYPE_SYS);
+        $this->setParam("orderType", UserMessageRemind::R_TYPE_ORDER);
+        $this->setParam("userSign", $userSign);
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,b.headImg,b.nickname');
         $this->setSql($sql);
         return $this->find($page);
     }

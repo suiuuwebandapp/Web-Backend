@@ -1,5 +1,5 @@
 <?php $tripInfo=json_decode($info->tripJsonInfo,true);
-$serviceArr = $info->serviceInfo;
+$serviceArr = json_decode($info->serviceInfo,true);
 ?>
 <!doctype html>
 <html lang="zh-CN">

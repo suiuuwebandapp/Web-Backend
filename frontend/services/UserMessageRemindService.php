@@ -25,6 +25,8 @@ class UserMessageRemindService extends BaseDb
     public function getOrderMessage($userSign,$page,$type)
     {
         try {
+            $page->sortName="remindId";
+            $page->sortType='desc';
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
             $data=$this->remindDb->getOrderRemind($userSign,$page,$type);
@@ -38,6 +40,8 @@ class UserMessageRemindService extends BaseDb
     public function getTripMessage($userSign,$page,$type)
     {
         try {
+            $page->sortName="remindId";
+            $page->sortType='desc';
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
             $data=$this->remindDb->getTripRemind($userSign,$page,$type);
@@ -52,6 +56,8 @@ class UserMessageRemindService extends BaseDb
     public function getTpMessage($userSign,$page,$type)
     {
         try {
+            $page->sortName="remindId";
+            $page->sortType='desc';
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
             $data=$this->remindDb->getTpRemind($userSign,$page,$type);
@@ -66,6 +72,8 @@ class UserMessageRemindService extends BaseDb
     public function getQaMessage($userSign,$page,$type)
     {
         try {
+            $page->sortName="remindId";
+            $page->sortType='desc';
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
             $data=$this->remindDb->getQaRemind($userSign,$page,$type);
@@ -79,6 +87,8 @@ class UserMessageRemindService extends BaseDb
     public function getSysMessage($userSign,$page,$type)
     {
         try {
+            $page->sortName="remindId";
+            $page->sortType='desc';
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
             $data=$this->remindDb->getSysRemind($userSign,$page,$type);
@@ -92,6 +102,8 @@ class UserMessageRemindService extends BaseDb
     public function getNoticeMessage($userSign,$page,$type)
     {
         try {
+            $page->sortName="remindId";
+            $page->sortType='desc';
             $conn = $this->getConnection();
             $this->remindDb=new UserMessageRemindDb($conn);
             $data=$this->remindDb->getNoticeMessage($userSign,$page,$type);
@@ -102,6 +114,30 @@ class UserMessageRemindService extends BaseDb
             $this->closeLink();
         }
     }
+
+    /**web端得到系统消息
+     * @param $userSign
+     * @param $page
+     * @param $type
+     * @return array
+     * @throws Exception
+     */
+    public function getWebSysMessage($userSign,$page,$type)
+    {
+        try {
+            $page->sortName="remindId";
+            $page->sortType='desc';
+            $conn = $this->getConnection();
+            $this->remindDb=new UserMessageRemindDb($conn);
+            $data=$this->remindDb->getWebSysMessage($userSign,$page,$type);
+            return array('data'=>$data->getList(),'msg'=>$data);
+        } catch (Exception $e) {
+            throw new Exception('获取通知消息异常',Code::FAIL,$e);
+        } finally {
+            $this->closeLink();
+        }
+    }
+
     public function deleteUserMessageRemind($rid,$userSign)
     {
         try {

@@ -32,6 +32,8 @@ class AController extends SController{
     {
 
         parent::__construct($id, $module);
+
+
     }
     public function loginValid($bo=true,$isApp=true)
     {

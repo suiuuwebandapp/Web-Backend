@@ -49,7 +49,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syRegistered .agr a{ color:#97cbff; text-decoration:none;}
 .syRegistered .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:10px auto 20px; text-decoration:none;}
 .syRegistered .btn:hover{ text-decoration:underline;}
-/*-----------随友注册选择国家弹层-------------*/
+	/*-----------随友注册选择国家弹层-------------*/
 .sySetcountry{ position:absolute; top:0; left:0; z-index:444; display:none;}
 .sySetcountry .navbars{ font-size:0.85rem; width:1.6rem; position:fixed; right:0; top:5rem; z-index:9; }
 .sySetcountry .navbars a{ color:#FFAB00; font-size:0.85rem; text-decoration:none; line-height:0.85rem; }
@@ -87,14 +87,14 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .bangding02 .lists li .code img{ width:100%; display:block;}
 .bangding02 .lists li .code:hover{ text-decoration:underline;}
 .bangding02 .lists li .country{ color:#858585; text-align:center; cursor:pointer;background:#eee url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
-.bangding02 .btn{  font-size:0.85rem;
-    display:block; width:8.2rem; height:2.14rem; line-height:2.14rem;
-    text-align:center; text-decoration:none;
-    position:absolute; left:50%; margin-left:-4.1rem;
-}
-.bangding02 .lists li.btns{ margin:1.5rem 0;}
-.bangding02 .forget{ margin-right:2rem; margin-top:0.8rem; color:#858585; text-decoration:none;}
-
+.bangding02 .btn{  font-size:0.85rem; 
+  display:block; width:8.2rem; height:2.14rem; line-height:2.14rem;
+   text-align:center; text-decoration:none;
+   position:absolute; left:50%; margin-left:-4.1rem;
+  }
+.bangding02 .lists li.btns{ margin:1.5rem 0;} 
+.bangding02 .forget{ margin-right:2rem; margin-top:0.8rem; color:#858585; text-decoration:none;} 
+  
 .bangding02 .btn:hover{ text-decoration:underline;}
 
 
@@ -108,14 +108,14 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .findPassword01 .lists li .code img{ width:100%; height:2.7rem;display:block;}
 .findPassword01 .lists li .code:hover{ text-decoration:underline;}
 .findPassword01 .lists li .country{ color:#858585; text-align:center; cursor:pointer;background:#eee url(../images/go.png) no-repeat 96% center; background-size:0.6rem 0.9rem; }
-.findPassword01 .btn{  font-size:0.85rem;
-    display:block; width:8.2rem; height:2.14rem; line-height:2.14rem;
-    text-align:center; text-decoration:none;
-    margin:1rem auto;
-
-}
-.findPassword01 .lists li.btns{ margin:1.5rem 0;}
-.findPassword01 .forget{ margin-right:2rem; margin-top:0.8rem; color:#858585; text-decoration:none;}
+.findPassword01 .btn{  font-size:0.85rem; 
+  display:block; width:8.2rem; height:2.14rem; line-height:2.14rem;
+   text-align:center; text-decoration:none;
+   margin:1rem auto;
+    
+  }
+.findPassword01 .lists li.btns{ margin:1.5rem 0;} 
+.findPassword01 .forget{ margin-right:2rem; margin-top:0.8rem; color:#858585; text-decoration:none;} 
 .findPassword01 .btn:hover{ text-decoration:underline;}
 
 
@@ -159,7 +159,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .sy_order .box .paying{ background:#A8A8B7;}
 .sy_order .box .finish{ background:#A8A8B7;}
 
-/*------fixed------*/
+		/*------fixed------*/
 .order_pay{ position:fixed;  bottom:0; left:0;  box-shadow:0 0 4px rgba(0,0,0,0.4);  height:0; width:100%; background:rgba(0,0,0,0.9); overflow:hidden; }
 .order_pay p{ text-align:center; color:#fff; margin-top:0.6rem; }
 .order_pay .select{ width:10rem; margin:1.5rem auto 0;}
@@ -273,26 +273,26 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 .userCenter .content{ padding-top:2.85rem; max-width:640px; margin:0 auto;}
 .userCenter .Uheader{
-    text-align:center;
-    background:#73B9FF;
-    font-size:1rem;
-    color: #fff;
-    line-height:2.85rem;
-    width: 100%;
-    height:2.85rem;
-    padding: 0 50px;
-    position:fixed;
-    top:0; left:0;
-    z-index:999;
+	text-align:center;
+	background:#73B9FF;
+	font-size:1rem;
+	color: #fff;
+	line-height:2.85rem;
+	width: 100%;
+	height:2.85rem;
+	padding: 0 50px;
+	position:fixed;
+	top:0; left:0;
+	z-index:999;
 }
 .userCenter .Uheader a{
-    background:url(../images/navIcon.png) no-repeat 0 center;
-    display: block;
-    width: 40px;
-    height:2.85rem;
-    position: absolute;
-    top: 0;
-    left: 10px;
+	background:url(../images/navIcon.png) no-repeat 0 center;
+	display: block;
+	width: 40px;
+	height:2.85rem;
+	position: absolute;
+	top: 0;
+	left: 10px;
 }
 .userCenter .content .box{ width:100%; position:relative; background:#fff; margin-bottom:10px; box-sizing:border-box; }
 .userCenter .content .box a.pic{ width:50%; display:block; }
@@ -445,13 +445,13 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .w_suiyou .selects a:nth-child(1){   text-align:left; }
 .w_suiyou .selects a i{  background:url(../images/drop.png) no-repeat center center; display:inline-block; width:24px; height:14px; background-size:0.85rem 0.5rem; }
 
-/*----------c随游 prop---------*/
-
-.w_suiyou .selects .props{ width:100%; z-index:333; position:absolute; top:2rem; left:0; }
-.w_suiyou .selects .syprop{ display:none;  width:100%; }
-.w_suiyou .selects .syprop .sets{ box-shadow:0 0 10px rgba(0,0,0,0.5); text-align:center; width:100%; max-width:640px; background:#fff; margin:0 auto;}
-.w_suiyou .selects .syprop .sets li{  line-height:2.6rem; border-bottom:1px solid #ddd;  }
-.w_suiyou .selects .syprop .sets .titles{ color:#fff; line-height:1.4rem;  }
+		/*----------c随游 prop---------*/
+		
+.w_suiyou .selects .props{ width:100%; z-index:333; position:absolute; top:2rem; left:0; }		
+.w_suiyou .selects .syprop{ display:none;  width:100%; }		
+.w_suiyou .selects .syprop .sets{ box-shadow:0 0 10px rgba(0,0,0,0.5); text-align:center; width:100%; max-width:640px; background:#fff; margin:0 auto;}		
+.w_suiyou .selects .syprop .sets li{  line-height:2.6rem; border-bottom:1px solid #ddd;  }		
+.w_suiyou .selects .syprop .sets .titles{ color:#fff; line-height:1.4rem;  }		
 
 .w_suiyou .top span{color:#fff;  }
 .w_suiyou .content{ width:100%; max-width:640px; margin:0 auto;}
@@ -462,7 +462,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .w_suiyou .content .box .details .title{ margin-bottom:4px; color:#fff; font-size:0.85rem;}
 .w_suiyou .content .box .details .colOrange{ color:#FFEA7F; font-size:0.85rem;}
 .w_suiyou .content .box .details .line img{ float:right; margin-left:3px;}
-
+		
 /*-----------c随游筛选-------------*/
 .w_suiyouSelect p{ margin-top:10px; }
 .w_suiyouSelect .row{ display:table; width:100%; height:2.7rem; line-height:2.7rem; background:#fff; padding:0 0.5rem;  }
@@ -584,8 +584,8 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 #pagepiling .section .search_out .btn{ width:2.5rem; height:2rem; margin-top:0.2rem; display:block; float:right; }
 #pagepiling .section .search_out .btn img{ width:2rem; height:2rem; display:block;  }
 #pagepiling .section .p1{ font-size:1rem; color:#fff; text-align:center; width:100%; margin-top:40%;}
-#pagepiling .section .btn02{font-size:1rem;  color:#fff; background:#73b9ff; width:9.7rem; height:2.14rem;
-    line-height:2.14rem; display:block; margin:1rem auto 0; text-align:center; }
+#pagepiling .section .btn02{font-size:1rem;  color:#fff; background:#73b9ff; width:9.7rem; height:2.14rem; 
+ line-height:2.14rem; display:block; margin:1rem auto 0; text-align:center; }
 
 
 
@@ -610,9 +610,14 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syContent .top .userPic img{ width:100%; display:block; }
 .syContent .top .userName{ float:left; margin-top:0.9rem; margin-left:3px; font-size:0.85rem; }
 .syContent p{ line-height:1.5rem; font-size:0.85rem; }
+.syContent p.bq{ background:url(../images/biaoqian.png) no-repeat 0 14px; padding-left:25px;}
+.syContent p.bq span{ color:#4FD8C3;}
+.syContent p.adress{ color:#4FD8C3; background:url(../images/position.png) no-repeat 0 14px; padding-left:25px;}
 .syContent .line b{ font-size:0.85rem;}
 .syContent .line img{ float:right; margin-left:3px; margin-top:5px;}
-.syContent .title{ line-height:2rem; font-size:0.9rem;}
+.syContent .title{ line-height:2rem; font-size:0.9rem; width:100%;}
+.syContent .title01{ line-height:2rem; font-size:0.85rem;}
+.syContent .pics{ display:block; width:100%;  }
 .syContent .map{ width:100%;  }
 .syContent .map .mapPic{ width:100%;}
 .syContent .details li{ width:33%; float:left;}
@@ -621,6 +626,14 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syContent .details li .icon3{ background-position:0 -8.53rem;}
 .syContent .contian span{ margin-right:10px;   }
 .syContent .contian span img{ width:0.9rem; height:0.9rem; display:inline-block; }
+
+
+
+.syContent .tuijian{ padding-top:0.2rem;height:2.6rem; width:100%; overflow:hidden; }
+.syContent .tuijian .left{ margin:0 10px;  border-radius:50%; overflow:hidden; float:left; display:block; height:2.14rem; width:2.14rem;}
+.syContent .tuijian .left img{  display:block; width:100%; border-radius:50%; }
+.syContent .tuijian .right{   float:left; }
+.syContent .tuijian .right p{ color:#fff; font-size:0.7rem; line-height:1rem; }
 .syContent .btns{ padding:15px;  width:100%; margin:20px auto 0; border-top:1px solid #ddd; }
 .syContent .btns a{ border-radius:5px; text-align:center; color:#fff; font-size:1rem; display:block;   height:2.14rem; line-height:2.14rem; width:7rem; }
 /*-----------随游详情A02------------*/
@@ -642,7 +655,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syContent02{ margin-top:15px;}
 .syContent02 .top{ height:2.85rem; position:relative;   }
 .syContent02 .top .collect{  position:absolute; top:1rem; right:5px; display:block; height:1.571rem; width:1.671rem; background:url(../images/syD02.png) no-repeat center 0; background-size:1.571rem 6.285rem;}
-.syContent02 .top .collect.active{  background-position:  center -5rem; }
+.syContent02 .top .collect.active{   background-position:center -5rem; }
 
 .syContent02 .top .userPic{ height:2.85rem; width:2.85rem; border-radius:50%; display:block; overflow:hidden; float:left;   }
 

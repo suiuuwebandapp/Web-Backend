@@ -79,7 +79,7 @@
         </li>
         <li style="height:3.5rem; ">
             <label for="">图形验证码</label>
-            <input type="text" style="width:70%; float:left;"  id="valNum"><a href="" style="height:2.7rem; width:30%; overflow:hidden;font-size:0.85rem; float:right; color:#FF7F00; text-decoration:none; text-align:center; line-height:2.7rem;"><img onclick="changeCode()" src="/index/get-code"></a>
+            <input type="text" style="width:70%; float:left;"  id="valNum"><a href="javascript:;"  onclick="changeCode();" style="height:2.7rem; width:30%; overflow:hidden;font-size:0.85rem; float:right; color:#FF7F00; text-decoration:none; text-align:center; line-height:2.7rem;"><img id="codeImg" style="height:2.7rem;width: 100%" src="/index/get-code"></a>
         </li>
         <li >
             <label for="">手机验证码</label>
@@ -91,6 +91,10 @@
     <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
 </div>
 <script>
+    function changeCode()
+    {
+        $('#codeImg').attr('src','/index/get-code')
+    }
     $(document).ready(function () {
         //初始化区号选择
         $(".accAreaCodeSelect").select2({

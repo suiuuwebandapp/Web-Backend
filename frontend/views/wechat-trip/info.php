@@ -73,6 +73,19 @@
     </ul>
     <h3 class="title colBlue">详情描述</h3>
     <p><?= nl2br($info['info']['info'])?></p>
+    <?php foreach($info['specialList'] as $val){?>
+        <img src="<?php echo $val['picUrl']?>" class="pics">
+        <p class="title01"><?php echo nl2br($val['title'])?></p>
+        <p><?php echo nl2br($val['info'])?></p>
+    <?php }?>
+
+    <div class="tuijian bgGreen clearfix">
+        <a href="#" class="left"><img src="<?= $info['createPublisherInfo']['headImg'];?>"></a>
+        <div class="right">
+            <p>推荐理由：</p>
+            <p>依然保留了初建时的许多历史遗迹，如威斯敏斯特厅</p>
+        </div>
+    </div>
     <h3 class="title colBlue">价格内容</h3>
     <div class="contian clearfix">
         <?php foreach($info['includeDetailList'] as $val){?>
