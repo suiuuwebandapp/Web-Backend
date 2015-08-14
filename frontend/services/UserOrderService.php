@@ -646,7 +646,7 @@ class UserOrderService extends BaseDb
             $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
             //6.更新随友账户余额
             $userMoney=$this->userOrderDb->getUserMoney($userPublisher->userId);
-            $balance=$userMoney['balance']+$orderInfo->totalPrice;
+            $balance=$userMoney['balance']+($orderInfo->totalPrice/Code::TRIP_SERVICE_PRICE);
             $version=$userMoney['version'];
             $rstCount=$this->userOrderDb->updateUserBaseMoney($userPublisher->userId,$balance,$version);
             if($rstCount==0){
@@ -655,7 +655,7 @@ class UserOrderService extends BaseDb
             //7.添加随友账户记录
             $userAccountRecord=new UserAccountRecord();
             $userAccountRecord->userId=$userPublisher->userId;
-            $userAccountRecord->money=$orderInfo->totalPrice;
+            $userAccountRecord->money=($orderInfo->totalPrice/Code::TRIP_SERVICE_PRICE);
             $userAccountRecord->balance=$balance;
             $userAccountRecord->info=$tripInfo['title'];
             $userAccountRecord->type=UserAccountRecord::USER_ACCOUNT_RECORD_TYPE_TRIP_SERVER;

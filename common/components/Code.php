@@ -90,6 +90,8 @@ class Code
 
     const TRIP_COUNTRY_CITY = "TRIP_COUNTRY_CITY";//已有随游的国家城市
 
+    const TRIP_SERVICE_PRICE=1.05;//服务费
+
     /**
      * 异常信息（后台）
      */

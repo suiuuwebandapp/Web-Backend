@@ -139,8 +139,6 @@ class TripService extends BaseDb{
         try {
 
             $this->tripTravelDb = new TravelTripDb($conn);
-            //随游价格提高 5%
-            //$travelTrip->basePrice=$travelTrip->basePrice+$travelTrip->basePrice*0.05;
             $this->tripTravelDb->addTravelTrip($travelTrip);
             $tripId=$conn->getLastInsertID();
             $travelTripPublisher->tripId=$tripId;
@@ -228,8 +226,6 @@ class TripService extends BaseDb{
         try {
 
             $this->tripTravelDb = new TravelTripDb($conn);
-            //随游价格提高 5%
-            //$travelTrip->basePrice=$travelTrip->basePrice+$travelTrip->basePrice*0.05;
             $this->tripTravelDb->updateTravelTrip($travelTrip);
             //删除 ，添加
             $this->tripTravelDb->deleteTravelTripScenicBytripId($travelTrip->tripId);
@@ -260,6 +256,7 @@ class TripService extends BaseDb{
             if($serviceList!=null){
                 foreach($serviceList as $service)
                 {
+
                     $service->tripId=$travelTrip->tripId;
                     $this->tripTravelDb->addTravelTripService($service);
                 }

@@ -154,7 +154,7 @@
                 <span class="form_tip" id="basePriceTip"></span>
 
                 <p class="sect">
-                    <input type="text" class="text01" value="<?=$travelInfo['info']['basePrice']?>" id="basePrice"/>
+                    <input type="text" class="text01" value="<?=$travelInfo['info']['oldPrice']?>" id="basePrice"/>
                     <select name="" class="serviceSelect" id="basePriceType">
                         <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON?>"
                             <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_PERSON?'selected':''; ?>
@@ -247,14 +247,14 @@
                                         <p>
                                             <input type="text" value="<?=$price['minCount']?>" class="step_people"><b>人</b><em>&nbsp;至&nbsp;</em>
                                             <input type="text" value="<?=$price['maxCount']?>" class="step_people"><b>人</b>
-                                            <input type="text" value="<?=$price['price']?>" class="step_price"><b>RMB</b>
+                                            <input type="text" value="<?=$price['oldPrice']?>" class="step_price"><b>RMB</b>
                                             <a href="javascript:;" id="addStepPrice" class="add"></a>
                                         </p>
                                     <?php }else{?>
                                         <p>
                                             <input type="text" value="<?=$price['minCount']?>" class="step_people"><b>人</b><em>&nbsp;至&nbsp;</em>
                                             <input type="text" value="<?=$price['maxCount']?>" class="step_people"><b>人</b>
-                                            <input type="text" value="<?=$price['price']?>" class="step_price"><b>RMB</b>
+                                            <input type="text" value="<?=$price['oldPrice']?>" class="step_price"><b>RMB</b>
                                             <a href="javascript:;" onclick="NewTrip.removeStepPrice(this)" class="jian"></a>
                                         </p>
                                     <?php }?>
@@ -293,7 +293,7 @@
                                 <?php if($key==0){ ?>
                                     <dd style="z-index:14">
                                         <input type="text" value="<?=$scenic['title']?>" class="m0-input">
-                                        <input type="text" value="<?=$scenic['money']?>" class="service_price_step">
+                                        <input type="text" value="<?=$scenic['oldMoney']?>" class="service_price_step">
                                         <div class="sect">
                                             <select name="" class="serviceSelect">
                                                 <option value="1"  <?php if($scenic['type']==1){ echo "selected"; } ?>>一人</option>
@@ -305,7 +305,7 @@
                                 <?php }else{?>
                                     <dd style="z-index:11">
                                         <input type="text" value="<?=$scenic['title']?>" class="m0-input">
-                                        <input type="text" value="<?=$scenic['money']?>" class="service_price_step">
+                                        <input type="text" value="<?=$scenic['oldMoney']?>" class="service_price_step">
                                         <div class="sect">
                                             <select name="" class="serviceSelect">
                                                 <option value="1"  <?php if($scenic['type']==1){ echo "selected"; } ?>>一人</option>

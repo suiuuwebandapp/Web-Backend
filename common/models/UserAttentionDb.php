@@ -1,5 +1,6 @@
 <?php
 namespace common\models;
+use common\components\Code;
 use common\entity\AllTotalize;
 use common\entity\CircleArticle;
 use common\entity\RecommendList;
@@ -69,7 +70,7 @@ class UserAttentionDb extends ProxyDb
     public function getAttentionCircleArticle($userSign,$page)
     {
         $sql=sprintf("
-         FROM  circle_article a
+            FROM  circle_article a
             LEFT JOIN user_base b ON b.userSign = a.aCreateUserSign
             LEFT JOIN user_attention c ON c.relativeId = a.articleId
             LEFT JOIN user_base d ON d.userSign = c.userSign
@@ -94,7 +95,7 @@ class UserAttentionDb extends ProxyDb
     {
 
         $sql=sprintf("
-         FROM  sys_circle_sort a
+            FROM  sys_circle_sort a
             LEFT JOIN user_attention c ON c.relativeId = a.cId
             LEFT JOIN user_base b ON c.userSign =b.userSign
             WHERE b.`status`=:userStatus AND c.relativeType=:relativeType AND c.`status`=:attentionStatus AND c.userSign=:userSign
@@ -116,7 +117,7 @@ class UserAttentionDb extends ProxyDb
     public function getAttentionUser($userSign,$page)
     {
         $sql=sprintf("
-         FROM  user_base a
+            FROM  user_base a
             LEFT JOIN user_attention b ON b.relativeId = a.userId
             WHERE a.`status`=:userStatus AND b.relativeType=:relativeType  AND b.`status`=:attentionStatus AND b.userSign=:userSign
         ");
@@ -138,7 +139,7 @@ class UserAttentionDb extends ProxyDb
     public function getAttentionResult(UserAttention $userAttention,$isSupport=false)
     {
         $sql=sprintf("
-           SELECT attentionId,relativeId,relativeType,status,addTime,userSign FROM  user_attention
+            SELECT attentionId,relativeId,relativeType,status,addTime,userSign FROM  user_attention
             WHERE userSign=:userSign AND relativeType=:relativeType AND relativeId=:relativeId
         ");
         if(!$isSupport)
@@ -195,7 +196,7 @@ class UserAttentionDb extends ProxyDb
         $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
         $this->setParam("userSign", $userSign);
 
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,a.tripCount,b.userSign,b.headImg,b.nickname,a.collectCount,a.commentCount');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,(a.basePrice*'.Code::TRIP_SERVICE_PRICE.') AS basePrice,a.tripCount,b.userSign,b.headImg,b.nickname,a.collectCount,a.commentCount');
         $this->setSql($sql);
         return $this->find($page);
     }
@@ -203,16 +204,17 @@ class UserAttentionDb extends ProxyDb
     /**
      * 得到关注的旅图
      * @param $userSign
+     * @param $page
      * @return array
      */
     public function getUserAttentionTp($userSign,$page)
     {
 
         $sql=sprintf("
-        FROM travel_picture a
-LEFT JOIN user_base b ON b.userSign=a.userSign
-LEFT JOIN user_attention d ON d.relativeId = a.id
-WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
+            FROM travel_picture a
+            LEFT JOIN user_base b ON b.userSign=a.userSign
+            LEFT JOIN user_attention d ON d.relativeId = a.id
+            WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
         ");
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("relativeType", UserAttention::TYPE_FOR_TRAVEL_PICTURE);
@@ -233,10 +235,10 @@ WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:a
     {
 
         $sql=sprintf("
-        FROM question_community a
-LEFT JOIN user_base b ON b.userSign=a.qUserSign
-LEFT JOIN user_attention d ON d.relativeId = a.qId
-WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
+            FROM question_community a
+            LEFT JOIN user_base b ON b.userSign=a.qUserSign
+            LEFT JOIN user_attention d ON d.relativeId = a.qId
+            WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:attentionStatus AND d.userSign=:userSign
         ");
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("relativeType", UserAttention::TYPE_FOR_QA);
@@ -256,7 +258,7 @@ WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:a
     public function getCollectArticleList($userSign,$page)
     {
         $sql=sprintf("
-       FROM circle_article a
+            FROM circle_article a
             LEFT JOIN user_attention b ON a.articleId = b.relativeId
             LEFT JOIN user_base c ON c.userSign=a.aCreateUserSign
             LEFT JOIN user_base d  ON d.userSign=b.userSign
@@ -317,9 +319,10 @@ WHERE  b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:a
      */
     public function getAttentionCount($userSign)
     {
+
         $sql=sprintf("
             SELECT COUNT(*) as numb  FROM user_attention a
-            WHERE a.relativeType=:relativeType AND a.`status`=1 AND a.userSign=:userSign
+            WHERE a.relativeType=:relativeType AND a.status=1 AND a.userSign=:userSign
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);

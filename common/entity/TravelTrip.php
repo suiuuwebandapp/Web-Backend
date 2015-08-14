@@ -167,4 +167,5 @@ class TravelTrip {
      */
     public $status;
 
+
 }

@@ -11,6 +11,7 @@ namespace common\models;
 
 
 use backend\components\Page;
+use common\components\Code;
 use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripDetail;
@@ -20,11 +21,22 @@ use common\entity\TravelTripPrice;
 use common\entity\TravelTripPublisher;
 use common\entity\TravelTripScenic;
 use common\entity\TravelTripService;
-use yii\base\Exception;
 use yii\db\mssql\PDO;
 
 class TravelTripDb extends ProxyDb
 {
+
+
+
+    public function getTripSelectInfo()
+    {
+        $selectInfo="t.tripId,t.createPublisherId,t.createTime,t.title,t.titleImg,t.countryId,t.cityId,t.lon,t.lat,
+        ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,t.basePrice as oldPrice,
+        t.basePriceType,t.maxUserCount,t.score,t.tripCount,t.startTime,t.endTime,t.travelTime,t.travelTimeType,t.intro,t.info,t.tags,
+        t.commentCount,t.collectCount,t.isHot,t.type,t.status";
+
+        return $selectInfo;
+    }
 
 
     /**
@@ -54,7 +66,8 @@ class TravelTripDb extends ProxyDb
             $sql .= " AND cityId =:cityId";
             $this->setParam("cityId", $cityId);
         }
-
+        $this->setSelectInfo("tripId,title,titleImg,countryId,cityId,ceil(basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,
+        basePriceType,score,tripCount,commentCount,collectCount,isHot,type,status ");
         $this->setSql($sql);
         return $this->find($page);
 
@@ -75,7 +88,7 @@ class TravelTripDb extends ProxyDb
      * @param $typeArray
      * @return Page|null
      */
-    public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $isHot,$typeArray, $status)
+    public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $isHot, $status,$typeArray)
     {
 
         $sql = sprintf("
@@ -126,13 +139,15 @@ class TravelTripDb extends ProxyDb
             $sql .= ")";
         }
         if(!empty($typeArray&&count($typeArray)>0)){
-            $sql .= " AND t.type IN (";
-            $sql .= implode(",",$typeArray);
+            $sql .= " AND t.tripId IN (";
+            $sql .= $tag;
             $sql .= ")";
         }
         $this->setSql($sql);
-        $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename,u.userSign ");
-
+        $this->setSelectInfo("t.tripId,t.title,t.titleImg,t.countryId,t.cityId,ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,
+        t.basePriceType,t.score,t.tripCount,t.commentCount,t.collectCount,t.isHot,t.type,t.status,
+        u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename,u.userSign ");
+        $this->setSelectInfo(" ");
         return $this->find($page);
     }
 
@@ -157,7 +172,9 @@ class TravelTripDb extends ProxyDb
         $sql .= " AND t.tripId in (" . $tripIds . ")";
 
         $this->setSql($sql);
-        $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename ");
+        $this->setSelectInfo(" t.tripId,t.title,t.titleImg,t.countryId,t.cityId,ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,
+        t.basePriceType,t.score,t.tripCount,t.commentCount,t.collectCount,t.isHot,t.type,t.status,
+        u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename ");
 
 
         return $this->find($page);
@@ -280,11 +297,11 @@ class TravelTripDb extends ProxyDb
     public function findTravelTripById($tripId)
     {
         $sql = sprintf("
-            SELECT t.*,c.cname AS countryCname,c.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname FROM travel_trip AS t
+            SELECT %s,c.cname AS countryCname,c.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname FROM travel_trip AS t
             LEFT JOIN country AS c ON c.id=t.countryId
             LEFT JOIN city AS ci ON ci.id=t.cityId
             WHERE tripId=:tripId
-        ");
+        ",self::getTripSelectInfo());
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
 
@@ -401,7 +418,7 @@ class TravelTripDb extends ProxyDb
     public function getTravelTripPriceList($tripId)
     {
         $sql = sprintf("
-            SELECT * FROM travel_trip_price
+            SELECT priceId,tripId,minCount,maxCount,ceil(price * ".Code::TRIP_SERVICE_PRICE.") AS price,price As oldPrice FROM travel_trip_price
             WHERE tripId=:tripId
         ");
         $command = $this->getConnection()->createCommand($sql);
@@ -619,7 +636,7 @@ class TravelTripDb extends ProxyDb
     public function getTravelTripServiceList($tripId)
     {
         $sql = sprintf("
-            SELECT * FROM travel_trip_service
+            SELECT tripId,title,money as oldMoney,ceil(money*".Code::TRIP_SERVICE_PRICE.") as money,type FROM travel_trip_service
             WHERE tripId=:tripId
         ");
         $command = $this->getConnection()->createCommand($sql);
@@ -767,7 +784,7 @@ class TravelTripDb extends ProxyDb
         $this->setParam("tripStatus", TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
 
         $this->setSql($sql);
-        $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names,u.userSign");
+        $this->setSelectInfo(self::getTripSelectInfo().",u.nickname,u.headImg,apply.count,service.names,u.userSign");
 
         return $this->findListBySql();
     }
@@ -806,7 +823,7 @@ class TravelTripDb extends ProxyDb
         $this->setParam("tripStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
 
         $this->setSql($sql);
-        $this->setSelectInfo(" t.*,u.nickname,u.headImg,apply.count,service.names");
+        $this->setSelectInfo(self::getTripSelectInfo().",u.nickname,u.headImg,apply.count,service.names");
 
         return $this->findListBySql();
     }
@@ -898,18 +915,17 @@ class TravelTripDb extends ProxyDb
      */
     public function removeCollectCount($tripId)
     {
-        try {
-            $sql = sprintf("
+
+        $sql = sprintf("
             UPDATE travel_trip SET
             collectCount=collectCount-1
             WHERE tripId=:tripId
         ");
 
-            $command = $this->getConnection()->createCommand($sql);
-            $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
-            $command->execute();
-        } catch (Exception $e) {
-        }
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->execute();
+
     }
 
     /**
@@ -996,7 +1012,7 @@ class TravelTripDb extends ProxyDb
             $this->setParam("endPrice", $endPrice);
         }
         $this->setSql($sql);
-        $this->setSelectInfo(" t.*,u.nickname,u.headImg,c.cname,c.ename,ci.cname as ctName,ci.ename as cteName ");
+        $this->setSelectInfo(self::getTripSelectInfo().",u.nickname,u.headImg,c.cname,c.ename,ci.cname as ctName,ci.ename as cteName ");
 
         return $this->find($page);
     }
@@ -1166,6 +1182,7 @@ class TravelTripDb extends ProxyDb
 
     /**
      * 获取用户推荐信息
+     * @param $tripId
      * @return array|bool
      */
     public function findTravelTripRecommendByTripId($tripId)

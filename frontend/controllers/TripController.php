@@ -121,6 +121,7 @@ class TripController extends CController
         $tagList = TagUtil::getInstance()->getTagList();
 
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
+
         //验证当前用户是不是随游的所属者
         $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
         if($travelInfo['info']['createPublisherId']!=$userPublisherId){

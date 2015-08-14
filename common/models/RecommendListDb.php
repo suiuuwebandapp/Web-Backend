@@ -1,5 +1,6 @@
 <?php
 namespace common\models;
+use common\components\Code;
 use common\entity\CircleArticle;
 use common\entity\CircleSort;
 use common\entity\RecommendList;
@@ -42,7 +43,7 @@ class RecommendListDb extends ProxyDb
     public function getList($page,$type)
     {
         $sql=sprintf("
-        FROM recommend_list a
+            FROM recommend_list a
             WHERE 1=1
         ");
         if(!empty($type))
@@ -68,7 +69,7 @@ class RecommendListDb extends ProxyDb
     public function change($id,$status)
     {
         $sql = sprintf("
-           UPDATE recommend_list set `status`=:status WHERE recommendId =:recommendId;
+           UPDATE recommend_list set status=:status WHERE recommendId =:recommendId;
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":status", $status, PDO::PARAM_INT);
@@ -107,7 +108,7 @@ class RecommendListDb extends ProxyDb
     {
         $this->clearParam();
         $sql=sprintf("
-        FROM circle_article b
+            FROM circle_article b
             LEFT JOIN user_base a ON a.userSign=b.aCreateUserSign
             LEFT JOIN recommend_list c ON c.relativeId = b.articleId
             LEFT JOIN sys_circle_sort d  ON d.cId=b.cId
@@ -131,18 +132,18 @@ class RecommendListDb extends ProxyDb
     {
         $this->clearParam();
         $sql=sprintf("
-        FROM travel_trip a
-        LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
-        LEFT JOIN user_base b ON b.userSign=c.userId
-        LEFT JOIN recommend_list d ON d.relativeId = a.tripId
-        LEFT JOIN country co ON a.countryId=co.id
-        WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:rStatus
+            FROM travel_trip a
+            LEFT JOIN user_publisher c ON c.userPublisherId = a.createPublisherId
+            LEFT JOIN user_base b ON b.userSign=c.userId
+            LEFT JOIN recommend_list d ON d.relativeId = a.tripId
+            LEFT JOIN country co ON a.countryId=co.id
+            WHERE a.`status`=:tStatus AND b.`status`=:userStatus AND d.relativeType=:relativeType AND d.`status`=:rStatus
         ");
         $this->setParam("relativeType", RecommendList::TYPE_FOR_TRAVEL);
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("rStatus", RecommendList::RECOMMEND_STATUS_NORMAL);
         $this->setParam("tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,a.basePrice,b.userSign,b.headImg,b.nickname,co.cname as countryName');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,(a.basePrice*'.Code::TRIP_SERVICE_PRICE.') AS basePrice,b.userSign,b.headImg,b.nickname,co.cname as countryName');
         $this->setSql($sql);
         return $this->find($page);
     }
@@ -155,7 +156,7 @@ class RecommendListDb extends ProxyDb
     {
         $this->clearParam();
         $sql=sprintf("
-        FROM user_base a
+            FROM user_base a
             LEFT JOIN recommend_list r ON r.relativeId=a.userId
             LEFT JOIN user_attention b ON a.userId = b.relativeId
             WHERE r.relativeType=:relativeType AND a.`status`=:userStatus AND r.`status`=:rStatus AND b.relativeType=:bType AND b.`status`=:bStatus
@@ -182,8 +183,8 @@ class RecommendListDb extends ProxyDb
     {
         $this->clearParam();
         $sql=sprintf("
-        FROM recommend_list a LEFT JOIN sys_circle_sort b ON a.relativeId=b.cId
-WHERE a.relativeType=:relativeType AND a.`status`=:rStatus
+            FROM recommend_list a LEFT JOIN sys_circle_sort b ON a.relativeId=b.cId
+            WHERE a.relativeType=:relativeType AND a.`status`=:rStatus
         ");
         $this->setParam("relativeType", RecommendList::TYPE_FOR_CIRCLE);
         $this->setParam("rStatus", RecommendList::RECOMMEND_STATUS_NORMAL);
@@ -204,13 +205,13 @@ WHERE a.relativeType=:relativeType AND a.`status`=:rStatus
     {
         $this->clearParam();
         $sql=sprintf("
-        FROM (   SELECT b.aTitle,b.articleId,b.aImg,s.cpic,s.cName,b.cId FROM (SELECT * FROM  user_attention l WHERE l.userSign=:userSign AND l.status=1 AND l.relativeType=4) c
-LEFT JOIN (SELECT a.aImg,a.cId,a.aTitle,a.articleId,a.aStatus,a.aCreateUserSign FROM circle_article a
-LEFT JOIN user_base f ON f.userSign = a.aCreateUserSign WHERE f.status=1 AND a.aStatus=1 AND a.cId<>0  ORDER BY articleId DESC ) b
-ON c.relativeId=b.cId
-LEFT JOIN sys_circle_sort s ON s.cId= c.relativeId
-WHERE b.cId<>0 AND s.cType=:cType
-GROUP BY b.cId ORDER BY b.articleId DESC  )as ss
+            FROM (   SELECT b.aTitle,b.articleId,b.aImg,s.cpic,s.cName,b.cId FROM (SELECT * FROM  user_attention l WHERE l.userSign=:userSign AND l.status=1 AND l.relativeType=4) c
+            LEFT JOIN (SELECT a.aImg,a.cId,a.aTitle,a.articleId,a.aStatus,a.aCreateUserSign FROM circle_article a
+            LEFT JOIN user_base f ON f.userSign = a.aCreateUserSign WHERE f.status=1 AND a.aStatus=1 AND a.cId<>0  ORDER BY articleId DESC ) b
+            ON c.relativeId=b.cId
+            LEFT JOIN sys_circle_sort s ON s.cId= c.relativeId
+            WHERE b.cId<>0 AND s.cType=:cType
+            GROUP BY b.cId ORDER BY b.articleId DESC  )as ss
         ");
         $this->setParam("cType", CircleSort::CIRCLE_TYPE_THEME);
         $this->setParam('userSign',$userSign);
@@ -229,13 +230,13 @@ GROUP BY b.cId ORDER BY b.articleId DESC  )as ss
     {
         $this->clearParam();
         $sql=sprintf("
-       FROM (   SELECT b.aTitle,b.articleId,b.aImg,s.cpic,s.cName,b.cAddrId as cId FROM (SELECT * FROM  user_attention l WHERE l.userSign=:userSign AND l.status=1 AND l.relativeType=4) c
-LEFT JOIN (SELECT a.aImg,a.cAddrId,a.aTitle,a.articleId,a.aStatus,a.aCreateUserSign FROM circle_article a
-LEFT JOIN user_base f ON f.userSign = a.aCreateUserSign WHERE f.status=1 AND a.aStatus=1 AND a.cAddrId<>0  ORDER BY articleId DESC ) b
-ON c.relativeId=b.cAddrId
-LEFT JOIN sys_circle_sort s ON s.cId= c.relativeId
-WHERE b.cAddrId<>0 AND s.cType=:cType
-GROUP BY b.cAddrId ORDER BY b.articleId DESC )as ss
+            FROM (   SELECT b.aTitle,b.articleId,b.aImg,s.cpic,s.cName,b.cAddrId as cId FROM (SELECT * FROM  user_attention l WHERE l.userSign=:userSign AND l.status=1 AND l.relativeType=4) c
+            LEFT JOIN (SELECT a.aImg,a.cAddrId,a.aTitle,a.articleId,a.aStatus,a.aCreateUserSign FROM circle_article a
+            LEFT JOIN user_base f ON f.userSign = a.aCreateUserSign WHERE f.status=1 AND a.aStatus=1 AND a.cAddrId<>0  ORDER BY articleId DESC ) b
+            ON c.relativeId=b.cAddrId
+            LEFT JOIN sys_circle_sort s ON s.cId= c.relativeId
+            WHERE b.cAddrId<>0 AND s.cType=:cType
+            GROUP BY b.cAddrId ORDER BY b.articleId DESC )as ss
         ");
         $this->setParam("cType", CircleSort::CIRCLE_TYPE_PLACE);
         $this->setParam('userSign',$userSign);
@@ -254,14 +255,14 @@ GROUP BY b.cAddrId ORDER BY b.articleId DESC )as ss
     {
         $this->clearParam();
         $sql=sprintf("
-        FROM ( SELECT * FROM (
-SELECT a.aImg,a.aTitle,a.articleId,a.aStatus,f.headImg,f.nickname,f.userSign,a.aContent FROM circle_article a
- LEFT JOIN user_base f ON f.userSign = a.aCreateUserSign
-LEFT JOIN user_attention e ON e.relativeId=f.userId
-WHERE f.status=1 AND a.aStatus=1 AND e.userSign=:userSign AND e.status=1  AND e.relativeType=:relativeType
-ORDER BY articleId DESC
- )
-b GROUP BY b.userSign )as ss
+            FROM ( SELECT * FROM (
+            SELECT a.aImg,a.aTitle,a.articleId,a.aStatus,f.headImg,f.nickname,f.userSign,a.aContent FROM circle_article a
+            LEFT JOIN user_base f ON f.userSign = a.aCreateUserSign
+            LEFT JOIN user_attention e ON e.relativeId=f.userId
+            WHERE f.status=1 AND a.aStatus=1 AND e.userSign=:userSign AND e.status=1  AND e.relativeType=:relativeType
+            ORDER BY articleId DESC
+            )
+            b GROUP BY b.userSign )as ss
         ");
         $this->setParam("relativeType", UserAttention::TYPE_FOR_USER);
         $this->setParam('userSign',$userSign);
