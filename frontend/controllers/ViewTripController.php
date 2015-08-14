@@ -56,6 +56,7 @@ class ViewTripController extends UnCController{
     {
         $search=\Yii::$app->request->get("s",null);
         $type=\Yii::$app->request->get("t",null);
+        $activity=\Yii::$app->request->get("a",null);
 
         $typeArray=null;
         //查询热门推荐
@@ -73,7 +74,8 @@ class ViewTripController extends UnCController{
         if(!empty($type)){
             $typeArray=[$type];
         }
-        $tripPage= $this->tripService->getList($tripPage,$search,null,null,null,null,null,null,null,$typeArray);
+        $tripPage= $this->tripService->getList($tripPage,$search,null,null,null,null,null,null,null,$typeArray,$activity);
+
         $pageHtml=Common::pageHtml($tripPage->currentPage,$tripPage->pageSize,$tripPage->totalCount);
         $pageResult=new PageResult($tripPage);
         $pageResult->pageHtml=$pageHtml;
@@ -212,6 +214,29 @@ class ViewTripController extends UnCController{
 
 
     /**
+     * 查询目的地的随游
+     * @return string
+     */
+    public function actionGetTripSearch()
+    {
+        $search=\Yii::$app->request->post("s");
+        if(empty($search)){
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,""));
+        }
+        try{
+            $page=new Page();
+            $page->pageSize=6;
+            $page=$this->tripService->getTripDesSearchList($page,$search);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$page->getList()));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
+    }
+
+
+    /**
      * 获取随游列表
      * @return string
      */
@@ -229,6 +254,9 @@ class ViewTripController extends UnCController{
 
         $startPrice="";
         $endPrice="";
+        if($peopleCount==0){
+            $peopleCount=null;
+        }
         if(!empty($amount)){
             $amount=str_replace("￥","",$amount);
             $amount=str_replace(" ","",$amount);

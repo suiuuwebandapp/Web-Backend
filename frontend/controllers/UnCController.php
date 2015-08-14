@@ -13,7 +13,9 @@ namespace frontend\controllers;
 use backend\services\SysUserService;
 use common\components\Aes;
 use common\components\Code;
+use frontend\components\Page;
 use frontend\services\CountryService;
+use frontend\services\TripService;
 use frontend\services\UserBaseService;
 
 class UnCController extends SController{
@@ -29,6 +31,7 @@ class UnCController extends SController{
     public $countryList;
     public $areaCode='+86';
 
+
     public function __construct($id, $module = null)
     {
 
@@ -37,6 +40,7 @@ class UnCController extends SController{
         $cookieSign=\Yii::$app->request->cookies->getValue(\Yii::$app->params['suiuu_sign']);
         $enPassword = \Yii::$app->params['encryptPassword'];
         $enDigit = \Yii::$app->params['encryptDigit'];
+
 
         if(isset($currentUser)){
             $this->userObj=$currentUser;

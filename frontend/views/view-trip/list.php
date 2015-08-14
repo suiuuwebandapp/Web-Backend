@@ -11,6 +11,10 @@
 
 <link type="text/css" rel="stylesheet" href="/assets/css/jquery-ui.css">
 <style>
+
+    #trip_base_list{
+        min-height: 400px;
+    }
 </style>
 
 
@@ -33,7 +37,7 @@
             <p class="ptitle">成员:</p>
             <p class="p1 clearfix">
                 <a href="javascript:;" class="icon jian" id="subtract"></a>
-                <input type="text" id="peopleCount">
+                <input type="text" id="peopleCount" value="0">
                 <a href="javascript:;" class="icon add" id="add"></a>
             </p>
             <p class="ptitle">类型:</p>

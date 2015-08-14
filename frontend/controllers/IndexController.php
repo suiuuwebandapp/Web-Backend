@@ -20,6 +20,7 @@ use common\entity\UserBase;
 use common\entity\UserPublisher;
 use common\components\ValidateCode;
 use frontend\services\CountryService;
+use frontend\services\TripService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use common\components\Code;
@@ -46,10 +47,9 @@ class IndexController extends UnCController
 
 
         if (RequestValidate::is_mobile_request()) {
-
            return $this->redirect('/wechat-trip');
-
         }
+
 
         //获取用户邮件定时器
         $emailTime = $this->getEmailTime();
@@ -59,9 +59,10 @@ class IndexController extends UnCController
 
         $page=new Page();
         $page->setCurrentPage(1);
-        $page->pageSize=3;
+        $page->pageSize=4;
         $attentionService=new UserAttentionService();
         $recommendTravel =$attentionService->getRecommendTravel($page);
+
         $this->isIndex=true;
         return $this->render('index',[
             'recommendTravel'=>$recommendTravel['data']

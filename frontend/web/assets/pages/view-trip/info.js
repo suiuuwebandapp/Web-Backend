@@ -8,6 +8,9 @@ $(document).ready(function () {
     initDatePicker();
     getComment(1);
 
+
+
+
 });
 
 
@@ -24,9 +27,12 @@ function initScroll(){
 
         var maxHeight = documentHeight - footHeight;
         //console.info($(".web-right").offset().top+"-"+fixHeight+"-"+maxHeight);
+
         if (scrollTop > 400) {
             $('.sydetail .web-right').addClass('fixed')
+            $('.sydetailNav').addClass('fixed')
         } else {
+            $('.sydetailNav').removeClass('fixed')
             $('.sydetail .web-right').removeClass('fixed')
         }
 
@@ -50,6 +56,9 @@ function initScroll(){
  *
  */
 function initBtnClick(){
+
+
+
     $(".removeBtn").bind("click",function(){
         var applyId=$(this).attr("applyId");
         opposeApply(applyId);
@@ -102,7 +111,20 @@ function initBtnClick(){
             window.location.href = '/index/create-travel';
             return;
         }
-        window.location.href = '/trip/to-apply-trip?trip=' + $("#tripId").val();
+        $(".syxqPro02").show();
+        $(".mask").show();
+        //window.location.href = '/trip/to-apply-trip?trip=' + $("#tripId").val();
+    });
+    $("#cancelApply").bind("click",function(){
+        $(".syxqPro02").hide();
+        $(".mask").hide();
+    });
+    $("#applyBtn").bind("click",function(){
+        var info=$("#applyInfo").val()
+        if(info==''){
+            return;
+        }
+        $("#applyForm").submit();
     });
 
     /**

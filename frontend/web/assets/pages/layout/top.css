@@ -20,3 +20,14 @@
     font-size: 12px;
     margin: 0;
 }
+
+.searchDrop{
+    font-size: 14px !important;
+    z-index: 99;
+}
+.searchDrop li{
+    font-size: 14px !important;
+}
+.searchDrop li b{
+    float: right;
+}

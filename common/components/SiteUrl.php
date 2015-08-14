@@ -24,6 +24,11 @@ class SiteUrl {
         $baseUrl=\Yii::$app->params['base_dir'];
         return $baseUrl."/view-trip/list?s=".$keywords;
     }
+    public static function getTripActivityUrl($keywords)
+    {
+        $baseUrl=\Yii::$app->params['base_dir'];
+        return $baseUrl."/view-trip/list?a=".$keywords;
+    }
 
     public static function getViewUserUrl($userId)
     {

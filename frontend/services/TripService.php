@@ -45,11 +45,12 @@ class TripService extends BaseDb{
      * @param $tag
      * @param null $isHot
      * @param null $typeArray
+     * @param null $activity
      * @return Page|null
      * @throws Exception
      * @throws \Exception
      */
-    public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$isHot=null,$typeArray=null)
+    public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$isHot=null,$typeArray=null,$activity=null)
     {
         try {
 
@@ -86,6 +87,11 @@ class TripService extends BaseDb{
                 $cc=$countryService->getCC($title);
                 $countryId=$cc[0];
                 $cityId=$cc[1];
+            }
+            if($activity==1){
+                $tagStr='154,170,142,148,192,113,133,178';
+            }else if($activity==2){
+                $tagStr='54,41,87,58,130,75,77,114,131,145';
             }
             return $this->tripTravelDb->getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tagStr,$isHot,$typeArray,TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
         } catch (Exception $e) {
@@ -838,5 +844,28 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
         return $rst;
+    }
+
+
+    /**
+     * 获取随游目的地 和 目的地数量
+     * @param Page $page
+     * @param $search
+     * @return Page|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getTripDesSearchList(Page $page,$search)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $page=$this->tripTravelDb->getTripDesSearchList($page,$search);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $page;
     }
 }

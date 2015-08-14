@@ -96,10 +96,9 @@ if($userBase==null||$userAccess==null){
             </li>
             <li class="server">
                 <input type="checkbox" id="ch4" class="input1"><label for="ch4" class="fleft">同意</label>
-                <a class="agreen" href="/static?about-services" target="_blank">服务协议</a>
-                <a class="agreen" href="/static?help-refundPolicy" target="_blank">退款政策</a>
-                <a class="agreen" href="/static?statement-copyright" target="_blank">版权声明</a>
-                <a class="agreen" href="/static?statement-disclaimer" target="_blank">免责声明</a>
+                <a target="_blank" href="/static?agreement-service" class="agreen">服务协议</a>
+                <a target="_blank" href="/static?agreement-copyright" class="agreen">版权声明</a>
+                <a target="_blank" href="/static?agreement-disclaimer" class="agreen">免责声明</a>
             </li>
             <li class="btns"> <a href="javascript:;" id="accessRegister" class="btn">注册</a></li>
 

@@ -13,7 +13,7 @@
 
 
 <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
-<div class="sydetailBanner web-banner">
+<div class="sydetailBanner web-banner" id="imgs">
     <div class="banner">
         <ul class="clearfix">
             <?php foreach($travelInfo['picList'] as $pic ){?>
@@ -179,7 +179,7 @@
                     <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
                 <?php } ?>
             <?php } ?>
-            <div class="web-con">
+            <div class="web-con" id="pinglun">
                 <p class="title" id="pinglunCount">
                     <img src="/assets/images/pinglun2.png" width="25" height="28" style="display: inline-block;">
                     &nbsp;有<span><?=$travelInfo['info']['commentCount'];?></span> 条评论
@@ -298,6 +298,44 @@
     <a href="javascript:;" class="bgGreen btn" id="confirmServiceDiv">确定</a>
 </div>
 
+
+<div class="screens syxqPro02" style="display: none">
+    <div class="tit02 bgGreen">
+        <a href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>" class="userPic fl"><img src="<?=$createUserInfo->headImg;?>"></a>
+        <div class="text fl">
+            <p class="p1"><img src="/assets/images/position.png" width="14" height="18">&nbsp;&nbsp;<?=$travelInfo['info']['countryCname']?>，<?=$travelInfo['info']['cityCname']?></p>
+            <p style="margin-top: 15px">&nbsp;<?=$travelInfo['info']['title']?></p>
+        </div>
+    </div>
+    <form method="post" id="applyForm" action="/trip/apply-trip">
+    <div class="line">
+        <ul class="list clearfix">
+            <li>
+                <p>在线提交申</p>
+                <p>请加入你感兴趣的随游</p>
+            </li>
+            <li>
+                <p>接到订单</p>
+                <p>陪伴游客</p>
+                <p>完成随游体验</p>
+            </li>
+            <li class="last">
+                <p>完成伴游</p>
+                <p>不用费心思</p>
+                <p>发布随游</p>
+                <p>也能获得收入</p>
+            </li>
+        </ul>
+
+            <input type="hidden" name="trip" value="<?=$travelInfo['info']['tripId']?>"  />
+            <textarea name="info" placeholder="说说你为什么想加入这条随游，怎样为旅行者提供更好的服务？"></textarea>
+    </div>
+    <div class="btns">
+        <a href="javascript:;" class="btn bgOrange fl" id="cancelApply">放弃申请</a>
+        <a href="javascript:;" class="btn bgGreen fr" id="applyBtn">提交申请</a>
+    </div>
+    </form>
+</div>
 <?php
     $stepPriceJson='';
     if(!empty($travelInfo['priceList'])){

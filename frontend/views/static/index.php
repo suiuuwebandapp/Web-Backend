@@ -79,8 +79,8 @@
                 <li>
                     <p>豆瓣,Facebook官方主页即将开放</p>
                     <div class="box clearfix">
-                        <a href="###" class="icon db"></a>
-                        <a href="###" class="icon ff"></a>
+                        <a href="javascript:;" class="icon db"></a>
+                        <a href="javascript:;" class="icon ff"></a>
                     </div>
                 </li>
             </ul>
@@ -90,14 +90,14 @@
             <h3 class="title">加入随游</h3>
             <p class="title02">跟我们一起努力，让旅行体验从此不同。</p>
             <p>随游欢迎热爱旅行，热爱分享，热爱挑战的你的加入。不论你是能将创意化为现实的开发工程师，用想象力和热情进行创作的视觉设计师，具有洞察力和敏锐观察的产品经理，还是擅长创作内容及传播信息的运营高手，随游都随时欢迎你的加入。</p>
-            <p class="p2"><a href="###">点击查看最新职位</a>&nbsp;&nbsp;或者&nbsp;&nbsp;<a href="###">现在发送邮件至HR@suiuu.com毛遂自荐</a></p>
+            <p class="p2"><a href="javascript:;">点击查看最新职位</a>&nbsp;&nbsp;或者&nbsp;&nbsp;<a href="javascript:;">现在发送邮件至HR@suiuu.com毛遂自荐</a></p>
             <p>同时，随游在全球持续寻找最懂旅行的人。我们邀请你把体验过的精彩旅行故事分享给我们，我们会通过视频，专题报道及随游产品的形式让更多人了解你的旅行经历。</p>
             <p>欢迎投稿至 info@suiuu.com</p>
 
         </div>
     </div>
-    <div class="aboutCon helps w1200 clearfix" style="display: none;">
-        <ul class="leftNav tabTitle clearfix">
+    <div  class="aboutCon helps w1200 clearfix" style="display: none;">
+        <ul class="leftNav tabTitle clearfix" id="help_ul">
             <li><a href="javascript:;" class="active" id="newUser">新手上路</a></li>
             <li><a href="javascript:;" id="userFlow">游客指南</a>
                 <div class="drop02">
@@ -134,8 +134,8 @@
                     <h2 class="title04">心动</h2>
                     <p>“随游”平台的海外当地人在遍布全球的各个城市分享他们挖掘到的精彩体验，或经典或小众，或刺激或清新，相信一定会为您的旅行创造无限可能，带来无限惊喜。</p>
                     <div class="btns clearfix">
-                        <a href="###" class="btn bgGreen fl">现在注册</a>
-                        <a href="###" class="btn bgOrange fr">随游</a>
+                        <a href="javascript:;" class="btn bgGreen fl">现在注册</a>
+                        <a href="javascript:;" class="btn bgOrange fr">随游</a>
                     </div>
                 </div>
             </div>
@@ -145,8 +145,8 @@
                     <h2 class="title04" style=" text-align:right;">准备</h2>
                     <p>想要自由旅行不再跟团走马观花？沉浸在海量游记攻略却无法解决心中的疑问?还在各大旅行论坛苦苦等待答案？何不让当地人直接告诉你！随游移动端Android App 的问答板块，有海外当地人解答旅行中常见的问题。</p>
                     <div class="btns clearfix">
-                        <a href="###" class="btn bgGreen fl">安卓客户端</a>
-                        <a href="###" class="btn bgOrange fr">随游微信服务号</a>
+                        <a href="javascript:;" class="btn bgGreen fl">安卓客户端</a>
+                        <a href="javascript:;" class="btn bgOrange fr">随游微信服务号</a>
                     </div>
                 </div>
             </div>
@@ -158,8 +158,8 @@
                     <br>
                     <p>预订成功之后，您可以通过网站，微信或APP来管理您的订单</p>
                     <div class="btns clearfix">
-                        <a href="###" class="btn bgGreen fl">我的预定</a>
-                        <a href="###" class="btn bgOrange fr">用户指南</a>
+                        <a href="javascript:;" class="btn bgGreen fl">我的预定</a>
+                        <a href="javascript:;" class="btn bgOrange fr">用户指南</a>
                     </div>
                 </div>
             </div>
@@ -170,8 +170,8 @@
                     <p>分享是旅行中不可缺少的环节，您的经历是我们在构建一个值得信赖的社区时不可或缺的一环。
                         您的贡献会为迷茫的旅客点亮方向，帮助他在 “随游”上寻找一段与您一样的奇妙旅程！更惊喜的是，与此同时，还能赚取丰厚的收入！</p>
                     <div class="btns clearfix">
-                        <a href="###" class="btn bgGreen fl">发布随游</a>
-                        <a href="###" class="btn bgOrange fr">随友指南</a>
+                        <a href="javascript:;" class="btn bgGreen fl">发布随游</a>
+                        <a href="javascript:;" class="btn bgOrange fr">随友指南</a>
                     </div>
                 </div>
             </div>
@@ -231,7 +231,7 @@
 
             <h3 class="title" id="sy02">发布随游</h3>
             <p>您可以在导航栏找到“发布随游”选项。在打开的随游发布页面中按照提示一次填写相关的信息。您所填写的信息越完整，图片越吸引人，那么就会有越多的旅行者预订您所发布的随游。 其中单项服务部分是您在随游的主要服务内容外可以提供的附加服务，比如交通，餐饮等。 在发布随游的过程中，定价完全由您自己决定。 在无法确定随游定价的时候，您可以选择参考其他随友贡献的路线/经历，也可以咨询我们的客服人员进行咨询。</p>
-            <a href="###" class="pubBtn bgGreen">现在发布随游</a>
+            <a href="javascript:;" class="pubBtn bgGreen">现在发布随游</a>
 
 
             <h3 class="title" id="sy03">管理随游</h3>
@@ -276,8 +276,8 @@
                     确定后接待您预定的随游线路。所以，一般情况下不会出现没有确认的情况。</p>
                 <h3 class="title">按照分类查看</h3>
                 <div class="btns clearfix">
-                    <a href="###" class="btn01">关于预定</a>
-                    <a href="###" class="btn02">关于服务</a>
+                    <a href="javascript:;" class="btn01">关于预定</a>
+                    <a href="javascript:;" class="btn02">关于服务</a>
                 </div>
             </div>
             <div class="box02">
@@ -337,9 +337,9 @@
                     <input type="radio" id="rad02" name="rad" value="1"><label for="rad02">我想提出意见或反馈，也希望能够得到回复</label>
                 </div>
                 <div class="drop">
-                    <input type="text" placeholder="姓名" id="username" maxlength="20">
-                    <input type="text" placeholder="电话" id="phone" maxlength="20">
-                    <input type="text" placeholder="邮箱" id="email" maxlength="50s">
+                    <input type="text" placeholder="姓名" id="username_static" maxlength="20">
+                    <input type="text" placeholder="电话" id="phone_static" maxlength="20">
+                    <input type="text" placeholder="邮箱" id="email_static" maxlength="50s">
                 </div>
             </div>
             <a href="javascript:;" id="sendFeedback" class="btn bgGreen">提交反馈</a>
@@ -521,5 +521,46 @@
     </div>
 </div>
 
+<script type="text/javascript">
+
+    $(document).scroll(function () {
+
+
+
+        var documentHeight=$(document).height();//浏览器时下窗口可视区域高度
+        var scrollTop=$(document).scrollTop();
+        if($("#help_ul").css("top")!=undefined){
+            var top=parseInt($("#help_ul").css("top").replace("px",''));
+            var fixHeight=$("#help_ul").height()+top;
+
+            var myTop=$("#footer-out").offset().top;
+            var maxHeight=documentHeight-myTop;
+
+            if(scrollTop+fixHeight>documentHeight-maxHeight){
+                $("#help_ul").css("position","absolute");
+            }else{
+                $("#help_ul").css("position","fixed");
+            }
+        }
+
+
+        $(".syGuid h3,.ykGuid h3").each(function(){
+            if($(this).offset().top>scrollTop){
+                var text=$(this).html().replace("？","");
+                $("#help_ul div[class='drop02'] a").each(function(){
+                    if(text==$(this).text()){
+                        $("#help_ul div[class='drop02'] a").removeClass("active");
+                        $(this).addClass("active");
+                        return false;
+                    }
+                });
+                return false;
+            }
+        });
+
+
+
+    });
+</script>
 
 <!------------helpCon-end--------------->

@@ -32,8 +32,8 @@
 
         </dl>
         <dl class="fl ">
-            <dt>声明</dt>
-            <dd><a href="/static?agreement-service">版权声明</a></dd>
+            <dt>网站条款</dt>
+            <dd><a href="/static?agreement-service">服务协议</a></dd>
             <dd><a href="/static?agreement-copyright">版权声明</a></dd>
             <dd><a href="/static?agreement-disclaimer">免责声明</a></dd>
         </dl>
@@ -159,18 +159,17 @@
                         <li class="rows">
                             <input type="checkbox" id="zhuce-check01">
                             <label for="zhuce-check01" class="fleft">同意</label>
-                            <a target="_blank" href="/static?about-services" class="agreen" style="margin-left: 10px">服务协议</a>
-                            <a target="_blank" href="/static?help-refundPolicy" class="agreen">退款政策</a>
-                            <a target="_blank" href="/static?statement-copyright" class="agreen">版权声明</a>
-                            <a target="_blank" href="/static?statement-disclaimer" class="agreen">免责声明</a>
+                            <a target="_blank" href="/static?agreement-service" class="agreen" style="margin-left: 10px">服务协议</a>
+                            <a target="_blank" href="/static?agreement-copyright" class="agreen">版权声明</a>
+                            <a target="_blank" href="/static?agreement-disclaimer" class="agreen">免责声明</a>
                         </li>
                     </ul>
                 </div>
 
                 <div class="box myCon box2">
                     <ul>
-                        <li><input type="text" placeholder="邮箱/手机号" id="username" maxlength="30"></li>
-                        <li><input type="password" placeholder="密码" id="userpassword" maxlength="30"></li>
+                        <li><input type="text" placeholder="邮箱/手机号" id="username_bottom" maxlength="30"></li>
+                        <li><input type="password" placeholder="密码" id="userpassword_bottom" maxlength="30"></li>
                         <li id="code9527" style="display: none">
                             <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
                         </li>
@@ -192,10 +191,9 @@
                         <li class="rows">
                             <input type="checkbox" id="zhuce-check02">
                             <label for="zhuce-check02" class="fleft">同意</label>
-                            <a target="_blank" href="/static?about-services" class="agreen" style="margin-left: 10px">服务协议</a>
-                            <a target="_blank" href="/static?help-refundPolicy" class="agreen">退款政策</a>
-                            <a target="_blank" href="/static?statement-copyright" class="agreen">版权声明</a>
-                            <a target="_blank" href="/static?statement-disclaimer" class="agreen">免责声明</a>
+                            <a target="_blank" href="/static?agreement-service" class="agreen" style="margin-left: 10px">服务协议</a>
+                            <a target="_blank" href="/static?agreement-copyright" class="agreen">版权声明</a>
+                            <a target="_blank" href="/static?agreement-disclaimer" class="agreen">免责声明</a>
                         </li>
                     </ul>
                 </div>

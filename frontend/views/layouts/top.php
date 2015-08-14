@@ -18,7 +18,8 @@
         <div class="header-main clearfix">
             <h2 class="logo fl"><a href="<?=Yii::$app->params['base_dir']; ?>"><img src="/assets/images/header/logo.png" width="106" height="43"></a></h2>
             <div class="search-out fl clearfix">
-                <a href="#" class="search-btn fl"><img src="/assets/images/header/top-search.png" width="32" height="30"></a>
+                <a href="javascript:;" class="search-btn fl"><img src="/assets/images/header/top-search.png" width="32" height="30"></a>
+                <ul class="searchDrop" id="searchDrop"></ul>
                 <input type="text" placeholder="想去哪里？" class="text fl" value="<?=isset($this->context->search)?$this->context->search:''?>" id="search">
             </div>
             <div class="header-right fr">
@@ -39,7 +40,7 @@
 
                         </div>
                     </li>
-                    <li class="xitong" id="suiuu-btn1"><a href="javascript:;"><span style="display: none" class="newTip"></span></a>
+                    <li class="xitong" id="suiuu-btn1"><a href="javascript:;" class="my-message"><span style="display: none" class="newTip"></span></a>
                         <div class="xit-sz">
                             <span class="jiao"></span>
                             <ol>
@@ -85,7 +86,7 @@
 <script type="text/javascript">
     var isLogin="<?=isset($this->context->userObj)?1:0?>";
     var emailTime="<?= array_key_exists('emailTime',$this->params)?$this->params['emailTime']:0;?>";
-
+    var searchList='<?=json_encode($this->context->searchList);?>';
 
     $(document).ready(function(){
         $("#search").keypress(function(e){
@@ -93,6 +94,22 @@
                 window.location.href=UrlManager.getTripSearchUrl($("#search").val());
             }
         });
+    });
+
+    $(document).bind("click",function(e){
+        var target = $(e.target);
+        if(!target.hasClass("colGreen")){
+            if(target.closest(".my-suiuu").length == 0){
+                $(".my-suiuu").hide();
+            }
+        }
+
+        target = $(e.target);
+        if(!target.hasClass("my-message")){
+            if(target.closest(".xit-sz").length == 0){
+                $(".xit-sz").hide();
+            }
+        }
     });
 </script>
 

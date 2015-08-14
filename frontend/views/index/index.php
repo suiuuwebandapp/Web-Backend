@@ -41,6 +41,13 @@
         bottom: 2px;
     }
 
+    #indexSearchDrop b{
+        float: right;
+        margin-right: 10px;
+    }
+    #indexSearchDrop{
+        font-size: 14px;
+    }
 </style>
 
 <div class="index">
@@ -56,7 +63,8 @@
         </ul>
         <div class="serch-out">
             <div class="serch">
-                <input type="text" placeholder="你想去哪里？" class="text1" id="indexSearch">
+                <input type="text" placeholder="你想去哪里？" class="text1" id="indexSearch" />
+                <ul class="drop" id="indexSearchDrop"></ul>
                 <a href="javascript:;" class="helps colGreen">如何使用随随游？</a>
             </div>
         </div>
@@ -88,11 +96,11 @@
     <p class="title">世界从此不同</p>
     <div class="index-tuijian w1200 clearfix">
         <ul class="countrys clearfix">
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('新加坡');?>"><img src="/assets/images/index/01.jpg"></a><span>新加坡<br>不只有鱼尾狮</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripActivityUrl(1);?>"><img src="/assets/images/index/01.jpg"></a><span>大手拉小手的旅行</span></li>
             <?php if(!empty($recommendTravel)){ ?>
                 <?php $recommend=$recommendTravel[0]?>
                 <li class="product">
-                    <img src="<?=$recommend['titleImg']?>" height="370px"><span><?=$recommend['countryName']?></span>
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
                     <div class="div01"><p><?=$recommend['title']?></p></div>
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
@@ -102,24 +110,50 @@
                     </div>
                 </li>
             <?php } ?>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('意大利');?>"><img src="/assets/images/index/03.jpg"></a><span>意大利</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('法国');?>"><img src="/assets/images/index/04.jpg"></a><span>法国</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('日本');?>"><img src="/assets/images/index/05.jpg"></a><span>日本</span></li>
             <?php if(!empty($recommendTravel)){ ?>
-            <?php $recommend=$recommendTravel[1]?>
-            <li class="product">
-                <img src="<?=$recommend['titleImg']?>" height="370px"><span><?=$recommend['countryName']?></span>
-                <div class="div01"><p><?=$recommend['title']?></p></div>
-                <div class="div02">
-                    <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
-                    <p class="p1"><?=$recommend['title']?></p>
-                    <p class="colGreen"><?=$recommend['basePrice']?></p>
-                    <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
-                </div>
-            </li>
+                <?php $recommend=$recommendTravel[1]?>
+                <li class="product">
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
+                    <div class="div01"><p><?=$recommend['title']?></p></div>
+                    <div class="div02">
+                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
+                        <p class="p1"><?=$recommend['title']?></p>
+                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
+                    </div>
+                </li>
             <?php } ?>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('澳大利亚');?>"><img src="/assets/images/index/01.jpg"></a><span>澳大利亚<br>驰骋在蔚蓝的路</span></li>
-
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('意大利');?>"><img src="/assets/images/index/04.jpg"></a><span>意大利</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('法国');?>"><img src="/assets/images/index/05.jpg"></a><span>法国</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('日本');?>"><img src="/assets/images/index/06.jpg"></a><span>日本</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('新加坡');?>"><img src="/assets/images/index/07.jpg"></a><span>新加坡</span></li>
+            <?php if(!empty($recommendTravel)){ ?>
+                <?php $recommend=$recommendTravel[2]?>
+                <li class="product">
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
+                    <div class="div01"><p><?=$recommend['title']?></p></div>
+                    <div class="div02">
+                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
+                        <p class="p1"><?=$recommend['title']?></p>
+                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
+                    </div>
+                </li>
+            <?php } ?>
+            <?php if(!empty($recommendTravel)){ ?>
+                <?php $recommend=$recommendTravel[3]?>
+                <li class="product">
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
+                    <div class="div01"><p><?=$recommend['title']?></p></div>
+                    <div class="div02">
+                        <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
+                        <p class="p1"><?=$recommend['title']?></p>
+                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
+                    </div>
+                </li>
+            <?php } ?>
+            <li><a href="<?=\common\components\SiteUrl::getTripActivityUrl(2);?>"><img src="/assets/images/index/10.jpg"></a><span>梦中的情人节</span></li>
         </ul>
     </div>
 
@@ -149,7 +183,7 @@
                 <div class="div01">
                     <h2 class="title01">他使用随游旅行</h2>
                     <p>在世界各地找到独特的体验，尝试和当地专家一起旅行</p>
-                    <a href="###" class="btn colGreen">了解如何用随游的方式去旅行&gt;</a>
+                    <a href="javascript:;" class="btn colGreen">了解如何用随游的方式去旅行&gt;</a>
                 </div>
             </li>
             <li class="fr">
@@ -157,7 +191,7 @@
                 <div class="div01">
                     <h2 class="title01">他通过随游赚取收入</h2>
                     <p>通过随游网发布你熟悉的目的地线路活动及服务，或者带领游客旅行从而获取丰厚收入。</p>
-                    <a href="###" class="btn colGreen">如何发布随游&gt;</a>
+                    <a href="javascript:;" class="btn colGreen">如何发布随游&gt;</a>
                 </div>
             </li>
         </ul>
@@ -211,6 +245,10 @@
             $('.indexPro').animate({top:-700},"slow");
         });
     })
+</script>
+<script type="text/javascript">
+
+    var currentPage=1;
     $(document).ready(function(){
 
         $(".prev,.next").hover(function(){
@@ -234,12 +272,8 @@
             autoPage:true,
             trigger:"click"
         });
-    });
-</script>
-<script type="text/javascript">
 
-    var currentPage=1;
-    $(document).ready(function(){
+
         /*
             loadTrip();
             $("#showTripMore").bind("click",function(){
@@ -254,7 +288,43 @@
                 tripSearch();
             }
         });
+        $("#indexSearch").on('input',function(e){
+            var search= $.trim($(this).val());
+            if(search==''){
+                $("#indexSearchDrop").html("");
+                $("#indexSearchDrop").hide();
+                return;
+            }
+
+            var rst=loadDes(search);
+
+            if(rst!=null&&rst.length>0){
+                var html='';
+                for(var j=0;j<rst.length;j++){
+                    var temp=rst[j];
+                    var name=temp.cname+"\\"+temp.ename;
+                    var tripCountHtml='<b>'+temp.count+'条随游</b>';
+                    if(name.length>16){
+                        name=name.substring(0,16)+"...";
+                    }
+
+                    html+='<li><a href="'+UrlManager.getTripSearchUrl(temp.cname)+'">';
+                    html+=name+tripCountHtml;
+                    html+='</a></li>'
+                    if(j==6){
+                        break;
+                    }
+                }
+                $("#indexSearchDrop").html(html);
+                $("#indexSearchDrop").show();
+            }else{
+                $("#indexSearchDrop").html("");
+                $("#indexSearchDrop").hide();
+            }
+        });
+
     });
+
 
     function tripSearch(){
         var searchInfo=$("#indexSearch").val();

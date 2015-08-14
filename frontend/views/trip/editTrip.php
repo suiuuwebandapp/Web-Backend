@@ -534,6 +534,8 @@
     </div>
 </div>
 <div class="syBj2Pro02 screens" style="z-index: 1000">
+    <img src="/assets/images/map_back.png" style="float: left;margin: 17px 0 0 30px;cursor: pointer" id="map_back"/>
+    <img src="/assets/images/map_close.png" style="float: right;margin: 17px 30px 0 0;cursor: pointer" id="map_close"/>
     <h2 class="title" id="scenicTitleTip">地图上的位置是否正确？</h2>
     <div class="map">
         <iframe id="mapFrame" name="mapFrame" src="/google-map/to-map" width="440px" height="330px;" frameborder="0" scrolling="no"></iframe></div>
@@ -839,6 +841,16 @@
 
                 findScenicInfo($("#scenic_name"));
             });
+
+            $("#map_close").bind("click",function(){
+                $(".syBj2Pro01").hide();
+                $(".syBj2Pro02").hide();
+                $(".mask").hide();
+            });
+            $("#map_back").bind("click",function(){
+                $(".syBj2Pro01").show();
+                $(".syBj2Pro02").hide();
+            });
             $("#scenicChangeLocation").bind("click",function(){
                 var img='<img src="http://maps.gstatic.cn/mapfiles/api-3/images/spotlight-poi.png" style="height: 30px; position: absolute; top: 13px;left:256px" />';
                 $("#scenicTitleTip").html("拖动&nbsp;&nbsp;&nbsp;"+img+"&nbsp;&nbsp;&nbsp;标记准确位置");
@@ -905,9 +917,13 @@
          */
         var findScenicInfo=function (obj) {
             var name=$(obj).val();
+            var country=$("#countryId").find("option:selected").text();
+            var city=$("#cityId").find("option:selected").text();;
+
             if(name==""){
                 return;
             }
+            name=country.split("/")[0]+city.split("/")[0]+name;
             $.ajax({
                 url :'/google-map/search-map-info?search='+name,
                 type:'get',

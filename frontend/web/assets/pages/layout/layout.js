@@ -288,10 +288,9 @@ function gt_custom_ajax(result, selector, message) {
 }
 
 function login(){
-    var username = $("#username").val();
-    var password = $("#userpassword").val();
+    var username = $("#username_bottom").val();
+    var password = $("#userpassword_bottom").val();
     var remember = $("#logo-check").is(":checked");
-
     if(username=='')
     {
         Main.showTip('用户名不能为空');
@@ -489,9 +488,9 @@ function initBottomTab(){
 
 function sendFeedback(){
     var content =$('#feedback_content').val();
-    var username=$('#username').val();
-    var phone=$('#phone').val();
-    var email=$('#email').val();
+    var username=$('#username_static').val();
+    var phone=$('#phone_static').val();
+    var email=$('#email_static').val();
     var chkType=$("input[type='radio'][name='rad']:checked").val();
     if(content=='')
     {
@@ -526,6 +525,22 @@ function sendFeedback(){
     });
 }
 
+function loadDes(search){
+    search= $.trim(search);
+    if(search==''){
+        return '';
+    }
+    var allList=$.parseJSON(searchList);
+    var rst=[];
+    for(var i=0;i<allList.length;i++){
+        var t=allList[i].cname+allList[i].ename;
+        if(t.toLowerCase().indexOf(search.toLowerCase())!=-1){
+            rst.push(allList[i]);
+        }
+    }
+    return rst;
+}
+
 $(document).ready(function () {
     //初始化区号选择
     $(".areaCodeSelect_top").select2({
@@ -542,7 +557,7 @@ $(document).ready(function () {
     initBreadcrumb();
     initBottomTab();
 
-    $("#userpassword").keypress(function(e){
+    $("#userpassword_bottom").keypress(function(e){
         if(e.keyCode==13){
             $("#login-check").click();
         }
@@ -555,6 +570,42 @@ $(document).ready(function () {
 
     $("#sendFeedback").bind("click",function(){
         sendFeedback();
+    });
+
+
+    $("#search").on('input',function(e){
+        var search= $.trim($(this).val());
+        if(search==''){
+            $("#searchDrop").html("");
+            $("#searchDrop").hide();
+            return;
+        }
+
+        var rst=loadDes(search);
+
+        if(rst!=null&&rst.length>0){
+            var html='';
+            for(var j=0;j<rst.length;j++){
+                var temp=rst[j];
+                var name=temp.cname+"\\"+temp.ename;
+                var tripCountHtml='<b>'+temp.count+'条随游</b>';
+                if(name.length>10){
+                    name=name.substring(0,10)+"...";
+                }
+
+                html+='<li><a href="'+UrlManager.getTripSearchUrl(temp.cname)+'">';
+                html+=name+tripCountHtml;
+                html+='</a></li>'
+                if(j==6){
+                    break;
+                }
+            }
+            $("#searchDrop").html(html);
+            $("#searchDrop").show();
+        }else{
+            $("#searchDrop").html("");
+            $("#searchDrop").hide();
+        }
     });
 
 

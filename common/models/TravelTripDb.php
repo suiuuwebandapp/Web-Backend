@@ -88,7 +88,7 @@ class TravelTripDb extends ProxyDb
      * @param $typeArray
      * @return Page|null
      */
-    public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $isHot, $status,$typeArray)
+    public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $isHot,$typeArray, $status)
     {
 
         $sql = sprintf("
@@ -139,15 +139,14 @@ class TravelTripDb extends ProxyDb
             $sql .= ")";
         }
         if(!empty($typeArray&&count($typeArray)>0)){
-            $sql .= " AND t.tripId IN (";
-            $sql .= $tag;
+            $sql .= " AND t.type IN (";
+            $sql .= implode(",",$typeArray);
             $sql .= ")";
         }
         $this->setSql($sql);
         $this->setSelectInfo("t.tripId,t.title,t.titleImg,t.countryId,t.cityId,ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,
         t.basePriceType,t.score,t.tripCount,t.commentCount,t.collectCount,t.isHot,t.type,t.status,
         u.nickname,u.headImg,c.cname,c.ename,ci.cname,ci.ename,u.userSign ");
-        $this->setSelectInfo(" ");
         return $this->find($page);
     }
 
@@ -169,7 +168,9 @@ class TravelTripDb extends ProxyDb
             WHERE 1=1
         ");
 
-        $sql .= " AND t.tripId in (" . $tripIds . ")";
+        if(!empty($tripIds)){
+            $sql .= " AND t.tripId in (" . $tripIds . ")";
+        }
 
         $this->setSql($sql);
         $this->setSelectInfo(" t.tripId,t.title,t.titleImg,t.countryId,t.cityId,ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,
@@ -1224,6 +1225,40 @@ class TravelTripDb extends ProxyDb
         $command->bindParam(":type", $type, PDO::PARAM_INT);
 
         return $command->execute();
+    }
+
+
+    /**
+     * 获取随游目的地 和 目的地数量
+     * @param Page $page
+     * @param $search
+     * @return Page|null
+     */
+    public function getTripDesSearchList(Page $page,$search)
+    {
+        $sql = sprintf("
+            FROM
+            (
+                SELECT c.*,t.count FROM  (SELECT countryId,COUNT(tripId) as count FROM travel_trip WHERE status=:status GROUP BY countryId HAVING count>0  ) t
+
+                LEFT JOIN country c ON c.id=t.countryId
+
+                UNION
+
+                SELECT c.*,t.count FROM  (SELECT cityId,COUNT(tripId) as count FROM travel_trip WHERE status=:status GROUP by cityId HAVING count>0  ) t
+
+                LEFT JOIN city c ON c.id=t.cityId
+            )  AS s
+            WHERE 1=1 ORDER BY s.count
+        ");
+        $this->setParam("status", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+        if (!empty($search)) {
+            $sql .= " AND ( s.cname like :search OR  s.ename like :search) ";
+            $this->setParam("search", "%" . $search . "%");
+        }
+        $this->setSql($sql);
+
+        return $this->find($page);
     }
 
 

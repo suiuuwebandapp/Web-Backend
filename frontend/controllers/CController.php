@@ -25,6 +25,8 @@ class CController extends SController{
     public $enableCsrfValidation=false;
 
 
+
+
     public function __construct($id, $module = null)
     {
         $this->userBaseService=new UserBaseService();

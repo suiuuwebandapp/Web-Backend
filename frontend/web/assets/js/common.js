@@ -50,7 +50,7 @@ $(function(){
 			$('.sydetailNav').removeClass('fixed')
 			$('.sydetail .web-right').removeClass('fixed')
 		}
-        
+
     });
 
 })
