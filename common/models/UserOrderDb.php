@@ -160,8 +160,7 @@ class UserOrderDb extends ProxyDb
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_CANCELED . "
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL . "
             AND uoi.status!=" . UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS . "
-
-
+            ORDER BY uoi.createTime DESC
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);
@@ -193,6 +192,8 @@ class UserOrderDb extends ProxyDb
               OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL . "
               OR uoi.status=" . UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS . "
             )
+            ORDER BY uoi.createTime DESC
+
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":userId", $userSign, PDO::PARAM_STR);

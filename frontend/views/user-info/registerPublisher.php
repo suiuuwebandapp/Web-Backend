@@ -60,7 +60,7 @@
     }
     .syInformation .forms .name input{
         margin: 0px;
-        width: 198px;
+        width: 197px;
     }
 
 
@@ -121,11 +121,13 @@
         margin-top: 10px;
     }
     .syInformation .forms .name_div{
-        width: 218px;
+        width: 215px;
         display: inline-block;
     }
 
-
+    .syInformation .forms .sexs input+label{
+        margin-right: 35px;
+    }
 
 </style>
 

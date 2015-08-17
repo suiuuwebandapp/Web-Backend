@@ -108,7 +108,7 @@ function initBtnClick(){
         }
         if (userPublisherId == '') {
             Main.showTip("成为随友后才能加入线路！");
-            window.location.href = '/index/create-travel';
+            window.location.href = '/user-info/create-travel';
             return;
         }
         $(".syxqPro02").show();
@@ -262,7 +262,7 @@ function initDatePicker() {
         $(".datetimepicker").show();
     });
 
-    $(".table-condensed tbody").bind("click", function () {
+    $(".datetimepicker-days .table-condensed tbody").bind("click", function () {
         $(".datetimepicker").hide();
     });
 

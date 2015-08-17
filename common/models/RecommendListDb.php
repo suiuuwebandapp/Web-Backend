@@ -143,7 +143,7 @@ class RecommendListDb extends ProxyDb
         $this->setParam("userStatus", UserBase::USER_STATUS_NORMAL);
         $this->setParam("rStatus", RecommendList::RECOMMEND_STATUS_NORMAL);
         $this->setParam("tStatus", TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,(a.basePrice*'.Code::TRIP_SERVICE_PRICE.') AS basePrice,b.userSign,b.headImg,b.nickname,co.cname as countryName');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,ceil(a.basePrice*'.Code::TRIP_SERVICE_PRICE.') AS basePrice,b.userSign,b.headImg,b.nickname,co.cname as countryName');
         $this->setSql($sql);
         return $this->find($page);
     }

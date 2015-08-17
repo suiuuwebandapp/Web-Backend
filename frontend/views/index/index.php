@@ -105,7 +105,7 @@
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
                         <p class="p1"><?=$recommend['title']?></p>
-                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <p class="colGreen">￥<?=$recommend['basePrice']?></p>
                         <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
                     </div>
                 </li>
@@ -118,7 +118,7 @@
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
                         <p class="p1"><?=$recommend['title']?></p>
-                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <p class="colGreen">￥<?=$recommend['basePrice']?></p>
                         <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
                     </div>
                 </li>
@@ -135,7 +135,7 @@
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
                         <p class="p1"><?=$recommend['title']?></p>
-                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <p class="colGreen">￥<?=$recommend['basePrice']?></p>
                         <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
                     </div>
                 </li>
@@ -148,7 +148,7 @@
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
                         <p class="p1"><?=$recommend['title']?></p>
-                        <p class="colGreen"><?=$recommend['basePrice']?></p>
+                        <p class="colGreen">￥<?=$recommend['basePrice']?></p>
                         <a href="<?=\common\components\SiteUrl::getTripUrl($recommend['tripId'])?>" class="bgGreen btn colWit">详情</a>
                     </div>
                 </li>
@@ -196,9 +196,11 @@
             </li>
         </ul>
     </div>
+    <!--
     <div class="ad">
         <a class="detailBtn" href="javascript:;">活动详情</a>
     </div>
+    -->
 
 </div>
 

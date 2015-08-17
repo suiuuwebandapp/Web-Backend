@@ -761,7 +761,7 @@ function initDatePicker(){
         $(".datetimepicker").show();
     });
 
-    $(".table-condensed tbody").bind("click",function(){
+    $(".datetimepicker-days .table-condensed tbody").bind("click", function () {
         $(".datetimepicker").hide();
     });
 }
@@ -886,7 +886,6 @@ function resetUploadHeadImg(){
  * 上传头像选择IMG（截头像）
  */
 function selectImg(){
-    alert("selectImg");
     var x=$("#img_x").val();
     var y=$("#img_y").val();
     var w=$("#img_w").val();
@@ -1017,7 +1016,6 @@ $('#img_origin').load(function(){
         //imgAreaSelectApi.setSelection((imgHeight/2)-(imgWidth/4)-padding, (imgHeight/2)-(imgWidth/4), (imgHeight/2)+(imgWidth/4)-padding, (imgHeight/2)+(imgWidth/4), true);
     }
 
-    alert(padding);
     if (imgHeight == imgWidth) {
         if (containerDivHeight > containerDivWidth) {
             $("#img_origin").css("margin-top", (containerDivHeight - imgHeight) / 2);

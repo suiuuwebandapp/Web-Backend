@@ -637,7 +637,7 @@ class TravelTripDb extends ProxyDb
     public function getTravelTripServiceList($tripId)
     {
         $sql = sprintf("
-            SELECT tripId,title,money as oldMoney,ceil(money*".Code::TRIP_SERVICE_PRICE.") as money,type FROM travel_trip_service
+            SELECT serviceId,tripId,title,money as oldMoney,ceil(money*".Code::TRIP_SERVICE_PRICE.") as money,type FROM travel_trip_service
             WHERE tripId=:tripId
         ");
         $command = $this->getConnection()->createCommand($sql);

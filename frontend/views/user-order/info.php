@@ -91,7 +91,7 @@ $serviceInfo=json_decode($orderInfo->serviceInfo,true);
 
 </div>
 
-<div id="weixinPayWindow" class="wzhifu screens">
+<div id="weixinPayWindow" class="wzhifu screens" style="z-index: 1001">
     <h2>微信支付</h2>
     <div class="con clearfix">
         <div class="left">
