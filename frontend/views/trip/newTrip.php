@@ -122,8 +122,11 @@
         <!----step4 ------>
         <div class="bjy-bj4 bjy-bj">
             <h2 class="titles">设置一个能体现随游的价值和好客之道的价格</h2>
-
             <div class="price1 clearfix">
+                <div style="line-height: 22px;margin-bottom: 10px;">
+                    <i class="fa fa-info-circle" style="color: #51c7b7;font-size: 20px"></i>
+                    &nbsp;&nbsp;随游平台会在您制定的价格基础之上向游客收取5%作为交易及转账费用，因此您所发布产品的展示价格为您所制定价格的105%。 这样做的目的是确保您可以按您自己的定价获得全部服务费。
+                </div>
                 <span class="title">基本价格</span>
                 <span class="form_tip" id="basePriceTip"></span>
 

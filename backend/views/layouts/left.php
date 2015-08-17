@@ -101,7 +101,7 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li class="default_menu">
+                    <li>
                         <a href="#~/destination/to-des-list"> 目的地列表</a>
                     </li>
                 </ul>
@@ -132,7 +132,7 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li>
+                    <li class="default_menu">
                         <a href="#~/trip/list"> 随游列表</a>
                     </li>
                     <li>

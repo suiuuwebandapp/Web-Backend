@@ -51,6 +51,7 @@
                         <th>标题</th>
                         <th>国家城市</th>
                         <th>创建人</th>
+                        <th>基础价格</th>
                         <th>状态</th>
                         <th>操作</th>
                     </tr>
@@ -111,6 +112,12 @@
                 },
                 {
                     "targets": [4],
+                    "data": "basePrice",
+                    "bSortable": false,
+                    "width":"80px"
+                },
+                {
+                    "targets": [5],
                     "data": "status",
                     "width":"100px",
                     "bSortable": false,
@@ -130,7 +137,7 @@
                     }
                 },
                 {
-                    "targets": [5],
+                    "targets": [6],
                     "data": "tripId",
                     "bSortable": false,
                     "width":"300px",

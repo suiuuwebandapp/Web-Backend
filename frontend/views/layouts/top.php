@@ -86,7 +86,7 @@
 <script type="text/javascript">
     var isLogin="<?=isset($this->context->userObj)?1:0?>";
     var emailTime="<?= array_key_exists('emailTime',$this->params)?$this->params['emailTime']:0;?>";
-    var searchList='<?=json_encode($this->context->searchList);?>';
+    var searchList='<?=isset($this->context->searchList)?json_encode($this->context->searchList):'';?>';
 
     $(document).ready(function(){
         $("#search").keypress(function(e){

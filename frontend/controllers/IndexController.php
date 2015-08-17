@@ -649,7 +649,7 @@ class IndexController extends UnCController
      * @param $nickname
      * @return string
      */
-    private function getEmailCode($email, $password,$nickname)
+    private function getEmailCode($email, $password,$nickname="")
     {
         return md5(md5($email . \Yii::$app->params['emailEncryptPassword'] . $password) . \Yii::$app->params['emailEncryptPassword'].$nickname);
     }
