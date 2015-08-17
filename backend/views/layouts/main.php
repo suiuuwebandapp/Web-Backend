@@ -28,10 +28,10 @@ AppAsset::register($this);
     <meta content="" name="description"/>
     <meta content="" name="author"/>
     <meta name="MobileOptimized" content="320">
-
+f
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
-    <link rel="shortcut icon" href="<?=Yii::$app->params['res_url'] ?>/assets/img/favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
     <!-- 将Jquery 引入到前方，方便内部引用-->
     <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-1.11.0.min.js"></script>
 </head>

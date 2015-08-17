@@ -978,7 +978,7 @@ $wechatAccount = null;
 <?php } ?>
 
 <!-----------支付宝绑定弹层--------------->
-<div class="zfbPro screens" id="showAlipayDiv">
+<div class="zfbPro screens" id="showAlipayDiv" style="z-index: 1001">
     <div class="top clearfix">
         <p class="bind_account_title">绑定支付宝账号</p>
     </div>
@@ -993,7 +993,7 @@ $wechatAccount = null;
        class="btn"><?= $alipayAccount == null ? "绑定账号" : "重新绑定支付宝账号" ?></a>
 </div>
 
-<div class="zfbPro screens" id="showWechatImgDiv" style="height: auto;text-align: center">
+<div class="zfbPro screens" id="showWechatImgDiv" style="height: auto;text-align: center;z-index: 1001">
     <div id="login_container"></div>
 </div>
 
@@ -1004,7 +1004,7 @@ if (!empty($wechatAccount)) {
 }
 ?>
 
-<div class="zfbPro screens" id="showWechatDiv">
+<div class="zfbPro screens" id="showWechatDiv" style="z-index: 1001">
     <div class="top clearfix">
         <p class="bind_account_title">绑定微信账号</p>
     </div>
@@ -1014,7 +1014,7 @@ if (!empty($wechatAccount)) {
     <p class="tip">此账号将是您的微信收款账号，请慎重填写！</p>
     <a href="javascript:;" onclick="bindWechatAccount();" class="btn">绑定账号</a>
 </div>
-<div class="zfbPro screens" id="showChangeWechatDiv" style="height: 250px;">
+<div class="zfbPro screens" id="showChangeWechatDiv" style="height: 250px;z-index: 1001">
     <div class="top clearfix">
         <p class="bind_account_title">绑定微信账号</p>
     </div>
@@ -1064,4 +1064,18 @@ if (!empty($wechatAccount)) {
             href: ".loginPanel .title{display:none}"
         });
     });
+
+    window._bd_share_config = {
+        common : {
+            bdText : '随游网-<?=htmlspecialchars(str_replace("\n"," ",111))?>',
+            bdDesc : '随游网-<?=htmlspecialchars(str_replace("\n"," ",222))?>',
+            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip=333';?>&',
+            bdPic : '<?=444?>'
+        },
+        share : [{
+            "bdSize" : 16
+        }]
+    }
+    //以下为js加载部分
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
 </script>

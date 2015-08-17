@@ -38,7 +38,6 @@
             locationNameInput: $('#us3-address')
         },
         enableAutocomplete: true,
-        zoom:6,
         onchanged: function (currentLocation, radius, isMarkerDropped) {
             console.info(currentLocation);
             $("#us3-lon").val(currentLocation.longitude);

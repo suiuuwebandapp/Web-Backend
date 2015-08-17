@@ -56,8 +56,8 @@
         <ul class="banners">
             <li class="banner01">
                 <div class="w1200 clearfix">
-                    <p class="p1">用随游的方式去旅行</p>
-                    <p class="p2">找到全世界的目的地体验产品</p>
+                    <p class="p1">随心所欲游世界</p>
+                    <p class="p2">这里有境外最好玩的短途体验</p>
                 </div>
             </li>
         </ul>
@@ -100,7 +100,7 @@
             <?php if(!empty($recommendTravel)){ ?>
                 <?php $recommend=$recommendTravel[0]?>
                 <li class="product">
-                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><!-- <span><?=$recommend['countryName']?></span> -->
                     <div class="div01"><p><?=$recommend['title']?></p></div>
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
@@ -113,7 +113,7 @@
             <?php if(!empty($recommendTravel)){ ?>
                 <?php $recommend=$recommendTravel[1]?>
                 <li class="product">
-                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><!-- <span><?=$recommend['countryName']?></span> -->
                     <div class="div01"><p><?=$recommend['title']?></p></div>
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
@@ -130,7 +130,7 @@
             <?php if(!empty($recommendTravel)){ ?>
                 <?php $recommend=$recommendTravel[2]?>
                 <li class="product">
-                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><!-- <span><?=$recommend['countryName']?></span> -->
                     <div class="div01"><p><?=$recommend['title']?></p></div>
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>
@@ -143,7 +143,7 @@
             <?php if(!empty($recommendTravel)){ ?>
                 <?php $recommend=$recommendTravel[3]?>
                 <li class="product">
-                    <img src="<?=$recommend['titleImg']?>" height="290px"><span><?=$recommend['countryName']?></span>
+                    <img src="<?=$recommend['titleImg']?>" height="290px"><!-- <span><?=$recommend['countryName']?></span> -->
                     <div class="div01"><p><?=$recommend['title']?></p></div>
                     <div class="div02">
                         <a href="<?=\common\components\SiteUrl::getViewUserUrl($recommend['userSign'])?>" class="user"><img src="<?=$recommend['headImg']?>"></a>

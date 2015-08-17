@@ -117,7 +117,7 @@
                 if(data.status==1){
                     Main.successTip("设置推荐成功");
                     $("#modal_close").click();
-                    Main.refrenshTable();
+                    Main.refrenshTableCurrent();
                 }else{
                     Main.errorTip("设置推荐失败:<br/>"+datas.data);
                 }

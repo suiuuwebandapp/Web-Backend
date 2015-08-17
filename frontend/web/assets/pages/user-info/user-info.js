@@ -1373,7 +1373,7 @@ function buildOrderList(list,type){
             html+='<a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br>';
             html+='<img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a>';
             if(Main.isNotEmpty(orderInfo.phone)){
-                html+='<b>+'+orderInfo.areaCode+' '+orderInfo.phone+'</b>';
+                html+='<b>'+orderInfo.areaCode+' '+orderInfo.phone+'</b>';
             }
             html+='</span>';
         }
@@ -1465,7 +1465,7 @@ function buildPublisherOrderList(list){
         html+='<a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br>';
         html+='<img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a>';
         if(Main.isNotEmpty(orderInfo.phone)){
-            html+='<b>+'+orderInfo.areaCode+' '+orderInfo.phone+'</b>';
+            html+='<b>'+orderInfo.areaCode+' '+orderInfo.phone+'</b>';
         }
         html+='</span>';
         html+='<span>';
@@ -1557,7 +1557,7 @@ function buildUnConfirmList(list){
         html+='<a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br>';
         html+='<img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a>';
         if(Main.isNotEmpty(orderInfo.phone)){
-            html+='<b>+'+orderInfo.areaCode+' '+orderInfo.phone+'</b>';
+            html+='<b>'+orderInfo.areaCode+' '+orderInfo.phone+'</b>';
         }
         html+='</span>';        html+='<span>';
         if(serviceInfo!=''&&serviceInfo.length>0){

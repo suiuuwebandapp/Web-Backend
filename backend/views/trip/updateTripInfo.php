@@ -159,7 +159,7 @@
                 if(data.status==1){
                     Main.successTip("更改随游信息成功");
                     $("#modal_close").click();
-                    Main.refrenshTable();
+                    Main.refrenshTableCurrent();
                 }else{
                     Main.errorTip("更改随游信息失败:<br/>"+datas.data);
                 }

@@ -36,7 +36,7 @@ LoginAsset::register($this);
     <meta name="MobileOptimized" content="320">
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
-    <link rel="shortcut icon" href="<?=Yii::$app->params['res_url'] ?>/assets/img/favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
     <link href="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/css/login-soft.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript">
         if (window != top) {

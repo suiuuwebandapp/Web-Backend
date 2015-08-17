@@ -9,7 +9,7 @@
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 <link rel="stylesheet" type="text/css" href="/assets/pages/layout/top.css">
-
+<link rel="icon" href="favicon.ico" />
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 
 <?php if (isset($this->context->userObj)) { ?>
