@@ -647,7 +647,7 @@ class WeChatController extends WController
                     {
                         return json_encode(Code::statusDataReturn(Code::FAIL,"验证码不能为空",$errorCount));
                     }
-                    if($code!=\Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE)){
+                    if(strtolower($code)!=strtolower(\Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE))){
                         return json_encode(Code::statusDataReturn(Code::FAIL,"验证码不正确",$errorCount));
                     }
                 }
@@ -765,7 +765,7 @@ class WeChatController extends WController
             $error = '密码格式不正确';
         } else if (empty($areaCode)) {
             $error = '手机区号格式不正确';
-        }else if(empty($valNum)||$valNum!=$sysNum){
+        }else if(empty($valNum)||strtolower($valNum)!=strtolower($sysNum)){
             $error = '图形验证码输入有误';
         }
         if (!empty($error)) {
@@ -819,7 +819,7 @@ class WeChatController extends WController
         $phone = \Yii::$app->request->post('phone');//发送给用户的手机
         $areaCode = \Yii::$app->request->post('areaCode');//区号
         $valNum = \Yii::$app->request->post('valNum');//区号
-        if(empty($valNum)||$valNum!=Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE))
+        if(empty($valNum)||strtolower($valNum)!=strtolower(Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE)))
         {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图文验证码不正确"));
         }
@@ -883,7 +883,7 @@ class WeChatController extends WController
                 $password=trim(\Yii::$app->request->post('password',""));
                 $valNum=trim(\Yii::$app->request->post('valNum',""));
                 $sysNum=\Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
-                if(empty($valNum)||$valNum!=$sysNum){
+                if(empty($valNum)||strtolower($valNum)!=($sysNum)){
                     return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "无效的验证码"));
                 }
                 $valPassword=Validate::validatePassword($password);

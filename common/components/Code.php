@@ -24,10 +24,12 @@ class Code
     /**
      * 错误码
      */
-    const SUCCESS = 1;
-    const FAIL = -1;
-    const PARAMS_ERROR = -2;
-    const UN_LOGIN = -3;
+    const SUCCESS = 1;//请求成功
+    const FAIL = -1;//请求失败，异常
+    const PARAMS_ERROR = -2;//参数错误，一般带错误返回
+    const UN_LOGIN = -3;//未登录
+    const ERROR= -4;//错误页面返回
+    const MUST_BE_UPDATED= -999;//必须更新
     /**
      * 请求错误信息
      */

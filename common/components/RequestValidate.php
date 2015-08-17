@@ -21,7 +21,7 @@ class RequestValidate
 
         $mobile_browser = '0';
 
-        if(preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|iphone|ipad|ipod|android|xoom)/i', strtolower($_SERVER['HTTP_USER_AGENT'])))
+        if(preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|iphone|android|xoom)/i', strtolower($_SERVER['HTTP_USER_AGENT'])))
 
             $mobile_browser++;
 
@@ -80,7 +80,6 @@ class RequestValidate
         if(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'windows phone') !== false)
 
             $mobile_browser++;
-
         if($mobile_browser>0)
 
             return true;
