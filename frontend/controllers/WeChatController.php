@@ -727,8 +727,10 @@ class WeChatController extends WController
             $userBase = new UserBase();
             $userBase->phone = $phone;
             $userBase->password = $password;
+            $userBase->areaCode=$areaCode;
             $userBaseService = new UserBaseService();
             $userBase = $userBaseService->addUser($userBase);
+
             //添加用户登录状态
             \Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
             return json_encode(Code::statusDataReturn(Code::SUCCESS, 'success'));

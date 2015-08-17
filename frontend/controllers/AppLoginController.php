@@ -167,6 +167,7 @@ class AppLoginController extends SController{
         $cPassword=\Yii::$app->request->post('cPassword');
         $nick=\Yii::$app->request->post('nick');
         $code=\Yii::$app->request->post('validateCode');//验证码
+        $areaCode=\Yii::$app->request->post('areaCode',"+86");//验证码
         if(empty($password))
         {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'密码不能为空'));
@@ -185,6 +186,7 @@ class AppLoginController extends SController{
             $userBase->nickname=$nick;
             $userBase->password=$password;
             $userBase->phone=$phone;
+            $userBase->areaCode=$areaCode;
             $user=$this->userBaseService->addUser($userBase);
             $enPassword = \Yii::$app->params['encryptPassword'];
             $enDigit = \Yii::$app->params['encryptDigit'];

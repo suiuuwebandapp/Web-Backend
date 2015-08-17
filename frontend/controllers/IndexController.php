@@ -430,6 +430,7 @@ class IndexController extends UnCController
             $userBase->phone = $phone;
             $userBase->password = $password;
             $userBase->nickname=$nickname;
+            $userBase->areaCode=$areaCode;
             $userBase = $this->userBaseService->addUser($userBase);
             //添加用户登录状态
             \Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
