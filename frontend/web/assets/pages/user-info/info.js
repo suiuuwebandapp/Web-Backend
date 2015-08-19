@@ -733,36 +733,12 @@ function initSelect(){
  * 初始化日期选择器（生日）
  */
 function initDatePicker(){
-    $('#birthday').datetimepicker({
-        language:  'zh-CN',
-        autoclose:1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0,
+    $('#birthday').datepicker({
+        language:'zh-CN',
+        autoclose: true,
+        endDate:new Date(Date.parse(nowDate.replace(/-/g,"/"))),
         format:'yyyy-mm-dd',
-        weekStart: 1
-    });
-    $(".datetimepicker").hide();
-
-
-    $('#birthday').unbind("focus");
-
-    $("#birthday").bind("focus",function(){
-        var top=$("#birthday").offset().top;
-        var left=$("#birthday").offset().left;
-        $(".datetimepicker").css({
-            'top':top+40,
-            'left':left,
-            'position':'absolute',
-            'background-color':'white',
-            'border':'1px solid gray',
-            'font-size':'14px'
-        });
-        $(".datetimepicker").show();
-    });
-
-    $(".datetimepicker-days .table-condensed tbody").bind("click", function () {
-        $(".datetimepicker").hide();
+        orientation:'top'
     });
 }
 

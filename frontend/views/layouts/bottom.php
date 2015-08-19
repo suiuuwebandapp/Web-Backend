@@ -46,9 +46,9 @@
     </div>
     <div class="box w1200 clearfix" style="padding-top: 30px">
         <ul class="clearfix list">
-            <li><a href="javascript:;" class="icon sina"></a></li>
+            <li><a href="http://weibo.com/suiuu" target="_blank" class="icon sina"></a></li>
             <li class="wei"><a href="javascript:;" class="icon weixin"></a><img src="/assets/images/weixinCoda.png" width="130" height="135" class="weixinCoda"></li>
-            <li><a href="javascript:;" class="icon db"></a></li>
+            <li><a href="http://www.douban.com/people/132981733/" target="_blank" class="icon db"></a></li>
             <li><a href="javascript:;" class="icon ff"></a></li>
         </ul>
 
@@ -173,9 +173,9 @@
                         <li id="code9527" style="display: none">
                             <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=b3a60a5dd8727fe814b43fce2ec7412a"></script>
                         </li>
-                        <li><a href="javascript:;" onclick="login()" id="login-check" class="btn">登录</a></li>
+                        <li><a href="javascript:;" onclick="login()" id="login-check" class="btn blue">登录</a></li>
                         <li class="rows">
-                            <a href="/index/password-send-code" class="forgot">忘记密码</a>
+                            <a href="/index/password-send-code" class="forgot blue">忘记密码</a>
                             <input type="checkbox" id="logo-check">
                             <label for="logo-check" class="fright">自动登录</label>
                         </li>

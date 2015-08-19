@@ -235,6 +235,20 @@
         <?php } ?>
         </div>
         <p>仅当您和另一名随游用户确认预订时，此资料才会被分享。这是我们帮助大家联系彼此的方式</p>
+        <br/>
+        <br/>
+        <div>
+            <p class="nick_name_p">QQ<span id="qqTip" class="form_tip"></span></p>
+            <div class="makes">
+                <input type="text" value="<?=$this->context->userObj->qq?>" name="qq" id="qq">
+            </div>
+        </div>
+        <div>
+            <p class="nick_name_p">微信<span id="wechatTip" class="form_tip"></span></p>
+            <div class="makes">
+                <input type="text" value="<?=$this->context->userObj->wechat?>" name="wechat" id="wechat">
+            </div>
+        </div>
         <a href="javascript:;" id="createPublisher" class="nextBtn">下一步</a>
     </div>
 </div>
@@ -317,6 +331,8 @@
         $("#createPublisher").bind("click", function () {
             $("#validateForm").submit();
         });
+
+
 
         initUploadfive();
         initValidate();
@@ -414,6 +430,7 @@
             }
 
         });
+
     }
     function initUploadfive(){
         $('#fileCardFront').uploadifive({
@@ -607,6 +624,13 @@
         var phone = $("#phone").val();
         var code = $("#code").val();
         var sex=$('input:radio[name="sex"]:checked').val();
+        var qq = $("#qq").val();
+        var wechat = $("#wechat").val();
+
+        if(qq==''&&wechat==''){
+            $("#qqTip").html("QQ和微信至少填写一个");
+            return;
+        }
 
         if(oldPhone!=''){
             phone=oldPhone;
@@ -634,6 +658,8 @@
                 phone:phone,
                 code:code,
                 sex:sex,
+                qq:qq,
+                wechat:wechat,
                 _csrf: $('input[name="_csrf"]').val()
             },
             beforeSend:function()

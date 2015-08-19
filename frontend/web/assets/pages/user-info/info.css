@@ -1,0 +1,309 @@
+.queue {
+    display: none;
+}
+
+#uploadifive-reImg {
+    display: none;
+}
+
+#uploadifive-userPhotoFile {
+    display: none;
+}
+
+.upload_show_info {
+    width: 205px;
+    height: 115px;
+    background: #eee;
+    display: inline-block;
+    line-height: 115px;
+    color: white;
+    font-weight: bold;
+}
+
+.sycon .myInformation .past01 .wdzl .sel-pic {
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.sycon .myInformation .past01 .wdzl .sel-pic .sect {
+    height: 300px;
+    line-height: 300px;
+}
+
+.p_photo1, .p_photo2, .p_photo3 {
+    float: left;
+}
+
+.datepicker th.prev i,.datepicker th.next i{
+    display: none;
+}
+.datepicker th.prev{
+    background-image: url('../../images/date_left1.png');
+    width:20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding:0;
+}
+
+.datepicker th.next{
+    background-image: url('../../images/date_right1.png');
+    width:20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding:0;
+}
+.datepicker th.prev:hover{
+    background-image: url('../../images/date_left2.png') !important;
+    width:20px !important;
+    height: 20px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+.datepicker th.next:hover{
+    background-image: url('../../images/date_right2.png') !important;
+    width:20px !important;
+    height: 20px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    padding:0 !important;
+}
+.datepicker table tr td.active.active, .datepicker table tr td.active:hover.active,.datepicker table tr td span.active.active{
+    background-color: #3dd9c3 !important;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3dd9c3), to(#3dd9c3)) !important;
+}
+
+.datetimepicker th, td {
+    padding: 3px 5px;
+}
+
+.datetimepicker table {
+    margin-top: 10px;
+}
+
+.InformationCon .select2-container .select2-choice {
+    height: 34px !important;
+    background-color: #eee;
+    border-radius: 0px;
+    font-size: 14px;
+    color: dimgray;
+}
+
+.InformationCon .select2-drop {
+    font-size: 14px;
+}
+
+.InformationCon .select2-highlighted {
+    background-color: #eee;
+}
+
+.InformationCon .select2-no-results {
+    font-size: 14px;
+    color: dimgray;
+    text-align: center;
+}
+
+.sycon .myInformation .past01 .wdzl .wdzl-xx span {
+    float: left;
+    width: 100px;
+}
+
+.sycon .myInformation .past02 .wdzl .wdzl-xx span {
+    float: left;
+    width: 100px;
+}
+
+.sycon .myInformation .past01 .box span {
+    float: left;
+    width: 100px;
+}
+
+.form_tip {
+    font-size: 14px;
+    padding-left: 20px;
+    color: red;
+    display: inline-block !important;
+    text-align: right !important;
+    float: right !important;
+    width: 200px !important;
+}
+
+.sycon .myInformation .past01 .wdzl .wdzl-xx .select2-arrow {
+    width: 20px !important;
+}
+
+.sycon .myInformation .past01 .wdzl .wdzl-xx .select2-chosen {
+    width: 300px;
+    margin-top: 0px;
+}
+
+.sycon .myInformation .past02 .wdzl .wdzl-xx .phone-select .select2-arrow {
+    width: 20px !important;
+}
+
+.sycon .myInformation .past02 .wdzl input.phone {
+    height: 44px !important;
+    margin-left: 20px;
+    width: 210px;
+}
+
+.validate {
+    background-color: #73b9ff !important;
+}
+
+.sycon .mySuiyou .orderList .rubbish {
+    top: 5px;
+    right: 5px;
+}
+
+.no_result {
+    margin-top: 50px;
+}
+
+.shield_btn {
+    font-size: 12px;
+    padding-left: 16px;
+    cursor: pointer;
+}
+
+.p_chose_card_front {
+    height: 210px;
+    width: 350px;
+    text-align: center;
+    line-height: 210px;
+    margin-top: 0px !important;
+}
+
+.upload_tip {
+    font-size: 12px;
+    text-align: left;
+    padding-left: 35px;
+}
+
+.upload_front_process {
+    position: absolute;
+    left: 360px;
+    top: 143px;
+    color: rosybrown;
+    font-size: 14px;
+    width: 140px;
+    text-align: center;
+}
+
+.imgPic {
+    cursor: pointer;
+    width: 350px;
+    background-color: #ffffff;
+}
+
+.showImg {
+    height: 210px;
+    width: 350px;
+}
+
+#uploadifive-fileCardFront {
+    display: none;
+}
+
+.queue {
+    display: none;
+}
+
+.sel-pic {
+    background: none;
+}
+
+.sycon .myInformation .past02 .wdzl .card_upload {
+    background: #ff7a4d !important;
+    padding-left: 0px !important;
+    color: white;
+}
+
+.order_list_number {
+    float: left;
+    padding-left: 20px;
+}
+
+.accountSpan {
+    line-height: 36px;
+}
+
+#bindAccountUl {
+    padding-left: 65px;
+}
+
+#bindAccountUl li {
+    padding: 0 10px;
+}
+
+.InformationCon hr {
+    border: 0;
+    background-color: #eee;
+    height: 1px;
+}
+
+.Mtitle {
+    margin: 10px;
+}
+
+.bind_account_title {
+    height: 50px;
+    line-height: 50px;
+    margin-left: 30px;
+    font-size: 16px;
+    color: #73b9ff;
+}
+
+#historyDl span {
+    width: 20%;
+}
+
+.sycon .accountCon .orderList .order dd span {
+    overflow: hidden;
+}
+
+#s2id_countryId {
+    margin-right: 7px;
+}
+
+.sycon .myInformation .sexs input {
+    width: auto;
+    opacity: 0;
+}
+
+.sycon .myInformation .sexs input + label {
+    margin-right: 30px;
+    padding-left: 20px;
+    cursor: pointer;
+    background: url('/assets/images/check.png') no-repeat 0 10px;
+    height: 36px;
+    line-height: 36px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.sycon .myInformation .past01 .box .select2-container span {
+    width: auto;
+    margin-top: 0px !important;
+}
+
+.sycon .myInformation .past01 .box .select2-container .select2-arrow {
+    width: 18px;
+}
+
+.sycon .myInformation .past02 .ul02 .pic {
+    height: auto;
+}
+
+#user_photo_list img {
+    max-width: 205px;
+    max-height: 115px;
+}
+#user_photo_list li:nth-child(3n){
+    margin-right: 0px;
+}

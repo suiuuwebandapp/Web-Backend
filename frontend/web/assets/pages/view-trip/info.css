@@ -3,16 +3,22 @@
     line-height: 35px
 }
 
+.prev, .next{
+    border-radius: 0 !important;
+}
+
 .timepicki-input{
     width: 45px !important;
     padding-left: 0px !important;
     margin-left: 7px !important;
+    border: none !important;
 }
 
 .timepicker_wrap{
-    top: 40px !important;
+    top: 47px !important;
     border-radius:0 !important;
     width: 240px;
+    background-color: #ffffff;
 }
 .prev, .next{
     border-radius: 0 !important;
@@ -21,27 +27,54 @@
     width: 177px !important;
 }
 
-.datetimepicker .prev{
-    background-image: url('../images/day_left.png');
+.datepicker th.prev i,.datepicker th.next i{
+    display: none;
+}
+.datepicker th.prev{
+    background-image: url('../../images/date_left1.png');
     width:20px;
     height: 20px;
     background-repeat: no-repeat;
     background-position: center;
     padding:0;
 }
-.datetimepicker .next{
-    background-image: url('../images/day_right.png');
+
+.datepicker th.next{
+    background-image: url('../../images/date_right1.png');
     width:20px;
     height: 20px;
     background-repeat: no-repeat;
     background-position: center;
     padding:0;
 }
-.datetimepicker th ,td{
+.datepicker th.prev:hover{
+    background-image: url('../../images/date_left2.png') !important;
+    width:20px !important;
+    height: 20px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+.datepicker th.next:hover{
+    background-image: url('../../images/date_right2.png') !important;
+    width:20px !important;
+    height: 20px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    padding:0 !important;
+}
+.datepicker table tr td.active.active, .datepicker table tr td.active:hover.active,.datepicker table tr td span.active.active{
+    background-color: #3dd9c3 !important;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3dd9c3), to(#3dd9c3)) !important;
+}
+.datepicker th ,td{
     padding: 3px 5px;
 }
-.datetimepicker table{
+.datepicker table{
     margin-top: 10px;
+}
+.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover,.datepicker table tr td span.disabled, .datepicker table tr td span.disabled:hover{
+    color: #ddd;
 }
 .btn-link,.input-group-btn{
     display: none !important;

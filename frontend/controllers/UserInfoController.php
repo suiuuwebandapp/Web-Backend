@@ -386,6 +386,9 @@ class UserInfoController extends CController
         $areaCode = trim(\Yii::$app->request->post("areaCode", ""));
         $phone = trim(\Yii::$app->request->post("phone", ""));
         $code = trim(\Yii::$app->request->post("code", ""));
+        $qq = trim(\Yii::$app->request->post("qq", ""));
+        $wechat = trim(\Yii::$app->request->post("wechat", ""));
+
 
         if (empty($nickname)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "昵称不能为空"));
@@ -408,6 +411,9 @@ class UserInfoController extends CController
         if (empty($phone)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "手机号码不能为空"));
         }
+        if(empty($qq)&&empty($wechat)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "QQ和微信至少填写一个"));
+        }
 
         $userBase = null;
         if ($this->userObj == null) {
@@ -426,6 +432,8 @@ class UserInfoController extends CController
         $userBase->countryId = $countryId;
         $userBase->cityId = $cityId;
         $userBase->profession = '';
+        $userBase->qq=$qq;
+        $userBase->wechat=$wechat;
 
 
         try {

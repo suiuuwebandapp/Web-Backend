@@ -12,8 +12,11 @@ AppAsset::register($this);
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->params['language']; ?>">
 <head>
-    <meta charset="<?= Yii::$app->charset ?>">
+    <meta name="keywords" content="随游，随游网，出境游，出境旅游，出境自由行，海外旅行，订制旅行" />
+    <meta name="description" content="随游是一个专注于海外目的地旅行体验的社区型服务平台，在这里人们既是导游也是旅行者，可以通过网站，微信，移动设备等各种方式发布，分享，预订全球的各种独特旅行体验及服务。
+无论您想体验不一样的异国文化，或和当地人结伴同行，甚至只是在旅行途中需要达人的帮助指点。您都能以任何价位享受到随游在全球多个城市为您带来的独一无二的旅行体验。随游相信用户提供的价值，我们不仅是旅行体验服务平台，更希望能够成为所有旅行者喜爱的旅行分享社区。" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="<?= Yii::$app->charset ?>">
     <?= Html::csrfMetaTags() ?>
     <title><?= Yii::$app->params['name'] ?> <?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>

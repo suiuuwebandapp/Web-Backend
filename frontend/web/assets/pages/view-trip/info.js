@@ -8,9 +8,6 @@ $(document).ready(function () {
     initDatePicker();
     getComment(1);
 
-
-
-
 });
 
 
@@ -20,7 +17,7 @@ $(document).ready(function () {
 function initScroll(){
     $(document).scroll(function () {
         var scrollTop = $(document).scrollTop();
-        resetDatePicker();
+
         var documentHeight = $(document).height();//浏览器时下窗口可视区域高度
         var fixHeight = $(".web-right").offset().top + $(".web-right").height();
         var footHeight = $("#footer-out").height();
@@ -38,7 +35,7 @@ function initScroll(){
 
         if (fixHeight > maxHeight) {
             $(".sydetail .web-right").hide();
-            $(".datetimepicker").hide();
+            $(".datepicker").hide();
         } else {
             $(".sydetail .web-right").show();
         }
@@ -49,6 +46,8 @@ function initScroll(){
         } else {
             $(".sylx-xiangxi").css("position", "fixed");
         }
+
+        resetDatePicker();
     });
 }
 
@@ -69,15 +68,7 @@ function initBtnClick(){
         var publisherId=$(this).attr("publisherId");
         agreeApply(applyId,publisherId);
     });
-    /**
-     * 时间选择器控件处理
-     */
-    $('#startTime').timepicki({
-        step_size_minutes: 15,
-        format_output: function (tim, mini, meri) {
-            return tim + ":" + mini + " " + meri;
-        }
-    });
+
 
     $("#collection_trip").bind("click", function () {
         submitCollection();
@@ -242,41 +233,30 @@ function initBtnClick(){
  * 初始化日期控件
  */
 function initDatePicker() {
-    $('#beginTime').datetimepicker({
-        language: 'zh-CN',
-        autoclose: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0,
-        format: 'yyyy-mm-dd',
-        weekStart: 1,
-        startDate: nowDate
+    $('#beginTime').datepicker({
+        language:'zh-CN',
+        autoclose: true,
+        startDate:new Date(Date.parse(nowDate.replace(/-/g,"/"))),
+        format:'yyyy-mm-dd',
+        orientation:'top'
     });
-    $(".datetimepicker").hide();
-
-
-    $('#beginTime').unbind("focus");
 
     $("#beginTime").bind("focus", function () {
         resetDatePicker();
-        $(".datetimepicker").show();
     });
 
-    $(".datetimepicker-days .table-condensed tbody").bind("click", function () {
-        $(".datetimepicker").hide();
-    });
 
     /**
-     * 隐藏日期选择
+     * 时间选择器控件处理
      */
-    $(document).bind("click", function (e) {
-        var target = $(e.target);
-        if (target.closest("#beginTime").length != 1) {
-            if (target.closest(".datetimepicker").length == 0) {
-                $(".datetimepicker").hide();
-            }
+    $('#startTime').timepicki({
+        step_size_minutes: 15,
+        disable_keyboard_mobile:false,
+        format_output: function (tim, mini, meri) {
+            return tim + ":" + mini + " " + meri;
         }
     });
+
 }
 
 /**
@@ -284,29 +264,28 @@ function initDatePicker() {
  */
 function resetDatePicker() {
     var top = $("#beginTime").offset().top;
-    var left = $("#beginTime").offset().left;
 
     if ($(".web-right").hasClass("fixed")) {
-        $(".datetimepicker").css({
-            'top': '120px',
-            'left': '50%',
-            'margin-left': '283px',
+        $(".datepicker").css({
+            'z-index':100,
+            'top': '126px',
             'position': 'fixed',
             'background-color': 'white',
-            'border': '1px solid gray',
+            'border': '1px solid #cccccc',
             'font-size': '14px'
         });
     } else {
-        $(".datetimepicker").css({
-            'top': top + 40,
-            'left': left,
-            'margin-left': '0px',
+        $(".datepicker").css({
+            'z-index':100,
+            'top': top + 43,
             'position': 'absolute',
             'background-color': 'white',
-            'border': '1px solid gray',
+            'border': '1px solid #cccccc',
             'font-size': '14px'
         });
     }
+
+
 }
 /**
  * 显示价格
