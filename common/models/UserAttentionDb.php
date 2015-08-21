@@ -196,7 +196,7 @@ class UserAttentionDb extends ProxyDb
         $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
         $this->setParam("userSign", $userSign);
 
-        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,ceil(a.basePrice*'.Code::TRIP_SERVICE_PRICE.') AS basePrice,a.tripCount,b.userSign,b.headImg,b.nickname,a.collectCount,a.commentCount');
+        $this->setSelectInfo('a.tripId,a.titleImg,a.title,a.intro,a.score,ceil(a.basePrice*'.Code::TRIP_SERVICE_PRICE.') AS basePrice,a.basePriceType,a.tripCount,b.userSign,b.headImg,b.nickname,a.collectCount,a.commentCount');
         $this->setSql($sql);
         return $this->find($page);
     }

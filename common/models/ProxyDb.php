@@ -94,7 +94,6 @@ class ProxyDb extends Connection {
             $page->totalCount=$this->findAllCount();
         }
         $command->setSql($searchSql);
-
         foreach($this->paramArray as $key=>$value )
         {
             if(is_numeric($value)){

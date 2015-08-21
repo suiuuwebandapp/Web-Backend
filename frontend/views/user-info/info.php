@@ -31,7 +31,7 @@
     <ul class="con-nav synav">
         <li><a href="javascript:;"  <?php if ($tab == "" || $tab == "myMessage") {echo "class='active'";}; ?> id="myMessage">收件箱</a></li>
         <li><a href="javascript:;" <?php if ($tab == "myComment") {echo "class='active'";}; ?> id="myComment">发言</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "myCollect") { echo "class='active'";}; ?> id="myCollect">收藏</a></li>
+        <li><a href="javascript:;" <?php if ($tab == "myCollect") { echo "class='active'";}; ?> id="myCollect">心愿清单</a></li>
         <li><a href="javascript:;" <?php if ($tab == "myOrderManager") { echo "class='active'";}; ?> id="myOrderManager">我的预定</a></li>
         <?php if ($this->context->userObj->isPublisher) { ?>
             <li><a href="javascript:;" <?php if ($tab == "tripManager") {echo "class='active'";}; ?> id="tripManager">随游管理</a></li>

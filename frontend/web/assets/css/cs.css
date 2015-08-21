@@ -203,7 +203,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .index-banner{ width:100%; height:600px;   position:relative;}
 .index-banner .banners{ width:100%; height:600px; overflow:hidden;}
 .index-banner .banners li{ float:left; width:100%; height:600px; overflow:hidden; }
-.index-banner .banners .banner01{ background:url(../images/index/indexbanner01.jpg) no-repeat center 0; }
+.index-banner .banners .banner01{ background:url(http://image.suiuu.com/suiuu_index/indexbanner01.jpg) no-repeat center 0; }
 .index-banner .banners p{ color:#fff; font-size:40px; text-align:center; }
 .index-banner .banners .p1{  margin-top:260px;  font-size:40px; }
 .index-banner .banners .p2{  font-size:24px; margin-top:20px; }
@@ -322,7 +322,7 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 
 .indexAd{ display:none;  position:fixed; bottom:0; left:0; width:100%; height:260px; background:rgba(0,0,0,0.8);}
 .indexAd .closed{ height:50px; width:50px; display:block; position:absolute; top:0; right:30px; background:url(../images/index/close.png) no-repeat center center; }
-.indexAd .inner{ position:absolute; top:-100px; left:50%; margin-left:-600px; height:350px; width:1200px; background:url(../images/index/adFixed.png) no-repeat center top; }
+.indexAd .inner{ position:absolute; top:-100px; left:50%; margin-left:-600px; height:350px; width:1200px; background:url(http://image.suiuu.com/suiuu_index/adFixed.png) no-repeat center top; }
 
 /*----------index页面样式-end---------*/
 
@@ -1922,7 +1922,7 @@ transition:1s;
 
 #aboutCon-out .helps .question{ width:1060px; background:#eee; padding:0; }
 #aboutCon-out .helps .question .box02{ background:#fff; padding:40px 100px; margin-bottom:25px;}
-#aboutCon-out .helps .question .box02 .search input{ height:40px; line-height:40px; font-size:16px; width:740px; padding-left:20px; border-radius:20px; border:1px solid #ddd; display:block; float:left;}
+#aboutCon-out .helps .question .box02 .search input{ height:40px; line-height:40px; font-size:16px; width:720px; padding-left:20px; border-radius:20px; border:1px solid #ddd; display:block; float:left;}
 #aboutCon-out .helps .question .box02 .search .btn{ text-align:center; height:40px; line-height:40px; font-size:16px; width:100px; border-radius:20px; border:1px solid #ddd; color:#3dd9c3; display:block; float:right;}
 #aboutCon-out .helps .question .box02 .search .btn:hover{  border:1px solid #fff; background:#3dd9c3; color:#fff; display:block; float:right;}
 #aboutCon-out .helps .question .box02 .title02{ text-align:left; margin-top:35px;}

@@ -87,6 +87,12 @@ class TripService extends BaseDb{
                 $cc=$countryService->getCC($title);
                 $countryId=$cc[0];
                 $cityId=$cc[1];
+                if(is_array($countryId)){
+                    $countryId=implode(",",$countryId);
+                }
+                if(is_array($cityId)){
+                    $cityId=implode(",",$cityId);
+                }
             }
             if($activity==1){
                 $tagStr='154,170,142,148,192,113,133,178';

@@ -179,7 +179,7 @@
                     <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
                 <?php } ?>
             <?php } ?>
-            <div class="web-con" id="pinglun">
+            <div class="web-con" id="pinglunDiv">
                 <p class="title" id="pinglunCount">
                     <img src="/assets/images/pinglun2.png" width="25" height="28" style="display: inline-block;">
                     &nbsp;有<span><?=$travelInfo['info']['commentCount'];?></span> 条评论

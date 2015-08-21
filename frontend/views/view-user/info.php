@@ -109,8 +109,34 @@
                         </div>
                     <?php } ?>
                 </div>
+                <br /><br />
             <?php } ?>
-            <br /><br />
+            <?php if(!empty($collectionList)){ ?>
+                <h2 class="title01">心愿清单： </h2>
+                <div class="sy clearfix">
+                    <?php foreach($collectionList['data'] as $trip){ ?>
+                        <div class="web-tuijian fl">
+                            <a href="<?=\common\components\SiteUrl::getTripUrl($trip['tripId'])?>" class="pic">
+                                <img src="<?=$trip['titleImg']?>" width="410" height="267">
+                                <p class="p4"><span>￥<?= intval($trip['basePrice']) ?></span>
+                                    <?=$trip['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?>
+                                </p>
+                            </a>
+                            <a href="<?=\common\components\SiteUrl::getViewUserUrl($trip['userSign'])?>" class="user"><img src="<?=$trip['headImg'];?>" ></a>
+                            <p class="title"><?=mb_strlen($trip['title'],"UTF-8")>20?mb_substr($trip['title'],0,20,"UTF-8")."...":$trip['title'] ?></p>
+                            <p class="xing">
+                                <img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                                <img src="<?= $trip['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                                <img src="<?= $trip['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                                <img src="<?= $trip['score']>=8?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                                <img src="<?= $trip['score']>=10?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" alt="">
+                                <span><?=$trip['tripCount']?>人去过</span><span><?=empty($trip['commentCount'])?'0':$trip['commentCount']?>条评论</span>
+                            </p>
+                        </div>
+                    <?php } ?>
+                </div>
+                <br /><br />
+            <?php } ?>
             <?php if(!empty($commentList['data'])){ ?>
             <h2 class="title01">相关评论： </h2>
             <div class="PL clearfix">

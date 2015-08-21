@@ -15,6 +15,7 @@ use common\components\LogUtils;
 use frontend\components\Page;
 use frontend\services\TravelTripCommentService;
 use frontend\services\TripService;
+use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
 
@@ -28,6 +29,7 @@ class ViewUserController extends UnCController{
         $userInfo=null;
         $tripList=null;
         $recommendList=null;
+        $collectionList=null;
         try{
             $userBaseService=new UserBaseService();
             $userInfo=$userBaseService->findUserByUserSignArray($userSign);
@@ -43,10 +45,14 @@ class ViewUserController extends UnCController{
             }
 
             $page=new Page();
-            $page->initPage(1,2);
+            $page->initPage(1,5);
             $travelSer =new TravelTripCommentService();
             $commentList = $travelSer->getCommentTripList($page,$userSign);
 
+            $collectionPage=new Page();
+            $page->showAll=true;
+            $attentionService = new UserAttentionService();
+            $collectionList = $attentionService->getUserCollectionTravel($userSign,$collectionPage);
 
             //获取用户证件信息
             $userCard=$userBaseService->findUserCardByUserId($userSign);
@@ -62,6 +68,7 @@ class ViewUserController extends UnCController{
             'userInfo'=>$userInfo,
             'tripList'=>$tripList,
             'commentList'=>$commentList,
+            'collectionList'=>$collectionList,
             'userCard'=>$userCard,
             'userAptitude'=>$userAptitude
         ]);
@@ -77,7 +84,7 @@ class ViewUserController extends UnCController{
         $currentPage=\Yii::$app->request->post('p',1);
         $userSign=\Yii::$app->request->post('u');
         $page=new Page();
-        $page->initPage($currentPage,2);
+        $page->initPage($currentPage,5);
         $travelSer =new TravelTripCommentService();
         try{
             $commentList = $travelSer->getCommentTripList($page,$userSign);

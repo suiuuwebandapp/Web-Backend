@@ -464,7 +464,7 @@ function getComment(page) {
                     }
                     str += '<li>';
                     str += '<div class="user-pic fl">';
-                    str += '<img src=\"' + obj.data[i].headImg + '\" alt=\"\">';
+                    str += '<a  href="/view-user/info?u='+obj.data[i].userSign+'" target="_blank"><img src=\"' + obj.data[i].headImg + '\" alt=\"\"></a>';
                     str += '<span class=\"user-name\">';
                     str += obj.data[i].nickname;
                     if (obj.data[i].travelCount > 0) {
@@ -474,7 +474,7 @@ function getComment(page) {
                     str += r;
                     str += "</b>";
                     str += ' ' + obj.data[i].content;
-                    str += "</p><a href='#pllist' rSign='" + obj.data[i].userSign + "' id='" + obj.data[i].commentId + "' class='hf' onclick='reply(this)'></a>";
+                    str += "</p><a href='javascript:;' rSign='" + obj.data[i].userSign + "' id='" + obj.data[i].commentId + "' class='hf' onclick='reply(this)'></a>";
                     str += "</li>";
                 }
                 $('#tanchu_pl').append(str);
@@ -509,6 +509,11 @@ function reply(obj) {
     rSign = $(obj).attr('rSign');
     var t = $(obj).prev().prev().find("span").html();
     $("#pinglun").val('@' + t + '   :');
+
+    var scroll_offset = $("#pinglunDiv").offset();
+    $("body,html").animate({
+        scrollTop:scroll_offset.top-20
+    },0);
 }
 
 

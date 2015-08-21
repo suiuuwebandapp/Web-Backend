@@ -101,15 +101,12 @@ class TravelTripDb extends ProxyDb
         ");
         $sql .= " AND t.status=:status";
         $this->setParam("status", $status);
-
         if (!empty($countryId) || !empty($cityId)) {
             if (!empty($countryId)) {
-                $sql .= " AND t.countryId =:countryId";
-                $this->setParam("countryId", $countryId);
+                $sql .= " AND t.countryId in(".$countryId.")";
             }
             if (!empty($cityId)) {
-                $sql .= " AND t.cityId =:cityId";
-                $this->setParam("cityId", $cityId);
+                $sql .= " AND t.cityId in(".$cityId.")";
             }
         } else {
             if (!empty($title)) {

@@ -13,41 +13,13 @@
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <script type="text/javascript" src="/assets/js/jquery.SuperSlide.2.1.1.js"></script>
 <style type="text/css">
-    .select2-container .select2-choice {
-        background-color: #eee;
-        border-radius: 0px;
-        font-size: 13px;
-        color: dimgray;
-        padding-top:0 ;
-        margin: 0 auto;
-        border: none;
-    }
-    .select2-drop {
-        font-size: 14px;
-    }
 
-    .select2-highlighted {
-        background-color: #0088e4;
-    }
-    .select2-no-results {
-        font-size: 13px;
-        color: dimgray;
-        text-align: center;
-    }
-    .index .topTip li{
-        margin-top: 9px;
-    }
-    .index-banner .serch-out .serch .helps{
-        bottom: 2px;
-    }
+    .index .topTip li{ margin-top: 9px; }
+    .index-banner .serch-out .serch .helps{ bottom: 2px; }
+    #indexSearchDrop b{ float: right; margin-right: 10px;  }
+    #indexSearchDrop{ font-size: 14px; }
+    .index .story .list li .div01 p{line-height: 24px;}
 
-    #indexSearchDrop b{
-        float: right;
-        margin-right: 10px;
-    }
-    #indexSearchDrop{
-        font-size: 14px;
-    }
 </style>
 
 <div class="index">
@@ -96,7 +68,7 @@
     <p class="title">世界从此不同</p>
     <div class="index-tuijian w1200 clearfix">
         <ul class="countrys clearfix">
-            <li><a href="<?=\common\components\SiteUrl::getTripActivityUrl(1);?>"><img src="/assets/images/index/01.jpg"></a><span>大手拉小手的旅行</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripActivityUrl(1);?>"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/01.jpg"></a><span>大手拉小手的旅行</span></li>
             <?php if(!empty($recommendTravel)){ ?>
                 <?php $recommend=$recommendTravel[0]?>
                 <li class="product">
@@ -123,10 +95,10 @@
                     </div>
                 </li>
             <?php } ?>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('意大利');?>"><img src="/assets/images/index/04.jpg"></a><span>意大利</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('法国');?>"><img src="/assets/images/index/05.jpg"></a><span>法国</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('日本');?>"><img src="/assets/images/index/06.jpg"></a><span>日本</span></li>
-            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('新加坡');?>"><img src="/assets/images/index/07.jpg"></a><span>新加坡</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('意大利');?>"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/04.jpg"></a><span>意大利</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('法国');?>"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/05.jpg"></a><span>法国</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('日本');?>"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/06.jpg"></a><span>日本</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripSearchUrl('新加坡');?>"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/07.jpg"></a><span>新加坡</span></li>
             <?php if(!empty($recommendTravel)){ ?>
                 <?php $recommend=$recommendTravel[2]?>
                 <li class="product">
@@ -153,7 +125,7 @@
                     </div>
                 </li>
             <?php } ?>
-            <li><a href="<?=\common\components\SiteUrl::getTripActivityUrl(2);?>"><img src="/assets/images/index/10.jpg"></a><span>梦中的情人节</span></li>
+            <li><a href="<?=\common\components\SiteUrl::getTripActivityUrl(2);?>"><img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/10.jpg"></a><span>梦中的情人节</span></li>
         </ul>
     </div>
 
@@ -161,15 +133,15 @@
         <p class="title">旅行，发现与体验</p>
         <ul id="ul1" class="clearfix">
             <li>
-                <img src="/assets/images/index/T01.png">
+                <img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/T01.jpg">
                 <div class="div01"><a href="/view-trip/list?t=<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?>"><p>慢行探索</p></a></div>
             </li>
             <li>
-                <img src="/assets/images/index/T02.png">
+                <img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/T02.jpg">
                 <div class="div01"><a href="/view-trip/list?t=<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?>"><p>个性玩法</p></a></div>
             </li>
             <li class="nomg">
-                <img src="/assets/images/index/T03.png">
+                <img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/T03.jpg">
                 <div class="div01"><a href="/view-trip/list?t=<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>"><p>交通服务</p></a></div>
             </li>
         </ul>
@@ -179,19 +151,19 @@
     <div class="story clearfix w1200">
         <ul class="list clearfix">
             <li class="fl">
-                <img src="/assets/images/index/storyPic01.jpg">
+                <img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/storyPic01.jpg">
                 <div class="div01">
                     <h2 class="title01">他使用随游旅行</h2>
                     <p>在世界各地找到独特的体验，尝试和当地专家一起旅行</p>
-                    <a href="javascript:;" class="btn colGreen">了解如何用随游的方式去旅行&gt;</a>
+                    <a href="/static?help-userFlow" class="btn colGreen">了解如何用随游的方式去旅行&gt;</a>
                 </div>
             </li>
             <li class="fr">
-                <img src="/assets/images/index/storyPic02.jpg">
+                <img src="<?=Yii::$app->params['suiuu_image_url']?>/suiuu_index/storyPic02.jpg">
                 <div class="div01">
                     <h2 class="title01">他通过随游赚取收入</h2>
                     <p>通过随游网发布你熟悉的目的地线路活动及服务，或者带领游客旅行从而获取丰厚收入。</p>
-                    <a href="javascript:;" class="btn colGreen">如何发布随游&gt;</a>
+                    <a href="/static?help-publisherFlow" class="btn colGreen">如何发布随游&gt;</a>
                 </div>
             </li>
         </ul>

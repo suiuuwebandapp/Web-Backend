@@ -12,6 +12,12 @@
     body{
         background-color: #F7F7F7;
     }
+    #aboutCon-out .aboutNav-out.fixed{
+        z-index: 999;
+    }
+    #aboutCon-out .aboutCon .leftNav.fixed{
+        z-index: 999;
+    }
 </style>
 
 
@@ -134,8 +140,11 @@
                     <h2 class="title04">心动</h2>
                     <p>“随游”平台的海外当地人在遍布全球的各个城市分享他们挖掘到的精彩体验，或经典或小众，或刺激或清新，相信一定会为您的旅行创造无限可能，带来无限惊喜。</p>
                     <div class="btns clearfix">
-                        <a href="javascript:;" class="btn bgGreen fl">现在注册</a>
-                        <a href="javascript:;" class="btn bgOrange fr">随游</a>
+                        <?php if (isset($this->context->userObj)) { ?>
+                            <a href="javascript:;" class="btn bgGreen fl">现在注册</a>
+                        <?php }else { ?>
+                            <a href="javascript:;" onclick="$('#zhuce').click();" class="btn bgGreen fl">现在注册</a>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -158,8 +167,7 @@
                     <br>
                     <p>预订成功之后，您可以通过网站，微信或APP来管理您的订单</p>
                     <div class="btns clearfix">
-                        <a href="javascript:;" class="btn bgGreen fl">我的预定</a>
-                        <a href="javascript:;" class="btn bgOrange fr">用户指南</a>
+                        <a href="/static?help-userFlow" class="btn bgOrange fr">用户指南</a>
                     </div>
                 </div>
             </div>
@@ -170,8 +178,8 @@
                     <p>分享是旅行中不可缺少的环节，您的经历是我们在构建一个值得信赖的社区时不可或缺的一环。
                         您的贡献会为迷茫的旅客点亮方向，帮助他在 “随游”上寻找一段与您一样的奇妙旅程！更惊喜的是，与此同时，还能赚取丰厚的收入！</p>
                     <div class="btns clearfix">
-                        <a href="javascript:;" class="btn bgGreen fl">发布随游</a>
-                        <a href="javascript:;" class="btn bgOrange fr">随友指南</a>
+                        <a href="/index/trip-help" class="btn bgGreen fl">发布随游</a>
+                        <a href="/static?help-publisherFlow" class="btn bgOrange fr">随友指南</a>
                     </div>
                 </div>
             </div>
@@ -231,7 +239,7 @@
 
             <h3 class="title" id="sy02">发布随游</h3>
             <p>您可以在导航栏找到“发布随游”选项。在打开的随游发布页面中按照提示一次填写相关的信息。您所填写的信息越完整，图片越吸引人，那么就会有越多的旅行者预订您所发布的随游。 其中单项服务部分是您在随游的主要服务内容外可以提供的附加服务，比如交通，餐饮等。 在发布随游的过程中，定价完全由您自己决定。 在无法确定随游定价的时候，您可以选择参考其他随友贡献的路线/经历，也可以咨询我们的客服人员进行咨询。</p>
-            <a href="javascript:;" class="pubBtn bgGreen">现在发布随游</a>
+            <a href="/index/trip-help" class="pubBtn bgGreen">现在发布随游</a>
 
 
             <h3 class="title" id="sy03">管理随游</h3>

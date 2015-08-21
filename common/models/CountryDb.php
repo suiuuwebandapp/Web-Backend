@@ -296,7 +296,7 @@ LEFT JOIN city b ON a.cityId = b.id
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":name",$name);
-        return $command->queryOne();
+        return $command->queryAll();
     }
     public function getCountryByName($name)
     {
@@ -306,7 +306,7 @@ LEFT JOIN city b ON a.cityId = b.id
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":name",$name);
-        return $command->queryOne();
+        return $command->queryAll();
     }
 
 }
