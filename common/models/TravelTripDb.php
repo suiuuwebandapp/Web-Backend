@@ -30,7 +30,7 @@ class TravelTripDb extends ProxyDb
 
     public function getTripSelectInfo()
     {
-        $selectInfo="t.tripId,t.createPublisherId,t.createTime,t.title,t.titleImg,t.countryId,t.cityId,t.lon,t.lat,
+        $selectInfo="t.tripId,t.createPublisherId,t.createTime,t.title,t.titleImg,t.countryId,t.cityId,t.lon,t.lat,t.isHotel,t.isAirplane,
         ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,t.basePrice as oldPrice,
         t.basePriceType,t.maxUserCount,t.score,t.tripCount,t.startTime,t.endTime,t.travelTime,t.travelTimeType,t.intro,t.info,t.tags,
         t.commentCount,t.collectCount,t.isHot,t.type,t.status";

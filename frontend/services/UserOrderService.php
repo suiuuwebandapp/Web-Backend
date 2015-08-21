@@ -715,15 +715,24 @@ class UserOrderService extends BaseDb
             //修改随游评分
             $tripInfo=$travelTripDb->findTravelTripById($userOrderComment->tripId);
             $tripInfo=$this->arrayCastObject($tripInfo,TravelTrip::class);
+            //因为确认订单时候 随游次数 随友次数都+1 所以这个时候要-1
             $allScore=$tripInfo->score*($tripInfo->tripCount-1)+$userOrderComment->tripScore;
-            $nowScore=$allScore/($tripInfo->tripCount);
+            if($tripInfo->tripCount==0){
+                $nowScore=$allScore;
+            }else{
+                $nowScore=$allScore/($tripInfo->tripCount);
+            }
             $tripInfo->score=$nowScore;
             $travelTripDb->updateTravelTrip($tripInfo);
             //修改随友评分
             $userPublisher=$userPublisherDb->findUserPublisherById($userOrderComment->publisherId);
             $userPublisher=$this->arrayCastObject($userPublisher,UserPublisher::class);
             $allScore=$userPublisher->score*($userPublisher->leadCount-1)+$userOrderComment->publisherScore;
-            $nowScore=$allScore/($userPublisher->leadCount);
+            if($userPublisher->leadCount==0){
+                $nowScore=$allScore;
+            }else{
+                $nowScore=$allScore/($userPublisher->leadCount);
+            }
             $userPublisher->score=$nowScore;
             $userPublisherDb->updateUserPublisher($userPublisher);
             //添加评论信息

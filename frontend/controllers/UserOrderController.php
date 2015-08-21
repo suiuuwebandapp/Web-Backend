@@ -520,6 +520,7 @@ class UserOrderController extends  CController{
             'publisherInfo'=>$publisherInfo,
             'publisherUserInfo'=>$publisherUserInfo,
             'tripInfo'=>$tripInfo,
+            'orderInfo'=>$orderInfo,
             'orderId'=>$orderId
         ]);
     }
@@ -534,8 +535,11 @@ class UserOrderController extends  CController{
     {
         $orderId=trim(\Yii::$app->request->post("orderId", ""));
         $content=\Yii::$app->request->post("content","");
+        $otherContent=\Yii::$app->request->post("otherContent","");
         $tripScore=\Yii::$app->request->post("tripScore","");
-        $publisherScore=\Yii::$app->request->post("publisherScore","");
+        $familiarScore=\Yii::$app->request->post("familiarScore","");
+        $absorbedScore=\Yii::$app->request->post("absorbedScore","");
+        $punctualScore=\Yii::$app->request->post("punctualScore","");
 
         if(empty($orderId)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
@@ -543,12 +547,19 @@ class UserOrderController extends  CController{
         if(empty($content)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的评价"));
         }
-        if($tripScore==0){
+        if(!is_numeric($tripScore)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随游评分"));
         }
-        if($publisherScore==0){
+        if(!is_numeric($familiarScore)||!is_numeric($absorbedScore)||!is_numeric($punctualScore)){
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的随友评分"));
         }
+        $familiarScore=self::validateScore($familiarScore);
+        $absorbedScore=self::validateScore($absorbedScore);
+        $punctualScore=self::validateScore($punctualScore);
+        $tripScore=self::validateScore($tripScore);
+
+        $publisherScore=round(($familiarScore+$absorbedScore+$punctualScore)/3);
+        $publisherScore=self::validateScore($publisherScore);
 
         //判断订单是否已经评论，
         $tempComment=$this->userOrderService->findUserOrderCommentByOrderId($orderId);
@@ -572,6 +583,10 @@ class UserOrderController extends  CController{
         $userOrderComment->tripScore=$tripScore;
         $userOrderComment->publisherScore=$publisherScore;
         $userOrderComment->content=$content;
+        $userOrderComment->familiarScore=$familiarScore;
+        $userOrderComment->absorbedScore=$absorbedScore;
+        $userOrderComment->punctualScore=$punctualScore;
+        $userOrderComment->otherContent=$otherContent;
         try{
             $this->userOrderService->addUserOrderComment($userOrderComment);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
@@ -580,6 +595,18 @@ class UserOrderController extends  CController{
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
+    }
+
+
+    private function validateScore($score)
+    {
+        if(!is_numeric($score)||$score<0){
+            $score=2;
+        }
+        if($score>10){
+            $score=10;
+        }
+        return $score;
     }
 
 

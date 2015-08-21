@@ -10,121 +10,163 @@
 ?>
 
 <style type="text/css">
-    .star{
-        cursor: pointer;
-        width: 15px;
-        height: 15px;
-        display: inline-block;
-    }
+
 
 </style>
 
 <input type="hidden" id="orderId" value="<?=$orderId?>"/>
-<div class="pjy-main w1200 clearfix">
-    <div class="pjy-content clearfix">
-        <div class="pjy-left">
-            <h3><?=$tripInfo->title?></h3>
-            <div class="pic"><img src="<?=$tripInfo->titleImg?>" alt=""></div>
-            <p><?=str_replace("\n","<br>",$tripInfo->info)?></p>
-            <span>基本价格<b><?=$tripInfo->basePrice?></b></span>
+
+<div class="makeScores clearfix">
+    <div class="left">
+        <h2 class="title">评分及评价</h2>
+        <h3 class="title02">关于服务</h3>
+        <p>随友对路线是否熟悉？</p>
+        <div class="xing clearfix">
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star01"></span>
         </div>
-        <div class="pjy-right">
-            <div class="user">
-                <div class="user-name">
-                    <a href="<?=\common\components\SiteUrl::getViewUserUrl($publisherUserInfo->userSign)?>" target="_blank"><img class="user-pic" alt="" src="<?=$publisherUserInfo->headImg?>"></a>
-                    <span><?=$publisherUserInfo->nickname?></span>
-                </div>
-                <p><?=$publisherUserInfo->intro?></p>
-            </div>
-            <div class="pf">
-                <ul>
-                    <li class="fen">行程数:<b><?=$publisherInfo->tripCount?></b></li>
-                    <li class="fen">随游数:<b><?=$publisherInfo->leadCount?></b></li>
-                </ul>
-            </div>
-
-
-            <div class="pf">
-                <ul>
-                    <li class="fen">
-                        <p class="xing">
-                            随友评分:
-                            <img class="star" width="13" height="13" src="/assets/images/start1.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                        </p>
-                    </li>
-                    <li class="fen">
-                        <p class="xing">
-                            随游评分:
-                            <img class="star" width="13" height="13" src="/assets/images/start1.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                            <img class="star" width="13" height="13" src="/assets/images/start2.fw.png">
-                        </p>
-                    </li>
-                </ul>
-            </div>
-
-
-            <textarea id="content"></textarea>
+        <p>随友是否在行程中专注为您提供服务？</p>
+        <div class="xing clearfix">
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star01"></span>
         </div>
-    </div><!--pjy-content-->
-    <a href="javascript:addComment();" class="btn">发表评论</a>
+        <p>随友是否守时？</p>
+        <div class="xing clearfix">
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star01"></span>
+        </div>
+        <h3 class="title02">关于随游</h3>
+        <p>该随游路线/活动的设计是否合理？</p>
+        <div class="xing clearfix">
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star02"></span>
+            <span class="star01"></span>
+        </div>
+        <h3 class="title02">谈谈您的体验</h3>
+        <p>您的体验将会显示在相应的随游详情页及相关随友的个人主页上</p>
+        <textarea id="content" placeholder="与随友一起游玩体验如何？"></textarea>
+        <h3 class="title02">其他反馈</h3>
+        <p>是否有任何其他反馈提供给我们？该信息不会公开显示</p>
+        <textarea id="otherContent" placeholder="选填"></textarea>
+        <a href="javascript:;" onclick="addComment()" class="btn bgGreen">提交评论</a>
+
+
+
+
+
+    </div>
+    <div class="right">
+        <h2 class="title bgGreen"><?=$tripInfo->title?></h2>
+        <a href="<?=\common\components\SiteUrl::getTripUrl($tripInfo->tripId);?>" target="_blank" class="product"><img src="<?=$tripInfo->titleImg?>"></a>
+        <p><?=date("Y年m月d日",strtotime($orderInfo->beginDate))?></p>
+        <div class="down">
+            <span>与</span>
+            <a href="<?=\common\components\SiteUrl::getViewUserUrl($publisherUserInfo->userSign)?>" target="_blank" class="user">
+                <img src="<?=$publisherUserInfo->headImg?>">
+            </a>
+            <span><?=$publisherUserInfo->nickname?></span>
+            <span>一起体验了<?=$tripInfo->title?></span>
+        </div>
+    </div>
+
 </div>
 
 
+
+
 <script type="text/javascript">
-    var light="/assets/images/start1.fw.png";
-    var gray="/assets/images/start2.fw.png";
     var nowStar=0;
     $(document).ready(function(){
         selectStar();
     });
 
     function selectStar(){
-        $(".star").bind("click",function(){
+        $(".xing span").bind("click",function(){
             var p=$(this).parent();
-            var index=p.find("img").index(this);
+            var index=p.find("span").index(this);
             nowStar=index;
-            $(this).attr("src",light);
-            p.find("img:lt("+index+")").attr("src",light);
-            p.find("img:gt("+index+")").attr("src",gray);
+            //当前变亮
+            $(this).removeClass("star01");
+            $(this).addClass("star02");
+            //小于当前变亮
+            p.find("span:lt("+index+")").removeClass("star01");
+            p.find("span:lt("+index+")").addClass("star02");
+            //大于当前变灰
+            p.find("span:gt("+index+")").removeClass("star02");
+            p.find("span:gt("+index+")").addClass("star01");
         });
-        $(".star").bind("mouseover",function(){
+        $(".xing span").bind("mouseover",function(){
             var p=$(this).parent();
-            var index=p.find("img").index(this);
-            $(this).attr("src",light);
-            p.find("img:lt("+index+")").attr("src",light);
-            p.find("img:gt("+index+")").attr("src",gray);
+            var index=p.find("span").index(this);
+            //当前变亮
+            $(this).removeClass("star01");
+            $(this).addClass("star02");
+            //小于当前变亮
+            p.find("span:lt("+index+")").removeClass("star01");
+            p.find("span:lt("+index+")").addClass("star02");
+            //大于当前变灰
+            p.find("span:gt("+index+")").removeClass("star02");
+            p.find("span:gt("+index+")").addClass("star01");
+
         });
-        $(".star").bind("mouseout",function(){
+        $(".xing span").bind("mouseout",function(){
             var p=$(this).parent();
             var index=nowStar;
-            p.find("img").eq(index).attr("src",light);
-            p.find("img:lt("+index+")").attr("src",light);
-            p.find("img:gt("+index+")").attr("src",gray);
+            //当前变亮
+            p.find("span").eq(index).removeClass("star01");
+            p.find("span").eq(index).addClass("star02");
+            //小于当前变亮
+            p.find("span:lt("+index+")").removeClass("star01");
+            p.find("span:lt("+index+")").addClass("star02");
+            //大于当前变灰
+            p.find("span:gt("+index+")").removeClass("star02");
+            p.find("span:gt("+index+")").addClass("star01");
         });
     }
 
     function addComment(){
         var orderId=$("#orderId").val();
         var content=$("#content").val();
+        var otherContent=$("#otherContent").val();
         var tripScore=0;
-        var publisherScore=0;
-        $(".xing").eq(0).find("img").each(function(){
-            if($(this).attr("src")==light){
-                tripScore=tripScore+2;
+        var familiarScore=0;
+        var absorbedScore=0;
+        var punctualScore=0;
+        $(".xing").eq(0).find("span").each(function(){
+            if($(this).hasClass("star02")){
+                familiarScore=familiarScore+2;
             }else{
                 return true;
             }
         });
-        $(".xing").eq(1).find("img").each(function(){
-            if($(this).attr("src")==light){
-                publisherScore=publisherScore+2;
+        $(".xing").eq(1).find("span").each(function(){
+            if($(this).hasClass("star02")){
+                absorbedScore=absorbedScore+2;
+            }else{
+                return true;
+            }
+        });
+        $(".xing").eq(2).find("span").each(function(){
+            if($(this).hasClass("star02")){
+                punctualScore=punctualScore+2;
+            }else{
+                return true;
+            }
+        });
+        $(".xing").eq(3).find("span").each(function(){
+            if($(this).hasClass("star02")){
+                tripScore=tripScore+2;
             }else{
                 return true;
             }
@@ -134,14 +176,6 @@
             Main.showTip("请输入评论内容");
             return;
         }
-        if(tripScore==0){
-            Main.showTip("请给随游打分");
-            return;
-        }
-        if(publisherScore==0){
-            Main.showTip("请给随友打分");
-            return;
-        }
 
         $.ajax({
             url :'/user-order/add-comment',
@@ -149,8 +183,11 @@
             data:{
                 orderId:orderId,
                 content:content,
+                otherContent:otherContent,
                 tripScore:tripScore,
-                publisherScore:publisherScore,
+                familiarScore:familiarScore,
+                absorbedScore:absorbedScore,
+                punctualScore:punctualScore,
                 _csrf: $('input[name="_csrf"]').val()
             },
             error:function(){
@@ -166,9 +203,6 @@
                 }
             }
         });
-
-
-
 
     }
 

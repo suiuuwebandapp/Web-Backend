@@ -369,11 +369,11 @@ class UserOrderDb extends ProxyDb
         $sql = sprintf("
             INSERT INTO user_order_comment
             (
-              tripId,userId,orderId,publisherId,content,commentTime,tripScore,publisherScore
+              tripId,userId,orderId,publisherId,content,commentTime,tripScore,publisherScore,familiarScore,absorbedScore,punctualScore,otherContent
             )
             VALUES
             (
-              :tripId,:userId,:orderId,:publisherId,:content,now(),:tripScore,:publisherScore
+              :tripId,:userId,:orderId,:publisherId,:content,now(),:tripScore,:publisherScore,:familiarScore,:absorbedScore,:punctualScore,:otherContent
             )
         ");
 
@@ -384,7 +384,11 @@ class UserOrderDb extends ProxyDb
         $command->bindParam(":publisherId", $userOrderComment->publisherId, PDO::PARAM_INT);
         $command->bindParam(":content", $userOrderComment->content, PDO::PARAM_STR);
         $command->bindParam(":tripScore", $userOrderComment->tripScore, PDO::PARAM_INT);
-        $command->bindParam(":publisherScore", $userOrderComment->tripScore, PDO::PARAM_INT);
+        $command->bindParam(":publisherScore", $userOrderComment->publisherScore, PDO::PARAM_INT);
+        $command->bindParam(":familiarScore", $userOrderComment->familiarScore, PDO::PARAM_INT);
+        $command->bindParam(":absorbedScore", $userOrderComment->absorbedScore, PDO::PARAM_INT);
+        $command->bindParam(":punctualScore", $userOrderComment->punctualScore, PDO::PARAM_INT);
+        $command->bindParam(":otherContent", $userOrderComment->otherContent, PDO::PARAM_INT);
 
         $command->execute();
     }
