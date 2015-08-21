@@ -121,7 +121,7 @@
         <div id="myOrderNothing" style="padding-top: 90px;padding-bottom: 20px" class="sycoNothing"><img src="/assets/images/N04.png" width="78" height="78"><p>您还没有行程，去随游预定吧</p></div>
         <div class="advertising"><img src="/assets/images/ad.jpg" width="1201" height="401"></div>
     </div>
-
+    <?php if ($this->context->userObj->isPublisher) { ?>
     <!-------------TabCon5-随游管理------------->
     <div class="tab-div mySuiyou TabCon clearfix" <?php if ($tab == "tripManager") {
         echo "style='display:block'";
@@ -145,7 +145,7 @@
         <div id="tripNothing" style="padding-top: 90px;" class="sycoNothing"><img src="/assets/images/N05.png" width="78" height="78"><p></p></div>
 
     </div>
-
+    <?php } ?>
     <!-------------TabCon6-个人资料------------>
     <div class="tab-div myInformation TabCon clearfix" <?php if ($tab == "userInfo") {
         echo "style='display:block'";
