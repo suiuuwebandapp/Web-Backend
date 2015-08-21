@@ -81,4 +81,8 @@ class WeChatOrderList{
      * @var价钱
      */
     public $wMoney;
+    /**
+     * @var是否删除
+     */
+    public $isDel;
 }

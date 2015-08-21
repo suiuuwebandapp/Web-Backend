@@ -79,7 +79,7 @@ class UserBaseDb extends ProxyDb
         $command->bindParam(":userSign", $userBase->userSign, PDO::PARAM_STR);
         $command->bindParam(":status", $userBase->status, PDO::PARAM_INT);
         $command->bindParam(":isPublisher", $userBase->isPublisher, PDO::PARAM_INT);
-        $command->bindParam(":countryId", $userBase->countryid, PDO::PARAM_INT);
+        $command->bindParam(":countryId", $userBase->countryId, PDO::PARAM_INT);
         $command->bindParam(":cityId", $userBase->cityId, PDO::PARAM_INT);
         $command->bindParam(":lon", $userBase->lon, PDO::PARAM_STR);
         $command->bindParam(":lat", $userBase->lat, PDO::PARAM_STR);

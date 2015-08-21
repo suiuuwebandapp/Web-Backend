@@ -109,10 +109,8 @@ class AppMainController extends AController
         $this->loginValid();
         try{
             $userSign=\Yii::$app->request->post('userSign');
-            //$userSign='085963dc0af031709b032725e3ef18f5';
             $page = new Page(\Yii::$app->request);
             $mySign=$this->userObj->userSign;
-            //$mySign='5787a571910e3352a76c753776e1b8f4';
             if(empty($userSign))
             {
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法得到未知用户主页'));

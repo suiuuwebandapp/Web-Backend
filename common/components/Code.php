@@ -29,6 +29,7 @@ class Code
     const PARAMS_ERROR = -2;//参数错误，一般带错误返回
     const UN_LOGIN = -3;//未登录
     const ERROR= -4;//错误页面返回
+    const TOKEN_ERROR= -5;//token无效
     const MUST_BE_UPDATED= -999;//必须更新
     /**
      * 请求错误信息
@@ -43,6 +44,10 @@ class Code
     const APP_USER_LOGIN_SESSION='A_U_L_S';//用户是否登录 SESSION KEY
     const APP_USER_LOGIN_ERROR_COUNT_PREFIX='A_U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
     const APP_USER_LOGIN_VERIFY_CODE='A_U_L_V_C'; //用户登录验证码 SESSION KEY
+    const APP_TOKEN="APP_TOKEN";//appToken
+    const APP_TOKEN_KEY="suiuuTokenKey";//appToken
+    const APP_TOKEN_TIME=7200;
+
     const APP_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='604800';
 
     const APP_USER_LOGOUT_SUCCESS_STR='注销成功';

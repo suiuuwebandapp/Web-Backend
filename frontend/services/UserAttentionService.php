@@ -258,11 +258,11 @@ class UserAttentionService extends BaseDb
                         break;
                     case UserAttention::TYPE_FOR_TRAVEL_PICTURE:
                         $tpSer = new TravelPictureService();
-                        $tpSer->updateTravelPictureAttentionCount($conn,$rId,false);
+                        $tpSer->updateTravelPictureAttentionCount($rId,false);
                         break;
                     case UserAttention::TYPE_FOR_QA:
                         $qaSer = new QaCommunityService();
-                        $qaSer->updateQaAttentionCount($conn,$rId,false);
+                        $qaSer->updateQaAttentionCount($rId,false);
                         break;
 
                 }
@@ -646,7 +646,7 @@ class UserAttentionService extends BaseDb
                     echo json_encode(Code::statusDataReturn(Code::FAIL,'未知旅图'));
                     exit;
                 }
-                $rst =$this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_QA,$userSign);
+                $rst =$this->AttentionDb ->addUserAttention($id,UserAttention::TYPE_FOR_TRAVEL_PICTURE,$userSign);
                 $userRemind = new UserMessageRemindService();
                 $content="###";
                 $url="###";

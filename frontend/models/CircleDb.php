@@ -171,8 +171,6 @@ ORDER BY b.beginDate DESC
         $this->setParam("userSign", $userSign);
         $this->setParam("successStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS);
         $this->setParam("finishStatus", UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH);
-        $this->setParam("tType", AllTotalize::TYPE_COMMENT_FOR_TRIP);
-        $this->setParam("ftType", AllTotalize::TYPE_COLLECT_FOR_TRIP);
         $this->setSelectInfo('a.tripId,a.score,c.nickname,c.headImg,a.title,a.titleImg,a.commentCount as cmtCount, a.collectCount');
         $this->setSql($sql);
         return $this->find($page);

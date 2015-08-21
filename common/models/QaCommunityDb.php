@@ -92,7 +92,7 @@ class QaCommunityDb extends ProxyDb  {
     public function getInviteUser($countryId,$cityId)
     {
         $sql = sprintf("
-            SELECT u.nickname,u.userSign FROM (SELECT aUserSign FROM answer_community a WHERE
+            SELECT u.nickname,u.headImg,u.userSign FROM (SELECT aUserSign FROM answer_community a WHERE
 qId in (SELECT qId FROM question_community WHERE qCountryId=:qCountryId AND qCityId=:qCityId)
 GROUP BY aUserSign ORDER BY COUNT(aUserSign) DESC) as ss LEFT JOIN user_base u ON ss.aUserSign = u.userSign
         ");

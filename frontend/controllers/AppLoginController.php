@@ -11,13 +11,13 @@ namespace frontend\controllers;
 
 
 use common\components\LogUtils;
+use common\components\ValidateCode;
 use frontend\services\CountryService;
 use common\components\Aes;
 use common\components\Code;
 use common\components\SMSUtils;
 use common\entity\UserAccess;
 use common\entity\UserBase;
-use frontend\components\ValidateCode;
 use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\web\Controller;

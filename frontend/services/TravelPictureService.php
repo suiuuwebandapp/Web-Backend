@@ -76,7 +76,7 @@ class TravelPictureService  extends BaseDb {
             $attentionEntity->relativeType=UserAttention::TYPE_FOR_TRAVEL_PICTURE;
             $attentionEntity->userSign = $userSign;
             $attention = $attentionDb->getAttentionResult($attentionEntity);
-            $attention = $attention==false?array():$attention;
+            $attention = $attention==false?array():array($attention);
             $likePage = new Page();
             $likePage->pageSize=5;
             $rst = $this->getLike($likePage,$id);
