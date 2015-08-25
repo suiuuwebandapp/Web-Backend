@@ -336,6 +336,9 @@ class IndexController extends UnCController
             if (isset($result)) {
                 //设置Session
                 Yii::$app->session->set(Code::USER_LOGIN_SESSION, $result);
+                //设置聊天SESSION
+                $sessionId=\Yii::$app->getSession()->id;
+                \Yii::$app->redis->set(Code::USER_LOGIN_SESSION_CHAT.$sessionId,json_encode($result));
                 //如果用户点击记住密码，设置Cookie
                 if ($remember == true) {
 
@@ -996,6 +999,18 @@ class IndexController extends UnCController
         }
 
     }
+
+
+    public function actionSetUserSession()
+    {
+        $userSign='684b420b268e389d8018e705600f8d7c';
+
+        $userBase=$this->userBaseService->findUserByUserSign($userSign);
+
+        \Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
+    }
+
+
 
 
 }

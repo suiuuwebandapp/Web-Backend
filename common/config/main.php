@@ -12,7 +12,6 @@ return [
 
             ],
         ],
-
         'redis' => [
             'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
