@@ -119,7 +119,7 @@ class WechatTripController extends WController {
         {
             return $this->redirect('/we-chat/error?str=未知随游');
         }
-        return $this->renderPartial("info",['info'=>$travelInfo]);
+        return $this->renderPartial("info",['info'=>$travelInfo,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
     }
 
     public function actionAddOrder()

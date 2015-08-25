@@ -7,8 +7,21 @@
     <link type="text/css" rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="/assets/other/weixin/js/jquery.SuperSlide.2.1.1.js"></script>
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 <body class="bgwhite">
+<div id="page" class="userCenter">
+        <?php include "left.php"; ?>
+        <div class="Uheader header mm-fixed-top">
+            <a href="#menu"></a>
+            <p class="navTop">我的订单</p>
+        </div>
 <div class="syDetailBanner">
     <!--banner开始-->
     <div class="bd">
@@ -101,5 +114,6 @@
 
     </div>
 </div>
+    </div>
 </body>
 </html>

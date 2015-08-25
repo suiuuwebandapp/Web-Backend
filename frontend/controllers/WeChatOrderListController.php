@@ -92,7 +92,54 @@ class WeChatOrderListController extends WController {
         return json_encode(Code::statusDataReturn(Code::SUCCESS, '/we-chat-order-list/order-success'));
     }
 
+    /**
+     * 修改订购记录
+     */
+    public function actionUpdateOrder()
+    {
+        $this->loginValidJson();
+        $site=Yii::$app->request->post('site');
+        $content=Yii::$app->request->post('content');
+        $timeList=Yii::$app->request->post('timeList');
+        $userNumber=Yii::$app->request->post('userNumber');
+        $userPhone=Yii::$app->request->post('phone');
+        $userSign=$this->userObj->userSign;
+        if(empty($userSign))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "无效的用户"));
+        }
+        if(empty($site))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订购地点不能为空"));
+        }
+        if(empty($content))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订购内容不能为空"));
 
+        }
+        if(empty($timeList))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订购时间不能为空"));
+        }
+        if(empty($userPhone))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "联系电话不能为空"));
+        }
+        if(empty($userNumber)||$userNumber<1)
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订购人数不能为空"));
+        }
+        $userInfo=new WeChatUserInfo();
+        $userInfo->userSign=$userSign;
+        $orderEntity=new WeChatOrderList();
+        $orderEntity->wOrderSite=$site;
+        $orderEntity->wOrderContent=$content;
+        $orderEntity->wOrderTimeList=$timeList;
+        $orderEntity->wUserNumber=$userNumber;
+        $orderEntity->wPhone=$userPhone;
+        $this->orderListSer->updateOrderInfo($orderEntity);
+        return json_encode(Code::statusDataReturn(Code::SUCCESS, '/we-chat-order-list/order-success'));
+    }
     /*//得到用户订购列表
     public function actionGetUserOrderList()
     {
@@ -151,13 +198,35 @@ class WeChatOrderListController extends WController {
 
     public function actionOrderView()
     {
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
         $c=Yii::$app->request->get('c');
         $n=Yii::$app->request->get('n');
         if(empty($n))
         {
             $n='目的地城市';
         }
-        return $this->renderPartial('orderView',['c'=>$c,'n'=>$n]);
+        return $this->renderPartial('orderView',['c'=>$c,'n'=>$n,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+    }
+
+    public function actionEditOrder()
+    {
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
+        $userSign=$this->userObj->userSign;
+        $orderNumber=Yii::$app->request->get("orderNumber");
+        $data = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+        if(empty($data)){
+            return $this->redirect('/we-chat/error?str=订单用户不匹配');
+        }
+        if($data['wStatus']!=WeChatOrderList::STATUS_NORMAL){
+            return $this->redirect('/we-chat/error?str=已处理无法修改');
+        }
+        return $this->renderPartial('editOrder',['info'=>$data,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
     }
 
     public function actionOrderManage()
@@ -192,7 +261,7 @@ class WeChatOrderListController extends WController {
         if(empty($data)){
             return $this->redirect('/we-chat/error?str=订单用户不匹配');
         }
-        return $this->renderPartial('orderInfo',['info'=>$data]);
+        return $this->renderPartial('orderInfo',['info'=>$data,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
     }
 
     public function actionDeleteOrder()

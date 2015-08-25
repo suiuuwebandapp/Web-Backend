@@ -52,7 +52,7 @@
                 ?>
                 <p>日期：<b><?php echo $dataV;?></b></p>
                 <?php } ?>
-                <a href="javascript:alert('暂无详情');" class="colBlue">详情...</a>
+                <a href="/we-chat-order-list/order-info?orderNumber=<?php echo $val['wOrderNumber'];?>" class="colBlue">详情...</a>
             </div>
         </div>
     </div>
@@ -78,6 +78,20 @@
                     <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
                     <?php }?>
                     <div class="left"><a href="#" class="user"><img src="<?php echo $val['headImg']?>" class="logo"></a><span class="name"><?php echo $val['nickName'];?></span></div>
+                    <!--<div class="details fr">
+                        <p class="data">目的地：<span><?php /*echo $val['wOrderSite'];*/?></span></p>
+                        <?php
+/*                        $dateList=$val['wOrderTimeList'];
+                        $dataArr=explode(',',$dateList);
+                        foreach($dataArr as $dataV){
+                            */?>
+                            <p class="data">日期：<span><?php /*echo $dataV;*/?></span></p>
+                        <?php /*} */?>
+                        <p class="btns">
+                            <a href="###" class="btn btn01">去评价</a>
+                            <a href="###" class="btn btn02">去评价</a>
+                        </p>
+                    </div>-->
                     <div class="right">
                         <p>城市：<b><?php echo $val['wOrderSite'];?></b></p>
                         <?php

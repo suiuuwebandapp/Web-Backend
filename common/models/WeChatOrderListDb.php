@@ -132,21 +132,20 @@ WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
         $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
         return $command->queryOne();
     }
-   /* public function updateWeChatOrderInfo(WeChatOrderList $weChatOrderList){
+    public function updateWeChatOrderInfo(WeChatOrderList $weChatOrderList){
         $sql = sprintf("
             UPDATE wechat_order_list SET
-            wOrderSite=:wOrderSite,wOrderTimeList=:wOrderTimeList,wOrderContent=:wOrderContent,
-            wStatus=:wStatus,wRelativeSign=:wRelativeSign,wLastTime=now()
+            wOrderSite=:wOrderSite,wOrderTimeList=:wOrderTimeList,wOrderContent=:wOrderContent,wPhone=:wPhone,wUserNumber=:wUserNumber,wLastTime=now()
             WHERE wOrderId=:wOrderId
         ");
         $command=$this->getConnection()->createCommand($sql);
         $command->bindParam(":wOrderSite", $weChatOrderList->wOrderSite, PDO::PARAM_STR);
         $command->bindParam(":wOrderTimeList", $weChatOrderList->wOrderTimeList, PDO::PARAM_STR);
         $command->bindParam(":wOrderContent", $weChatOrderList->wOrderContent, PDO::PARAM_STR);
-        $command->bindParam(":wStatus", $weChatOrderList->wStatus, PDO::PARAM_INT);
-        $command->bindParam(":wRelativeSign", $weChatOrderList->wRelativeSign, PDO::PARAM_STR);
+        $command->bindParam(":wPhone", $weChatOrderList->wPhone, PDO::PARAM_STR);
+        $command->bindParam(":wUserNumber", $weChatOrderList->wUserNumber, PDO::PARAM_INT);
         return $command->execute();
-    }*/
+    }
 
     public function updateOrderUserSign($openId,$wUserSign)
     {

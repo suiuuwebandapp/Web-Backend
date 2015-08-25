@@ -4,7 +4,7 @@
 body{ background:#eee;font-size:0.85rem;}
 nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6e6e6e; display:block; color:#fff; font-size:1rem; max-width:640px;margin:0 auto }
 .con{ padding:0 1%; width:100%; max-width:640px; margin:0 auto; position:relative;}
-
+.navTop{ height:2.85rem; line-height:2.85rem;  font-size:; color:#fff; text-align:center;}
 
 /*-----------注册-------------*/
 .Registered .lists li{ position:relative;  }
@@ -193,12 +193,15 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 
 /*-----------随游-填写需求01-------------*/
-.sy_need01 .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
+.sy_need01 .needText{ background:#fff; margin-top:3.2rem; padding:10px;}
+.sy_need01 .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:2rem; }
 .sy_need01 p{ text-align:center; }
-.sy_need01 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
-.sy_need01 .btn:hover{ text-decoration:underline;}
+.sy_need01 .needText p{ margin-bottom:5px;font-size:0.8rem; text-align:left; }
+.bottomBtn{ position:fixed; left:50%; bottom:20px; margin-left:-5.4rem; border-radius:5px; font-size:0.85rem; color:#fff; background:#30DBC3; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center;  text-decoration:none;}
+.bottomBtn:hover{ text-decoration:underline;}
 
 /*-----------随游-填写需求02-------------*/
+.sy_need02{ margin-top:3.2rem;  }
 .sy_need02 .selet{ width:100%;display:block; height:2.7rem; border:1px solid #ddd; line-height:2.7rem; font-size:0.85rem; color:#858585; text-decoration:none; padding:0 0.5rem; background:#fff; margin:0.28rem auto; }
 .sy_need02 p{ margin-top:10px; }
 .sy_need02 .row{ display:table; width:100%; height:2.7rem; line-height:2.7rem; background:#fff; padding:0 0.5rem;  }
@@ -206,16 +209,21 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .sy_need02 .row .text{ text-align:center; display:table-cell; height:2.7rem; line-height:2.7rem; font-size:1rem; width:100%; margin:0 auto;  }
 .sy_need02 .row .minus{ display:table-cell; width:2rem;  background:url(../images/minus.png) no-repeat center center; background-size:1.78rem 0.35rem;border-right:1px solid #ddd;  }
 .sy_need02 .sdate{ width:100%; height:2.7rem; line-height:2.7rem; font-size:0.85rem; background:#fff; padding:0 0.5rem; margin-bottom:10px;  }
-.sy_need02 textarea{ width:100%; padding:0.5rem;  line-height:0.85rem; font-size:0.85rem; height:8.2rem; background:#fff; border:1px solid #ddd;}
-.sy_need02 .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:20px auto; text-decoration:none;}
-.sy_need02 .btn:hover{ text-decoration:underline;}
+.sy_need02 .box{  background:#fff;  margin:0 auto; border:1px solid #ddd; padding:5px 10px 25px; margin-bottom:10px; }
+.sy_need02 .box .type{ color:#aaa; }
+.sy_need02 .box .sels a{ margin-top:15px; color:#00DEC3; text-align:center; height:1.78rem; line-height:1.78rem; width:5.8rem;  border:1px solid #ddd; border-radius:5px; display:block; float:left; margin-right:10px; }
+.sy_need02 .box .sels a.active{ color:#fff;   border:1px solid #fff; background:#00DEC3; }
+.sy_need02 .btnDiv{ margin-top:15px; width:100%; padding-top:1rem; height:4rem; background:#fff; border:1px solid #ddd;}
+.sy_need02 .btnDiv .btn{ margin:0 auto; border-radius:5px; font-size:0.85rem; color:#fff; background:#30DBC3; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center;  text-decoration:none;}
 
+
+.sy_need02 textarea{ width:100%; padding:0.5rem;  line-height:0.85rem; font-size:0.85rem; height:5rem; background:#fff; border:1px solid #ddd;}
 
 /*-----------成功页-------------*/
 .finish .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.8rem; }
 .finish p{ text-align:center; }
 .finish .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:6rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
-.finish .btn:hover{ text-decoration:underline;}
+.finish .btn:hover{  text-decoration:underline;}
 
 
 /*-----------国家-------------*/
@@ -271,10 +279,10 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 #menu .user .userPic img{ width:100%; display:block; }
 #menu .user .userName{ font-size:1rem;  color:#858585;}
 
-.userCenter .content{ padding-top:2.85rem; max-width:640px; margin:0 auto;}
+.userCenter .content{ padding-top:3.2rem; max-width:640px; margin:0 auto;}
 .userCenter .Uheader{
 	text-align:center;
-	background:#73B9FF;
+	background:#30DBC3;
 	font-size:1rem;
 	color: #fff;
 	line-height:2.85rem;
@@ -300,6 +308,13 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .userCenter .content .box .details{ width:50%; padding:10px; box-sizing:border-box;  }
 
 /*----------个人中心 我的订单----------*/
+
+.oderNav{ width:100%; }
+.oderNav li{ width:33.3%; float:left; height:2.85rem; }
+.userCenter .Uheader .oderNav li a{height:2.85rem; width:100%; font-size:1rem; color:#fff; position:relative; background:none;   }
+.userCenter .Uheader .oderNav li a.active,.userCenter .Uheader .oderNav li a:hover{ color:#FFFF72;}
+
+.center_myOder{ display:none;}
 .center_myOder .content{ width:100%; max-width:640px; margin:0 auto;}
 .center_myOder .content .logo{ width:4.6rem;display:block; margin:0 auto; margin-top:6.0rem; }
 .center_myOder .content .noOrder{ line-height:1.5rem;margin-top:10px;text-align: center; }
@@ -307,7 +322,15 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .center_myOder .content .box a.pic{ width:50%; display:block; }
 .center_myOder .content .box a img{ width:100%; display:block;}
 .center_myOder .content .box .details{ width:50%; padding:10px; box-sizing:border-box;  }
-.center_myOder .content .box .data{ position:absolute; bottom:10px; left:50%; padding-left:10px; }
+.center_myOder .content .box .data{ font-size:0.7rem; color:#868686;   }
+.center_myOder .content .box .money{ font-size:0.7rem; color:#868686;    }
+.center_myOder .content .box .money span{  color:#FF9672;    }
+.center_myOder .content .box .btns{ font-size:0.7rem;position:absolute; bottom:10px; left:51%;line-height:1.28rem; height:1.28rem; display:block; }
+.center_myOder .content .box .btn{ font-size:0.7rem;    line-height:1.28rem; height:1.28rem; width:5rem; display:block; text-align:center; color:#fff; }
+.center_myOder .content .box .btn01{ float:left;  background:#FFAB00;  }
+.center_myOder .content .box .btn02{ float:right;  background:#30DBC3; }
+.center_myOder .content .box .btn03{ position:absolute; bottom:10px; left:51%; background:#30DBC3; }
+.center_myOder .content .box .p1{ font-size:0.7rem; margin-top:15px; color:#aaa;  }
 
 /*----------个人中心 我的订单详情----------*/
 .cmyoderDetail .content{ width:100%; max-width:640px; margin:0 auto;}
@@ -323,13 +346,14 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .cmyoderDetail .content .part .userPic{ height:2.85rem; width:2.85rem; border-radius:50%; display:block; overflow:hidden; float:left;   }
 .cmyoderDetail .content .part .userPic img{ width:100%; display:block; }
 .cmyoderDetail .content .part .userName{ float:left; margin-top:0.9rem; margin-left:3px; font-size:0.85rem; }
+.cmyoderDetail .content .part .chat{ float:right; height:48px; width:48px; background:url(../images/chat.png) no-repeat center center; }
 .cmyoderDetail .content .part .btnfr{ float:right; margin-top:0.6rem;  text-decoration:none;  }
 .cmyoderDetail .content .part .btnfr02{ display:block; text-align:center;  text-decoration:none;  }
 .cmyoderDetail .content .part .btnfr:hover{   text-decoration:underline; }
 .cmyoderDetail .content .part p{ line-height:1.5rem; }
 .cmyoderDetail .content .part .btn{ height:2.1rem; width:30%; line-height:2.1rem; font-size:0.85rem; color:#fff; text-align:center; display:block; text-decoration:none;  }
 .cmyoderDetail .content .part .btn.bgOrange{margin-left:15%; float:left;}
-.cmyoderDetail .content .part .btn.bgBlue{ float:right; margin-right:15%;}
+.cmyoderDetail .content .part .btn.bgBlue{ float:right; margin-right:15%; background:#00DEC3;}
 .cmyoderDetail .content .part .btn:hover{ text-decoration:underline;}
 .cmyoderDetail .content .part .btn.one{ margin:0 auto; float:inherit;}
 
@@ -380,20 +404,23 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 
 /*-----------c定制订单-----------*/
+.cdzOder .content .box{ width:100%; position:relative; background:#fff; margin-bottom:10px; box-sizing:border-box; }
+.cdzOder .content .box a.pic{ width:50%; display:block; }
+.cdzOder .content .box a img{ width:100%; display:block;}
+.cdzOder .content .box .details{ width:50%; padding:10px; box-sizing:border-box;  }
+.cdzOder .content .box .data{ font-size:0.7rem; color:#868686;   }
+.cdzOder .content .box .money{ font-size:0.7rem; color:#868686;    }
+.cdzOder .content .box .money span{  color:#FF9672;    }
+.cdzOder .content .box .btns{ position:absolute; bottom:10px; left:51%; font-size:0.7rem;  line-height:1.28rem; height:1.28rem; display:block; }
+.cdzOder .content .box .btn{ font-size:0.7rem;    line-height:1.28rem; height:1.28rem; width:5rem; display:block; text-align:center; color:#fff; }
+.cdzOder .content .box .btn01{ float:left;  background:#FFAB00;  }
+.cdzOder .content .box .btn02{ float:right;  background:#30DBC3; }
+.cdzOder .content .box .btn03{ margin:15px auto 0; background:#30DBC3; }
+.cdzOder .content .box .p1{ font-size:0.7rem; margin-top:15px; color:#aaa;  }
+.cdzOder .content .box .seen{ text-decoration:underline; font-size:0.7rem; position:absolute; bottom:10px; right:20px;color:#30DBC3; }
 
-.cdzOder .box{ position:relative; padding:0.9rem 0.8rem; background:#fff;margin-top:0.5rem;  }
-.cdzOder .box01{ margin-top:5.5rem; }
-.dbtnfixed{ line-height:2rem; height:2rem; z-index:999; position:absolute; top:3rem; text-align:center;  left:50%; width:6rem; margin-left:-3rem; display:block; }
-.cdzOder .box .top{  padding-bottom:20px; }
-.cdzOder .box .top .left{padding-top:15px;  float:left;  width:36%; text-align:center; position:relative; height:4rem; }
-.cdzOder .box .top .right{ padding-top:15px; float:right; width:60%;  }
-.cdzOder .box .top .left .user{ position:relative; width:2.58rem; height:2.58rem; border-radius:50%;display:block; margin:0 auto; overflow:hidden; margin-bottom:5px;}
-.cdzOder .box .top .left .user img{ width:2.58rem;  border-radius:50%;display:block; }
-.cdzOder .box .top .left .name{ word-break:break-all;   width:5rem; margin:0 auto; }
-.cdzOder .box .delete{ position:absolute; height:41px; width:41px; display:block;  top:0.7rem; right:0.7rem; background:url(../images/delet02.png) no-repeat center center;  }
-.cdzOder .box .state{ position:absolute;  top:0.7rem; left:0.7rem;   }
-.cdzOder .box .top p{  line-height:1.2rem; margin-bottom:10px; }
-.cdzOder .box .top a{ color:#97cbff; text-decoration:none;}
+.dbtnfixed{ border-radius:5px; color:#fff;background:#30DBC3; line-height:2rem; height:2rem; z-index:999; position:fixed;bottom:2rem; text-align:center;  left:50%; width:7rem; margin-left:-3.5rem; display:block; }
+
 
 /*-----------c定制订单详情-----------*/
 .cdzOder_Detail .box .down{ position:relative; margin-top:1rem;}
@@ -405,10 +432,16 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .cdzOder_Detail .box .last{ margin-top:80px; border-top:1px solid #ddd; padding:20px 0;}
 .cdzOder_Detail .box .last .money{  margin:10px;}
 
-.cdzOder_Detail .box .btn{height:2.1rem; width:30%; line-height:2.1rem; font-size:0.85rem; color:#fff; text-align:center; display:block; text-decoration:none; border-radius:5px;}
+.cdzOder_Detail .box .btn{ border-radius:5px;height:2.1rem; width:30%; line-height:2.1rem; font-size:0.85rem; color:#fff; text-align:center; display:block; text-decoration:none; border-radius:5px;}
 .cdzOder_Detail .box .btn.bgOrange{ margin-right:20px;}
 .cdzOder_Detail .box .btn:hover{ text-decoration:underline; }
 
+/*-----------c定制订单02-----------*/
+.cdzdetail02 p{ margin-bottom:10px; font-size:0.85rem;  }
+.cdzdetail02 .fixed{ text-align:center; position:fixed; bottom:30px; left:0; width:100%;}
+.cdzdetail02 .fixed .btn{ font-size:0.85rem; margin:0 15px; display:inline-block; border-radius:5px; color:#fff; width:7rem; height:36px; line-height:36px; text-align:center;}
+.cdzdetail02 .fixed .btn01{ background:#FFAC00;  }
+.cdzdetail02 .fixed .btn02{ background:#30DBC3;  }
 
 /*----------个人中心 收件箱----------*/
 .center_message{ width:100%; padding:4rem 1% 0; max-width:640px; margin:0 auto;}
@@ -430,7 +463,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .center_message02 .talk .zuo .p1:before{  height:0; width:0; content:""; border:0.57rem solid transparent; border-width:0.35rem 0.71rem; position:absolute; top:5px;left:-1.25rem;border-right-color:#DBDBEB;}
 .center_message02 .pass{ background:#fff; height:2.5rem; padding:0.5rem 1.5rem; width:100%; position:fixed; bottom:0; left:0; }
 .center_message02 .pass .text{ height:1.5rem; line-height:1.5rem;padding:0 0.5rem; width:60%; display:block; float:right; background:#eee; }
-.center_message02 .pass .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; margin-left:10px; float:right; display:block; width:3.5rem; height:1.5rem; line-height:1.5rem; text-align:center; text-decoration:none;}
+.center_message02 .pass .btn{ border-radius:5px; font-size:0.85rem; color:#fff; background:#97CBFF; margin-left:10px; float:right; display:block; width:3.5rem; height:1.5rem; line-height:1.5rem; text-align:center; text-decoration:none;}
 .center_message02 .pass .btn:hover{ text-decoration:underline;}
 
 /*----------c随游---------*/
@@ -474,7 +507,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .w_suiyouSelect .price-select{ width:70%;}
 .w_suiyouSelect .price-select #amount{ color:#f6931f; font-size:18px;}
 .w_suiyouSelect .price-select #slider-range{ margin:20px 0;}
-.w_suiyouSelect .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:60px auto 20px; text-decoration:none;}
+.w_suiyouSelect .btn{  border-radius:5px;font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:60px auto 20px; text-decoration:none;}
 .w_suiyouSelect .btn:hover{ text-decoration:underline;}
 
 
@@ -624,10 +657,8 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syContent .details li .icon{   display:block; padding-left:1.25rem;background:url(../images/syxq.png) no-repeat 0 0; background-size:1rem 9.5rem;}
 .syContent .details li .icon2{ background-position:0 -4.25rem;}
 .syContent .details li .icon3{ background-position:0 -8.53rem;}
-.syContent .contian span{ margin-right:10px;   }
+.syContent .contian span{ margin-right:30px;   }
 .syContent .contian span img{ width:0.9rem; height:0.9rem; display:inline-block; }
-
-
 
 .syContent .tuijian{ padding-top:0.2rem;height:2.6rem; width:100%; overflow:hidden; }
 .syContent .tuijian .left{ margin:0 10px;  border-radius:50%; overflow:hidden; float:left; display:block; height:2.14rem; width:2.14rem;}
@@ -662,17 +693,28 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syContent02 .top .userPic img{ width:100%; display:block; }
 .syContent02 .top .userName{ float:left; margin-top:0.9rem; margin-left:3px; font-size:0.85rem; }
 .syContent02 p{ line-height:1.5rem; font-size:0.85rem; }
+.syContent02 p.bq{ background:url(../images/biaoqian.png) no-repeat 0 14px; padding-left:25px;}
+.syContent02 p.bq span{ color:#4FD8C3;}
+.syContent02 p.adress{ color:#4FD8C3; background:url(../images/position.png) no-repeat 0 14px; padding-left:25px;}
 .syContent02 .line b{ font-size:0.85rem;}
 .syContent02 .line img{ float:right; margin-left:3px; margin-top:5px;}
-.syContent02 .title{ line-height:2rem; font-size:0.9rem;}
+.syContent02 .title{ line-height:2rem; font-size:0.9rem; width:100%;}
+.syContent02 .title01{ line-height:2rem; font-size:0.85rem;}
+.syContent02 .pics{ display:block; width:100%;  }
 .syContent02 .map{ width:100%;  }
 .syContent02 .map .mapPic{ width:100%;}
 .syContent02 .details li{ width:33%; float:left;}
 .syContent02 .details li .icon{   display:block; padding-left:1.25rem;background:url(../images/syxq.png) no-repeat 0 0; background-size:1rem 9.5rem;}
 .syContent02 .details li .icon2{ background-position:0 -4.25rem;}
 .syContent02 .details li .icon3{ background-position:0 -8.53rem;}
-.syContent02 .contian span{ margin-right:10px;   }
+.syContent02 .contian span{ margin-right:30px;   }
 .syContent02 .contian span img{ width:0.9rem; height:0.9rem; display:inline-block; }
+
+.syContent02 .tuijian{ padding-top:0.2rem;height:2.6rem; width:100%; overflow:hidden; }
+.syContent02 .tuijian .left{ margin:0 10px;  border-radius:50%; overflow:hidden; float:left; display:block; height:2.14rem; width:2.14rem;}
+.syContent02 .tuijian .left img{  display:block; width:100%; border-radius:50%; }
+.syContent02 .tuijian .right{   float:left; }
+.syContent02 .tuijian .right p{ color:#fff; font-size:0.7rem; line-height:1rem; }
 .syContent02 .btns{ padding:15px;  width:100%; margin:20px auto 0; border-top:1px solid #ddd; }
 .syContent02 .btns a{ border-radius:5px; text-align:center; color:#fff; font-size:1rem; display:block;   height:2.14rem; line-height:2.14rem; width:7rem; }
 

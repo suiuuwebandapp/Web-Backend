@@ -78,12 +78,14 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
+
+        echo urlencode("ZgN5BYAw1FUgebsvGNanaRgNf25KtXyvIRgYG5zyF8ADgJ5VFAitRA==");
+        echo "<br>";
+        echo time();
+        echo "<br>";
+        echo md5(time()."ZgN5BYAw1FUgebsvGNanaRgNf25KtXyvIRgYG5zyF8ADgJ5VFAitRA==".\Yii::$app->params['apiPassword']);
         exit;
-        $userSing="085963dc0af031709b032725e3ef18f5";
-        $orderNumber="2015062697971014";
-        $type = 2;
-        $rst = $this->wechatInterface->sendStatusChangeTemplateMessage($userSing,$type,$orderNumber);
-        var_dump($rst);
+
     }
 
 

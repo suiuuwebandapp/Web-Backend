@@ -57,62 +57,95 @@
         <a href="#menu"></a>
         我的定制
     </div>
-<div class="con sy_need02 clearfix">
-    <input id="site" type="text" placeholder="目的地城市" class="selet">
-    <!--<a href="/we-chat/show-country?rUrl=/we-chat-order-list/order-view" id="site" class="selet" areaCode="<?php /*echo $c*/?>" ><?php /*echo $n;*/?></a>-->
-    <p>出游人数</p>
-    <div class="row">
-        <a href="javascript:;" class="minus" onclick="updateNumber(false)"></a>
-        <input id="userNumber" type="text" class="text" value="1">
-        <a href="javascript:;" class="add" onclick="updateNumber(true)"></a>
-    </div>
-    <p>联系方式</p>
-    <input id="userPhone" class="sdate" placeholder="请输入手机号" />
-    <p>你在哪天需要随友？</p>
-    <input id="dateList" class="sdate" placeholder="请选择出行日期(可多选) ..." />
-    <p>旅行需求</p>
-    <div class="box">
-        <p class="type">舒适度</p>
-        <div id="ssd" class="sels clearfix">
-            <a href="javascript:;" class="">经济</a>
-            <a href="javascript:;">舒适</a>
-            <a href="javascript:;">豪华</a>
+    <div class="con sy_need02 clearfix">
+        <input id="site" type="text" placeholder="目的地城市" class="selet" value="<?= $info['wOrderSite']?>">
+        <!--<a href="/we-chat/show-country?rUrl=/we-chat-order-list/order-view" id="site" class="selet" areaCode="<?php /*echo $c*/?>" ><?php /*echo $n;*/?></a>-->
+        <p>出游人数</p>
+        <div class="row">
+            <a href="javascript:;" class="minus" onclick="updateNumber(false)"></a>
+            <input id="userNumber" type="text" class="text" value="<?= $info['wUserNumber']?$info['wUserNumber']:1?>">
+            <a href="javascript:;" class="add" onclick="updateNumber(true)"></a>
         </div>
-    </div>
-    <div class="box">
-        <p class="type">类型</p>
-        <div id="lx" class="sels clearfix">
-            <a href="javascript:;" class="">家庭</a>
-            <a href="javascript:;">美食</a>
-            <a href="javascript:;">惊险</a>
-            <a href="javascript:;">博物馆</a>
-            <a href="javascript:;">浪漫</a>
-            <a href="javascript:;">猎奇</a>
-            <a href="javascript:;">购物</a>
-            <a href="javascript:;">自然</a>
-
+        <p>联系方式</p>
+        <input id="userPhone" class="sdate" placeholder="请输入手机号" value="<?= $info['wPhone']?>" />
+        <p>你在哪天需要随友？</p>
+        <input id="dateList" class="sdate" placeholder="请选择出行日期(可多选) ..." value="<?= $info['wOrderTimeList']?>"/>
+        <p>旅行需求</p>
+        <div class="box">
+            <p class="type">舒适度</p>
+            <div id="ssd" class="sels clearfix">
+                <a href="javascript:;" class="">经济</a>
+                <a href="javascript:;">舒适</a>
+                <a href="javascript:;">豪华</a>
+            </div>
         </div>
-    </div>
-    <div class="box">
-        <p class="type">导游</p>
-        <div id="dy" class="sels clearfix">
-            <a href="javascript:;" class="">男</a>
-            <a href="javascript:;">女</a>
-            <a href="javascript:;">留学生</a>
-            <a href="javascript:;">移民</a>
-            <a href="javascript:;">专业导游</a>
+        <div class="box">
+            <p class="type">类型</p>
+            <div id="lx" class="sels clearfix">
+                <a href="javascript:;" class="">家庭</a>
+                <a href="javascript:;">美食</a>
+                <a href="javascript:;">惊险</a>
+                <a href="javascript:;">博物馆</a>
+                <a href="javascript:;">浪漫</a>
+                <a href="javascript:;">猎奇</a>
+                <a href="javascript:;">购物</a>
+                <a href="javascript:;">自然</a>
 
+            </div>
         </div>
-    </div>
-    <p>写下你的旅行愿望</p>
-    <textarea id="content"></textarea>
-    <div class="btnDiv">
-        <a href="javascript:;" class="btn" onclick="submit()">提交定制</a>
-    </div>
+        <div class="box">
+            <p class="type">导游</p>
+            <div id="dy" class="sels clearfix">
+                <a href="javascript:;" class="">男</a>
+                <a href="javascript:;">女</a>
+                <a href="javascript:;">留学生</a>
+                <a href="javascript:;">移民</a>
+                <a href="javascript:;">专业导游</a>
 
-</div>
+            </div>
+        </div>
+        <p>写下你的旅行愿望</p>
+        <textarea id="content"></textarea>
+        <div class="btnDiv">
+            <a href="javascript:;" class="btn" onclick="submit()">提交定制</a>
+        </div>
+
+    </div>
 </div>
 <script>
+
+    $(document).ready(function(){
+        var s = "<?= $info['wOrderContent']?>";
+        var arr = s.split("||");
+        if(arr.length==4)
+        {
+            var ssd_arr=arr[0].split(":");
+            var ssd_s = ssd_arr[1];
+            $("#ssd a").each(function(){
+                if(ssd_s.indexOf($(this).html())>=0){
+                $(this).attr('class',"active");
+                }
+            });
+            var lx_arr=arr[1].split(":");
+            var lx_s = lx_arr[1];
+            $("#lx a").each(function(){
+                if(lx_s.indexOf($(this).html())>=0){
+                    $(this).attr('class',"active");
+                }
+            });
+            var dy_arr=arr[2].split(":");
+            var dy_s = dy_arr[1];
+            $("#dy a").each(function(){
+                if(dy_s.indexOf($(this).html())>=0){
+                    $(this).attr('class',"active");
+                }
+            });
+            $("#content").val(arr[3]);
+        }else
+        {
+        $("#content").val(s);
+        }
+    });
     $("#ssd a").bind("click",function(){
         if( $(this).attr('class')=="active"){
             $(this).attr('class',"");
@@ -227,7 +260,7 @@
         }
         content=str+content;
         $.ajax({
-            url :'/we-chat-order-list/add-order',
+            url :'/we-chat-order-list/update-order',
             type:'post',
             data:{
                 site:site,
@@ -237,7 +270,7 @@
                 userNumber:userNumber
             },
             error:function(){
-                alert("提交订购异常");
+                alert("修改订购异常");
             },
             success:function(data){
                 //hide load

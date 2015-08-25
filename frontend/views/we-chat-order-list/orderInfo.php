@@ -9,9 +9,88 @@
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="/assets/other/weixin/js/weixin.js"></script>
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body class="bgwhite">
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        我的定制
+    </div>
+    <?php if($info['wDetails']==""||$info['wDetails']=="######"){?>
+        <div class="con cdzOder clearfix">
+            <div class="content cdzdetail02">
+                <p>目的地：<span><?= $info['wOrderSite'];?></span></p>
+                <p>出行人数：<span><?= $info['wUserNumber'];?>人</span></p>
+                <?php
+                $dateList=$info['wOrderTimeList'];
+                $dataArr=explode(',',$dateList);
+                foreach($dataArr as $dataV){
+                    ?>
+                    <p>随游陪同日期：<span><?php echo $dataV;?></span></p>
+                <?php } ?>
+                <p>旅行需求：<span><?php
+                        $arr = explode("||",$info['wOrderContent']);
+                        if(count($arr)==4)
+                        {
+                            $lx=explode(":",$arr[1])[1];
+                            $dy=explode(":",$arr[2])[1];
+                            $str = explode(":",$arr[0])[1]."、".join("、",explode(",",$lx))."、"."导游：".join("、",explode(",",$dy));
+                            echo $str;
+                        }
+                        ?>
+                    </span></p>
+                <p>其他留言：<span><?php $arr = explode("||",$info['wOrderContent']);if(count($arr)==4)
+                        {
+                            echo $arr[3];
+                        }else
+                        {
+                            echo $info['wOrderContent'];
+                        }
+                        ?> </span></p>
+                <div class="fixed">
+                    <a href="/we-chat-order-list/edit-order?orderNumber=<?php echo $info['wOrderNumber'];?>" class="btn btn01">修改</a>
+                    <a href="javascript:;" class="btn btn02" onclick="deleteOrder('<?php echo $info['wOrderNumber']?>')">取消行程</a>
+
+                </div>
+            </div>
+        </div>
+        <script>
+            function deleteOrder(orderNumber)
+            {
+                $.ajax({
+                    url :'/we-chat-order-list/delete-order',
+                    type:'post',
+                    data:{
+                        orderNumber:orderNumber
+                    },
+                    error:function(){
+                        alert("删除订购异常");
+                    },
+                    success:function(data){
+                        data=eval("("+data+")");
+                        if(data.status==1){
+                            alert(data.data);
+                            setTimeout(function(){ window.location.href="/we-chat-order-list/order-manage";},1000);
+                        }else if(data.status==-3){
+                            window.location.href=data.data;
+                        }else{
+                            alert(data.data);
+                        }
+                    }
+                });
+            }
+        </script>
+    <?php }else{?>
+
 <div class="con cdzOder_Detail clearfix">
     <div class="box clearfix">
         <div class="down clearfix">
@@ -95,7 +174,10 @@
         <a href="javascript:;" class="btn" id="qxPay">取消</a>
     </div>
 </div>
+</div>
+
 <script type="text/javascript">
+
     $(function(){
         $('#payC').click(function(e) {
             $('.order_pay').animate({height:'6.5rem'},500);
@@ -132,6 +214,6 @@
         window.location.href=urlA;
     }
 </script>
-
+<?php }?>
 </body>
 </html>

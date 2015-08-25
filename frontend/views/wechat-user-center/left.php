@@ -3,6 +3,7 @@
         <li class="user">
             <a href="#" class="userPic"><img src="<?= $userObj->headImg?>"></a>
             <span class="userName"><?= $userObj->nickname?></span>
+
         </li>
         <li><a href="/wechat-trip" <?php if($active==1){echo 'class="active"';}?>>首页</a></li>
         <li><a href="/we-chat-order-list/order-manage"<?php if($active==2){echo 'class="active"';}?> >我的定制</a></li>

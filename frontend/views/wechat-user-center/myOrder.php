@@ -24,7 +24,6 @@
 
 <body>
 <div id="page" class="userCenter">
-    <div class="center_myOder">
         <?php include "left.php"; ?>
         <div class="Uheader header mm-fixed-top">
             <a href="#menu"></a>

@@ -201,7 +201,7 @@ class WechatUserCenterController extends WController {
                 $userBaseService = new UserBaseService();
                 $publisherBase=$userBaseService->findUserByUserSign($sign);
             }
-            return $this->renderPartial('myOrderInfo',['info'=>$info,'publisherBase'=>$publisherBase]);
+            return $this->renderPartial('myOrderInfo',['info'=>$info,'publisherBase'=>$publisherBase,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str="系统异常"');
