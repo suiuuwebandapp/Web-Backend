@@ -248,6 +248,7 @@ class UserOrderDb extends ProxyDb
               SELECT orderId FROM user_order_publisher_ignore WHERE publisherId=:publisherId
             )
             AND CONCAT(uoi.beginDate,' ',uoi.startTime)>now()
+            ORDER BY uoi.createTime DESC
         ");
 
         $command = $this->getConnection()->createCommand($sql);
@@ -300,6 +301,7 @@ class UserOrderDb extends ProxyDb
             UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH
 
             .")
+            ORDER BY uoi.createTime DESC
         ");
 
         $command=$this->getConnection()->createCommand($sql);

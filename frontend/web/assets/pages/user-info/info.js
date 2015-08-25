@@ -1422,8 +1422,17 @@ function buildPublisherOrderList(list){
         serviceInfo=eval("("+serviceInfo+")");
 
         var  orderStatusHtml='',orderBtnHtml='';
-        orderStatusHtml+='<span><b class="colOrange"></b><br><b class="colGreen">已接单</b></span>';
-        orderBtnHtml+='<a href="javascript:showCancelWindow('+orderInfo.orderId+');" class="cancel">取消订单</a>';
+
+        orderBtnHtml='<a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a>';
+        orderStatusHtml='<span><b class="colOrange"></b><br><b class="colGreen">已完成</b></span>';
+
+        if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CONFIRM){
+            orderStatusHtml='<span><b class="colGreen">已接单</b><br/><b class="colOrange">等待用户确认</b></span>';
+            orderBtnHtml='<a href="javascript:showCancelWindow('+orderInfo.orderId+');" class="cancel">取消订单</a>';
+        }else if(orderInfo.status==OrderStatus.USER_ORDER_STATUS_CANCELED){
+            orderBtnHtml='<a href="#" class="cancel_1"></a><a href="#" class="sure_1"></a>';
+            orderStatusHtml='<span><b class="colOrange">订单关闭</b><br><b class="colGreen">已取消</b></span>';
+        }
 
         html+='<div class="orderList clearfix">';
 

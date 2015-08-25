@@ -51,6 +51,7 @@ class TripOrderController extends CController{
     {
         $page=new Page(\Yii::$app->request);
         $page->sortName='createTime';
+        $page->sortType='desc';
         $search=trim(\Yii::$app->request->get('searchText',''));
         $status=trim(\Yii::$app->request->get('status',''));
         $page=$this->userOrderService->getOrderList($page,$search,null,null,$status);

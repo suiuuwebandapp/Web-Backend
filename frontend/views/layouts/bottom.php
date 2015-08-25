@@ -80,7 +80,7 @@
     </form>
 </div>
 <!-----------取消订单弹层--------------->
-<div id="showOrderDiv" class="scancelTip screens" style="display: none">
+<div id="showOrderDiv" class="scancelTip screens" style="display: none;z-index: 1001">
     <p>随游非常认真地对待随友取消订单</p>
     <p>我们强烈建议您不要取消订单，因为取消预定会给其他用户造成很大不便。</p>
     <p>请在随游网站上主动联系预订者，解释您取消订单的原因</p>
@@ -90,7 +90,7 @@
     <a href="javascript:publisherCancelOrder();" class="btn">确认取消</a>
 </div>
 <!-----------取消订单弹层--------------->
-<div id="showRefundDiv" class="scancelTip screens" style="display: none">
+<div id="showRefundDiv" class="scancelTip screens" style="display: none;z-index: 1001">
     <p>请填写您的退款原因</p>
     <input id="show_message_refund_order_id" type="hidden"/>
     <textarea placeholder="请填写退款原因" id="show_refund_message"></textarea>
