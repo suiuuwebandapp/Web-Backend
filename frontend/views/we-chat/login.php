@@ -8,9 +8,22 @@
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body class="bgwhite">
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <p class="navTop">预定随游</p>
+    </div>
 <div class="con login clearfix">
     <ul class="lists clearfix">
         <li>
@@ -36,6 +49,7 @@
 
     </div>
     <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
+</div>
 </div>
 <script>
     function changeCode()

@@ -36,54 +36,40 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top" id="menuH">
         <a href="#menu"></a>
-        随游
+        <div class="search_out" onclick="gotoSelect('')" >
+            <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
+            <a href="javascript:;" class="btn"><img  src="/assets/other/weixin/images/top-search.png"> </a>
+        </div>
     </div>
+    <!--<-->
 <div id="pagepiling">
-    <div class="section" id="section1">
+    <div class="section" id="section1" onclick="gotoSelect('澳大利亚')">
         <div class="box">
             <h2 class="title">澳大利亚</h2>
             <p class="detail">和神兽一起玩耍</p>
-
-            <div class="search_out" onclick="gotoSelect('')" >
-                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
-                <a href="javascript:;" class="btn"><img  src="/assets/other/weixin/images/top-search.png"> </a>
-            </div>
-
         </div>
-        <img onclick="gotoSelect('澳大利亚')" src="/assets/other/weixin/images/pic01.jpg" class="pics">
+        <img  src="/assets/other/weixin/images/pic01.jpg" class="pics">
     </div>
-    <div class="section" id="section2">
+    <div class="section" id="section2" onclick="gotoSelect('香港')">
         <div class="box">
             <h2 class="title">香港</h2>
             <p class="detail">校园行一起做学霸</p>
-            <div class="search_out"  onclick="gotoSelect('')">
-                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
-                <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
-            </div>
         </div>
-        <img onclick="gotoSelect('香港')" src="/assets/other/weixin/images/pic02.jpg" class="pics">
+        <img  src="/assets/other/weixin/images/pic02.jpg" class="pics">
     </div>
-    <div class="section" id="section3">
+    <div class="section" id="section3" onclick="gotoSelect('新加坡')">
         <div class="box" >
             <h2 class="title">新加坡</h2>
             <p class="detail">不只有鱼尾狮</p>
-            <div class="search_out"  onclick="gotoSelect('')">
-                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
-                <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
-            </div>
         </div>
-        <img  onclick="gotoSelect('新加坡')" src="/assets/other/weixin/images/pic03.jpg" class="pics">
+        <img   src="/assets/other/weixin/images/pic03.jpg" class="pics">
     </div>
-    <div class="section" id="section4">
+    <div class="section" id="section4" onclick="gotoSelect('意大利')">
         <div class="box">
             <h2 class="title">意大利</h2>
             <p class="detail">买买买</p>
-            <div class="search_out"  onclick="gotoSelect('')">
-                <input type="text" placeholder="你的旅行目的地" class="search" readonly="readonly">
-                <a href="javascript:;" class="btn"><img src="/assets/other/weixin/images/top-search.png"> </a>
-            </div>
         </div>
-        <img  onclick="gotoSelect('意大利')" src="/assets/other/weixin/images/pic04.jpg" class="pics">
+        <img   src="/assets/other/weixin/images/pic04.jpg" class="pics">
     </div>
     <div class="section" id="section5">
         <div class="box">

@@ -13,10 +13,22 @@
         .selectItem{display:none;color: #858585;padding-left: 5px;margin-top: 10px; width: 80%;}
       /*  a:hover{background: #000033}*/
     </style>
-
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body class="bgwhite">
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <p class="navTop">搜索</p>
+    </div>
 <div class="con w_suiyou02 clearfix" id="goToTrip">
     <div class="search_out clearfix">
         <div class="search fl">
@@ -51,7 +63,7 @@
         <span>意大利</span><span>西班牙</span><span>葡萄牙</span><span>奥地利</span><span>比利时</span>
     </div>
 </div>
-
+</div>
 <script>
     $("#country_search").keyup(function(){
         var val=$("#country_search").val();

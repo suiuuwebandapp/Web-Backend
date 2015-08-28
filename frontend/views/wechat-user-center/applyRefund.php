@@ -4,13 +4,26 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>申请退款</title>
+    <title>随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body>
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <p class="navTop">申请成功</p>
+    </div>
 <div class="con Remoney clearfix">
     <img src="/assets/other/weixin/images/logo02.png" class="logo">
     <p>请提交审核资料,稍后我们会与您联系</p>
@@ -18,6 +31,7 @@
     <textarea id="tk_reason"></textarea>
     <a href="javascript:;" class="btn" onclick="applyRefund()">提交申请</a>
 
+</div>
 </div>
 <script>
     function applyRefund()

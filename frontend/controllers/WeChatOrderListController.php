@@ -98,12 +98,17 @@ class WeChatOrderListController extends WController {
     public function actionUpdateOrder()
     {
         $this->loginValidJson();
+        $orderId = Yii::$app->request->post('orderId');
         $site=Yii::$app->request->post('site');
         $content=Yii::$app->request->post('content');
         $timeList=Yii::$app->request->post('timeList');
         $userNumber=Yii::$app->request->post('userNumber');
         $userPhone=Yii::$app->request->post('phone');
         $userSign=$this->userObj->userSign;
+        if(empty($orderId))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "无效的订购订单"));
+        }
         if(empty($userSign))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "无效的用户"));
@@ -129,14 +134,14 @@ class WeChatOrderListController extends WController {
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "订购人数不能为空"));
         }
-        $userInfo=new WeChatUserInfo();
-        $userInfo->userSign=$userSign;
         $orderEntity=new WeChatOrderList();
         $orderEntity->wOrderSite=$site;
         $orderEntity->wOrderContent=$content;
         $orderEntity->wOrderTimeList=$timeList;
         $orderEntity->wUserNumber=$userNumber;
         $orderEntity->wPhone=$userPhone;
+        $orderEntity->wOrderId=$orderId;
+        $orderEntity->wUserSign=$userSign;
         $this->orderListSer->updateOrderInfo($orderEntity);
         return json_encode(Code::statusDataReturn(Code::SUCCESS, '/we-chat-order-list/order-success'));
     }
@@ -223,7 +228,7 @@ class WeChatOrderListController extends WController {
         if(empty($data)){
             return $this->redirect('/we-chat/error?str=订单用户不匹配');
         }
-        if($data['wStatus']!=WeChatOrderList::STATUS_NORMAL){
+        if(!empty($data['wRelativeSign'])){
             return $this->redirect('/we-chat/error?str=已处理无法修改');
         }
         return $this->renderPartial('editOrder',['info'=>$data,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
@@ -368,11 +373,11 @@ class WeChatOrderListController extends WController {
     }
     public function actionOrderSuccess()
     {
-        return $this->renderPartial('orderSuccess',['str2'=>'返回','url'=>"javascript:history.go(-1);"]);
+        return $this->renderPartial('orderSuccess');
     }
     public function actionRefundSuccess()
     {
-        return $this->renderPartial('refundSuccess',['str2'=>'返回','url'=>"javascript:history.go(-1);"]);
+        return $this->renderPartial('refundSuccess');
     }
     public function actionBinding()
     {

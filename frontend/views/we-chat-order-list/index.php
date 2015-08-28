@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>任性随游</title>
+    <title>随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css" />
     <link rel="stylesheet" href="/assets/other/weixin/css/weiHtml5.css" />
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>

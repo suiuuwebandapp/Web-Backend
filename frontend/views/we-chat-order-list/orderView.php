@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>随游-填写需求</title>
+    <title>随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
@@ -18,11 +18,7 @@
     <script src="/assets/other/weixin/js/mobiscroll-2.14.4-crack.js"></script>
     <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('div#menu').mmenu();
-        });
-    </script>
+
     <script type="text/javascript">
         $(document).bind("mobileinit", function () {
             //覆盖的代码
@@ -48,6 +44,11 @@
             });
         });
     </script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body>
@@ -55,7 +56,7 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
-        我的定制
+        <p class="navTop">提交定制</p>
     </div>
 <div class="con sy_need02 clearfix">
     <input id="site" type="text" placeholder="目的地城市" class="selet">
@@ -68,7 +69,7 @@
     </div>
     <p>联系方式</p>
     <input id="userPhone" class="sdate" placeholder="请输入手机号" />
-    <p>你在哪天需要随友？</p>
+    <p>你在哪天需要我们的服务？</p>
     <input id="dateList" class="sdate" placeholder="请选择出行日期(可多选) ..." />
     <p>旅行需求</p>
     <div class="box">

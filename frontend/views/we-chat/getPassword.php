@@ -34,9 +34,22 @@
             display: none;
         }
     </style>
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body class="bgwhite">
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <p class="navTop">找回密码</p>
+    </div>
 <div class="con findPassword02 clearfix">
     <ul class="lists clearfix">
         <li>
@@ -71,6 +84,7 @@
     </ul>
     <a href="javascript:;" class="btn" onclick="updatePassword()">确定</a>
 
+</div>
 </div>
 <script>
     $(document).ready(function () {

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>注册</title>
+    <title>随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
@@ -43,9 +43,22 @@
             display: none;
         }
     </style>
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body class="bgwhite">
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <p class="navTop">注册绑定</p>
+    </div>
 <div class="con Registered02 clearfix">
     <ul class="lists clearfix">
         <li>
@@ -77,11 +90,8 @@
             <label for="">手机号</label>
             <input type="text" id="phone">
         </li>
-        <li style="height:3.5rem; ">
-            <label for="">图形验证码</label>
-            <input type="text" style="width:70%; float:left;"  id="valNum"><a href="javascript:;"  onclick="changeCode();" style="height:2.7rem; width:30%; overflow:hidden;font-size:0.85rem; float:right; color:#FF7F00; text-decoration:none; text-align:center; line-height:2.7rem;"><img id="codeImg" style="height:2.7rem;width: 100%" src="/index/get-code"></a>
-        </li>
-        <li >
+
+        <li class="clearfix" >
             <label for="">手机验证码</label>
             <input type="text"  style="width:70%; float:left;"  id="code"><a href="javascript:;" style="height:2.7rem; width:30%; overflow:hidden;font-size:0.85rem; float:right;  text-decoration:none; text-align:center; line-height:2.7rem;color:#73b9ff;" onclick="getCode()">获取验证码</a>
         </li>
@@ -89,6 +99,7 @@
     <a href="javascript:;" class="btn" id="register">立即注册</a>
     <p class="agr"><input type="checkbox" id="agreement"><label for="agreement">同意<a href="###">《网站注册协议》</a></label></p>
     <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
+</div>
 </div>
 <script>
     function changeCode()
@@ -110,7 +121,7 @@
     {
         var phone = $('#phone').val();
         var areaCode = $("#accCodeId").val();
-        var valNum = $('#valNum').val();
+        //var valNum = $('#valNum').val();
         if(areaCode=="")
         {
             alert('国家不能为空');
@@ -121,18 +132,17 @@
             alert('手机号不能为空');
             return;
         }
-        if(valNum=="")
+       /* if(valNum=="")
         {
             alert('图型验证码不能为空');
             return;
-        }
+        }*/
         $.ajax({
             url :'/we-chat/acc-send-message',
             type:'post',
             data:{
                 areaCode:areaCode,
-                phone:phone,
-                valNum:valNum
+                phone:phone
             },
             error:function(){
                 alert("验证码发送失败");

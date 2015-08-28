@@ -4,12 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title></title>
+    <title>随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript" src="/assets/other/weixin/js/myTab.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -17,8 +18,8 @@
         });
     </script>
     <style>
-         .btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
-        .btn:hover{ text-decoration:underline;}
+         /*.btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
+        .btn:hover{ text-decoration:underline;}*/
     </style>
 </head>
 
@@ -27,92 +28,283 @@
         <?php include "left.php"; ?>
         <div class="Uheader header mm-fixed-top">
             <a href="#menu"></a>
-            我的订单
+            <ul class="oderNav recTit">
+                <li><a href="javascript:;" class="active">全部订单</a></li>
+                <li><a href="javascript:;">随游订单</a></li>
+                <li><a href="javascript:;">过往订单</a></li>
+            </ul>
         </div>
-        <div class="content">
-            <?php if(count($list)==0&&count($unList)==0){?>
-                <img src="/assets/other/weixin/images/logo02.png" class="logo">
+        <?php if(count($list)==0&&count($unList)==0){?>
+            <img src="/assets/other/weixin/images/logo02.png" class="logo">
             <p class="noOrder">你还没有订单哦</p>
-                <a href="/wechat-trip" class="btn">任性随游</a>
-            <?php }?>
+            <a href="/wechat-trip" class="btn">任性随游</a>
+        <?php }else{?>
+        <div class="center_myOder slideRec" style="display:block;margin-top: 3.2rem">
+            <div class="content">
+                <?php foreach($allList as $val){
+                    $tripInfo = json_decode($val['tripJsonInfo'],true);
+                    ?>
+                    <div class="box clearfix">
+                        <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
+                        <div class="details fr">
+                            <p><?php echo $tripInfo['info']['title'];?></p>
+                            <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
+                            <p class="money">随游总价：<span>￥<?php echo $val['totalPrice'];?></span></p>
+                            <?php if($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
+                                <p class="btns">
+                                <a href="javascript:;" class="btn btn01" onclick="pay('<?= $val['orderNumber'];?>')">支付</a>
+                                    <a href="javascript:;" class="btn btn02" onclick="cancelOrder('<?= $val['orderId'];?>')">取消订单</a>
+                                </p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
+                                <p class="btns">
+                                    <a href="javascript:;" class="btn btn03" onclick="refundOrder('<?= $val['orderId'];?>')">申请退款</a>
+                                </p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CONFIRM){?>
+                                <p class="btns">
+                                    <a href="/wechat-user-center/apply-refund?id=<?php echo $val['orderNumber'] ?>" class="btn btn01">申请退款</a>
+                                    <a href="javascript:;" class="btn btn02" onclick="confirmOrder('<?= $val['orderId'];?>')">确认游玩</a>
+                                </p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CANCELED){?>
+                                <p class="p1">已取消</p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT){?>
+                                <p class="p1">退款中</p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS){?>
+                                <p class="p1">退款成功</p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS){?>
+                                <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){?>
+                                <p class="p1">祝您旅途愉快</p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY){?>
+                                <p class="p1">退款审核中</p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_FAIL){?>
+                                <p class="p1">退款审核失败</p>
+                            <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL){?>
+                                <p class="p1">随友取消</p>
+                            <?php }?>
+                        </div>
+                    </div>
+                <?php }?>
+            </div>
+    </div>
+    <div class="center_myOder slideRec" style="margin-top: 3.2rem">
+        <div class="content">
             <?php foreach($unList as $val){
                 $tripInfo = json_decode($val['tripJsonInfo'],true);
                 ?>
-                <div class="box clearfix" onclick="toInfo('<?php echo $val['orderNumber'] ?>')">
-                    <a href="javascript:;"  class="pic fl"><img  src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
+                <div class="box clearfix">
+                    <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
                     <div class="details fr">
-                        <?php if($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
-                            <a href="javascript:;" class="colOrange">未付款</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
-                            <a href="javascript:;" class="colOrange">待接单</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CONFIRM){?>
-                            <a href="javascript:;" class="colBlue">游玩中</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CANCELED){?>
-                            <a href="javascript:;" class="colGrey " >已取消</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT){?>
-                            <a href="javascript:;" class="colGrey" >退款中</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS){?>
-                            <a href="javascript:;" class="colGrey" >退款成功</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS){?>
-                            <a href="javascript:;" class="colGrey" >已结束</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){?>
-                            <a href="javascript:;" class="colGrey" >已结束</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY){?>
-                            <a href="javascript:;" class="colGrey" >审核中</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_FAIL){?>
-                            <a href="javascript:;" class="colGrey" >审核失败</a>
-                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL){?>
-                            <a href="javascript:;" class="colGrey" >随友取消</a>
-                        <?php }?>
-
                         <p><?php echo $tripInfo['info']['title'];?></p>
-                    </div>
-                    <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
-                </div>
-            <?php }?>
-            <?php foreach($list as $val){
-                $tripInfo = json_decode($val['tripJsonInfo'],true);
-                ?>
-                <div class="box clearfix" onclick="toInfo('<?php echo $val['orderNumber'] ?>')">
-                    <a href="javascript:;"  class="pic fl"><img  src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
-                    <div class="details fr">
+                        <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
+                        <p class="money">随游总价：<span>￥<?php echo $val['totalPrice'];?></span></p>
                         <?php if($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
-                            <a href="javascript:;" class="colOrange">未付款</a>
+                            <p class="btns">
+                                <a href="javascript:;" class="btn btn01"  onclick="pay('<?= $val['orderNumber'];?>')">支付</a>
+                                <a href="javascript:;" class="btn btn02" onclick="cancelOrder('<?= $val['orderId'];?>')">取消订单</a>
+                            </p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
-                            <a href="javascript:;" class="colOrange">待接单</a>
+                            <p class="btns">
+                                <a href="javascript:;" class="btn btn03" onclick="refundOrder('<?= $val['orderId'];?>')">申请退款</a>
+                            </p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CONFIRM){?>
-                            <a href="javascript:;" class="colBlue">游玩中</a>
+                            <p class="btns">
+                                <a href="/wechat-user-center/apply-refund?id=<?php echo $val['orderNumber'] ?>" class="btn btn01">申请退款</a>
+                                <a href="javascript:;" class="btn btn02" onclick="confirmOrder('<?= $val['orderId'];?>')">确认游玩</a>
+                            </p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CANCELED){?>
-                            <a href="javascript:;" class="colGrey " >已取消</a>
+                            <p class="p1">已取消</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT){?>
-                            <a href="javascript:;" class="colGrey" >退款中</a>
+                            <p class="p1">退款中</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS){?>
-                            <a href="javascript:;" class="colGrey" >退款成功</a>
+                            <p class="p1">退款成功</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS){?>
-                            <a href="javascript:;" class="colGrey" >已结束</a>
+                            <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){?>
-                            <a href="javascript:;" class="colGrey" >已结束</a>
+                            <p class="p1">祝您旅途愉快</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY){?>
-                            <a href="javascript:;" class="colGrey" >审核中</a>
+                            <p class="p1">退款审核中</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_FAIL){?>
-                            <a href="javascript:;" class="colGrey" >审核失败</a>
+                            <p class="p1">退款审核失败</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL){?>
-                            <a href="javascript:;" class="colGrey" >随友取消</a>
+                            <p class="p1">随友取消</p>
                         <?php }?>
-
-                        <p><?php echo $tripInfo['info']['title'];?></p>
                     </div>
-                    <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
                 </div>
             <?php }?>
         </div>
     </div>
+    <div class="center_myOder slideRec" style="margin-top: 3.2rem">
+        <div class="content">
+            <?php foreach($list as $val){
+                $tripInfo = json_decode($val['tripJsonInfo'],true);
+                ?>
+                <div class="box clearfix">
+                    <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
+                    <div class="details fr">
+                        <p><?php echo $tripInfo['info']['title'];?></p>
+                        <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
+                        <p class="money">随游总价：<span>￥<?php echo $val['totalPrice'];?></span></p>
+                        <?php if($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
+                            <p class="btns">
+                                <a href="javascript:;" class="btn btn01"   onclick="pay('<?= $val['orderNumber'];?>')">支付</a>
+                                <a href="javascript:;" class="btn btn02" onclick="cancelOrder('<?= $val['orderId'];?>')">取消订单</a>
+                            </p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
+                            <p class="btns">
+                                <a href="javascript:;" class="btn btn03" onclick="refundOrder('<?= $val['orderId'];?>')">申请退款</a>
+                            </p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CONFIRM){?>
+                            <p class="btns">
+                                <a href="/wechat-user-center/apply-refund?id=<?php echo $val['orderNumber'] ?>" class="btn btn01">申请退款</a>
+                                <a href="javascript:;" class="btn btn02" onclick="confirmOrder('<?= $val['orderId'];?>')">确认游玩</a>
+                            </p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_CANCELED){?>
+                            <p class="p1">已取消</p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_WAIT){?>
+                            <p class="p1">退款中</p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS){?>
+                            <p class="p1">退款成功</p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS){?>
+                            <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){?>
+                            <p class="p1">祝您旅途愉快</p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY){?>
+                            <p class="p1">退款审核中</p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_FAIL){?>
+                            <p class="p1">退款审核失败</p>
+                        <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL){?>
+                            <p class="p1">随友取消</p>
+                        <?php }?>
+                    </div>
+                </div>
+            <?php }?>
+        </div>
+    </div>
+    <?php }?>
+    <div class="order_pay clearfix">
+        <p>选择支付方式</p>
+        <div class="select clearfix">
+            <a href="javascript:;" class="zfb" onclick="aliPayUrl()"></a>
+            <a href="javascript:;" class="wei" onclick="payUrl()"></a>
+            <a href="javascript:;" class="btn" id="qxPay">取消</a>
+        </div>
+    </div>
 </div>
+<script type="text/javascript">
+    $(function(){
+        $('#qxPay').click(function(e) {
+            $('.order_pay').animate({height:'0'},500);
+        });
+
+    })
+    var urlR="";
+    var urlA="";
+    function pay(orderNumber)
+    {
+        $('.order_pay').animate({height:'6.5rem'},500);
+        urlR ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/wxpay-js?t=2&n="+orderNumber;
+        urlA ="<?php echo Yii::$app->params['weChatUrl'];?>/we-chat/ali-pay-url?t=2&o="+orderNumber;
+
+    }
+    function payUrl()
+    {
+        if(urlR=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlR;
+    }
+    function aliPayUrl()
+    {
+        if(urlA=="")
+        {
+            alert("未知的订单");
+            return;
+        }
+        window.location.href=urlA;
+    }
+</script>
 <script>
 
-    function toInfo(id)
+    function refundOrder(orderId)
     {
-        window.location.href="/wechat-user-center/my-order-info?id="+id;
+        $.ajax({
+            url :'/wechat-user-center/refund-order',
+            type:'post',
+            data:{
+                orderId:orderId
+            },
+            error:function(){
+                //hide load
+                alert('退款失败');
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    window.location.href="/wechat-user-center/my-order";
+                }else{
+                    alert('退款失败');
+                }
+            }
+        });
+    }
+    //取消
+    function cancelOrder(id)
+    {
+        var r=confirm("是否确认取消订单")
+        if (r==true)
+        {
+
+        }
+        else
+        {
+           return;
+        }
+        $.ajax({
+            url :'/wechat-user-center/cancel-order',
+            type:'post',
+            data:{
+                orderId:id
+            },
+            error:function(){
+                //hide load
+                alert('取消失败');
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    window.location.href="/wechat-user-center/my-order";
+                }else{
+                    alert(data.data);
+                }
+            }
+        });
+    }
+    //确认
+    function confirmOrder(id){
+        $.ajax({
+            url :'/wechat-user-center/user-confirm-play',
+            type:'post',
+            data:{
+                orderId:id
+            },
+            error:function(){
+                //hide load
+                alert('确认失败');
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    window.location.href="/wechat-user-center/my-order";
+                }else{
+                    alert('确认失败');
+                }
+            }
+        });
     }
 </script>
 </body>

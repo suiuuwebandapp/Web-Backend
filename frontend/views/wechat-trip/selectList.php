@@ -14,52 +14,29 @@
         .noOrder{ line-height:1.5rem;margin-top:10px;text-align: center; }
         .active{color: #97CBFF}
     </style>
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body>
-<div class="w_suiyou">
-    <nav class="top"><span class="fl"><?php echo $str?></span><a href="/wechat-trip/select" class="btn fr"><img src="/assets/other/weixin/images/top-search.png" width="45" height="49"></a></nav>
-    <div class="selects clearfix con-nav">
-        <a href="javascript:;" class="a1">&nbsp;&nbsp;&nbsp;人数<i class="icon"></i></a>
-        <a href="javascript:;" class="a2">类型<i class="icon"></i></a>
-        <a href="javascript:;" class="a3">价格<i class="icon"></i>&nbsp;&nbsp;&nbsp;</a>
-        <div class="props">
-            <div class="syprop syprop01 TabCon">
-                <ul class="sets">
-                    <li class="titles bgBlue">人数</li>
-                    <li onclick="pCount(1,this)"  class="<?php if($peopleCount==1){echo "active";}?>" >1</li>
-                    <li onclick="pCount(2,this)"  class="<?php if($peopleCount==2){echo "active";}?>" >2</li>
-                    <li onclick="pCount(3,this)"  class="<?php if($peopleCount==3){echo "active";}?>" >3</li>
-                    <li onclick="pCount(4,this)"  class="<?php if($peopleCount==4){echo "active";}?>" >4</li>
-                    <li onclick="pCount(5,this)"  class="<?php if($peopleCount==5){echo "active";}?>" >5</li>
-                    <li onclick="pCount(6,this)"  class="<?php if($peopleCount==6){echo "active";}?>" >5人以上</li>
-                </ul>
-            </div>
-            <div class="syprop syprop02 TabCon">
-                <ul class="sets" id="tagLi">
-                    <li class="titles bgBlue">类型</li>
-                    <li onclick="tagHandle('家庭',this)">家庭</li>
-                    <li onclick="tagHandle('美食',this)">美食</li>
-                    <li onclick="tagHandle('购物',this)">购物</li>
-                    <li onclick="tagHandle('自然',this)">自然</li>
-                    <li onclick="tagHandle('惊险',this)">惊险</li>
-                    <li onclick="tagHandle('浪漫',this)">浪漫</li>
-                    <li onclick="tagHandle('博物馆',this)">博物馆</li>
-                    <li onclick="tagHandle('猎奇',this)">猎奇</li>
-                </ul>
-            </div>
-            <div class="syprop syprop03 TabCon">
-                <ul class="sets">
-                    <li class="titles bgBlue">价格</li>
-                    <li onclick="momeyHandle('￥0 - 200',this)" class="<?php if($startPrice<=200){echo "active";}?>">￥0 - 200</li>
-                    <li onclick="momeyHandle('￥201 - 500',this)" class="<?php if($startPrice<=500&&$startPrice>200){echo "active";}?>">￥201 - 500</li>
-                    <li onclick="momeyHandle('￥501 - 1000',this)" class="<?php if($startPrice<=1000&&$startPrice>500){echo "active";}?>">￥501 - 1000</li>
-                    <li onclick="momeyHandle('￥1001 - 2000',this)" class="<?php if($startPrice<=2000&&$startPrice>1000){echo "active";}?>">￥1001 - 2000</li>
-                    <li onclick="momeyHandle('￥2001 - 20000',this)" class="<?php if($startPrice>2000){echo "active";}?>">2000以上</li>
-                </ul>
-            </div>
-        </div>
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <ul class="oderNav">
+            <li><a id="sort1" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=1">推荐分数</a></li>
+            <li><a id="sort2" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=2">预定数</a></li>
+            <li><a id="sort3" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=3">评论数</a></li>
+        </ul>
+        <a href='/wechat-trip/search?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=<?=$sort;?>' class="searchBtn"></a>
     </div>
+    <div class="con w_suiyou">
+
     <?php if(count($list)==0){?>
         <img src="/assets/other/weixin/images/logo02.png" class="logo">
         <p class="noOrder">没有合适的随游哦</p>
@@ -73,15 +50,16 @@
                 <h3 class="title"><?php echo $val['title']?></h3>
                 <p class="line clearfix">
                     <b class="colOrange">￥<?php echo $val['basePrice']?></b>
-                    <img src="<?= $val['score']>=2?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                    <img src="<?= $val['score']>=4?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                    <img src="<?= $val['score']>=6?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
-                    <img src="<?= $val['score']>=8?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
                     <img src="<?= $val['score']>=10?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
+                    <img src="<?= $val['score']>=8?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
+                    <img src="<?= $val['score']>=6?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
+                    <img src="<?= $val['score']>=4?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
+                    <img src="<?= $val['score']>=2?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
                 </p>
             </div>
         </div>
         <?php }}?>
+</div>
 </div>
 </div>
 <script>
@@ -92,45 +70,13 @@
             $(this).attr("class","active");
         }
     });
-
-    function tagHandle(str,obj){
-        if($(obj).attr('class')!="active")
-        {
-            if(tag!=""){
-            tag+=",";
-            }
-            tag+=str;
-            window.location.href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag="+tag+"&amount=<?=$amount;?>";
-        }else{
-            var arr = tag.split(',');
-           var i = arr.indexOf(str);
-            arr.splice(i,1);
-            tag =  arr.join(',');
-            window.location.href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag="+tag+"&amount=<?=$amount;?>";
-        }
-    }
-
-    function momeyHandle(s,obj){
-        if($(obj).attr('class')!="active")
-        {
-            window.location.href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount="+s;
-        }else{
-            window.location.href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=";
-        }
-    }
-
-
-
-
-    function pCount(i,obj){
-        if($(obj).attr('class')!="active")
-        {
-            window.location.href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount="+i+"&tag=<?=$tag;?>&amount=<?=$amount;?>";
-        }else{
-            window.location.href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount="+0+"&tag=<?=$tag;?>&amount=<?=$amount;?>";
-        }
-
-    }
+    var sort='<?php echo $sort;?>';
+    if(sort==2)
+    {
+        $("#sort2").attr("class","active");
+    }else if(sort==3)
+    { $("#sort3").attr("class","active");}else
+    { $("#sort1").attr("class","active");}
     var page="<?php echo $c;?>";
     $(window).scroll(function(){
         　　var scrollTop = $(this).scrollTop();
@@ -139,15 +85,17 @@
 　　if(scrollTop + windowHeight == scrollHeight){
             page++;
             var str='<?php echo $str;?>';
+
             $.ajax({
-                url:"/wechat-trip/select-list?str="+str,
+                url:"/wechat-trip/select-list?str="+str+"sort"+sort,
                 type:'post',
                 data:{
                     tag:"<?php echo $tag;?>",
                     peopleCount:"<?php echo $peopleCount;?>",
                     amount:"<?php echo $amount;?>",
                     page:page,
-                    type:'post',
+                    ajax:'true',
+                    type:'<?= $type?>',
                     number:10
                 },
                 error:function(){

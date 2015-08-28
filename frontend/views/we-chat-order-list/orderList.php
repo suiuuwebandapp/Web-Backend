@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title></title>
+    <title>随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
@@ -23,89 +23,64 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
-        我的定制
+        <p class="navTop">我的定制</p>
     </div>
 <div class="con cdzOder clearfix">
+    <div class="content">
     <a href="/we-chat-order-list/order-view" class="bgBlue colWit dbtnfixed">添加定制</a>
     <?php
         $i=0;
         foreach($list as $val){
             $i++;
-        if(empty($val['wRelativeSign'])||$val['wStatus']==\common\entity\WeChatOrderList::STATUS_NORMAL){
+        if(empty($val['wRelativeSign'])){
         ?>
-    <div class="box clearfix <?php if($i==1)echo 'box01';?>">
-        <div class="top clearfix">
-            <span class="state colOrange">处理中</span>
-            <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
-            <div class="left">
-                <a href="#" class="user">
-                    <img src="/assets/other/weixin/images/logo01.png" class="logo">
-                </a>
-                <span class="name">未分配</span>
+
+            <div class="box clearfix"">
+                <div class="pic fl">
+                    <a href="" class="userPic"><img src="/assets/other/weixin/images/logo02.png"></a>
+                    <p class="name">未分配</p>
+                </div>
+                <div class="details fr" id="details">
+                    <p class="data">目的地：<span><?php echo $val['wOrderSite'];?></span></p>
+                    <p class="data">日期：
+                    <?php
+                    $dateList=$val['wOrderTimeList'];
+                    $dataArr=explode(',',$dateList);
+                        ?>
+                        <span><?php echo $dataArr[0];if(count($dataArr)>2){echo " ...";}?></span>
+                    </p>
+                    <p class="data">联系方式：<span><?php echo $val['wPhone'];?></span></p>
+                    <p class="btns">
+                        <a href="/we-chat-order-list/edit-order?orderNumber=<?=$val['wOrderNumber'];?>" class="btn btn01" id="xg">编辑修改</a>
+                        <a href="javascript:;" class="btn btn02" id="qx" onclick="overOrder('<?php echo $val['wOrderNumber']?>')">取消定制</a>
+                    </p>
+                </div>
             </div>
-            <div class="right">
-                <p>城市：<b><?php echo $val['wOrderSite'];?></b></p>
+     <?php }else{ ?>
+    <div class="box clearfix"">
+        <div class="pic fl">
+            <a href="/wechat-user-info/trip-list?userSign=<?php echo $val['wRelativeSign']?>" class="userPic"><img src="<?php echo $val['headImg']?>"></a>
+            <p class="name"><?php echo $val['nickName'];?></p>
+        </div>
+        <div class="details fr" id="details">
+            <p class="data">目的地：<span><?php echo $val['wOrderSite'];?></span></p>
+            <p class="data">日期：
                 <?php
                 $dateList=$val['wOrderTimeList'];
                 $dataArr=explode(',',$dateList);
-                foreach($dataArr as $dataV){
                 ?>
-                <p>日期：<b><?php echo $dataV;?></b></p>
-                <?php } ?>
-                <a href="/we-chat-order-list/order-info?orderNumber=<?php echo $val['wOrderNumber'];?>" class="colBlue">详情...</a>
-            </div>
+                <span><?php echo $dataArr[0];if(count($dataArr)>2){echo " ...";}?></span>
+            </p>
+            <?php if($val['wStatus']>\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
+            <p class="data">随友电话：<span class="colGreen"><?php echo $val['phone'];?></span></p>
+            <?php }?>
+            <p class="data">负责人电话：<span class="colGreen"><?php echo $val['phone'];?></span></p>
+            <p class="money">总价：<span>￥<?php echo $val['wMoney'] ?></span></p>
+            <a href="/we-chat-order-list/order-info?orderNumber=<?php echo $val['wOrderNumber'];?>" class="seen">查看行程</a>
+
         </div>
     </div>
-     <?php }else{ ?>
-            <div class="box clearfix <?php if($i==1)echo 'box01';?>">
-                <div class="top clearfix">
-                    <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS){?>
-                        <span class="state colOrange">游玩中</span>
-                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
-                        <span class="state colOrange">待支付</span>
-                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
-                        <span class="state colOrange">退款中</span>
-                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_END){?>
-                        <span class="state colBlue">已结束</span>
-                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_FAL){?>
-                        <span class="state colBlue">拒绝退款</span>
-                    <?php }elseif($val['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_SUCCESS){?>
-                        <span class="state colBlue">退款成功</span>
-                    <?php }else{?>
-                    <span class="state colOrange">处理中</span>
-                    <?php }?>
-                    <?php if($val['wStatus']!=\common\entity\WeChatOrderList::STATUS_PAY_SUCCESS&&$val['wStatus']!=\common\entity\WeChatOrderList::STATUS_APPLY_REFUND){?>
-                    <a href="javascript:;" class="delete" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
-                    <?php }?>
-                    <div class="left"><a href="#" class="user"><img src="<?php echo $val['headImg']?>" class="logo"></a><span class="name"><?php echo $val['nickName'];?></span></div>
-                    <!--<div class="details fr">
-                        <p class="data">目的地：<span><?php /*echo $val['wOrderSite'];*/?></span></p>
-                        <?php
-/*                        $dateList=$val['wOrderTimeList'];
-                        $dataArr=explode(',',$dateList);
-                        foreach($dataArr as $dataV){
-                            */?>
-                            <p class="data">日期：<span><?php /*echo $dataV;*/?></span></p>
-                        <?php /*} */?>
-                        <p class="btns">
-                            <a href="###" class="btn btn01">去评价</a>
-                            <a href="###" class="btn btn02">去评价</a>
-                        </p>
-                    </div>-->
-                    <div class="right">
-                        <p>城市：<b><?php echo $val['wOrderSite'];?></b></p>
-                        <?php
-                        $dateList=$val['wOrderTimeList'];
-                        $dataArr=explode(',',$dateList);
-                        foreach($dataArr as $dataV){
-                            ?>
-                            <p>日期：<b><?php echo $dataV;?></b></p>
-                        <?php } ?>
-                        <p>手机：<a href="tel:<?php echo $val['areaCode'].$val['phone'];?>"><?php echo $val['areaCode'].$val['phone'];?></a></p>
-                        <a href="/we-chat-order-list/order-info?orderNumber=<?php echo $val['wOrderNumber'];?>" class="colBlue">详情...</a>
-                    </div>
-                </div>
-            </div>
+
         <?php }?>
     <?php }?>
     </div>
@@ -114,6 +89,18 @@
 
 
 <script>
+
+    $(document).ready(function(){
+        //$(".box.clearfix").bind('click', clickKb);
+    });
+    function clickKb(e){
+        alert($(e.target)[0].id );return;
+        if($(e.target)[0].id !="xg"&&$(e.target)[0].id !="qx"){
+            window.location.href="/we-chat-order-list/order-info?orderNumber="+$(e.target)[0].id ;
+        }
+            return;
+    }
+
     function overOrder(orderNumber)
     {
         $.ajax({

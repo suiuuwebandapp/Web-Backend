@@ -662,7 +662,7 @@ class WeChatController extends WController
                     return json_encode(Code::statusDataReturn(Code::FAIL,"用户名或密码错误",$errorCount));
                 }
                 Yii::$app->session->set(Code::USER_LOGIN_SESSION, $userBase);
-                if ($this->is_weixin()||$remember) {
+                if ($this->is_weixin()||$remember=="true") {
                     //记录加密Cookie
                     $enPassword = Yii::$app->params['encryptPassword'];
                     $enDigit = Yii::$app->params['encryptDigit'];
@@ -770,7 +770,7 @@ class WeChatController extends WController
         } else if (empty($areaCode)) {
             $error = '手机区号格式不正确';
         }else if(empty($valNum)||strtolower($valNum)!=strtolower($sysNum)){
-            $error = '图形验证码输入有误';
+            //$error = '图形验证码输入有误';
         }
         if (!empty($error)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, $error));
@@ -825,7 +825,7 @@ class WeChatController extends WController
         $valNum = \Yii::$app->request->post('valNum');//区号
         if(empty($valNum)||strtolower($valNum)!=strtolower(Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE)))
         {
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图文验证码不正确"));
+            //return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图文验证码不正确"));
         }
         $error = "";//错误信息
         $valMsg = Validate::validatePhone($phone);
@@ -888,7 +888,7 @@ class WeChatController extends WController
                 $valNum=trim(\Yii::$app->request->post('valNum',""));
                 $sysNum=\Yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
                 if(empty($valNum)||strtolower($valNum)!=($sysNum)){
-                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "无效的验证码"));
+                    //return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "无效的验证码"));
                 }
                 $valPassword=Validate::validatePassword($password);
                 if(!empty($valPassword)) {

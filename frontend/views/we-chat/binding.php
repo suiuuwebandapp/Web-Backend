@@ -8,24 +8,37 @@
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body class="bgwhite">
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <p class="navTop">绑定账号</p>
+    </div>
 <div class="con bangding02 clearfix">
     <ul class="lists clearfix">
         <li>
-            <label for="">邮箱/已验证手机</label>
-            <input id="phone" type="text" placeholder="手机号">
+            <label for="">随游账号</label>
+            <input id="phone" type="text" placeholder="输入已注册的邮箱/手机号">
         </li>
         <li>
             <label for="">密码</label>
             <input id="password" type="password" placeholder="密码">
         </li>
-        <li><label for="">验证码</label></li>
+        <!--<li><label for="">验证码</label></li>
         <li class="clearfix">
             <input type="text" class="w70" placeholder="图形验证码" id="valNum"><a href="" class="code"><img style="height:2.7rem;" onclick="changeCode()" src="/index/get-code"></a>
-        </li>
-        <li class="btns clearfix"><a href="javascript:;" class="btn colWit bgOrange" onclick="binding()">绑定账号</a><a href="/we-chat/password-view" class="fr forget">忘记密码？</a></li>
+        </li>-->
+        <li class="btns clearfix"><a href="javascript:;" class="btn btn01" onclick="binding()">绑定账号</a><a href="/we-chat/password-view" class="fr forget">忘记密码？</a></li>
     </ul>
     <div class="down clearfix">
         <ul class="lists clearfix">
@@ -37,6 +50,7 @@
 
     </div>
     <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
+</div>
 </div>
 <script>
     function changeCode()
@@ -50,18 +64,18 @@
     function binding()
     {
         var phone = $('#phone').val();
-        var valNum = $('#valNum').val();
+        //var valNum = $('#valNum').val();
         var password = $('#password').val();
         if(phone=="")
         {
             alert('手机号不能为空');
             return;
         }
-        if(valNum=="")
+        /*if(valNum=="")
         {
             alert('图型验证码不能为空');
             return;
-        }
+        }*/
         if(password=="")
         {
             alert('密码不能为空');
@@ -72,8 +86,7 @@
             type:'post',
             data:{
                 username:phone,
-                password:password,
-                valNum:valNum
+                password:password
             },
             error:function(){
                 alert("验证码发送失败");

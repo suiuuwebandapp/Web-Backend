@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>定制订单详情</title>
+    <title>随游</title>
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
@@ -23,9 +23,9 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
-        我的定制
+        <p class="navTop">定制详情</p>
     </div>
-    <?php if($info['wDetails']==""||$info['wDetails']=="######"){?>
+    <?php if(empty($info['wRelativeSign'])){?>
         <div class="con cdzOder clearfix">
             <div class="content cdzdetail02">
                 <p>目的地：<span><?= $info['wOrderSite'];?></span></p>
@@ -149,7 +149,7 @@
         <?php }elseif($info['wStatus']==\common\entity\WeChatOrderList::STATUS_REFUND_SUCCESS){?>
             <a href="javascript:;" class="btn finish">退款成功</a>
         <?php }else{?>
-            <a href="javascript:;" class="btn finish">已结束</a>
+            <a href="javascript:;" class="btn finish">处理中</a>
         <?php }?>
         <!--状态1-->
 
@@ -177,7 +177,30 @@
 </div>
 
 <script type="text/javascript">
-
+    function overOrder(orderNumber)
+    {
+        $.ajax({
+            url :'/we-chat-order-list/over-order',
+            type:'post',
+            data:{
+                o:orderNumber
+            },
+            error:function(){
+                alert("结束订购异常");
+            },
+            success:function(data){
+                data=eval("("+data+")");
+                if(data.status==1){
+                    alert(data.data);
+                    setTimeout(function(){ window.location.href="/we-chat-order-list/order-manage";},1000);
+                }else if(data.status==-3){
+                    window.location.href=data.data;
+                }else{
+                    alert(data.data);
+                }
+            }
+        });
+    }
     $(function(){
         $('#payC').click(function(e) {
             $('.order_pay').animate({height:'6.5rem'},500);

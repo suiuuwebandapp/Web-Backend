@@ -54,7 +54,6 @@ class TripService extends BaseDb{
     public function getList($page,$title,$countryId,$cityId,$peopleCount,$startPrice,$endPrice,$tag,$isHot=null,$typeArray=null,$activity=null)
     {
         try {
-
             if(!empty($typeArray)){
                 foreach($typeArray as $t){
                     if(!is_numeric($t)){
@@ -72,7 +71,9 @@ class TripService extends BaseDb{
                 $tagList=explode(',',$tag);
                 foreach($tagList as $val){
                     $valArr=json_decode(\Yii::$app->redis->get(Code::TRAVEL_TRIP_TAG_PREFIX.md5($val)),true);
+                    if(count($valArr)>0){
                     $intersection=array_merge($intersection,$valArr);
+                    }
                 }
                 if(!empty($intersection)){
                     $arr = array_count_values($intersection);

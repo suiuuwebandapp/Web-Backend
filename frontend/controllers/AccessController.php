@@ -75,7 +75,7 @@ class AccessController extends UnCController
 
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_SINA_WEIBO,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
-            if($rst['data']!=null&&$rst['data']->phone!=null){
+            if($rst['data']!=null&&($rst['data']->phone!=null||$rst['data']->email!=null)){
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 if(empty($type)){
                     return $this->redirect("/");
@@ -146,7 +146,7 @@ class AccessController extends UnCController
         $rst=$this->accessLogin($unionid,UserAccess::ACCESS_TYPE_WECHAT,$nickname,$sex,$headImg);
 
         if($rst['status']==Code::SUCCESS){
-            if($rst['data']!=null&&$rst['data']->phone!=null){
+            if($rst['data']!=null&&($rst['data']->phone!=null||$rst['data']->email!=null)){
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 return $this->redirect("/");
             }else{
@@ -198,7 +198,7 @@ class AccessController extends UnCController
         $rst=$this->accessLogin($unionid,UserAccess::ACCESS_TYPE_WECHAT,$nickname,$sex,$headImg);
 
         if($rst['status']==Code::SUCCESS){
-            if($rst['data']!=null&&$rst['data']->phone!=null){
+            if($rst['data']!=null&&($rst['data']->phone!=null||$rst['data']->email!=null)){
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 return $this->redirect("/wechat-trip");
             }else{
@@ -252,7 +252,7 @@ class AccessController extends UnCController
 
         $rst=$this->accessLogin($openId,UserAccess::ACCESS_TYPE_QQ,$nickname,$sex,$headImg);
         if($rst['status']==Code::SUCCESS){
-            if($rst['data']!=null&&$rst['data']->phone!=null){
+            if($rst['data']!=null&&($rst['data']->phone!=null||$rst['data']->email!=null)){
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$rst['data']);
                 return $this->redirect("/");
             }else{

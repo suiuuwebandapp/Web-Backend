@@ -1,7 +1,7 @@
 <div id="menu" class="navBar">
     <ul>
         <li class="user">
-            <a href="#" class="userPic"><img src="<?= $userObj->headImg?>"></a>
+            <a href="<?= empty($userObj->userSign)?"javascript:;":"/wechat-user-info/user-info?userSign=$userObj->userSign" ?>" class="userPic"><img src="<?= $userObj->headImg?$userObj->headImg:'/assets/other/weixin/images/logo02.png'?>"></a>
             <span class="userName"><?= $userObj->nickname?></span>
         </li>
         <li><a href="/wechat-trip" <?php if($active==1){echo 'class="active"';}?>>首页</a></li>
@@ -15,8 +15,9 @@
             <li><a href="/wechat-user-center/trip-order" <?php if($active==6){echo 'class="active"';}?> >随游订单</a></li>
         <?php }?>
         <?php if(empty($userObj->userSign)){?>
-        <li><a href="/we-chat/login">登录</a></li>
+            <li><a href="/we-chat/login" <?php if($active==7){echo 'class="active"';}?>>登录</a></li>
         <?php }else{?>
+            <li><a href="/wechat-user-info/setting" <?php if($active==8){echo 'class="active"';}?>>设置</a></li>
             <li><a href="/we-chat/logout">退出</a></li>
         <?php }?>
     </ul>

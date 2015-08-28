@@ -8,9 +8,22 @@
     <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
     <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
+    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('div#menu').mmenu();
+        });
+    </script>
 </head>
 
 <body class="bgwhite">
+<div id="page" class="userCenter">
+    <?php include "left.php"; ?>
+    <div class="Uheader header mm-fixed-top">
+        <a href="#menu"></a>
+        <p class="navTop">注册</p>
+    </div>
 <div class="con RegisteredPhone clearfix">
     <form action="/we-chat/register" method="post" id="wechat_register">
     </form>
@@ -25,10 +38,7 @@
             <input type="password" id="wechat_password" placeholder="密码">
         </li>
         <li class="clearfix">
-            <input type="text" class="w70" placeholder="图形验证码" id="wechat_valNum"><a href="javascript:;" class="code"><img id="codeImg" style="height:2.7rem;" onclick="changeCode()" src="/index/get-code"></a>
-        </li>
-        <li class="clearfix">
-            <input type="text" class="w70" placeholder="手机验证码" id="wechat_code"><a href="javascript:;" class="code colBlue" onclick="getCode()">获取验证码</a>
+            <input type="text" class="w70" placeholder="手机验证码" id="wechat_code"><a href="javascript:;" class="code" onclick="getCode()">获取验证码</a>
         </li>
     </ul>
     <a href="javascript:;" class="btn" onclick="register()">注册</a>
@@ -36,10 +46,11 @@
     <div class="down clearfix">
         <div class="line"></div>
         <span>快速登录</span>
-        <div class="ddd clearfix"><a href="/access/connect-weibo?str=wap" class="icon sina"></a><a href="" class="icon wei"></a><a href="#" class="icon qq"></a></div>
+        <div class="ddd clearfix"><a href="/access/connect-weibo?str=wap" class="icon sina"></a><a href="/access/connect-wechat-js" class="icon wei"></a><a href="#" class="icon qq"></a></div>
 
         <input id="r_url" hidden="hidden" value="<?php echo Yii::$app->session->get('r_url');?>">
     </div>
+</div>
 </div>
 <script>
     function changeCode()
@@ -53,7 +64,7 @@
 
         var phone = $('#wechat_phone').val();
         var areaCode = $('#wechat_country').attr('areaCode');
-        var valNum = $('#wechat_valNum').val();
+        //var valNum = $('#wechat_valNum').val();
         var password = $('#wechat_password').val();
         if(areaCode=="")
         {
@@ -65,11 +76,11 @@
             alert('手机号不能为空');
             return;
         }
-        if(valNum=="")
+        /*if(valNum=="")
         {
             alert('图型验证码不能为空');
             return;
-        }
+        }*/
         if(password=="")
         {
             alert('密码不能为空');
@@ -118,7 +129,7 @@
     {
         var phone = $('#wechat_phone').val();
         var areaCode = $('#wechat_country').attr('areaCode');
-        var valNum = $('#wechat_valNum').val();
+        //var valNum = $('#wechat_valNum').val();
         var password = $('#wechat_password').val();
         if(areaCode=="")
         {
@@ -130,11 +141,11 @@
             alert('手机号不能为空');
             return;
         }
-        if(valNum=="")
+        /*if(valNum=="")
         {
             alert('图型验证码不能为空');
             return;
-        }
+        }*/
         if(password=="")
         {
             alert('密码不能为空');
@@ -146,8 +157,7 @@
             data:{
                 areaCode:areaCode,
                 phone:phone,
-                password:password,
-                valNum:valNum
+                password:password
             },
             error:function(){
                 alert("验证码发送失败");

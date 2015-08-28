@@ -17,7 +17,7 @@ class WeChatOrderList{
     const STATUS_END = 4;//游玩结束
     const STATUS_PAY_SUCCESS = 3;//状态：已支付
     const STATUS_PROCESSED = 2;//状态：已经处理待支付
-    const STATUS_NORMAL = 1;//状态：下单 待支付
+    const STATUS_NORMAL = 1;//状态：下单 待处理
     const IS_DEL_N = 0;//状态：未删除
     const IS_DEL_Y = 1;//状态：删除
     /**

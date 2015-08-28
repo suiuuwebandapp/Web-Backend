@@ -85,8 +85,8 @@
 .ui-slider .ui-slider-handle {
 	position: absolute;
 	z-index: 2;
-	width: 1.2em;
-	height: 1.2em;
+	width: 50px;
+	height:50px;
 	cursor: default;
 	-ms-touch-action: none;
 	touch-action: none;
@@ -110,12 +110,14 @@
 	height:5px;
 }
 .ui-slider-horizontal .ui-slider-handle {
-	top: 0;
+	top:0.2rem;
 	margin-left: -.6em;
+	
 }
 .ui-slider-horizontal .ui-slider-range {
 	top: 0;
 	height: 100%;
+	background:#30dbc3;
 }
 .ui-slider-horizontal .ui-slider-range-min {
 	left: 0;
@@ -186,6 +188,9 @@
 	background:url(../images/baricon.fw.png) no-repeat center center;
 	font-weight: bold;
 	color: #1c94c4;
+	background-size:1.21rem 1.71rem;
+	
+	
 }
 .ui-state-default a,
 .ui-state-default a:link,
@@ -202,6 +207,7 @@
 	background:url(../images/baricon.fw.png) no-repeat center center;
 	font-weight: bold;
 	color: #c77405;
+	background-size:1.21rem 1.71rem;
 }
 .ui-state-hover a,
 .ui-state-hover a:hover,

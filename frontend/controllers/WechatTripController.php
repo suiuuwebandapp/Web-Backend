@@ -18,6 +18,7 @@ use common\entity\TravelTripService;
 use common\entity\UserOrderInfo;
 use frontend\components\Page;
 use frontend\services\CountryService;
+use frontend\services\TravelTripCommentService;
 use frontend\services\TripService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
@@ -29,10 +30,14 @@ class WechatTripController extends WController {
     public $enableCsrfValidation=false;
     public $userOrderService =null ;
     private $tripService;
+    public $tripCommentSer;
+    public $AttentionService;
     public function __construct($id, $module = null)
     {
         $this->userOrderService = new UserOrderService();
+        $this->AttentionService=new UserAttentionService();
         $this->tripService=new TripService();
+        $this->tripCommentSer=new TravelTripCommentService();
         parent::__construct($id, $module);
     }
 
@@ -52,23 +57,28 @@ class WechatTripController extends WController {
         $arrCC=json_decode($cc,true);
         $countryList = isset($arrCC['c'])?$arrCC['c']:array();
         $cityList = isset($arrCC['ct'])?$arrCC['ct']:array();
-        return $this->renderPartial('select',['cList'=>$countryList,'ctList'=>$cityList]);
+        return $this->renderPartial('select',['cList'=>$countryList,'ctList'=>$cityList,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
     }
 
     public function actionSelectList()
     {
+        $login = $this->loginValid(false);
         $str=\Yii::$app->request->get("str");
-        $type=\Yii::$app->request->post("type");//是否是ajax;
-        if($type=="post")
-        {
-            $peopleCount=\Yii::$app->request->post("peopleCount");
-            $amount=\Yii::$app->request->post("amount");
-            $tag=\Yii::$app->request->post("tag");
-        }else
-        {
+        $sort=\Yii::$app->request->get("sort");
+        if($_POST){
+        $peopleCount=\Yii::$app->request->post("peopleCount");
+        $amount=\Yii::$app->request->post("amount");
+        $tag=\Yii::$app->request->post("tag");
+        $type=\Yii::$app->request->post("type");
+        }else{
             $peopleCount=\Yii::$app->request->get("peopleCount");
             $amount=\Yii::$app->request->get("amount");
             $tag=\Yii::$app->request->get("tag");
+            $type=\Yii::$app->request->get("type");
+        }
+        $typeArray=null;
+        if(!empty($type)){
+            $typeArray=explode(",",$type);
         }
         $startPrice="";
         $endPrice="";
@@ -81,19 +91,32 @@ class WechatTripController extends WController {
         }
         $page=new Page(\Yii::$app->request);
         $page->pageSize=10;
-        $page= $this->tripService->getList($page,$str,null,null,$peopleCount,$startPrice,$endPrice,$tag);
-        if($type=="post")
+        if($sort==2){
+            $page->sortName="tripCount";
+        }else if($sort==3){
+            $page->sortName="commentCount";
+        }else{
+            $page->sortName="score";
+        }
+        $page->sortType="desc";
+        $page= $this->tripService->getList($page,$str,null,null,$peopleCount,$startPrice,$endPrice,$tag,null,$typeArray);
+        $ajax=\Yii::$app->request->post("ajax");
+        if($ajax=="true")
         {
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$page->getList()));
         }
-        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,'peopleCount'=>$peopleCount,"amount"=>$amount,"startPrice"=>$startPrice,"tag"=>$tag]);
+        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,
+            'peopleCount'=>$peopleCount,"amount"=>$amount,"startPrice"=>$startPrice,"tag"=>$tag,"sort"=>$sort,"type"=>$type,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0
+        ]);
     }
 
     public function actionSearch()
     {
+        $login = $this->loginValid(false);
         $str=\Yii::$app->request->get("str");
-        $peopleCount=\Yii::$app->request->get("peopleCount",1);
+        $peopleCount=\Yii::$app->request->get("peopleCount",0);
         $amount=\Yii::$app->request->get("amount");
+        $type=\Yii::$app->request->get("type");
         $startPrice=0;
         $endPrice=5000;
         if(!empty($amount)){
@@ -104,22 +127,34 @@ class WechatTripController extends WController {
             $endPrice=$priceArr[1];
         }
         $tag=\Yii::$app->request->get("tag");
-        return $this->renderPartial('search',['str'=>$str,'peopleCount'=>$peopleCount,"startPrice"=>$startPrice,"endPrice"=>$endPrice,"tag"=>$tag]);
+        return $this->renderPartial('search',['str'=>$str,'peopleCount'=>$peopleCount,"startPrice"=>$startPrice,"endPrice"=>$endPrice,"tag"=>$tag,'type'=>$type,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
     }
 
     public function actionInfo()
     {
+        $login = $this->loginValid(false);
         $tripId=\Yii::$app->request->get("tripId");
+        if(empty($this->userObj))
+        {
+            $userSign='';
+        }else
+        {
+            $userSign=$this->userObj->userSign;
+        }
         if(empty($tripId))
         {
             return $this->redirect('/we-chat/error?str=未知随游');
         }
-        $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
+        $travelInfo=$this->tripService->getTravelTripInfoById($tripId,$userSign);
         if(empty($travelInfo['info']))
         {
             return $this->redirect('/we-chat/error?str=未知随游');
         }
-        return $this->renderPartial("info",['info'=>$travelInfo,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+        $page=new Page();
+        $page->pageSize=5;
+        $rst= $this->tripCommentSer->getTravelComment($tripId,$page,$userSign);
+        $userRecommend=$this->tripService->findTravelTripRecommendByTripId($tripId);
+        return $this->renderPartial("info",['info'=>$travelInfo,'userRecommend'=>$userRecommend,'comment'=>$rst,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
     }
 
     public function actionAddOrder()
@@ -260,8 +295,122 @@ class WechatTripController extends WController {
         {
             return $this->redirect('/we-chat/error?str=未知随游');
         }
-        return $this->renderPartial("addOrderView",['info'=>$travelInfo,'publisherId'=>$publisherId]);
+        return $this->renderPartial("addOrderView",['info'=>$travelInfo,'publisherId'=>$publisherId,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
     }
 
+    /**
+     * 获取评论列表
+     * @return string
+     */
+    public function actionGetCommentList()
+    {
+        try{
+            $cPage=\Yii::$app->request->post('cPage');
+            $tripId=\Yii::$app->request->post('tripId');
+            if(empty($cPage)||$cPage<1)
+            {
+                $cPage=1;
+            }
+            $numb=5;
+            $page=new Page();
+            $page->currentPage=$cPage;
+            $page->pageSize=$numb;
+            $page->startRow = (($page->currentPage - 1) * $page->pageSize);
+            if(empty($this->userObj))
+            {
+                $userSign='';
+            }else
+            {
+                $userSign=$this->userObj->userSign;
+            }
+
+            $rst= $this->tripCommentSer->getTravelComment($tripId,$page,$userSign);
+            $str='';
+            $totalCount=$rst['msg']->totalCount;
+            if(intval($totalCount)!=0)
+            {
+
+                $count=intval($totalCount);
+                //$str=$count;//Common::pageHtml($cPage,$numb,$count);
+            }
+            //
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$rst['data'],$rst['msg']));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"获取评论列表失败"));
+        }
+    }
+
+
+    /**
+     * 添加评论
+     * @return string
+     */
+    public function actionAddComment()
+    {
+        $this->loginValidJson();
+
+        try{
+            $userSign=$this->userObj->userSign;
+            $tripId = \Yii::$app->request->post('tripId');
+            $content = \Yii::$app->request->post('content');
+            $rId= \Yii::$app->request->post('rId');
+            $rTitle= \Yii::$app->request->post('rTitle');
+            $rUserSign= \Yii::$app->request->post('rSign');
+            if(empty($tripId)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法评论未知随游'));}
+            if(empty($content)){return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'无法发布空评论'));}
+            $this->tripCommentSer->addComment($userSign,$content,$rId,$tripId,$rTitle,$rUserSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL,"发布评论失败"));
+        }
+    }
+
+    /**
+     * 收藏随游
+     * @return string
+     */
+    public function actionAddCollectionTravel()
+    {
+        try{
+            $this->loginValidJson();
+            $travelId= \Yii::$app->request->post('travelId');
+            if(empty($travelId))
+            {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'收藏信息不能为空'));
+            }
+            $userSign = $this->userObj->userSign;
+            $data=$this->AttentionService->CreateCollectionToTravel($travelId,$userSign);
+            echo json_encode(Code::statusDataReturn(Code::SUCCESS,$data));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
+    /**
+     * 删除收藏
+     * @return string
+     */
+    public function actionDeleteAttention()
+    {
+
+        try{
+            $this->loginValidJson();
+            $attentionId= \Yii::$app->request->post('attentionId');
+            if(empty($attentionId))
+            {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,'取消信息不能为空'));
+            }
+            $userSign = $this->userObj->userSign;
+            $this->AttentionService->deleteAttention($attentionId,$userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,'success'));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
 
 }

@@ -27,7 +27,7 @@ class QuestionCommunity {
      */
     public $qContent;
     /**
-     * @var提问地点藐视
+     * @var提问地点
      */
     public $qAddr;
     /**

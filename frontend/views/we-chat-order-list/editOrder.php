@@ -55,9 +55,10 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
-        我的定制
+        <p class="navTop">编辑修改</p>
     </div>
     <div class="con sy_need02 clearfix">
+        <input id="orderId" type="text" hidden="hidden" value="<?= $info['wOrderId']?>">
         <input id="site" type="text" placeholder="目的地城市" class="selet" value="<?= $info['wOrderSite']?>">
         <!--<a href="/we-chat/show-country?rUrl=/we-chat-order-list/order-view" id="site" class="selet" areaCode="<?php /*echo $c*/?>" ><?php /*echo $n;*/?></a>-->
         <p>出游人数</p>
@@ -233,6 +234,12 @@
         var timeList=$('#dateList').val();
         var userNumber=$('#userNumber').val();
         var userPhone=$('#userPhone').val();
+        var orderId=$('#orderId').val();
+        if(orderId=="")
+        {
+            alert('未知订单');
+            return;
+        }
         if(site=="")
         {
             alert('请选择出行国家');
@@ -263,6 +270,7 @@
             url :'/we-chat-order-list/update-order',
             type:'post',
             data:{
+                orderId:orderId,
                 site:site,
                 content:content,
                 timeList:timeList,
