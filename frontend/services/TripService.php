@@ -17,6 +17,7 @@ use common\entity\TravelTrip;
 use common\entity\TravelTripApply;
 use common\entity\TravelTripDetail;
 use common\entity\TravelTripPublisher;
+use common\entity\TravelTripTraffic;
 use common\entity\UserAttention;
 use common\models\BaseDb;
 use common\models\TravelTripDb;
@@ -217,6 +218,107 @@ class TripService extends BaseDb{
         }
     }
 
+
+    /**
+     * 添加交通服务随游
+     * @param TravelTrip $travelTrip
+     * @param TravelTripTraffic $travelTripTraffic
+     * @param $picList
+     * @param TravelTripPublisher $travelTripPublisher
+     * @param $detailList
+     * @return array|bool
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function addTravelTripTraffic(TravelTrip $travelTrip,TravelTripTraffic $travelTripTraffic,$picList,TravelTripPublisher $travelTripPublisher,$detailList)
+    {
+        $conn = $this->getConnection();
+        $tran=$conn->beginTransaction();
+        try {
+
+            $this->tripTravelDb = new TravelTripDb($conn);
+            $this->tripTravelDb->addTravelTrip($travelTrip);
+            $tripId=$conn->getLastInsertID();
+
+            $travelTripTraffic->tripId=$tripId;
+            $travelTripPublisher->tripId=$tripId;
+
+            $this->saveObject($travelTripTraffic);
+            $this->tripTravelDb->addTravelTripPublisher($travelTripPublisher);
+            if($picList!=null){
+                foreach($picList as $pic)
+                {
+                    $pic->tripId=$tripId;
+                    $this->tripTravelDb->addTravelTripPicture($pic);
+                }
+            }
+            if($detailList!=null){
+                foreach($detailList as $detail)
+                {
+                    $detail->tripId=$tripId;
+                    $this->tripTravelDb->addTravelTripDetail($detail);
+                }
+            }
+
+            $this->commit($tran);
+            return $this->tripTravelDb->findTravelTripById($tripId);
+        } catch (Exception $e) {
+            $this->rollback($tran);
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
+    /**
+     * 更新交通服务随游
+     * @param TravelTrip $travelTrip
+     * @param TravelTripTraffic $travelTripTraffic
+     * @param $picList
+     * @param $detailList
+     * @return array|bool
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function updateTravelTripTraffic(TravelTrip $travelTrip,TravelTripTraffic $travelTripTraffic,$picList,$detailList)
+    {
+        $conn = $this->getConnection();
+        $tran=$conn->beginTransaction();
+        try {
+
+            $this->tripTravelDb = new TravelTripDb($conn);
+            $this->tripTravelDb->updateTravelTrip($travelTrip);
+            $this->updateObject($travelTripTraffic);
+            //删除 ，添加
+            $this->tripTravelDb->deleteTravelTripPicBytripId($travelTrip->tripId);
+            if($picList!=null){
+                foreach($picList as $pic)
+                {
+                    $pic->tripId=$travelTrip->tripId;
+                    $this->tripTravelDb->addTravelTripPicture($pic);
+                }
+            }
+            $this->tripTravelDb->deleteTravelTripDetailByTripId($travelTrip->tripId);
+            if($detailList!=null){
+                foreach($detailList as $detail)
+                {
+                    $detail->tripId=$travelTrip->tripId;
+                    $this->tripTravelDb->addTravelTripDetail($detail);
+                }
+            }
+            $this->tripTravelDb->deleteTravelTripHighLightByTripId($travelTrip->tripId);
+
+            $this->commit($tran);
+            return $this->tripTravelDb->findTravelTripById($travelTrip->tripId);
+        } catch (Exception $e) {
+            $this->rollback($tran);
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
     /**
      * 更新随游
      * @param TravelTrip $travelTrip
@@ -310,6 +412,8 @@ class TripService extends BaseDb{
         }
     }
 
+
+
     /**
      * 获取随游详情
      * @param $tripId
@@ -346,12 +450,19 @@ class TripService extends BaseDb{
                 throw new Exception("随游不存在");
             }
             $tripInfo['picList']=$this->tripTravelDb->getTravelTripPicList($tripId);
-            $tripInfo['priceList']=$this->tripTravelDb->getTravelTripPriceList($tripId);
             $tripInfo['publisherList']=$this->tripTravelDb->getTravelTripPublisherList($tripId);
-            $tripInfo['scenicList']=$this->tripTravelDb->getTravelTripScenicList($tripId);
-            $tripInfo['serviceList']=$this->tripTravelDb->getTravelTripServiceList($tripId);
-            $tripInfo['highlightList']=$this->tripTravelDb->getTravelTripHighlightList($tripId);
-            $tripInfo['specialList']=$this->tripTravelDb->getTravelTripSpecialList($tripId);
+
+            if($tripInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
+                $traffic=$this->findObjectByType(TravelTripTraffic::class,"tripId",$tripId);
+                $tripInfo['trafficInfo']=$traffic[0];
+            }else{
+                $tripInfo['priceList']=$this->tripTravelDb->getTravelTripPriceList($tripId);
+                $tripInfo['scenicList']=$this->tripTravelDb->getTravelTripScenicList($tripId);
+                $tripInfo['serviceList']=$this->tripTravelDb->getTravelTripServiceList($tripId);
+                $tripInfo['highlightList']=$this->tripTravelDb->getTravelTripHighlightList($tripId);
+                $tripInfo['specialList']=$this->tripTravelDb->getTravelTripSpecialList($tripId);
+            }
+
             //所有明细
             $detailList=$this->tripTravelDb->getTravelTripDetailList($tripId);
             $includeDetailList=[];
@@ -381,6 +492,7 @@ class TripService extends BaseDb{
         }
         return $tripInfo;
     }
+
 
     /**
      * 根据随游获取随友详情
@@ -437,6 +549,34 @@ class TripService extends BaseDb{
             $this->closeLink();
         }
         return $tripInfo;
+    }
+
+
+    /**
+     * 获取随游交通服务详情
+     * @param $tripId
+     * @return mixed|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function  getTravelTripTrafficByTripId($tripId)
+    {
+        if(empty($tripId)){
+            throw new Exception ("TripId Is No Allow Empty");
+        }
+        $trafficInfo=null;
+        try{
+            $rst=$this->findObjectByType(TravelTripTraffic::class,"tripId",$tripId);
+            if(empty($rst)){
+                throw new Exception("随游不存在");
+            }
+            $trafficInfo=$this->arrayCastObject($rst[0],TravelTripTraffic::class);
+        }catch (Exception $e){
+            throw $e;
+        }finally {
+            $this->closeLink();
+        }
+        return $trafficInfo;
     }
 
     /**

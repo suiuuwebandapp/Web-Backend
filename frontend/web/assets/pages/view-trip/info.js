@@ -5,11 +5,166 @@
 $(document).ready(function () {
     initScroll();
     initBtnClick();
-    initDatePicker();
     getComment(1);
-
+    if(type==3){
+        initTrafficOrder();
+        initTrafficDatePicker();
+    }else{
+        initCommonTripClick();
+        initDatePicker();
+    }
 });
 
+function compareTime(time1,time2){
+    time1="1990-01-01 "+time1;
+    time2="1990-01-01 "+time2;
+
+    time1 = time1.replace(/-/g,"/");
+    time2 = time2.replace(/-/g,"/");
+
+    var d1 = new Date(time1);
+    var d2 = new Date(time2);
+
+    if(d1.getTime()>d2.getTime()){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function initTrafficOrder() {
+
+    $("#trafficOrderBtn").bind("click",function(){
+        if (userId == '') {
+            $("#denglu").click();
+            return;
+        }
+        $("#trafficOrderDiv").show();
+        $(".mask").show();
+    });
+    $("#orderDivClose").bind("click",function(){
+        $("#trafficOrderDiv").hide();
+        $(".mask").hide();
+    });
+
+    $("#addService").bind("click",function(){
+        var serviceName=$("#trafficOrderDiv ul li a[class*='active']").html();
+        var orderDate=$("#orderDate").val();
+        var orderTime=$("#orderTime").val();
+        var peopleCount=$("#peopleCount").val();
+        var serviceType='car';
+        var price='';
+
+        if(serviceName!='包车'){
+            serviceType='airplane';
+        }
+        if(orderDate==''){
+            Main.showTip("请选择服务日期");
+            return;
+        }
+        if(orderTime==''){
+            Main.showTip("请选择服务时间");
+            return;
+        }
+        orderTime+=":00";
+
+
+        if(serviceType=='airplane'){
+            if(compareTime(orderTime,nightTimeStart)&&compareTime(nightTimeEnd,orderTime)){
+                price=parseInt(airplanePrice)+parseInt(nightServicePrice);
+            }else{
+                price=airplanePrice;
+            }
+        }else{
+            price=carPrice;
+        }
+        var html='<p serviceType="'+serviceType+'" servicePrice="'+price+'" orderDate="'+orderDate+'" orderTime="'+orderTime+'" orderPerson="'+peopleCount+'" >' +
+            '<span class="name">'+serviceName+" <b>"+orderDate+'</b></span><span class="money">￥'+price+'</span>' +
+            '<a href="javascript:;" onclick="removeTrafficService(this)" class="delet"></a>' +
+            '</p>';
+        $("#trafficServiceList").append(html);
+        showTrafficPrice();
+
+    });
+
+    $("#trafficOrderDiv ul li a").bind("click",function(){
+        $("#trafficOrderDiv ul li a").removeClass("active");
+        if($(this).hasClass("active")){
+            $(this).removeClass("active")
+        }else{
+            $(this).addClass("active")
+        }
+    });
+    showTrafficPrice();
+
+    $("#toPay").bind("click",function(){
+        if($("#trafficServiceList p").size()==0){
+            return;
+        }
+        var tempDate,tempTime,tempPerson,type,jsonStr='';
+        $("#trafficServiceList p").each(function(){
+            tempDate=$(this).attr("orderDate");
+            tempTime=$(this).attr("orderTime");
+            type=$(this).attr("serviceType");
+            tempPerson=$(this).attr("orderPerson");
+            if(tempDate!=''&&tempTime!=''&&type!=''){
+                jsonStr+='{"date":"'+tempDate+'","time":"'+tempTime+'","type":"'+type+'","person":'+tempPerson+'},';
+            }
+        });
+        if(jsonStr!=''){
+            jsonStr=jsonStr.substring(0,jsonStr.length-1);
+            jsonStr='['+jsonStr+']';
+            $("#serviceList").val(jsonStr);
+            $("#trafficOrder").submit();
+        }
+
+    });
+}
+
+
+function removeTrafficService(obj) {
+    $(obj).parent().remove();
+    showTrafficPrice();
+}
+function showTrafficPrice(){
+    var allPrice= 0,tempPrice;
+    $("#trafficServiceList p").each(function(){
+        tempPrice=$(this).attr("servicePrice");
+        allPrice=parseInt(allPrice)+parseInt(tempPrice);
+    });
+    $("#allPrice").html("￥"+allPrice);
+    if($("#trafficServiceList p").size()>0){
+        $("#trafficServiceList").show();
+        $(".noChoseService").hide();
+        $("#toPay").css("background-color","#4FD8C3");
+        $(".jtPro .contains .right .all").show();
+    }else{
+        $("#trafficServiceList").hide();
+        $(".noChoseService").show();
+        $("#toPay").css("background-color","#ddd");
+        $(".jtPro .contains .right .all").hide();
+
+    }
+}
+
+function initTrafficDatePicker(){
+
+    $("#choseDateBox").DateTimePicker({
+        titleContentTime:'选择时间',
+        setButtonContent:'确定',
+        clearButtonContent:'取消',
+        timeFormat: 'HH:mm',
+        minTime:minTime,
+        maxTime:maxTime
+    });
+    $('#orderDate').datepicker({
+        language:'zh-CN',
+        autoclose: true,
+        startDate:new Date(Date.parse(nowDate.replace(/-/g,"/"))),
+        format:'yyyy-mm-dd',
+        orientation:'top'
+    });
+}
 
 /**
  * 鼠标滚动事件处理
@@ -46,34 +201,14 @@ function initScroll(){
         } else {
             $(".sylx-xiangxi").css("position", "fixed");
         }
-
-        resetDatePicker();
+        if(type==3){
+        }else{
+            resetDatePicker();
+        }
     });
 }
 
-/**
- *
- */
-function initBtnClick(){
-
-
-
-    $(".removeBtn").bind("click",function(){
-        var applyId=$(this).attr("applyId");
-        opposeApply(applyId);
-    });
-
-    $(".sure").bind("click",function(){
-        var applyId=$(this).attr("applyId");
-        var publisherId=$(this).attr("publisherId");
-        agreeApply(applyId,publisherId);
-    });
-
-
-    $("#collection_trip").bind("click", function () {
-        submitCollection();
-    });
-
+function initCommonTripClick(){
     $("#peopleCount").bind("change", function () {
         showPrice();
     });
@@ -117,22 +252,12 @@ function initBtnClick(){
         }
         $("#applyForm").submit();
     });
-
-    /**
-     *显示更多评论
-     */
-    $("#showMoreComment").bind("click", function () {
-        var showPage = $(this).attr("showPage");
-        getComment(showPage);
-    });
-
     /**
      * 点击购买
      */
     $("#toBuy").bind("click", function () {
         if (userId == '') {
             $("#denglu").click();
-            //Main.showTip("登录后才能购买哦~！");
             return;
         }
         $("html,body").animate({scrollTop: $("#buyTrip").offset().top - 30}, 500);
@@ -155,7 +280,6 @@ function initBtnClick(){
 
         if (userId == '') {
             $("#denglu").click();
-            //Main.showTip("登录后才能购买哦~！");
             return;
         }
         if (beginDate == '') {
@@ -190,6 +314,36 @@ function initBtnClick(){
         $("#serviceIds").val(serviceIds);
         $("#orderForm").submit();
 
+    });
+}
+
+/**
+ *
+ */
+function initBtnClick(){
+
+
+    $(".removeBtn").bind("click",function(){
+        var applyId=$(this).attr("applyId");
+        opposeApply(applyId);
+    });
+
+    $(".sure").bind("click",function(){
+        var applyId=$(this).attr("applyId");
+        var publisherId=$(this).attr("publisherId");
+        agreeApply(applyId,publisherId);
+    });
+
+    $("#collection_trip").bind("click", function () {
+        submitCollection();
+    });
+
+    /**
+     *显示更多评论
+     */
+    $("#showMoreComment").bind("click", function () {
+        var showPage = $(this).attr("showPage");
+        getComment(showPage);
     });
 
     /**
@@ -245,7 +399,6 @@ function initDatePicker() {
         resetDatePicker();
     });
 
-
     /**
      * 时间选择器控件处理
      */
@@ -284,9 +437,8 @@ function resetDatePicker() {
             'font-size': '14px'
         });
     }
-
-
 }
+
 /**
  * 显示价格
  */

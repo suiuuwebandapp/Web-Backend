@@ -17,6 +17,7 @@ use common\components\Common;
 use common\components\LogUtils;
 use common\components\PageResult;
 use common\components\TagUtil;
+use common\entity\TravelTrip;
 use common\entity\TravelTripComment;
 use common\entity\UserAttention;
 use frontend\services\PublisherService;
@@ -121,7 +122,11 @@ class ViewTripController extends UnCController{
     public function actionInfo()
     {
         $tripId=\Yii::$app->request->get("trip");
+        $returnUrl="info";$travelInfo=null;
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
+        if($travelInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
+            $returnUrl="trafficInfo";
+        }
         $applyList=$this->tripService->getPublisherApplyList($tripId);
         $recommendPage=new Page();
         $recommendPage->pageSize=3;
@@ -149,7 +154,7 @@ class ViewTripController extends UnCController{
 
         $rst=$attention->getAttentionResult(UserAttention::TYPE_COLLECT_FOR_TRAVEL,$tripId,$userSign);
 
-        return $this->render("info",[
+        return $this->render($returnUrl,[
             'travelInfo'=>$travelInfo,
             'createUserInfo'=>$createUserInfo,
             'createPublisherInfo'=>$createPublisherId,

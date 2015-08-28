@@ -30,8 +30,8 @@ class TravelTripDb extends ProxyDb
 
     public function getTripSelectInfo()
     {
-        $selectInfo="t.tripId,t.createPublisherId,t.createTime,t.title,t.titleImg,t.countryId,t.cityId,t.lon,t.lat,t.isHotel,t.isAirplane,
-        ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,t.basePrice as oldPrice,
+        $selectInfo="t.tripId,t.createPublisherId,t.createTime,t.title,t.titleImg,t.countryId,t.cityId,t.lon,t.lat,
+        ceil(t.basePrice*".Code::TRIP_SERVICE_PRICE.") AS basePrice,t.basePrice as oldPrice,scheduledTime,
         t.basePriceType,t.maxUserCount,t.score,t.tripCount,t.startTime,t.endTime,t.travelTime,t.travelTimeType,t.intro,t.info,t.tags,
         t.commentCount,t.collectCount,t.isHot,t.type,t.status";
 
@@ -189,12 +189,12 @@ class TravelTripDb extends ProxyDb
             INSERT INTO travel_trip
             (
               createPublisherId,createTime,title,titleImg,countryId,cityId,lon,lat,basePrice,basePriceType,maxUserCount,
-              isAirplane,isHotel,score,tripCount,startTime,endTime,travelTime,travelTimeType,intro,info,tags,status
+              scheduledTime,score,tripCount,startTime,endTime,travelTime,travelTimeType,intro,info,tags,status,type
             )
             VALUES
             (
               :createPublisherId,now(),:title,:titleImg,:countryId,:cityId,:lon,:lat,:basePrice,:basePriceType,:maxUserCount,
-              :isAirplane,:isHotel,:score,0,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status
+              :scheduledTime,:score,0,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status,:type
             )
         ");
 
@@ -209,8 +209,7 @@ class TravelTripDb extends ProxyDb
         $command->bindParam(":basePrice", $travelTrip->basePrice, PDO::PARAM_STR);
         $command->bindParam(":basePriceType", $travelTrip->basePriceType, PDO::PARAM_INT);
         $command->bindParam(":maxUserCount", $travelTrip->maxUserCount, PDO::PARAM_INT);
-        $command->bindParam(":isAirplane", $travelTrip->isAirplane, PDO::PARAM_INT);
-        $command->bindParam(":isHotel", $travelTrip->isHotel, PDO::PARAM_INT);
+        $command->bindParam(":scheduledTime", $travelTrip->scheduledTime, PDO::PARAM_STR);
         $command->bindParam(":score", $travelTrip->score, PDO::PARAM_STR);
         $command->bindParam(":startTime", $travelTrip->startTime, PDO::PARAM_STR);
         $command->bindParam(":endTime", $travelTrip->endTime, PDO::PARAM_STR);
@@ -219,11 +218,13 @@ class TravelTripDb extends ProxyDb
         $command->bindParam(":intro", $travelTrip->intro, PDO::PARAM_STR);
         $command->bindParam(":info", $travelTrip->info, PDO::PARAM_STR);
         $command->bindParam(":tags", $travelTrip->tags, PDO::PARAM_STR);
+        $command->bindParam(":type", $travelTrip->type, PDO::PARAM_STR);
         $command->bindParam(":status", $travelTrip->status, PDO::PARAM_INT);
 
 
         $command->execute();
     }
+
 
     /**
      * 修改随游
@@ -235,7 +236,7 @@ class TravelTripDb extends ProxyDb
         $sql = sprintf("
             UPDATE travel_trip SET
             title=:title,titleImg=:titleImg,countryId=:countryId,cityId=:cityId,lon=:lon,lat=:lat,basePrice=:basePrice,
-            basePriceType=:basePriceType,maxUserCount=:maxUserCount,isAirplane=:isAirplane,isHotel=:isHotel,score=:score,
+            basePriceType=:basePriceType,maxUserCount=:maxUserCount,scheduledTime=:scheduledTime,score=:score,
             tripCount=:tripCount,startTime=:startTime,endTime=:endTime,travelTime=:travelTime,travelTimeType=:travelTimeType,
             intro=:intro,info=:info,tags=:tags,status=:status
             WHERE tripId=:tripId
@@ -250,8 +251,7 @@ class TravelTripDb extends ProxyDb
         $command->bindParam(":basePrice", $travelTrip->basePrice, PDO::PARAM_STR);
         $command->bindParam(":basePriceType", $travelTrip->basePriceType, PDO::PARAM_INT);
         $command->bindParam(":maxUserCount", $travelTrip->maxUserCount, PDO::PARAM_INT);
-        $command->bindParam(":isAirplane", $travelTrip->isAirplane, PDO::PARAM_INT);
-        $command->bindParam(":isHotel", $travelTrip->isHotel, PDO::PARAM_INT);
+        $command->bindParam(":scheduledTime", $travelTrip->scheduledTime, PDO::PARAM_INT);
         $command->bindParam(":score", $travelTrip->score, PDO::PARAM_STR);
         $command->bindParam(":tripCount", $travelTrip->tripCount, PDO::PARAM_INT);
         $command->bindParam(":startTime", $travelTrip->startTime, PDO::PARAM_STR);

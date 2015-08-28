@@ -43,13 +43,19 @@ class PayController extends CController{
 
         $orderService=new UserOrderService();
         $orderInfo=$orderService->findOrderByOrderNumber(trim($number));
+        $contact=$orderService->getOrderContactByOrderId($orderInfo->orderId);
+
         if(empty($orderInfo)){
             return $this->redirect(['/result', 'result' => '无效的订单号']);
         }
         if($orderInfo->userId!=$this->userObj->userSign){
             return $this->redirect(['/result', 'result' => '订单用户不匹配']);
-
         }
+        if($contact==null){
+            return $this->redirect(['/result', 'result' => '无效的订单联系方式']);
+        }
+
+
         if($payType==UserPayRecord::PAY_RECORD_TYPE_ALIPAY){
             $alipayCreateApi->createOrder($orderInfo,$this->userObj);
         }elseif($payType==UserPayRecord::PAY_RECORD_TYPE_WXPAY){

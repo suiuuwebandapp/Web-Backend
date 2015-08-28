@@ -8,12 +8,26 @@
  */
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap-datepicker/css/datepicker3.css" />
-<link rel="stylesheet" type="text/css" href="/assets/plugins/time-picki/css/timepicki.css">
+<link rel="stylesheet" type="text/css" href="/assets/plugins/datetimepicker/DateTimePicker.css" />
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/datetimepicker/DateTimePicker-ltie9.css" />
+<script type="text/javascript" src="/assets/plugins/datetimepicker/DateTimePicker-ltie9.js"></script>
+<![endif]-->
+
 <link rel="stylesheet" type="text/css" href="/assets/pages/view-trip/info.css" />
 
+<style type="text/css">
+    .datepicker{
+        top: 335px !important;
+        position: fixed !important;
+        background-color: #ffffff;
+        border:1px solid #cccccc ;
+    }
+</style>
 
 <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
-<div class="sydetailBanner web-banner" id="imgs">
+<!--交通详情页-->
+<div class="sydetailBanner web-banner">
     <div class="banner">
         <ul class="clearfix">
             <?php foreach($travelInfo['picList'] as $pic ){?>
@@ -24,19 +38,17 @@
     <a href="javascript:;" class="pre"></a>
     <a href="javascript:;" class="next"></a>
 </div>
-
 <div class="bgGreen sydetailNav clearfix">
     <div class="w1200 clearfix">
         <ul class="clearfix">
             <li><a href="#imgs">照片</a></li>
-            <li><a href="#detail">详情描述</a></li>
-            <li><a href="#price">价格内容</a></li>
+            <li><a href="#detail">服务简介</a></li>
+            <li><a href="#price">车辆信息</a></li>
             <li><a href="#pinglun">评论</a></li>
         </ul>
     </div>
 </div>
-
-<div class="sydetail w1200 clearfix">
+<div class="sydetail jtdetail w1200 clearfix">
     <div class="titTop clearfix fl">
         <?php if($isOwner){ ?>
             <a href="<?=\common\components\SiteUrl::getEditTripUrl($travelInfo['info']['tripId'])?>" class="change">修改随游</a>
@@ -44,10 +56,6 @@
         <h3 class="title"><?=$travelInfo['info']['title'];?></h3>
         <p><img src="/assets/images/position.png" width="14" height="18">&nbsp;<?=$travelInfo['info']['countryCname']?>，<?=$travelInfo['info']['cityCname']?></p>
         <p class="xing">
-            <img src="/assets/images/biaoqian.png" width="16" height="16">
-            <?php foreach(explode(",",$travelInfo['info']['tags']) as $tag){ ?>
-                <span><?=$tag;?></span>
-            <?php } ?>
             <img src="<?= $travelInfo['info']['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
             <img src="<?= $travelInfo['info']['score']>=4?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
             <img src="<?= $travelInfo['info']['score']>=6?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13">
@@ -58,41 +66,37 @@
     <div class="web-content fl">
         <div class="web-left">
             <div class="map">
-                <ul class="details">
-                    <li>
-                        <span class="icon icon1">随游
-                            <b> <?=\common\components\DateUtils::convertTimePicker($travelInfo['info']['startTime'],2);?> -
-                                <?=\common\components\DateUtils::convertTimePicker($travelInfo['info']['endTime'],2);?>
+                <ul class="details clearfix">
+                    <li><span class="icon icon1">服务时间
+                            <b>
+                                <?php if(empty($travelInfo['info']['startTime'])){ ?>
+                                    全天24小时提供服务
+                                <?php }else{ ?>
+                                    <?=\common\components\DateUtils::formatTime($travelInfo['info']['startTime']);?> -
+                                    <?=\common\components\DateUtils::formatTime($travelInfo['info']['endTime']);?>
+                                <?php } ?>
                             </b>
-                        </span>
-                    </li>
-                    <li><span class="icon icon2">随游时长<b id="tripTime"><?=$travelInfo['info']['travelTime'];?></b><?=$travelInfo['info']['travelTimeType']==\common\entity\TravelTrip::TRAVEL_TRIP_TIME_TYPE_DAY?'天':'小时';?></span></li>
-                    <li class="last"><span class="icon icon3">随友最多接待<b id="maxPeopleCount"><?=$travelInfo['info']['maxUserCount'];?></b>人</span></li>
+                        </span></li>
+                    <li><span class="icon icon2">全天可包车<b id="tripTime"><?=$travelInfo['info']['travelTime'];?></b>小时</span></li>
+                    <li class="last"><span class="icon icon3">最多乘坐<b id="maxUserCount"><?=$travelInfo['trafficInfo']['seatCount'];?></b>人</span></li>
                 </ul>
-                <div class="map-pic">
-                    <iframe id="mapFrame" name="mapFrame" src="/google-map/view-scenic-map?tripId=<?=$travelInfo['info']['tripId'];?>" width="893px" height="330px;" frameborder="0" scrolling="no"></iframe>
-                </div>
-
-                <p class="title02" id="detail">详情描述</p>
-                <div class="trip_info">
+                <p class="title02" id="detail">服务简介</p>
+                <div>
                     <?=str_replace("\n","</br>",$travelInfo['info']['info']);?>
                 </div>
-                <?php if(!empty($travelInfo['specialList'])){ ?>
-                    <?php foreach($travelInfo['specialList'] as $special){ ?>
-                        <div><img src="<?=$special['picUrl']?>" style="max-width: 830px"></div>
-                        <p class="title"><?=$special['title']?></p>
-                        <p><?=$special['info']?></p>
-                    <?php } ?>
-                <?php } ?>
-                <?php if($userRecommend!=null&&!empty($userRecommend['content'])){ ?>
-                    <div class="bgGreen idea clearfix">
-                        <a href="javascript:;" class="cir fl"><img src="<?=$userRecommend['headImg'];?>" width="66" height="66"></a>
-                        <div class="fl">
-                            <p>推荐理由：</p>
-                            <p><?=nl2br($userRecommend['content']);?></p>
-                        </div>
-                    </div>
-                <?php } ?>
+
+                <p class="title02" id="price">车辆信息</p>
+                <div class="contian car clearfix">
+                    <span><b class="icon icon01"></b>车型:<b><?=$travelInfo['trafficInfo']['carType'];?></b></span>
+                    <span><b class="icon icon02"></b>司机驾龄:<b><?=date("Y",time())-date("Y",strtotime($travelInfo['trafficInfo']['driverLicenseDate']));?>年</b></span>
+                    <span><b class="icon icon03"></b>携带宠物:<b><?=$travelInfo['trafficInfo']['allowPet']==1?'允许':'不允许';?></b></span>
+                    <span><b class="icon icon05"></b>全天包车时长:<b><?=$travelInfo['trafficInfo']['serviceTime'];?>小时</b></span>
+                    <span><b class="icon icon07"></b>乘客吸烟:<b><?=$travelInfo['trafficInfo']['allowSmoke']==1?'允许':'不允许';?></b></span>
+                    <span><b class="icon icon08"></b>每日公里限:<b><?=$travelInfo['trafficInfo']['serviceMileage'];?>公里</b></span>
+                    <span><b class="icon icon09"></b>行李空间:<b><?=is_numeric($travelInfo['trafficInfo']['spaceInfo'])?$travelInfo['trafficInfo']['spaceInfo'].'件行李':$travelInfo['trafficInfo']['spaceInfo'];?></b></span>
+                    <span><b class="icon icon010"></b>儿童座椅:<b><?=$travelInfo['trafficInfo']['childSeat']==1?'有':'无';?></b></span>
+                    <span><b class="icon icon011"></b>最大载客:<b><?=$travelInfo['trafficInfo']['seatCount'];?>人</b></span>
+                </div>
                 <?php if(!empty($travelInfo['includeDetailList'])&&!empty($travelInfo['unIncludeDetailList'])){ ?>
                     <p class="title02" id="price">价格内容</p>
                     <div class="contian clearfix">
@@ -104,6 +108,18 @@
                         <?php } ?>
                     </div>
                 <?php } ?>
+
+                <p class="title02">预订须知</p>
+                <?php if(!empty($travelInfo['trafficInfo']['nightServicePrice'])){ ?>
+                    <p>预订时间：提前<?=$travelInfo['info']['scheduledTime']/(60*60*24)?>天进行预订</p>
+                    <p>夜间服务：时间为<?=\common\components\DateUtils::formatTime($travelInfo['trafficInfo']['nightTimeStart'])?>-<?=\common\components\DateUtils::formatTime($travelInfo['trafficInfo']['nightTimeEnd'])?>，接机加收<?=$travelInfo['trafficInfo']['nightServicePrice']?>元每趟/服务费。</p>
+                <?php } ?>
+                <?php if(!empty($travelInfo['info']['scheduledTime'])){ ?>
+                    <p>预订时间：提前<?=$travelInfo['info']['scheduledTime']/(60*60*24)?>天进行预订</p>
+                <?php } ?>
+                <p>超时费用：超时每小时<?=$travelInfo['trafficInfo']['overTimePrice'];?>元</p>
+                <p>超程费用：每公里收费<?=$travelInfo['trafficInfo']['overMileagePrice'];?>元</p>
+
                 <ul class="detNav tabTitle clearfix">
                     <li><a href="javascript:;" class="icon icon01 active">预定流程</a></li>
                     <li><a href="javascript:;" class="icon icon02">退款说明</a></li>
@@ -134,51 +150,6 @@
                     <p>和随游旅行过程中如出现意外情况，随友和游客无需承担保险范围内的任何费用，随游网提供的旅行保险全权处理100%赔付。据统计90%以上的游客和随友的相处都非常愉快，如需赔付，您只需要提供现场相关证据照片，在48小时内与随游客服联系，即可享受保险保障。</p>
                 </div>
             </div>
-
-            <?php if($isOwner&&(count($travelInfo['publisherList'])>1||!empty($applyList))){?>
-                <div class="newsLists clearfix" id="publisherList">
-                    <h2 class="title line">随游管理</h2>
-                    <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
-                        <?php if($publisherInfo['publisherId']==$travelInfo['info']['createPublisherId']){continue;} ?>
-                        <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
-                        <div class="lists clearfix" id="div_trip_publisher_<?=$publisherInfo['tripPublisherId']?>" type="publisherList">
-                            <img src="<?= $publisherInfo['headImg']?>" alt="" class="userpic">
-                            <ul class="clearfix">
-                                <li class="li01">
-                                    <p class="name"><span><?=$publisherInfo['nickname'];?></span><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$publisherInfo['userSign']?>')"></p>
-                                    <p>性别:<b><?php if($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($publisherInfo['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></p>
-                                </li>
-                                <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($publisherInfo['birthday']);?></b></li>
-                                <li>职业:<b><?=$publisherInfo['profession']?></b></li>
-                                <li>随游次数:<b><?=$publisherInfo['travelCount']?></b></li>
-                                <li></li>
-                            </ul>
-                            <a href="javascript:;" tripPublisherId="<?=$publisherInfo['tripPublisherId']?>" class="sureBtn colOrange">移除</a>
-                        </div>
-                    <?php } ?>
-                    <?php foreach($applyList as $apply){?>
-                        <div class="lists clearfix" id="apply_div_<?=$apply['applyId']?>">
-                            <img src="<?= $apply['headImg']?>" alt="" class="userpic">
-                            <ul class="clearfix">
-                                <li class="li01">
-                                    <p class="name"><span><?=$apply['nickname'];?></span><img src="/assets/images/xf.fw.png" width="18" height="12" style="cursor: pointer" onclick="Main.showSendMessage('<?=$apply['userSign']?>')"></p>
-                                    <p>性别:<b><?php if($apply['sex']==\common\entity\UserBase::USER_SEX_MALE){echo '男';}elseif($apply['sex']==\common\entity\UserBase::USER_SEX_FEMALE){echo '女';}else{echo '保密';} ?></b></p>
-                                </li>
-                                <li>年龄:<b><?=\common\components\DateUtils::convertBirthdayToAge($apply['birthday']);?></b></li>
-                                <li>职业:<b><?=$apply['profession']?></b></li>
-                                <li>随游次数:<b><?=$apply['travelCount']?></b></li>
-                                <li><a href="javascript:;" data="<?=$apply['info']?>"  onclick="showApplyInfo(this)" class="colGreen">申请理由</a></li>
-                            </ul>
-                            <a href="javascript:;" class="sureBtn posis colGreen sure" applyId="<?=$apply['applyId']?>" publisherId="<?=$apply['publisherId']?>">接受</a>
-                            <a href="javascript:;" class="sureBtn colOrange removeBtn" applyId="<?=$apply['applyId']?>">忽略</a>
-                        </div>
-                    <?php } ?>
-                </div>
-            <?php }else{ ?>
-                <?php foreach($travelInfo['publisherList'] as $publisherInfo){?>
-                    <?php if(isset($this->context->userPublisherObj)&&$publisherInfo['publisherId']==$this->context->userPublisherObj->userPublisherId){$joinTravel=true;} ?>
-                <?php } ?>
-            <?php } ?>
             <div class="web-con" id="pinglunDiv">
                 <p class="title" id="pinglunCount">
                     <img src="/assets/images/pinglun2.png" width="25" height="28" style="display: inline-block;">
@@ -187,7 +158,7 @@
                 <div class="zhuanlan-web">
                     <ul id="tanchu_pl">
                     </ul>
-                   <!-- <ol id="spage"> </ol>-->
+                    <!-- <ol id="spage"> </ol>-->
                 </div>
                 <a href="javascript:;" class="zl-btn colGreen more" id="showMoreComment">更多评论</a>
 
@@ -196,7 +167,6 @@
                     <a href="javascript:;" class="zl-btn bgGreen colWit" onclick="submitComment()">发表评论</a>
                 </div>
             </div>
-
 
             <p class="title02"><img src="/assets/images/ss.png" width="20" height="20">&nbsp;相似推荐</p>
             <div class="clearfix">
@@ -226,30 +196,11 @@
         </div>
     </div>
     <div class="web-right">
-        <form id="orderForm" method="post" action="/user-order/add-order">
-            <input type="hidden" name="tripId" id="tripId" value="<?=$travelInfo['info']['tripId'];?>" />
-            <div class="kuang clearfix">
-                <h3 class="title bgGreen clearfix"><span class="colOrange fl">￥<?=$travelInfo['info']['basePrice']?></span>
-                    <span class="colWit fr"><?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?></span></h3>
-                <ul class="ul01 clearfix" style="overflow:inherit">
-                    <li class="tit"><span>出发日期</span><span>起始时间</span><span class="last">&nbsp;人数</span></li>
-                    <li class="tit tit02"><span><input type="text" name="beginDate" id="beginTime"></span><span><input type="text" name="startTime" id="startTime"></span>
-                        <span class="last">
-                         <select id="peopleCount" name="peopleCount">
-                            <?php for($i=1;$i<=$travelInfo['info']['maxUserCount'];$i++){echo '<option value="'.$i.'">'.$i.'</option>';} ?>
-                         </select>
-                        </span>
-                    </li>
-                </ul>
-                <?php if(!empty($travelInfo['serviceList'])){ ?>
-                    <a href="javascript:;" id="showServiceDiv" class="servers"><span>该随游可选择的附加服务</span><b class="icon"></b></a>
-                <?php } ?>
-                <p class="colOrange money" id="allPrice">总价：￥<?=intval($travelInfo['info']['basePrice']);?></p>
-                <input id="toApply" type="button" value="申请加入" class="btn web-btn5 bgGreen" <?=$isOwner||isset($joinTravel)?'disabled style="background-color: #ddd"':''?> >
-                <input id="addOrder" type="button" value="立即预定" class="btn web-btn6 bgOrange" <?=$isOwner?'disabled style="background-color: #ddd"':''?> >
-                <a href="javascript:;" id="buyHelp" class="colGreen fr">如何预订?</a>
-            </div>
-        </form>
+        <div class="kuang clearfix">
+            <h3 class="title bgGreen clearfix"><span class="colOrange fl">￥<?=$travelInfo['info']['basePrice']?></span><span class="colWit fr">每次</span></h3>
+            <input type="button" value="申请预订" class="btn bgOrange" id="trafficOrderBtn">
+            <a href="javascript:;" class="colGreen helps">如何预订？</a>
+        </div>
 
         <div class="kuang clearfix">
             <div class="user bgGreen">
@@ -257,7 +208,7 @@
                     <a target="_blank" href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>">
                         <img src="<?=$createUserInfo->headImg;?>" alt="" class="user-pic">
                     </a>
-                <span><?=$createUserInfo->nickname;?></span>
+                    <span><?=$createUserInfo->nickname;?></span>
                 </div>
                 <p style="max-width: 215px"><?=$createUserInfo->intro;?></p>
                 <a href="javascript:;" onclick="Main.showSendMessage('<?=$createUserInfo->userSign;?>')" class="icon"></a>
@@ -272,82 +223,74 @@
                 <?php if(empty($attention)||$attention==false){?>
                     <p class="colGreen adds"><i class="addIicon" attentionIdTrip="0" id="collection_trip"></i>添加到心愿单</p>
                 <?php  }else{?>
-                    <p class="colGreen adds"><i class="addIicon active" attentionIdTrip="<?php echo $attention['attentionId']?>" id="collection_trip"v></i>从心愿单中移除</p>
+                    <p class="colGreen adds"><i class="addIicon active" attentionIdTrip="<?php echo $attention['attentionId']?>" id="collection_trip"></i>从心愿单中移除</p>
                 <?php }?>
             </div>
         </div>
     </div>
+
 </div>
 
+<div class="jtPro screens clearfix" id="trafficOrderDiv" style="z-index: 1001">
+    <h2 class="title">车辆服务<a href="javascript:;" id="orderDivClose" class="close"></a></h2>
+    <div class="contains">
+        <div class="left">
+            <p>选择服务</p>
+            <ul class="ul01 clearfix">
+                <li>
+                    <?php if(!empty($travelInfo['trafficInfo']['carPrice'])){ ?>
+                        <a href="javascript:;" class="btn active">包车</a>
+                    <?php } ?>
+                    <p>预约日期（当地）</p>
+                    <div class="selet">
+                        <input type="text" id="orderDate" placeholder="请选择日期" readonly/>
+                    </div>
+                </li>
+                <li>
+                    <?php if(!empty($travelInfo['trafficInfo']['airplanePrice'])){ ?>
+                        <a href="javascript:;" class="btn">接机</a>
+                    <?php } ?>
+                    <p>时间（当地）</p>
+                    <div class="selet">
+                        <input type="text" data-field="time" id="orderTime" placeholder="请选择时间" readonly/>
+                    </div>
+                </li>
+                <li>
+                    <?php if(!empty($travelInfo['trafficInfo']['airplanePrice'])){ ?>
+                        <a href="javascript:;" class="btn">送机</a>
+                    <?php } ?>
+                    <p>人数</p>
+                    <div class="selet">
+                        <select id="peopleCount">
+                            <?php for($i=1;$i<=$travelInfo['info']['maxUserCount'];$i++){ ?> <option value="<?=$i?>"><?=$i?>人</option> <?php } ?>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+            <p class="p1" id="addService" style="width: 150px;cursor: pointer"><span>添加服务</span><a href="javascript:;" class="adds" ></a></p>
 
-<div class="serverSelct screens" style="z-index: 1000;">
-    <h2 class="bgGreen title">附加服务 <a href="javascript:;" class="close" id="closeServiceDiv"><img src="/assets/images/syxClose.png" width="22" height="22"></a></h2>
-    <ul class="ul02 clearfix" id="serviceLi">
-        <?php foreach($travelInfo['serviceList'] as $key=> $service){  ?>
-            <li>
-                <span><?=$service['title']?></span>
-                <span><b>￥<?=intval($service['money'])?></b></span>
-                <span class="last">
-                    <?=$service['type']==\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE?'每人':'每次' ?>
-                    <input type="checkbox"  class="radio" id="radio<?=$service['serviceId']?>" serviceId="<?=$service['serviceId']?>" servicePrice="<?=$service['money']?>" serviceType="<?=$service['type']?>" >
-                    <label for="radio<?=$service['serviceId']?>" ></label>
-                </span>
-            </li>
-        <?php } ?>
-    </ul>
-    <a href="javascript:;" class="bgGreen btn" id="confirmServiceDiv">确定</a>
-</div>
+        </div>
+        <div class="right">
+            <div class="noChoseService">未选择服务</div>
+            <div id="trafficServiceList" style="display: none">
+            </div>
+            <p class="all"><span class="name">总价</span> <span class="money" id="allPrice">￥0</span></p>
+            <form action="/user-order/add-traffic-order" method="post" id="trafficOrder">
+                <input type="hidden" id="tripId" name="tripId" value="<?=$travelInfo['info']['tripId']?>"/>
+                <input type="hidden" id="serviceList" name="serviceList"/>
 
-
-<div class="screens syxqPro02" style="display: none">
-    <div class="tit02 bgGreen">
-        <a href="<?=\common\components\SiteUrl::getViewUserUrl($createUserInfo->userSign)?>" class="userPic fl"><img src="<?=$createUserInfo->headImg;?>"></a>
-        <div class="text fl">
-            <p class="p1"><img src="/assets/images/position.png" width="14" height="18">&nbsp;&nbsp;<?=$travelInfo['info']['countryCname']?>，<?=$travelInfo['info']['cityCname']?></p>
-            <p style="margin-top: 15px">&nbsp;<?=$travelInfo['info']['title']?></p>
+                <a href="javascript:;" id="toPay" class="btn">支付</a>
+            </form>
         </div>
     </div>
-    <form method="post" id="applyForm" action="/trip/apply-trip">
-    <div class="line">
-        <ul class="list clearfix">
-            <li>
-                <p>在线提交申</p>
-                <p>请加入你感兴趣的随游</p>
-            </li>
-            <li>
-                <p>接到订单</p>
-                <p>陪伴游客</p>
-                <p>完成随游体验</p>
-            </li>
-            <li class="last">
-                <p>完成伴游</p>
-                <p>不用费心思</p>
-                <p>发布随游</p>
-                <p>也能获得收入</p>
-            </li>
-        </ul>
-
-            <input type="hidden" name="trip" value="<?=$travelInfo['info']['tripId']?>"  />
-            <textarea name="info" placeholder="说说你为什么想加入这条随游，怎样为旅行者提供更好的服务？"></textarea>
-    </div>
-    <div class="btns">
-        <a href="javascript:;" class="btn bgOrange fl" id="cancelApply">放弃申请</a>
-        <a href="javascript:;" class="btn bgGreen fr" id="applyBtn">提交申请</a>
-    </div>
-    </form>
 </div>
-<?php
-    $stepPriceJson='';
-    if(!empty($travelInfo['priceList'])){
-        $stepPriceJson=json_encode($travelInfo['priceList']);
-    }
-?>
+
+<div id="choseDateBox"></div>
 
 <script type="text/javascript">
     var basePrice='<?=intval($travelInfo['info']['basePrice']);?>';
     var basePriceType='<?=$travelInfo['info']['basePriceType'];?>';
     var maxPeopleCount='<?=$travelInfo['info']['maxUserCount'];?>';
-    var stepPriceJson='<?=$stepPriceJson;?>';
     var serviceTypeCount='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_COUNT;?>';
     var serviceTypePeople='<?=\common\entity\TravelTripService::TRAVEL_TRIP_SERVICE_TYPE_PEOPLE;?>';
     var userPublisherId='<?= $this->context->userPublisherObj!=null?$this->context->userPublisherObj->userPublisherId:''?>';
@@ -357,10 +300,17 @@
     var tripId=$("#tripId").val();
     var page=1;
     var rSign='';
-    var nowDate='<?=date('Y-m-d',time()); ?>';
-    var type=<?=empty($travelInfo['info']['type'])?0:$travelInfo['info']['type'];?>
+    var nowDate='<?=date('Y-m-d',time()+(empty($travelInfo['info']['scheduledTime'])?0:$travelInfo['info']['scheduledTime'])); ?>';
+    var minTime=<?=empty($travelInfo['info']['startTime'])?'null':"'".$travelInfo['info']['startTime']."'"?>;
+    var maxTime=<?=empty($travelInfo['info']['endTime'])?'null':"'".$travelInfo['info']['endTime']."'"?>;
+    var type=<?=empty($travelInfo['info']['type'])?0:$travelInfo['info']['type'];?>;
+    var nightTimeStart=<?=empty($travelInfo['trafficInfo']['nightTimeStart'])?'null':"'".$travelInfo['trafficInfo']['nightTimeStart']."'";?>;
+    var nightTimeEnd=<?=empty($travelInfo['trafficInfo']['nightTimeEnd'])?'null':"'".$travelInfo['trafficInfo']['nightTimeEnd']."'";?>;
+    var nightServicePrice=<?=empty($travelInfo['trafficInfo']['nightServicePrice'])?'null':$travelInfo['trafficInfo']['nightServicePrice'];?>;
+    var carPrice=<?=empty($travelInfo['trafficInfo']['carPrice'])?'null':$travelInfo['trafficInfo']['carPrice'];?>;
+    var airplanePrice=<?=empty($travelInfo['trafficInfo']['airplanePrice'])?'null':$travelInfo['trafficInfo']['airplanePrice'];?>;
 
-        window._bd_share_config = {
+    window._bd_share_config = {
         common : {
             bdText : '随游网-<?=htmlspecialchars(str_replace("\n"," ",$travelInfo['info']['intro']))?>',
             bdDesc : '随游网-<?=htmlspecialchars(str_replace("\n"," ",$travelInfo['info']['title']))?>',
@@ -370,13 +320,12 @@
         share : [{
             "bdSize" : 16
         }]
-    }
+    };
     //以下为js加载部分
     with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
 </script>
-
 <script type="text/javascript" src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" ></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" ></script>
-<script type="text/javascript" src="/assets/plugins/time-picki/js/timepicki.js"></script>
+<script type="text/javascript" src="/assets/plugins/datetimepicker/DateTimePicker.js"></script>
 <script type="text/javascript" src="/assets/pages/view-trip/info.js" ></script>
 

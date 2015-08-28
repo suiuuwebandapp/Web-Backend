@@ -41,7 +41,7 @@ function xcbjy(){
         };
     }
 };
-function bz(id,sClass){
+function bz(id,sClass,fun){
     var oBox=document.getElementById('bjy-box');
     var oDiv=getByClass(oBox,sClass);
     var oBtn=document.getElementById('bz').getElementsByTagName('li');
@@ -84,7 +84,7 @@ function bz(id,sClass){
 
     oBjyprev.onclick = function(){
         if(iNow==4){
-            NewTrip.saveTrip(2);
+            eval(fun+".saveTrip(2)");
             return;
         }
         if(iNow==3){
@@ -110,7 +110,7 @@ function bz(id,sClass){
 
     function next(){
         if(iNow==4){
-            NewTrip.saveTrip(1);
+            eval(fun+".saveTrip(1)");
             return;
         }
         if(iNow==3){

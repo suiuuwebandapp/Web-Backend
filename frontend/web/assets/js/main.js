@@ -40,6 +40,15 @@ var Main = function() {
             var r = window.location.search.substr(1).match(reg);
             if (r != null) return unescape(r[2]); return null;
         },
+        setInputOnlyNumber:function(obj){
+            $(obj).bind("keyup",function(){
+                var value=$(this).val()
+                $(this).val(value.replace(/[^\d]/g,''));
+            });
+            $(obj).bind("beforepaste",function(){
+                clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))
+            });
+        },
         /**
          * yyyy-MM-dd hh:mm:ss
          * @param strDate

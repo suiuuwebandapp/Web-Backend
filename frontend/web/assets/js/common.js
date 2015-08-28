@@ -50,7 +50,7 @@ $(function(){
 			$('.sydetailNav').removeClass('fixed')
 			$('.sydetail .web-right').removeClass('fixed')
 		}
-
+        
     });
 
 })
@@ -270,7 +270,7 @@ $(function(){
 /*-----syhPro弹出浮层-----*/
 $(function(){
 	$('.suiyouHelp .btn').click(function(e) {
-        //$('.syhPro,.mask').css('display','block')
+        $('.syhPro,.mask').css('display','block')
     });
 
 })
@@ -356,6 +356,33 @@ $(function(){
 	$('.bjy-bj5 .biaoqian a.addL').click(function(e) {
         $('.bjy-bj5 .tog').slideToggle();
     });
+	
+	
+	
+	
+   /*-----交通编辑提示-----*/
+   
+	$('.bjy-bj3 .car').hover(function(e) {
+        $('.bjy-bj3 .bj3Pro01').css('display','block');
+		
+    },function(){
+        $('.bjy-bj3 .bj3Pro01').css('display','none');
+    });
+      
+	$('.bjy-bj3 .pack').hover(function(e) {
+        $('.bjy-bj3 .bj3Pro02').css('display','block');
+		
+    },function(){
+        $('.bjy-bj3 .bj3Pro02').css('display','none');
+    });
+	
+	$('.bjy-bj3 .carPic').hover(function(e) {
+        $('.bjy-bj3 .bj3Pro03').css('display','block');
+		
+    },function(){
+        $('.bjy-bj3 .bj3Pro03').css('display','none');
+    });
+	
 	
 })
 

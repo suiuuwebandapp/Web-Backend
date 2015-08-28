@@ -14,17 +14,18 @@ use common\components\SMSUtils;
 use common\components\Code;
 use common\components\DateUtils;
 use common\components\SysMessageUtils;
+use common\components\Validate;
 use common\entity\TravelTrip;
 use common\entity\TravelTripService;
 use common\entity\UserMessage;
 use common\entity\UserOrderComment;
+use common\entity\UserOrderContact;
 use common\entity\UserOrderInfo;
 use frontend\services\TripService;
 use frontend\services\UserBaseService;
 use frontend\services\UserMessageService;
 use frontend\services\UserOrderService;
 use yii\base\Exception;
-
 class UserOrderController extends  CController{
 
 
@@ -72,9 +73,18 @@ class UserOrderController extends  CController{
         if($orderInfo->userId!=$this->userObj->userSign){
             return $this->redirect(['/result', 'result' => '无效的用户']);
         }
+
+        $contact=$this->userOrderService->getOrderContactByOrderId($orderInfo->orderId);
+        if($contact==null){
+            $contact=new UserOrderContact();
+            $contact->username=$this->userObj->surname.$this->userObj->name;
+            $contact->phone=$this->userObj->phone;
+            $contact->wechat=$this->userObj->wechat;
+        }
         return $this->render("info",[
-           'orderInfo'=> $orderInfo,
-            'userPublisherInfo'=>$publisherInfo
+            'orderInfo'=> $orderInfo,
+            'userPublisherInfo'=>$publisherInfo,
+            'contact'=>$contact
         ]);
     }
 
@@ -193,6 +203,138 @@ class UserOrderController extends  CController{
             return $this->redirect(["/user-order/info",
                 'orderNumber'=>$userOrderInfo->orderNumber
             ]);
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return $this->redirect(['/result', 'result' => '系统未知异常']);
+        }
+    }
+
+    public function actionAddTrafficOrder()
+    {
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+        $serviceStr=trim(\Yii::$app->request->post("serviceList", ""));
+
+        if(empty($tripId)){
+            return $this->redirect(['/result', 'result' => '随游编号不正确']);
+        }
+        if(empty($serviceStr)){
+            return $this->redirect(['/result', 'result' => '服务列表不能为空']);
+        }
+
+        try{
+            $serviceList=json_decode($serviceStr,true);
+
+            $tripService=new TripService();
+            $travelTripInfo=$tripService->getTravelTripInfoById($tripId);
+            $tripInfo=$travelTripInfo['info'];
+            $tripPublisherList=$travelTripInfo['publisherList'];
+            $trafficInfo=$travelTripInfo['trafficInfo'];
+            $scheduledDay=0;
+            $totalPrice=0;
+
+            $nowDay=strtotime(date("Y-m-d",time()));
+
+            $serviceResult=[];
+            $beginDate='';
+            $startTime='';
+            $personCount='';
+
+            if(!empty($tripInfo['scheduledTime'])){
+                $scheduledDay=$tripInfo['scheduledTime'];
+            }
+
+            foreach($serviceList as $serviceInfo){
+                $tempDate=$serviceInfo['date'];
+                $tempTime=$serviceInfo['time'];
+                $tempType=$serviceInfo['type'];
+                $tempPerson=$serviceInfo['person'];
+
+                $tempPrice=null;
+                $timeNumber=strtotime(date("Y-m-d",time())." ".$tempTime);
+
+                if(strtotime($tempDate)<($nowDay+$scheduledDay)){
+                    return $this->redirect(['/result', 'result' => '无效的出行日期']);
+                }
+                if(!empty($tripInfo['startTime'])&&!empty($tripInfo['endTime'])){
+                    $startTimeNumber=strtotime(date("Y-m-d",time())." ".$tripInfo['startTime']);
+                    $endTimeNumber=strtotime(date("Y-m-d",time())." ".$tripInfo['endTime']);
+                    $tempServiceInfo=[];
+                    if($timeNumber<$startTimeNumber||$timeNumber>$endTimeNumber){
+                        return $this->redirect(['/result', 'result' => '无效的出行时间']);
+                    }
+                }
+                if($tempPerson>$tripInfo['maxUserCount']){
+                    return $this->redirect(['/result', 'result' => '无效的出行人数']);
+                }
+                if($tempType=="car"){
+                    $tempPrice=$trafficInfo['carPrice'];
+                }else{
+                    $nightStartNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeStart']);
+                    $nightEndNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeEnd']);
+                    if($timeNumber>$nightStartNumber&&$timeNumber<$nightEndNumber){
+                        $tempPrice=intval($trafficInfo['airplanePrice'])+intval($trafficInfo['nightServicePrice']);
+                    }else{
+                        $tempPrice=$trafficInfo['airplanePrice'];
+                    }
+                }
+
+                if(empty($beginDate)){
+                    $beginDate=$tempDate;
+                    $startTime=$tempTime;
+                }else{
+                    if(strtotime($tempDate)<strtotime($beginDate)){
+                        $beginDate=$tempDate;
+                        $startTime=$tempTime;
+                    }
+                }
+
+
+                if(empty($personCount)){
+                    $personCount=$tempPerson;
+                }else{
+                    if($tempPerson>$personCount){
+                        $personCount=$tempPerson;
+                    }
+                }
+
+                $totalPrice=intval($totalPrice)+intval($tempPrice);
+                $tempServiceInfo['date']=$tempDate;
+                $tempServiceInfo['time']=$tempTime;
+                $tempServiceInfo['type']=$tempType;
+                $tempServiceInfo['price']=$tempPrice;
+                $tempServiceInfo['person']=$tempPerson;
+
+                $serviceResult[]=$tempServiceInfo;
+            }
+
+            if(empty($serviceResult)){
+                throw new Exception("请选择有效的服务");
+            }
+
+
+            $userOrderInfo=new UserOrderInfo();
+            $userOrderInfo->tripId=$tripInfo['tripId'];
+            $userOrderInfo->userId=$this->userObj->userSign;
+            $userOrderInfo->beginDate=$beginDate;
+            $userOrderInfo->startTime=$startTime;
+            $userOrderInfo->personCount=$personCount;
+            $userOrderInfo->serviceInfo=json_encode($serviceResult);
+            $userOrderInfo->basePrice=$tripInfo['basePrice'];
+            $userOrderInfo->servicePrice=$totalPrice;
+            $userOrderInfo->tripJsonInfo=json_encode($travelTripInfo);
+            $userOrderInfo->totalPrice=$totalPrice;
+            $userOrderInfo->status=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT;//默认订单状态，待支付
+            $userOrderInfo->orderNumber=Code::createOrderNumber();
+            $this->userOrderService->addUserOrder($userOrderInfo);
+
+            //给随友发送消息
+            $sysMessageUtils=new SysMessageUtils();
+            $sysMessageUtils->sendNewOrderMessage($this->userObj->userSign,$tripPublisherList,$userOrderInfo->orderNumber);
+            return $this->redirect(["/user-order/info",
+                'orderNumber'=>$userOrderInfo->orderNumber
+            ]);
+
+
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect(['/result', 'result' => '系统未知异常']);
@@ -589,6 +731,88 @@ class UserOrderController extends  CController{
         $userOrderComment->otherContent=$otherContent;
         try{
             $this->userOrderService->addUserOrderComment($userOrderComment);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+
+    }
+
+
+    /**
+     * @return string 保存订单联系人
+     */
+    public function actionSaveOrderContact()
+    {
+        $orderNumber=\Yii::$app->request->post('orderNumber');
+        $username=\Yii::$app->request->post('username');
+        $phone=\Yii::$app->request->post('phone');
+        $sparePhone=\Yii::$app->request->post('sparePhone');
+        $wechat=\Yii::$app->request->post('wechat','');
+        $urgentUsername=\Yii::$app->request->post('urgentUsername');
+        $urgentPhone=\Yii::$app->request->post('urgentPhone');
+        $arriveFlyNumber=\Yii::$app->request->post('arriveFlyNumber');
+        $leaveFlyNumber=\Yii::$app->request->post('leaveFlyNumber');
+        $destination=\Yii::$app->request->post('destination');
+
+        if(empty($orderNumber)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($username)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户姓名"));
+        }
+        if(empty($phone)||Validate::validatePhone($phone)!=''){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的手机号"));
+        }
+        if(empty($urgentUsername)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的紧急联系人姓名"));
+        }
+        if(empty($urgentPhone)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的紧急联系人手机号"));
+        }
+
+
+        try{
+            $orderInfo=$this->userOrderService->findOrderByOrderNumber($orderNumber);
+            $contact=$this->userOrderService->getOrderContactByOrderId($orderInfo->orderId);
+
+            if($orderInfo->orderNumber!=$orderNumber){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+            }
+            $serviceInfo=json_decode($orderInfo->serviceInfo,true);
+            $hasAirplane=false;
+            foreach($serviceInfo as $service){
+                if($service['type']=='airplane'){
+                    $hasAirplane=true;
+                }
+            }
+            if($hasAirplane){
+                if(empty($arriveFlyNumber)&&empty($leaveFlyNumber)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的接送机号码"));
+                }
+                if(empty($destination)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的目的地"));
+                }
+            }
+            if(empty($contact)){
+                $contact=new UserOrderContact();
+            }
+
+            $contact->orderId=$orderInfo->orderId;
+            $contact->userId=$orderInfo->userId;
+
+            $contact->username=$username;
+            $contact->phone=$phone;
+            $contact->sparePhone=$sparePhone;
+            $contact->wechat=$wechat;
+            $contact->urgentUsername=$urgentUsername;
+            $contact->urgentPhone=$urgentPhone;
+            $contact->arriveFlyNumber=$arriveFlyNumber;
+            $contact->leaveFlyNumber=$leaveFlyNumber;
+            $contact->destination=$destination;
+
+            $this->userOrderService->saveUserContact($contact);
             return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);

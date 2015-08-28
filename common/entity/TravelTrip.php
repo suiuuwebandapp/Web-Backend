@@ -89,16 +89,6 @@ class TravelTrip {
     public $maxUserCount;
 
     /**
-     * @var是否接机
-     */
-    public $isAirplane;
-
-    /**
-     * @var是否提供住宿
-     */
-    public $isHotel;
-
-    /**
      * @var随游评分
      */
     public $score;
@@ -156,6 +146,11 @@ class TravelTrip {
      * @var是否是热门
      */
     public $isHot;
+
+    /**
+     * @var提前预定时间
+     */
+    public $scheduledTime;
 
     /**
      * @var随游分类

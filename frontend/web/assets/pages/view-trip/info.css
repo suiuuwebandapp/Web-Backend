@@ -120,3 +120,40 @@
 .sydetail .web-right .btn{
     margin-bottom: 10px;
 }
+
+
+
+/********TRAFFIC TRIP*******/
+#trafficOrderDiv input{
+    padding: 0px 10px;
+}
+
+.jtPro .contains .right .name{
+    width: 170px;
+}
+.jtPro .contains .right p{
+    padding-left: 10px;
+    padding-right: 0px;
+}
+.jtPro .contains .right .name b {
+    font-size: 16px;
+}
+.jtPro .contains .right{
+    width: 294px;
+    padding-left: 25px;
+}
+
+.jtPro .contains .right .all .money{
+    font-size: 18px;
+}
+
+.jtPro #trafficServiceList{
+    min-height: 95px;
+    font-size: 16px !important;
+}
+.jtPro .right .noChoseService{
+    text-align: center;
+    color: #ddd;
+    padding-top: 60px;
+    height: 75px;
+}

@@ -1,0 +1,242 @@
+.form_tip{
+    font-size: 14px !important;
+    padding-left: 20px;
+    color: red;
+    display: inline-block !important;
+    text-align: right !important;
+    float: right;
+    width: 250px !important;
+    height: 36px;
+    margin-top: 0px !important;
+}
+.title_p{
+    width: 440px;
+    margin: auto;
+}
+.spn_title{
+    display: inline !important;
+}
+.select2-container .select2-choice {
+    background-color: #eee;
+    border-radius: 0px;
+    font-size: 14px;
+    color: dimgray;
+    height: 30px !important;
+}
+.select2-drop {
+    font-size: 14px;
+}
+.select2-highlighted {
+    background-color: #eee;
+}
+.select2-no-results {
+    font-size: 14px;
+    color: dimgray;
+    text-align: center;
+}
+.p_chose_title_img {
+    height: 267px;
+    width: 410px;
+    text-align: center;
+    line-height:267px;
+    background-color: #ECECFC;
+}
+.upload_tip {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 15px;
+}
+.imgPic {
+    cursor: pointer;
+    height: 267px;
+    width: 410px;
+    margin: auto;
+}
+.showImg {
+    height: 267px;
+    width: 410px;
+}
+#uploadifive-titleImgFile {
+    display: none;
+}
+.queue {
+    display: none;
+}
+#uploadAll{
+    width: 286px;
+    background-color: #FF7A45;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+    margin: auto;
+}
+.jtbjy .bjy-bj2 .lines{
+    clear: both;
+}
+.content{
+    width: 350px;
+    margin: auto;
+}
+.map{
+    background-color: #ffffff !important;
+}
+
+#uploadifive-picFile{
+    display: none;
+}
+.upload_show_info{
+    text-align: center;
+    margin-top: 50px;
+    display: block;
+}
+.ti_tx, .mi_tx, .mer_tx{
+    height: 40px;
+    padding-left:0px;
+    margin-left:6px;
+}
+.bj4-main{
+    overflow: visible;
+}
+.timepicki-input{
+    width: 45px !important;
+    padding-left: 0px !important;
+}
+.timepicker_wrap{
+
+    border-radius:0 !important;
+}
+.prev, .next{
+    border-radius: 0 !important;
+}
+.time_end{
+    left: 200px !important;
+    width: 240px !important;
+}
+.service_time_tip{
+    float: left;
+    line-height: 36px;
+    height: 36px;
+    margin: 0 10px;
+}
+.timepicker_start, .timepicker_end{
+    width: 197px !important;
+    margin-right: 0px !important;
+}
+
+.service_price .select2-search{
+    display: none !important;
+}
+.sect .serviceSelect .select2-chosen{
+    margin: 0px !important;
+}
+.sect .serviceSelect .select2-choice{
+    position: initial;
+    width: 100px !important;
+}
+.sect .serviceSelect a{
+    height: 36px !important;
+    line-height: 36px !important;
+    border: none;
+
+}
+.sect .serviceSelect .select2-choice{ padding-top: 0; border: 0;}
+.sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
+.sect .select2-container .select2-choice .select2-arrow{ margin-top: 0;}
+.select2-container .select2-arrow b{
+    padding-right: 0px;
+}
+.bjy-bj4 p a{
+    color: #858585;
+}
+
+.bjy-bj4 .bj4-div{
+    width: 440px;
+    margin: auto;
+}
+.bjy-bj4 .bj4-div span{
+    width: 150px;
+    float: left;
+}
+.bjy-bj4 p{
+    clear: both;
+}
+
+.bjy-bj4 .creat dl dd input{
+    margin-bottom: 10px;
+}
+.bjy-bj4 .start-time dt span{
+    width: 150px;
+}
+
+.input-group-btn{
+    display: none !important;
+}
+
+.detail_tags{
+    display: inline-block;
+    text-shadow: none !important;
+    font-weight: 300;
+    font-size: 14px;
+    padding: 3px 6px 3px 6px;
+    color: #fff;
+    background-color: #51c7b7;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.uploadifive-button{
+    display: none;
+}
+
+
+.picPop{
+    z-index: 1001 !important;
+}
+
+
+
+
+/*************/
+
+.line_ipt{
+    padding: 0px 10px;
+    width: 120px !important;
+    display: inline-block !important;
+}
+.line_span{
+    float: right !important;
+    margin-right: 10px;
+    display: inline-block !important;
+    width: 50px !important;
+    text-align: right;
+}
+.jtbjy .bjy-bj2 .time label input{
+    margin: 0px 3px;
+}
+.bjy-bj span{
+    line-height: 36px;
+    height: 36px;
+}
+
+.timePicker{
+    font-size: 14px;
+    text-align: center;
+    padding: 0 5px !important;
+    width: 60px !important;
+}
+.jtbjy .bjy-bj2 .time label input{
+    text-align: center;
+}
+.line_p_tip{
+    color:red;
+    text-align: center;
+    padding-bottom: 10px;
+    font-size: 14px;
+}
+.line_two_ipt_div{
+    clear: both;display: inline-block;width: 215px
+}
+.select2-container .select2-choice > .select2-chosen{
+    line-height: 30px;
+}

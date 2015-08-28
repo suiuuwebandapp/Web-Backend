@@ -58,6 +58,13 @@ class DateUtils {
     }
 
 
+    public static function formatTime($str)
+    {
+        $arr=explode(":",$str);
+        return $arr[0].":".$arr[1];
+    }
+
+
     /**
      * 获取当前时间
      * @return bool|string

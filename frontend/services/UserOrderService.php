@@ -17,6 +17,7 @@ use common\entity\TravelTripComment;
 use common\entity\UserAccountRecord;
 use common\entity\UserMessage;
 use common\entity\UserOrderComment;
+use common\entity\UserOrderContact;
 use common\entity\UserOrderInfo;
 use common\entity\UserOrderPublisher;
 use common\entity\UserOrderPublisherCancel;
@@ -57,6 +58,57 @@ class UserOrderService extends BaseDb
             $this->closeLink();
         }
     }
+
+
+    /**
+     * 保存用户联系人
+     * @param UserOrderContact $userOrderContact
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function saveUserContact(UserOrderContact $userOrderContact)
+    {
+        try{
+            $conn=$this->getConnection();
+            $this->userOrderDb=new UserOrderDb($conn);
+            if(empty($userOrderContact->contactId)){
+                $this->saveObject($userOrderContact);
+            }else{
+                $this->updateObject($userOrderContact);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+
+    /**
+     * 根据订单获取用户联系信息
+     * @param $orderId
+     * @return mixed|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getOrderContactByOrderId($orderId)
+    {
+        $orderContact=null;
+        try{
+            $conn=$this->getConnection();
+            $this->userOrderDb=new UserOrderDb($conn);
+            $rst=$this->findObjectByType(UserOrderContact::class,'orderId',$orderId);
+            if(!empty($rst)){
+                $orderContact=$this->arrayCastObject($rst[0],UserOrderContact::class);
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $orderContact;
+    }
+
 
     /**
      * 根据订单号获取订单详情

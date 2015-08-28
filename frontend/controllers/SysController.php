@@ -53,6 +53,7 @@ class SysController extends Controller{
 
 
 
+
     public function actionEditTrip()
     {
         $tripId=\Yii::$app->request->get("trip");
@@ -99,6 +100,9 @@ class SysController extends Controller{
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
 
+        if ($this->userPublisherObj == null) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
+        }
         if (empty($tripId)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
         }
@@ -117,7 +121,7 @@ class SysController extends Controller{
         if (empty($cityId)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
         }
-        if (empty($basePrice)) {
+        if (empty($basePrice)||$basePrice<0) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "基础价格不允许为空"));
         }
         if (empty($peopleCount)) {
@@ -141,10 +145,16 @@ class SysController extends Controller{
         if (count($scenicList) > 10) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "图片介绍不能大于10个"));
         }
-        if (empty($tagList)) {
+        if (empty($tagList)&&empty($cusTagList)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要选择一个标签"));
         }
 
+        //验证当前用户是不是随游的所属者
+        $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
+        $travelTrip = $this->tripService->getTravelTripById($tripId);
+        if($travelTrip->createPublisherId!=$userPublisherId){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
+        }
 
         $tripStartTime = DateUtils::convertTimePicker($beginTime, 1);
         $tripEndTime = DateUtils::convertTimePicker($endTime, 1);
@@ -174,6 +184,7 @@ class SysController extends Controller{
         $travelTrip->travelTimeType = $tripKind;
         $travelTrip->startTime = $tripStartTime;
         $travelTrip->endTime = $tripEndTime;
+        $travelTrip->createPublisherId = $userPublisherId;
         $travelTrip->tags = implode(",", array_merge($tagList,$cusTagList));
 
 
@@ -201,6 +212,9 @@ class SysController extends Controller{
                 $tempPrice->minCount = $step[0];
                 $tempPrice->maxCount = $step[1];
                 $tempPrice->price = $step[2];
+                if($tempPrice->price<0){
+                    throw new Exception("无效的阶梯价格");
+                }
                 $tripStepPriceList[] = $tempPrice;
             }
         }
@@ -214,6 +228,9 @@ class SysController extends Controller{
                 $tempService->title = $service[0];
                 $tempService->money = $service[1];
                 $tempService->type = $service[2];
+                if($tempService->money<0){
+                    throw new Exception("无效的专项服务价格");
+                }
                 $tripServiceList[] = $tempService;
             }
         }
