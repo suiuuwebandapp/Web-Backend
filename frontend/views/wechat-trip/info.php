@@ -42,6 +42,7 @@
             <p class="navTop">随游详情</p>
         </div>
 <div class="syDetailBanner">
+    <span class="smoney">￥<?= $info['info']['basePrice'];?></span>
     <!--banner开始-->
     <div class="bd">
         <ul class="banners" id="ul_id">
@@ -94,7 +95,7 @@
                 </span>
         </li>
         <li><span class="icon icon2"><?=  substr($info['info']['startTime'],0,5) ?>  -<?=  substr($info['info']['endTime'],0,5) ?> </span></li>
-        <li class="last"><span class="icon icon3">￥<?= $info['info']['basePrice'];?></span></li>
+        <li class="last"><span class="icon icon3"><?= $info['info']['travelTime'];?>小时</span></li>
     </ul>
     <div class="bgbox">
         <h3 class="title colGreen">详情描述</h3>

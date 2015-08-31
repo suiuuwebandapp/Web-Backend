@@ -48,13 +48,17 @@
                 <li><a href="javascript:;">过往订单</a></li>
             </ul>
         </div>
+
+
         <?php if(count($list)==0&&count($unList)==0){?>
     <div class="center_myOder slideRec" style="display:block;margin-top: 3.2rem">
         <div class="content">
-            <img src="/assets/other/weixin/images/nodz.png" class="logo">
-            <p class="noOrder">你还没有订单哦</p>
-            <!--<a href="/wechat-trip" class="btn btn01">任性随游</a>-->
+            <div class="noOrder">
+                <p class="">还没有订单</p>
+                <img src="/assets/other/weixin/images/nodz.png" class="img">
+            </div>
         </div>
+    </div>
     </div>
         <?php }else{?>
             <div class="center_myOder slideRec" style="display:block;margin-top: 3.2rem">

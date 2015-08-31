@@ -132,7 +132,13 @@ class AppTravelController extends AController
     {
 
         try{
-            $appSign = \Yii::$app->request->get(\Yii::$app->params['app_suiuu_sign']);
+            $token = \Yii::$app->request->get("token");
+            $appSign = \Yii::$app->redis->get(Code::APP_TOKEN . $token);
+            if(empty($appSign))
+            {
+                echo json_encode(Code::statusDataReturn(Code::TOKEN_ERROR, 'token已过期'));
+                exit;
+            }
             $currentUser = json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION . $appSign)));
 
             if (!isset($currentUser) && empty($appSign)) {
@@ -147,8 +153,6 @@ class AppTravelController extends AController
                 return $this->renderPartial('error',['str1'=>'登陆已过期请重新登陆','str2'=>'返回','url'=>"#"]);
             }
             $userSign=$this->userObj->userSign;
-            /*$appSign = "d";
-            $userSign='085963dc0af031709b032725e3ef18f5';*/
             $trId=Yii::$app->request->get('trId');
             if(empty($trId)){  return $this->renderPartial('error',['str1'=>'未知随游','str2'=>'返回','url'=>"#"]);}
             $data=$this->travelSer->getTravelTripInfoById($trId,$userSign);
@@ -160,7 +164,7 @@ class AppTravelController extends AController
             if(empty($createPublisherId)){
                 return $this->renderPartial('error',['str1'=>'无法得到未知的随友','str2'=>'返回','url'=>"#"]);
             }
-            return $this->renderPartial('info',['info'=>$data,'sign'=>$appSign]);
+            return $this->renderPartial('info',['info'=>$data,'token'=>$token]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->renderPartial('error',['str1'=>'获取详情异常','url'=>"#"]);
