@@ -17,14 +17,28 @@
             $('div#menu').mmenu();
         });
     </script>
-    <style>
-         /*.btn{ font-size:0.85rem; color:#fff; background:#97CBFF; display:block; width:10.8rem; height:2.14rem; line-height:2.14rem; text-align:center; margin:3rem auto 0; text-decoration:none;}
-        .btn:hover{ text-decoration:underline;}*/
-    </style>
+    <script>
+        function showHtml()
+        {
+            $("#page").show();
+            $("#loading").hide();
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
 </head>
 
-<body>
-<div id="page" class="userCenter">
+<body   onload="showHtml()">
+
+<div id="loading" class="overlay">
+    <div class="spinner" id="loading">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+</div>
+<div id="page" hidden="hidden" class="userCenter">
         <?php include "left.php"; ?>
         <div class="Uheader header mm-fixed-top">
             <a href="#menu"></a>
@@ -35,12 +49,16 @@
             </ul>
         </div>
         <?php if(count($list)==0&&count($unList)==0){?>
-            <img src="/assets/other/weixin/images/logo02.png" class="logo">
+    <div class="center_myOder slideRec" style="display:block;margin-top: 3.2rem">
+        <div class="content">
+            <img src="/assets/other/weixin/images/nodz.png" class="logo">
             <p class="noOrder">你还没有订单哦</p>
-            <a href="/wechat-trip" class="btn">任性随游</a>
+            <!--<a href="/wechat-trip" class="btn btn01">任性随游</a>-->
+        </div>
+    </div>
         <?php }else{?>
-        <div class="center_myOder slideRec" style="display:block;margin-top: 3.2rem">
-            <div class="content">
+            <div class="center_myOder slideRec" style="display:block;margin-top: 3.2rem">
+                <div class="content">
                 <?php foreach($allList as $val){
                     $tripInfo = json_decode($val['tripJsonInfo'],true);
                     ?>
@@ -81,11 +99,12 @@
                             <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL){?>
                                 <p class="p1">随友取消</p>
                             <?php }?>
+
                         </div>
                     </div>
                 <?php }?>
-            </div>
     </div>
+                </div>
     <div class="center_myOder slideRec" style="margin-top: 3.2rem">
         <div class="content">
             <?php foreach($unList as $val){

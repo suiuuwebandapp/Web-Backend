@@ -78,6 +78,8 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
+        return $this->renderPartial("test");
+        exit;
 
         echo urlencode("ZgN5BYAw1FUgebsvGNanaRgNf25KtXyvIRgYG5zyF8ADgJ5VFAitRA==");
         echo "<br>";
@@ -271,10 +273,11 @@ class WeChatController extends WController
 
     public function actionError()
     {
+        $this->loginValid();
         $str=Yii::$app->request->get('str');
         $btn=Yii::$app->request->get('btn','返回');
         $url=Yii::$app->request->get('url',"javascript:history.go(-1)");
-        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>$btn,'url'=>$url));
+        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>$btn,'url'=>$url,'userObj'=>$this->userObj,'active'=>7,'newMsg'=>0));
     }
 
     public function actionShowCountry()

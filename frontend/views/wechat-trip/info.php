@@ -14,8 +14,27 @@
             $('div#menu').mmenu();
         });
     </script>
+    <script>
+        function showHtml()
+        {
+            $("#page").show();
+            $("#loading").hide();
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
 </head>
-<body class="bgwhite">
+
+<body  class="bgwhite" onload="showHtml()">
+
+<div id="loading" class="overlay">
+    <div class="spinner" id="loading">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+</div>
 <div id="page" class="userCenter">
         <?php include "left.php"; ?>
         <div class="Uheader header mm-fixed-top">

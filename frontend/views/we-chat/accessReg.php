@@ -33,7 +33,6 @@
             color: #858585;
             text-align: center;
             font-size: 0.85rem;
-            padding: 20px;
             height: 2.7rem;
         }
         .accAreaCodeSelect #select2-chosen-1{
@@ -50,10 +49,28 @@
             $('div#menu').mmenu();
         });
     </script>
+    <script>
+        function showHtml()
+        {
+            $("#page").show();
+            $("#loading").hide();
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
 </head>
 
-<body class="bgwhite">
-<div id="page" class="userCenter">
+<body  class="bgwhite" onload="showHtml()">
+
+<div id="loading" class="overlay">
+    <div class="spinner" id="loading">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+</div>
+<div id="page" hidden="hidden" class="userCenter">
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>

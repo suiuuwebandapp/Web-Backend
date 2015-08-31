@@ -15,10 +15,29 @@
             $('div#menu').mmenu();
         });
     </script>
+    <script>
+        function showHtml()
+        {
+            $("#page").show();
+            $("#loading").hide();
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
+
 </head>
 
-<body>
-<div id="page" class="userCenter">
+<body onload="showHtml()">
+
+<div id="loading" class="overlay">
+    <div class="spinner" id="loading">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+</div>
+<div id="page" hidden="hidden" class="userCenter">
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
@@ -33,7 +52,7 @@
                         <img src="<?php echo $userInfo['headImg'];?>">
                     </a>
                     <div class="texts fl">
-                        <p class="adress"><?php if(!empty($userInfo['countryCname'])&&!empty($userInfo['cityCname'])){$str="、";} echo $userInfo['countryCname'].$str.$userInfo['cityCname'];?></p>
+                        <p class="adress"><?php $str=""; if(!empty($userInfo['countryCname'])&&!empty($userInfo['cityCname'])){$str="、";} echo $userInfo['countryCname'].$str.$userInfo['cityCname'];?></p>
                         <?php if(!empty($userInfo['email'])){?>
                             <p class="email">邮箱验证</p>
                         <?php }?>
