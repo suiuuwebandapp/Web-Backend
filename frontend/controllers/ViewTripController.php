@@ -154,6 +154,7 @@ class ViewTripController extends UnCController{
 
         $rst=$attention->getAttentionResult(UserAttention::TYPE_COLLECT_FOR_TRAVEL,$tripId,$userSign);
 
+        $this->getView()->title = $travelInfo['info']['title'];
         return $this->render($returnUrl,[
             'travelInfo'=>$travelInfo,
             'createUserInfo'=>$createUserInfo,
