@@ -40,7 +40,10 @@
                 display: 'bottom',    // Specify display mode like: display: 'bottom' or omit setting to use default
                 counter: true,        // More info about counter: http://docs.mobiscroll.com/2-15-1/calendar#!opt-counter
                 multiSelect: true,    // More info about multiSelect: http://docs.mobiscroll.com/2-15-1/calendar#!opt-multiSelect
-                selectedValues: []
+                controls: ['calendar'], // Show only the calendar
+                endYear:2020, //结束年份
+                startYear: (new Date()).getFullYear(), //开始年份
+                selectedValues: [] // Initial selected days
             });
         });
     </script>
@@ -219,6 +222,11 @@
         var timeList=$('#dateList').val();
         var userNumber=$('#userNumber').val();
         var userPhone=$('#userPhone').val();
+
+        var timeArr= timeList.split(",");
+        var myDate = new Date();
+
+
         if(site=="")
         {
             alert('请选择出行国家');
@@ -243,6 +251,16 @@
         {
             alert('手机号格式不正确');
             return;
+        }
+        for(var i =0;i<timeArr.length;i++)
+        {
+            var tt = new Date(timeArr[i]);
+            if(tt.getTime()<myDate.getTime())
+            {
+                alert("出行日期不能小于当前时间");
+                return;
+
+            }
         }
         content=str+content;
         $.ajax({

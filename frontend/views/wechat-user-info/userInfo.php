@@ -61,9 +61,13 @@
                         <?php }?>
                     </div>
                 </div>
-                <p><?php echo !empty($userInfo['info'])?nl2br($userInfo['info']):"暂无简介" ;?></p>
+                <?php
+                $info=!empty($userInfo['info'])?nl2br($userInfo['info']):"暂无简介" ;
+                $str="";
+                if(mb_strlen($info)>80){$str=mb_substr($info,0,80,"utf-8"); $str.="....";}
+                ?>
+                <p id="userInfo" info="<?php echo $info?>" str="<?php echo $str;?>" isInfo="<?php if(empty($str)){echo 1;}else{echo 0;}?>"><?php echo empty($str)?$info:$str; ?></p>
             </div>
-
 
 
                 <?php if(count($tripList)==0){?>
@@ -73,7 +77,7 @@
                     </div>
                 <?php }else{?>
             <div class="bigBox" onclick="toTripList('<?=$userInfo['userSign'] ?>')">
-                    <h2 class="tyleTitle">他的随游<?php echo count($tripList);?></h2>
+                    <h2 class="tyleTitle">他的随游(<?php echo count($tripList);?>)</h2>
                     <div class="box">
                         <a href="javascript:;" class="pic"><img src="<?php echo $tripList[0]['titleImg']?>"></a>
                         <div class="details">
@@ -99,7 +103,7 @@
                     </div>
                 <?php }else{?>
             <div class="bigBox"  onclick="toAttentionList('<?=$userInfo['userSign'] ?>')">
-                <h2 class="tyleTitle">他的心愿单<?php echo $attention['msg']->totalCount?></h2>
+                <h2 class="tyleTitle">他的心愿单(<?php echo $attention['msg']->totalCount?>)</h2>
                 <div class="box">
                     <a href="javascript:;" class="pic"><img src="<?php echo $attention['data'][0]['titleImg']?>"></a>
                     <div class="details">
@@ -121,6 +125,24 @@
     </div>
 </div>
 <script>
+    $("#userInfo").bind("click",clickInfo)
+    function clickInfo()
+    {
+        var isInfo = $("#userInfo").attr("isInfo");
+        var str = $("#userInfo").attr("str");
+        var info = $("#userInfo").attr("info");
+        if(str=="")
+        {return;}
+        if(isInfo==1)
+        {
+            $("#userInfo").html(str);
+            $("#userInfo").attr("isInfo",0);
+        }else
+        {
+            $("#userInfo").html(info);
+            $("#userInfo").attr("isInfo",1);
+        }
+    }
     function toTripList(sign)
     {
         window.location.href="/wechat-user-info/trip-list?userSign="+sign;

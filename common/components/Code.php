@@ -190,7 +190,14 @@ class Code
     const ORDER_UNIT_NULL = '订单单元id为空';
 
 
-
+    /**
+     * 定制
+     */
+    const ORDER_PAY_TYPE_FOR_WECHAT_ORDER=1;
+    /**
+     * 随游订单
+     */
+    const ORDER_PAY_TYPE_FOR_TRAVEL_ORDER=2;
     /**
      * 返回数据和状态
      * @param $infoCode       信息码

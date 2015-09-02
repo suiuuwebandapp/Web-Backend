@@ -3,10 +3,9 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
     <title>随游</title>
-    <link type="text/css" rel="stylesheet" href="/assets/other/weixin/css/common.css">
-    <link type="text/css" rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery.SuperSlide.2.1.1.js"></script>
+    <link type="text/css" rel="stylesheet" href="/assets/other/app/css/astyle.css">
+    <script type="text/javascript" src="/assets/other/app/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/assets/other/app/js/jquery.SuperSlide.2.1.1.js"></script>
 </head>
 
 <body  class="bgwhite" >
@@ -101,23 +100,7 @@
         <img src="<?= $info['info']['score']>=4?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
         <img src="<?= $info['info']['score']>=2?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
     </p>
-    <ul class="weblist clearfix">
-        <?php foreach($comment['data'] as $val ){?>
-            <li>
-                <div class="box clearfix">
-                    <a href="/wechat-user-info/user-info?userSign=<?= $val['userSign'];?>" class="userPic"><img src="<?= $val['headImg']?>"></a>
-                    <span class="userName"><?= $val['nickname']?></span>
-                    <p class="text"><?= $val['content']?></p>
-                </div>
 
-            </li>
-        <?php }?>
-    </ul>
-    <div class="btns clearfix">
-        <a href="#" class="bgOrange fl">咨询</a>
-        <a href="/wechat-trip/add-order-view?tripId=<?=$info['info']['tripId'];?>" class="bgBlue fr">预定</a>
-
-    </div>
 </div>
 </body>
 <script>
@@ -136,7 +119,7 @@
     function submitCollection() {
         var tripId = "<?=$info['info']['tripId'];?>";
         if (tripId == '' || tripId == undefined || tripId == 0) {
-            alert('未知的随游');
+            jsAlert('未知的随游');
             return;
         }
         var isCollection = false;
@@ -150,14 +133,14 @@
         if (isCollection) {
             //添加收藏
             $.ajax({
-                url: '/v1/app-user-attention/add-collection-travel'+"?token="+"<?php echo urlencode($token);?>",
+                url: 'http://api.suiuu.com/v1/app-attention/add-collection-travel'+"?token="+"<?php echo urlencode($token);?>",
                 type: 'post',
                 data: {
                     travelId: tripId
                 },
                 error: function () {
                     //hide load
-                    alert("收藏随游失败");
+                    jsAlert("收藏随游失败");
                     $('#collection_trip').removeClass('active');
                     isCollection = false;
                 },
@@ -165,16 +148,16 @@
                     //hide load
                     data = eval("(" + data + ")");
                     if (data.status == 1) {
-                        alert("收藏成功");
+                        jsAlert("收藏成功");
                         $('#collection_trip').attr('attentionIdTrip', data.data);
                         isCollection = true;
                     } else if (data.status == -3) {
                         $('#collection_trip').removeClass('active');
-                        alert("请登录后再收藏");
+                        jsAlert("请登录后再收藏");
                         isCollection = false;
                     } else {
                         $('#collection_trip').removeClass('active');
-                        alert(data.data);
+                        jsAlert(data.data);
                         isCollection = false;
                     }
                 }
@@ -182,7 +165,7 @@
         } else {
             //取消收藏
             $.ajax({
-                url: '/v1/app-user-attention/delete-attention'+"?token="+"<?php echo urlencode($token);?>",
+                url: 'http://api.suiuu.com//v1/app-attention/delete-attention'+"?token="+"<?php echo urlencode($token);?>",
                 type: 'post',
                 data: {
                     attentionId: $('#collection_trip').attr('attentionIdTrip')
@@ -191,22 +174,22 @@
                     //hide load
                     $('#collection_trip').addClass('active');
                     isCollection = true;
-                    alert("收藏随游失败");
+                    jsAlert("收藏随游失败");
                 },
                 success: function (data) {
                     //hide load
                     data = eval("(" + data + ")");
                     if (data.status == 1) {
-                        alert("取消成功");
+                        jsAlert("取消成功");
                         isCollection = false;
                     } else if (data.status == -3) {
                         $('#collection_trip').addClass('active');
                         isCollection = true;
-                        alert("请登录后再取消");
+                        jsAlert("请登录后再取消");
                     }else{
                         $('#collection_trip').addClass('active');
                         isCollection = true;
-                        alert(data.data);
+                        jsAlert(data.data);
                     }
                 }
             });

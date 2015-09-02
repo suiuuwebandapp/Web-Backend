@@ -386,6 +386,25 @@ class WechatInterface {
         );
         return json_encode($arr);
     }
+
+    private function getPaySuccessTemplate($toUser,$templateId,$backUrl,$nickName,$tripTitle,$userNumber,$travelTime,$remark)
+    {
+        $arr=array(
+            "touser"=>$toUser,
+            "template_id"=>$templateId,
+            "url"=>$backUrl,
+            "topcolor"=>"#FF0000",
+            "data"=>array(
+                "keyword1"=>array("value"=>$nickName,"color"=>"#173177"),
+                "keyword2"=>array("value"=>$tripTitle,"color"=>"#173177"),
+                "keyword3"=>array("value"=>$userNumber,"color"=>"#173177"),
+                "keyword4"=>array("value"=>$travelTime,"color"=>"#173177"),
+                "remark"=>array("value"=>$remark,"color"=>"#173177")
+            )
+        );
+        return json_encode($arr);
+    }
+
     private function curlHandel($url,$data)
     {
         $curl = curl_init();

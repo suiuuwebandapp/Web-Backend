@@ -43,7 +43,7 @@
         <a href="#menu"></a>
         <p class="navTop">定制详情</p>
     </div>
-    <?php if(empty($info['wRelativeSign'])){?>
+    <?php if($info['wStatus']==\common\entity\WeChatOrderList::STATUS_NORMAL||empty($info['wRelativeSign'])){?>
         <div class="con cdzOder clearfix">
             <div class="content cdzdetail02">
                 <p>目的地：<span><?= $info['wOrderSite'];?></span></p>
@@ -76,12 +76,36 @@
                         ?> </span></p>
                 <div class="fixed">
                     <a href="/we-chat-order-list/edit-order?orderNumber=<?php echo $info['wOrderNumber'];?>" class="btn btn01">修改</a>
-                    <a href="javascript:;" class="btn btn02" onclick="deleteOrder('<?php echo $info['wOrderNumber']?>')">取消行程</a>
+                    <a href="javascript:;" class="btn btn02" onclick="overOrder('<?php echo $info['wOrderNumber']?>')">取消行程</a>
 
                 </div>
             </div>
         </div>
         <script>
+            function overOrder(orderNumber)
+            {
+                $.ajax({
+                    url :'/we-chat-order-list/over-order',
+                    type:'post',
+                    data:{
+                        o:orderNumber
+                    },
+                    error:function(){
+                        alert("结束订购异常");
+                    },
+                    success:function(data){
+                        data=eval("("+data+")");
+                        if(data.status==1){
+                            alert("取消成功");
+                            setTimeout(function(){location.reload()},1000);
+                        }else if(data.status==-3){
+                            window.location.href=data.data;
+                        }else{
+                            alert("取消异常");
+                        }
+                    }
+                });
+            }
             function deleteOrder(orderNumber)
             {
                 $.ajax({

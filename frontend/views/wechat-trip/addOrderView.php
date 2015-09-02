@@ -35,7 +35,7 @@
             $('#timeList').mobiscroll().time({
                 theme: 'mobiscroll',
                 display: 'bottom',
-                buttons: [],
+                lang: 'zh',
                 headerText: false
             });
 
@@ -227,7 +227,7 @@
 
     $("#addOrder").bind("click",function(){
         if(isOwner==1){
-            Main.showTip("您无法购买自己的随游哦~");
+           alert("您无法购买自己的随游哦~");
             return;
         }
         var peopleCount=$("#number").val();

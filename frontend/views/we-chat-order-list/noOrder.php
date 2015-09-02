@@ -55,7 +55,7 @@
 
         </div>
         <img src="/assets/other/weixin/images/logo02.png" class="logo">
-        <p>你还没有订单</p>
+        <p>你还没有订制</p>
 
     </div>
     <a href="/we-chat-order-list/order-view" class="bottomBtn">添加定制</a>

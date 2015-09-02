@@ -58,6 +58,16 @@ class WeChat {
     const TEMPLATE_ID_FOR_RESERVE="yWu0jQ8QB6HM-CQrVUYhu232TAMGi-uGQnTTnr4OjJc";
     //状态变更
     const TEMPLATE_ID_FOR_STATUS_CHANGE='526NMMRJEoXa1WtavjekxRjyMTR7jtlZWNme0FlgzNs';
+    //订单支付成功
+    const TEMPLATE_ID_FOR_ORDER_PAY_SUCCESS="z7SSdLr4yLNcwoIQ6_4UEpE3DGWoBGHerjpy97-8syQ";
+    //行程即将开始
+    const TEMPLATE_ID_FOR_TRIP_BEGIN="Aj44aw7ib6ZdSvdLoWr-1bH2NELyT_tDWODdFUxNM6o";
+
+    //定制反馈
+    const TEMPLATE_ID_FOR_WECHAT_ORDER_FEEDBACK="fri8FxH0PxPa9U_ebYlX6QJPuPGS8sxlXKxu8FEmKEc";
+    //消息提醒
+    const TEMPLATE_ID_FOR_MESSAGE_REMIND="8oZUloGjVbEJsc1g1TIq9h-kjFHrETY_DoLeG17xyik";
+
     /**
      * 记录token信息
      */

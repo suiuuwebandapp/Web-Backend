@@ -255,7 +255,7 @@ class WechatTripController extends WController {
             $userOrderInfo->tripId=$tripInfo['tripId'];
             $userOrderInfo->userId=$userSign;
             $userOrderInfo->beginDate=$beginDate;
-            $userOrderInfo->startTime=DateUtils::convertTimePicker($startTime,1);
+            $userOrderInfo->startTime=$startTime;
             $userOrderInfo->personCount=$peopleCount;
             $userOrderInfo->serviceInfo=$serviceInfo;
             $userOrderInfo->basePrice=$tripInfo['basePrice'];

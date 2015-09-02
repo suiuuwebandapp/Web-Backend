@@ -496,8 +496,8 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 .g_zhuye .content{ width:100%; max-width:640px; margin:0 auto;}
 .g_zhuye .content .topUser{ padding:10px; background:#fff; margin-bottom:15px;}
-.g_zhuye .content .topUser .top{ height:4.5rem; position:relative; margin-bottom:10px; }
-.g_zhuye .content .topUser .top .chat{ float:right; height:48px; width:48px; background:url(../images/chat.png) no-repeat center center; }
+.g_zhuye .content .topUser .top{ height:auto; position:relative; margin-bottom:10px; }
+.g_zhuye .content .topUser .top .chat{ float:right; height:48px; width:48px; background:url(../images/chat.png) no-repeat center center; background-size:1.71rem 1.71rem; }
 .g_zhuye .content .topUser .usePic{ border:3px solid #30dbc3; margin-right:20px; height:4.2rem; width:4.2rem; display:block; overflow:hidden; border-radius:50%;}
 .g_zhuye .content .topUser .usePic img{ display:block; width:100%;}
 .g_zhuye .content .topUser .texts .adress{ margin-top:0.5rem; padding-left:30px; line-height:1.3rem;  background:url(../images/position.png) no-repeat 0 center; }
@@ -532,9 +532,9 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .g_xinyuan .content .list .pic{ margin-bottom:10px; width:100%; display:block; overflow:hidden;height:6.3rem;}
 .g_xinyuan .content .list .pic img{ width:100%; display:block; }
 .g_xinyuan .content .list p{ padding:0 10px; }
-.g_xinyuan .content .list .bottom{ overflow:hidden; padding:0 10px; margin-top:15px;   }
-.g_xinyuan .content .list .bottom .colt{ float:left;background:url(../images/clot.png) no-repeat 0 center; padding-left:25px; }
-.g_xinyuan .content .list .bottom .rest{ float:right; background:url(../images/resp.png) no-repeat 0 center; padding-left:30px; }
+.g_xinyuan .content .list .bottom{ overflow:hidden; padding:0 10px; margin-top:15px; height:30px; line-height:30px;  }
+.g_xinyuan .content .list .bottom .colt{ float:left;background:url(../images/clot.png) no-repeat 0 center; padding-left:25px;  height:30px; }
+.g_xinyuan .content .list .bottom .rest{ float:right; background:url(../images/resp.png) no-repeat 0 center; padding-left:30px;  height:30px; }
 
 /*-----------c随游筛选-------------*/
 .w_suiyouSelect .search_out{ margin-top:15px; position:relative;}

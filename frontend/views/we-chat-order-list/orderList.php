@@ -50,7 +50,7 @@
         $i=0;
         foreach($list as $val){
             $i++;
-        if(empty($val['wRelativeSign'])){
+        if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_NORMAL||empty($info['wRelativeSign'])){
         ?>
 
             <div class="box clearfix"">
@@ -133,12 +133,12 @@
             success:function(data){
                 data=eval("("+data+")");
                 if(data.status==1){
-                    alert(data.data);
+                    alert("取消成功");
                     setTimeout(function(){location.reload()},1000);
                 }else if(data.status==-3){
                     window.location.href=data.data;
                 }else{
-                    alert(data.data);
+                    alert("取消异常");
                 }
             }
         });

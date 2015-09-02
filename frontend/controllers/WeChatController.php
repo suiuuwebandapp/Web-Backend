@@ -12,6 +12,7 @@ use common\components\Code;
 use common\components\LogUtils;
 use common\components\SMSUtils;
 use common\components\Validate;
+use common\components\WechatTemplate;
 use common\components\wx\WXBizMsgCrypt;
 use common\entity\UserAccess;
 use common\entity\UserBase;
@@ -78,16 +79,10 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
-        return $this->renderPartial("test");
-        exit;
-
-        echo urlencode("ZgN5BYAw1FUgebsvGNanaRgNf25KtXyvIRgYG5zyF8ADgJ5VFAitRA==");
-        echo "<br>";
-        echo time();
-        echo "<br>";
-        echo md5(time()."ZgN5BYAw1FUgebsvGNanaRgNf25KtXyvIRgYG5zyF8ADgJ5VFAitRA==".\Yii::$app->params['apiPassword']);
-        exit;
-
+        sleep(100);
+        $temp=new WechatTemplate();
+        $rst = $temp->sendMessageRemind("085963dc0af031709b032725e3ef18f5","dddd");
+var_dump($rst);
     }
 
 

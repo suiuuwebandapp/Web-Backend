@@ -49,7 +49,7 @@
                 <?php foreach($list["data"] as $val){?>
                 <li onclick="toInfo('<?=$val["tripId"]?>')">
                     <a href="javascript:;" class="pic"><img src="<?php echo $val["titleImg"]?>"></a>
-                    <p><?php echo $val['title']?></p>
+                    <p><?php echo  mb_strlen($val['title'])>10?mb_substr($val['title'],0,10,"utf-8")."...":$val['title'] ?></p>
                     <p class="bottom">
                         <a href="javascript:;" class="colt"><?php echo $val['collectCount']?></a>
                         <a href="javascript:;" class="rest"><?php echo $val['commentCount']?></a>

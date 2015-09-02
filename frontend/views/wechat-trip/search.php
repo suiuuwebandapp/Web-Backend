@@ -85,7 +85,7 @@
         <div class="search_out clearfix">
             <div class="search fl">
                 <input type="text" placeholder="输入你感兴趣的地点" value="<?= $str?>" id="site">
-                <a href="javascript:;" class="searchIcon" onclick="submit()"><img src="/assets/other/weixin/images/top-search.png"></a>
+                <a href="javascript:;" class="searchIcon" onclick="submitSearch()"><img src="/assets/other/weixin/images/top-search.png"></a>
             </div>
             <input type="button" value="取消" class="cancel fr" onclick="javascript:history.go(-1);">
 
@@ -113,12 +113,12 @@
         </p>
         <div id="slider-range"></div>
     </div>
-    <a href="javascript:;" class="btn"  onclick="submit()">确定</a>
+    <a href="javascript:;" class="btn"  onclick="submitSearch()">确定</a>
     </form>
 </div>
 </div>
 <script>
-    function submit()
+    function submitSearch()
     {
         var tagList="";
         var typeList="";

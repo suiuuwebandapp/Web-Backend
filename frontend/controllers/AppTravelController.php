@@ -136,7 +136,7 @@ class AppTravelController extends AController
             $appSign = \Yii::$app->redis->get(Code::APP_TOKEN . $token);
             if(empty($appSign))
             {
-                echo json_encode(Code::statusDataReturn(Code::TOKEN_ERROR, 'token已过期'));
+                return $this->renderPartial('error',['str1'=>'token已过期','str2'=>'返回','url'=>"#"]);
                 exit;
             }
             $currentUser = json_decode(stripslashes(\Yii::$app->redis->get(Code::APP_USER_LOGIN_SESSION . $appSign)));
@@ -164,7 +164,10 @@ class AppTravelController extends AController
             if(empty($createPublisherId)){
                 return $this->renderPartial('error',['str1'=>'无法得到未知的随友','str2'=>'返回','url'=>"#"]);
             }
-            return $this->renderPartial('info',['info'=>$data,'token'=>$token]);
+            $page =new Page();
+            $userRecommend=$this->travelSer->findTravelTripRecommendByTripId($trId);
+            $rst= $this->tripCommentSer->getTravelComment($trId,$page,$userSign);
+            return $this->renderPartial('info',['info'=>$data,'token'=>$token,'comment'=>$rst,'userRecommend'=>$userRecommend]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->renderPartial('error',['str1'=>'获取详情异常','url'=>"#"]);
