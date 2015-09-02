@@ -251,12 +251,6 @@ class TripController extends CController
             if(empty($serviceMileage)){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务公里数不允许为空"));
             }
-            if(empty($overTime)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "超出服务时间价格不允许为空"));
-            }
-            if(empty($overMileage)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "超出服务公路价格不允许为空"));
-            }
             if(empty($carBasePrice)||$carBasePrice<0){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "汽车服务基础价格不允许为空"));
             }
@@ -500,12 +494,6 @@ class TripController extends CController
             }
             if(empty($serviceMileage)){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务公里数不允许为空"));
-            }
-            if(empty($overTime)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "超出服务时间价格不允许为空"));
-            }
-            if(empty($overMileage)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "超出服务公路价格不允许为空"));
             }
             if(empty($carBasePrice)||$carBasePrice<0){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "汽车服务基础价格不允许为空"));

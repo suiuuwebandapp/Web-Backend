@@ -217,14 +217,14 @@
                         <div class="line_two_ipt_div">
                             <span class="spn_title" style="width: auto">超时费用</span> <span class="form_tip" id="overTimeTip" style="width: 130px !important;"></span>
                             <div class="selets cty">
-                                <input type="text" class="line_ipt" id="overTime" ipt-type="number_ipt">
+                                <input type="text" class="line_ipt" id="overTime" ipt-type="number_ipt" placeholder="选填">
                                 <span>￥/小时</span>
                             </div>
                         </div>
                         <div class="line_two_ipt_div">
                             <span class="spn_title" style="width: auto">超程费用</span> <span class="form_tip" id="overMileageTip" style="width: 130px !important;"></span>
                             <div class="selets cty">
-                                <input type="text" class="line_ipt" id="overMileage" ipt-type="number_ipt">
+                                <input type="text" class="line_ipt" id="overMileage" ipt-type="number_ipt" placeholder="选填">
                                 <span>￥/公里</span>
                             </div>
                         </div>
@@ -775,15 +775,6 @@
                         $("#serviceMileageTip").html("请输入服务里程");
                         error = true;
                     }
-                    if (overTime == "") {
-                        $("#overTimeTip").html("请输入超时费用");
-                        error = true;
-                    }
-                    if (overMileage == "") {
-                        $("#overMileageTip").html("请输入超程费用");
-                        error = true;
-                    }
-
 
                 }
                 if(airServiceType==0){

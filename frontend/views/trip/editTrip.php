@@ -555,7 +555,7 @@
     $(document).ready(function () {
         /*添加标签*/
         xcbjy();
-        bz('bjybox', 'bjy-bj');
+        bz('bjybox', 'bjy-bj','NewTrip');
         /*添加标签*/
 
         $("#bjy-prev").hide();

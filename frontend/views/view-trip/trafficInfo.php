@@ -111,7 +111,6 @@
 
                 <p class="title02">预订须知</p>
                 <?php if(!empty($travelInfo['trafficInfo']['nightServicePrice'])){ ?>
-                    <p>预订时间：提前<?=$travelInfo['info']['scheduledTime']/(60*60*24)?>天进行预订</p>
                     <p>夜间服务：时间为<?=\common\components\DateUtils::formatTime($travelInfo['trafficInfo']['nightTimeStart'])?>-<?=\common\components\DateUtils::formatTime($travelInfo['trafficInfo']['nightTimeEnd'])?>，接机加收<?=$travelInfo['trafficInfo']['nightServicePrice']?>元每趟/服务费。</p>
                 <?php } ?>
                 <?php if(!empty($travelInfo['info']['scheduledTime'])){ ?>
@@ -198,7 +197,11 @@
     <div class="web-right">
         <div class="kuang clearfix">
             <h3 class="title bgGreen clearfix"><span class="colOrange fl">￥<?=$travelInfo['info']['basePrice']?></span><span class="colWit fr">每次</span></h3>
-            <input type="button" value="申请预订" class="btn bgOrange" id="trafficOrderBtn">
+            <?php if($isOwner){ ?>
+                <input type="button" value="申请预订" class="btn bgOrange" style="background-color: #ddd">
+            <?php }else{ ?>
+                <input type="button" value="申请预订" class="btn bgOrange" id="trafficOrderBtn">
+            <?php } ?>
             <a href="javascript:;" class="colGreen helps">如何预订？</a>
         </div>
 
