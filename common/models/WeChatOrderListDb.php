@@ -116,19 +116,31 @@ class WeChatOrderListDb extends ProxyDb{
 WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
         ");
         $this->setParam("userSign", $userSign);
-        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,b.phone,b.areaCode,wMoney,wDetails,wPhone');
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,tripContact,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,b.phone,b.areaCode,wMoney,wDetails,wPhone');
         $this->setSql($sql);
         return $this->find($page);
     }
-    public function getWeChatOrderListByOrderNumber($wOrderNumber)
+    public function getWeChatOrderListByOrderNumber($wOrderNumber,$userSign=null)
     {
+        if(empty($userSign)){
         $sql=sprintf("
-        SELECT wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,b.headImg,b.nickName,wMoney,wDetails
+        SELECT wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,wUserNumber,tripContact,b.headImg,b.nickName,wMoney,wDetails,b.phone as rPhone
         FROM wechat_order_list a
         LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
-WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
+        WHERE a.wOrderNumber=:wOrderNumber  AND isDel=FALSE ORDER BY a.wOrderId DESC
         ");
+        }else{
+            $sql=sprintf("
+        SELECT wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wLastTime,tripContact,wUserNumber,b.headImg,b.nickName,wMoney,wDetails,b.phone as rPhone
+        FROM wechat_order_list a
+        LEFT JOIN user_base b ON a.wRelativeSign=b.userSign
+        WHERE a.wOrderNumber=:wOrderNumber AND wUserSign=:wUserSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
+        ");
+        }
         $command=$this->getConnection()->createCommand($sql);
+        if(!empty($userSign)){
+            $command->bindParam(":wUserSign", $userSign, PDO::PARAM_STR);
+        }
         $command->bindParam(":wOrderNumber", $wOrderNumber, PDO::PARAM_STR);
         return $command->queryOne();
     }

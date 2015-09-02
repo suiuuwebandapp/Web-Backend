@@ -70,6 +70,8 @@ $serviceInfo=json_decode($info->serviceInfo,true);
                 <a href="#" class="userPic"><img src="<?= $publisherBase->headImg;?>"></a>
                 <span class="userName"><?= $publisherBase->nickname;?></span>
                 <a href="#" class="chat"></a>
+                <p class="datas">订单创建时间：<span><?php echo $info->createTime?></span></p>
+                <p class="numbers">订单号 :<span> <?php echo $info->orderNumber?></span></p>
             </div>
         <?php }?>
         <div class="part clearfix">

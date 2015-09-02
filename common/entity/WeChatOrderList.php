@@ -11,6 +11,7 @@ namespace common\entity;
 
 class WeChatOrderList{
 
+    const STATUS_CANCEL=8;//取消
     const STATUS_REFUND_FAL=7;//拒绝退款
     const STATUS_REFUND_SUCCESS=6;//结束退款
     const STATUS_APPLY_REFUND=5;//申请退款中
@@ -85,4 +86,9 @@ class WeChatOrderList{
      * @var是否删除
      */
     public $isDel;
+
+    /**
+     * @var随友联系方式
+     */
+    public $tripContact;
 }

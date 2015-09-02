@@ -49,12 +49,12 @@ class WeChatOrderListService extends BaseDb{
             $this->closeLink();
         }
     }
-    public function getWeChatOrderListByOrderNumber($orderNumber)
+    public function getWeChatOrderListByOrderNumber($orderNumber,$userSign=null)
     {
         try {
             $conn = $this->getConnection();
             $this->weChatOrderListDb=new WeChatOrderListDb($conn);
-            return $this->weChatOrderListDb->getWeChatOrderListByOrderNumber($orderNumber);
+            return $this->weChatOrderListDb->getWeChatOrderListByOrderNumber($orderNumber,$userSign);
         } catch (Exception $e) {
             throw new Exception('查询用户订购信息异常', Code::FAIL, $e);
         } finally {

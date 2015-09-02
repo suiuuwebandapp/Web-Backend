@@ -72,6 +72,7 @@
 
                 <?php if(count($tripList)==0){?>
                     <div class="bigBox nothing">
+                        <h2 class="tyleTitle">他的随游(0)</h2>
                         <p>还没有随游哦</p>
                         <img src="/assets/other/weixin/images/nothing.fw.png">
                     </div>
@@ -98,6 +99,7 @@
 
                 <?php if($attention['msg']->totalCount==0){?>
                     <div class="bigBox nothing">
+                        <h2 class="tyleTitle">他的心愿单(0)</h2>
                         <p>还没有心愿单哦</p>
                         <img src="/assets/other/weixin/images/liwu-2.fw.png">
                     </div>

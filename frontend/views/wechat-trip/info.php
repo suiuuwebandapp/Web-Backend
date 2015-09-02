@@ -39,7 +39,8 @@
         <?php include "left.php"; ?>
         <div class="Uheader header mm-fixed-top">
             <a href="#menu"></a>
-            <p class="navTop">随游详情</p>
+            <p class="navTop"><?php echo $info['info']['title'];?></p>
+            <a href="javascript:;" class="collect <?php if(count($info['attention'])!=0){echo "active";}?>" id="collection_trip" attentionIdTrip="<?php if(count($info['attention'])!=0){echo $info['attention'][0]['attentionId'];}?>"></a>
         </div>
 <div class="syDetailBanner">
     <span class="smoney">￥<?= $info['info']['basePrice'];?></span>
@@ -85,7 +86,7 @@
         <a href="/wechat-user-info/user-info?userSign=<?= $info['createPublisherInfo']['userSign'];?>" class="userPic"><img src="<?= $info['createPublisherInfo']['headImg'];?>"></a>
         <span class="userName"><?= $info['createPublisherInfo']['nickname'];?></span>
         <p class="adress"><?= $info['createPublisherInfo']['countryName'].$info['createPublisherInfo']['cityName'];?></p>
-        <a href="javascript:;" class="collect <?php if(count($info['attention'])!=0){echo "active";}?>" id="collection_trip" attentionIdTrip="<?php if(count($info['attention'])!=0){echo $info['attention'][0]['attentionId'];}?>"></a>
+
     </div>
     <p class="bq"><span><?= $info['info']['tags'];?></span></p>
     <ul class="details clearfix">
@@ -95,7 +96,7 @@
                 </span>
         </li>
         <li><span class="icon icon2"><?=  substr($info['info']['startTime'],0,5) ?>  -<?=  substr($info['info']['endTime'],0,5) ?> </span></li>
-        <li class="last"><span class="icon icon3"><?= $info['info']['travelTime'];?>小时</span></li>
+        <li class="last"><span class="icon icon3">随游时长:<?= $info['info']['travelTime'];?>小时</span></li>
     </ul>
     <div class="bgbox">
         <h3 class="title colGreen">详情描述</h3>

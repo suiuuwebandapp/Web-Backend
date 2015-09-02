@@ -268,7 +268,7 @@ class WeChatOrderListController extends WController {
         }
         $userSign=$this->userObj->userSign;
         $orderNumber=Yii::$app->request->get("orderNumber");
-        $data = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+        $data = $this->orderListSer->getWeChatOrderListByOrderNumber($orderNumber,$userSign);
         if(empty($data)){
             return $this->redirect('/we-chat/error?str=订单用户不匹配');
         }
@@ -288,6 +288,15 @@ class WeChatOrderListController extends WController {
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "订单号不能为空"));
         }
+        $info = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+        if(empty($info))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单用户不匹配"));
+        }
+        if($info['wStatus']==WeChatOrderList::STATUS_NORMAL||$info['wStatus']==WeChatOrderList::STATUS_PROCESSED
+            ||$info['wStatus']==WeChatOrderList::STATUS_PAY_SUCCESS||$info['wStatus']==WeChatOrderList::STATUS_APPLY_REFUND){
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单状态不可删除"));
+        }
         $data = $this->orderListSer->deleteOrder($orderNumber,$userSign);
         if($data==1)
         {
@@ -303,6 +312,15 @@ class WeChatOrderListController extends WController {
         $this->loginValidJson();
         $userSign=$this->userObj->userSign;
         $orderNumber=Yii::$app->request->post('o');
+        $info = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+        if(empty($info))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单用户不匹配"));
+        }
+        if($info['wStatus']!=WeChatOrderList::STATUS_PAY_SUCCESS){
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单状态不可确认"));
+        }
+
         $data = $this->orderListSer->updateOrderStatus($orderNumber,WeChatOrderList::STATUS_END,$userSign);
         if($data==1)
         {
@@ -311,7 +329,29 @@ class WeChatOrderListController extends WController {
             return json_encode(Code::statusDataReturn(Code::FAIL, "确认异常"));
         }
     }
+    public function actionCancelOrder()
+    {
 
+        $this->loginValidJson();
+        $userSign=$this->userObj->userSign;
+        $orderNumber=Yii::$app->request->post('o');
+        $info = $this->orderListSer->getOrderInfoByOrderNumber($orderNumber,$userSign);
+        if(empty($info))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单用户不匹配"));
+        }
+        if($info['wStatus']!=WeChatOrderList::STATUS_NORMAL&&$info['wStatus']!=WeChatOrderList::STATUS_PROCESSED){
+            return json_encode(Code::statusDataReturn(Code::FAIL, "订单状态不可取消"));
+        }
+
+        $data = $this->orderListSer->updateOrderStatus($orderNumber,WeChatOrderList::STATUS_CANCEL,$userSign);
+        if($data==1)
+        {
+            return json_encode(Code::statusDataReturn(Code::SUCCESS, "取消成功"));
+        }else{
+            return json_encode(Code::statusDataReturn(Code::FAIL, "取消异常"));
+        }
+    }
     public function actionApplyRefund()
     {
         $this->loginValidJson();
