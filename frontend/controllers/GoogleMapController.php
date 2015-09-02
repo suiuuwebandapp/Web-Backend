@@ -87,11 +87,13 @@ class GoogleMapController extends UnCController{
         //return json_encode(Code::statusDataReturn(Code::SUCCESS,json_decode('{"lat" : 35.3605555,"lng" : 138.7277777} ')));
 
         $search=\Yii::$app->request->get("search");
+
         try{
+            $search=str_replace(" ","",$search);
             $googleMap=GoogleMap::getInstance();
             $rst=$googleMap->searchSiteInfo($search);
             $rst=json_decode($rst);
-            if($rst->status=="OK"){
+            if(isset($rst->status)&&$rst->status=="OK"){
                 $location=$rst->results[0]->geometry->location;
                 return json_encode(Code::statusDataReturn(Code::SUCCESS,$location));
             }else{
@@ -99,7 +101,7 @@ class GoogleMapController extends UnCController{
             }
         }catch (Exception $e){
             LogUtils::log($e);
-            return json_encode(Code::statusDataReturn(Code::FAIL,$e->getName()));
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 

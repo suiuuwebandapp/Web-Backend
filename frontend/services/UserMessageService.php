@@ -16,6 +16,7 @@ use common\entity\UserMessageSession;
 use common\entity\UserMessageSetting;
 use common\models\BaseDb;
 use common\models\UserMessageDb;
+use frontend\components\Page;
 use frontend\models\UserBaseDb;
 use yii\base\Exception;
 
@@ -207,6 +208,67 @@ class UserMessageService extends BaseDb
         }finally{
             $this->closeLink();
         }
+    }
+
+    /**
+     * 获取用户未读列表消息
+     * @param $userId
+     * @return array|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getUnReadMessageList($userId)
+    {
+        $rst=[];
+        $userList=[];
+        $sysList=[];
+        try{
+            $conn=$this->getConnection();
+            $this->userMessageDb=new UserMessageDb($conn);
+            $list= $this->userMessageDb->getUnReadMessageList($userId);
+
+            if(!empty($list)){
+                foreach($list as $message)
+                {
+                    if($message['senderId']==Code::USER_SYSTEM_MESSAGE_ID){
+                        $sysList[]=$message;
+                    }else{
+                        $userList[]=$message;
+                    }
+                }
+            }
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        $userMessageRemindService=new UserMessageRemindService();
+        $page=new Page();
+        $page->showAll;
+        $sys=$userMessageRemindService->getWebSysMessage($userId,$page,null);
+        if(!empty($sys['data'])){
+            foreach($sys['data'] as $message){
+                $sessionKey=self::getMessageSessionKey(Code::USER_SYSTEM_MESSAGE_ID,$userId);
+
+                $sysMessage=[];
+                $sysMessage['messageId']=$message['remindId'];
+
+                $sysMessage['sessionKey']=$sessionKey;
+                $sysMessage['receiveId']=$userId;
+                $sysMessage['senderId']=Code::USER_SYSTEM_MESSAGE_ID;
+                $sysMessage['url']=$message['url'];
+                $sysMessage['content']=$message['content'];
+                $sysMessage['sendTime']=$message['createTime'];
+                $sysMessage['readTime']=$message['readTime'];
+                $sysMessage['isRead']=$message['rStatus']==1?false:true;
+                $sysMessage['isShield']=false;
+                $sysList[]=$sysMessage;
+            }
+        }
+        $rst['userList']=$userList;
+        $rst['sysList']=$sysList;
+
+        return $rst;
     }
 
     /**
@@ -452,6 +514,7 @@ class UserMessageService extends BaseDb
             $conn=$this->getConnection();
             $this->userMessageDb=new UserMessageDb($conn);
             $this->userMessageDb->updateSystemMessageRead($messageId,$userSign);
+
 
         }catch (Exception $e){
             throw $e;

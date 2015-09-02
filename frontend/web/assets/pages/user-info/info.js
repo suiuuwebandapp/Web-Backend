@@ -4,7 +4,6 @@
 
 //第一页消息列表
 var currentPageMessageSessionKeyList=[];
-var messageSessionTimer;
 
 var rotate;
 var rotateCount=0;
@@ -86,15 +85,6 @@ $(document).ready(function(){
     //绑定发送验证码事件
     $("#getCode").bind("click", function () {
         sendTravelCode();
-    });
-    $("#sendMessageBtn").bind("click",function(){
-        sendUserMessage();
-    });
-    $("#userMessageSetting").bind("click",function(){
-        initUserMessageSetting();
-    });
-    $("input:radio[name='user_message_setting_status']").bind("change",function(){
-       updateUserMessageSetting();
     });
 
     //初始化上传身份证等功能
@@ -281,304 +271,6 @@ function initUpdatePassword(){
     });
 }
 
-/**
- * 初始化用户私信会话列表
- */
-
-/**
- * 初始化用户消息会话
- */
-function initMessageSession(){
-    $.ajax({
-        url :'/user-message/message-session-list',
-        type:'post',
-        data:{u:1},
-        beforeSend:function(){
-        },
-        error:function(){
-            Main.showTip("获取私信列表失败");
-        },
-        success:function(data){
-            data=eval("("+data+")");
-            if(data.status==1){
-                buildMessageSessionHtml(data.data);
-            }else{
-                Main.showTip("获取私信列表失败");
-            }
-            //初始化完成之后，调用定时器
-            initUserMessageSessionTimer();
-        }
-    });
-}
-
-/**
- * 初始化会话列表定时器
- */
-function initUserMessageSessionTimer(){
-    try{
-        window.clearInterval(messageSessionTimer);
-    }catch(e){
-    }
-    messageSessionTimer=window.setInterval(function(){
-        getUserUnReadMessageSession();
-    },10000);
-}
-
-/**
- * 根据返回List构建私信会话HTML
- * @param list
- */
-function buildMessageSessionHtml(list){
-    $("#messageSessionDiv ul").html("");
-    $("#messageInfoDiv ul").html("");//清空
-    var html='',tempSession='',content='';
-    if(list==''||list.length==0){
-        $("#messageNothing").show();
-        return;
-    }
-    $("#messageNothing").hide();
-
-    for(var i=0;i<list.length;i++){
-        tempSession=list[i];
-        content=tempSession.lastContentInfo;
-        currentPageMessageSessionKeyList.push(tempSession.sessionKey);
-        var nickname=tempSession.nickname;
-        var headImg=tempSession.headImg;
-        if(tempSession.relateId==SystemMessage.userId){
-            nickname=SystemMessage.nickname;
-            headImg=SystemMessage.headImg;
-        }
-        if(content.length>50){
-            content=content.substring(0,50)+"...";
-        }
-        var isNew='';
-        if(tempSession.isRead!=1){
-            isNew='class="new"';
-        }
-        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
-        html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
-        html+='<p class="words">'+content+'</p>';
-        if(tempSession.relateId!=SystemMessage.userId){
-            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
-        }
-        html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
-        html+='</li>';
-    }
-    $("#messageSessionDiv ul").html(html);
-}
-
-/**
- * 获取用户未读私信会话
- */
-function getUserUnReadMessageSession(){
-    $.ajax({
-        url :'/user-message/un-read-message-session-list',
-        type:'post',
-        data:{},
-        beforeSend:function(){
-        },
-        success:function(data){
-            data=eval("("+data+")");
-            if(data.status==1){
-                rebuildMessageSessionList(data.data);
-                //$("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
-                //$(obj).removeClass("new");
-                //buildMessageSessionInfo(data.data)
-            }else{
-                Main.showTip("获取私信列表失败");
-            }
-        }
-    });
-}
-
-/**
- * 重新构建消息会话列表
- * @param list
- */
-function rebuildMessageSessionList(list){
-    if(list==''||list.length==0){
-        return;
-    }
-    //将查出数据翻转，循环时候，末尾的先放置头部，依次循环
-    list=list.reverse();
-    var content='',tempSession='';
-    for(var i=0;i<list.length;i++){
-        var html='';
-        tempSession=list[i];
-        //如果未读会话已经存在，那么置顶 ，移除当前  如果不存在，那么置顶 移除最后一个
-        var index=currentPageMessageSessionKeyList.indexOf(tempSession.sessionKey);
-        if(index!=-1){
-            currentPageMessageSessionKeyList.splice(index,1);
-            currentPageMessageSessionKeyList.push(tempSession.sessionKey);
-            $("#messageSessionDiv ul li[sessionKey='"+tempSession.sessionKey+"']").remove();
-        }else{
-            var last=currentPageMessageSessionKeyList.pop();
-            $("#messageSessionDiv ul li[sessionKey='"+last+"']").remove();
-            currentPageMessageSessionKeyList.push(tempSession.sessionKey);
-        }
-        var nickname=tempSession.nickname;
-        var headImg=tempSession.headImg;
-        if(tempSession.relateId==SystemMessage.userId){
-            nickname=SystemMessage.nickname;
-            headImg=SystemMessage.headImg;
-        }
-        content=tempSession.lastContentInfo;
-        currentPageMessageSessionKeyList.push(tempSession.sessionKey);
-        if(content.length>50){
-            content=content.substring(0,50)+"...";
-        }
-        var isNew='';
-        if(tempSession.isRead!=1){
-            isNew='class="new"';
-        }
-        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
-        html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
-        html+='<p class="words">'+content+'</p>';
-        if(tempSession.relateId!=SystemMessage.userId){
-            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
-        }
-        html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
-        html+='</li>';
-
-        //如果是最后一个，判断这条消息是不是跟左侧的详情Key一致，如果一致，那么直接追加到消息详情页
-        if(i==list.length-1){
-            var infoSessionKey=$("#messageInfoDiv").attr("sessionKey");
-            var receiveHeadImg=$("#messageInfoDiv").attr("receiveHeadImg");
-            if(infoSessionKey==tempSession.sessionKey){
-                if($("#messageInfoDiv ul li").last().attr("autoFlag")!="true"){
-                    var infoHtml='';
-                    infoHtml+='<li class="you clearfix" autoFlag="true">';
-                    infoHtml+='<img src="'+receiveHeadImg+'">';
-                    infoHtml+=' <p>'+content+'</p>';
-                    infoHtml+='</li>';
-                    $("#messageInfoDiv ul").append(infoHtml);
-                }
-            }
-        }
-        //将消息放置顶部
-        $("#messageSessionDiv ul").prepend(html);
-    }
-
-
-}
-
-/**
- * 获取私信会话详情
- * @param sessionKey
- * @param receiveHeadImg
- * @param obj
- */
-function showMessageSessionInfo(sessionKey,receiveHeadImg,obj){
-    $.ajax({
-        url :'/user-message/message-session-info',
-        type:'post',
-        data:{
-            sessionKey:sessionKey
-        },
-        beforeSend:function(){
-        },
-        error:function(){
-            Main.showTip("获取私信列表失败");
-        },
-        success:function(data){
-            data=eval("("+data+")");
-            if(data.status==1){
-                $("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
-                $(obj).removeClass("new");
-                buildMessageSessionInfo(data.data,sessionKey)
-            }else{
-                Main.showTip("获取私信列表失败");
-            }
-        }
-    });
-}
-
-/**
- * 发送私信消息
- */
-function sendUserMessage(){
-    var receiveId=$("#messageInfoDiv").attr("receiveId");
-    var content=$("#messageContent").val();
-
-    if($.trim(receiveId)==''){
-        Main.showTip("选择发送人有误");
-        return;
-    }
-    if($.trim(content)==''){
-        Main.showTip("请输入发送内容");
-        return;
-    }
-
-    $.ajax({
-        url :'/user-message/add-user-message',
-        type:'post',
-        data:{
-            receiveId:$.trim(receiveId),
-            content:$.trim(content)
-        },
-        error:function(){
-            Main.showTip("发送消息失败");
-        },
-        success:function(data){
-            data=eval("("+data+")");
-            if(data.status==1){
-                var html='';
-                html+='<li class="you clearfix">';
-                html+='<img src="'+userHeadImg+'">';
-                html+=' <p>'+content+'</p>';
-                html+='</li>';
-                $("#messageInfoDiv ul").append(html);
-                $("#messageContent").val("");
-            }else{
-                Main.showTip("发送消息失败");
-            }
-        }
-    });
-}
-
-/**
- * 构建私信会话详情HTML
- * @param list
- */
-function buildMessageSessionInfo(list,sessionKey){
-    if(list==''||list.length==0){
-        return;
-    }
-    var receiveHeadImg=$("#messageInfoDiv").attr("receiveHeadImg");
-    $("#messageInfoDiv ul").html("");//清空
-    var html='',tempMessage='',receiveId='';
-    for(var i=0;i<list.length;i++){
-        tempMessage=list[i];
-        var content=tempMessage.content;
-        if(Main.isNotEmpty(tempMessage.url)){
-            content='<a href="'+tempMessage.url+'">'+content+'</a>';
-        }
-        //如果自己是发送人
-        if(tempMessage.senderId==userSign){
-            receiveId=tempMessage.receiveId;
-            html+='<li class="you clearfix" mid="'+tempMessage.messageId+'">';
-            html+='<img src="'+userHeadImg+'">';
-            html+=' <p>'+content+'</p>';
-            html+='</li>';
-        }else{
-            receiveId=tempMessage.senderId;
-            html+='<li class="zuo clearfix" mid="'+tempMessage.messageId+'">';
-            html+='<img src="'+receiveHeadImg+'">';
-            html+=' <p>'+content+'</p>';
-            html+='</li>';
-        }
-
-    }
-    if(tempMessage.senderId==SystemMessage.userId||tempMessage.receiveId==SystemMessage.userId){
-        $("#write_div").hide();
-    }else{
-        $("#write_div").show();
-    }
-    $("#messageInfoDiv").attr("receiveId",receiveId);
-    $("#messageInfoDiv").attr("sessionKey",sessionKey);
-    $("#messageInfoDiv").show();
-    $("#messageInfoDiv ul").html(html);
-}
 
 /**
  * 更新用户基本资料
@@ -2742,3 +2434,277 @@ function toValidatePhone() {
     $("#myUserInfo").click();
     $('html,body').animate({scrollTop:$('#phone_show_btn').offset().top-100}, 800);
 }
+
+
+
+
+/************************ User Message Begin ******************************/
+
+
+
+
+
+
+/**
+ * 初始化用户消息会话
+ */
+function initMessageSession(){
+    $("#sendMessageBtn").bind("click",function(){
+        sendUserMessage();
+    });
+    $("#userMessageSetting").bind("click",function(){
+        initUserMessageSetting();
+    });
+    $("input:radio[name='user_message_setting_status']").bind("change",function(){
+        updateUserMessageSetting();
+    });
+    $("#messageContent").keypress(function(e){
+        if(e.keyCode==13){
+            sendUserMessage();
+        }
+    });
+    buildMessageSessionHtml(messageSessionList);
+}
+
+
+/**
+ * 根据返回List构建私信会话HTML
+ * @param list
+ */
+function buildMessageSessionHtml(list){
+    $("#messageSessionDiv ul").html("");
+    $("#messageInfoDiv ul").html("");//清空
+    var html='',tempSession='',content='';
+    if(list==''||list.length==0){
+        $("#messageNothing").show();
+        return;
+    }
+    $("#messageNothing").hide();
+
+    for(var i=0;i<list.length;i++){
+        tempSession=list[i];
+        content=tempSession.lastContentInfo;
+        currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+        var nickname=tempSession.nickname;
+        var headImg=tempSession.headImg;
+        if(tempSession.relateId==SystemMessage.userId){
+            nickname=SystemMessage.nickname;
+            headImg=SystemMessage.headImg;
+        }
+        if(content.length>50){
+            content=content.substring(0,50)+"...";
+        }
+        var isNew='';
+        if(tempSession.isRead!=1){
+            isNew='class="new"';
+        }
+        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
+        html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
+        html+='<p class="words">'+content+'</p>';
+        if(tempSession.relateId!=SystemMessage.userId){
+            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
+        }
+        html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
+        html+='</li>';
+    }
+    $("#messageSessionDiv ul").html(html);
+    setTopUnReadMessageCount();
+}
+
+/**
+ * 重新构建消息会话列表
+ * type=1 发信人重新构建
+ * type=2 收信人重新构建
+ * @param list
+ */
+function rebuildMessageSessionList(sessionList,type){
+    var list=new Array();
+    list=sessionList;
+    if(list==''||list.length==0){
+        return;
+    }
+    //将查出数据翻转，循环时候，末尾的先放置头部，依次循环
+    list=list.reverse();
+    var content='',tempSession='';
+    for(var i=0;i<list.length;i++){
+        var html='';
+        tempSession=list[i];
+        //如果未读会话已经存在，那么置顶 ，移除当前  如果不存在，那么置顶 移除最后一个
+        var index=currentPageMessageSessionKeyList.indexOf(tempSession.sessionKey);
+        if(index!=-1){
+            currentPageMessageSessionKeyList.splice(index,1);
+            currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+            $("#messageSessionDiv ul li[sessionKey='"+tempSession.sessionKey+"']").remove();
+        }else{
+            var last=currentPageMessageSessionKeyList.pop();
+            $("#messageSessionDiv ul li[sessionKey='"+last+"']").remove();
+            currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+        }
+        var nickname=tempSession.nickname;
+        var headImg=tempSession.headImg;
+        if(tempSession.relateId==SystemMessage.userId){
+            nickname=SystemMessage.nickname;
+            headImg=SystemMessage.headImg;
+        }
+        content=tempSession.lastContentInfo;
+        currentPageMessageSessionKeyList.push(tempSession.sessionKey);
+        if(content.length>50){
+            content=content.substring(0,50)+"...";
+        }
+        var isNew='';
+        if(tempSession.isRead!=1){
+            isNew='class="new"';
+        }
+        html+='<li '+isNew+' sessionKey="'+tempSession.sessionKey+'" onclick=showMessageSessionInfo("'+tempSession.sessionKey+'","'+headImg+'",this)>';
+        html+='<div class="people"><img src="'+headImg+'"><span>'+nickname+'</span></div>';
+        html+='<p class="words">'+content+'</p>';
+        if(tempSession.relateId!=SystemMessage.userId){
+            html+='<b class="shield_btn" onclick="addUserMessageShield(\''+tempSession.relateId+'\')">屏蔽</b>';
+        }
+        html+='<b class="datas">'+Main.formatDate(tempSession.lastConcatTime,'hh:mm')+'</b>';
+        html+='</li>';
+
+        //如果是最后一个，判断这条消息是不是跟左侧的详情Key一致，如果一致，那么直接追加到消息详情页
+        if(i==list.length-1&&type==2){
+            var infoSessionKey=$("#messageInfoDiv").attr("sessionKey");
+            var receiveHeadImg=$("#messageInfoDiv").attr("receiveHeadImg");
+            if(infoSessionKey==tempSession.sessionKey){
+                var infoHtml='';
+                infoHtml+='<li class="zuo clearfix">';
+                infoHtml+='<img src="'+receiveHeadImg+'">';
+                infoHtml+=' <p>'+content+'</p>';
+                infoHtml+='</li>';
+                $("#messageInfoDiv ul").append(infoHtml);
+            }
+        }
+        //将消息放置顶部
+        $("#messageSessionDiv ul").prepend(html);
+        $('#messageInfoDiv ul').scrollTop( $('#messageInfoDiv ul')[0].scrollHeight );
+    }
+}
+
+/**
+ * 获取私信会话详情
+ * @param sessionKey
+ * @param receiveHeadImg
+ * @param obj
+ */
+function showMessageSessionInfo(sessionKey,receiveHeadImg,obj){
+    $.ajax({
+        url :'/user-message/message-session-info',
+        type:'post',
+        data:{
+            sessionKey:sessionKey
+        },
+        beforeSend:function(){
+        },
+        error:function(){
+            Main.showTip("获取私信列表失败");
+        },
+        success:function(data){
+            data=eval("("+data+")");
+            if(data.status==1){
+                $("#messageInfoDiv").attr("receiveHeadImg",receiveHeadImg);
+                $(obj).removeClass("new");
+                buildMessageSessionInfo(data.data,sessionKey)
+                $('#messageInfoDiv ul').scrollTop( $('#messageInfoDiv ul')[0].scrollHeight );
+
+            }else{
+                Main.showTip("获取私信列表失败");
+            }
+        }
+    });
+}
+
+/**
+ * 发送私信消息
+ */
+function sendUserMessage(){
+    var receiveId=$("#messageInfoDiv").attr("receiveId");
+    var content=$("#messageContent").val();
+    var html='';
+
+    if($.trim(receiveId)==''){
+        Main.showTip("选择发送人有误");
+        return;
+    }
+    if($.trim(content)==''){
+        Main.showTip("请输入发送内容");
+        return;
+    }
+    try{
+        //发送消息
+        ws.send(JSON.stringify({"type": "say","to_client_id": receiveId,"content":content}));
+        //插入发送记录里面
+        html+='<li class="you clearfix">';
+        html+='<img src="'+userHeadImg+'">';
+        html+=' <p>'+content+'</p>';
+        html+='</li>';
+        $("#messageInfoDiv ul").append(html);
+        $("#messageContent").val("");
+        $('#messageInfoDiv ul').scrollTop( $('#messageInfoDiv ul')[0].scrollHeight );
+        var sessionKey=$("#messageInfoDiv").attr("sessionKey");
+
+        var newMessageInfo=null;
+        //创建UserMessageSession 并更新
+        for(var i=0;i<messageSessionList.length;i++){
+            var temp=messageSessionList[i];
+            if(temp.sessionKey==sessionKey){
+                newMessageInfo=temp;
+                break;
+            }
+        }
+        newMessageInfo.lastContentTime=new Date().format("yyyy-MM-dd HH:mm:ss");
+        newMessageInfo.lastContentInfo=content;
+        rebuildMessageSessionList(new Array(newMessageInfo),1);
+    }catch (e){
+        console.info('发送私信异常');
+    }
+}
+
+/**
+ * 构建私信会话详情HTML
+ * @param list
+ */
+function buildMessageSessionInfo(list,sessionKey){
+    if(list==''||list.length==0){
+        return;
+    }
+    var receiveHeadImg=$("#messageInfoDiv").attr("receiveHeadImg");
+    $("#messageInfoDiv ul").html("");//清空
+    var html='',tempMessage='',receiveId='';
+    for(var i=0;i<list.length;i++){
+        tempMessage=list[i];
+        var content=tempMessage.content;
+        if(Main.isNotEmpty(tempMessage.url)){
+            content='<a href="'+tempMessage.url+'">'+content+'</a>';
+        }
+        //如果自己是发送人
+        if(tempMessage.senderId==userSign){
+            receiveId=tempMessage.receiveId;
+            html+='<li class="you clearfix" mid="'+tempMessage.messageId+'">';
+            html+='<img src="'+userHeadImg+'">';
+            html+=' <p>'+content+'</p>';
+            html+='</li>';
+        }else{
+            receiveId=tempMessage.senderId;
+            html+='<li class="zuo clearfix" mid="'+tempMessage.messageId+'">';
+            html+='<img src="'+receiveHeadImg+'">';
+            html+=' <p>'+content+'</p>';
+            html+='</li>';
+        }
+
+    }
+    if(tempMessage.senderId==SystemMessage.userId||tempMessage.receiveId==SystemMessage.userId){
+        $("#write_div").hide();
+    }else{
+        $("#write_div").show();
+    }
+    $("#messageInfoDiv").attr("receiveId",receiveId);
+    $("#messageInfoDiv").attr("sessionKey",sessionKey);
+    $("#messageInfoDiv").show();
+    $("#messageInfoDiv ul").html(html);
+}
+
+
+/************************ User Message End ******************************/

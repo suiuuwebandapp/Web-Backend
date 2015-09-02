@@ -6,13 +6,21 @@
  * Time : 下午2:35
  * Email: zhangxinmailvip@foxmail.com
  */
+
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 <link rel="stylesheet" type="text/css" href="/assets/pages/layout/top.css">
 <link rel="icon" href="favicon.ico" />
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 
+<?php
+    $newMessageCount=0;
+    $maxMessageCount=7;
+?>
 <?php if (isset($this->context->userObj)) { ?>
+    <script type="text/javascript" src="/assets/chat/js/web_socket.js"></script>
+    <script type="text/javascript" src="/assets/chat/js/json.js"></script>
+
     <!--header开始-->
     <div  class="header<?= isset($this->context->isIndex)?' indexHeader':''?><?=isset($this->context->isTripList)?' fixedBar':''?>" >
         <div class="header-main clearfix">
@@ -40,16 +48,59 @@
 
                         </div>
                     </li>
-                    <li class="xitong" id="suiuu-btn1"><a href="javascript:;" class="my-message"><span style="display: none" class="newTip"></span></a>
+                    <li class="xitong" id="suiuu-btn1">
+                        <a href="javascript:;" class="my-message xitong" id="topNewMessageBox">
+                            <span style="display: none" class="newTip" id="topNewMessageCount"></span></a>
                         <div class="xit-sz">
                             <span class="jiao"></span>
                             <ol>
                                 <li class="sx active" id="userMessageLiBtn">私信</li>
                                 <li class="xtxx" id="sysMessageLiBtn">系统消息</li>
                             </ol>
+
                             <ul id="unReadUserMessageList">
+                                <?php $noUserMessage=false;$moreUserMessage=false; ?>
+                                <?php if(!empty($this->context->unReadMessageList['userList'])){ ?>
+                                    <?php foreach($this->context->unReadMessageList['userList']  as $key=> $messageInfo){ ?>
+                                        <?php $newMessageCount++;if($key>$maxMessageCount){ continue; } ?>
+                                        <?php
+                                            $nickname=$messageInfo['nickname'];
+                                            if(mb_strlen($nickname,"UTF-8")>5){
+                                                $nickname=mb_substr($nickname,0,5,"UTF-8");
+                                            }
+                                        ?>
+                                        <li class="message">
+                                            <a style="width: 240px;height: 40px" href="/user-info?tab=myMessage">
+                                                <img src="<?=$messageInfo['headImg']?>" /><span><?=$nickname?></span>
+                                                <p>给您发了私信</p>
+                                            </a>
+                                        </li>
+                                        <?php if($key==$maxMessageCount){$moreUserMessage=true;}?>
+                                    <?php } ?>
+                                <?php }else{ $noUserMessage=true;} ?>
+                                <li id="noUserMessage" <?=$noUserMessage?'':'style="display:none"' ?>><p class="message_p_center">暂无私信消息</p></li>
+                                <li id="moreUserMessage" <?=$moreUserMessage?'':'style="display:none"' ?>><a href="/user-info?tab=myMessage"><p class="message_p_center">...</p> </a></li>
                             </ul>
                             <ul id="unReadSystemMessageList" style="display: none">
+                                <?php $noSysMessage=false;$moreSysMessage=false; ?>
+                                <?php if(!empty($this->context->unReadMessageList['sysList'])){ ?>
+                                    <?php foreach($this->context->unReadMessageList['sysList'] as $key=> $messageInfo){ ?>
+                                        <?php $newMessageCount++;if($key>$maxMessageCount){ continue; } ?>
+                                        <?php
+                                            $c=$messageInfo['content'];
+                                            if(mb_strlen($content,"UTF-8")>12){
+                                                $c=mb_substr($c,0,12,"UTF-8");
+                                            }
+                                        ?>
+                                        <li class="message" onclick="changeSystemMessageRead('<?=$messageInfo['messageId']?>','<?=$messageInfo['url']?>')">
+                                            <p><?=$c?></p>
+                                        </li>
+                                        <?php if($key==$maxMessageCount){$moreSysMessage=true;} ?>
+                                    <?php } ?>
+                                <?php }else{ $noSysMessage=true; } ?>
+
+                                <li id="noSysMessage" <?=$noSysMessage?'':'style="display:none"' ?>><p class="message_p_center">暂无系统消息</p></li>
+                                <li id="moreSysMessage" <?=$moreSysMessage?'':'style="display:none"' ?>><a href="/user-info?tab=myMessage"><p class="message_p_center">...</p> </a></li>
                             </ul>
                         </div>
                     </li>
@@ -83,10 +134,28 @@
 <!--nav end-->
 
 
+<!--[if gt IE 9]>
+<script type="text/javascript" src="/assets/chat/js/swfobject.js"></script>
+<script type="text/javascript">WEB_SOCKET_SWF_LOCATION = "/assets/chat/swf/WebSocketMain.swf";</script>
+<![endif]-->
+
 <script type="text/javascript">
     var isLogin="<?=isset($this->context->userObj)?1:0?>";
     var emailTime="<?= array_key_exists('emailTime',$this->params)?$this->params['emailTime']:0;?>";
     var searchList='<?=isset($this->context->searchList)?json_encode($this->context->searchList):'';?>';
+    var topNewMessageCount=<?=empty($newMessageCount)?0:$newMessageCount;?>;
+    var maxMessageCount=<?=$maxMessageCount?>;
+    /*** scoket connec***/
+    if (typeof console == "undefined") {
+        this.console = {
+            log: function (msg) {
+            }
+        };
+    }
+    WEB_SOCKET_DEBUG = true;
+    var ws, name, client_list = {}, timeid, reconnect = false;
+    var sessionId = '<?=session_id()?>';
+
 
     $(document).ready(function(){
         $("#search").keypress(function(e){

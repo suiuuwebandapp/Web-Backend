@@ -59,7 +59,11 @@ class Code
      */
     const USER_NAME_SESSION = 'U_N_S';//用户名session
     const USER_LOGIN_SESSION='U_L_S';//用户是否登录 SESSION KEY
+
+
     const USER_LOGIN_SESSION_CHAT='U_L_S_C';//用户是否登录聊天 SESSION KEY
+    const USER_LOGIN_SESSION_NEW_MESSAGE='U_L_S_N_M';//用户是是否有新消息
+    const USER_LOGIN_SESSION_UN_READ_MESSAGE='U_L_S_U_R_M';//用户是是否有新消息
 
     const USER_LOGIN_ERROR_COUNT_PREFIX='U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
     const USER_LOGIN_VERIFY_CODE='U_L_V_C'; //用户登录验证码 SESSION KEY

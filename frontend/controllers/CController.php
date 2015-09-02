@@ -12,6 +12,7 @@ use common\components\Code;
 use common\components\Aes;
 use common\entity\UserBase;
 use frontend\services\UserBaseService;
+use frontend\services\UserMessageService;
 use yii\web\Controller;
 
 
@@ -23,8 +24,6 @@ class CController extends SController{
 
     public $userBaseService=null;
     public $enableCsrfValidation=false;
-
-
 
 
     public function __construct($id, $module = null)
@@ -55,14 +54,16 @@ class CController extends SController{
             }else{
                 return $this->redirect(['/result', 'result' => '请登录过后再进行操作']);
             }
-
         }
+
+
         if($currentUser->isPublisher){
             $userPublisherObj=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);
             $this->userPublisherObj=$userPublisherObj;
         }
         parent::__construct($id, $module);
     }
+
 
 
     public function refreshUserInfo()

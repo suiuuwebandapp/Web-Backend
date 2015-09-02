@@ -13,6 +13,65 @@ var phoneTimer;
 var phoneTime=0;
 
 
+
+function initSocketConnection() {
+    // 创建websocket
+    ws = new WebSocket("ws://58.96.191.44:7272");
+    // 当socket连接打开时，输入用户名
+    ws.onopen = function () {
+        if(reconnect == false) {
+            // 登录
+            var login_data = JSON.stringify({"type":"login","user_key":sessionId});
+            console.log("socket connection success");
+            ws.send(login_data);
+            reconnect = true;
+        }else{
+            // 断线重连
+            var relogin_data = JSON.stringify({"type":"re_login","user_key":sessionId});
+            console.log("socket reconnection success");
+            ws.send(relogin_data);
+        }
+    };
+    // 当有消息时根据消息类型显示不同信息
+    ws.onmessage = function (e) {
+        console.log(e.data);
+        var data = JSON.parse(e.data);
+        switch(data['type']){
+            // 服务端ping客户端
+            case 'ping':
+                ws.send(JSON.stringify({"type":"pong"}));
+                break;;
+            // 登录 更新用户列表
+            case 'login':
+                console.log(data['client_name']+"登录成功");
+                break;
+            // 断线重连，只更新用户列表
+            case 're_login':
+                console.log(data['client_name']+"重连成功");
+                break;
+            // 发言
+            case 'say':
+                //{"type":"say","from_client_id":xxx,"to_client_id":"all/client_id","content":"xxx","time":"xxx"}
+                newMessageProcess(data);
+                break;
+            // 用户退出 更新用户列表
+            case 'logout':
+                console.log("用户退出了登录");
+
+        }
+
+    };
+    ws.onclose = function () {
+        console.log("连接关闭，定时重连");
+
+    };
+    ws.onerror = function () {
+        console.log("出现错误");
+    };
+}
+
+
+
 function initBreadcrumb(){
     var href=window.location.href;
     if(href.indexOf("?")!=-1){
@@ -30,10 +89,13 @@ function initBreadcrumb(){
 function initTopMessage(){
     //如果用户登录了，查询是否有新私信
     if(isLogin==1){
-        initUserMessageInfoList();
-        topMessageInterval=window.setInterval(function(){
-            initUserMessageInfoList();
-        },10000);
+        initSocketConnection();
+        setTopUnReadMessageCount(topNewMessageCount);
+
+        //initUserMessageInfoList();
+        //topMessageInterval=window.setInterval(function(){
+        //    initUserMessageInfoList();
+        //},10000);
     }
 
     $(".search-btn").bind("click",function(){
@@ -59,30 +121,73 @@ function initTopMessage(){
     });
 }
 
-function initUserMessageInfoList(){
-    $.ajax({
-        type: 'post',
-        url: '/user-message/un-read-message-info-list',
-        data: {
-            _csrf: $('input[name="_csrf"]').val()
-        },
-        error:function(){
-            window.clearInterval(topMessageInterval);
-        },
-        success: function (data) {
-            var datas=eval('('+data+')');
-            if(datas.status==1){
-                sys_message_count=0;
-                user_message_count=0;
-                buildUserMessageListHtml(datas.data['userList']);
-                buildSysMessageListHtml(datas.data['sysList']);
-                initTopMessageSelect();
-            }else{
+var newMessageProcess=function (messageInfo)
+{
+    var userHtml="";
 
-            }
-        }
-    });
+    var nickname=messageInfo.sender_name;
+    if(nickname.length>5){
+        nickname=nickname.substring(0,5);
+    }
+    userHtml+='<li class="message"><a style="width: 240px;height: 40px" href="/user-info?tab=myMessage"><img src="'+messageInfo.sender_HeadImg+'"><span>'+nickname+'</span>';
+    userHtml+='<p>给您发了私信</p>';
+    userHtml+='</a></li>';
+    if(userHtml==""){
+        userHtml='<li><p style="text-align: center;width: 240px">暂无私信消息</p></li>';
+    }
+
+    $("#unReadUserMessageList").html(userHtml+$("#unReadUserMessageList").html());
+    var nowUserMessageCount=$("#unReadUserMessageList li[class='message']").size();
+    if(nowUserMessageCount>maxMessageCount){
+        $("#unReadUserMessageList li[class='message']").last().remove();
+    }
+    $("#moreUserMessage").show();
+    setTopUnReadMessageCount(1);
+
+    if(typeof(messageSessionList)!="undefined"){
+        var tempMessage={};
+        tempMessage.headImg=messageInfo.sender_HeadImg;
+        tempMessage.isRead=0;
+        tempMessage.lastConcatTime=messageInfo.time;
+        tempMessage.lastContentInfo=messageInfo.content;
+        tempMessage.nickname=messageInfo.sender_name;
+        tempMessage.relateId=messageInfo.receive_id;
+        tempMessage.sessionId=0;
+        tempMessage.sessionKey=messageInfo.session_key;
+        tempMessage.userId=messageInfo.sender_id;
+
+
+        rebuildMessageSessionList(new Array(tempMessage),2);
+    }
 }
+
+var setTopUnReadMessageCount=function(count) {
+    if($("#topNewMessageCount").html()==""){
+        count=parseInt(count)
+    }else{
+        count=parseInt(count)+parseInt($("#topNewMessageCount").html());
+    }
+    if(count>0){
+        $("#topNewMessageCount").show();
+        $("#topNewMessageCount").html(count);
+        $("#noUserMessage").hide();
+        if(count>maxMessageCount){
+            $("#moreUserMessage").show();
+        }else{
+            $("#moreUserMessage").hide();
+        }
+    }else{
+        $("#topNewMessageCount").hide();
+        $("#topNewMessageCount").html("");
+        $("#noUserMessage").show();
+        $("#moreUserMessage").hide();
+
+
+    }
+
+
+};
+
 
 function buildSysMessageListHtml(list){
     if(list==""||list.length==0){
@@ -320,21 +425,17 @@ function login(){
                 Main.showTip("系统异常。。。");
             },
             success: function (data) {
-
-                var obj=eval('('+data+')');
-                if(obj.status==1)
-                {
+                var obj= $.parseJSON(data);
+                if(obj.status==1){
                     if(window.location.href.indexOf("result?result=")==-1){
                         window.location.reload();
                     }else{
                         window.location.href="/";
                     }
-
-                }else
-                {$('.gt_refresh_button')[0].click();
+                }else{
                     Main.showTip(obj.data);
-                    if(obj.message>=2)
-                    {
+                    if(obj.message>=3){
+                        $('.gt_refresh_button')[0].click();
                         $("#code9527").css('display','block');
                     }
                 }
@@ -572,7 +673,6 @@ $(document).ready(function () {
         sendFeedback();
     });
 
-
     $("#search").on('input',function(e){
         var search= $.trim($(this).val());
         if(search==''){
@@ -608,10 +708,7 @@ $(document).ready(function () {
         }
     });
 
-
-
 });
-
 
 
 

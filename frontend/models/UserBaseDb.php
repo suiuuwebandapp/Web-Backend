@@ -485,5 +485,24 @@ class UserBaseDb extends ProxyDb
     }
 
 
+    /**
+     * 获取用户账户余额
+     * @param $userSign
+     * @return array|bool
+     */
+    public function findUserMoneyByUserSign($userSign)
+    {
+        $sql=sprintf("
+            SELECT balance FROM user_base
+            WHERE userSign=:userSign
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+
+        return $command->queryOne();
+    }
+
+
 
 }

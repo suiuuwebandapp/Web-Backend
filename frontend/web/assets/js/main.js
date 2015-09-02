@@ -49,6 +49,10 @@ var Main = function() {
                 clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))
             });
         },
+        // 改变页面地址
+        changeLocationUrl : function(location) {
+            window.location.href = location;
+        },
         /**
          * yyyy-MM-dd hh:mm:ss
          * @param strDate
@@ -199,28 +203,13 @@ var Main = function() {
                 Main.showTip("请输入发送内容");
                 return;
             }
-            $.ajax({
-                url :'/user-message/add-user-message',
-                type:'post',
-                data:{
-                    receiveId:$.trim(receiveId),
-                    content:$.trim(content)
-                },
-                error:function(){
-                    Main.showTip("发送消息失败");
-                },
-                success:function(data){
-                    data=eval("("+data+")");
-                    if(data.status==1){
-                        Main.showTip("发送消息成功");
-                        $("#showMessageDiv").hide();
-                        $("#myMask").hide();
-                        $("#sendMessageForm")[0].reset();
-                    }else{
-                        Main.showTip("发送消息失败");
-                    }
-                }
-            });
+            try{
+                ws.send(JSON.stringify({"type": "say","to_client_id": receiveId,"content":content}));
+                Main.showTip("发送消息成功");
+                $("#showMessageDiv").hide();
+                $("#myMask").hide();
+                $("#sendMessageForm")[0].reset();
+            }catch (e){}
         }
     };
 
@@ -390,3 +379,30 @@ String.prototype.startWith=function(s){
         return false;
     return true;
 }
+
+/**
+ * yyyy-MM-dd hh:mm:ss
+ * @param fmt
+ * @returns {*}
+ */
+Date.prototype.format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};

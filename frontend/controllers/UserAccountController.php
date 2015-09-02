@@ -19,6 +19,8 @@ use common\entity\UserAccount;
 use common\entity\UserAccountRecord;
 use frontend\interfaces\WechatInterface;
 use frontend\services\UserAccountService;
+use frontend\services\UserBaseService;
+use frontend\services\UserOrderService;
 use yii\base\Exception;
 
 class UserAccountController extends CController {
@@ -200,11 +202,11 @@ class UserAccountController extends CController {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid Money"));
         }
 
-        $balance=$this->userObj->balance;
-        if($money>$balance){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"No Enough Balance"));
-        }
         try{
+            $balance=$this->userBaseService->findUserMoneyByUserSign($this->userObj->userSign);
+            if($money>$balance){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"No Enough Balance"));
+            }
             $this->userAccountService->addUserCashApply($money,$accountId,$this->userObj->userSign);
             $this->refreshUserInfo();
             return json_encode(Code::statusDataReturn(Code::SUCCESS));

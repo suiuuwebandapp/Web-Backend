@@ -7,7 +7,6 @@
  * Email: zhangxinmailvip@foxmail.com
  */
 ?>
-
 <link rel="stylesheet" type="text/css" href="/assets/plugins/imgAreaSelect/css/imgareaselect-default.css"/>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/jquery-uploadifive/uploadifive.css">
 <link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap-datepicker/css/datepicker3.css" />
@@ -589,7 +588,7 @@
         <div id="accountDiv" class="myOder nowOder actCon" style="display:block;">
             <div class="top clearfix">
                 <p class="row clearfix">账户余额：<span class="orange"
-                                                   style="float: none">￥<?= intval($this->context->userObj->balance); ?></span>
+                                                   style="float: none">￥<?= $balance; ?></span>
                     <a href="javascript:;" id="toAddUserAccount" class=" btn blueColor">添加收款方式</a></p>
                 <?php if (!empty($userAccountList)) { ?>
                     <div class="row clearfix">
@@ -753,6 +752,8 @@ if (!empty($wechatAccount)) {
     var phoneTimer;
     var bindWechat = <?=$bindWechat;?>;
     var nowDate='<?=date('Y-m-d',time()); ?>';
+
+    var messageSessionList= $.parseJSON('<?=$userMessageSessionList?>');
 
 </script>
 

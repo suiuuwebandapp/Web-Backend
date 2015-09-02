@@ -892,4 +892,31 @@ class UserBaseService extends BaseDb
         return $userAptitude;
     }
 
+
+    /**
+     * 获取用户实时余额
+     * @param $userSign
+     * @return array|bool|int
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function findUserMoneyByUserSign($userSign)
+    {
+        if(empty($userSign)){
+            throw new Exception("userSign Is Not Allow Empty");
+        }
+        $money=0;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $money=$this->userBaseDb->findUserMoneyByUserSign($userSign);
+            $money=$money['balance'];
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $money;
+    }
+
 }

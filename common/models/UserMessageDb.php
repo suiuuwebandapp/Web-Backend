@@ -50,6 +50,22 @@ class UserMessageDb extends ProxyDb
     }
 
 
+    public function getUnReadMessageList($userId)
+    {
+        $sql=sprintf("
+            SELECT um.*,ub.nickname,ub.headImg FROM user_message um
+            LEFT JOIN user_base ub ON um.senderId=ub.userSign
+            WHERE um.receiveId=:userId AND um.isRead=FALSE
+        ");
+
+        $command=$this->getConnection()->createCommand($sql);
+
+        $command->bindParam(":userId", $userId, PDO::PARAM_INT);
+
+        return $command->queryAll();
+    }
+
+
     /**
      * 获取会话（根据Key）
      * @param $userId

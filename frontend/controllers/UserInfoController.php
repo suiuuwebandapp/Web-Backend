@@ -27,6 +27,7 @@ use frontend\services\TravelTripCommentService;
 use frontend\services\UserAccountService;
 use frontend\services\UserAttentionService;
 use frontend\services\UserBaseService;
+use frontend\services\UserMessageService;
 use yii\base\Exception;
 use yii\debug\models\search\Log;
 use yii\web\Cookie;
@@ -88,7 +89,14 @@ class UserInfoController extends CController
         //获取用户资历信息
         $userAptitude=$this->userBaseService->findUserAptitudeByUserId($this->userObj->userSign);
 
+        $userMessageService=new UserMessageService();
+        //用户会话列表
+        $list=$userMessageService->getUserMessageSessionList($this->userObj->userSign);
+
         $wechatAccount = \Yii::$app->getSession()->get(Code::USER_WECHAT_ACCOUNT);
+
+        $balance=$this->userBaseService->findUserMoneyByUserSign($this->userObj->userSign);
+
         return $this->render("info", [
             'countryList' => $countryList,
             'userPublisher' => $userPublisher,
@@ -102,7 +110,9 @@ class UserInfoController extends CController
             'bindAlipayAccount' => $bindAlipayAccount,
             'photoList' => $photoList,
             'userCard'=>$userCard,
-            'userAptitude'=>$userAptitude
+            'userAptitude'=>$userAptitude,
+            'userMessageSessionList'=>json_encode($list),
+            'balance'=>$balance
         ]);
     }
 

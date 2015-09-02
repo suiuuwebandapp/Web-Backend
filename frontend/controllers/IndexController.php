@@ -44,8 +44,6 @@ class IndexController extends UnCController
 
     public function actionIndex()
     {
-
-
         if (RequestValidate::is_mobile_request()) {
            return $this->redirect('/wechat-trip');
         }
@@ -226,6 +224,7 @@ class IndexController extends UnCController
         $confirmPassword = Yii::$app->request->post('confirmPassword');
         $code = Yii::$app->request->post('code');//用户名
         $codeSession = yii::$app->session->get(Code::USER_LOGIN_VERIFY_CODE);
+
         if(strtolower($code)!=strtolower($codeSession)||empty($codeSession)){
             return json_encode(Code::statusDataReturn(Code::FAIL, '验证码错误'));
         }
@@ -358,6 +357,7 @@ class IndexController extends UnCController
                 }
                 //清除错误登录次数
                 Yii::$app->redis->del(Code::USER_LOGIN_ERROR_COUNT_PREFIX . $username);
+
                 //跳转用户登录前的页面
                 return json_encode(Code::statusDataReturn(Code::SUCCESS));
 

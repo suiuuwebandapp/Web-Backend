@@ -35,3 +35,10 @@
 .searchDrop li b{
     float: right;
 }
+
+#unReadUserMessageList li a,#unReadSystemMessageList li a{
+    background: none;
+}
+.message_p_center{
+    text-align: center;width: 240px
+}

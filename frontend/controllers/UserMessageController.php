@@ -13,6 +13,7 @@ namespace frontend\controllers;
 use common\components\Code;
 use common\components\LogUtils;
 use common\entity\UserMessage;
+use frontend\services\UserMessageRemindService;
 use frontend\services\UserMessageService;
 use yii\base\Exception;
 
@@ -130,6 +131,23 @@ class UserMessageController extends  CController{
     }
 
     /**
+     * 未读消息列表
+     * @return string
+     */
+    public function actionUnReadMessageList()
+    {
+        try{
+            $userSign=$this->userObj->userSign;
+            $list=$this->userMessageService->getUnReadMessageList($userSign);
+
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$list));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+    /**
      * 更新系统消息已读
      */
     public function actionChangeSystemMessageRead()
@@ -141,8 +159,10 @@ class UserMessageController extends  CController{
         }
         try{
             $userSign=$this->userObj->userSign;
-            $userMessageSetting=$this->userMessageService->changeSystemMessageRead($messageId,$userSign);
-            return json_encode(Code::statusDataReturn(Code::SUCCESS,$userMessageSetting));
+            $userMessageRemindService=new UserMessageRemindService();
+            $userMessageRemindService->deleteUserMessageRemind($messageId,$userSign);
+            //$userMessageSetting=$this->userMessageService->changeSystemMessageRead($messageId,$userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
         }catch (Exception $e){
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));

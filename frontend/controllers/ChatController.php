@@ -18,6 +18,7 @@ class ChatController extends CController{
 
     public function actionIndex()
     {
+
         //echo md5("gkin70mhrpcvq1sc3i8m9aiqn1");exit;
         return $this->renderPartial("index");
     }

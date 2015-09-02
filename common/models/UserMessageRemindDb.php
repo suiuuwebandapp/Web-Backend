@@ -56,12 +56,12 @@ class UserMessageRemindDb extends ProxyDb
     public function deleteUserMessageRemind($remindId,$userSign)
     {
         $sql=sprintf("
-           UPDATE user_message_remind SET rStatus=:rStatus,readTime=now() WHERE remindId = :remindId AND createUserSign=:createUserSign
+           UPDATE user_message_remind SET rStatus=:rStatus,readTime=now() WHERE remindId = :remindId AND relativeUserSign=:relativeUserSign
         ");
         $command=$this->getConnection()->createCommand($sql);
-        $command->bindValue(":status", UserMessageRemind::REMIND_STATUS_DISABLED, PDO::PARAM_INT);
+        $command->bindValue(":rStatus", UserMessageRemind::REMIND_STATUS_DISABLED, PDO::PARAM_INT);
         $command->bindParam(":remindId", $remindId, PDO::PARAM_INT);
-        $command->bindParam(":createUserSign", $userSign, PDO::PARAM_STR);
+        $command->bindParam(":relativeUserSign", $userSign, PDO::PARAM_STR);
         $command->execute();
     }
 
@@ -288,7 +288,7 @@ class UserMessageRemindDb extends ProxyDb
         $this->setParam("sysType", UserMessageRemind::R_TYPE_SYS);
         $this->setParam("orderType", UserMessageRemind::R_TYPE_ORDER);
         $this->setParam("userSign", $userSign);
-        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,b.headImg,b.nickname');
+        $this->setSelectInfo('a.relativeId,a.relativeType,a.createUserSign,a.remindId,a.rType,a.content,a.url,a.createTime,a.readTime,a.rStatus,b.headImg,b.nickname');
         $this->setSql($sql);
         return $this->find($page);
     }
