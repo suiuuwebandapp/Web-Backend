@@ -441,7 +441,7 @@
                 'multi': false,
                 'dnd': false,
                 'onAddQueueItem': function (file) {
-                    var html = '<a href="javascript:;" class="imgs" pic="' + file.name + file.size + '"><span class="upload_show_info">正在上传...</span><span class="delet" onclick="NewTrip.removePic(this)"></span><img /></a>';
+                    var html = '<a href="javascript:;" class="imgs" pic="' + file.name + file.size + '"><span class="upload_show_info">正在上传...</span><span class="delet" onclick="NewTrafficTrip.removePic(this)"></span><img /></a>';
                     $("#upload_div").prepend(html);
                 },
                 'onUploadComplete': function (file, data) {
@@ -746,7 +746,7 @@
                 }
 
                 var size = $("#upload_div a[class='imgs'][id!='uploadPic'] img").size();
-                if (size <1) {
+                if (size <5) {
                     selectTab(3);
                     $("#carPhotoTip").html("请至少上传5张车辆照片");
                     return;
@@ -909,6 +909,19 @@
              */
             removeDetail: function (obj) {
                 $(obj).parent().remove();
+            },
+            /**
+             * 移除列表中图片
+             * @param obj
+             */
+            removePic: function (obj) {
+                $(obj).parent().remove();
+                var size = $("#upload_div a[class='imgs'][id!='uploadPic'] img").size();
+                if (size >= 10) {
+                    $("#uploadPic").hide();
+                }else{
+                    $("#uploadPic").show();
+                }
             }
         }
     }();

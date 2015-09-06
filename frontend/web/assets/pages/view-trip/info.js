@@ -73,7 +73,7 @@ function initTrafficOrder() {
         orderTime+=":00";
 
 
-        if(serviceType=='airplane'){
+        if(serviceType=='airplane_come'||serviceType=='airplane_send'){
             if(compareTime(orderTime,nightTimeStart)&&compareTime(nightTimeEnd,orderTime)){
                 price=parseInt(airplanePrice)+parseInt(nightServicePrice);
             }else{

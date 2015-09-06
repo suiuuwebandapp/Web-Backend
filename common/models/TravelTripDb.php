@@ -38,6 +38,17 @@ class TravelTripDb extends ProxyDb
         return $selectInfo;
     }
 
+    public function getTrafficTripInfo()
+    {
+        $selectInfo="t.trafficId,t.tripId,t.driverLicenseDate,t.carType,t.seatCount,t.spaceInfo,t.allowSmoke,t.allowPet,t.childSeat,t.serviceTime,
+        t.serviceMileage,t.overTimePrice,t.overMileagePrice,ceil(t.carPrice*".Code::TRIP_SERVICE_PRICE.") AS carPrice,t.carPrice AS oldCarPrice,
+        ceil(t.airplanePrice*".Code::TRIP_SERVICE_PRICE.") AS airplanePrice,t.airplanePrice AS oldAirplanePrice,
+        t.nightTimeStart,t.nightTimeEnd,ceil(t.nightServicePrice*".Code::TRIP_SERVICE_PRICE.") AS nightServicePrice,t.nightServicePrice AS oldNightServicePrice
+
+        ";
+        return $selectInfo;
+    }
+
 
     /**
      * 获取推荐随游
@@ -194,7 +205,7 @@ class TravelTripDb extends ProxyDb
             VALUES
             (
               :createPublisherId,now(),:title,:titleImg,:countryId,:cityId,:lon,:lat,:basePrice,:basePriceType,:maxUserCount,
-              :scheduledTime,:score,0,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status,:type
+              :scheduledTime,0,0,:startTime,:endTime,:travelTime,:travelTimeType,:intro,:info,:tags,:status,:type
             )
         ");
 
@@ -210,7 +221,6 @@ class TravelTripDb extends ProxyDb
         $command->bindParam(":basePriceType", $travelTrip->basePriceType, PDO::PARAM_INT);
         $command->bindParam(":maxUserCount", $travelTrip->maxUserCount, PDO::PARAM_INT);
         $command->bindParam(":scheduledTime", $travelTrip->scheduledTime, PDO::PARAM_STR);
-        $command->bindParam(":score", $travelTrip->score, PDO::PARAM_STR);
         $command->bindParam(":startTime", $travelTrip->startTime, PDO::PARAM_STR);
         $command->bindParam(":endTime", $travelTrip->endTime, PDO::PARAM_STR);
         $command->bindParam(":travelTime", $travelTrip->travelTime, PDO::PARAM_STR);
@@ -285,6 +295,18 @@ class TravelTripDb extends ProxyDb
         $command->bindParam(":status", $status, PDO::PARAM_INT);
         $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
         $command->execute();
+    }
+
+    public function findTravelTrafficById($tripId)
+    {
+        $sql = sprintf("
+            SELECT %s FROM travel_trip_traffic AS t
+            WHERE tripId=:tripId
+        ",self::getTrafficTripInfo());
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+
+        return $command->queryOne();
     }
 
     /**

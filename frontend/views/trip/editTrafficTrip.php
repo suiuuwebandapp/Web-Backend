@@ -210,7 +210,7 @@
                 <div id="carServiceDiv">
                     <span class="spn_title">基本价格</span>
                     <span class="form_tip" id="carBasePriceTip" style="margin-right: 17px"></span>
-                    <p><input type="text" class="text01" id="carBasePrice" ipt-type="number_ipt" value="<?=empty($travelInfo['trafficInfo']['carPrice'])?'':$travelInfo['trafficInfo']['carPrice'];?>"><b>RMB/每天</b></p>
+                    <p><input type="text" class="text01" id="carBasePrice" ipt-type="number_ipt" value="<?=empty($travelInfo['trafficInfo']['oldCarPrice'])?'':$travelInfo['trafficInfo']['oldCarPrice'];?>"><b>RMB/每天</b></p>
                     <div class="lines clearfix">
                         <div class="line_two_ipt_div">
                             <span class="spn_title" style="width: auto">服务时长</span> <span class="form_tip" id="serviceTimeTip" style="width: 130px !important;"></span>
@@ -263,7 +263,7 @@
                 <div id="airplaneServiceDiv">
                     <span class="spn_title">基本价格</span>
                     <span class="form_tip" id="airBasePriceTip" style="margin-right: 17px"></span>
-                    <p><input type="text" class="text02" id="airBasePrice" ipt-type="number_ipt" value="<?=empty($travelInfo['trafficInfo']['airplanePrice'])?'':$travelInfo['trafficInfo']['airplanePrice'];?>"><b>每次</b></p>
+                    <p><input type="text" class="text02" id="airBasePrice" ipt-type="number_ipt" value="<?=empty($travelInfo['trafficInfo']['oldAirplanePrice'])?'':$travelInfo['trafficInfo']['oldAirplanePrice'];?>"><b>每次</b></p>
                     <h2 class="titles mT">夜间加价</h2>
                     <div class="line">
                         <input type="radio" id="f" name="nightPriceRadio" value="0"><label for="f">不加收夜间费用</label>
@@ -278,7 +278,7 @@
                             <input type="text" class="timePicker" data-field="time" id="nightTimeEnd" placeholder="结束时间" value="<?=empty($travelInfo['trafficInfo']['nightTimeEnd'])?'':\common\components\DateUtils::formatTime($travelInfo['trafficInfo']['nightTimeEnd']);?>"/>
                             <span>加收夜间服务费</span>
                         </p>
-                        <p><span>夜间加收服务费</span><input type="text" class="text" ipt-type="number_ipt" id="nightTimePrice" value="<?=empty($travelInfo['trafficInfo']['nightServicePrice'])?'':$travelInfo['trafficInfo']['nightServicePrice'];?>"><b>￥/每次</b></p>
+                        <p><span>夜间加收服务费</span><input type="text" class="text" ipt-type="number_ipt" id="nightTimePrice" value="<?=empty($travelInfo['trafficInfo']['oldNightServicePrice'])?'':$travelInfo['trafficInfo']['oldNightServicePrice'];?>"><b>￥/每次</b></p>
                     </div>
                 </div>
             </div>
@@ -476,7 +476,7 @@
                 'multi': false,
                 'dnd': false,
                 'onAddQueueItem': function (file) {
-                    var html = '<a href="javascript:;" class="imgs" pic="' + file.name + file.size + '"><span class="upload_show_info">正在上传...</span><span class="delet" onclick="NewTrip.removePic(this)"></span><img /></a>';
+                    var html = '<a href="javascript:;" class="imgs" pic="' + file.name + file.size + '"><span class="upload_show_info">正在上传...</span><span class="delet" onclick="NewTrafficTrip.removePic(this)"></span><img /></a>';
                     $("#upload_div").prepend(html);
                 },
                 'onUploadComplete': function (file, data) {
@@ -532,6 +532,8 @@
             if($("#carBasePrice").val()==''){
                 checkRadio($("#carServiceRadio"),true);
                 $("#carServiceDiv").hide();
+                $("#carServiceRadio").attr('checked','checked');
+
             }else{
                 checkRadio($("#carServiceRadio"),false);
                 $("#carServiceDiv").show();
@@ -539,6 +541,8 @@
             if($("#airBasePrice").val()==''){
                 checkRadio($("#airplaneServiceRadio"),true);
                 $("#airplaneServiceDiv").hide();
+                $("#airplaneServiceRadio").attr('checked','checked');
+
             }else{
                 checkRadio($("#airplaneServiceRadio"),false);
                 $("#airplaneServiceDiv").show();
@@ -873,7 +877,7 @@
                 }
 
                 var size = $("#upload_div a[class='imgs'][id!='uploadPic'] img").size();
-                if (size <1) {
+                if (size <5) {
                     selectTab(3);
                     $("#carPhotoTip").html("请至少上传5张车辆照片");
                     return;
@@ -1040,6 +1044,19 @@
              */
             removeDetail: function (obj) {
                 $(obj).parent().remove();
+            },
+            /**
+             * 移除列表中图片
+             * @param obj
+             */
+            removePic: function (obj) {
+                $(obj).parent().remove();
+                var size = $("#upload_div a[class='imgs'][id!='uploadPic'] img").size();
+                if (size >= 10) {
+                    $("#uploadPic").hide();
+                }else{
+                    $("#uploadPic").show();
+                }
             }
         }
     }();

@@ -202,6 +202,16 @@ class TripController extends CController
         $unIncludeDetailList = \Yii::$app->request->post("unIncludeDetailList", "");
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
+        if($carServiceType=='true'){
+            $carServiceType=1;
+        }else{
+            $carServiceType=0;
+        }
+        if($airServiceType=='true'){
+            $airServiceType=1;
+        }else{
+            $airServiceType=0;
+        }
 
         if ($this->userPublisherObj == null) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
@@ -236,7 +246,7 @@ class TripController extends CController
         if (empty($space)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "行李控件不允许为空"));
         }
-        if (empty($picList)||count($picList)<1) {
+        if (empty($picList)||count($picList)<5) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有五个图片介绍"));
         }
         if ($carServiceType==0&&(empty($cityId)||empty($cityId))) {
@@ -258,7 +268,7 @@ class TripController extends CController
 
         if($airServiceType==0){
 
-            if(empty($carBasePrice)||$carBasePrice<0){
+            if(empty($airBasePrice)||$airBasePrice<0){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "接机服务基础价格不允许为空"));
             }
             if($nightPriceType==1){
@@ -282,9 +292,11 @@ class TripController extends CController
             }
         }
 
-        $basePrice=0;
+        $basePrice=null;
         if($carServiceType==0){
             $basePrice=$carBasePrice;
+        }else{
+            $basePrice=$airBasePrice;
         }
 
         $userPublisherId = $this->userPublisherObj->userPublisherId;
@@ -443,6 +455,16 @@ class TripController extends CController
         $unIncludeDetailList = \Yii::$app->request->post("unIncludeDetailList", "");
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
+        if($carServiceType=='true'){
+            $carServiceType=1;
+        }else{
+            $carServiceType=0;
+        }
+        if($airServiceType=='true'){
+            $airServiceType=1;
+        }else{
+            $airServiceType=0;
+        }
 
         if ($this->userPublisherObj == null) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
@@ -480,7 +502,7 @@ class TripController extends CController
         if (empty($space)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "行李控件不允许为空"));
         }
-        if (empty($picList)||count($picList)<1) {
+        if (empty($picList)||count($picList)<5) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有五个图片介绍"));
         }
         if ($carServiceType==0&&(empty($cityId)||empty($cityId))) {
@@ -502,7 +524,7 @@ class TripController extends CController
 
         if($airServiceType==0){
 
-            if(empty($carBasePrice)||$carBasePrice<0){
+            if(empty($airBasePrice)||$airBasePrice<0){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "接机服务基础价格不允许为空"));
             }
             if($nightPriceType==1){
@@ -526,9 +548,11 @@ class TripController extends CController
             }
         }
 
-        $basePrice=0;
+        $basePrice=null;
         if($carServiceType==0){
             $basePrice=$carBasePrice;
+        }else{
+            $basePrice=$airBasePrice;
         }
 
         $userPublisherId = $this->userPublisherObj->userPublisherId;

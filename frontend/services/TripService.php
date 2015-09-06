@@ -454,8 +454,8 @@ class TripService extends BaseDb{
             $tripInfo['publisherList']=$this->tripTravelDb->getTravelTripPublisherList($tripId);
 
             if($tripInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
-                $traffic=$this->findObjectByType(TravelTripTraffic::class,"tripId",$tripId);
-                $tripInfo['trafficInfo']=$traffic[0];
+                $traffic=$this->tripTravelDb->findTravelTrafficById($tripId);
+                $tripInfo['trafficInfo']=$traffic;
             }else{
                 $tripInfo['priceList']=$this->tripTravelDb->getTravelTripPriceList($tripId);
                 $tripInfo['scenicList']=$this->tripTravelDb->getTravelTripScenicList($tripId);
@@ -567,11 +567,13 @@ class TripService extends BaseDb{
         }
         $trafficInfo=null;
         try{
-            $rst=$this->findObjectByType(TravelTripTraffic::class,"tripId",$tripId);
-            if(empty($rst)){
+            $conn = $this->getConnection();
+            $this->tripTravelDb=new TravelTripDb($conn);
+            $traffic=$this->tripTravelDb->findTravelTrafficById($tripId);
+            if(empty($traffic)){
                 throw new Exception("随游不存在");
             }
-            $trafficInfo=$this->arrayCastObject($rst[0],TravelTripTraffic::class);
+            $trafficInfo=$this->arrayCastObject($traffic,TravelTripTraffic::class);
         }catch (Exception $e){
             throw $e;
         }finally {

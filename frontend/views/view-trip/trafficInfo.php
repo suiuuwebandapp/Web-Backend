@@ -240,28 +240,37 @@
         <div class="left">
             <p>选择服务</p>
             <ul class="ul01 clearfix">
-                <li>
-                    <?php if(!empty($travelInfo['trafficInfo']['carPrice'])){ ?>
+                <?php if(!empty($travelInfo['trafficInfo']['carPrice'])){ ?>
+                    <li>
                         <a href="javascript:;" class="btn active">包车</a>
-                    <?php } ?>
+                    </li>
+                <?php } ?>
+                <?php if(!empty($travelInfo['trafficInfo']['airplanePrice'])){ ?>
+                    <li>
+                        <a href="javascript:;" class="btn">接机</a>
+                    </li>
+                <?php } ?>
+                <?php if(!empty($travelInfo['trafficInfo']['airplanePrice'])){ ?>
+                    <li>
+                        <a href="javascript:;" class="btn">送机</a>
+                    </li>
+                <?php } ?>
+
+            </ul>
+            <ul class="ul01 clearfix">
+                <li>
                     <p>预约日期（当地）</p>
                     <div class="selet">
                         <input type="text" id="orderDate" placeholder="请选择日期" readonly/>
                     </div>
                 </li>
                 <li>
-                    <?php if(!empty($travelInfo['trafficInfo']['airplanePrice'])){ ?>
-                        <a href="javascript:;" class="btn">接机</a>
-                    <?php } ?>
                     <p>时间（当地）</p>
                     <div class="selet">
                         <input type="text" data-field="time" id="orderTime" placeholder="请选择时间" readonly/>
                     </div>
                 </li>
                 <li>
-                    <?php if(!empty($travelInfo['trafficInfo']['airplanePrice'])){ ?>
-                        <a href="javascript:;" class="btn">送机</a>
-                    <?php } ?>
                     <p>人数</p>
                     <div class="selet">
                         <select id="peopleCount">
