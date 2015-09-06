@@ -87,7 +87,7 @@
     <input id="show_message_cancel_order_id" type="hidden"/>
     <textarea placeholder="请填写取消原因" id="show_order_message"></textarea>
     <p class="blue">点击确认后订单将会立即取消，随游的工作人员会在稍后联系您</p>
-    <a href="javascript:publisherCancelOrder();" class="btn">确认取消</a>
+    <a href="javascript:;" onclick="publisherCancelOrder()" class="btn">确认取消</a>
 </div>
 <!-----------取消订单弹层--------------->
 <div id="showRefundDiv" class="scancelTip screens" style="display: none;z-index: 1001">
@@ -95,7 +95,7 @@
     <input id="show_message_refund_order_id" type="hidden"/>
     <textarea placeholder="请填写退款原因" id="show_refund_message"></textarea>
     <p class="blue">点击确认后请耐心等待审核，随游的工作人员会在稍后同您联系</p>
-    <a href="javascript:refundOrderByMessage();" class="btn">提交申请</a>
+    <a href="javascript:;" onclick="refundOrderByMessage()" class="btn">提交申请</a>
 </div>
 
 

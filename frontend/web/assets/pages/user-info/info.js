@@ -1026,7 +1026,7 @@ function buildOrderList(list,type){
 
         html+='<dl class="order clearfix">';
         html+='<dt class="title">';
-        html+='<span>订单状态</span><span>随游</span><span>开始日期</span><span>人数</span><span>联系人</span><span>服务明细</span>';
+        html+='<span>订单状态</span><span>随游</span><span>开始日期</span><span>人数</span><span>联系人</span><span><a href="/user-order/view-order-info?orderNumber='+orderInfo.orderNumber+'" target="_blank">查看服务明细</a></span>';
         html+='</dt>';
         html+='<dd>';
         html+=orderStatusHtml;
@@ -1046,13 +1046,7 @@ function buildOrderList(list,type){
             html+='</span>';
         }
         html+='<span>';
-        if(serviceInfo!=''&&serviceInfo.length>0){
-            for(var j=0;j<serviceInfo.length;j++){
-                var service=serviceInfo[j];
-                html+=service.title;
-                html+='<br>';
-            }
-        }
+
         html+='</span>';
         html+='</dd>';
         html+='</dl>';
@@ -1130,7 +1124,7 @@ function buildPublisherOrderList(list){
 
         html+='<dl class="order clearfix">';
         html+='<dt class="title">';
-        html+='<span>订单状态</span><span>随游</span><span>开始日期</span><span>人数</span><span>联系人</span><span>服务明细</span>';
+        html+='<span>订单状态</span><span>随游</span><span>开始日期</span><span>人数</span><span>联系人</span><span><a href="/user-order/view-order-info?orderNumber='+orderInfo.orderNumber+'" target="_blank">查看服务明细</a></span>';
         html+='</dt>';
         html+='<dd>';
         html+=orderStatusHtml;
@@ -1146,13 +1140,6 @@ function buildPublisherOrderList(list){
         }
         html+='</span>';
         html+='<span>';
-        if(serviceInfo!=''&&serviceInfo.length>0){
-            for(var j=0;j<serviceInfo.length;j++){
-                var service=serviceInfo[j];
-                html+=service.title;
-                html+='<br>';
-            }
-        }
         html+='</span>';
         html+='</dd>';
         html+='</dl>';
@@ -1222,7 +1209,7 @@ function buildUnConfirmList(list){
 
         html+='<dl class="order clearfix">';
         html+='<dt class="title">';
-        html+='<span>订单状态</span><span>随游</span><span>开始日期</span><span>人数</span><span>联系人</span><span>服务明细</span>';
+        html+='<span>订单状态</span><span>随游</span><span>开始日期</span><span>人数</span><span>联系人</span><span><a href="/user-order/view-order-info?orderNumber='+orderInfo.orderNumber+'" target="_blank">查看服务明细</a></span>';
         html+='</dt>';
         html+='<dd>';
         html+=orderStatusHtml;
@@ -1237,13 +1224,6 @@ function buildUnConfirmList(list){
             html+='<b>'+orderInfo.areaCode+' '+orderInfo.phone+'</b>';
         }
         html+='</span>';        html+='<span>';
-        if(serviceInfo!=''&&serviceInfo.length>0){
-            for(var j=0;j<serviceInfo.length;j++){
-                var service=serviceInfo[j];
-                html+=service.title;
-                html+='<br>';
-            }
-        }
         html+='</span>';
         html+='</dd>';
         html+='</dl>';

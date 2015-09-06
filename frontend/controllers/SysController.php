@@ -60,9 +60,15 @@ class SysController extends Controller{
         $countryService = new CountryService();
         $countryList = $countryService->getCountryList();
         $tagList = TagUtil::getInstance()->getTagList();
+        $returnUrl="sysEditTrip";
 
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
-        return $this->render("sysEditTrip",[
+
+        if($travelInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
+            $returnUrl="sysTrafficTrip";
+        }
+
+        return $this->render($returnUrl,[
             'travelInfo'=>$travelInfo,
             'countryList' => $countryList,
             'tagList' => $tagList

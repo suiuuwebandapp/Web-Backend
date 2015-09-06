@@ -43,4 +43,11 @@ class SiteUrl {
         return $baseUrl."/trip/edit-trip?trip=".$tripId;
     }
 
+    public static function getOrderPayUrl($orderNumber)
+    {
+        $baseUrl=\Yii::$app->params['base_dir'];
+        return $baseUrl."/user-order/info?orderNumber=".$orderNumber;
+
+    }
+
 }

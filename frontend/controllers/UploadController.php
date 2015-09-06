@@ -256,8 +256,8 @@ class UploadController extends UnCController
 
 
             //缩放
-            $showWidth=830;
-            $showHeight=482;
+            $showWidth=820;
+            $showHeight=534;
             $image=imagecreatetruecolor($showWidth, $showHeight);
 
             //关键函数，参数（目标资源，源，目标资源的开始坐标x,y, 源资源的开始坐标x,y,目标资源的宽高w,h,源资源的宽高w,h）

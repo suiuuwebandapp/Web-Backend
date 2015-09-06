@@ -36,7 +36,9 @@
             <li><a href="javascript:;" <?php if ($tab == "tripManager") {echo "class='active'";}; ?> id="tripManager">随游管理</a></li>
         <?php } ?>
         <li><a href="javascript:;" <?php if ($tab == "userInfo") { echo "class='active'";}; ?> id="userInfo">个人资料</a></li>
-        <li><a href="javascript:;" <?php if ($tab == "userAccount") {echo "class='active'";}; ?> id="userAccount">个人账户</a></li>
+        <?php if ($this->context->userObj->isPublisher) { ?>
+            <li><a href="javascript:;" <?php if ($tab == "userAccount") {echo "class='active'";}; ?> id="userAccount">个人账户</a></li>
+        <?php } ?>
     </ul>
     <!-------------TabCon1-我的邮件------------>
     <div class="tab-div myEmail TabCon clearfix" <?php if ($tab == "" || $tab == "myMessage") {
@@ -575,106 +577,106 @@
         </div>
     </div>
 
+    <?php if ($this->context->userObj->isPublisher) { ?>
     <!-------------TabCon7-个人账户------------->
-    <div class="tab-div accountCon TabCon clearfix" <?php if ($tab == "userAccount") {
-        echo "style='display:block'";
-    } else {
-        echo "style='display:none'";
-    }; ?>>
-        <ul class="myOderNav actNav">
-            <li><a href="javascript:;" class="active" id="accountList">账户信息</a></li>
-            <li><a href="javascript:;" id="accountHistory">历史交易</a></li>
-        </ul>
-        <div id="accountDiv" class="myOder nowOder actCon" style="display:block;">
-            <div class="top clearfix">
-                <p class="row clearfix">账户余额：<span class="orange"
-                                                   style="float: none">￥<?= $balance; ?></span>
-                    <a href="javascript:;" id="toAddUserAccount" class=" btn blueColor">添加收款方式</a></p>
-                <?php if (!empty($userAccountList)) { ?>
-                    <div class="row clearfix">
-                        <span class="accountSpan">选择收款方式：</span>
+        <div class="tab-div accountCon TabCon clearfix" <?php if ($tab == "userAccount") {
+            echo "style='display:block'";
+        } else {
+            echo "style='display:none'";
+        }; ?>>
+            <ul class="myOderNav actNav">
+                <li><a href="javascript:;" class="active" id="accountList">账户信息</a></li>
+                <li><a href="javascript:;" id="accountHistory">历史交易</a></li>
+            </ul>
+            <div id="accountDiv" class="myOder nowOder actCon" style="display:block;">
+                <div class="top clearfix">
+                    <p class="row clearfix">账户余额：<span class="orange"
+                                                       style="float: none">￥<?= $balance; ?></span>
+                        <a href="javascript:;" id="toAddUserAccount" class=" btn blueColor">添加收款方式</a></p>
+                    <?php if (!empty($userAccountList)) { ?>
+                        <div class="row clearfix">
+                            <span class="accountSpan">选择收款方式：</span>
 
-                        <div class="selets"><select name="" id="accountId">
-                                <option value="">收款方式</option>
-                                <?php foreach ($userAccountList as $userAccount) { ?>
-                                    <?php if ($userAccount['type'] == \common\entity\UserAccount::USER_ACCOUNT_TYPE_ALIPAY) { ?>
-                                        <option value="<?= $userAccount['accountId'] ?>">
-                                            支付宝（<?= $userAccount['username'] . ":" . $userAccount['account'] ?>）
-                                        </option>
-                                    <?php } else if ($userAccount['type'] == \common\entity\UserAccount::USER_ACCOUNT_TYPE_WECHAT) { ?>
-                                        <option value="<?= $userAccount['accountId'] ?>">
-                                            微信（<?= $userAccount['username'] ?>）
-                                        </option>
+                            <div class="selets"><select name="" id="accountId">
+                                    <option value="">收款方式</option>
+                                    <?php foreach ($userAccountList as $userAccount) { ?>
+                                        <?php if ($userAccount['type'] == \common\entity\UserAccount::USER_ACCOUNT_TYPE_ALIPAY) { ?>
+                                            <option value="<?= $userAccount['accountId'] ?>">
+                                                支付宝（<?= $userAccount['username'] . ":" . $userAccount['account'] ?>）
+                                            </option>
+                                        <?php } else if ($userAccount['type'] == \common\entity\UserAccount::USER_ACCOUNT_TYPE_WECHAT) { ?>
+                                            <option value="<?= $userAccount['accountId'] ?>">
+                                                微信（<?= $userAccount['username'] ?>）
+                                            </option>
+                                        <?php } ?>
                                     <?php } ?>
-                                <?php } ?>
-                            </select></div>
-                        <span class="accountSpan">输入金额：</span><input type="text" id="drawMoney"><a
-                            href="javascript:drawMoney();" class="btnBlue">转出</a>
-                    </div>
-                <?php } ?>
-            </div>
-            <p class="listTit">账户清单</p>
+                                </select></div>
+                            <span class="accountSpan">输入金额：</span><input type="text" id="drawMoney"><a
+                                href="javascript:drawMoney();" class="btnBlue">转出</a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <p class="listTit">账户清单</p>
 
-            <div class="orderList clearfix">
-                <dl class="order clearfix" id="accountDl">
-                    <dt class="title">
-                        <span>日期</span><span>类别</span><span>详情</span><span>金额</span>
-                    </dt>
-                </dl>
+                <div class="orderList clearfix">
+                    <dl class="order clearfix" id="accountDl">
+                        <dt class="title">
+                            <span>日期</span><span>类别</span><span>详情</span><span>金额</span>
+                        </dt>
+                    </dl>
+                </div>
             </div>
-        </div>
-        <div id="accountHistoryDiv" class="myOder nowOder actCon">
-            <div class="top clearfix">
-                <div class="row clearfix" id="accountSearch">
-                    <div class="selets">
-                        <select id="accountYear">
-                            <?php for ($i = 2015; $i <= date('Y'); $i++) {
-                                if ($i == date('Y')) {
-                                    echo '<option value="' . $i . '" selected>' . $i . '年</option>';
-                                } else {
-                                    echo '<option value="' . $i . '">' . $i . '年</option>';
-                                }
-                            } ?>
-                        </select>
-                    </div>
-                    <div class="selets">
-                        <select id="accountMonth">
-                            <?php for ($i = 1; $i <= 12; $i++) {
-                                if ($i == date('m')) {
-                                    echo '<option value="' . $i . '" selected>' . $i . '月</option>';
-                                } else {
-                                    echo '<option value="' . $i . '">' . $i . '月</option>';
-                                }
+            <div id="accountHistoryDiv" class="myOder nowOder actCon">
+                <div class="top clearfix">
+                    <div class="row clearfix" id="accountSearch">
+                        <div class="selets">
+                            <select id="accountYear">
+                                <?php for ($i = 2015; $i <= date('Y'); $i++) {
+                                    if ($i == date('Y')) {
+                                        echo '<option value="' . $i . '" selected>' . $i . '年</option>';
+                                    } else {
+                                        echo '<option value="' . $i . '">' . $i . '年</option>';
+                                    }
+                                } ?>
+                            </select>
+                        </div>
+                        <div class="selets">
+                            <select id="accountMonth">
+                                <?php for ($i = 1; $i <= 12; $i++) {
+                                    if ($i == date('m')) {
+                                        echo '<option value="' . $i . '" selected>' . $i . '月</option>';
+                                    } else {
+                                        echo '<option value="' . $i . '">' . $i . '月</option>';
+                                    }
 
-                            } ?>
-                        </select>
-                    </div>
-                    <div class="selets">
-                        <select name="" id="accountType">
-                            <option value="">全部</option>
-                            <option value="1">随游服务收入</option>
-                            <option value="2">路线分成服务</option>
-                            <option value="3">转出</option>
-                            <option value="4">其他收入</option>
-                        </select>
+                                } ?>
+                            </select>
+                        </div>
+                        <div class="selets">
+                            <select name="" id="accountType">
+                                <option value="">全部</option>
+                                <option value="1">随游服务收入</option>
+                                <option value="2">路线分成服务</option>
+                                <option value="3">转出</option>
+                                <option value="4">其他收入</option>
+                            </select>
+                        </div>
+
                     </div>
 
                 </div>
+                <p class="listTit">交易清单</p>
 
-            </div>
-            <p class="listTit">交易清单</p>
-
-            <div class="orderList clearfix">
-                <dl class="order clearfix" id="historyDl">
-                    <dt class="title">
-                        <span>日期</span><span>类别</span><span>详情</span><span>金额</span><span>状态</span>
-                    </dt>
-                </dl>
+                <div class="orderList clearfix">
+                    <dl class="order clearfix" id="historyDl">
+                        <dt class="title">
+                            <span>日期</span><span>类别</span><span>详情</span><span>金额</span><span>状态</span>
+                        </dt>
+                    </dl>
+                </div>
             </div>
         </div>
-
-
-    </div>
+    <?php } ?>
 </div>
 
 <?php

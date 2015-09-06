@@ -345,9 +345,14 @@ class UserInfoController extends CController
      */
     public function actionCreateTravel()
     {
+        $type=\Yii::$app->request->get('t',1);
         //判断用户是否是随友，不是的话，跳转到随游注册页面
         if ($this->userObj->isPublisher) {
-            return $this->redirect("/trip/new-trip");
+            if($type==1){
+                return $this->redirect("/trip/new-trip");
+            }else{
+                return $this->redirect("/trip/new-traffic-trip");
+            }
         } else {
 
             $email = "";

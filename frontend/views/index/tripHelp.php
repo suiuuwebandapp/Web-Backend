@@ -73,7 +73,7 @@
     <div class="down clearfix">
         <div class="introduce fl">
             <ul class="icon clearfix">
-                <li onclick="jumpCreateTravel()">
+                <li onclick="jumpCreateTravel(1)">
                     <div class="pic">
                         <img src="/assets/images/syP01.png" width="29" height="50">
                         <p class="p1">慢行探索</p>
@@ -84,7 +84,7 @@
                         <p><span class="bgGreen icon"></span><span>与游客分享风光背后的故事</span></p>
                     </div>
                 </li>
-                <li onclick="jumpCreateTravel()">
+                <li onclick="jumpCreateTravel(1)">
                     <div class="pic">
                         <img src="/assets/images/syP02.png" width="37" height="57">
                         <p class="p1">个性玩法</p>
@@ -95,7 +95,7 @@
                         <p><span class="bgGreen icon"></span><span>带游客融入你喜欢的生活</span></p>
                     </div>
                 </li>
-                <li onclick="jumpCreateTravel()" class="nomg">
+                <li onclick="jumpCreateTravel(2)" class="nomg">
                     <div class="pic">
                         <img src="/assets/images/syP03.png" width="53" height="44">
                         <p class="p1">交通服务</p>
@@ -118,7 +118,7 @@
         $(".mask").show();
     }
 
-    function jumpCreateTravel(){
-        window.location.href="/user-info/create-travel";
+    function jumpCreateTravel(type){
+        window.location.href="/user-info/create-travel?t="+type;
     }
 </script>

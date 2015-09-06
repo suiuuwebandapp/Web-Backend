@@ -48,14 +48,18 @@ class CController extends SController{
             if(isset($currentUser)){
                 $this->userObj=$currentUser;
                 \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
-                //设置聊天SESSION
-                $sessionId=\Yii::$app->getSession()->id;
-                \Yii::$app->redis->set(Code::USER_LOGIN_SESSION_CHAT.$sessionId,json_encode($currentUser));
+
             }else{
                 return $this->redirect(['/result', 'result' => '请登录过后再进行操作']);
             }
         }
-
+        //设置聊天SESSION
+        $sessionId=\Yii::$app->getSession()->id;
+        $chatUser=\Yii::$app->redis->get(Code::USER_LOGIN_SESSION_CHAT.$sessionId);
+        if(empty($chatUser)){
+            \Yii::$app->redis->set(Code::USER_LOGIN_SESSION_CHAT.$sessionId,json_encode($currentUser));
+            \Yii::$app->redis->expire(Code::USER_LOGIN_SESSION_CHAT.$sessionId,24*60*60);
+        }
 
         if($currentUser->isPublisher){
             $userPublisherObj=$this->userBaseService->findUserPublisherByUserSign($this->userObj->userSign);

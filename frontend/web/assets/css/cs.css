@@ -721,6 +721,7 @@ transition:1s;
 .sycon .orderCon .orderList .order{ padding-bottom:25px;}
 .sycon .orderCon .orderList .order .title{ margin-bottom:20px; height:36px;  }
 .sycon .orderCon .orderList .order .title span{ width:16.6%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px; }
+.sycon .orderCon .orderList .order .title span a{color:#3dd9c3; text-decoration:underline; }
 .sycon .orderCon .orderList .order dd span{ overflow:hidden; text-align:center;width:16.6%; display:inline-block; float:left; line-height:22px;}
 .sycon .orderCon .orderList .order dd .pic img{ width:50%; margin:0 auto; display:block;}
 
@@ -769,6 +770,8 @@ transition:1s;
 .sycon .mySuiyou .orderList .order .title{ margin-bottom:10px; height:36px;  }
 .sycon .mySuiyou .orderList .order .title.grey{ background:#cacaca;}
 .sycon .mySuiyou .orderList .order .title span{ width:16.6%; display:inline-block; float:left; text-align:center; height:36px; line-height:36px;  }
+.sycon .mySuiyou .orderList .order .title span a{color:#3dd9c3; text-decoration:underline; }
+
 .sycon .mySuiyou .orderList .order dd span{ text-align:center;width:16.6%; display:inline-block; float:left; line-height:22px;}
 .sycon .mySuiyou .orderList .order dd .pic img{ width:100%;  display:block;}
 .sycon .mySuiyou .orderList .order dd a.user{ border-radius:50%; width:50px; height:50px; overflow:hidden; display:block; margin:0 auto;}
@@ -2291,6 +2294,117 @@ transition:1s;
 .payforTraffic .right .suggest .line{ height:164px; width:1px; background:#4FD8C3; position:absolute; top:6px; left:20px;}
 .payforTraffic .right .suggest p{ padding-left:10px;  position:relative;  margin-bottom:15px; }
 .payforTraffic .right .suggest p:before{ content:""; height:12px; width:12px; background:#4FD8C3; border-radius:50%; display:block; position:absolute; top:5px; left:-5px; }
+
+
+/*------------随友服务明细----------*/
+.sy_serverDetail{ font-size:18px;  width:1000px; height:auto; margin:0 auto; padding-top:30px;}
+.sy_serverDetail .title{ font-size:22px;}
+.sy_serverDetail .p1{ margin:15px auto 20px;}
+.sy_serverDetail .title02{ font-size:20px; color:#666666; margin-top:55px;}
+.sy_serverDetail .list dt{ text-align:center; background:#3dd9c3; color:#fff; height:36px; line-height:36px; font-size:20px;}
+.yk_serverDetail .list dt span{ font-size:20px; color:#666666;}
+.sy_serverDetail .list span{  display:block; float:left; text-align:center;   }
+.sy_serverDetail .list .span1{ width:265px;  }
+.sy_serverDetail .list .span2{ width:460px;  }
+.sy_serverDetail .list .span3{ float:right; width:275px;  }
+.sy_serverDetail .list .span3 .btn{ font-size:22px; color:#3dd9c3; }
+.sy_serverDetail .list .user{ padding-top:15px; height:70px; }
+.sy_serverDetail .list dd{ font-size:18px; }
+.sy_serverDetail .list .user .usePic{ overflow:hidden; height:50px; width:50px; border-radius:50%; border:2px solid #3dd9c3; display:block; float:left;  }
+.sy_serverDetail .list .user .usePic img{  display:block; width:100%;}
+.sy_serverDetail .list .user .usePic img{  display:block; width:100%;}
+.sy_serverDetail .list .user .userName{ margin:15px 10px 0;float:left;  }
+.sy_serverDetail .list .user .email{  margin-top:15px;height:20px; width:20px; background:url(../images/xf.fw.png) no-repeat center center; display:block; float:left; }
+
+.sy_serverDetail .list .user .span2{ margin-top:15px; }
+.sy_serverDetail .list .user .span3{ margin-top:10px; }
+.sy_serverDetail .list02 dd{ height:55px; line-height:55px; border-bottom:1px solid #ddd; }
+.sy_serverDetail .allMoney{ color:#FF7F00; font-size:24px; text-align:center; height:80px; line-height:80px; }
+.sy_serverDetail .text{ margin-top:10px;}
+.sy_serverDetail .text span{ color:#3dd9c3;}
+.sy_serverDetail .btns{ margin:70px auto 20px;   text-align:center;  }
+.sy_serverDetail .btns .btn{ height:36px; line-height:36px; width:165px; border-radius:5px; border:1px solid #ddd; text-align:center; display:inline-block;}
+.sy_serverDetail .btns .btn.cancel{ margin-right:15px; color:#FFAD39;}
+.sy_serverDetail .btns .btn.cancel:hover{ background:#FFAD39; color:#fff; border:1px solid #fff;}
+.sy_serverDetail .btns .btn.seen{ color:#3dd9c3;}
+.sy_serverDetail .btns .btn.seen:hover{ background:#3dd9c3; color:#fff; border:1px solid #fff;}
+
+
+/*------------游客服务明细----------*/
+.yk_serverDetail{ font-size:18px;  width:1000px; height:auto; margin:0 auto;}
+.yk_serverDetail .title02{ font-size:20px; color:#666666; margin-top:55px;}
+.yk_serverDetail .list dt{ text-align:center; background:#3dd9c3; color:#fff; height:36px; line-height:36px; font-size:20px;}
+.yk_serverDetail .list dt span{ font-size:20px; color:#666666;}
+.yk_serverDetail .list span{  display:block; float:left; text-align:center;   }
+.yk_serverDetail .list .span1{ width:265px;  }
+.yk_serverDetail .list .span2{ width:460px;  }
+.yk_serverDetail .list .span3{ float:right; width:275px;  }
+.yk_serverDetail .list .span3 .btn{  }
+.yk_serverDetail .list .user{ padding-top:15px; height:70px; }
+.yk_serverDetail .list dd{ font-size:18px; }
+.yk_serverDetail .user{ height:110px; background:#3dd9c3; color:#fff;}
+.yk_serverDetail .user .left{ height:110px; position:relative; width:260px; float:left;}
+.yk_serverDetail .user .usePic{ margin:15px 0 0 15px; overflow:hidden; height:76px; width:76px; border-radius:50%; border:2px solid #fff; display:block; float:left;  }
+.yk_serverDetail .user .usePic img{  display:block; width:100%;}
+.yk_serverDetail .user .userName{   margin:18px 10px 0;float:left;  }
+.yk_serverDetail .user .email{  margin-top:21px;height:20px; width:20px; background:url(../images/xf02.png) no-repeat center center; display:block; float:left; }
+
+.yk_serverDetail .user .left .phone{ font-size:16px; position:absolute; left:96px; bottom:25px;}
+.yk_serverDetail .user .right{ height:110px; position:relative; float:left; width:740px;   }
+.yk_serverDetail .user .right .title{ line-height:65px; font-size:20px; padding-left:80px;}
+.yk_serverDetail .user .right p{  font-size:16px; }
+.yk_serverDetail .user .right p span{ margin-right:15px; }
+.yk_serverDetail .user .right .btn{ position:absolute; top:6px; right:6px;font-size:22px; color:#FFDD6B;  }
+
+.yk_serverDetail .list .user .span2{ margin-top:15px; }
+.yk_serverDetail .list .user .span3{ margin-top:10px; }
+.yk_serverDetail .list02 .dt01{ height:55px; line-height:55px; border-bottom:1px solid #ddd; background:#fff; color:#858585; }
+.yk_serverDetail .list02 dd{ height:55px; line-height:55px; border-bottom:1px solid #ddd; }
+.yk_serverDetail .allMoney{ color:#FF7F00; font-size:24px; text-align:center; height:80px; line-height:80px; }
+.yk_serverDetail .text{ margin-top:10px;}
+.yk_serverDetail .text span{ color:#3dd9c3;}
+.yk_serverDetail .btns{ margin:70px auto 20px;   text-align:center;  }
+.yk_serverDetail .btns .btn{ height:36px; line-height:36px; width:165px; border-radius:5px; border:1px solid #ddd; text-align:center; display:inline-block;}
+.yk_serverDetail .btns .btn.cancel{ margin-right:15px; color:#FFAD39;}
+.yk_serverDetail .btns .btn.cancel:hover{ background:#FFAD39; color:#fff; border:1px solid #fff;}
+.yk_serverDetail .btns .btn.seen{ color:#3dd9c3;}
+.yk_serverDetail .btns .btn.seen:hover{ background:#3dd9c3; color:#fff; border:1px solid #fff;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

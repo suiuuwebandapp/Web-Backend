@@ -88,6 +88,57 @@ class UserOrderController extends  CController{
         ]);
     }
 
+
+    public function actionViewOrderInfo()
+    {
+        $orderNumber=trim(\Yii::$app->request->get('orderNumber', ''));
+        $returnUrl='userOrderInfo';
+        if(empty($orderNumber)){
+            return $this->redirect(['/result', 'result' => '无效的订单号']);
+        }
+        $orderInfo=$this->userOrderService->findOrderByOrderNumber($orderNumber);
+
+        $tripJsonInfo=json_decode($orderInfo->tripJsonInfo,true);
+        $tripService=new TripService();
+        $userInfo=$this->userObj;
+
+        $isAllowUser=false;
+        if($this->userObj->userSign!=$orderInfo->userId){
+            //如果是带接单状态 判断当前用户是不是随友  如果不是带接单状态 那么 判断是不是当前用户  或者是已接单的随友
+            if($orderInfo->status==UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){
+                $publisherList=$tripService->getTravelTripPublisherList($tripJsonInfo['info']['tripId']);
+                foreach($publisherList as $publisher ){
+                    if($publisher['userSign']==$this->userObj->userSign){
+                        $isAllowUser=true;
+                    }
+                }
+            }else{
+                $publisher=$this->userOrderService->findPublisherByOrderId($orderInfo->orderId);
+                if(isset($publisher)&&$publisher->userId==$this->userObj->userSign){
+                    $isAllowUser=true;
+                }
+            }
+            $returnUrl='publisherOrderInfo';
+            $userBaseService=new UserBaseService();
+            $userInfo=$userBaseService->findUserByUserSign($orderInfo->userId);
+        }else{
+            $isAllowUser=true;
+        }
+        if(!$isAllowUser){
+            return $this->redirect(['/result', 'result' => '无效的用户']);
+        }
+        $contact=$this->userOrderService->getOrderContactByOrderId($orderInfo->orderId);
+
+
+        return $this->render($returnUrl,[
+            'orderInfo'=>$orderInfo,
+            'tripJsonInfo'=>$tripJsonInfo,
+            'userInfo'=>$userInfo,
+            'contact'=>$contact
+        ]);
+
+    }
+
     /**
      * 添加用户订单
      * @return void|\yii\web\Response
@@ -197,9 +248,7 @@ class UserOrderController extends  CController{
             $userOrderInfo->status=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT;//默认订单状态，待支付
             $userOrderInfo->orderNumber=Code::createOrderNumber();
             $this->userOrderService->addUserOrder($userOrderInfo);
-            //给随友发送消息
-            $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendNewOrderMessage($this->userObj->userSign,$tripPublisherList,$userOrderInfo->orderNumber);
+
             return $this->redirect(["/user-order/info",
                 'orderNumber'=>$userOrderInfo->orderNumber
             ]);
@@ -327,9 +376,6 @@ class UserOrderController extends  CController{
             $userOrderInfo->orderNumber=Code::createOrderNumber();
             $this->userOrderService->addUserOrder($userOrderInfo);
 
-            //给随友发送消息
-            $sysMessageUtils=new SysMessageUtils();
-            $sysMessageUtils->sendNewOrderMessage($this->userObj->userSign,$tripPublisherList,$userOrderInfo->orderNumber);
             return $this->redirect(["/user-order/info",
                 'orderNumber'=>$userOrderInfo->orderNumber
             ]);

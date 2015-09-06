@@ -56,7 +56,11 @@ function initTrafficOrder() {
         var price='';
 
         if(serviceName!='包车'){
-            serviceType='airplane';
+            if(serviceName=='接机'){
+                serviceType='airplane_come';
+            }else{
+                serviceType='airplane_send';
+            }
         }
         if(orderDate==''){
             Main.showTip("请选择服务日期");

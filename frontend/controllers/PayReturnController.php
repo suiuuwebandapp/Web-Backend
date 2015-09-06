@@ -12,6 +12,7 @@ namespace frontend\controllers;
 use common\components\Code;
 use common\components\Common;
 use common\components\LogUtils;
+use common\components\SysMessageUtils;
 use common\entity\UserOrderInfo;
 use common\entity\UserPayRecord;
 use common\pay\alipay\create\AlipayConfig;
@@ -20,6 +21,7 @@ use common\pay\alipay\send\AlipaySendApi;
 use common\pay\alipaywap\create\AlipaywapConfig;
 use common\pay\alipaywap\lib\AlipaywapNotify;
 use common\pay\wxpay\Log_;
+use frontend\services\TripService;
 use frontend\services\UserOrderService;
 use frontend\services\UserPayService;
 use frontend\services\WeChatOrderListService;
@@ -106,8 +108,17 @@ class PayReturnController extends Controller {
                         $userPayService=new UserPayService();
                         $rst=$userPayService->addUserPay($out_trade_no,$trade_no,UserPayRecord::PAY_RECORD_TYPE_ALIPAY,UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS);
                         logResult($rst);
+
                         \Yii::$app->redis->set(Code::USER_ORDER_PAY_STATS.$out_trade_no,1);
                         \Yii::$app->redis->expire(Code::USER_ORDER_PAY_STATS.$out_trade_no,600);//设定保留时长 10分钟（600秒）
+
+                        //给随友发送消息
+                        $userOrderService=new UserOrderService();
+                        $tripService=new TripService();
+                        $orderInfo=$userOrderService->findOrderByOrderNumber($out_trade_no);
+                        $tripPublisherList=$tripService->getTravelTripPublisherList($orderInfo->tripId);
+                        $sysMessageUtils=new SysMessageUtils();
+                        $sysMessageUtils->sendNewOrderMessage($orderInfo->userId,$tripPublisherList,$out_trade_no);
 
                         return "success";		//请不要修改或删除
                     }catch (Exception $e){
@@ -199,6 +210,16 @@ class PayReturnController extends Controller {
                         logResult($rst);
                         \Yii::$app->redis->set(Code::USER_ORDER_PAY_STATS.$out_trade_no,1);
                         \Yii::$app->redis->expire(Code::USER_ORDER_PAY_STATS.$out_trade_no,600);//设定保留时长 10分钟（600秒）
+
+
+                        //给随友发送消息
+                        $userOrderService=new UserOrderService();
+                        $tripService=new TripService();
+                        $orderInfo=$userOrderService->findOrderByOrderNumber($out_trade_no);
+                        $tripPublisherList=$tripService->getTravelTripPublisherList($orderInfo->tripId);
+                        $sysMessageUtils=new SysMessageUtils();
+                        $sysMessageUtils->sendNewOrderMessage($orderInfo->userId,$tripPublisherList,$out_trade_no);
+
 
                         return "success";		//请不要修改或删除
                     }catch (Exception $e){

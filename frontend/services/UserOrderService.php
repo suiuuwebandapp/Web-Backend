@@ -609,7 +609,6 @@ class UserOrderService extends BaseDb
 
         $orderInfo=$this->findOrderByOrderId($orderId);
         $userPublisher=$this->findPublisherByOrderId($orderId);
-
         if(empty($orderInfo)){
            throw new Exception("Invalid OrderId");
         }
@@ -626,7 +625,6 @@ class UserOrderService extends BaseDb
         $tran=$conn->beginTransaction();
         try{
             $this->userOrderDb=new UserOrderDb($conn);
-            $userPublisher=$this->userOrderDb->findPublisherByOrderId($orderId);
             $userOrderPublisherCancel=new UserOrderPublisherCancel();
             $userOrderPublisherCancel->orderId=$orderId;
             $userOrderPublisherCancel->publisherId=$publisherId;
@@ -635,7 +633,6 @@ class UserOrderService extends BaseDb
             //TODO 判断时间限制
             $this->userOrderDb->changeOrderStatus($orderId,UserOrderInfo::USER_ORDER_STATUS_PUBLISHER_CANCEL);
             $this->userOrderDb->addUserOrderPublisherCancel($userOrderPublisherCancel);
-            $this->arrayCastObject($userPublisher,UserPublisher::class);
             $this->commit($tran);
 
             //给随友发送消息
