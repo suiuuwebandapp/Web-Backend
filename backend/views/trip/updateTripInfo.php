@@ -41,18 +41,22 @@
                                         <div class="col-md-7 valdate">
                                             <div class="input-icon right">
                                                 <i class="fa"></i>
-                                                <select id="tripType"  class="form-control muti_select" placeholder=" 请选择随游分类"  required>
-                                                    <option value="0"></option>
-                                                    <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?>"
-                                                        <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?'selected':''?>
-                                                        >慢行探索</option>
-                                                    <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?>"
-                                                        <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?'selected':''?>
-                                                        >个性玩法</option>
-                                                    <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>"
-                                                        <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?'selected':''?>
-                                                        >交通服务</option>
-                                                </select>
+                                                <?php if($tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){ ?>
+                                                    <select id="tripType"  class="form-control muti_select" placeholder=" 请选择随游分类"  required>
+                                                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>" selected >交通服务</option>
+                                                    </select>
+                                                <?php  }else{ ?>
+                                                    <select id="tripType"  class="form-control muti_select" placeholder=" 请选择随游分类"  required>
+                                                        <option value="0"></option>
+                                                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?>"
+                                                            <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?'selected':''?>
+                                                            >慢行探索</option>
+                                                        <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?>"
+                                                            <?=$tripInfo['type']==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?'selected':''?>
+                                                            >个性玩法</option>
+                                                    </select>
+                                                <?php }?>
+
                                             </div>
                                         </div>
                                     </div>

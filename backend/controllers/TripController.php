@@ -15,7 +15,10 @@ use backend\services\TripService;
 use backend\services\UserBaseService;
 use common\components\Code;
 use common\entity\TravelTrip;
+use common\entity\TravelTripPublisher;
 use common\entity\TravelTripRecommend;
+use common\entity\UserBase;
+use common\entity\UserPublisher;
 use Yii;
 use yii\base\Exception;
 
@@ -43,7 +46,11 @@ class TripController extends CController {
         $status=Yii::$app->request->get('status');
         $startPrice=Yii::$app->request->get('startPrice');
         $endPrice=Yii::$app->request->get('endPrice');
-        $page = $this->tripSer->getTripDbList($page,$search,$startPrice,$endPrice,$status);
+        $type=Yii::$app->request->get('type');
+        if($type==0){
+            $type=null;
+        }
+        $page = $this->tripSer->getTripDbList($page,$search,$startPrice,$endPrice,$type,$status);
         $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());
         echo json_encode($tableResult);
     }
@@ -115,11 +122,15 @@ class TripController extends CController {
     {
         $tripId=Yii::$app->request->get("tripId");
         $tripInfo=$this->tripSer->findObjectById(TravelTrip::class,$tripId);
+        $this->tripSer->closeLink();
+
 
         return $this->render("updateTripInfo",[
             'tripInfo'=>$tripInfo
         ]);
     }
+
+
 
     public function actionUpdateTripInfo()
     {
@@ -132,6 +143,46 @@ class TripController extends CController {
         $this->tripSer->updateTravelTripBase($trip,$score,$tripCount,$isHot,$type);
 
         return json_encode(Code::statusDataReturn(Code::SUCCESS));
+    }
+
+    public function actionToChangePublisher()
+    {
+        $tripId=Yii::$app->request->get("tripId");
+        $tripInfo=$this->tripSer->findObjectById(TravelTrip::class,$tripId);
+        $this->tripSer->closeLink();
+        $userBaseService=new UserBaseService();
+        $publisherInfo=$userBaseService->findUserBaseByPublisherId($tripInfo['createPublisherId']);
+
+        return $this->render("changePublisher",[
+            'tripInfo'=>$tripInfo,
+            'publisherInfo'=>$publisherInfo
+        ]);
+    }
+
+    public function actionChangePublisher()
+    {
+        $tripId=Yii::$app->request->post("tripId");
+        $newUserId=Yii::$app->request->post("newUserId");
+
+        $userInfo=$this->tripSer->findObjectById(UserBase::class,$newUserId);
+        $publisher=$this->tripSer->findObjectByType(UserPublisher::class,'userId',$userInfo['userSign']);
+        $this->tripSer->closeLink();
+        if(empty($publisher)){
+            throw new Exception("无效的用户编号");
+        }
+        $this->tripSer->updateTravelTripPublisher($tripId,$publisher[0]['userPublisherId']);
+
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+
+    }
+
+
+    public function actionDelete()
+    {
+        $tripId=Yii::$app->request->post('tripId');
+        $this->tripSer->changeTripStatus($tripId,TravelTrip::TRAVEL_TRIP_STATUS_DELETE);
+        return json_encode(Code::statusDataReturn(Code::SUCCESS));
+
     }
 
 

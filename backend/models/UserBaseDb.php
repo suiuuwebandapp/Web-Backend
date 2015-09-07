@@ -18,6 +18,12 @@ use yii\db\mssql\PDO;
 class UserBaseDb extends ProxyDb
 {
 
+    /**
+     * 基础查询
+     */
+    const FIND_USER_BASE_INFO_SELECT='ub.nickname,ub.sex,ub.birthday,ub.headImg,ub.hobby,ub.school,ub.intro,ub.info,ub.travelCount,ub.userSign,
+            ub.isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,ub.profession,co.cname AS countryCname,
+            co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname,surname,name';
 
     /**
      * 查找用户（根据邮箱）
@@ -276,6 +282,26 @@ class UserBaseDb extends ProxyDb
         $this->setSql($sql);
         $page=$this->find($page);
         return $page;
+    }
+
+    /**
+     * 根据随友Id 获取用户详情
+     * @param $publisherId
+     * @return array|bool
+     */
+    public function findByPublisherId($publisherId)
+    {
+        $sql = sprintf("
+            SELECT up.*,ub.*
+            FROM user_base AS ub
+            LEFT JOIN user_publisher AS up ON up.userId=ub.userSign
+            WHERE up.userPublisherId=:userPublisherId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userPublisherId", $publisherId, PDO::PARAM_INT);
+
+        return $command->queryOne();
     }
 
 }

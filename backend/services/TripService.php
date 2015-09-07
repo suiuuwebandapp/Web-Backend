@@ -9,10 +9,13 @@
 namespace backend\services;
 
 
+use backend\models\UserBaseDb;
 use common\entity\TravelTrip;
 use common\entity\TravelTripRecommend;
+use common\entity\TravelTripTraffic;
 use common\models\BaseDb;
 use common\models\TravelTripDb;
+use common\models\UserPublisherDb;
 use yii\base\Exception;
 
 class TripService extends BaseDb{
@@ -23,7 +26,9 @@ class TripService extends BaseDb{
     {
 
     }
-    public function getTripDbList($page,$search,$startPrice,$endPrice,$status)
+
+
+    public function getTripDbList($page,$search,$startPrice,$endPrice,$type,$status)
     {
         try {
             $conn = $this->getConnection();
@@ -33,7 +38,7 @@ class TripService extends BaseDb{
             {
                 $peopleCount=intval($search);
             }
-            $page=$this->tripDb->sysGetList($page,$search,$peopleCount,$startPrice,$endPrice,$status);
+            $page=$this->tripDb->sysGetList($page,$search,$peopleCount,$startPrice,$endPrice,$type,$status);
         } catch (Exception $e) {
             throw $e;
         } finally {
@@ -109,6 +114,39 @@ class TripService extends BaseDb{
         try {
             $this->tripDb = new TravelTripDb($conn);
             $this->tripDb->updateTravelTripBase($tripId,$score,$tripCount,$isHot,$type);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
+
+
+    public function updateTravelTripPublisher($tripId,$newPublisherId)
+    {
+        $conn = $this->getConnection();
+        $tran=$conn->beginTransaction();
+        try {
+            $this->tripDb = new TravelTripDb($conn);
+            $tripInfo=$this->tripDb->findTravelTripById($tripId);
+            $this->tripDb->updateTravelTripPublisher($tripId,$tripInfo['createPublisherId'],$newPublisherId);
+            $this->tripDb->updateTravelTripCreatePublisher($tripId,$newPublisherId);
+            $this->commit($tran);
+        } catch (Exception $e) {
+            $this->rollback($tran);
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+
+    }
+
+    public function changeTripStatus($tripId,$status)
+    {
+        $conn = $this->getConnection();
+        try {
+            $this->tripDb = new TravelTripDb($conn);
+            $this->tripDb->changeTravelStatus($tripId,$status);
         } catch (Exception $e) {
             throw $e;
         } finally {

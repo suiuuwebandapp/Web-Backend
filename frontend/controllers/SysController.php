@@ -76,6 +76,268 @@ class SysController extends Controller{
     }
 
 
+
+
+
+
+
+    public function actionUpdateTrafficTrip()
+    {
+        $tripId = trim(\Yii::$app->request->post("tripId", ""));
+        $title = trim(\Yii::$app->request->post("title", ""));
+        $titleImg = trim(\Yii::$app->request->post("titleImg", ""));
+        $countryId = trim(\Yii::$app->request->post("countryId", ""));
+        $cityId = trim(\Yii::$app->request->post("cityId", ""));
+        $carLicense = \Yii::$app->request->post("license", "");
+        $maxUserCount = \Yii::$app->request->post("maxUserCount", "");
+        $scheduledType = \Yii::$app->request->post("scheduledType", "");
+        $scheduledTime = \Yii::$app->request->post("scheduledTime", "");
+
+        $carType = \Yii::$app->request->post("carType", "");
+        $seatCount = \Yii::$app->request->post("seatCount", "");
+        $space = \Yii::$app->request->post("space", "");
+        $allowSmoke = \Yii::$app->request->post("allowSmoke", 0);
+        $allowPet = \Yii::$app->request->post("allowPet", 0);
+        $childSeat = \Yii::$app->request->post("childSeat", 0);
+        $picList = \Yii::$app->request->post("picList", "");
+
+
+        $carServiceType = \Yii::$app->request->post("carServiceType", "");
+        $airServiceType = \Yii::$app->request->post("airServiceType", "");
+        $carBasePrice = \Yii::$app->request->post("carBasePrice", "");
+        $serviceTime = \Yii::$app->request->post("serviceTime", "");
+        $serviceMileage = \Yii::$app->request->post("serviceMileage", "");
+        $overTime = \Yii::$app->request->post("overTime", "");
+        $overMileage = \Yii::$app->request->post("overMileage", "");
+        $airBasePrice = trim(\Yii::$app->request->post("airBasePrice", ""));
+        $nightPriceType = trim(\Yii::$app->request->post("nightPriceType", ""));
+        $nightTimeBegin = trim(\Yii::$app->request->post("nightTimeBegin", ""));
+        $nightTimeEnd = trim(\Yii::$app->request->post("nightTimeEnd", ""));
+        $nightTimePrice = trim(\Yii::$app->request->post("nightTimePrice", ""));
+
+
+        $info = trim(\Yii::$app->request->post("info", ""));
+        $serviceTimeType=trim(\Yii::$app->request->post("serviceTimeType",""));
+        $serviceTimeBegin=trim(\Yii::$app->request->post("serviceTimeBegin",""));
+        $serviceTimeEnd=trim(\Yii::$app->request->post("serviceTimeEnd",""));
+        $includeDetailList = \Yii::$app->request->post("includeDetailList", "");
+        $unIncludeDetailList = \Yii::$app->request->post("unIncludeDetailList", "");
+        $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
+
+
+        if($carServiceType==='true'||$carServiceType==1){
+            $carServiceType=1;
+        }else{
+            $carServiceType=0;
+        }
+        if($airServiceType==='true'||$airServiceType==1){
+            $airServiceType=1;
+        }else{
+            $airServiceType=0;
+        }
+
+
+        if (empty($tripId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
+        }
+        if (empty($title)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "标题不允许为空"));
+        }
+        if (empty($titleImg)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "封面图不允许为空"));
+        }
+        if (empty($countryId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "国家不允许为空"));
+        }
+        if (empty($cityId)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
+        }
+        if (empty($carLicense)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "驾照时间不允许为空"));
+        }
+        if (empty($maxUserCount)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "最多接待人数不允许为空"));
+        }
+        if ($scheduledType==2&&empty($scheduledTime)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "提前预定时间不允许为空"));
+        }
+        if (empty($carType)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "车型不允许为空"));
+        }
+        if (empty($seatCount)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "座位数不允许为空"));
+        }
+        if (empty($space)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "行李控件不允许为空"));
+        }
+        if (empty($picList)||count($picList)<5) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有五个图片介绍"));
+        }
+        if ($carServiceType==0&&$airServiceType==0) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "包车接机服务不能同时为空"));
+        }
+
+        if ($carServiceType==0) {
+
+            if(empty($serviceTime)){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务时间不允许为空"));
+            }
+            if(empty($carBasePrice)||$carBasePrice<0){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "汽车服务基础价格不允许为空"));
+            }
+        }
+
+        if($airServiceType==0){
+
+            if(empty($airBasePrice)||$airBasePrice<0){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "接机服务基础价格不允许为空"));
+            }
+            if($nightPriceType==1){
+                if(empty($nightTimeBegin)||empty($nightTimeEnd)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "夜间服务时间不允许为空"));
+                }
+                if(empty($nightTimePrice)||$nightTimePrice<0){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "夜间服务价格不允许为空"));
+                }
+
+            }
+        }
+
+        if (empty($info)) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "详情介绍不允许为空"));
+        }
+
+        if ($serviceTimeType==0) {
+            if (empty($serviceTimeBegin)||empty($serviceTimeEnd)) {
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务时间不允许为空"));
+            }
+        }
+
+        $basePrice=null;
+        if($carServiceType==0){
+            $basePrice=$carBasePrice;
+        }else{
+            $basePrice=$airBasePrice;
+        }
+
+
+        $tripPicList = array();
+        $tripDetailList=array();
+
+
+        //随游基本信息
+        $travelTrip = $this->tripService->getTravelTripById($tripId);
+        $travelTrip->title = $title;
+        $travelTrip->titleImg = $titleImg;
+        $travelTrip->intro = $title;
+        $travelTrip->countryId = $countryId;
+        $travelTrip->cityId = $cityId;
+        $travelTrip->basePrice = $basePrice;
+        $travelTrip->basePriceType=TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT;
+        $travelTrip->maxUserCount = $maxUserCount;
+        $travelTrip->info = $info;
+        $travelTrip->travelTime = $serviceTime;
+        $travelTrip->travelTimeType = TravelTrip::TRAVEL_TRIP_TIME_TYPE_HOUR;
+        $travelTrip->status = $status;
+
+        $travelTripTraffic=$this->tripService->getTravelTripTrafficByTripId($tripId);;
+        $travelTripTraffic->driverLicenseDate=$carLicense;
+
+        $travelTripTraffic->carType=$carType;
+        $travelTripTraffic->seatCount=$seatCount;
+        $travelTripTraffic->spaceInfo=$space;
+        $travelTripTraffic->allowSmoke=$allowSmoke;
+        $travelTripTraffic->allowPet=$allowPet;
+        $travelTripTraffic->childSeat=$childSeat;
+
+
+        if($scheduledType==2){
+            $travelTrip->scheduledTime=$scheduledTime*(60*60*24);
+        }else{
+            $travelTrip->scheduledTime=null;
+        }
+
+        if($serviceTimeType==1){
+            $travelTrip->startTime = null;
+            $travelTrip->endTime = null;
+        }else{
+            $travelTrip->startTime = $serviceTimeBegin;
+            $travelTrip->endTime = $serviceTimeEnd;
+        }
+
+        if($carServiceType==0){
+            $travelTripTraffic->serviceTime=$serviceTime;
+            $travelTripTraffic->serviceMileage=$serviceMileage;
+            $travelTripTraffic->overTimePrice=$overTime;
+            $travelTripTraffic->overMileagePrice=$overMileage;
+            $travelTripTraffic->carPrice=$carBasePrice;
+        }else{
+            $travelTripTraffic->carPrice=null;
+            $travelTripTraffic->serviceTime=null;
+            $travelTripTraffic->serviceMileage=null;
+            $travelTripTraffic->overTimePrice=null;
+            $travelTripTraffic->overMileagePrice=null;
+        }
+        if($airServiceType==0){
+            $travelTripTraffic->airplanePrice=$airBasePrice;
+            if($nightPriceType==1){
+                $travelTripTraffic->nightServicePrice=$nightTimePrice;
+                $travelTripTraffic->nightTimeStart=$nightTimeBegin;
+                $travelTripTraffic->nightTimeEnd=$nightTimeEnd;
+            }
+        }else{
+            $travelTripTraffic->airplanePrice=null;
+            $travelTripTraffic->nightServicePrice=null;
+            $travelTripTraffic->nightTimeStart=null;
+            $travelTripTraffic->nightTimeEnd=null;
+        }
+
+
+
+        //设置图片列表
+        foreach ($picList as $pic) {
+            $tempPic = new TravelTripPicture();
+            $tempPic->tripId=$tripId;
+            $tempPic->url = $pic;
+            $tripPicList[] = $tempPic;
+        }
+        //包含内容
+        if(!empty($includeDetailList)){
+            foreach ($includeDetailList as $includeDetail) {
+                if(empty($includeDetail)){
+                    continue;
+                }
+                $tempDetail = new TravelTripDetail();
+                $tempDetail->tripId=$tripId;
+                $tempDetail->type = TravelTripDetail::TRAVEL_TRIP_DETAIL_TYPE_INCLUDE;
+                $tempDetail->name = $includeDetail;
+                $tripDetailList[] = $tempDetail;
+            }
+        }
+        //不包含内容
+        if(!empty($unIncludeDetailList)){
+            foreach ($unIncludeDetailList as $unIncludeDetail) {
+                if(empty($unIncludeDetail)){
+                    continue;
+                }
+                $tempDetail = new TravelTripDetail();
+                $tempDetail->tripId=$tripId;
+                $tempDetail->type = TravelTripDetail::TRAVEL_TRIP_DETAIL_TYPE_UN_INCLUDE;
+                $tempDetail->name = $unIncludeDetail;
+                $tripDetailList[] = $tempDetail;
+            }
+        }
+        try {
+            $travelTrip=$this->tripService->updateTravelTripTraffic($travelTrip, $travelTripTraffic, $tripPicList, $tripDetailList);
+
+            return json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
+        } catch (Exception $e) {
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
+        }
+    }
+
+
     public function actionUpdateTrip()
     {
         $tripId = trim(\Yii::$app->request->post("tripId", ""));
@@ -106,9 +368,6 @@ class SysController extends Controller{
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
 
-        if ($this->userPublisherObj == null) {
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "请您先注册为随友"));
-        }
         if (empty($tripId)) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "随游不允许为空"));
         }
@@ -155,12 +414,6 @@ class SysController extends Controller{
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要选择一个标签"));
         }
 
-        //验证当前用户是不是随游的所属者
-        $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
-        $travelTrip = $this->tripService->getTravelTripById($tripId);
-        if($travelTrip->createPublisherId!=$userPublisherId){
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
-        }
 
         $tripStartTime = DateUtils::convertTimePicker($beginTime, 1);
         $tripEndTime = DateUtils::convertTimePicker($endTime, 1);
@@ -190,7 +443,6 @@ class SysController extends Controller{
         $travelTrip->travelTimeType = $tripKind;
         $travelTrip->startTime = $tripStartTime;
         $travelTrip->endTime = $tripEndTime;
-        $travelTrip->createPublisherId = $userPublisherId;
         $travelTrip->tags = implode(",", array_merge($tagList,$cusTagList));
 
 
@@ -300,7 +552,7 @@ class SysController extends Controller{
             $t->updateTagValList($tagList,$travelTrip['tripId']);
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$travelTrip));
         } catch (Exception $e) {
-            //LogUtils::log($e);
+            LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }

@@ -643,7 +643,6 @@
                 } else {
                     $("#titleTip").html("");
                 }
-                ;
             });
             $("#basePrice").bind("focus", function () {
                 $("#basePriceTip").html("");

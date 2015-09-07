@@ -143,4 +143,28 @@ class UserBaseService extends BaseDb{
         }
         return $page;
     }
+
+
+    /**
+     * 根据随友Id获取用户信息
+     * @param $publisherId
+     * @return int|null
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function findUserBaseByPublisherId($publisherId)
+    {
+        $userBase=null;
+        try{
+            $conn=$this->getConnection();
+            $userBaseDb=new UserBaseDb($conn);
+            $userBase=$userBaseDb->findByPublisherId($publisherId);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+        return $userBase;
+
+    }
 }

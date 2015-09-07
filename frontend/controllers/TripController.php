@@ -202,12 +202,12 @@ class TripController extends CController
         $unIncludeDetailList = \Yii::$app->request->post("unIncludeDetailList", "");
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
-        if($carServiceType=='true'){
+        if($carServiceType==='true'||$carServiceType==1){
             $carServiceType=1;
         }else{
             $carServiceType=0;
         }
-        if($airServiceType=='true'){
+        if($airServiceType==='true'||$airServiceType==1){
             $airServiceType=1;
         }else{
             $airServiceType=0;
@@ -249,17 +249,14 @@ class TripController extends CController
         if (empty($picList)||count($picList)<5) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有五个图片介绍"));
         }
-        if ($carServiceType==0&&(empty($cityId)||empty($cityId))) {
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
+        if ($carServiceType==0&&$airServiceType==0) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "包车接机服务不能同时为空"));
         }
 
         if ($carServiceType==0) {
 
             if(empty($serviceTime)){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务时间不允许为空"));
-            }
-            if(empty($serviceMileage)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务公里数不允许为空"));
             }
             if(empty($carBasePrice)||$carBasePrice<0){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "汽车服务基础价格不允许为空"));
@@ -353,6 +350,12 @@ class TripController extends CController
             $travelTripTraffic->overTimePrice=$overTime;
             $travelTripTraffic->overMileagePrice=$overMileage;
             $travelTripTraffic->carPrice=$carBasePrice;
+        }else{
+            $travelTripTraffic->carPrice=null;
+            $travelTripTraffic->serviceTime=null;
+            $travelTripTraffic->serviceMileage=null;
+            $travelTripTraffic->overTimePrice=null;
+            $travelTripTraffic->overMileagePrice=null;
         }
         if($airServiceType==0){
             $travelTripTraffic->airplanePrice=$airBasePrice;
@@ -361,6 +364,11 @@ class TripController extends CController
                 $travelTripTraffic->nightTimeStart=$nightTimeBegin;
                 $travelTripTraffic->nightTimeEnd=$nightTimeEnd;
             }
+        }else{
+            $travelTripTraffic->airplanePrice=null;
+            $travelTripTraffic->nightServicePrice=null;
+            $travelTripTraffic->nightTimeStart=null;
+            $travelTripTraffic->nightTimeEnd=null;
         }
 
 
@@ -505,17 +513,14 @@ class TripController extends CController
         if (empty($picList)||count($picList)<5) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有五个图片介绍"));
         }
-        if ($carServiceType==0&&(empty($cityId)||empty($cityId))) {
-            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "城市不允许为空"));
+        if ($carServiceType==0&&$airServiceType==0) {
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "包车接机服务不能同时为空"));
         }
 
         if ($carServiceType==0) {
 
             if(empty($serviceTime)){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务时间不允许为空"));
-            }
-            if(empty($serviceMileage)){
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "服务公里数不允许为空"));
             }
             if(empty($carBasePrice)||$carBasePrice<0){
                 return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "汽车服务基础价格不允许为空"));
@@ -607,6 +612,12 @@ class TripController extends CController
             $travelTripTraffic->overTimePrice=$overTime;
             $travelTripTraffic->overMileagePrice=$overMileage;
             $travelTripTraffic->carPrice=$carBasePrice;
+        }else{
+            $travelTripTraffic->carPrice=null;
+            $travelTripTraffic->serviceTime=null;
+            $travelTripTraffic->serviceMileage=null;
+            $travelTripTraffic->overTimePrice=null;
+            $travelTripTraffic->overMileagePrice=null;
         }
         if($airServiceType==0){
             $travelTripTraffic->airplanePrice=$airBasePrice;
@@ -615,6 +626,11 @@ class TripController extends CController
                 $travelTripTraffic->nightTimeStart=$nightTimeBegin;
                 $travelTripTraffic->nightTimeEnd=$nightTimeEnd;
             }
+        }else {
+            $travelTripTraffic->airplanePrice = null;
+            $travelTripTraffic->nightServicePrice = null;
+            $travelTripTraffic->nightTimeStart = null;
+            $travelTripTraffic->nightTimeEnd = null;
         }
 
 

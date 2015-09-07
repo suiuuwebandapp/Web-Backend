@@ -27,17 +27,24 @@
                 <div class="table-info-form ">
                     <form id="datatables_form" onsubmit="return false;">
                         <div class="col-md-8 input-group ">
-                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入标题或用户昵称 或国家 城市">
+                            <input type="text" name="searchText" class="" style="width: 35% !important;margin-right: 20px" placeholder="请输入标题或用户昵称 或国家 城市">
                             <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态：</label>
-                            <select name="status" class="form-control input-medium" >
+                            <select name="status" class="form-control " style="width: 15% !important;">
                                 <option value="1">正常</option>
                                 <option value="2">草稿</option>
                                 <option value="3">已删除</option>
                                 <option value="0">全部</option>
                             </select>
-                                    <span class="input-group-btn">
-                                        <button id="search" class="btn green-meadow" type="button">搜索</button>
-                                    </span>
+                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态：</label>
+                            <select name="type" class="form-control " style="width: 15% !important;">
+                                <option value="0">全部</option>
+                                <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>">交通服务</option>
+                                <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_PERSONALITY?>">个性玩法</option>
+                                <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE?>">慢行探索</option>
+                            </select>
+                            <span class="input-group-btn">
+                                <button id="search" class="btn green-meadow" type="button">搜索</button>
+                            </span>
                         </div>
                        <!-- <div class="pull-right">
                             <a id="addRe" href="javascript:" class="btn green-meadow"><i class="fa fa-plus"></i> 添加推荐</a>
@@ -88,12 +95,18 @@
             'tableOrder':[],
             'tableColumn':[
                 {"targets": [0],"data": "tripId",
-                    "width":"50px","bSortable": false},
+                    "width":"50px","bSortable": false
+                },
                 {
                     "targets": [1],
                     "data": "title",
                     "width":"150px",
-                    "bSortable": false
+                    "bSortable": false,
+                    "render": function(data, type, full) {
+                        var html='';
+                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/view-trip/info?trip="?>'+full.tripId+'" target="_blank" >'+data+'</a>';
+                        return html;
+                    }
                 },
                 {
                     "targets": [2],
@@ -140,14 +153,22 @@
                     "targets": [6],
                     "data": "tripId",
                     "bSortable": false,
-                    "width":"300px",
+                    "width":"100px",
                     "render": function(data, type, full) {
                         var html='';
-                        html +='<a href="javascript:;" onclick="editUserRecommend('+data+')" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 推荐信息</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="editTripInfo('+data+');" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 展示设置</a>&nbsp;&nbsp;';
-                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/view-trip/info?trip="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
-                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/sys/edit-trip?trip="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteHandle(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
+
+                        html+='<div class="btn-group">';
+                        html+='<button class="btn btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown">&nbsp;&nbsp;设置&nbsp;&nbsp;<i class="fa fa-angle-down"></i></button>';
+                        html+='<ul class="dropdown-menu" role="menu">';
+                        html+='<li><a href="javascript:;" onclick="editUserRecommend('+data+')"> 推荐信息 </a></li>';
+                        html+='<li><a href="javascript:;" onclick="editTripInfo('+data+')"> 展示设置 </a></li>';
+                        html+='<li><a href="javascript:;" onclick="updateTripPublisher('+data+')"> 修改所属人 </a></li>';
+                        html+='<li class="divider"></li>';
+                        html+='<li><a href="<?php echo Yii::$app->params["suiuu_url"]."/sys/edit-trip?trip="?>'+data+'" target="_blank"> 编辑 </a></li>';
+                        html+='<li><a href="javascript:;" onclick="deleteHandle(\''+data+'\')" > 删除 </a></li>';
+                        html+='</ul>';
+                        html+='</div>';
+
                         return html;
                     }
                 }
@@ -171,14 +192,18 @@
         Main.openModal("/trip/to-update-trip-info?tripId="+tripId)
     }
 
-    function deleteHandle(id){
+    function updateTripPublisher(tripId) {
+        Main.openModal("/trip/to-change-publisher?tripId="+tripId)
 
+    }
+
+    function deleteHandle(id){
         Main.confirmTip("确认要删除此数据吗？",function(){
             $.ajax({
                 type:"POST",
                 url:"/trip/delete",
                 data:{
-                    id:id
+                    tripId:id
                 },beforeSend:function(){
                     Main.showWait("#table_list");
                 },

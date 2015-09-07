@@ -991,16 +991,18 @@ class TravelTripDb extends ProxyDb
         $command->execute();
     }
 
-    /**后台得到随游列表
+    /**
+     * 后台得到随游列表
      * @param $page
      * @param $search
      * @param $peopleCount
      * @param $startPrice
      * @param $endPrice
+     * @param $type
      * @param $status
      * @return Page|null
      */
-    public function sysGetList($page, $search, $peopleCount, $startPrice, $endPrice, $status)
+    public function sysGetList($page, $search, $peopleCount, $startPrice, $endPrice,$type, $status)
     {
 
         $sql = sprintf("
@@ -1014,6 +1016,10 @@ class TravelTripDb extends ProxyDb
         if (!empty($status)) {
             $sql .= " AND t.status=:status";
             $this->setParam("status", $status);
+        }
+        if (!empty($type)) {
+            $sql .= " AND t.type=:type";
+            $this->setParam("type", $type);
         }
         if (!empty($search)) {
             $sql .= " AND ( t.title like :search OR c.cname like :search OR ci.cname like :search OR u.nickname like :search ) ";
@@ -1278,6 +1284,37 @@ class TravelTripDb extends ProxyDb
         $this->setSql($sql);
 
         return $this->find($page);
+    }
+
+
+    public function updateTravelTripCreatePublisher($tripId,$publisherId)
+    {
+        $sql=sprintf("
+            UPDATE travel_trip SET createPublisherId=:publisherId
+            WHERE tripId=:tripId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->bindParam(":publisherId", $publisherId, PDO::PARAM_INT);
+
+        return $command->execute();
+    }
+
+
+    public function updateTravelTripPublisher($tripId,$oldPublisherId,$newPublisherId)
+    {
+        $sql=sprintf("
+            UPDATE travel_trip_publisher SET publisherId=:newPublisherId
+            WHERE tripId=:tripId AND publisherId=:oldPublisherId
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":tripId", $tripId, PDO::PARAM_INT);
+        $command->bindParam(":oldPublisherId", $oldPublisherId, PDO::PARAM_INT);
+        $command->bindParam(":newPublisherId", $newPublisherId, PDO::PARAM_INT);
+
+        return $command->execute();
     }
 
 

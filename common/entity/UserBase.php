@@ -19,6 +19,7 @@ class UserBase {
     const USER_STATUS_NORMAL=1;//用户状态：正常
     const USER_STATUS_DISABLED=2;//用户状态：禁用
 
+    const PRIMARY_KEY='userId';
     /**
      * @var用户Id
      */
