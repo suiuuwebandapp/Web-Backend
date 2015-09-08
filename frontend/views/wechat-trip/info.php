@@ -51,21 +51,21 @@
             <li class="banner01"><img src="<?= $pic['url'];?>"></li>
             <?php }?>
         </ul>
-        <!--<div class="banner-btn">
+        <div class="banner-btn">
             <a class="prev" href="javascript:void(0);"></a>
             <a class="next" href="javascript:void(0);"></a>
-        </div>-->
+        </div>
         <div class="hd"><ul></ul></div>
     </div>
     <!--banner结束-->
     <script type="text/javascript">
         $(document).ready(function(){
 
-            /*$(".prev,.next").hover(function(){
+            $(".prev,.next").hover(function(){
                 $(this).stop(true,false).fadeTo("show",1);
             },function(){
                 $(this).stop(true,false).fadeTo("show",1);
-            });*/
+            });
 
             $(".syDetailBanner").slide({
                 titCell:".hd ul",
@@ -83,9 +83,9 @@
 </div>
 <div class="syContent con">
     <div class="top clearfix">
-        <a href="/wechat-user-info/user-info?userSign=<?= $info['createPublisherInfo']['userSign'];?>" class="userPic"><img src="<?= $info['createPublisherInfo']['headImg'];?>"></a>
-        <span class="userName"><?= $info['createPublisherInfo']['nickname'];?></span>
-        <p class="adress"><?= $info['createPublisherInfo']['countryName'].$info['createPublisherInfo']['cityName'];?></p>
+        <a href="/wechat-user-info/user-info?userSign=<?= $createUserInfo->userSign;?>" class="userPic"><img src="<?= $createUserInfo->headImg;?>"></a>
+        <span class="userName"><?=$createUserInfo->nickname;?></span>
+        <p class="adress">&nbsp;<?=$info['info']['countryCname']?>，<?=$info['info']['cityCname']?></p>
 
     </div>
     <p class="bq"><span><?= $info['info']['tags'];?></span></p>
@@ -146,7 +146,7 @@
         <?php }?>
     </ul>
     <div class="btns clearfix">
-        <a href="#" class="bgOrange fl">咨询</a>
+        <a href="/wechat-user-center/user-message-info?rUserSign=<?= $createUserInfo->userSign;?>" class="bgOrange fl">咨询</a>
         <a href="/wechat-trip/add-order-view?tripId=<?=$info['info']['tripId'];?>" class="bgBlue fr">预定</a>
 
     </div>

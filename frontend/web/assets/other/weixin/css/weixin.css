@@ -444,8 +444,10 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 
 /*-----------c定制订单详情-----------*/
+.cdzOder_Detail .boxTop{ border-bottom:1px solid #ddd; padding-bottom:5px; }
+.cdzOder_Detail .boxTop p{margin-bottom:5px;}
 .cdzOder_Detail .box .down{ position:relative; margin-top:1rem;}
-.cdzOder_Detail .box .down .title{ font-size:1rem; text-align:center;  line-height:1.5rem; position:relative; border-bottom:1px solid #ddd;}
+.cdzOder_Detail .box .down .title{ margin-bottom:10px; font-size:1rem; text-align:center;  line-height:1.5rem; position:relative; }
 .cdzOder_Detail .box .down .title02{  border-bottom:1px solid #ddd; color:#97cbff; text-align:center; line-height:2rem;}
 .cdzOder_Detail .box .down dl dd{ display:table; width:100%; vertical-align:middle; border-bottom:1px solid #ddd;}
 .cdzOder_Detail .box .down dl dd .time{ width:20%; text-align:center; display:table-cell; vertical-align:middle;color:#97cbff; border-right:1px solid #ddd;}
@@ -456,6 +458,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .cdzOder_Detail .box .btn{ border-radius:5px;height:2.1rem; width:30%; line-height:2.1rem; font-size:0.85rem; color:#fff; text-align:center; display:block; text-decoration:none; border-radius:5px;}
 .cdzOder_Detail .box .btn.bgOrange{ margin-right:20px;}
 .cdzOder_Detail .box .btn:hover{ text-decoration:underline; }
+.cdzOder_Detail .box .state{ color:#aaa; text-align:center; display:block; }
 
 /*-----------c定制订单02-----------*/
 .cdzdetail02 p{ margin-bottom:10px; font-size:0.85rem;  }
@@ -513,6 +516,9 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .g_zhuye .content .topUser .usePic img{ display:block; width:100%;}
 .g_zhuye .content .topUser .texts .adress{ margin-top:0.5rem; padding-left:30px; line-height:1.3rem;  background:url(../images/position.png) no-repeat 0 center; }
 .g_zhuye .content .topUser .texts .email{line-height:1.3rem; margin-top:8px;padding-left:30px; background:url(../images/ok.png) no-repeat 0 center; }
+.g_zhuye .content .topUser .drop{ background:url(../images/drop.png) no-repeat center center; height:24px; width:24px; display:block; float:right;  }
+.g_zhuye .content .topUser .drop02{ background:url(../images/drop02.png) no-repeat center center; height:24px; width:24px; display:block; float:right;  }
+
 .g_zhuye .content .tyleTitle{ margin-bottom:5px;  color:#aaa; background:url(../images/go.png) no-repeat right center;}
 .g_zhuye .content .bigBox{ cursor:pointer; margin-bottom:15px; padding:10px; background:#fff;}
 .g_zhuye .content .bigBox.nothing{ background:#fff; height:14rem; width:100%;}
@@ -687,11 +693,14 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .Uheader .collect.active{   background-position:center -5rem; }
 
 .syDetailBanner{ padding-top:2.85rem; width:100%; max-width:640px; margin:0 auto;   position:relative;}
-.syDetailBanner .smoney{ background:rgba(0,0,0,0.6); z-index:9; color:#FFE599; position:absolute; top:40%; width:4.5rem; height:1.6rem; line-height:1.6rem; text-align:center; right:0;}
+.syDetailBanner .smoney{ background:rgba(0,0,0,0.6); z-index:9; color:#FFE599; position:absolute; bottom:10px; width:4.5rem; height:1.6rem; line-height:1.6rem; text-align:center; right:0;}
 .syDetailBanner .banners{ width:100%; overflow:hidden;}
 .syDetailBanner .banners li{ float:left; width:100%;  }
 .syDetailBanner .banners li img{   width:100%; display:block; }
-.syDetailBanner .hd {position:absolute;bottom:10px; left:50%; margin-left:-20px;}
+
+.syDetailBanner .banner-btn .prev,.syDetailBanner .banner-btn .next{ position:absolute; left:0; top:40%; display:block;   height:50px; width:50px; display:block; z-index:3; background:url(../images/mdd-prev.fw.png) no-repeat center center;}
+.syDetailBanner .banner-btn .next{ right:0; left:auto; background:url(../images/mdd-next.fw.png) no-repeat center center; }
+.syDetailBanner .hd {position:absolute;bottom:10px; left:50%; -moz-transform:translateX(-50%);-ms-transform:translateX(-50%);;transform:translateX(-50%);  }
 .syDetailBanner .hd ul li{width:12px;height:12px;border-radius :50%;text-indent:-9999px;margin-right:5px;background:#ccc;float:left;cursor:pointer;}
 .syDetailBanner .hd ul li.on{background:#DA324D;}
 .syDetailBanner .banners p{  position:absolute; color:#fff; font-size:30px; left:50%; margin-left:-170px; }
@@ -738,6 +747,96 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 .syContent .btns{ padding:15px;  width:100%; margin:20px auto 0;   }
 .syContent .btns a{ border-radius:5px; text-align:center; color:#fff; font-size:1rem; display:block;   height:2.14rem; line-height:2.14rem; width:7rem; }
+
+
+
+/*-----------交通详情------------*/
+.jtContent{ margin-top:15px; padding-top:0;}
+.jtContent .top .userPic{ height:2.85rem; width:2.85rem; border-radius:50%; display:block; overflow:hidden; float:left;   }
+.jtContent .top .userPic img{ width:100%; display:block; }
+.jtContent .top .userName{ float:left; margin-top:0.9rem; margin-left:3px; font-size:0.85rem; }
+
+.jtContent p{ line-height:1.5rem; font-size:0.85rem; }
+.jtContent p.bq{ line-height:1.5rem; margin-bottom:5px;background:url(../images/biaoqian.png) no-repeat 0 0.35rem; padding-left:25px;}
+.jtContent p.bq span{ color:#4FD8C3;}
+.jtContent p.adress{ float:left; margin-top:0.8rem; margin-left:10px;color:#4FD8C3; background:url(../images/position.png) no-repeat 0 0.35rem; padding-left:25px;}
+.jtContent .line{ border-bottom:1px solid #ddd;}
+.jtContent .line b{ color:#aaa; font-size:0.7rem;}
+.jtContent .line img{ float:right; margin-left:3px; margin-top:5px;}
+.jtContent .title{ text-align:center; line-height:2rem; font-size:0.9rem; width:100%;}
+.jtContent .title01{ line-height:2rem; font-size:0.85rem;}
+.jtContent .pics{ display:block; width:100%;  }
+.jtContent .details li{ width:33%; float:left;}
+.jtContent .details li .icon{   display:block; padding-left:1.25rem;background:url(../images/syxq02.png) no-repeat 0 0; background-size:1rem 9.5rem;}
+.jtContent .details li .icon2{ background-position:0 -4.25rem;}
+.jtContent .details li .icon3{ background-position:0 -8.53rem;  }
+.jtContent .contian span{ font-size:0.7rem; margin-right:30px; display:inline-block; margin-bottom:7px;   }
+.jtContent .car span .icon{ margin-right:5px;display:inline-block;background:url(../images/jticon.png) no-repeat 0 0; background-size:0.9rem 24.1rem;  height:0.9rem; width:0.9rem; }
+.jtContent .car span:nth-child(2) .icon{ background-position:0 -2.6rem;}
+.jtContent .car span:nth-child(3) .icon{ background-position:0 -5.2rem;}
+.jtContent .car span:nth-child(4) .icon{ background-position:0 -7.7rem;}
+.jtContent .car span:nth-child(5) .icon{ background-position:0 -10.3rem;}
+.jtContent .car span:nth-child(6) .icon{ background-position:0 -12.9rem;}
+.jtContent .car span:nth-child(7) .icon{ background-position:0 -15.4rem;}
+.jtContent .car span:nth-child(8) .icon{ background-position:0 -18rem;}
+.jtContent .car span:nth-child(9) .icon{ background-position:0 -20.6rem;}
+.jtContent .car span:nth-child(10) .icon{ background-position:0 -23.2rem;}
+.jtContent .car span:nth-child(11) .icon{ background-position:0 -25.8rem;}
+
+
+.jtContent .contian span img{ width:0.9rem; height:0.9rem; display:inline-block; }
+.jtContent .bgbox{ margin:15px 0; background:#F5F5F5; padding:10px;}
+.jtContent .weblist li{ margin-top:1rem;  }
+.jtContent .weblist li .box{ padding-bottom:0.5rem;  position:relative; border-bottom:1px solid #ddd;}
+.jtContent .weblist .userPic{ height:2.85rem; width:2.85rem; position:absolute; top:0; left:0; border-radius:50%; display:block; overflow:hidden;   }
+.jtContent .weblist .userPic img{ width:100%; display:block; }
+.jtContent .weblist .userName{ margin-left:3rem;  font-size:0.85rem; }
+.jtContent .weblist .text{  margin-left:3rem;   font-size:0.85rem; }
+
+.jtContent .btns{ padding:15px;  width:100%; margin:20px auto 0;   }
+.jtContent .btns a{ border-radius:5px; text-align:center; color:#fff; font-size:1rem; display:block;   height:2.14rem; line-height:2.14rem; width:7rem; }
+
+
+
+/*-----------交通订单确认--------*/
+.jtdingdan{ padding:3.2rem 0 0;}
+.jtdingdan .box{ margin-bottom:15px; padding:10px; background:#fff;}
+.jtdingdan .box .title{ font-size:1rem;}
+.jtdingdan .box p{ margin-bottom:15px;}
+.jtdingdan .box p.money{ color:#FF9226; font-size:1rem;}
+.jtdingdan .btns{ border-top:1px solid #ddd; margin-top:5rem; padding-top:20px;   background:#fff;}
+.jtdingdan .btns .btn{ margin:0 auto 15px; width:12.85rem; height:2.14rem; line-height:2.14rem; text-align:center; display:block; color:#fff;  border-radius:5px; }
+.jtdingdan .btns .btn01{ background:#73B9FF ;   }
+.jtdingdan .btns .btn02{ background:#2DBA00;   }
+
+
+/*-----------服务项目选择--------*/
+.jtseverSelect{ padding:3.2rem 0 0;}
+.jtseverSelect .box{ margin-bottom:15px; padding:10px; background:#fff;}
+.jtseverSelect .box .title{ font-size:1rem;}
+.jtseverSelect .box p{ margin-bottom:15px;}
+.jtseverSelect .box .items{ margin-bottom:0; cursor:pointer; background:url(../images/drop.png) no-repeat right center;  line-height:2.14rem; height:2.14rem;}
+.jtseverSelect .box .items_drop{ display:none;}
+.jtseverSelect .box .items_drop input{ color:#858585; display:block; width:100%; border-bottom:1px solid #eee; line-height:2.14rem; height:2.14rem;}
+.jtseverSelect .box .items_drop input:first-child{ border-top:1px solid #eee;}
+.jtseverSelect .box .items_drop input:last-child{    border-bottom:none;}
+.jtseverSelect .box p span{ margin-right:10px;}
+.jtseverSelect .box p.money{ color:#FF9226; font-size:1rem;}
+.jtseverSelect .btns{ border-top:1px solid #ddd; margin-top:5rem; padding-top:20px;   background:#fff;}
+.jtseverSelect .btns .btn{ margin:0 auto 15px; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; display:block; color:#fff;  border-radius:5px; }
+.jtseverSelect .btns .btn01{ background:#4FD8C3 ;   }
+
+
+/*-----------个人信息完善--------*/
+.jtpersonal{ padding:3.2rem 0 0;}
+.jtpersonal .title03{ margin:20px auto; font-size:0.85rem; text-align:center;}
+.jtpersonal .title04{ margin:6px auto; color:#aaa;  font-size:0.8rem; text-align:center;}
+.jtpersonal input{ font-size:0.8rem;   background:#fff; padding:0 10px; color:#858585; display:block; width:100%; border-bottom:1px solid #eee; line-height:2.14rem; height:2.14rem;}
+.jtpersonal p{ font-size:0.8rem;  line-height:1.5rem; height:1.5rem;}
+.jtpersonal .btns{ border-top:1px solid #ddd; margin-top:20px; padding-top:20px;   background:#fff;}
+.jtpersonal .btns .btn{ margin:0 auto 15px; width:8.2rem; height:2.14rem; line-height:2.14rem; text-align:center; display:block; color:#fff;  border-radius:5px; }
+.jtpersonal .btns .btn01{ background:#4FD8C3 ;   }
+
 
 /*-----------支付------------*/
 .payfor .top{ background:#fff; padding:10px 10px 20px; margin-top:10px;}

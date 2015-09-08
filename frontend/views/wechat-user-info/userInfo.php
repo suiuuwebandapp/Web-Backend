@@ -47,7 +47,7 @@
         <div class="content">
             <div class="topUser clearfix">
                 <div class="top clearfix">
-                    <a href="javascript:;" class="chat"></a>
+                    <a href="/wechat-user-center/user-message-info?rUserSign=<?= $userInfo['userSign'];?>" class="chat"></a>
                     <a href="javascript:;" class="usePic fl">
                         <img src="<?php echo $userInfo['headImg'];?>">
                     </a>
@@ -64,9 +64,10 @@
                 <?php
                 $info=!empty($userInfo['info'])?nl2br($userInfo['info']):"暂无简介" ;
                 $str="";
-                if(mb_strlen($info)>80){$str=mb_substr($info,0,80,"utf-8"); $str.="....";}
+                if(mb_strlen($info,"utf-8")>80){$str=mb_substr($info,0,80,"utf-8"); $str.="....";}
                 ?>
                 <p id="userInfo" info="<?php echo $info?>" str="<?php echo $str;?>" isInfo="<?php if(empty($str)){echo 1;}else{echo 0;}?>"><?php echo empty($str)?$info:$str; ?></p>
+                <a href="javascript:;" onclick="clickInfo()" id="infoBtn" class="drop"></a>
             </div>
 
 
@@ -127,7 +128,6 @@
     </div>
 </div>
 <script>
-    $("#userInfo").bind("click",clickInfo)
     function clickInfo()
     {
         var isInfo = $("#userInfo").attr("isInfo");
@@ -137,10 +137,12 @@
         {return;}
         if(isInfo==1)
         {
+            $("#infoBtn").attr("class","drop");
             $("#userInfo").html(str);
             $("#userInfo").attr("isInfo",0);
         }else
         {
+            $("#infoBtn").attr("class","drop02");
             $("#userInfo").html(info);
             $("#userInfo").attr("isInfo",1);
         }

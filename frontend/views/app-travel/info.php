@@ -146,7 +146,6 @@
                 },
                 success: function (data) {
                     //hide load
-                    data = eval("(" + data + ")");
                     if (data.status == 1) {
                         jsAlert("收藏成功");
                         $('#collection_trip').attr('attentionIdTrip', data.data);
@@ -165,7 +164,7 @@
         } else {
             //取消收藏
             $.ajax({
-                url: 'http://api.suiuu.com//v1/app-attention/delete-attention'+"?token="+"<?php echo urlencode($token);?>",
+                url: 'http://api.suiuu.com/v1/app-attention/delete-attention'+"?token="+"<?php echo urlencode($token);?>",
                 type: 'post',
                 data: {
                     attentionId: $('#collection_trip').attr('attentionIdTrip')
@@ -178,7 +177,7 @@
                 },
                 success: function (data) {
                     //hide load
-                    data = eval("(" + data + ")");
+                   // data = eval("(" + data + ")");
                     if (data.status == 1) {
                         jsAlert("取消成功");
                         isCollection = false;

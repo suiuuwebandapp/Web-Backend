@@ -18,6 +18,7 @@ use common\entity\TravelTripService;
 use common\entity\UserOrderInfo;
 use frontend\components\Page;
 use frontend\services\CountryService;
+use frontend\services\PublisherService;
 use frontend\services\TravelTripCommentService;
 use frontend\services\TripService;
 use frontend\services\UserAttentionService;
@@ -134,6 +135,7 @@ class WechatTripController extends WController {
     {
         $login = $this->loginValid(false);
         $tripId=\Yii::$app->request->get("tripId");
+        $returnUrl="info";
         if(empty($this->userObj))
         {
             $userSign='';
@@ -146,15 +148,33 @@ class WechatTripController extends WController {
             return $this->redirect('/we-chat/error?str=未知随游');
         }
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId,$userSign);
+        if($travelInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
+            $returnUrl="trafficInfo";
+        }
         if(empty($travelInfo['info']))
         {
             return $this->redirect('/we-chat/error?str=未知随游');
         }
+        $tripInfo=$travelInfo['info'];
+        $userService=new UserBaseService();
+        $publisherService=new PublisherService();
+        $tripPublisherId=$tripInfo['createPublisherId'];
+        $createPublisherId=$publisherService->findById($tripPublisherId);
+        $createUserInfo=$userService->findUserByUserSign($createPublisherId->userId);
         $page=new Page();
         $page->pageSize=5;
         $rst= $this->tripCommentSer->getTravelComment($tripId,$page,$userSign);
         $userRecommend=$this->tripService->findTravelTripRecommendByTripId($tripId);
-        return $this->renderPartial("info",['info'=>$travelInfo,'userRecommend'=>$userRecommend,'comment'=>$rst,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+        return $this->renderPartial($returnUrl,['info'=>$travelInfo,'createUserInfo'=>$createUserInfo,'userRecommend'=>$userRecommend,'comment'=>$rst,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+    }
+
+    public function actionAddTrafficOrder()
+    {
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
+        return $this->renderPartial("addTrafficOrder",['userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
     }
 
     public function actionAddOrder()

@@ -79,10 +79,6 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
-        sleep(100);
-        $temp=new WechatTemplate();
-        $rst = $temp->sendMessageRemind("085963dc0af031709b032725e3ef18f5","dddd");
-var_dump($rst);
     }
 
 

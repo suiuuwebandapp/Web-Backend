@@ -20,6 +20,7 @@ use frontend\services\PublisherService;
 use frontend\services\TripService;
 use frontend\services\UserBaseService;
 use frontend\services\UserMessageRemindService;
+use frontend\services\UserMessageService;
 use frontend\services\UserOrderService;
 use frontend\services\WeChatService;
 use yii\base\Exception;
@@ -164,7 +165,7 @@ class WechatUserCenterController extends WController {
             }
             $userSer =new UserBaseService();
             $userInfo = $userSer->findUserByUserSign($info->userId);
-            return $this->renderPartial('tripOrderInfo',['info'=>$info,'userInfo'=>$userInfo]);
+            return $this->renderPartial('tripOrderInfo',['info'=>$info,'userInfo'=>$userInfo,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str=系统异常');
@@ -202,7 +203,7 @@ class WechatUserCenterController extends WController {
                 $userBaseService = new UserBaseService();
                 $publisherBase=$userBaseService->findUserByUserSign($sign);
             }
-            return $this->renderPartial('myOrderInfo',['info'=>$info,'publisherBase'=>$publisherBase,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
+            return $this->renderPartial('myOrderInfo',['info'=>$info,'publisherBase'=>$publisherBase,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str="系统异常"');
@@ -483,11 +484,77 @@ class WechatUserCenterController extends WController {
             $userSign=$this->userObj->userSign;
             $userMessageSer = new UserMessageRemindService();
             $page  = new Page(\Yii::$app->request);
-            $rst = $userMessageSer->getWebSysMessage($userSign,$page,null);
-            return $this->renderPartial('messageRemind',['list'=>$rst,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
+            $page->showAll=true;
+            $list = $userMessageSer->getWebSysMessage($userSign,$page,null);
+            //用户会话列表
+            $userMessageService=new UserMessageService();
+            $sessionList=$userMessageService->getUserMessageSessionList($userSign);
+            return $this->renderPartial('messageRemind',['list'=>$list,"sessionList"=>$sessionList,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str=获取消息异常');
+        }
+    }
+
+    public function actionUserMessageInfo()
+    {
+        try{
+            $login = $this->loginValid();
+            if(!$login){
+                return $this->redirect(['/we-chat/login']);
+            }
+            $rUserSign =\Yii::$app->request->get("rUserSign");
+            $userSign=$this->userObj->userSign;
+            $sessionKey = $this->getMessageSessionKey($userSign,$rUserSign);
+            //用户会话列表
+            $userMessageService=new UserMessageService();
+            $userBaseService = new UserBaseService();
+            $rInfo = $userBaseService->findBaseInfoBySign($rUserSign);
+            $list=$userMessageService->getUserMessageSessionInfo($userSign,$sessionKey);
+            /*if(empty($list)){
+                return $this->redirect('/we-chat/error?str=未知的会话列表');
+            }*/
+            return $this->renderPartial('messageInfo',["list"=>$list,"userSign"=>$userSign,'rInfo'=>$rInfo,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return $this->redirect('/we-chat/error?str=获取消息异常');
+        }
+    }
+    /**
+     * 生成SessionKey
+     * @param $senderId
+     * @param $receiveId
+     * @return string
+     */
+    private function getMessageSessionKey($senderId,$receiveId)
+    {
+        //暂时修改为两个会话
+        if($senderId>$receiveId){
+            return md5($senderId.$receiveId);
+        }else{
+            return md5($receiveId.$senderId);
+        }
+    }
+
+    /**
+     * 更新系统消息已读
+     */
+    public function actionChangeSystemMessageRead()
+    {
+        $this->loginValidJson();
+        $messageId=trim(\Yii::$app->request->post("messageId"));
+        if(empty($messageId)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的消息"));
+        }
+        try{
+            $userSign=$this->userObj->userSign;
+            $userMessageRemindService=new UserMessageRemindService();
+            $userMessageRemindService->deleteUserMessageRemind($messageId,$userSign);
+            //$userMessageSetting=$this->userMessageService->changeSystemMessageRead($messageId,$userSign);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
     }
 }

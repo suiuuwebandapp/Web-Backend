@@ -84,7 +84,11 @@
     <a href="javascript:;" class="close" onclick="deleteOrder('<?php echo $val['wOrderNumber']?>')"></a>
     <?php }?>
         <div class="pic fl">
-            <a href="/wechat-user-info/trip-list?userSign=<?php echo $val['wRelativeSign']?>" class="userPic"><img src="<?php echo $val['headImg']?>"></a>
+            <?php if(empty($val['wRelativeSign'])){?>
+                <a href="javascript:;" class="userPic"><img src="/assets/other/weixin/images/logo02.png"></a>
+            <?php }else{ ?>
+                <a href="/wechat-user-info/trip-list?userSign=<?php echo $val['wRelativeSign']?>" class="userPic"><img src="<?php echo $val['headImg']?>"></a>
+            <?php }?>
             <p class="name"><?php echo $val['nickName'];?></p>
             <?php if($val['wStatus']==\common\entity\WeChatOrderList::STATUS_PROCESSED){?>
                 <p class="state01">待支付</p>
