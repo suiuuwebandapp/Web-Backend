@@ -8,7 +8,11 @@
  */
 ?>
 
-<link rel="stylesheet" type="text/css" href="/assets/plugins/time-picki/css/timepicki.css">
+<link rel="stylesheet" type="text/css" href="/assets/plugins/datetimepicker/DateTimePicker.css" />
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/datetimepicker/DateTimePicker-ltie9.css" />
+<script type="text/javascript" src="/assets/plugins/datetimepicker/DateTimePicker-ltie9.js"></script>
+<![endif]-->
 <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
 <link rel="stylesheet" type="text/css" href="/assets/plugins/jquery-uploadifive/uploadifive.css">
 <link rel="stylesheet" type="text/css" href="/assets/pages/trip/new-trip.css"/>
@@ -19,7 +23,7 @@
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/jquery-uploadifive/jquery.uploadifive.min.js"></script>
 <script type="text/javascript" src="/assets/js/squid.js"></script>
-<script type="text/javascript" src="/assets/plugins/time-picki/js/timepicki.js"></script>
+<script type="text/javascript" src="/assets/plugins/datetimepicker/DateTimePicker.js"></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/imgAreaSelect/js/jquery.imgareaselect.base.js" ></script>
 
@@ -154,7 +158,7 @@
                     <i class="fa fa-info-circle" style="color: #51c7b7;font-size: 20px"></i>
                     &nbsp;&nbsp;随游平台会在您制定的价格基础之上向游客收取5%作为交易及转账费用，因此您所发布产品的展示价格为您所制定价格的105%。 这样做的目的是确保您可以按您自己的定价获得全部服务费。
                 </div>
-                <span class="title">基本价格</span>
+                <span class="form_title">基本价格</span>
                 <span class="form_tip" id="basePriceTip"></span>
 
                 <p class="sect">
@@ -233,13 +237,13 @@
 
             <div class="bj4-main">
                 <div class="price2">
-                    <span>人数上限</span>
+                    <span class="form_title">人数上限</span>
                     <span class="form_tip" id="peopleCountTip"></span>
                     <input type="text" placeholder="你最多可以接待多少人呢" class="sx" id="peopleCount" value="<?=$travelInfo['info']['maxUserCount']?>">
 
                     <div id="step_div_content" <?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'style="display:none"':''; ?>>
                         <p>
-                            <span>优惠价格（选填）</span>
+                            <span class="form_title">优惠价格（选填）</span>
                             <span class="form_tip" id="stepTip"></span>
                         </p>
                         <div id="stepDiv">
@@ -285,13 +289,13 @@
                     </div>
                 </div>
                 <p>
-                    <span style="width: 180px;">附加服务及价格（选填）</span>
+                    <span style="width: 180px !important;" class="form_title">附加服务及价格（选填）</span>
                     <span class="form_tip" id="servicePriceTip" style="width: 220px !important;"></span>
                 </p>
 
                 <div class="creat clearfix">
                     <dl id="stepDl">
-                        <dt><span class="step_title_span">服务</span><span class="step_title_span">价格</span><span>单位</span></dt>
+                        <dt><span class="step_title_span">服务</span><span class="step_title_span">价格</span><span style="width: 80px">单位</span></dt>
                         <?php if($travelInfo['serviceList']!=null){?>
                             <?php  foreach($travelInfo['serviceList'] as $key=> $scenic){ ?>
                                 <?php if($key==0){ ?>
@@ -345,10 +349,10 @@
                     <dl class="clearfix">
                         <dt><span>可提供服务时间</span> <span class="form_tip" id="serviceTimeTip"></span></dt>
                         <dd>
-                            <input type="text" id="beginTime" class="timepicker_start" placeholder="请选择开始时间"
+                            <input type="text" id="beginTime" class="timepicker_start" placeholder="请选择开始时间"  data-field="time"
                                    value="<?=\common\components\DateUtils::convertTimePicker($travelInfo['info']['startTime'],2)?>">
                             <b class="service_time_tip">至</b>
-                            <input type="text" id="endTime" class="timepicker_end" placeholder="请选择结束时间"
+                            <input type="text" id="endTime" class="timepicker_end" placeholder="请选择结束时间"  data-field="time"
                                    value="<?=\common\components\DateUtils::convertTimePicker($travelInfo['info']['endTime'],2)?>">
                         </dd>
                     </dl>
@@ -385,7 +389,7 @@
                 <input id="cusTagTitle" type="text" maxlength="5">
                 <a href="javascript:;" class="btn" id="addTag">提交</a>
             </div>
-            <h2 class="titles">每个随游都与众不同，通过添加描述，让你的随游给游客留下深刻的印象</h2>
+            <h2 class="titles">设置一个能体现随游的价值和好客之道的价格</h2>
 
             <div class="box01">
                 <span>详情描述<b class="form_tip" id="infoTip"></b></span>
@@ -423,12 +427,12 @@
                         <li class="add"><img src="/assets/images/addG.png" width="25" height="25"></li>
                     </ul>
                     <!--
-                       <div class="bjyPro bj5Pro02">
-                           <h2 class="tit bgGreen">基本价格</h2>
+                   <div class="bjyPro bj5Pro02">
+                       <h2 class="tit bgGreen">基本价格</h2>
 
-                           <h2 class="titles">每个随游都与众不同，通过添加描述，让你的随游给游客留下深刻的印象</h2>
-                       </div>
-                       -->
+                       <h2 class="titles">每个随游都与众不同，通过添加描述，让你的随游给游客留下深刻的印象</h2>
+                   </div>
+                   -->
                 </div>
                 <div class="box03">
                     <span>随游亮点</span>
@@ -548,6 +552,8 @@
         <a href="javascript:;" class="bjy-next bgGreen" id="scenicConfirm">看上去不错</a>
     </div>
 </div>
+
+<div id="choseDateBox"></div>
 
 <script type="text/javascript">
 
@@ -769,16 +775,11 @@
          *  初始化时间选择器
          */
         var initTimePicker = function () {
-            $('.timepicker_start').timepicki({
-                format_output: function (tim, mini, meri) {
-                    return tim + ":" + mini + " " + meri;
-                }
-            });
-            $('.timepicker_end').timepicki({
-                custom_classes: 'time_end',
-                format_output: function (tim, mini, meri) {
-                    return tim + ":" + mini + " " + meri;
-                }
+            $("#choseDateBox").DateTimePicker({
+                titleContentTime:'选择时间',
+                setButtonContent:'确定',
+                clearButtonContent:'取消',
+                timeFormat: 'hh:mm AA'
             });
         };
 

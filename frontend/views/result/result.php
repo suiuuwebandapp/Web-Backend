@@ -10,11 +10,10 @@
 ?>
 
 
-<div id="finish">
+<div id="finish" style="min-height: 300px">
     <div class="pic">
         <img src="/assets/images/ico.png" alt="">
-
-        <p><?= $result ?></p>
+        <p style="margin-top: 30px"><?= $result ?></p>
     </div>
     <p class="dnav">
         <a href="<?php echo Yii::$app->params['base_dir']; ?>" class="orange">返回首页</a>

@@ -16,10 +16,11 @@
 }
 .select2-container .select2-choice {
     background-color: #eee;
-    border-radius: 0px;
+    border-radius: 0;
     font-size: 14px;
-    color: dimgray;
+    color: #858585 !important;
     height: 30px !important;
+    position:initial !important;
 }
 .select2-drop {
     font-size: 14px;
@@ -247,4 +248,9 @@ input,textarea{
 }
 .picPop{
     z-index: 1001 !important;
+}
+
+.bjy .form_title{
+    width: 150px !important;
+    float: left;
 }

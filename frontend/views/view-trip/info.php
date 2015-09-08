@@ -8,9 +8,12 @@
  */
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap-datepicker/css/datepicker3.css" />
-<link rel="stylesheet" type="text/css" href="/assets/plugins/time-picki/css/timepicki.css">
+<link rel="stylesheet" type="text/css" href="/assets/plugins/datetimepicker/DateTimePicker.css" />
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/datetimepicker/DateTimePicker-ltie9.css" />
+<script type="text/javascript" src="/assets/plugins/datetimepicker/DateTimePicker-ltie9.js"></script>
+<![endif]-->
 <link rel="stylesheet" type="text/css" href="/assets/pages/view-trip/info.css" />
-
 
 <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
 <div class="sydetailBanner web-banner" id="imgs">
@@ -25,13 +28,13 @@
     <a href="javascript:;" class="next"></a>
 </div>
 
-<div class="bgGreen sydetailNav clearfix">
+<div class="bgGreen sydetailNav clearfix" id="tripInfoMapUrl">
     <div class="w1200 clearfix">
         <ul class="clearfix">
             <li><a href="#imgs">照片</a></li>
             <li><a href="#detail">详情描述</a></li>
             <li><a href="#price">价格内容</a></li>
-            <li><a href="#pinglun">评论</a></li>
+            <li><a href="#pinglunCount">评论</a></li>
         </ul>
     </div>
 </div>
@@ -233,7 +236,9 @@
                     <span class="colWit fr"><?=$travelInfo['info']['basePriceType']==\common\entity\TravelTrip::TRAVEL_TRIP_BASE_PRICE_TYPE_COUNT?'每次':'每人'?></span></h3>
                 <ul class="ul01 clearfix" style="overflow:inherit">
                     <li class="tit"><span>出发日期</span><span>起始时间</span><span class="last">&nbsp;人数</span></li>
-                    <li class="tit tit02"><span><input type="text" name="beginDate" id="beginTime"></span><span><input type="text" name="startTime" id="startTime"></span>
+                    <li class="tit tit02">
+                        <span><input type="text" name="beginDate" id="beginTime" style="padding:0 10px"></span>
+                        <span><input type="text" data-field="time" name="startTime" id="startTime" style="padding:0 10px"></span>
                         <span class="last">
                          <select id="peopleCount" name="peopleCount">
                             <?php for($i=1;$i<=$travelInfo['info']['maxUserCount'];$i++){echo '<option value="'.$i.'">'.$i.'</option>';} ?>
@@ -336,6 +341,8 @@
     </div>
     </form>
 </div>
+<div id="choseDateBox"></div>
+
 <?php
     $stepPriceJson='';
     if(!empty($travelInfo['priceList'])){
@@ -358,7 +365,9 @@
     var page=1;
     var rSign='';
     var nowDate='<?=date('Y-m-d',time()); ?>';
-    var type=<?=empty($travelInfo['info']['type'])?0:$travelInfo['info']['type'];?>
+    var type=<?=empty($travelInfo['info']['type'])?0:$travelInfo['info']['type'];?>;
+    var minTime=<?=empty($travelInfo['info']['startTime'])?'null':"'".$travelInfo['info']['startTime']."'"?>;
+    var maxTime=<?=empty($travelInfo['info']['endTime'])?'null':"'".$travelInfo['info']['endTime']."'"?>;
 
         window._bd_share_config = {
         common : {
@@ -377,6 +386,6 @@
 
 <script type="text/javascript" src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" ></script>
 <script type="text/javascript" src="/assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" ></script>
-<script type="text/javascript" src="/assets/plugins/time-picki/js/timepicki.js"></script>
+<script type="text/javascript" src="/assets/plugins/datetimepicker/DateTimePicker.js"></script>
 <script type="text/javascript" src="/assets/pages/view-trip/info.js" ></script>
 

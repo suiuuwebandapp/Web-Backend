@@ -6,6 +6,7 @@ $(document).ready(function () {
     initScroll();
     initBtnClick();
     getComment(1);
+    scrollTo();
     if(type==3){
         initTrafficOrder();
         initTrafficDatePicker();
@@ -14,6 +15,19 @@ $(document).ready(function () {
         initDatePicker();
     }
 });
+
+
+function scrollTo() {
+    $("#tripInfoMapUrl a").bind("click",function(){
+        var top=$($(this).attr("href")).offset().top;
+        if(top<=71){
+            $("html, body").animate({scrollTop: 0 }, {duration: 500,easing: "swing"});
+        }else{
+            $("html, body").animate({scrollTop: top-40 + "px"}, {duration: 500,easing: "swing"});
+        }
+        return false;
+    });
+}
 
 function compareTime(time1,time2){
     time1="1990-01-01 "+time1;
@@ -159,7 +173,8 @@ function initTrafficDatePicker(){
         clearButtonContent:'取消',
         timeFormat: 'HH:mm',
         minTime:minTime,
-        maxTime:maxTime
+        maxTime:maxTime,
+        isPopup:false
     });
     $('#orderDate').datepicker({
         language:'zh-CN',
@@ -195,6 +210,7 @@ function initScroll(){
         if (fixHeight > maxHeight) {
             $(".sydetail .web-right").hide();
             $(".datepicker").hide();
+            $(".dtpicker-overlay").hide();
         } else {
             $(".sydetail .web-right").show();
         }
@@ -403,15 +419,15 @@ function initDatePicker() {
         resetDatePicker();
     });
 
-    /**
-     * 时间选择器控件处理
-     */
-    $('#startTime').timepicki({
-        step_size_minutes: 15,
-        disable_keyboard_mobile:false,
-        format_output: function (tim, mini, meri) {
-            return tim + ":" + mini + " " + meri;
-        }
+
+    $("#choseDateBox").DateTimePicker({
+        titleContentTime:'选择时间',
+        setButtonContent:'确定',
+        clearButtonContent:'取消',
+        timeFormat: 'HH:mm',
+        minTime:minTime,
+        maxTime:maxTime,
+        isPopup:false
     });
 
 }
@@ -431,6 +447,14 @@ function resetDatePicker() {
             'border': '1px solid #cccccc',
             'font-size': '14px'
         });
+        $(".dtpicker-overlay").css({
+            'z-index':100,
+            'top': '119px',
+            'position': 'fixed',
+            'left': '1195.5px',
+            'width': '130px',
+            'height': 'auto'
+        });
     } else {
         $(".datepicker").css({
             'z-index':100,
@@ -439,6 +463,13 @@ function resetDatePicker() {
             'background-color': 'white',
             'border': '1px solid #cccccc',
             'font-size': '14px'
+        });
+        $(".dtpicker-overlay").css({
+            'position': 'absolute',
+            'top': '553px',
+            'left': '1195.5px',
+            'width': '130px',
+            'height': 'auto'
         });
     }
 }

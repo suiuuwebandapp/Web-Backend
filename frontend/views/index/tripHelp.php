@@ -59,10 +59,9 @@
             <a href="javascript:;" onclick="openCreateTravelDiv()" class="btn bgGreen colWit">现在就试试吧！</a>
         <?php }else { ?>
             <a href="/user-info/create-travel" class="btn bgGreen colWit">现在就试试吧！</a>
-
         <?php } ?>
     <?php }else{ ?>
-        <a href="javascript:;" onclick="$('#denglu').click()" class="btn bgGreen colWit">现在就试试吧！</a>
+        <a href="javascript:;" onclick="$('#denglu').click();" class="btn bgGreen colWit">现在就试试吧！</a>
     <?php } ?>
 </div>
 

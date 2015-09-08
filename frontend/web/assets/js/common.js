@@ -140,52 +140,79 @@ $(function(){
 
 /*-----随游详情页banner轮播----*/
 $(function(){
-	var num=0;
-	var timer=null;
-	var maxnum=$('.sydetailBanner .banner li').size()-1;
-	var area=$('.sydetailBanner .banner');
-	$(area).html($(area).html()+$(area).html());
 
+    var imgCount=$('.sydetailBanner .banner li img').size();
+    var nowCount=0;
+    var maxWidth=0;
+    var beforeWidth=0;
+    var endWidth=0;
+    var area=$('.sydetailBanner .banner ul');
+    var html=$(area).html();
+    var timer=null;
+    var documentWidth=$(document).width();
+    var left=0;
+    $('.sydetailBanner .banner li img').load(function(){
+        nowCount++;
+        maxWidth+=$(this).width();
+        beforeWidth=maxWidth;
 
-	function fn(){
-		
-		num++;
-		if(num>maxnum){num=0}
-		$('.web-banner .banner').stop().animate({left:num*-600},1000)
-	}
-	timer=setInterval(fn,2000)
-	$('.web-banner ul li').hover(function(e) {
-        clearInterval(timer)
-		
-    },function(){
-		clearInterval(timer)
-    	timer=setInterval(fn,2000)
-    
-    });
-	
-	$('.web-banner .next').click(function(e) {
-        num++;
-		if(num>maxnum){num=0}
-		$('.web-banner .banner').stop().animate({left:num*-600},500)
+        if(imgCount!=nowCount){
+           return;
+        }
 
+        var flag=true;
+        while(flag){
+            if((maxWidth<documentWidth)){
+                maxWidth+=beforeWidth;
+                $(area).width(maxWidth);
+                $(area).html($(area).html()+html);
+            }else{
+                flag=false;
+            }
+        }
+        endWidth=documentWidth-maxWidth;
+        function fn(){
+            if(left==endWidth){left=0;}else{left-=500;}
+            if(left>0){left=0;}
+            if(left<endWidth&&left!=0){left=endWidth;}
+            $('.web-banner .banner').stop().animate({left:left},1000)
+        }
+        timer=setInterval(fn,2000)
+        $('.web-banner ul li').hover(function(e) {
+            clearInterval(timer)
+
+        },function(){
+            clearInterval(timer)
+            timer=setInterval(fn,2000)
+
+        });
+
+        $('.web-banner .next').click(function(e) {
+
+            if(left==endWidth){left=0;}else{left-=500;}
+            if(left>0){left=0;}
+            if(left<endWidth&&left!=0){left=endWidth;}
+            $('.web-banner .banner').stop().animate({left:left},500)
+
+        });
+        $('.web-banner .pre').click(function(e) {
+            if(left==0){left=endWidth}else{left+=500;}
+            if(left>0){left=0;}
+            if(left<endWidth&&left!=0){left=endWidth;}
+            $('.web-banner .banner').stop().animate({left:left},500)
+        });
+        $('.web-banner .nex,.web-banner .pre').hover(function(e) {
+            clearInterval(timer)
+        });
+
+        $('.web-banner .prev,.web-banner .next').hover(function(e) {
+            clearInterval(timer)
+        },function(){
+            clearInterval(timer)
+            timer=setInterval(fn,2000)
+        });
     });
-	$('.web-banner .pre').click(function(e) {
-        num--;
-		if(num<0){num=maxnum}
-		$('.web-banner .banner').stop().animate({left:num*-600},500)
-    });
-	$('.web-banner .nex,.web-banner .pre').hover(function(e) {
-		clearInterval(timer)
-    });
-	
-	$('.web-banner .prev,.web-banner .next').hover(function(e) {
-        clearInterval(timer)
-    },function(){
-		clearInterval(timer)
-		timer=setInterval(fn,2000)
-	});
-	
-	
+
 })
 
 
@@ -267,13 +294,16 @@ $(function(){
 })
 
 
-/*-----syhPro弹出浮层-----*/
+/*-----syhPro弹出浮层-----
+
 $(function(){
 	$('.suiyouHelp .btn').click(function(e) {
         $('.syhPro,.mask').css('display','block')
     });
 
 })
+ */
+
 
 
 /*-----sy编辑step1提示-----*/

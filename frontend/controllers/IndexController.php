@@ -969,7 +969,7 @@ class IndexController extends UnCController
 
     public function actionError()
     {
-        return $this->render("error",[
+        return $this->renderPartial("error",[
            'message'=>'系统异常'
         ]);
     }

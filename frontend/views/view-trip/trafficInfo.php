@@ -23,11 +23,13 @@
         background-color: #ffffff;
         border:1px solid #cccccc ;
     }
+    body{
+        background-color: #F7F7F7;
+    }
 </style>
-
 <?php $isOwner=$this->context->userPublisherObj!=null&&$this->context->userPublisherObj->userPublisherId==$travelInfo['info']['createPublisherId']?true:false; ?>
 <!--交通详情页-->
-<div class="sydetailBanner web-banner">
+<div class="sydetailBanner web-banner" id="imgs">
     <div class="banner">
         <ul class="clearfix">
             <?php foreach($travelInfo['picList'] as $pic ){?>
@@ -38,13 +40,13 @@
     <a href="javascript:;" class="pre"></a>
     <a href="javascript:;" class="next"></a>
 </div>
-<div class="bgGreen sydetailNav clearfix">
+<div class="bgGreen sydetailNav clearfix" id="tripInfoMapUrl">
     <div class="w1200 clearfix">
         <ul class="clearfix">
             <li><a href="#imgs">照片</a></li>
             <li><a href="#detail">服务简介</a></li>
             <li><a href="#price">车辆信息</a></li>
-            <li><a href="#pinglun">评论</a></li>
+            <li><a href="#pinglunCount">评论</a></li>
         </ul>
     </div>
 </div>
