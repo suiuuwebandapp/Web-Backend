@@ -14,7 +14,9 @@
 <link rel="stylesheet" type="text/css" href="/assets/pages/user-info/info.css">
 
 <style type="text/css">
-
+ body{
+     background-color: #F7F7F7;
+ }
 </style>
 
 

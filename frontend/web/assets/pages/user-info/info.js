@@ -801,8 +801,12 @@ function buildMyTripHtml(tripList){
         tripInfo=tripList[i];
         var count=tripInfo.count==null?'':tripInfo.count;
         var info=tripInfo.info;
+        var title=tripInfo.title;
         if(info.length>100){
             info=info.substring(0,100)+"...";
+        }
+        if(title.length>12){
+            title=title.substring(0,12)+"...";
         }
         html+='<div class="orderList clearfix">';
         html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+',this)">';
@@ -812,7 +816,7 @@ function buildMyTripHtml(tripList){
         }else{
             html+='   <dt class="title">';
         }
-        html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';
+        html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+title+'</span><span>随游时间</span><span>附加服务</span>';
         html+='   </dt>';
         html+='   <dd>';
         html+='       <span class="pic"><img src="'+tripInfo.titleImg+'"></span>';
@@ -884,8 +888,12 @@ function buildMyJoinTripHtml(tripList){
     for(var i=0;i<tripList.length;i++){
         tripInfo=tripList[i];
         var info=tripInfo.info;
+        var title=tripInfo.title;
         if(info.length>100){
             info=info.substring(0,100)+"...";
+        }
+        if(title.length>12){
+            title=title.substring(0,12)+"...";
         }
         //var count=tripInfo.count==null?'':tripInfo.count;
         //if(count!=''){ count='<a href="#" class="sure">新申请<b>'+count+'</b></a>'};
@@ -895,7 +903,7 @@ function buildMyJoinTripHtml(tripList){
         html+='       <span>'+Main.formatDate(tripInfo.createTime,'yyyy.MM.dd')+'发布</span><span>'+tripInfo.title+'</span><span>随游时间</span><span>附加服务</span>';
         html+='   </dt>';
         html+='   <dd>';
-        html+='       <span class="pic"><a href="/view-trip?trip='+tripInfo.tripId+'"><img src="'+tripInfo.titleImg+'"></a></span>';
+        html+='       <span class="pic"><a href="/view-trip?trip='+tripInfo.tripId+'"><img src="'+title+'"></a></span>';
         html+='       <span>'+info+'</span>';
         html+='       <span>'+tripInfo.startTime+'</span>';
         html+='       <span>';

@@ -307,3 +307,7 @@
 #user_photo_list li:nth-child(3n){
     margin-right: 0px;
 }
+
+.sycon .myInformation .box{
+    border: none;
+}

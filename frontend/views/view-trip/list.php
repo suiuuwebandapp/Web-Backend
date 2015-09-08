@@ -10,13 +10,14 @@
 ?>
 
 <link type="text/css" rel="stylesheet" href="/assets/css/jquery-ui.css">
-<style>
-
+<style type="text/css">
+    body{
+        background-color: #F7F7F7;
+    }
     #trip_base_list{
         min-height: 400px;
     }
 </style>
-
 
 <script type="text/javascript" src="/assets/js/UI/jquery-ui.js"></script>
 <script type="text/javascript" src="/assets/js/jquery.lazyload.min.js"></script>
