@@ -697,6 +697,14 @@
                 $(".syBj2Pro01").hide();
             });
             $("#scenicNext").bind("click",function(){
+                var country=$("#countryId").find("option:selected").text();
+                var city=$("#cityId").find("option:selected").text();
+                if(country==''||city==''){
+                    $("#scenic_name_tip").html("请先选择国家和城市");
+                    return;
+                }else{
+                    $("#scenic_name_tip").html("");
+                }
                 if($("#scenic_name").val()==''){
                     $("#scenic_name_tip").html("景点名称不能为空");
                     return;
