@@ -11,7 +11,7 @@ $serviceInfo = json_decode($orderInfo->serviceInfo, true);
 $hasAirplane = 0;
 if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC) {
     foreach ($serviceInfo as $service) {
-        if ($service['type'] == 'airplane') {
+        if ($service['type'] != 'car') {
             $hasAirplane = 1;
         }
     }
@@ -113,7 +113,7 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
                 </li>
             </ul>
         </div>
-        <div class="box" <?=(!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC)?'':'style="display:none"'?>>
+        <div class="box" <?=$hasAirplane==1?'':'style="display:none"'?>>
             <p>出行信息</p>
 
             <p class="p1">请您准确填写出行信息，以免耽误行程</p>

@@ -238,8 +238,9 @@ class UploadService {
                 imagecopyresampled($nImg, $Img, -$IntNW / 1.8, 0, 0, 0, $width, $Dh, $w, $h);
             }
             $ext_arr=explode(".",$Image);
+
             if(strtolower(end($ext_arr))=="png"){
-                $Image=substr(0,strlen($Image-3))."jpg";
+                $Image=substr($Image,0,strlen($Image)-3)."jpg";
             }
             imagejpeg($nImg, $Image);
             return Code::statusDataReturn(Code::SUCCESS,$Image);

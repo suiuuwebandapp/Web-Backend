@@ -179,7 +179,6 @@ class UserOrderController extends  CController{
             $travelInfo=$tripService->getTravelTripInfoById($tripId);
             $tripInfo=$travelInfo['info'];
             $tripPriceList=$travelInfo['priceList'];
-            $tripPublisherList=$travelInfo['publisherList'];
             $tripServiceList=$travelInfo['serviceList'];
 
             $orderTripInfoJson=json_encode($travelInfo);//订单详情
@@ -276,7 +275,6 @@ class UserOrderController extends  CController{
             $tripService=new TripService();
             $travelTripInfo=$tripService->getTravelTripInfoById($tripId);
             $tripInfo=$travelTripInfo['info'];
-            $tripPublisherList=$travelTripInfo['publisherList'];
             $trafficInfo=$travelTripInfo['trafficInfo'];
             $scheduledDay=0;
             $totalPrice=0;
@@ -318,9 +316,7 @@ class UserOrderController extends  CController{
                 if($tempType=="car"){
                     $tempPrice=$trafficInfo['carPrice'];
                 }else{
-                    $nightStartNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeStart']);
-                    $nightEndNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeEnd']);
-                    if($timeNumber>$nightStartNumber&&$timeNumber<$nightEndNumber){
+                    if(self::isNightServiceTime($tempTime,$trafficInfo['nightTimeStart'],$trafficInfo['nightTimeEnd'])){
                         $tempPrice=intval($trafficInfo['airplanePrice'])+intval($trafficInfo['nightServicePrice']);
                     }else{
                         $tempPrice=$trafficInfo['airplanePrice'];
@@ -386,6 +382,35 @@ class UserOrderController extends  CController{
             return $this->redirect(['/result', 'result' => '系统未知异常']);
         }
     }
+
+
+    /**
+     * 判断是否是夜间服务时间
+     * @param $choseTime
+     * @param $startTime
+     * @param $endTime
+     * @return bool
+     */
+    private function isNightServiceTime($choseTime,$startTime,$endTime) {
+
+        $isNight=false;
+        //如果结束时间大于开始时间 那么是正常情况
+        if($choseTime==$startTime||$choseTime==$endTime){
+            return true;
+        }
+        if(DateUtils::compareTime($endTime,$startTime)){
+            if(DateUtils::compareTime($choseTime,$startTime)&&!DateUtils::compareTime($choseTime,$endTime)){
+                $isNight=true;
+            }
+        }else{
+            if((DateUtils::compareTime($choseTime,$startTime)&&!DateUtils::compareTime($choseTime,$endTime,1))
+                ||(!DateUtils::compareTime($choseTime,$startTime,1)&&DateUtils::compareTime($endTime,$choseTime))){
+                $isNight=true;
+            }
+        }
+        return $isNight;
+    }
+
 
     public function actionToPay()
     {

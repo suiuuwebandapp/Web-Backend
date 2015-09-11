@@ -99,9 +99,9 @@ function initTopMessage(){
     }
 
     $(".search-btn").bind("click",function(){
-        var search=$("#search-ipt").val();
+        var search=$("#search").val();
         if(search!=""){
-            window.location.href="/search?s="+search;
+            window.location.href="/view-trip/list?s="+search;
         }
     });
 

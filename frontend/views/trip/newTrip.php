@@ -32,7 +32,7 @@
 
 
 
-
+<input type="hidden" id="tripId" />
 <div class="bjy clearfix" id="bjy-box">
     <ul id="bz">
         <li class="active"><a href="javascript:;">上传封面</a></li>
@@ -41,6 +41,8 @@
         <li><a href="javascript:;">设置价格</a></li>
         <li><a href="javascript:;">详情描述</a></li>
     </ul>
+    <p style="display: none" id="autoSaveTip" class="auto_save_tip">自动保存成功...</p>
+
     <div class="bjy-list clearfix">
 
         <!--step1-->
@@ -264,7 +266,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <a href="###" class="jian"></a>
+                            <a href="javascript:;" class="jian"></a>
                         </dd>
                     </dl>
 
@@ -375,7 +377,7 @@
         <p id="show_img_tip">正在上传...</p>
         <img id="img_origin" style="display: none"/>
     </div>
-    <a href="###" class="btn sure" id="show_img_confirm">确定</a>
+    <a href="javascript:;" class="btn sure" id="show_img_confirm">确定</a>
     <a href="javascript:;" class="btn cancle" id="show_img_cancel">取消</a>
 </div>
 
@@ -437,7 +439,7 @@
         //初始化上传封面图
     });
 
-
+    var autoSaveInterval;
     var NewTrip = function () {
 
         var specialList=[];
@@ -835,6 +837,10 @@
                 initTimePicker();
                 initTripTag();
                 initBtnClick();
+
+                autoSaveInterval=window.setInterval(function(){
+                    NewTrip.autoSaveTrip();
+                },10000);
             },
             showChoseSpecialDiv:function(){
                 var html='';
@@ -938,10 +944,180 @@
             },
 
             /**
+             * 自动保存随游
+             * @param saveType
+             */
+            autoSaveTrip: function () {
+                var tripId=$("#tripId").val();
+                var title = $("#title").val();
+                var titleImg = $("#titleImg").attr("src");
+                var intro = title;
+
+                var countryId = $("#countryId").val();
+                var cityId = $("#cityId").val();
+                var scenicList = new Array();
+                var picList = new Array();
+
+                var basePrice = $("#basePrice").val();
+                var basePriceType = $("#basePriceType").val();
+                var peopleCount = $("#peopleCount").val();
+                var stepPriceList = new Array();
+                var serviceList = new Array();
+                var includeDetailList = new Array();
+                var unIncludeDetailList = new Array();
+                var beginTime = $("#beginTime").val();
+                var endTime = $("#endTime").val();
+                var tripLong = $("#tripLong").val();
+                var tripKind = $("#tripKind").val();
+
+                var info = $("#info").val();
+                var tagList = new Array();
+                var cusTagList=new Array();
+                var highlightList = new Array();
+                var specialList=new Array();
+
+
+                var error = false;
+                //TAB 1验证
+                if (title == "") {
+                    error = true;
+                }
+                if (intro == "") {
+                    error = true;
+                }
+                if (titleImg == "") {
+                    error = true;
+                }
+                if (error) {
+                    return;
+                }
+
+
+                $("#scenicList input").each(function () {
+                    var title = $(this).val();
+                    var lon = $(this).attr("lon");
+                    var lat = $(this).attr("lat");
+                    if(lon != "" && lon != undefined && lat != "" && lat != undefined) {
+                        var scenic = [title, lon, lat];
+                        scenicList.push(scenic);
+                    }
+                });
+
+                //TAB 4验证
+                $("#upload_div a[class='imgs'][id!='uploadPic'] img").each(function () {
+                    picList.push($(this).attr("src"));
+                });
+
+                $("#stepDiv p").each(function () {
+                    var ipts = $(this).find("input");
+                    var min = $(ipts).eq(0).val();
+                    var max = $(ipts).eq(1).val();
+                    var price = $(ipts).eq(2).val();
+                    if (min != "" && max != "" && price != "") {
+                        var stepPrice = [min, max, price];
+                        stepPriceList.push(stepPrice);
+                    }
+                });
+                $("#stepDl dd").each(function () {
+                    var ipts = $(this).find("input");
+                    var service = $(ipts).eq(0).val();
+                    var price = $(ipts).eq(1).val();
+                    var unit = $(this).find("select").val();
+                    if (service != "" && price != "" && unit != "") {
+                        var serviceInfo = [service, price, unit];
+                        serviceList.push(serviceInfo);
+                    }
+                });
+                $("#include_detail input").each(function () {
+                    var name = $(this).val();
+                    if (name != "") {
+                        includeDetailList.push(name);
+                    }
+                });
+                $("#uninclude_detail input").each(function () {
+                    var name = $(this).val();
+                    if (name != "") {
+                        unIncludeDetailList.push(name);
+                    }
+                });
+
+                $("#tagsUl li").each(function () {
+                    if ($(this).hasClass("active-bj")) {
+                        if($(this).attr("type")=="cus"){
+                            cusTagList.push($(this).html());
+                        }else{
+                            tagList.push($(this).html());
+                        }
+
+                    }
+                });
+
+                $("#highlight_div input").each(function () {
+                    var value = $(this).val();
+                    if (value != "") {
+                        highlightList.push(value);
+                    }
+                });
+
+                $("#tripSpecialList li").each(function(){
+                    var special_list_name=$(this).find("h3").attr("data");
+                    var special_list_info=$(this).find("p[class='special_list_info']").attr("data");
+                    var special_list_img=$(this).find("a[class='pic']").find("img").attr("src");
+                    var special=[special_list_name,special_list_info,special_list_img];
+                    specialList.push(special);
+                });
+
+
+                $.ajax({
+                    url: '/trip/auto-save-trip',
+                    type: 'post',
+                    data: {
+                        tripId:tripId,
+                        title: title,
+                        titleImg: titleImg,
+                        intro: intro,
+                        countryId: countryId,
+                        cityId: cityId,
+                        scenicList: scenicList,
+                        picList: picList,
+                        basePrice: basePrice,
+                        basePriceType: basePriceType,
+                        peopleCount: peopleCount,
+                        stepPriceList: stepPriceList,
+                        serviceList: serviceList,
+                        includeDetailList: includeDetailList,
+                        unIncludeDetailList: unIncludeDetailList,
+                        beginTime: beginTime,
+                        endTime: endTime,
+                        tripLong: tripLong,
+                        tripKind: tripKind,
+                        info: info,
+                        tagList: tagList,
+                        highlightList: highlightList,
+                        specialList:specialList,
+                        cusTagList:cusTagList
+
+                    },
+                    beforeSend: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        data = eval("(" + data + ")");
+                        if(data.status==1){
+                            $("#tripId").val(data.data.tripId);
+                            $("#autoSaveTip").fadeIn(1000).fadeOut(2000);
+                        }
+                        console.info(data);
+                    }
+                });
+            },
+            /**
              * 保存随游
              * @param saveType
              */
             saveTrip: function (saveType) {
+                var tripId=$("#tripId").val();
                 var title = $("#title").val();
                 var titleImg = $("#titleImg").attr("src");
                 var intro = title;
@@ -1123,11 +1299,12 @@
                     selectTab(5);
                     return;
                 }
-
+                window.clearInterval(autoSaveInterval);
                 $.ajax({
-                    url: '/trip/save-trip',
+                    url: '/trip/update-trip',
                     type: 'post',
                     data: {
+                        tripId:tripId,
                         title: title,
                         titleImg: titleImg,
                         intro: intro,

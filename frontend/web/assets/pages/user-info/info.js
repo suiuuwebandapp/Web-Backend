@@ -802,16 +802,24 @@ function buildMyTripHtml(tripList){
         var count=tripInfo.count==null?'':tripInfo.count;
         var info=tripInfo.info;
         var title=tripInfo.title;
+        var startTime=tripInfo.startTime;
         if(info.length>100){
             info=info.substring(0,100)+"...";
         }
         if(title.length>12){
             title=title.substring(0,12)+"...";
         }
+        if(!Main.isNotEmpty(info)){
+            info='&nbsp;';
+        }
+
+        if(!Main.isNotEmpty(startTime)){
+            startTime='&nbsp;';
+        }
         html+='<div class="orderList clearfix">';
         html+=' <img src="/assets/images/delete.fw.png" width="22" height="24" class="rubbish" onclick="deleteTravelTrip('+tripInfo.tripId+',this)">';
         html+=' <dl class="order clearfix">';
-        if(tripInfo.status==TripStatus.TRAVEL_TRIP_STATUS_DRAFT){
+        if(tripInfo.status==TripStatus.TRAVEL_TRIP_STATUS_DRAFT||tripInfo.status==TripStatus.TRAVEL_TRIP_AUTO_SAVE){
             html+='   <dt class="title grey">';
         }else{
             html+='   <dt class="title">';
@@ -821,7 +829,7 @@ function buildMyTripHtml(tripList){
         html+='   <dd>';
         html+='       <span class="pic"><img src="'+tripInfo.titleImg+'"></span>';
         html+='       <span>'+info+'</span>';
-        html+='       <span>'+tripInfo.startTime+'</span>';
+        html+='       <span>'+startTime+'</span>';
         html+='       <span>';
         if(tripInfo.names!=''&&tripInfo.names!=null){
             var names=tripInfo.names.split(",");
@@ -835,11 +843,15 @@ function buildMyTripHtml(tripList){
         html+=' <p>';
         if(tripInfo.status==TripStatus.TRAVEL_TRIP_STATUS_DRAFT){
             html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">编辑发布</a>';
+            html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
+        }else if(tripInfo.status==TripStatus.TRAVEL_TRIP_AUTO_SAVE){
+            html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">继续编辑</a>';
         }else{
-            //<b>'+count+'</b>
-            if(count!=''){ html+='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a>';};
+            html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
+            html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">重新编辑</a>';
+
         }
-        html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
+        if(count!=''){ html+='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a>';};
         html+=' </p>';
         html+='</div>';
     }

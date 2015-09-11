@@ -173,7 +173,7 @@ class SysController extends Controller{
         if (empty($picList)||count($picList)<5) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "至少要有五个图片介绍"));
         }
-        if ($carServiceType==0&&$airServiceType==0) {
+        if ($carServiceType==1&&$airServiceType==1) {
             return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "包车接机服务不能同时为空"));
         }
 

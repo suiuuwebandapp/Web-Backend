@@ -47,7 +47,7 @@
             <h3 class="title">联系我们</h3>
             <ul class="ul01 clearfix">
                 <li>
-                    <p class="p1">申请成为海外</p>
+                    <p class="p1">申请成为海外导游</p>
                     <p>
                         QQ：1295913524<br>
                         邮箱：jiejun.he@suiuu.com<br>
@@ -80,7 +80,7 @@
                 </li>
                 <li>
                     <p>随游新浪微博官方账号</p>
-                    <img src="/assets/images/weibocoda.png" width="121" height="121">
+                    <img src="/assets/images/weiboCoda.png" width="121" height="121">
                 </li>
                 <li>
                     <p>豆瓣,Facebook官方主页即将开放</p>

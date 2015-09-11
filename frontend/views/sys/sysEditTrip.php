@@ -832,6 +832,7 @@
                 $(".mask").hide();
                 $(".syBj2Pro01").hide();
             });
+
             $("#scenicNext").bind("click",function(){
                 var country=$("#countryId").find("option:selected").text();
                 var city=$("#cityId").find("option:selected").text();

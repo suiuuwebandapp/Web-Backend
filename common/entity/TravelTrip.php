@@ -15,6 +15,8 @@ class TravelTrip {
     const TRAVEL_TRIP_STATUS_NORMAL=1;//随游状态：正常
     const TRAVEL_TRIP_STATUS_DRAFT=2; //随游状态：草稿
     const TRAVEL_TRIP_STATUS_DELETE=3;//随游状态：已删除
+    const TRAVEL_TRIP_STATUS_AUTO_SAVE=4;//随游状态：自动保存
+
 
     const TRAVEL_TRIP_TIME_TYPE_DAY=0; //随游时长：天
     const TRAVEL_TRIP_TIME_TYPE_HOUR=1;//随游时长：小时

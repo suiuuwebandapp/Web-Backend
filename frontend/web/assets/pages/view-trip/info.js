@@ -29,9 +29,13 @@ function scrollTo() {
     });
 }
 
-function compareTime(time1,time2){
+function compareTime(time1,time2,addDate){
     time1="1990-01-01 "+time1;
-    time2="1990-01-01 "+time2;
+    if(Main.isNotEmpty(addDate)){
+        time2="1990-01-02 "+time2;
+    }else{
+        time2="1990-01-01 "+time2;
+    }
 
     time1 = time1.replace(/-/g,"/");
     time2 = time2.replace(/-/g,"/");
@@ -39,11 +43,29 @@ function compareTime(time1,time2){
     var d1 = new Date(time1);
     var d2 = new Date(time2);
 
-    if(d1.getTime()>d2.getTime()){
+    if(d1.getTime()>=d2.getTime()){
         return true;
     }else{
         return false;
     }
+}
+
+function isNightServiceTime(choseTime,startTime,endTime) {
+    var isNight=false;
+    //如果结束时间大于开始时间 那么是正常情况
+    if(choseTime==startTime||choseTime==endTime){
+        return true;
+    }
+    if(compareTime(endTime,startTime)){
+        if(compareTime(choseTime,startTime)&&!compareTime(choseTime,endTime)){
+            isNight=true;
+        }
+    }else{
+        if((compareTime(choseTime,startTime)&&!compareTime(choseTime,endTime,1))||(!compareTime(choseTime,startTime,1)&&compareTime(endTime,choseTime))){
+            isNight=true;
+        }
+    }
+    return isNight;
 }
 
 function initTrafficOrder() {
@@ -88,11 +110,12 @@ function initTrafficOrder() {
 
 
         if(serviceType=='airplane_come'||serviceType=='airplane_send'){
-            if(compareTime(orderTime,nightTimeStart)&&compareTime(nightTimeEnd,orderTime)){
+            if(isNightServiceTime(orderTime,nightTimeStart,nightTimeEnd)){
                 price=parseInt(airplanePrice)+parseInt(nightServicePrice);
             }else{
                 price=airplanePrice;
             }
+
         }else{
             price=carPrice;
         }
@@ -209,8 +232,10 @@ function initScroll(){
 
         if (fixHeight > maxHeight) {
             $(".sydetail .web-right").hide();
+            if(type!=3){
+                $(".dtpicker-overlay").hide();
+            }
             $(".datepicker").hide();
-            $(".dtpicker-overlay").hide();
         } else {
             $(".sydetail .web-right").show();
         }
@@ -222,6 +247,7 @@ function initScroll(){
             $(".sylx-xiangxi").css("position", "fixed");
         }
         if(type==3){
+            $(".dtpicker-overlay").css('position','fixed');
         }else{
             resetDatePicker();
         }

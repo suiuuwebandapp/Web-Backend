@@ -20,6 +20,8 @@
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <script type="text/javascript" src="/assets/js/xcbjy.js"></script>
 
+
+<input type="hidden" id="tripId"/>
 <div class="jtbjy clearfix" id="bjy-box">
     <ul id="bz">
         <li class="active"><a href="javascript:;">上传封面</a></li>
@@ -28,6 +30,7 @@
         <li><a href="javascript:;">设置价格</a></li>
         <li><a href="javascript:;">服务详情</a></li>
     </ul>
+    <p style="display: none" id="autoSaveTip" class="auto_save_tip">自动保存成功...</p>
     <div class="bjy-list clearfix">
         <!--step1-->
         <div class="bjy-bj1 bjy-bj" style=" display:block;">
@@ -349,10 +352,9 @@
 
         NewTrafficTrip.initTrip();
 
-
     });
 
-
+    var autoSaveInterval;
     var NewTrafficTrip = function(){
 
         /**
@@ -630,6 +632,7 @@
         return {
 
             initTrip: function () {
+
                 initCountryCity();
                 initDefaultRadio();
                 initRadioClick();
@@ -637,12 +640,154 @@
                 initCarUploadImg();
                 initValidate();
                 initNumberInput();
+
+                autoSaveInterval=window.setInterval(function(){
+                    NewTrafficTrip.autoSaveTrip();
+                },10000);
+            },
+            autoSaveTrip: function () {
+                var tripId = $("#tripId").val();
+                var title = $("#title").val();
+                var titleImg = $("#titleImg").attr("src");
+                var countryId = $("#countryId").val();
+                var cityId = $("#cityId").val();
+                var licenseYear=$("#licenseYear").val();
+                var licenseMonth=$("#licenseMonth").val();
+                var maxUserCount = $("#maxUserCount").val();
+                var scheduledType=$("input:radio[name='scheduledRadio']:checked").val();
+                var scheduledTime=$("#scheduledTime").val();
+
+                var carType=$("#carType").val();
+                var seatCount=$("#seatCount").val();
+                var space=$("#space").val();
+                var allowSmoke=$("input:radio[name='allowSmokeRadio']:checked").val();
+                var allowPet=$("input:radio[name='allowPetRadio']:checked").val();
+                var childSeat=$("input:radio[name='childseatRadio']:checked").val();
+                var picList = new Array();
+
+                var carServiceType=0;
+                if($("#carServiceRadio").attr("checked")=="checked"){
+                    carServiceType=1;
+                }
+                var carBasePrice=$("#carBasePrice").val();
+                var serviceTime=$("#serviceTime").val();
+                var serviceMileage=$("#serviceMileage").val();
+                var overTime=$("#overTime").val();
+                var overMileage=$("#overMileage").val();
+
+                var airServiceType=0;
+                if($("#airplaneServiceRadio").attr("checked")=="checked"){
+                    airServiceType=1;
+                }
+                var airBasePrice=$("#airBasePrice").val();
+
+                var nightPriceType=$("input:radio[name='nightPriceRadio']:checked").val();
+                var nightTimeBegin=$("#nightTimeBegin").val();
+                var nightTimeEnd=$("#nightTimeEnd").val();
+                var nightTimePrice=$("#nightTimePrice").val();
+
+                var info = $("#info").val();
+                var serviceTimeType=$("input:radio[name='serviceTimeRadio']:checked").val();
+                var serviceTimeBegin=$("#serviceTimeBegin").val();
+                var serviceTimeEnd=$("#serviceTimeEnd").val();
+                var includeDetailList = new Array();
+                var unIncludeDetailList = new Array();
+
+
+                var error = false;
+
+
+                //TAB 1验证
+                if (title == "") {
+                    error = true;
+                }
+                if (titleImg == "") {
+                    error = true;
+                }
+                if (error) {
+                    return;
+                }
+
+                $(".sevBox input:checkbox").each(function(){
+                    var temp=$(this).next().html();
+                    if($(this).is(':checked')){
+                        includeDetailList.push(temp);
+                    }else{
+                        unIncludeDetailList.push(temp);
+                    }
+                });
+                $("#include_detail input").each(function () {
+                    var name = $(this).val();
+                    if (name != "") {
+                        includeDetailList.push(name);
+                    }
+                });
+                $("#uninclude_detail input").each(function () {
+                    var name = $(this).val();
+                    if (name != "") {
+                        unIncludeDetailList.push(name);
+                    }
+                });
+
+                var license=licenseYear+":"+licenseMonth+":01";
+                $.ajax({
+                    url: '/trip/auto-save-traffic-trip',
+                    type: 'post',
+                    data: {
+                        tripId:tripId,
+                        title: title,
+                        titleImg: titleImg,
+                        countryId: countryId,
+                        cityId: cityId,
+                        license: license,
+                        picList: picList,
+                        maxUserCount: maxUserCount,
+                        scheduledType: scheduledType,
+                        scheduledTime: scheduledTime,
+                        carType: carType,
+                        seatCount: seatCount,
+                        space: space,
+                        allowSmoke: allowSmoke,
+                        allowPet: allowPet,
+                        childSeat: childSeat,
+                        carServiceType: carServiceType,
+                        carBasePrice: carBasePrice,
+                        serviceTime: serviceTime,
+                        serviceMileage: serviceMileage,
+                        overTime: overTime,
+                        overMileage:overMileage,
+                        airServiceType:airServiceType,
+                        nightPriceType:nightPriceType,
+                        airBasePrice:airBasePrice,
+                        nightTimeBegin:nightTimeBegin,
+                        nightTimeEnd:nightTimeEnd,
+                        nightTimePrice:nightTimePrice,
+                        info:info,
+                        serviceTimeType:serviceTimeType,
+                        serviceTimeBegin:serviceTimeBegin,
+                        serviceTimeEnd:serviceTimeEnd,
+                        includeDetailList:includeDetailList,
+                        unIncludeDetailList:unIncludeDetailList
+                    },
+                    beforeSend: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        data = eval("(" + data + ")");
+                        if (data.status == 1) {
+                            $("#tripId").val(data.data.tripId);
+                            $("#autoSaveTip").fadeIn(1000).fadeOut(2000);;
+                        }
+                    }
+                });
             },
             /**
              * 保存随游
              * @param saveType
              */
             saveTrip: function (saveType) {
+                var tripId = $("#tripId").val();
                 var title = $("#title").val();
                 var titleImg = $("#titleImg").attr("src");
                 var countryId = $("#countryId").val();
@@ -833,10 +978,12 @@
                 });
 
                 var license=licenseYear+":"+licenseMonth+":01";
+                window.clearInterval(autoSaveInterval);
                 $.ajax({
-                    url: '/trip/save-traffic-trip',
+                    url: '/trip/update-traffic-trip',
                     type: 'post',
                     data: {
+                        tripId:tripId,
                         title: title,
                         titleImg: titleImg,
                         countryId: countryId,

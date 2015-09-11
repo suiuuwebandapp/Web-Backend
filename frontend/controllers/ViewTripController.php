@@ -124,6 +124,13 @@ class ViewTripController extends UnCController{
         $tripId=\Yii::$app->request->get("trip");
         $returnUrl="info";$travelInfo=null;
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
+        //如果是未发布的随游 判断当前用户是否是创建人
+        if($travelInfo['info']['status']!=TravelTrip::TRAVEL_TRIP_STATUS_NORMAL){
+            $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
+            if($travelInfo['info']['createPublisherId']!=$userPublisherId){
+                return $this->redirect(['/result', 'result' => '您没有权限查看此随游']);
+            }
+        }
         if($travelInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
             $returnUrl="trafficInfo";
         }
