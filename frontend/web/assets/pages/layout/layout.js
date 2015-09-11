@@ -90,7 +90,11 @@ function initTopMessage(){
     //如果用户登录了，查询是否有新私信
     if(isLogin==1){
         initSocketConnection();
-        setTopUnReadMessageCount(topNewMessageCount);
+        if(topNewMessageCount>0){
+            $("#topNewMessageCount").html(topNewMessageCount);
+            $("#topNewMessageCount").show();
+        }
+        //setTopUnReadMessageCount(topNewMessageCount);
 
         //initUserMessageInfoList();
         //topMessageInterval=window.setInterval(function(){

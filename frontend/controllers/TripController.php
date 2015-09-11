@@ -698,12 +698,12 @@ class TripController extends CController
         $unIncludeDetailList = \Yii::$app->request->post("unIncludeDetailList", "");
         $status = \Yii::$app->request->post("status", TravelTrip::TRAVEL_TRIP_STATUS_DRAFT);
 
-        if($carServiceType=='true'){
+        if($carServiceType=='true'||$carServiceType==1){
             $carServiceType=1;
         }else{
             $carServiceType=0;
         }
-        if($airServiceType=='true'){
+        if($airServiceType=='true'||$airServiceType==1){
             $airServiceType=1;
         }else{
             $airServiceType=0;

@@ -152,22 +152,22 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
                 <a href="javascript:;" id="payBtn" class="pay_btn">立即支付</a>
 
             </div>
-            <div class="finish clearfix" style="display: none;" id="result">
-                <p class="title">支付成功！</p>
-
-                <p class="tip">您可以在<a href="/user-info?myOrderManager"> 个人中心-我的订单 </a>查看您的订单状态</p>
-
-                <p>分享这条随游</p>
-                <ul class="share">
-                    <li>
-                        <div class="bdsharebuttonbox" data-tag="share_1">
-                            <a data-cmd="tsina" href="javascript:;" class="icon sina"></a>
-                            <a data-cmd="weixin" href="javascript:;" class="icon weixin"></a>
-                        </div>
-                    </li>
-                </ul>
-                <a href="/user-info?tab=myOrderManager" class="btn">确定</a>
-            </div>
+<!--            <div class="finish clearfix" style="display: none;" id="result">-->
+<!--                <p class="title">支付成功！</p>-->
+<!---->
+<!--                <p class="tip">您可以在<a href="/user-info?myOrderManager"> 个人中心-我的订单 </a>查看您的订单状态</p>-->
+<!---->
+<!--                <p>分享这条随游</p>-->
+<!--                <ul class="share">-->
+<!--                    <li>-->
+<!--                        <div class="bdsharebuttonbox" data-tag="share_1">-->
+<!--                            <a data-cmd="tsina" href="javascript:;" class="icon sina"></a>-->
+<!--                            <a data-cmd="weixin" href="javascript:;" class="icon weixin"></a>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--                <a href="/user-info?tab=myOrderManager" class="btn">确定</a>-->
+<!--            </div>-->
         <?php } ?>
 
     </div>
@@ -269,7 +269,7 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
 
 <div align="center" id="qrcode">
 </div>
-
+<div class="orderMask" style="width: 100%;height: 100%;background: rgba(0,0,0,0.8);position: fixed;top: 0;left: 0;z-index: 999;display: none"></div>
 <div id="weixinPayWindow" class="wzhifu screens" style="z-index: 1001">
     <h2>微信支付</h2>
 
@@ -287,7 +287,27 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
     </div>
     <a href="javascript:;" onclick="hideWxPay()" class="back"> &nbsp;< &nbsp;选择其他支付方式 </a>
 </div>
-
+<div class="jtpayPro01" style="display: none;z-index: 1001;">
+    <a href="javascript:;" class="close" id="closePayWait"></a>
+    <h2 class="title">已跳转到第三方支付页面，在付款完成前请勿关闭此页面</h2>
+    <p>如付款失败，建议重新选择付款方式</p>
+    <div class="maths clearfix">
+        <div class="zfdiv">
+            <b class="icon zfb"></b>
+            <input type="radio" id="radio04" name="pay"><label for="radio04" style="background-position: 0px 10px;"></label>
+            <b class="icon weixin"></b>
+            <input type="radio" id="radio05" name="pay"><label for="radio05" style="background-position: 0px 10px;"></label>
+        </div>
+    </div>
+</div>
+<div class="jtpayPro02" style="display: none;z-index: 1001;">
+    <a href="javascript:;" class="close" id="closePaySuccess"></a>
+    <span class="sucess"></span>
+    <p class="tip">您已成功付款<span>￥<?=$orderInfo->totalPrice?></span>元</p>
+    <a href="/user-order/view-order-info?orderNumber=<?= $orderInfo->orderNumber ?>" class="btn">查看此订单的详情</a>
+    <a href="/user-info?tab=myOrderManager" class="btn">查看其他订单</a>
+    <a href="/" class="btn">返回主页</a>
+</div>
 
 <script src="/assets/other/weixin/js/qrcode.js"></script>
 
@@ -299,6 +319,22 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
     var hasAirplane =<?=$hasAirplane?>;
     $(document).ready(function () {
         initBtnClick();
+        $("#closePayWait").bind("click",function(){
+            $(".jtpayPro01").hide();
+            $(".orderMask").hide();
+        });
+        $("#closePaySuccess").bind("click",function(){
+            $(".jtpayPro02").hide();
+            $(".orderMask").hide();
+        });
+        $("#radio04").bind("click",function(){
+            window.open("/pay?number=" + $("#orderNumber").val() + "&type=1");
+        });
+        $("#radio05").bind("click",function(){
+            wxPay($("#orderNumber").val());
+            $(".jtpayPro01").hide();
+            $(".orderMask").hide();
+        });
     });
 
     function initBtnClick() {
@@ -382,12 +418,15 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
                             wxPay(orderNumber);
                         } else if (payType == 1) {
                             window.open("/pay?number=" + orderNumber + "&type=1");
+                            $(".jtpayPro01").show();
+                            $(".orderMask").show();
                             interval = window.setInterval(function () {
                                 getStatus();
                             }, 2000);
                         } else {
                             Main.showTip("请选择支付方式");
                         }
+
                     } else {
                         alert(data.data);
                     }
@@ -445,9 +484,11 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
             success: function (data) {
                 data = eval("(" + data + ")");
                 if (data.status == 1) {
-                    $("#result").show();
-                    $("#pay_div").hide();
                     hideWxPay();
+                    $("#pay_box").hide();
+                    $(".jtpayPro01").hide();
+                    $(".orderMask").show();
+                    $(".jtpayPro02").show();
                     window.clearInterval(interval);
                 }
             }

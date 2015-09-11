@@ -10,11 +10,11 @@ $(function(){
 		$('input[type=checkbox]').click(function(e) {
 			if( $(this).prop("checked")){
 				$(this).next('label').css('background-position','0 -157px')
-				
+
 			}else{
 				$(this).next('label').css('background-position','0 -102px')
 			}
-			
+
         });
 })
 
@@ -26,11 +26,11 @@ $(function(){
 		$('input[type=radio]').click(function(e) {
 			if( $(this).prop("checked")){
 				$(this).next('label').css('background-position','0 -47px').siblings('label').css('background-position','0 10px')
-				
+
 			}else{
 				$(this).next('label').css('background-position','0 10px')
 			}
-			
+
         });
 })
 
@@ -50,7 +50,7 @@ $(function(){
 			$('.sydetailNav').removeClass('fixed')
 			$('.sydetail .web-right').removeClass('fixed')
 		}
-        
+
     });
 
 })
@@ -68,14 +68,14 @@ $(function(){
 			$('#aboutCon-out .aboutNav-out').removeClass('fixed')
 			$('#aboutCon-out .leftNav').removeClass('fixed')
 		}
-        
+
     });
-	
+
 	$('#aboutCon-out .aboutCon .leftNav li .drop02 a').click(function(e) {
-			$(this).addClass('active').siblings().removeClass('active');        
-		
-		
-		
+			$(this).addClass('active').siblings().removeClass('active');
+
+
+
     });
 
 })
@@ -99,7 +99,7 @@ $(function(){
         appDownloadClosed = true;
     });
 });
-	
+
 
 
 /*----nav-index登录、注册弹框-----*/
@@ -110,7 +110,7 @@ $(function(){
         $('.myLogins .a2,.myLogins .a3').removeClass('active');
         $('.mask,.myLogins').toggle();
         $('.myLogins .box1').css('display','block').siblings().css('display','none');
-		
+
     });
 	$('.nav-out .nav-right ol .logins #denglu').click(function(e) {
         $('.myLogins .a2').addClass('active');
@@ -148,6 +148,9 @@ $(function(){
     var timer=null;
     var documentWidth=$(document).width();
     var left=0;
+    if($('.sydetailBanner .banner ul').size()==0){
+        return;
+    }
     var loadImgTimer=window.setInterval(function(){
         var loadSuccess=true;
         maxWidth=0;
@@ -252,7 +255,7 @@ $(function(){
 			}else{
 			 $(this).addClass('active');
 		}
-		
+
     });
 
 })
@@ -277,8 +280,8 @@ $(function(){
 	$('#finish').outerHeight(myh+'px')
 	$('.forgotPaw').outerHeight(myh+'px')
 	$('.syRegisterT').outerHeight(myh+'px')
-	
-	
+
+
 })
 /*-----关闭浮层---*/
 $(function(){
@@ -289,7 +292,7 @@ $(function(){
         $(this).css('display','none')
         $('.screens').css('display','none')
     });
-	
+
 
 })
 
@@ -310,110 +313,110 @@ $(function(){
 $(function(){
 	$('.bjy-bj1 .name').hover(function(e) {
         $('.bjy-bj1 .bj1Pro01').css('display','block');
-		
+
     },function(){
         $('.bjy-bj1 .bj1Pro01').css('display','none');
     });
 	$('.bjy-bj1 .fPic').hover(function(e) {
         $('.bjy-bj1 .bj1Pro02').css('display','block');
-		
+
     },function(){
         $('.bjy-bj1 .bj1Pro02').css('display','none');
     });
-	
-	
+
+
 	$('.bjy-bj2 .jings').hover(function(e) {
         $('.bjy-bj2 .bj2Pro01').css('display','block');
-		
+
     },function(){
         $('.bjy-bj2 .bj2Pro01').css('display','none');
     });
-	
-	
+
+
 	$('.bjy-bj4 .price1').hover(function(e) {
         $('.bjy-bj4 .bj4Pro01').css('display','block');
-		
+
     },function(){
         $('.bjy-bj4 .bj4Pro01').css('display','none');
     });
-	
+
 	$('.bjy-bj4 .price2').hover(function(e) {
         $('.bjy-bj4 .bj4Pro02').css('display','block');
-		
+
     },function(){
         $('.bjy-bj4 .bj4Pro02').css('display','none');
     });
-	
+
 	$('.bjy-bj4 .creat').hover(function(e) {
         $('.bjy-bj4 .bj4Pro03').css('display','block');
-		
+
     },function(){
         $('.bjy-bj4 .bj4Pro03').css('display','none');
     });
-	
+
 	$('.bjy-bj4 .start-time').hover(function(e) {
         $('.bjy-bj4 .bj4Pro04').css('display','block');
-		
+
     },function(){
         $('.bjy-bj4 .bj4Pro04').css('display','none');
     });
-	
+
 	$('.bjy-bj5 .box01').hover(function(e) {
         $('.bjy-bj5 .bj5Pro01').css('display','block');
-		
+
     },function(){
         $('.bjy-bj5 .bj5Pro01').css('display','none');
     });
-	
+
 	$('.bjy-bj5 .box02').hover(function(e) {
         $('.bjy-bj5 .bj5Pro02').css('display','block');
-		
+
     },function(){
         $('.bjy-bj5 .bj5Pro02').css('display','none');
     });
-	
+
 	$('.bjy-bj5 .box03').hover(function(e) {
         $('.bjy-bj5 .bj5Pro03').css('display','block');
-		
+
     },function(){
         $('.bjy-bj5 .bj5Pro03').css('display','none');
     });
-	
-	
+
+
 	$('.bjy-bj5 .biaoqian ul li.add').click(function(e) {
         $('.bjy-bj5 .bj5Add,.mask').css('display','block');
     });
 	$('.bjy-bj5 .biaoqian a.addL').click(function(e) {
         $('.bjy-bj5 .tog').slideToggle();
     });
-	
-	
-	
-	
+
+
+
+
    /*-----交通编辑提示-----*/
-   
+
 	$('.bjy-bj3 .car').hover(function(e) {
         $('.bjy-bj3 .bj3Pro01').css('display','block');
-		
+
     },function(){
         $('.bjy-bj3 .bj3Pro01').css('display','none');
     });
-      
+
 	$('.bjy-bj3 .pack').hover(function(e) {
         $('.bjy-bj3 .bj3Pro02').css('display','block');
-		
+
     },function(){
         $('.bjy-bj3 .bj3Pro02').css('display','none');
     });
-	
+
 	$('.bjy-bj3 .carPic').hover(function(e) {
         $('.bjy-bj3 .bj3Pro03').css('display','block');
-		
+
     },function(){
         $('.bjy-bj3 .bj3Pro03').css('display','none');
     });
-	
-	
+
+
 })
 
 /*-----sy资料补全页name提示-----*/
@@ -421,7 +424,7 @@ $(function(){
 $(function(){
 	$('.syInformation .forms .name').hover(function(e) {
         $('.syInformation .forms .name .nameTip').css('display','block');
-		
+
     },function(){
         $('.syInformation .forms .name .nameTip').css('display','none');
     });
@@ -432,7 +435,7 @@ $(function(){
 $(function(){
 	$('.sycon .myInformation .past01 .box .tog .adds').click(function(e) {
 		$(this).parents().children('.togT').toggle();
-        
+
     })
 
 })

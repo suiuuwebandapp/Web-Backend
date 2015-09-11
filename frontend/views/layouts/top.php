@@ -75,11 +75,12 @@
                                                 <p>给您发了私信</p>
                                             </a>
                                         </li>
+                                        <?php ?>
                                         <?php if($key==$maxMessageCount){$moreUserMessage=true;}?>
                                     <?php } ?>
                                 <?php }else{ $noUserMessage=true;} ?>
-                                <li id="noUserMessage" <?=$noUserMessage?'':'style="display:none"' ?>><p class="message_p_center">暂无私信消息</p></li>
-                                <li id="moreUserMessage" <?=$moreUserMessage?'':'style="display:none"' ?>><a href="/user-info?tab=myMessage"><p class="message_p_center">...</p> </a></li>
+                                <li id="noUserMessage" <?=$noUserMessage?'style="display:block"':'style="display:none"' ?>><p class="message_p_center">暂无私信消息</p></li>
+                                <li id="moreUserMessage" <?=$moreUserMessage?'style="display:block"':'style="display:none"' ?>><a href="/user-info?tab=myMessage"><p class="message_p_center">...</p> </a></li>
                             </ul>
                             <ul id="unReadSystemMessageList" style="display: none">
                                 <?php $noSysMessage=false;$moreSysMessage=false; ?>
