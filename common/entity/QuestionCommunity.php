@@ -14,6 +14,9 @@ namespace common\entity;
  * @package common\entity
  */
 class QuestionCommunity {
+
+    const PRIMARY_KEY='qId';
+
     /**
      * @var主键id
      */
@@ -62,4 +65,9 @@ class QuestionCommunity {
      * @var int 关注总数
      */
     public $attentionNumber=0;
+
+    /**
+     * @var回答总数
+     */
+    public $aNumber;
 }

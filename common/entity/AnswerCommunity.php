@@ -11,6 +11,8 @@ namespace common\entity;
 
 class AnswerCommunity {
 
+    const PRIMARY_KEY='aId';
+
     /**
      * @var主键回答id
      */
@@ -31,5 +33,9 @@ class AnswerCommunity {
      * @var回答时间
      */
     public $aCreateTime;
+
+    public $type;
+
+    public $zan;
 
 }
