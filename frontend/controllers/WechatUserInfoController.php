@@ -127,7 +127,13 @@ class WechatUserInfoController extends WController {
         $cityList=$countrySer->findCityById($id);
         return json_encode(Code::statusDataReturn(Code::SUCCESS,$cityList));
     }
-
+    public function actionGetCityListById()
+    {
+        $id=Yii::$app->request->get("id");
+        $countrySer=new CountryService();
+        $cityList=$countrySer->getCityList($id,null);
+        return json_encode(Code::statusDataReturn(Code::SUCCESS,$cityList));
+    }
     public function actionUpdateUserInfo()
     {
         $login = $this->loginValid();
@@ -178,6 +184,10 @@ class WechatUserInfoController extends WController {
 
             }
             if (!empty($intro)) {
+                if(strlen($intro) > 50)
+                {
+                    return $this->redirect('/we-chat/error?str=签名过长');
+                }
                 $userInfo->intro = $intro;
 
             }

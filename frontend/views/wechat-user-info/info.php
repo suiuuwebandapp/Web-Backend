@@ -88,7 +88,7 @@
                     ?>
                 </li>
             </ul>
-            <p class="tit"><span>联系方式</span> 为保证更好的服务，请完善您的联系方式</p>
+            <p class="tit"><span>联系方式</span> </p>
             <ul class="list">
                 <li  onclick="to('/wechat-user-info/up-view?v=Phone')"><span>手机</span><b><?=empty($userInfo["phone"])?"待完善":$userInfo["phone"]?></b></li>
                 <li onclick="to('/wechat-user-info/up-view?v=Email')"><span>邮箱</span><b><?=empty($userInfo["email"])?"待完善":$userInfo["email"]?></b></li>

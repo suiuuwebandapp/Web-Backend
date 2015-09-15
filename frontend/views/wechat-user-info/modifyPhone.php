@@ -45,7 +45,7 @@
             margin-bottom:10px;
         }
         .accAreaCodeSelect #select2-chosen-1{
-            margin-top: 25px;
+            margin-top: 15px;
         }
         .select2-hidden-accessible{
             display: none;

@@ -42,10 +42,11 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
-        <p class="navTop">工作</p>
+        <p class="navTop">性别</p>
         <a href="javascript:;" class="sures" onclick="submitUserInfo()">确定</a>
     </div>
     <div class="con cshezhi_sex clearfix">
+    <div class="loadBack"></div>
         <ul class="list clearfix">
             <li  onclick="selectSex(1)"> <input type="radio" name="sex" id="rad01"><label for="rad01">男</label></li>
             <li onclick="selectSex(0)"><input type="radio" name="sex" id="rad02"><label for="rad02" >女</label></li>

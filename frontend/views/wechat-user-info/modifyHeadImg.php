@@ -57,7 +57,7 @@
                 <form class="avatar-form" action="/wechat-user-info/wechat-upload-head-img" enctype="multipart/form-data" method="post" id="avatar-form">
                 <input id="avatar_src" type="hidden" class="avatar-src" name="avatar_src">
                 <input id="avatar_data" type="hidden" class="avatar-data" name="avatar_data">
-                <label for="file_head">上传头像</label><input type="file" id="file_head" name="file_head" onchange="javascript:setImagePreview();">
+                <label for="file_head">上传头像</label><input type="file" id="file_head" name="file_head"  accept="image/*" onchange="javascript:setImagePreview();">
                 </form>
             </div>
         </div>

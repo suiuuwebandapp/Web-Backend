@@ -71,7 +71,7 @@
         <a href="javascript:;" class="sures" onclick="submitUserInfo()">确定</a>
     </div>
     <div class="con cshezhi_ziliaoSet clearfix">
-        <select id="countryId" name="countryIds" class="accAreaCodeSelect"  required>
+        <select id="countryId" name="countryIds" class="accAreaCodeSelect" placeholder="国家"  required onchange="getCityList()">
             <option value=""></option>
             <?php if($countryList!=null){ ?>
                 <?php foreach ($countryList as $c) { ?>
@@ -84,7 +84,7 @@
                 <?php } ?>
             <?php } ?>
         </select>
-        <select id="cityId" name="cityIds" class="accAreaCodeSelect"  required>
+        <select id="cityId" name="cityIds" class="accAreaCodeSelect"  placeholder="城市" required>
             <option value=""></option>
             <?php if($cityList!=null){ ?>
                 <?php foreach ($cityList as $c) { ?>
@@ -104,6 +104,7 @@
     </form>
 </div>
 <script>
+    var cityId="";
     $(document).ready(function () {
         //初始化区号选择
         $(".accAreaCodeSelect").select2({
@@ -113,8 +114,45 @@
                 return "暂无匹配";
             }
         });
-
+        cityId=$("#cityId").val("");
     });
+    /**
+     * 级联获取城市列表
+     */
+    function  getCityList(){
+        var countryId=$("#countryId").val();
+        if(countryId==""){
+            return;
+        }
+        $("#cityId").empty();
+
+        $("#cityId").append("<option value=''></option>");
+        $("#cityId").val("").trigger("change");
+        $.ajax({
+            url :"/wechat-user-info/get-city-list-by-id?id="+countryId,
+            type:'get',
+            error:function(){
+            },
+            success:function(data){
+                var datas=eval('('+data+')');
+                if(datas.status==1){
+                    var html = "";
+                    for(var i=0;i<datas.data.length;i++){
+                        var city=datas.data[i];
+                        html+='<option value="'+city.id+'">'+city.cname+'</option>';
+                    }
+                    $("#cityId").append(html);
+                    if(cityId!=""){
+                        $("#cityId").val(cityId).trigger("change");
+                    }else{
+                        $("#cityId").val()
+                    }
+                }else{
+                }
+            }
+        });
+    }
+
 
     function submitUserInfo()
     {

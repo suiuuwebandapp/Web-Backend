@@ -64,7 +64,9 @@ $tripType = $tripInfo["info"]["type"];
         </div>
         <?php if(empty($publisherBase)){?>
         <div class="part clearfix">
+            <?php  if($info->status==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_SUCCESS){?>
             <a href="#" class="btnfr02 colOrange">待接单</a>
+            <?php }?>
             <p class="datas">订单创建时间：<span><?php echo $info->createTime?></span></p>
             <p class="numbers">订单号 :<span> <?php echo $info->orderNumber?></span></p>
         </div>
