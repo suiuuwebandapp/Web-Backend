@@ -161,7 +161,7 @@ class WeChat {
     const TEXT_TPL= "<xml>
                         <ToUserName><![CDATA[%s]]></ToUserName>
                         <FromUserName><![CDATA[%s]]></FromUserName>
-                        <CreateTime>%s</CreateTime>
+                        <CreateTime>%d</CreateTime>
                         <MsgType><![CDATA[%s]]></MsgType>
                         <Content><![CDATA[%s]]></Content>
                         <FuncFlag>0</FuncFlag>
@@ -170,7 +170,7 @@ class WeChat {
     const MSG_TPL = "<xml>
                                     <ToUserName><![CDATA[%s]]></ToUserName>
                                     <FromUserName><![CDATA[%s]]></FromUserName>
-                                    <CreateTime>%s</CreateTime>
+                                    <CreateTime>%d</CreateTime>
                                     <MsgType><![CDATA[%s]]></MsgType>
                                     <ArticleCount>%d</ArticleCount>
                                     <Articles>
@@ -179,7 +179,16 @@ class WeChat {
                                     </xml> ";
 
 
-
+//图片消息
+    const IMG_TPL= "<xml>
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%d</CreateTime>
+                    <MsgType><![CDATA[image]]></MsgType>
+                    <Image>
+                    <MediaId><![CDATA[%s]]></MediaId>
+                    </Image>
+                    </xml>";
     /**
      * 发送消息-微信链接接口
      */

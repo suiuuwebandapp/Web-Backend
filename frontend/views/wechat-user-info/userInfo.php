@@ -47,7 +47,9 @@
         <div class="content">
             <div class="topUser clearfix">
                 <div class="top clearfix">
+                    <?php if($userObj->userSign!=$userInfo['userSign']){?>
                     <a href="/wechat-user-center/user-message-info?rUserSign=<?= $userInfo['userSign'];?>" class="chat"></a>
+                    <?php }?>
                     <a href="javascript:;" class="usePic fl">
                         <img src="<?php echo $userInfo['headImg'];?>">
                     </a>

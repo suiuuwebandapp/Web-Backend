@@ -11,10 +11,6 @@
 </head>
 <script>
     var sessionId = '<?=session_id()?>';
-    function newMessage(messageInfo)
-    {
-        $("#left_msg").attr("class","tip");
-    }
 </script>
 <?php if(!empty($userObj)&&!empty($userObj->userSign)){
     ?>
@@ -27,12 +23,12 @@
         <ul class="clearfix" id="messageUl">
             <?php foreach($list as $info){?>
                 <?php if($info['senderId'] == $userSign){?>
-            <li class="zuo clearfix">
+            <li class="you clearfix">
                 <img src="<?php echo isset($userObj->headImg)?$userObj->headImg:"/assets/other/weixin/images/logo01.png" ?>" class="pic">
                 <p class="p1"><?php echo $info['content'];?></p>
             </li>
                     <?php }else{?>
-            <li class="you clearfix">
+            <li class="zuo clearfix">
                 <img src="<?php echo isset($rInfo->headImg)?$rInfo->headImg:"/assets/other/weixin/images/logo01.png" ?>" class="pic">
                 <p class="p1"><?php echo $info['content'];?></p>
             </li>
@@ -56,7 +52,7 @@
         changeHight();
         var headImg=messageInfo.sender_HeadImg;
         var content=messageInfo.content;
-        var str = '<li class="you clearfix">';
+        var str = '<li class="zuo clearfix">';
         str+='<img src="' ;
         str+= headImg;
         str+='" class="pic">';

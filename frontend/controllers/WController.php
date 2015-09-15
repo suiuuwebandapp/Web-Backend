@@ -50,6 +50,13 @@ class WController extends SController {
                     return false;
                 }
                 $this->userObj=$currentUser;
+                //设置聊天SESSION
+                $sessionId=\Yii::$app->getSession()->id;
+                $chatUser=\Yii::$app->redis->get(Code::USER_LOGIN_SESSION_CHAT.$sessionId);
+                if(empty($chatUser)){
+                    \Yii::$app->redis->set(Code::USER_LOGIN_SESSION_CHAT.$sessionId,json_encode($currentUser));
+                    \Yii::$app->redis->expire(Code::USER_LOGIN_SESSION_CHAT.$sessionId,24*60*60);
+                }
                 return true;
             }else if(!empty($cookieSign)){
                 $aes=new Aes();
@@ -59,6 +66,13 @@ class WController extends SController {
                 if(isset($currentUser)){
                     $this->userObj=$currentUser;
                     \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
+                    //设置聊天SESSION
+                    $sessionId=\Yii::$app->getSession()->id;
+                    $chatUser=\Yii::$app->redis->get(Code::USER_LOGIN_SESSION_CHAT.$sessionId);
+                    if(empty($chatUser)){
+                        \Yii::$app->redis->set(Code::USER_LOGIN_SESSION_CHAT.$sessionId,json_encode($currentUser));
+                        \Yii::$app->redis->expire(Code::USER_LOGIN_SESSION_CHAT.$sessionId,24*60*60);
+                    }
                     return true;
                 }else{
                     return false;
@@ -165,11 +179,24 @@ class WController extends SController {
         }
 
     }
+    public function refreshUserInfo()
+    {
+        $this->userBaseService=new UserBaseService();
+        $currentUser=$this->userBaseService->findUserByUserSign($this->userObj->userSign);
+        $this->userObj=$currentUser;
+        \Yii::$app->session->set(Yii::$app->params['weChatSign'],$currentUser);
+        \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
+        $sessionId=\Yii::$app->getSession()->id;
+        \Yii::$app->redis->set(Code::USER_LOGIN_SESSION_CHAT.$sessionId,json_encode($currentUser));
+    }
     public function appRefreshUserInfo()
     {
         $this->userBaseService=new UserBaseService();
         $currentUser=$this->userBaseService->findUserByUserSign($this->userObj->userSign);
         $this->userObj=$currentUser;
         \Yii::$app->session->set(Yii::$app->params['weChatSign'],$currentUser);
+        \Yii::$app->session->set(Code::USER_LOGIN_SESSION,$currentUser);
+        $sessionId=\Yii::$app->getSession()->id;
+        \Yii::$app->redis->set(Code::USER_LOGIN_SESSION_CHAT.$sessionId,json_encode($currentUser));
     }
 }

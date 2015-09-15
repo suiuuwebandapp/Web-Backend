@@ -41,30 +41,45 @@
     <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
-        <p class="navTop">设置</p>
+        <p class="navTop">邮箱认证</p>
+        <a href="javascript:;" class="sures" onclick="submitUserInfo()">确定</a>
     </div>
-    <div class="con cshezhi clearfix">
-        <p class="title">个人信息</p>
-        <div class="box"  onclick="to('/wechat-user-info/info')">
-            <div class="user clearfix">
-                <a href="javascript:;" class="pic"><img src="<?= $userInfo['headImg'];?>"></a>
-                <span class="name"><?= $userInfo['nickname'];?></span>
-            </div>
-        </div>
-        <p class="title">关于随游</p>
-        <div class="box" id="list">
-            <ul class="list">
-                <li onclick="to('/wechat-user-info/supply')">我们提供</li>
-                <li onclick="to('/wechat-user-info/notice')">订购须知</li>
-                <li onclick="to('/wechat-user-info/contact')">联系我们</li>
-            </ul>
-        </div>
+    <div class="con cshezhi_ziliaoSet clearfix">
+        <input id="email" type="text" placeholder="请输入邮箱" value="<?=$userInfo["email"]?>">
     </div>
+    <form style="display: none" action="/wechat-user-info/update-user-info" method="post" id="userInfo" >
+        <input name="email" id="val_sub">
+    </form>
 </div>
 <script>
-    function to(url)
+    function submitUserInfo()
     {
-        window.location.href=url;
+        var email = $('#email').val();
+        if(email=="")
+        {
+            alert('email不能为空');
+            return;
+        }
+        $.ajax({
+            url :'/wechat-user-info/send-validate-mail',
+            type:'post',
+            data:{
+                mail:email
+            },
+            error:function(){
+                alert("发送失败");
+            },
+            success:function(data){
+                //hide load
+                data=eval("("+data+")");
+                if(data.status==1){
+                    alert("验证邮件已发送，请登录邮箱完成验证修改");
+                    window.location.href="/wechat-user-info/info";
+                }else{
+                    alert(data.data);
+                }
+            }
+        });
     }
 </script>
 </body>

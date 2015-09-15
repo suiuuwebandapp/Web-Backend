@@ -168,15 +168,6 @@ class WechatTripController extends WController {
         return $this->renderPartial($returnUrl,['info'=>$travelInfo,'createUserInfo'=>$createUserInfo,'userRecommend'=>$userRecommend,'comment'=>$rst,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
     }
 
-    public function actionAddTrafficOrder()
-    {
-        $login = $this->loginValid();
-        if(!$login){
-            return $this->redirect(['/we-chat/login']);
-        }
-        return $this->renderPartial("addTrafficOrder",['userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
-    }
-
     public function actionAddOrder()
     {
         $this->loginValidJson();
@@ -315,8 +306,151 @@ class WechatTripController extends WController {
         {
             return $this->redirect('/we-chat/error?str=未知随游');
         }
-        return $this->renderPartial("addOrderView",['info'=>$travelInfo,'publisherId'=>$publisherId,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        $returnUrl="addOrderView";
+        if($travelInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
+            $returnUrl="addTrafficOrder";
+        }
+        return $this->renderPartial($returnUrl,['info'=>$travelInfo,'publisherId'=>$publisherId,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
     }
+
+    public function actionAddTrafficOrder()
+    {
+        $login = $this->loginValid();
+        if(!$login){
+            return $this->redirect(['/we-chat/login']);
+        }
+        if(empty($_POST))
+        {
+            return $this->renderPartial("addTrafficOrder",['userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+        }
+        $tripId=trim(\Yii::$app->request->post("tripId", ""));
+        $serviceStr=trim(\Yii::$app->request->post("serviceList", ""));
+
+        if(empty($tripId)){
+            return $this->redirect(['/we-chat/error', 'str' => '随游编号不正确']);
+        }
+        if(empty($serviceStr)){
+            return $this->redirect(['/we-chat/error', 'str' => '服务列表不能为空']);
+        }
+
+        try{
+            $serviceList=json_decode($serviceStr,true);
+
+            $tripService=new TripService();
+            $travelTripInfo=$tripService->getTravelTripInfoById($tripId);
+            $tripInfo=$travelTripInfo['info'];
+            $trafficInfo=$travelTripInfo['trafficInfo'];
+            $scheduledDay=0;
+            $totalPrice=0;
+
+            $nowDay=strtotime(date("Y-m-d",time()));
+
+            $serviceResult=[];
+            $beginDate='';
+            $startTime='';
+            $personCount='';
+
+            if(!empty($tripInfo['scheduledTime'])){
+                $scheduledDay=$tripInfo['scheduledTime'];
+            }
+
+            foreach($serviceList as $serviceInfo){
+                $tempDate=$serviceInfo['date'];
+                $tempTime=$serviceInfo['time'];
+                $tempType=$serviceInfo['type'];
+                $tempPerson=$serviceInfo['person'];
+
+                $tempPrice=null;
+                $timeNumber=strtotime(date("Y-m-d",time())." ".$tempTime);
+
+                if(strtotime($tempDate)<($nowDay+$scheduledDay)){
+                    return $this->redirect(['/we-chat/error', 'str' => '无效的出行日期']);
+                }
+                if(!empty($tripInfo['startTime'])&&!empty($tripInfo['endTime'])){
+                    $startTimeNumber=strtotime(date("Y-m-d",time())." ".$tripInfo['startTime']);
+                    $endTimeNumber=strtotime(date("Y-m-d",time())." ".$tripInfo['endTime']);
+                    $tempServiceInfo=[];
+                    if($timeNumber<$startTimeNumber||$timeNumber>$endTimeNumber){
+                        return $this->redirect(['/we-chat/error', 'str' => '无效的出行时间']);
+                    }
+                }
+                if($tempPerson>$tripInfo['maxUserCount']){
+                    return $this->redirect(['/we-chat/error', 'str' => '无效的出行人数']);
+                }
+                if($tempType=="car"){
+                    $tempPrice=$trafficInfo['carPrice'];
+                }else{
+                    $nightStartNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeStart']);
+                    $nightEndNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeEnd']);
+                    if($timeNumber>$nightStartNumber&&$timeNumber<$nightEndNumber){
+                        $tempPrice=intval($trafficInfo['airplanePrice'])+intval($trafficInfo['nightServicePrice']);
+                    }else{
+                        $tempPrice=$trafficInfo['airplanePrice'];
+                    }
+                }
+
+                if(empty($beginDate)){
+                    $beginDate=$tempDate;
+                    $startTime=$tempTime;
+                }else{
+                    if(strtotime($tempDate)<strtotime($beginDate)){
+                        $beginDate=$tempDate;
+                        $startTime=$tempTime;
+                    }
+                }
+
+
+                if(empty($personCount)){
+                    $personCount=$tempPerson;
+                }else{
+                    if($tempPerson>$personCount){
+                        $personCount=$tempPerson;
+                    }
+                }
+
+                $totalPrice=intval($totalPrice)+intval($tempPrice);
+                $tempServiceInfo['date']=$tempDate;
+                $tempServiceInfo['time']=$tempTime;
+                $tempServiceInfo['type']=$tempType;
+                $tempServiceInfo['price']=$tempPrice;
+                $tempServiceInfo['person']=$tempPerson;
+
+                $serviceResult[]=$tempServiceInfo;
+            }
+
+            if(empty($serviceResult)){
+                throw new Exception("请选择有效的服务");
+            }
+
+            if($totalPrice==0){
+                return $this->redirect(['/we-chat/error', 'str' => '服务金额不能为0']);
+            }
+            $userOrderInfo=new UserOrderInfo();
+            $userOrderInfo->tripId=$tripInfo['tripId'];
+            $userOrderInfo->userId=$this->userObj->userSign;
+            $userOrderInfo->beginDate=$beginDate;
+            $userOrderInfo->startTime=$startTime;
+            $userOrderInfo->personCount=$personCount;
+            $userOrderInfo->serviceInfo=json_encode($serviceResult);
+            $userOrderInfo->basePrice=$tripInfo['basePrice'];
+            $userOrderInfo->servicePrice=$totalPrice;
+            $userOrderInfo->tripJsonInfo=json_encode($travelTripInfo);
+            $userOrderInfo->totalPrice=$totalPrice;
+            $userOrderInfo->status=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT;//默认订单状态，待支付
+            $userOrderInfo->orderNumber=Code::createOrderNumber();
+            $this->userOrderService->addUserOrder($userOrderInfo);
+
+            return $this->redirect(["/wechat-user-center/order-contact",
+                'orderNumber'=>$userOrderInfo->orderNumber
+            ]);
+
+
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return $this->redirect(['/we-chat/error', 'str' => '系统未知异常']);
+        }
+    }
+
 
     /**
      * 获取评论列表

@@ -76,7 +76,7 @@ function wxSendMessage(rId,userHeadImg)
     {
         return;
     }
-var str = '<li class="zuo clearfix">';
+var str = '<li class="you clearfix">';
     str+='<img src="' ;
     str+= userHeadImg;
     str+='" class="pic">';

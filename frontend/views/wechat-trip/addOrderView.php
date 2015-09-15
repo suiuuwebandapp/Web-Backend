@@ -122,6 +122,7 @@
     </div>
 </div>
 <script>
+    var boSubmit=true;
     var TripBasePriceType={
         'TRIP_BASE_PRICE_TYPE_PERSON':1,
         'TRIP_BASE_PRICE_TYPE_COUNT':2
@@ -188,7 +189,7 @@
             stepPriceList=eval("("+stepPriceJson+")");
         }
         if(basePriceType==TripBasePriceType.TRIP_BASE_PRICE_TYPE_COUNT){
-            allPrice=basePrice;
+            allPrice=Number(basePrice);
         }else{
             var bo=true;
             if(stepPriceList.length>0){
@@ -226,6 +227,11 @@
     }
 
     $("#addOrder").bind("click",function(){
+        if(!boSubmit)
+        {
+            alert("提交中...");
+            return;
+        }
         if(isOwner==1){
            alert("您无法购买自己的随游哦~");
             return;
@@ -273,6 +279,7 @@
         }
 
         $("#serviceIds").val(serviceIds);
+        boSubmit=false;
 
         $.ajax({
             url :'/wechat-trip/add-order',
@@ -286,12 +293,14 @@
 
             },
             error:function(){
+                boSubmit= true;
                 alert("提交订单异常");
             },
             success:function(data){
+                boSubmit= true;
                 data=eval("("+data+")");
                 if(data.status==1){
-                    window.location.href="/wechat-user-center/my-order-info?id="+data.data;
+                    window.location.href="/wechat-user-center/order-contact?orderNumber="+data.data;
                 }else if(data.status==-3){
                     window.location.href=data.data;
                 }else{

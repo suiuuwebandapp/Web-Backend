@@ -918,5 +918,25 @@ class UserBaseService extends BaseDb
         }
         return $money;
     }
+    /**
+     *
+     * @param $userSign
+     * @return array|null
+     * @throws Exception
+     */
+    public function findUserAccessByUserSign($userSign)
+    {
+        $result = null;
+        try {
+            $conn = $this->getConnection();
+            $this->userBaseDb = new UserBaseDb($conn);
+            $result = $this->userBaseDb->findUserAccessByUserSign($userSign);
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $result;
+    }
 
 }

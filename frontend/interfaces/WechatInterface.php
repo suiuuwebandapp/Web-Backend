@@ -119,7 +119,16 @@ class WechatInterface {
 
     }
 
+    /**
+     * 跳转到微信js接入页面
+     */
+    public function toConnectWechatAccess(){
+        $returnUrl='http://www.suiuu.com/wechat-user-info/weixin-access';
 
+        $url=sprintf(WeChat::GET_OAUTH2_CODE,WeChat::APP_ID,urlencode($returnUrl));
+
+        header("Location:$url");
+    }
 
     /**
      * 跳转到微信js接入页面

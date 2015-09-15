@@ -1,5 +1,6 @@
 <?php $tripInfo=json_decode($info->tripJsonInfo,true);
 $serviceInfo=json_decode($info->serviceInfo,true);
+$tripType = $tripInfo["info"]["type"];
 ?>
 <!doctype html>
 <html lang="zh-CN">
@@ -45,14 +46,14 @@ $serviceInfo=json_decode($info->serviceInfo,true);
             <a href="#menu"></a>
             <p class="navTop">订单详情</p>
         </div>
-<div class="cmyoderDetail">
+<div class="jtoderDetail">
     <div class="content">
         <div class="box">
             <a href="/wechat-trip/info?tripId=<?= $tripInfo['info']['tripId'];?>" class="pic"><img src="<?= $tripInfo['info']['titleImg'];?>"></a>
             <div class="details">
                 <h3 class="title"><?= $tripInfo['info']['title'];?></h3>
                 <p class="line clearfix">
-                    <b class="colOrange">￥<?= $info->totalPrice;?></b>
+                    <b class="colOrange">￥<?= intval($info->basePrice);?></b>
                     <img src="<?= $tripInfo['info']['score']>=10?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
                     <img src="<?= $tripInfo['info']['score']>=8?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
                     <img src="<?= $tripInfo['info']['score']>=6?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
@@ -64,34 +65,103 @@ $serviceInfo=json_decode($info->serviceInfo,true);
         <?php if(empty($publisherBase)){?>
         <div class="part clearfix">
             <a href="#" class="btnfr02 colOrange">待接单</a>
+            <p class="datas">订单创建时间：<span><?php echo $info->createTime?></span></p>
+            <p class="numbers">订单号 :<span> <?php echo $info->orderNumber?></span></p>
         </div>
         <?php }else{?>
             <div class="part clearfix">
-                <a href="#" class="userPic"><img src="<?= $publisherBase->headImg;?>"></a>
+                <a href="/wechat-user-info/user-info?userSign=<?= $publisherBase->userSign?>" class="userPic"><img src="<?= $publisherBase->headImg;?>"></a>
                 <span class="userName"><?= $publisherBase->nickname;?></span>
-                <a href="#" class="chat"></a>
+                <a href="/wechat-user-center/user-message-info?rUserSign=<?= $publisherBase->userSign;?>" class="chat"></a>
                 <p class="datas">订单创建时间：<span><?php echo $info->createTime?></span></p>
                 <p class="numbers">订单号 :<span> <?php echo $info->orderNumber?></span></p>
             </div>
         <?php }?>
+
+        <?php if($tripType==\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){?>
+            <div class="part clearfix">
+                <p class="title">订单信息：</p>
+                    <?php if(count($serviceInfo)==0){?>
+                    <p> 暂无附加服务</p>
+                <?php }else{?>
+                <ul class="list clearfix">
+                    <li class="title">
+                        <p class="first">项目</p>
+                        <p>服务日期</p>
+                        <p>时间</p>
+                        <p class="last">人数</p>
+                    </li>
+                    <?php foreach($serviceInfo as $val){
+                    $typeName="";
+                    switch($val["type"])
+                    {
+                        case "car":
+                            $typeName="包车";
+                            break;
+                        case "airplane_come":
+                            $typeName="接机";
+                            break;
+                        case "airplane_send":
+                            $typeName="送机";
+                            break;
+                        default:
+                    }
+                    ?>
+                    <li>
+                        <p class="first"><?=$typeName?></p>
+                        <p><?php echo $val["date"];?></p>
+                        <p><?php echo \common\components\DateUtils::convertTimePicker($val["time"],2);?></p>
+                        <p class="last"><?php echo $val["person"];?></p>
+                    </li>
+                <?php }?>
+                </ul>
+                    <?php }?>
+                <a href="#" class="btnfr colOrange">总价￥<?php echo intval($info->totalPrice);?></a>
+            </div>
+        <?php }else{?>
+            <div class="part clearfix">
+                <?php if(!empty($publisherBase)){?>
+                    <p>联系电话：<a href="tel:<?php echo $publisherBase->phone;?>" class="colBlue"><?php echo $publisherBase->phone;?></a></p>
+                <?php }?>
+                <p>出发日期：<b><?php echo $info->beginDate;?></b></p>
+                <p>开始时间：<b><?php echo \common\components\DateUtils::convertTimePicker($info->startTime,2);?></b></p>
+                <p>随游人数：<b><?= $info->personCount?>人</b></p>
+            </div>
+            <div class="part clearfix">
+                <p class="title">附加服务：</p>
+                <?php if(count($serviceInfo)==0){?>
+                    <p> 暂无附加服务</p>
+                <?php }else{foreach($serviceInfo as $val){?>
+                    <p><?php echo $val['title'];?>：<b>￥<?php echo intval($val['money']);?></b></p>
+                <?php }}?>
+                <a href="#" class="btnfr colOrange">总价￥<?php echo intval($info->totalPrice);?></a>
+            </div>
+        <?php }?>
+
         <div class="part clearfix">
-            <?php if(!empty($publisherBase)){?>
-                <p>联系电话：<a href="tel:<?php echo $publisherBase->phone;?>" class="colBlue"><?php echo $publisherBase->phone;?></a></p>
+            <p class="title">我的信息：</p>
+            <?php if(empty($contact)){?>
+                <p> 暂无信息</p>
+            <?php }else{?>
+                <?php if(!empty($contact->arriveFlyNumber)){?>
+                    <p>航班号：<b><?php echo $contact->arriveFlyNumber;?></b></p>
+                <?php }?>
+                <?php if(!empty($contact->leaveFlyNumber)){?>
+                    <p>离开航班号：<b><?php echo $contact->leaveFlyNumber;?></b></p>
+                <?php }?>
+                <?php if(!empty($contact->destination)){?>
+                    <p>目的地：<b><?php echo $contact->destination;?></b></p>
+                <?php }?>
+                <p>主要联系人：<b><?php echo $contact->username;?></b></p>
+                <p>微信号：<b><?php echo $contact->wechat;?></b></p>
+                <p>联系号码：<b><?php echo $contact->phone;?></b></p>
+                <p>备用联系号码：<b><?php echo $contact->sparePhone;?></b></p>
+                <p>紧急联系人：<b><?php echo $contact->urgentUsername;?></b></p>
+                <p>紧急联系号码：<b><?php echo $contact->urgentPhone;?></b></p>
+
             <?php }?>
-            <p>出发日期：<b><?php echo $info->beginDate;?></b></p>
-            <p>开始时间：<b><?php echo \common\components\DateUtils::convertTimePicker($info->startTime,2);?></b></p>
-            <p>随游人数：<b><?= $info->personCount?>人</b></p>
         </div>
         <div class="part clearfix">
-            <p>附加服务：</p>
-            <?php if(count($serviceInfo)==0){?>
-                <p> 暂无附加服务</p>
-            <?php }else{foreach($serviceInfo as $val){?>
-                <p><?php echo $val['title'];?>：<b>￥<?php echo intval($val['money']);?></b></p>
-            <?php }}?>
-            <a href="#" class="btnfr colOrange">总价￥<?php echo intval($info->totalPrice);?></a>
-        </div>
-        <div class="part mrTop60 clearfix">
             <?php if($info->status==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
                     <a href="javascript:;" class="btn bgOrange"  id="payC"  onclick="pay('<?= $info->orderNumber;?>')">支付</a>
                     <a href="javascript:;" class="btn bgBlue" onclick="cancelOrder('<?= $info->orderId;?>')">取消订单</a>

@@ -138,6 +138,10 @@ class WeiboInterface {
     }
 
 
+    public function setCallBackUrl($url)
+    {
+        $this->call_back_url=$url;
+    }
     public function toConnectWeibo()
     {
         $url=$this->getAuthorizeURL();

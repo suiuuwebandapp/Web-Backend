@@ -79,6 +79,15 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
+        exit;
+        header("Content-type:text/html;charset=utf-8");
+        $url ="https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=Hd8fqOvD00hhYDDHmYD0JF7DI7xAWpGXf1vTU_ldT4Fry9N3M4TmHj9XoHCuRKVGU6NwXtEi06YRqKyiuAfeQ7DkhDAs9BnTLrPYTiNLlqo";
+        $jsonData=array("type"=>"image","offset"=>0,"count"=>20);
+
+        $josn1 = '{"type":"image","offset":"0","count":"20"}';
+        $rst = Common::CurlHandel($url,$jsonData);
+        var_dump($rst);exit;
+        return $this->renderPartial("test");
     }
 
 
@@ -140,10 +149,11 @@ class WeChatController extends WController
                 //发送位置签到
             } else {
                 //关于用户发送消息的
-                if (!empty($keyword)) {
-                    if ($keyword == '更新用户资料') {
-                        $this->wechatInterface->getWechatUserInfo($fromUsername, true); //更新的时候抓取用户信息
-                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text, '更新成功');
+                if ($keyword!="") {
+                    if ($keyword == '0') {
+                        //$this->wechatInterface->getWechatUserInfo($fromUsername, true); //更新的时候抓取用户信息
+                        //随小游的二维码
+                        $this->commonMsgImg(WeChat::IMG_TPL, $fromUsername, $toUsername, $time,  'TGL0j4APeEwDfKjdw1Ylc9ZSs937OEOIjjqQGGQEDG1KCasscUkZe9W5LAplP0dk');
                     }else {
                         $bo=true;
                         $wordList = $this->newsListSer->getKeywordList();
@@ -433,6 +443,35 @@ class WeChatController extends WController
     {
 
         $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, $msgType_text, $send_str);
+        $encrypt_type = (isset($_GET['encrypt_type']) && ($_GET['encrypt_type'] == 'aes')) ? "aes" : "raw";
+        if($encrypt_type=='aes'){
+            $timeStamp  =Yii::$app->request->get("timestamp");
+            $nonce=Yii::$app->request->get("nonce");
+            $pc=new WXBizMsgCrypt(Yii::$app->params['token_weChat'], WeChat::EncodingAESKey, WeChat::APP_ID);
+            $encryptMsg = ''; //加密后的密文
+            $errCode = $pc->encryptMsg($resultStr, $timeStamp, $nonce, $encryptMsg);
+            if ($errCode == 0) {
+                $resultStr= $encryptMsg;
+            }else
+            {
+                $this->wechatInterface->write_to_log(WeChat::LOG_XXX_NAME, $errCode);
+            }
+        }
+        echo $resultStr;
+    }
+
+    /**
+     * 发送图片消息
+     * @param $ImgTpl
+     * @param $fromUsername
+     * @param $toUsername
+     * @param $time
+     * @param $send_str
+     */
+    private function commonMsgImg($ImgTpl, $fromUsername, $toUsername, $time, $send_str)
+    {
+
+        $resultStr = sprintf($ImgTpl, $fromUsername, $toUsername, $time, $send_str);
         $encrypt_type = (isset($_GET['encrypt_type']) && ($_GET['encrypt_type'] == 'aes')) ? "aes" : "raw";
         if($encrypt_type=='aes'){
             $timeStamp  =Yii::$app->request->get("timestamp");

@@ -770,7 +770,7 @@ class IndexController extends UnCController
             $rst=$this->userBaseService->findBaseAllBySign($userBase->userSign);
             if(empty($rst)||$rst==false)
             {
-                return json_encode(Code::statusDataReturn(Code::PARAMS_ERRORi, "未知的用户"));
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR, "未知的用户"));
             }
             $rst->phone=$phone;
             $this->userBaseService->updateUserBase($rst);

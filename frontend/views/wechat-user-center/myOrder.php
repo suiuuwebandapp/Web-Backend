@@ -93,7 +93,9 @@
                             <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS){?>
                                 <p class="p1">退款成功</p>
                             <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS){?>
-                                <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
+                                <p class="btns">
+                                    <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
+                                </p>
                             <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){?>
                                 <p class="p1">祝您旅途愉快</p>
                             <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY){?>
@@ -141,7 +143,9 @@
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS){?>
                             <p class="p1">退款成功</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS){?>
+                            <p class="btns">
                             <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
+                            </p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){?>
                             <p class="p1">祝您旅途愉快</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY){?>
@@ -188,7 +192,9 @@
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_SUCCESS){?>
                             <p class="p1">退款成功</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_SUCCESS){?>
-                            <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
+                            <p class="btns">
+                                <a href="javascript:alert('暂无');" class="btn btn03">去评价</a>
+                            </p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PLAY_FINISH){?>
                             <p class="p1">祝您旅途愉快</p>
                         <?php }elseif($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_REFUND_VERIFY){?>

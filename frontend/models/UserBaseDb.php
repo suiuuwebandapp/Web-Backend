@@ -320,6 +320,16 @@ class UserBaseDb extends ProxyDb
         return $command->queryOne();
     }
 
+    public function findUserAccessByUserSign($userSign)
+    {
+        $sql = sprintf("
+            SELECT * FROM user_access WHERE userId=:userSign
+        ");
+        $command = $this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        return $command->queryAll();
+    }
+
     /**
      * 添加用户接入关联
      * @param UserAccess $userAccess

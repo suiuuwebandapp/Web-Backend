@@ -39,7 +39,7 @@
         <?php include "left.php"; ?>
         <div class="Uheader header mm-fixed-top">
             <a href="#menu"></a>
-            <p class="navTop"><?php echo $info['info']['title'];?></p>
+            <p class="navTop"><?php echo mb_strlen($info['info']['title'],"utf-8")>9?mb_substr($info['info']['title'],0,9,"utf-8")."...":$info['info']['title'];?></p>
             <a href="javascript:;" class="collect <?php if(count($info['attention'])!=0){echo "active";}?>" id="collection_trip" attentionIdTrip="<?php if(count($info['attention'])!=0){echo $info['attention'][0]['attentionId'];}?>"></a>
         </div>
 <div class="syDetailBanner">

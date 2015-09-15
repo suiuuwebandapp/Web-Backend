@@ -283,6 +283,9 @@ class AccessController extends UnCController
 
 
 
+
+
+
     private function accessLogin($openId,$type,$nickname,$sex,$headImg)
     {
         $this->userBaseService=new UserBaseService();

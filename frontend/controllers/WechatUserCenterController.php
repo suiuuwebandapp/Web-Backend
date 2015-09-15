@@ -12,7 +12,9 @@ namespace frontend\controllers;
 use common\components\Code;
 use common\components\LogUtils;
 use common\components\SysMessageUtils;
+use common\components\Validate;
 use common\entity\TravelTripService;
+use common\entity\UserOrderContact;
 use common\entity\UserOrderInfo;
 use common\entity\WeChatUserInfo;
 use frontend\components\Page;
@@ -186,6 +188,7 @@ class WechatUserCenterController extends WController {
                 return $this->redirect('/we-chat/error?str=未知的订单&url=javascript:history.go(-1);');
             }
             $info = $this->userOrderService->findOrderByOrderNumber($orderNumber);
+            $contact=$this->userOrderService->getOrderContactByOrderId($info->orderId);
             if(empty($info))
             {
                 return $this->redirect('/we-chat/error?str=未知订单');
@@ -203,7 +206,7 @@ class WechatUserCenterController extends WController {
                 $userBaseService = new UserBaseService();
                 $publisherBase=$userBaseService->findUserByUserSign($sign);
             }
-            return $this->renderPartial('myOrderInfo',['info'=>$info,'publisherBase'=>$publisherBase,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+            return $this->renderPartial('myOrderInfo',['info'=>$info,"contact"=>$contact,'publisherBase'=>$publisherBase,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str="系统异常"');
@@ -309,6 +312,114 @@ class WechatUserCenterController extends WController {
         }catch (Exception $e){
             LogUtils::log($e);
             return json_encode(Code::statusDataReturn(Code::FAIL,"取消订单失败"));
+        }
+
+    }
+
+
+    /**
+     * @return string 保存订单联系人
+     */
+    public function actionOrderContact()
+    {
+
+        if(empty($_POST))
+        {
+            $login = $this->loginValid();
+            if(!$login){
+                return $this->redirect(['/we-chat/login']);
+            }
+            $orderNumber=\Yii::$app->request->get('orderNumber');
+            $orderInfo=$this->userOrderService->findOrderByOrderNumber($orderNumber);
+            if(empty($orderInfo))
+            {
+                return $this->redirect('/we-chat/error?str=未知订单');
+            }
+            $serviceInfo=json_decode($orderInfo->serviceInfo,true);
+            $hasAirplane=false;
+            foreach($serviceInfo as $service){
+                if($service['type']=='airplane'){
+                    $hasAirplane=true;
+                }
+            }
+            $contact=$this->userOrderService->getOrderContactByOrderId($orderInfo->orderId);
+            if(empty($contact))
+            {
+                $contact=new UserOrderContact();
+            }
+            return $this->renderPartial("perfectOrder",["orderNumber"=>$orderNumber,"hasAirplane"=>$hasAirplane,'orderInfo'=> $orderInfo,"contact"=>$contact,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
+        }
+        $orderNumber=\Yii::$app->request->post('orderNumber');
+        $username=\Yii::$app->request->post('username');
+        $phone=\Yii::$app->request->post('phone');
+        $sparePhone=\Yii::$app->request->post('sparePhone');
+        $wechat=\Yii::$app->request->post('wechat','');
+        $urgentUsername=\Yii::$app->request->post('urgentUsername');
+        $urgentPhone=\Yii::$app->request->post('urgentPhone');
+        $arriveFlyNumber=\Yii::$app->request->post('arriveFlyNumber');
+        $leaveFlyNumber=\Yii::$app->request->post('leaveFlyNumber');
+        $destination=\Yii::$app->request->post('destination');
+
+        if(empty($orderNumber)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+        }
+        if(empty($username)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的用户姓名"));
+        }
+        if(empty($phone)||Validate::validatePhone($phone)!=''){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的手机号"));
+        }
+        if(empty($urgentUsername)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的紧急联系人姓名"));
+        }
+        if(empty($urgentPhone)){
+            return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的紧急联系人手机号"));
+        }
+
+
+        try{
+            $orderInfo=$this->userOrderService->findOrderByOrderNumber($orderNumber);
+            $contact=$this->userOrderService->getOrderContactByOrderId($orderInfo->orderId);
+            if($orderInfo->orderNumber!=$orderNumber){
+                return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的订单号"));
+            }
+            $serviceInfo=json_decode($orderInfo->serviceInfo,true);
+            $hasAirplane=false;
+            foreach($serviceInfo as $service){
+                if($service['type']=='airplane'){
+                    $hasAirplane=true;
+                }
+            }
+            if($hasAirplane){
+                if(empty($arriveFlyNumber)&&empty($leaveFlyNumber)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的接送机号码"));
+                }
+                if(empty($destination)){
+                    return json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"无效的目的地"));
+                }
+            }
+            if(empty($contact)){
+                $contact=new UserOrderContact();
+            }
+
+            $contact->orderId=$orderInfo->orderId;
+            $contact->userId=$orderInfo->userId;
+
+            $contact->username=$username;
+            $contact->phone=$phone;
+            $contact->sparePhone=$sparePhone;
+            $contact->wechat=$wechat;
+            $contact->urgentUsername=$urgentUsername;
+            $contact->urgentPhone=$urgentPhone;
+            $contact->arriveFlyNumber=$arriveFlyNumber;
+            $contact->leaveFlyNumber=$leaveFlyNumber;
+            $contact->destination=$destination;
+
+            $this->userOrderService->saveUserContact($contact);
+            return json_encode(Code::statusDataReturn(Code::SUCCESS));
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return json_encode(Code::statusDataReturn(Code::FAIL));
         }
 
     }
