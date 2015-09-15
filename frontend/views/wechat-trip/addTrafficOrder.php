@@ -247,11 +247,12 @@
             return;
         }
         var price=0;
-        if(compareTime(timeListJj,nightTimeStart)&&compareTime(nightTimeEnd,timeListJj)){
-                price=Number(airplanePrice)+Number(nightServicePrice);
-            }else{
-                price=airplanePrice;
-            }
+
+        if(isNightServiceTime(timeListJj,nightTimeStart,nightTimeEnd)){
+            price=parseInt(airplanePrice)+parseInt(nightServicePrice);
+        }else{
+            price=airplanePrice;
+        }
         var str='<p >接机：<span>'+dateListJj+'</span> <span>'+timeListJj+'</span><span>￥'+price+'</span> <a  serviceType="airplane_come" orderDate='+dateListJj+' orderTime='+timeListJj+' orderPerson='+jjNumb+
             ' basePrice='+price+' href="javascript:;" class="close" onclick="removeList(this)"></a></p>';
         $("#serviceListHtml").prepend(str);
@@ -276,8 +277,8 @@
             return;
         }
         var price=0;
-        if(compareTime(timeListSj,nightTimeStart)&&compareTime(nightTimeEnd,timeListSj)){
-            price=Number(airplanePrice)+Number(nightServicePrice);
+        if(isNightServiceTime(timeListSj,nightTimeStart,nightTimeEnd)){
+            price=parseInt(airplanePrice)+parseInt(nightServicePrice);
         }else{
             price=airplanePrice;
         }
@@ -326,9 +327,13 @@
         changeTotalMoney();
     }
 
-    function compareTime(time1,time2){
+    function compareTime(time1,time2,addDate){
         time1="1990-01-01 "+time1;
-        time2="1990-01-01 "+time2;
+        if(isNotEmpty(addDate)){
+            time2="1990-01-02 "+time2;
+        }else{
+            time2="1990-01-01 "+time2;
+        }
 
         time1 = time1.replace(/-/g,"/");
         time2 = time2.replace(/-/g,"/");
@@ -336,13 +341,37 @@
         var d1 = new Date(time1);
         var d2 = new Date(time2);
 
-        if(d1.getTime()>d2.getTime()){
+        if(d1.getTime()>=d2.getTime()){
             return true;
         }else{
             return false;
         }
     }
+    function isNotEmpty(obj){
+        if(obj==null||obj=="null"||obj==""||obj==undefined){
+            return false;
+        }else{
+            return true;
+        }
+    }
 
+    function isNightServiceTime(choseTime,startTime,endTime) {
+        var isNight=false;
+        //如果结束时间大于开始时间 那么是正常情况
+        if(choseTime==startTime||choseTime==endTime){
+            return true;
+        }
+        if(compareTime(endTime,startTime)){
+            if(compareTime(choseTime,startTime)&&!compareTime(choseTime,endTime)){
+                isNight=true;
+            }
+        }else{
+            if((compareTime(choseTime,startTime)&&!compareTime(choseTime,endTime,1))||(!compareTime(choseTime,startTime,1)&&compareTime(endTime,choseTime))){
+                isNight=true;
+            }
+        }
+        return isNight;
+    }
     function addbc(obj)
     {
         var timeListBc=$("#timeListBc").val();

@@ -380,9 +380,7 @@ class WechatTripController extends WController {
                 if($tempType=="car"){
                     $tempPrice=$trafficInfo['carPrice'];
                 }else{
-                    $nightStartNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeStart']);
-                    $nightEndNumber=strtotime(date("Y-m-d",time())." ".$trafficInfo['nightTimeEnd']);
-                    if($timeNumber>$nightStartNumber&&$timeNumber<$nightEndNumber){
+                    if(self::isNightServiceTime($tempTime,$trafficInfo['nightTimeStart'],$trafficInfo['nightTimeEnd'])){
                         $tempPrice=intval($trafficInfo['airplanePrice'])+intval($trafficInfo['nightServicePrice']);
                     }else{
                         $tempPrice=$trafficInfo['airplanePrice'];
@@ -451,6 +449,32 @@ class WechatTripController extends WController {
         }
     }
 
+    /**
+     * 判断是否是夜间服务时间
+     * @param $choseTime
+     * @param $startTime
+     * @param $endTime
+     * @return bool
+     */
+    private function isNightServiceTime($choseTime,$startTime,$endTime) {
+
+        $isNight=false;
+        //如果结束时间大于开始时间 那么是正常情况
+        if($choseTime==$startTime||$choseTime==$endTime){
+            return true;
+        }
+        if(DateUtils::compareTime($endTime,$startTime)){
+            if(DateUtils::compareTime($choseTime,$startTime)&&!DateUtils::compareTime($choseTime,$endTime)){
+                $isNight=true;
+            }
+        }else{
+            if((DateUtils::compareTime($choseTime,$startTime)&&!DateUtils::compareTime($choseTime,$endTime,1))
+                ||(!DateUtils::compareTime($choseTime,$startTime,1)&&DateUtils::compareTime($endTime,$choseTime))){
+                $isNight=true;
+            }
+        }
+        return $isNight;
+    }
 
     /**
      * 获取评论列表
