@@ -114,9 +114,9 @@
                 </ul>
                 <div class="detCon con01 tabCon" style="display:block;">
                     <div class="line"></div>
-                    <p><span>1</span> 咨询随游的发布者，确认游玩细节。</p>
+                    <p><span>1</span> 咨询随游的设计师，确认游玩细节。</p>
                     <p><span>2</span> 填写日期，人数等信息并预支付订单。</p>
-                    <p><span>3</span> 等待随友接单后，通过邮件，短信及站内信方式收到订单提醒。</p>
+                    <p><span>3</span> 等待陪同随友接单后，通过邮件，短信及站内信方式收到订单提醒。</p>
                     <p><span>4</span> 凭电子确认单进行游玩。</p>
                     <p><span>5</span> 完成游玩后进行确认，评价您选择的随游及服务提供者。</p>
                 </div>
@@ -264,7 +264,17 @@
                     </a>
                 <span><?=$createUserInfo->nickname;?></span>
                 </div>
-                <p style="max-width: 215px"><?=$createUserInfo->intro;?></p>
+                <p>随游设计师<a href="javascript:;" class="help"> </a></p>
+                <script type="text/javascript">
+                    $(function(){
+                        $('.sydetail .web-right .kuang .user p .help').hover(function(e) {
+                            $('.sydetail .web-right .kuang .tip').toggle();
+                        });
+                    })
+                </script>
+                <div class="tip">
+                    <p>随游设计师仅提供本行程路线的制定，我们会另外安排合适的随友陪伴您游玩</p>
+                </div>
                 <a href="javascript:;" onclick="Main.showSendMessage('<?=$createUserInfo->userSign;?>')" class="icon"></a>
             </div>
             <div class="text clearfix">

@@ -1674,14 +1674,18 @@ transition:1s;
 .sydetail .web-right .servers:hover .icon{ background-position:0 -56px;}
 
 
-.sydetail .web-right .kuang .user{height:60px; padding:10px;}
+.sydetail .web-right .kuang .user{height:60px; padding:10px; position:relative;}
 .sydetail .web-right .kuang .user .icon{ background:url(../images/xicon.png) no-repeat 0 0;height:30px; width:30px; display:block; float:right;}
 .sydetail .web-right .kuang .user .icon:hover{ background-position:-110px 0;}
-.sydetail .web-right .kuang .user .user-name{ position:relative; width:60px; height:60px; border-radius:360px; float:left;  }
+.sydetail .web-right .kuang .user .user-name{ margin-right:10px; position:relative; width:60px; height:60px; border-radius:360px; float:left;  }
 .sydetail .web-right .kuang .user .user-name .user-pic{ float:left; display:block; width:60px; height:60px; border-radius:360px; float:left; margin-right:15px;}
 .sydetail .web-right .kuang .user .user-name span{ width:200px; position:absolute; left:64px; color:#fff; top:0;}
 
 .sydetail .web-right .kuang .user p{ margin-top:25px; padding-left:0; float:left; color:#fff; }
+.sydetail .web-right .kuang .user p .help{ margin:0 6px; display:inline-block; width:16px; height:16px; background:url(../images/syicon.png) no-repeat center center;}
+.sydetail .web-right .kuang .tip{ display:none;  border-radius:5px;  width:185px; height:auto; position:absolute; top:47px; left:180px; background:#eee; padding:10px;}
+.sydetail .web-right .kuang .tip p{ height:auto; color:#878787; margin:0; line-height:21px; font-size:14px; }
+
 .sydetail .web-right .kuang .text{ padding:10px 20px; }
 .sydetail .web-right .kuang .text .tits{ font-size:18px; margin-bottom:10px;  }
 .sydetail .web-right .kuang .text p{ line-height:24px; height:auto;  padding-left:0;   }
