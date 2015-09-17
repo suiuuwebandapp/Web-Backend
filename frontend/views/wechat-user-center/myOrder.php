@@ -65,11 +65,12 @@
                 <div class="content">
                 <?php foreach($allList as $val){
                     $tripInfo = json_decode($val['tripJsonInfo'],true);
+                    $title=mb_strlen($tripInfo['info']['title'],"utf-8")>8?mb_substr($tripInfo['info']['title'],0,8,"utf-8")."...":$tripInfo['info']['title'];
                     ?>
                     <div class="box clearfix">
                         <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
                         <div class="details fr">
-                            <p><?php echo $tripInfo['info']['title'];?></p>
+                            <p><?php echo $title;?></p>
                             <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
                             <p class="money">随游总价：<span>￥<?php echo $val['totalPrice'];?></span></p>
                             <?php if($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
@@ -115,11 +116,12 @@
         <div class="content">
             <?php foreach($unList as $val){
                 $tripInfo = json_decode($val['tripJsonInfo'],true);
+                $title=mb_strlen($tripInfo['info']['title'],"utf-8")>8?mb_substr($tripInfo['info']['title'],0,8,"utf-8")."...":$tripInfo['info']['title'];
                 ?>
                 <div class="box clearfix">
                     <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
                     <div class="details fr">
-                        <p><?php echo $tripInfo['info']['title'];?></p>
+                        <p><?php echo $title;?></p>
                         <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
                         <p class="money">随游总价：<span>￥<?php echo $val['totalPrice'];?></span></p>
                         <?php if($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>
@@ -164,11 +166,12 @@
         <div class="content">
             <?php foreach($list as $val){
                 $tripInfo = json_decode($val['tripJsonInfo'],true);
+                $title=mb_strlen($tripInfo['info']['title'],"utf-8")>8?mb_substr($tripInfo['info']['title'],0,8,"utf-8")."...":$tripInfo['info']['title'];
                 ?>
                 <div class="box clearfix">
                     <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
                     <div class="details fr">
-                        <p><?php echo $tripInfo['info']['title'];?></p>
+                        <p><?php echo $title;?></p>
                         <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
                         <p class="money">随游总价：<span>￥<?php echo $val['totalPrice'];?></span></p>
                         <?php if($val['status']==\common\entity\UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT){?>

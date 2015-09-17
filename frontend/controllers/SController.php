@@ -45,6 +45,7 @@ class SController extends Controller {
 
     public function initUserMessage()
     {
+        if(isset($this->userObj->userSign)){
         $hasNewMessage=\Yii::$app->redis->get(Code::USER_LOGIN_SESSION_NEW_MESSAGE.$this->userObj->userSign);
         $unReadMessage=\Yii::$app->session->get(Code::USER_LOGIN_SESSION_UN_READ_MESSAGE);
         if(empty($hasNewMessage)||empty($unReadMessage)){
@@ -54,7 +55,7 @@ class SController extends Controller {
             \Yii::$app->session->set(Code::USER_LOGIN_SESSION_UN_READ_MESSAGE,$unReadMessage);
         }
         $this->unReadMessageList=$unReadMessage;
-
+        }
 
     }
 }

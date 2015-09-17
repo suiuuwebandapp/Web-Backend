@@ -153,6 +153,8 @@ class AppTravelController extends AController
                 return $this->renderPartial('error',['str1'=>'登陆已过期请重新登陆','str2'=>'返回','url'=>"#"]);
             }
             $userSign=$this->userObj->userSign;
+            /*$userSign="a085e8179a643b6eb1b207fada26af99";
+            $token="1";*/
             $trId=Yii::$app->request->get('trId');
             if(empty($trId)){  return $this->renderPartial('error',['str1'=>'未知随游','str2'=>'返回','url'=>"#"]);}
             $data=$this->travelSer->getTravelTripInfoById($trId,$userSign);

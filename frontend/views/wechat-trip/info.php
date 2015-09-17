@@ -38,8 +38,8 @@
 <div id="page" class="userCenter">
         <?php include "left.php"; ?>
         <div class="Uheader header mm-fixed-top">
-            <a href="#menu"></a>
             <p class="navTop"><?php echo mb_strlen($info['info']['title'],"utf-8")>9?mb_substr($info['info']['title'],0,9,"utf-8")."...":$info['info']['title'];?></p>
+            <a href="javascript:history.go(-1);" class="back"></a>
             <a href="javascript:;" class="collect <?php if(count($info['attention'])!=0){echo "active";}?>" id="collection_trip" attentionIdTrip="<?php if(count($info['attention'])!=0){echo $info['attention'][0]['attentionId'];}?>"></a>
         </div>
 <div class="syDetailBanner">
@@ -85,19 +85,23 @@
     <div class="top clearfix">
         <a href="/wechat-user-info/user-info?userSign=<?= $createUserInfo->userSign;?>" class="userPic"><img src="<?= $createUserInfo->headImg;?>"></a>
         <span class="userName"><?=$createUserInfo->nickname;?></span>
-        <p class="adress">&nbsp;<?=$info['info']['countryCname']?>，<?=$info['info']['cityCname']?></p>
-
+        <p  class="role"><span>随游设计师</span><a href="javascript:;" class="help" onclick="maskChange('true')"></a></p>
     </div>
-    <p class="bq"><span><?= $info['info']['tags'];?></span></p>
+    <h3 class="title colGreen">基本信息</h3>
     <ul class="details clearfix">
+        <li>
+                <span class="icon icon1">&nbsp;<?=$info['info']['countryCname']?>，<?=$info['info']['cityCname']?></span>
+        </li>
         <li>
                 <span class="icon icon1">同伴最多
                     <b> <?= $info['info']['maxUserCount'];?>人</b>
                 </span>
         </li>
-        <li><span class="icon icon2"><?=  substr($info['info']['startTime'],0,5) ?>  -<?=  substr($info['info']['endTime'],0,5) ?> </span></li>
         <li class="last"><span class="icon icon3">随游时长:<?= $info['info']['travelTime'];?>小时</span></li>
+        <li><span class="icon icon4"><?=  substr($info['info']['startTime'],0,5) ?>  -<?=  substr($info['info']['endTime'],0,5) ?> </span></li>
     </ul>
+    <p class="bq"><span><?= $info['info']['tags'];?></span></p>
+
     <div class="bgbox">
         <h3 class="title colGreen">详情描述</h3>
         <p><?= nl2br($info['info']['info'])?></p>
@@ -145,15 +149,30 @@
         </li>
         <?php }?>
     </ul>
-    <div class="btns clearfix">
-        <a href="/wechat-user-center/user-message-info?rUserSign=<?= $createUserInfo->userSign;?>" class="bgOrange fl">咨询</a>
-        <a href="/wechat-trip/add-order-view?tripId=<?=$info['info']['tripId'];?>" class="bgBlue fr">预定</a>
+    </div>
+    </div>
+<div class="fixed btns clearfix">
+    <a href="/wechat-user-center/user-message-info?rUserSign=<?= $createUserInfo->userSign;?>" class="bgOrange fl">咨询</a>
+    <a href="/wechat-trip/add-order-view?tripId=<?=$info['info']['tripId'];?>" class="bgBlue fr">预定</a>
 
-    </div>
-    </div>
-    </div>
+</div>
+<div class="cshezhiPro" id="mask_info">
+    <a href="javascript:;" class="closes" onclick="maskChange('false')"></a>
+    <img src="/assets/other/weixin/images/cset.png" class="smile">
+    <p style="text-align:left;">随游设计师仅提供本行程路线的制定，我们会另外安排合适的随友陪伴您游玩</p>
+</div>
 </body>
 <script>
+
+    function maskChange(bo)
+    {
+        if(bo=="true"){
+        $("#mask_info").show();
+        }else{
+            $("#mask_info").hide();
+        }
+    }
+
     $('#collection_trip').bind('click',submitCollection);
     /**
      * 添加收藏

@@ -11,6 +11,7 @@
 <body  class="bgwhite" >
 <div class="syDetailBanner">
     <span class="smoney">￥<?= $info['info']['basePrice'];?></span>
+    <a href="javascript:;" class="collect <?php if(count($info['attention'])!=0){echo "active";}?>" id="collection_trip" attentionIdTrip="<?php if(count($info['attention'])!=0){echo $info['attention'][0]['attentionId'];}?>"></a>
     <!--banner开始-->
     <div class="bd">
         <ul class="banners" id="ul_id">
@@ -48,15 +49,17 @@
         });
     </script>
 </div>
-<div class="syContent con">
+<div class="syContent con" style="padding-bottom: 0rem;">
     <div class="top clearfix">
         <a href="javascript:;" onclick="showAndroidUserHome('<?= $info['createPublisherInfo']['userSign'];?>')" class="userPic"><img src="<?= $info['createPublisherInfo']['headImg'];?>"></a>
         <span class="userName"><?= $info['createPublisherInfo']['nickname'];?></span>
-        <p class="adress"><?= $info['createPublisherInfo']['countryName'].$info['createPublisherInfo']['cityName'];?></p>
-        <a href="javascript:;" class="collect <?php if(count($info['attention'])!=0){echo "active";}?>" id="collection_trip" attentionIdTrip="<?php if(count($info['attention'])!=0){echo $info['attention'][0]['attentionId'];}?>"></a>
+        <p  class="role"><span>随游设计师</span><a href="javascript:;" class="help" onclick="showMask()"></a></p>
     </div>
-    <p class="bq"><span><?= $info['info']['tags'];?></span></p>
+    <h3 class="title colGreen">基本信息</h3>
     <ul class="details clearfix">
+        <li>
+            <span class="icon icon1">&nbsp;<?=$info['info']['countryCname']?>，<?=$info['info']['cityCname']?></span>
+        </li>
         <li>
                 <span class="icon icon1">同伴最多
                     <b> <?= $info['info']['maxUserCount'];?>人</b>
@@ -65,6 +68,7 @@
         <li><span class="icon icon2"><?=  substr($info['info']['startTime'],0,5) ?>  -<?=  substr($info['info']['endTime'],0,5) ?> </span></li>
         <li class="last"><span class="icon icon3"><?= $info['info']['travelTime'];?>小时</span></li>
     </ul>
+    <p class="bq"><span><?= $info['info']['tags'];?></span></p>
     <div class="bgbox">
         <h3 class="title colGreen">详情描述</h3>
         <p><?= nl2br($info['info']['info'])?></p>
@@ -102,8 +106,28 @@
     </p>
 
 </div>
+<div class="cshezhiPro" id="mask_info">
+    <a href="javascript:;" class="closes" onclick="maskChange('false')"></a>
+    <img src="/assets/other/app/images/cset.png" class="smile">
+    <p style="text-align:left;">随游设计师仅提供本行程路线的制定，我们会另外安排合适的随友陪伴您游玩</p>
+</div>
 </body>
+
+
 <script>
+    function showMask()
+    {
+        window.jsObj.showMask();
+    }
+
+    function maskChange(bo)
+    {
+        if(bo=="true"){
+            $("#mask_info").show();
+        }else{
+            $("#mask_info").hide();
+        }
+    }
     function showAndroidUserHome(user)
     {
         window.jsObj.userHomePage(user);
