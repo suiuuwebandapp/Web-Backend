@@ -13,7 +13,9 @@ use backend\components\Page;
 use backend\components\TableResult;
 use backend\services\WechatNewsService;
 use common\components\Code;
+use common\components\Common;
 use common\entity\WeChatNewsList;
+use frontend\interfaces\WechatInterface;
 use Yii;
 use yii\base\Exception;
 
@@ -147,4 +149,32 @@ class WechatNewsController extends CController {
         $data = $this->wechatNewsSer->getInfo($id);
         return $this->render("edit",['info'=>$data]);
     }
+
+
+    public function actionToImgList(){
+        header("Content-type:text/html;charset=utf-8");
+        $wechatInterface = new WechatInterface();
+        $token=$wechatInterface->readToken();
+        $url ="https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=".$token;
+        $jsonData=array("type"=>"image","offset"=>0,"count"=>20);
+        $rst = Common::CurlHandel($url,$jsonData);
+        return $this->render("imgList",['info'=>$rst["data"]]);
+    }
+
+    public function actionImgList()
+    {
+        $start=Yii::$app->request->post("start",0);
+        $length=Yii::$app->request->post("length",10);
+        header("Content-type:text/html;charset=utf-8");
+        $wechatInterface = new WechatInterface();
+        $token=$wechatInterface->readToken();
+        $url ="https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=".$token;
+        $jsonData=array("type"=>"image","offset"=>$start,"count"=>$length);
+        $rst = Common::CurlHandel($url,$jsonData);
+        $jsonData = json_decode($rst["data"],true);
+        $page=new Page(Yii::$app->request);
+        $tableResult=new TableResult($page->draw,count($jsonData["item_count"]),$jsonData["total_count"],$jsonData["item"]);
+        echo json_encode($tableResult);
+    }
+
 }

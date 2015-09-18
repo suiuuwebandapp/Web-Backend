@@ -44,12 +44,22 @@ class WechatTripController extends WController {
 
     public function actionIndex()
     {
-        $this->loginValid(false);
-        $page=new Page();
-        $page->pageSize=4;
-        $attentionService=new UserAttentionService();
-        $recommendTravel =$attentionService->getRecommendTravel($page);
-       return $this->renderPartial("index",["recommendTravel"=>$recommendTravel['data'],'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        try{
+            $this->loginValid(false);
+            $page=new Page();
+            $page->pageSize=10;
+            $page= $this->tripService->getList($page,null,null,null,0,null,null,null,null,array(TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE));
+            return $this->renderPartial("index",["page"=>$page->getList(),'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        }catch (Exception $e){
+            LogUtils::log($e);
+            return $this->redirect(['/we-chat/error', 'str' => '系统未知异常']);
+        }
+    }
+
+    public function actionIndexJson()
+    {
+        $page=new Page(\Yii::$app->request);
+        //$page= $this->tripService->getList($page,$str,null,null,$peopleCount,$startPrice,$endPrice,$tag,null,$typeArray);
     }
 
     public function actionSelect()
@@ -64,6 +74,7 @@ class WechatTripController extends WController {
     public function actionSelectList()
     {
         $login = $this->loginValid(false);
+        $activity=\Yii::$app->request->get("activity");
         $str=\Yii::$app->request->get("str");
         $sort=\Yii::$app->request->get("sort");
         if($_POST){
@@ -100,13 +111,13 @@ class WechatTripController extends WController {
             $page->sortName="score";
         }
         $page->sortType="desc";
-        $page= $this->tripService->getList($page,$str,null,null,$peopleCount,$startPrice,$endPrice,$tag,null,$typeArray);
+        $page= $this->tripService->getList($page,$str,null,null,$peopleCount,$startPrice,$endPrice,$tag,null,$typeArray,$activity);
         $ajax=\Yii::$app->request->post("ajax");
         if($ajax=="true")
         {
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$page->getList()));
         }
-        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,
+        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,"activity"=>$activity,
             'peopleCount'=>$peopleCount,"amount"=>$amount,"startPrice"=>$startPrice,"tag"=>$tag,"sort"=>$sort,"type"=>$type,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0
         ]);
     }

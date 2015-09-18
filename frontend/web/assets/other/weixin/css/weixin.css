@@ -716,7 +716,7 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .login .down .icon.wei{ background-position:center -9.03rem; margin:0 0.7rem;}
 .login .down .icon.qq{ background-position:center -14.96rem; }
 
-/*-----------随游滚屏------------*/
+/*-----------首页------------*/
 
 .Uheader .search_out{ position:relative; width:100%; margin:5px auto 0; border:1px solid #fff; border-radius:60px; height:2.4rem; line-height:2.4rem; }
 .Uheader .search_out .search{ font-size:1rem; color:#fff; float:left; width:80%; line-height:2.4rem; height:2.4rem; padding:10px; box-sizing:border-box; display:block; background:none; outline:none; border:none; }
@@ -725,15 +725,34 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .Uheader .search_out .btn img{ width:2rem; height:2rem; display:block;  }
 
 
-#pagepiling .section .box{ position:relative;  max-width:640px; height:100%; margin:0 auto; }
-#pagepiling .section .pics{ position:absolute; top:0; left:0; display:block; width:100%; z-index:-1;  }
-#pagepiling .section .title{ margin-top:6rem; margin-left:15px; color:#fff; font-size:1.7rem; }
-#pagepiling .section .detail{  color:#fff; font-size:1.1rem; margin-top:20px; margin-left:15px; }
-#pagepiling .section .p1{ font-size:1rem; color:#fff; text-align:center; width:100%; margin-top:50%;}
-#pagepiling .section .btn02{ border-radius:5px;font-size:1rem;  color:#fff; background:#30dbc3 ; width:9.7rem; height:2.14rem; 
- line-height:2.14rem; display:block; margin:1rem auto 0; text-align:center; }
+.indexBanner{ padding-top:3rem;  width:100%; max-width:640px; margin:0 auto;   position:relative;}
+.indexBanner .banners{ width:100%; overflow:hidden;}
+.indexBanner .banners li{ min-height:3rem; float:left; width:100%; position:relative;  }
+.indexBanner .banners li .title{ width:100%; position:absolute; top:45%; left:0; color:#fff; text-align:center;   font-size:1.28rem; text-shadow:0 0 5px #000; }
+.indexBanner .banners li img{   width:100%; display:block; }
 
+.indexBanner .banner-btn .prev,.syDetailBanner .banner-btn .next{ position:absolute; left:0; top:40%; display:block;   height:50px; width:50px; display:block; z-index:3; background:url(../images/mdd-prev.fw.png) no-repeat center center; background-size:1.785rem 1.785rem;}
+.indexBanner .banner-btn .next{ right:0; left:auto; background:url(../images/mdd-next.fw.png) no-repeat center center;background-size:1.785rem 1.785rem; }
+.indexBanner .hd { text-align:center;position:absolute;bottom:10px; width:100%; }
+.indexBanner .hd ul li{width:12px;height:12px;border-radius :50%;text-indent:-9999px;margin-right:5px;background:#ccc; display:inline-block;cursor:pointer;}
+.indexBanner .hd ul li.on{background:#DA324D;}
+.indexCon{ max-width:640px; margin:0 auto; }
+.indexCon .btn{background:#1DDCC3; color:#fff; text-align:center; font-size:1rem; line-height:2.14rem; height:2.14rem; width:90%; display:block; margin:10px auto; border-radius:5px;}
+.indexCon .btn img{ vertical-align:middle; display:inline-block; max-width:35px; width:1.25rem; margin:0 5px;}
+.indexCon .tabs .top li{ height:2rem; line-height:2rem; width:33%; float:left; text-align:center; }
+.indexCon .tabs .top li a{border-bottom:5px solid #eee; height:2rem; line-height:2rem; width:100%; display:block;text-align:center; }
+.indexCon .tabs .top li a.active{ color:#1DDCC3; border-bottom:5px solid #1DDCC3;}
 
+.indexCon .down{ display:none;}
+.indexCon .down .box{ width:100%; position:relative;}
+.indexCon .down .box a.pic{ width:100%; display:block;}
+.indexCon .down .box a img{ width:100%; display:block;}
+.indexCon .down .box .details{ background:rgba(0,0,0,0.7); width:100%; box-sizing:border-box; color:#fff; position:absolute; padding:2%; left:0; bottom:0;}
+.indexCon .down .box .details .title{ margin-bottom:4px; color:#fff; font-size:0.85rem;}
+.indexCon .down .box .details b{ float:left; color:#FFEA7F; font-size:0.85rem;}
+.indexCon .down .box .details .line img{ float:left; margin:0.3rem 0 0 3px;}
+.indexCon .down .box .details .line span{ color:#AAAAAA; font-size:0.6rem; float:right; float:right; margin-left:10px;}
+		
 
 /*-----------随游详情------------*/
 

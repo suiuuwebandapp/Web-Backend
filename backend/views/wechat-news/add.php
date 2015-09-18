@@ -86,6 +86,10 @@
                                                     <input type="radio" name="optionsRadios" value="2" onclick="changedx(2)"  >
                                                     图文
                                                 </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="optionsRadios" value="3" onclick="changedx(3)"  >
+                                                    图片
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -126,6 +130,9 @@
                             <div id="txt_id2" class="col-md-6" style="display: none">
                                 <script id="container" name="content" type="text/plain" style="height:300px;">
                                 </script>
+                            </div>
+                            <div id="txt_id3" class="col-md-6" style="display: none">
+                                <textarea id="textareaid2" class="col-md-8"></textarea>
                             </div>
                         </div>
 
@@ -201,16 +208,32 @@
     });
 
 
+    var showUserInfo=function(){
+        Main.openModal("/wechat-news/to-img-list");
+    };
+
+    function alertTest()
+    {
+        alert(1);
+    }
     function changedx(i)
     {
         if(i==1)
         {
             $('#txt_id1').show();
             $('#txt_id2').hide();
-        }else
+            $('#txt_id3').hide();
+        }else if(i==2)
         {
             $('#txt_id1').hide();
             $('#txt_id2').show();
+            $('#txt_id3').hide();
+        }else if(i==3)
+        {
+            showUserInfo();
+            $('#txt_id1').hide();
+            $('#txt_id2').hide();
+            $('#txt_id3').show();
         }
     }
 
@@ -239,7 +262,7 @@
             {
                 Main.errorTip("内容不允许为空");
             }
-        }else{
+        }else if(type=="2"){
         if(titleImg==''){
             Main.errorTip("封面图不允许为空");
             return;
@@ -247,7 +270,14 @@
         if(title==''){
             Main.errorTip("标题不允许为空");
             return;
-        }
+        }}else if(type=="3"){
+            content =  $('#textareaid2').val();
+            if(content=='')
+            {
+                Main.errorTip("图片id不能为空");
+                return;
+            }
+
         }
         $.ajax({
             url :'/wechat-news/add',

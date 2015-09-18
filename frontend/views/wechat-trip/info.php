@@ -93,7 +93,7 @@
                 <span class="icon icon1">&nbsp;<?=$info['info']['countryCname']?>，<?=$info['info']['cityCname']?></span>
         </li>
         <li>
-                <span class="icon icon1">同伴最多
+                <span class="icon icon2">同伴最多
                     <b> <?= $info['info']['maxUserCount'];?>人</b>
                 </span>
         </li>
@@ -112,15 +112,12 @@
         <?php }?>
     </div>
     <?php if($userRecommend!=null&&!empty($userRecommend['content'])){ ?>
-        <div class="tuijian bgGreen clearfix">
-            <a href="#" class="left"><img src="<?=$userRecommend['headImg'];?>"></a>
-            <div class="right">
-                <p>推荐理由：</p>
-                <p><?=nl2br($userRecommend['content'])?></p>
-            </div>
+        <div class="tuijian clearfix">
+            <p class="colGreen">推荐理由</p>
+            <p><?=nl2br($userRecommend['content'])?></p>
         </div>
     <?php }?>
-    <h3 class="title colBlue">价格内容</h3>
+    <h3 class="title colGreen">价格内容</h3>
     <div class="contian clearfix">
         <?php foreach($info['includeDetailList'] as $val){?>
             <span><img src="/assets/other/weixin/images/syhas.png"><?php echo $val['name']?></span>
@@ -129,8 +126,10 @@
             <span><img src="/assets/other/weixin/images/syno.png"><?php echo $val['name']?></span>
         <?php }?>
     </div>
+    <div class="bgbox">
+    <h3 class="title colGreen">用户评价</h3>
     <p class="line clearfix">
-        <b>用户评价<?php echo count($comment['data']);?></b>
+        <b><?php echo count($comment['data']);?>条评论</b>
         <img src="<?= $info['info']['score']>=10?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
         <img src="<?= $info['info']['score']>=8?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
         <img src="<?= $info['info']['score']>=6?'/assets/other/weixin/images/xing02.png':'/assets/other/weixin/images/xing01.png'; ?>" width="13" height="13">
@@ -149,6 +148,7 @@
         </li>
         <?php }?>
     </ul>
+    </div>
     </div>
     </div>
 <div class="fixed btns clearfix">

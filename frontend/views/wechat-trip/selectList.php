@@ -47,9 +47,9 @@
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
         <ul class="oderNav">
-            <li><a id="sort1" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=1">推荐分数</a></li>
-            <li><a id="sort2" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=2">预定数</a></li>
-            <li><a id="sort3" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=3">评论数</a></li>
+            <li><a id="sort1" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&activity=<?=$activity;?>&sort=1">推荐分数</a></li>
+            <li><a id="sort2" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&activity=<?=$activity;?>&sort=2">预定数</a></li>
+            <li><a id="sort3" href="/wechat-trip/select-list?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&activity=<?=$activity;?>&sort=3">评论数</a></li>
         </ul>
         <a href='/wechat-trip/search?str=<?php echo $str;?>&peopleCount=<?=$peopleCount;?>&tag=<?=$tag;?>&amount=<?=$amount;?>&type=<?=$type;?>&sort=<?=$sort;?>' class="searchBtn"></a>
     </div>
@@ -91,12 +91,15 @@
             $(this).attr("class","active");
         }
     });
+    var active="<?php echo $active;?>";
+
     var sort='<?php echo $sort;?>';
     if(sort==2)
     {
         $("#sort2").attr("class","active");
     }else if(sort==3)
-    { $("#sort3").attr("class","active");}else
+    { $("#sort3").attr("class","active");
+    }else
     { $("#sort1").attr("class","active");}
     var page="<?php echo $c;?>";
     $(window).scroll(function(){
@@ -108,7 +111,7 @@
             var str='<?php echo $str;?>';
 
             $.ajax({
-                url:"/wechat-trip/select-list?str="+str+"sort"+sort,
+                url:"/wechat-trip/select-list?str="+str+"&sort="+sort+"&activity="+active,
                 type:'post',
                 data:{
                     tag:"<?php echo $tag;?>",

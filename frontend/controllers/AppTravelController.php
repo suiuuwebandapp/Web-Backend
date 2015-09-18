@@ -57,14 +57,7 @@ class AppTravelController extends AController
             $title=Yii::$app->request->post('title');
             $countryId=Yii::$app->request->post('countryId');
             $cityId=Yii::$app->request->post('cityId');
-            $cc=Yii::$app->request->post('cc');
-            if(!empty($cc))
-            {
-                $countrySer = new CountryService();
-                $arr=$countrySer->getCC($cc);
-                $countryId=$arr[0];
-                $cityId=$arr[1];
-            }
+
             $peopleCount=Yii::$app->request->post('peopleCount');
             $startPrice=Yii::$app->request->post('startPrice');
             $endPrice=Yii::$app->request->post('endPrice');
