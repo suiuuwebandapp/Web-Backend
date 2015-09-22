@@ -303,7 +303,7 @@ class UserBaseService extends BaseDb
             $result = $this->userBaseDb->findByUserSign($userSign);
             $userBase = $this->arrayCastObject($result, UserBase::class);
         } catch (Exception $e) {
-            throw new Exception(Code::SYSTEM_EXCEPTION, Code::FAIL, $e);
+            throw $e;
         } finally {
             $this->closeLink();
         }
@@ -446,7 +446,9 @@ class UserBaseService extends BaseDb
 
         if ($userAccess == null) {
             $userBase->sex = UserBase::USER_SEX_SECRET;
-            $userBase->headImg = \Yii::$app->params["base_dir"] . '/assets/images/user_default.png';
+            if(empty($userBase->headImg)){
+                $userBase->headImg = \Yii::$app->params["base_dir"] . '/assets/images/user_default.png';
+            }
 
             if (!empty($userBase->email)) {
                 if ($userPublisher == null) {
@@ -479,7 +481,9 @@ class UserBaseService extends BaseDb
         $userBase->hobby = '';
         $userBase->info = '';
         $userBase->intro = '';
-        $userBase->school = '';
+        if(empty($userBase->school)){
+            $userBase->school = '';
+        }
         $userBase->surname = '';
         $userBase->name = '';
         $userBase->qq = '';
@@ -487,8 +491,12 @@ class UserBaseService extends BaseDb
         $userBase->birthday = '0000-00-00';
         $userBase->userSign = Code::getUUID();
         $userBase->status = UserBase::USER_STATUS_NORMAL;
-        $userBase->registerIp = $_SERVER['REMOTE_ADDR'];
-        $userBase->lastLoginIp = $_SERVER['REMOTE_ADDR'];
+        if(empty($userBase->registerIp)){
+            $userBase->registerIp = $_SERVER['REMOTE_ADDR'];
+        }
+        if(empty($userBase->lastLoginIp)){
+            $userBase->lastLoginIp = $_SERVER['REMOTE_ADDR'];
+        }
         $userBase->profession = '';
         return $userBase;
     }
