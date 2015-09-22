@@ -37,7 +37,7 @@
             <div class="serch">
                 <input type="text" placeholder="你想去哪里？" class="text1" id="indexSearch" />
                 <ul class="drop" id="indexSearchDrop"></ul>
-                <a href="javascript:;" class="helps colGreen">如何使用随随游？</a>
+                <a href="javascript:;" class="helps colGreen">如何使用随游？</a>
             </div>
         </div>
     </div>
