@@ -1,0 +1,37 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User : xin.zhang
+ * Date : 15/5/7
+ * Time : 下午2:51
+ * Email: zhangxinmailvip@foxmail.com
+ */
+
+namespace app\modules\v1\entity;
+
+
+class UserMessage {
+
+
+
+    public $messageId;
+
+    public $sessionKey;
+
+    public $receiveId;
+
+    public $senderId;
+
+    public $url;
+
+    public $content;
+
+    public $sendTime;
+
+    public $readTime;
+
+    public $isRead;
+
+    public $isShield;
+
+}

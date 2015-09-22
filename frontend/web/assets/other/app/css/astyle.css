@@ -1,0 +1,131 @@
+@charset "utf-8";
+/* CSS Document */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,aside,blockquote,th,td,span,i,b{margin:0;padding:0; list-style:none; font-weight:normal; border:none; }
+*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
+html{width:100%; margin:0 auto;font-family:"Microsoft YaHei","黑体";}
+body{font-family:"Microsoft YaHei","黑体";-webkit-text-size-adjust:100%;text-size-adjust:100%; color:#858585; position:relative;}
+h1,h2,h3,h4,h5,h6{font-weight:normal;font-size:100%;}
+em,i{font-style:normal;}
+table{border-collapse:collapse;border-spacing:0;}
+img{border:none;}
+a{ text-decoration:none; color:#858585;}
+ol,ul,li{vertical-align:middle;}
+input,textarea{ color:#aaa;font-family:"Microsoft YaHei"; outline:none; font-size:0.85rem; -webkit-appearance: none; background:none;}
+textarea{resize:none;}
+textarea::-webkit-input-placeholder,
+textarea::-moz-input-placeholder,
+textarea::-ms-input-placeholder,
+input::-webkit-input-placeholder,
+input::-moz-input-placeholder;
+input::-ms-input-placeholder{color:#858585; }
+input:focus{outline-width:0;box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;-ms-box-shadow:none;box-shadow:none}
+.clearfix:before,.clearfix:after{content:"";display:table;}
+.clearfix:after{clear:both;}
+.clearfix{*zoom:1;}
+.bgwhite{ background:#fff;}
+.mrTop60{ margin-top:60px;}
+.colBlue{ color:#73b9ff ;}
+.colGreen{ color:#4FD8C3;}
+.colOrange{ color:#FFAA00;}
+.colWit{ color:#FFF;}
+.colGrey{color:#BABABA;}
+.bgOrange{ background:#FFAA00; }
+.bgBlue{ background:#73b9ff ; }
+.bgGrey{ background:#ddd;}
+.bgGreen{ background:#00DEC3;}
+.fr{ float:right; _display:inline;}
+.fl{ float:left; _display:inline;}
+
+body{ background:#F5F5F5;font-size:0.85rem;}
+nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6e6e6e; display:block; color:#fff; font-size:1rem; max-width:640px;margin:0 auto }
+.con{  padding:3.2rem 1% 0; width:100%; max-width:640px; margin:0 auto; position:relative;}
+.navTop{ height:2.85rem; line-height:2.85rem;  font-size:; color:#fff; text-align:center;}
+
+/*-----------随游详情------------*/
+
+.syDetailBanner{  width:100%; max-width:640px; margin:0 auto;   position:relative;}
+.syDetailBanner .smoney{ background:rgba(0,0,0,0.6); z-index:9; color:#FFE599; position:absolute; bottom:0px; left:0; width:4.5rem; height:1.6rem; line-height:1.6rem; text-align:center; }
+.syDetailBanner .collect{ background:url(../images/colect.png) no-repeat center center; background-size:1.64rem 1.42rem; z-index:9;   position:absolute; top:0px; right:0; width:1.64rem; height:1.42rem; line-height:1.6rem; text-align:center; }
+.syDetailBanner .collect.active{ background:url(../images/syD02.png) no-repeat center bottom; background-size:1.57rem 6.285rem; z-index:9;   position:absolute; top:0px; right:0; width:1.64rem; height:1.42rem; line-height:1.6rem; text-align:center; }
+.syDetailBanner .banners{ width:100%; overflow:hidden;}
+.syDetailBanner .banners li{ float:left; width:100%;  }
+.syDetailBanner .banners li img{   width:100%; display:block; }
+
+.syDetailBanner .banner-btn .prev,.syDetailBanner .banner-btn .next{ position:absolute; left:0; top:40%; display:block;   height:50px; width:50px; display:block; z-index:3; background:url(../images/mdd-prev.fw.png) no-repeat center center; background-size:1.785rem 1.785rem;}
+.syDetailBanner .banner-btn .next{ right:0; left:auto; background:url(../images/mdd-next.fw.png) no-repeat center center;background-size:1.785rem 1.785rem; }
+.syDetailBanner .hd { text-align:center;position:absolute;bottom:10px; width:100%; }
+.syDetailBanner .hd ul li{width:12px;height:12px;border-radius :50%;text-indent:-9999px;margin-right:5px;background:#ccc; display:inline-block;cursor:pointer;}
+.syDetailBanner .hd ul li.on{background:#DA324D;}
+.syDetailBanner .banners p{  position:absolute; color:#fff; font-size:30px; left:50%; margin-left:-170px; }
+.syDetailBanner .banners .p1{ top:350px;}
+.syDetailBanner .banners .banner01 .p2{ top:390px; text-indent:2em;}
+.syDetailBanner .banners .banner02 .p2{ top:390px; text-indent:6em;}
+.syDetailBanner .banners .banner02 .p2 a{ color:#fff; font-size:16px; text-decoration:none; position:absolute; top:-20px; right:-60px;}
+.syDetailBanner .banners .banner02 .p2 a:hover{ color:#FF7F00;}
+.syDetailBanner .banners .banner03 .p2{ top:390px; text-indent:2em;}
+.syDetailBanner .banners .banner04 .p0{ top:270px;}
+.syContent{  padding-top:0; padding-bottom:4.3rem;}
+.syContent .top{ padding:10px 0; background:#f5f5f5;}
+.syContent .top .userPic{ height:2.85rem; width:2.85rem; border-radius:50%; display:block; overflow:hidden; margin:0 auto;  }
+.syContent .top .userPic img{ width:100%; display:block; }
+.syContent .top .userName{  font-size:0.85rem; display:block; text-align:center; }
+.syContent .top .role{ text-align:center;display:table;  font-size:0.7rem; display:block; text-align:center; }
+.syContent .top .role span{ display:inline-block;  vertical-align:middle;}
+.syContent .top .role .help{ display:inline-block;vertical-align:middle;height:1.5rem; width:1.5rem; background:url(../images/help.png) no-repeat center center; background-size:0.85rem 0.85rem; }
+
+.syContent p{ line-height:1.5rem; font-size:0.85rem; }
+.syContent p.bq{ line-height:1.5rem; margin-bottom:5px;background:url(../images/biaoqian.png) no-repeat 0 0.35rem; padding-left:25px;}
+.syContent p.bq span{ color:#4FD8C3; margin-right:10px;}
+.syContent .line{ border-bottom:1px solid #ddd;}
+.syContent .line b{ color:#aaa; font-size:0.7rem;}
+.syContent .line img{ float:right; margin-left:3px; margin-top:5px;}
+.syContent .title{ text-align:center; line-height:2rem; font-size:0.9rem; width:100%;}
+.syContent .title01{ color:#535353; line-height:2rem; font-size:0.85rem;}
+.syContent .pics{ display:block; width:100%;  }
+.syContent .details li{  width:50%; float:left;}
+.syContent .details li .icon{ height:1.5rem;   display:block; padding-left:1.25rem;background:url(../images/syxq.png) no-repeat 0 0; background-size:1rem 13.6rem;}
+.syContent .details li .icon2{ background-position:0 -4rem;}
+.syContent .details li .icon3{ background-position:0 -8.2rem;  }
+.syContent .details li .icon4{ background-position:0 -12.5rem;  }
+.syContent .contian span{ width:50%; float:left; display:block; margin-bottom:10px;   }
+.syContent .contian span img{ width:0.9rem; height:0.9rem; display:inline-block; }
+.syContent .bgbox{ margin:10px 0; background:#F5F5F5; padding:10px;}
+.syContent .tuijian{ text-align:center; background:#F5F5F5; padding:10px 0;height:auto; width:100%; overflow:hidden; }
+.syContent .tuijian .colGreen{ font-size:0.85rem;}
+.syContent .tuijian p{ font-size:0.7rem;}
+
+.syContent .weblist li{ margin-top:1rem;  }
+.syContent .weblist li .box{ padding-bottom:0.5rem;  position:relative; border-bottom:1px solid #ddd;}
+.syContent .weblist .userPic{ height:2.85rem; width:2.85rem; position:absolute; top:0; left:0; border-radius:50%; display:block; overflow:hidden;   }
+.syContent .weblist .userPic img{ width:100%; display:block; }
+.syContent .weblist .userName{ margin-left:3rem;  font-size:0.85rem; }
+.syContent .weblist .text{  margin-left:3rem;   font-size:0.85rem; }
+
+.fixed{ background:#fff; border-top:1px solid #ddd; padding:15px;  width:100%;  position:fixed; bottom:0; left:0;    }
+.fixed a{ border-radius:5px; text-align:center; color:#fff; font-size:1rem; display:block;   height:2.14rem; line-height:2.14rem; width:7rem; }
+
+/*-----------—Pro--------*/
+.cshezhiPro{ z-index:99; display:none; border-radius:5px;  background:rgba(0,0,0,0.8); height: auto; width:80%; padding:20px; position:fixed; top:30%; left:50%; margin-left:-40%;}
+.cshezhiPro p{ line-height:1.8rem;font-size:1rem; color:#fff; text-align:center;}
+.cshezhiPro .closes{ height:24px; width:24px; position:absolute; top:10px; right:10px; background:url(../images/close.png) no-repeat 0 0; display:block;}
+.cshezhiPro .smile{ display:block; margin:10px auto; width:60px;  }
+
+
+@media screen and ( min-width: 320px ) and ( max-width:374px ){
+	html{font-size:16px;}
+}
+@media screen and ( min-width: 375px ) and ( max-width:479px ){
+	html{font-size:18px;}
+}
+@media screen and (min-width: 480px) and (max-width: 539px){
+	html{font-size:20px;}
+}
+@media screen and (min-width: 540px) and (max-width: 639px){
+	html{font-size:24px;}
+}
+@media screen and (min-width:640px){
+	html{font-size:28px;}
+}
+
+
+
