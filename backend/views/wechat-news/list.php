@@ -161,6 +161,9 @@
                             case "2":
                                 return "图文消息";
                                 break;
+                            case "3":
+                                return "图片消息";
+                                break;
                             default:
                                 return "未知";
                         }

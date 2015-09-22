@@ -52,11 +52,11 @@
             <ul class="banners">
                 <li class="banner01" onclick="gotoUrl('/wechat-trip/select-list?activity=1')">
                     <p class="title">大手拉小手的旅行</p>
-                    <img src="/assets/other/weixin/images/img01.jpg">
+                    <img src="http://image.suiuu.com/suiuu_index/01.jpg">
                 </li>
                 <li class="banner01" onclick="gotoUrl('/wechat-trip/select-list?activity=2')">
-                    <p class="title">小手的旅行</p>
-                    <img src="/assets/other/weixin/images/img02.jpg">
+                    <p class="title">梦中的情人节</p>
+                    <img src="http://image.suiuu.com/suiuu_index/10.jpg">
                 </li>
             </ul>
             <div class="hd"><ul></ul></div>

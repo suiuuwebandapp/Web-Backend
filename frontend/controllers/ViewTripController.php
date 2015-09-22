@@ -16,6 +16,7 @@ use common\components\Code;
 use common\components\Common;
 use common\components\LogUtils;
 use common\components\PageResult;
+use common\components\RequestValidate;
 use common\components\TagUtil;
 use common\entity\TravelTrip;
 use common\entity\TravelTripComment;
@@ -122,6 +123,9 @@ class ViewTripController extends UnCController{
     public function actionInfo()
     {
         $tripId=\Yii::$app->request->get("trip");
+        if (RequestValidate::is_mobile_request()) {
+            return $this->redirect(['/wechat-trip/info',"tripId"=>$tripId]);
+        }
         $returnUrl="info";$travelInfo=null;
         $travelInfo=$this->tripService->getTravelTripInfoById($tripId);
         //如果是未发布的随游 判断当前用户是否是创建人

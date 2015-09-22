@@ -108,7 +108,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="nUrl" value="" class="form-control" placeholder="请输入图文消息指向URL" required/>
+                                    <input type="text" id="nUrl" value="" class="form-control" placeholder="请输入图文消息指向URL"/>
                                 </div>
                             </div>
                         </div>
@@ -212,24 +212,33 @@
         Main.openModal("/wechat-news/to-img-list");
     };
 
-    function alertTest()
+    function chooseImg(obj)
     {
-        alert(1);
+
+        $("#modal_close").click();
+        Main.refrenshTableCurrent();
+       $("#textareaid2").val($(obj).attr("mid"));
+        $("#titleImg").val($(obj).attr("src"));
+        $("#titleImgPre").attr("src",$(obj).attr("src"));
+        $("#titleImgPre").show();
     }
     function changedx(i)
     {
         if(i==1)
         {
+            $("#uploadifive-file_upload").hide();
             $('#txt_id1').show();
             $('#txt_id2').hide();
             $('#txt_id3').hide();
         }else if(i==2)
         {
+            $("#uploadifive-file_upload").show();
             $('#txt_id1').hide();
             $('#txt_id2').show();
             $('#txt_id3').hide();
         }else if(i==3)
         {
+            $("#uploadifive-file_upload").hide();
             showUserInfo();
             $('#txt_id1').hide();
             $('#txt_id2').hide();
@@ -242,7 +251,6 @@
     }
 
     function addNews(){
-
         var Tid=$("#Tid").val();
         var title=$("#title").val();
         var nIntro=$("#nIntro").val();

@@ -22,7 +22,7 @@
                     <form id="datatables_form" onsubmit="return false;">
                     </form>
                 </div>
-                <table id="table_list" class="table table-hover">
+                <table id="table_list1" class="table table-hover">
                     <thead class="flip-content">
                     <tr>
                         <th>图片</th>
@@ -49,7 +49,7 @@
         var tableInfo = {
             'formObj'  :'#datatables_form',
             'tableDiv' :'#table_div',
-            'tableObj' :'#table_list',
+            'tableObj' :'#table_list1',
             'tableUrl' :'/wechat-news/img-list',
             'tableData':{},
             'tableOrder':[],
@@ -59,7 +59,7 @@
                     "data": "url",
                     "bSortable": false,
                     "render": function(data, type, full) {
-                        html='<img src="'+data+'" width="80px" height="80px" >';
+                        html='<img onclick="chooseImg(this)" mid="'+full.media_id+'" src="'+data+'" width="80px" height="80px" >';
                         return html;
                     }
                 },
@@ -68,9 +68,7 @@
             ]
         };
         TableAjax.init(tableInfo);
-
     });
-
 </script>
 </body>
 </html>
