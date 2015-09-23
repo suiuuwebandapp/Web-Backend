@@ -234,4 +234,17 @@ class TravelPictureService  extends BaseDb {
             $this->closeLink();
         }
     }
+
+    public function delete($id,$userSign)
+    {
+        try{
+            $conn=$this->getConnection();
+            $this->tpDb=new TravelPictureDb($conn);
+            return $this->tpDb->deleteById($id,$userSign);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 }

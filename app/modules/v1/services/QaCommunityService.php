@@ -270,4 +270,17 @@ class QaCommunityService  extends BaseDb {
             $this->closeLink();
         }
     }
+
+    public function delete($id,$userSign)
+    {
+        try{
+            $conn=$this->getConnection();
+            $this->qaCommunityDb=new QaCommunityDb($conn);
+            return $this->qaCommunityDb->deleteById($id,$userSign);
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 }

@@ -163,4 +163,15 @@ class TravelPictureDb extends ProxyDb {
         $this->setSql($sql);
         return $this->find($page);
     }
+
+    public function deleteById($id,$userSign)
+    {
+        $sql = sprintf("
+            DELETE FROM travel_picture  WHERE id=:id AND userSign=:userSign;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":id", $id, PDO::PARAM_INT);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_INT);
+        return $command->execute();
+    }
 }

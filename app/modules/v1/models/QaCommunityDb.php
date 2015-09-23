@@ -203,4 +203,15 @@ GROUP BY aUserSign ORDER BY COUNT(aUserSign) DESC  LIMIT 0,5) as ss LEFT JOIN us
         $command->bindParam(":qCountryId", $id, PDO::PARAM_INT);
         return $command->queryAll();
     }
+    public function deleteById($id,$userSign)
+    {
+        $sql = sprintf("
+              DELETE FROM question_community WHERE qId=:qId AND qUserSign=:qUserSign
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":qId", $id, PDO::PARAM_INT);
+        $command->bindParam(":qUserSign", $userSign, PDO::PARAM_STR);
+        return $command->execute();
+    }
+
 }

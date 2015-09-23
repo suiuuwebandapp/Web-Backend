@@ -238,4 +238,21 @@ class AppQaController extends AController {
             return $this->apiReturn(Code::statusDataReturn(Code::FAIL,"获取用户旅图异常"));
         }
     }
+
+    public function actionDeleteQa()
+    {
+        $this->loginValid();
+        try {
+            $id=Yii::$app->request->get('qId');
+            $userSign = $this->userObj->userSign;
+            if (empty($userSign)) {
+                return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "未知用户"));
+            }
+            $rst = $this->qaSer->delete($id,$userSign);
+            return $this->apiReturn(Code::statusDataReturn(Code::SUCCESS,$rst));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return $this->apiReturn(Code::statusDataReturn(Code::FAIL,"获取用户旅图异常"));
+        }
+    }
 }

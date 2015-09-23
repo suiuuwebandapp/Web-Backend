@@ -377,7 +377,7 @@ class AppTravelController extends AController
 
         //验证当前用户是不是随游的所属者
         $userPublisherId = $this->userPublisherObj->userPublisherId;//当前用户
-        $travelTrip = $this->tripService->getTravelTripById($tripId);
+        $travelTrip = $this->travelSer->getTravelTripById($tripId);
         if($travelTrip->createPublisherId!=$userPublisherId){
             return $this->apiReturn(Code::statusDataReturn(Code::PARAMS_ERROR, "您没有权限修改此随游"));
         }
@@ -393,7 +393,7 @@ class AppTravelController extends AController
         $tripHighlightList=array();
 
         //随游基本信息
-        $travelTrip = $this->tripService->getTravelTripById($tripId);
+        $travelTrip = $this->travelSer->getTravelTripById($tripId);
         $travelTrip->title = $title;
         $travelTrip->titleImg = $titleImg;
         $travelTrip->intro = $intro;
@@ -490,9 +490,10 @@ class AppTravelController extends AController
         }
 
         try {
-            $travelTrip=$this->tripService->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList,$tripDetailList,$tripHighlightList);
+
+            $travelTrip=$this->travelSer->updateTravelTrip($travelTrip, $tripScenicList, $tripPicList, $tripStepPriceList, $tripServiceList,$tripDetailList,$tripHighlightList,null);
             if($status==TravelTrip::TRAVEL_TRIP_STATUS_NORMAL&&$travelTrip['status']==TravelTrip::TRAVEL_TRIP_STATUS_DRAFT){
-                $this->tripService->changeTripStatus($travelTrip['tripId'],TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
+                $this->travelSer->changeTripStatus($travelTrip['tripId'],TravelTrip::TRAVEL_TRIP_STATUS_NORMAL);
             }
             $t=TagUtil::getInstance();
             $t->updateTagValList($tagList,$travelTrip['tripId']);
