@@ -1,0 +1,82 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*----------公用样式--------*/
+html{-webkit-text-size-adjust:none;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-font-smoothing:antialiased;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,img,legend,input,textarea,select,p,blockquote,th,td,span,em,i,b,font{margin:0;padding:0; list-style:none; border:none;font-family: "Microsoft YaHei"; font-weight:normal; outline:none; }
+input,button,select,textarea{outline:none; background:none; color:#858585; font-size:16px;}
+table{border-collapse:collapse;border-spacing:0;}
+textarea{resize:none;}
+body { font-family: "Microsoft YaHei"; font-size:16px; color:#858585; }
+a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); cursor:pointer;color:#858585;}
+.w1200{ width:1200px; margin:0 auto;}
+.fl{float:left;_display:inline;}
+.fr{float:right;_display:inline;}
+.clearfix:before,.clearfix:after{content:"";display:table;}
+.clearfix:after{clear:both;}
+.clearfix{*zoom:1;}
+.grey{ background:#eee;}
+.colGreen{ color:#3dd9c3;}
+.bgGreen{ background:#3dd9c3;}
+.bgwhite{ background:#fff;}
+.mrTop60{ margin-top:60px;}
+.colBlue{ color:#73b9ff ;}
+.colOrange{ color:#FFAA00;}
+.colWit{ color:#FFF;}
+.colGrey{color:#aaa;}
+.bgOrange{ background:#FFAA00; }
+.bgBlue{ background:#73b9ff ; }
+.bgGrey{ background:#aaa;}
+.fr{ float:right; _display:inline;}
+.fl{ float:left; _display:inline;}
+
+
+
+/*---志愿产品 con----*/
+.product_banner{ cursor:pointer; width:100%; height:600px;   position:relative;}
+.product_banner .bannerPic{ display:none;}
+.product_banner .banners{ width:100%; height:600px; background:url(../images/product/pro01.jpg) no-repeat center 0; overflow:hidden;}
+.product_banner .banners .con{ width:650px; height:600px; position:relative; margin:0 auto;}
+.product_banner .banners p{ color:#fff; font-size:36px; text-align:center; }
+.product_banner .banners .p1{ position:absolute; left:0; top:180px;}
+.product_banner .banners .p2{position:absolute; right:0; top:250px;   }
+.product_banner .banners .helps{position:absolute; right:0; top:305px; font-size:18px; color:#FFFC86;  } 
+.product_banner .banners .helps:hover{ text-decoration:underline; } 
+
+.productCon{ position:relative; }
+.productCon .topTip{ width:100%; height:80px; background:#3dd9c3; }
+.productCon .topTip.active{ z-index:999; position:fixed; top:0; left:0; }
+.productCon .topTip .inner{ width:1004px; margin:0 auto;}
+.productCon .topTip li{ float:left;height:80px; line-height:80px;  width:11.1%; text-align:center; border-right:1px solid #8BE8DE; box-sizing:border-box;}
+.productCon .topTip li.nobd{ border:none;}
+.productCon .topTip li a{ border-bottom:1px solid #fff;  text-align:center; color:#fff; font-size:18px;  }
+
+.productCon .listBox{ background:url(../images/product/bg.png) no-repeat center 30px; width:100%; height:auto;margin:0 auto; padding-top:240px;}
+.productCon .listBox .listCon{ width:1004px; height:auto;margin:0 auto;}
+.productCon .listBox .title{ border-radius:6px; margin-left:20px;background:#FFDD6B; height:43px; line-height:43px; width:115px; color:#D86C00; font-size:18px; text-align:center;}
+.productCon .listBox .list li{ margin-bottom:15px; position:relative; border-radius:10px; background:#fff; border:2px solid #FFDE61; width:100%; height:313px; }
+.productCon .listBox .list li .pic{ border-radius:10px; width:50%; height:313px; float:left; display:block; overflow:hidden; }
+.productCon .listBox .list li .pic img{ width:100%; display:block;  }
+.productCon .listBox .list li .text{ width:50%; height:257px; float:right; padding:28px 15px; box-sizing:border-box; }
+.productCon .listBox .list li .text .title02{ font-size:24px;   }
+.productCon .listBox .list li .text p{ line-height:30px; font-size:20px;   }
+.productCon .listBox .list li .text .p1{ margin:25px 0 30px; overflow:hidden; }
+.productCon .listBox .list li .text .p1 span{ display:block; float:left; width:85%; }
+.productCon .listBox .list li .text .p1 .span01{ width:60px; }
+.productCon .listBox .list li .text .money{ position:absolute; right:15px; bottom:15px;  color:#FF9226; font-size:20px;}
+.productCon .listBox .list li .text .money span{ font-size:32px; margin-left:10px;}
+
+
+.showBtn{ display:none; height:80px; width:80px; background:url(../images/product/contact.png) no-repeat center center; position:fixed; right:10px; bottom:10px; }
+
+.rightFixed{ position:absolute; top:700px; left:50%;   margin-left:530px; }
+.rightFixed.active{ position:fixed; top:100px; left:50%; margin-left:530px; z-index:999;}
+.rightFixed .codeBox{ margin-bottom:20px; text-align:center; padding:25px 0 10px;  border-radius:10px; background:rgba(0,0,0,0.6); height:auto; width:190px; }
+.rightFixed .codeBox img{ margin-bottom:10px;  }
+.rightFixed .codeBox p{ font-size:14px; line-height:24px; color:#AAAAAA;}
+.rightFixed .codeBox .p1{ font-size:14px; line-height:24px; color:#FFDE5F;}
+.rightFixed .codeBox .goTop{ color:#AAAAAA; border-top:2px dashed #AAAAAA; display:block; background:url(../images/product/goTop.png) no-repeat center 10px; padding-top:25px; margin-top:10px;}
+.rightFixed .codeBox .goTop:hover{ color:#ff9226;}
+
+
+

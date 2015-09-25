@@ -23,4 +23,9 @@ class StaticController extends UnCController{
     public function actionIndex(){
         return $this->render("index");
     }
+
+    public function actionProduct()
+    {
+        return $this->renderPartial('product');
+    }
 }

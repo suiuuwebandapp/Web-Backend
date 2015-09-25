@@ -12,6 +12,28 @@
 
 <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
 <script type="text/javascript" src="/assets/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $(".prev,.next").hover(function(){
+            $(this).stop(true,false).fadeTo("show",1);
+        },function(){
+            $(this).stop(true,false).fadeTo("show",1);
+        });
+
+        $(".index-banner").slide({
+            titCell:".hd ul",
+            mainCell:".banners",
+            effect:"fold",
+            interTime:3500,
+            delayTime:500,
+            autoPlay:true,
+            autoPage:true,
+            trigger:"click"
+        });
+
+    });
+</script>
 <style type="text/css">
 
     .index .topTip li{ margin-top: 9px; }
@@ -19,7 +41,6 @@
     #indexSearchDrop b{ float: right; margin-right: 10px;  }
     #indexSearchDrop{ font-size: 14px; }
     .index .story .list li .div01 p{line-height: 24px;}
-
 </style>
 
 <div class="index">
@@ -32,6 +53,14 @@
                     <p class="p2">这里有境外最好玩的短途体验</p>
                 </div>
             </li>
+            <li class="banner02" onclick="window.location.href='/static/product'">
+                <div class="con">
+                    <p class="p1">不想拯救世界不是一个好少年</p>
+                    <p class="p2">全球志愿旅行计划开启倒计时</p>
+                    <a href="javascript:;" class="jion">参加活动赢取优惠哦！</a>
+                </div>
+            </li>
+
         </ul>
         <div class="serch-out">
             <div class="serch">
@@ -40,8 +69,16 @@
                 <a href="javascript:;" class="helps colGreen">如何使用随游？</a>
             </div>
         </div>
+        <div class="banner-btn">
+            <a class="prev" href="javascript:void(0);"></a>
+            <a class="next" href="javascript:void(0);"></a>
+            <!--  <div class="hd"><ul></ul></div>    -->
+
+        </div>
+
     </div>
     <!--banner结束-->
+
 
 
     <div class="bgGreen colWit clearfix topTip">

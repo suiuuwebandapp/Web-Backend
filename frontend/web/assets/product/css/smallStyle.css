@@ -1,0 +1,7 @@
+@charset "utf-8";
+/* CSS Document */
+
+.productCon .listBox{ background:url(../images/product/bg.png) no-repeat -230px 30px; width:100%; height:auto;margin:0 auto; padding-top:240px;}
+.productCon .listBox .listCon{ width:1004px; height:auto;margin:0 20px;}
+.rightFixed{ margin-left:0; left:auto; right:10px;  }
+.rightFixed.active{ position:fixed; top:100px; margin-left:0;  left:auto; right:10px;  z-index:999;}

@@ -1,0 +1,19 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*---志愿产品 con----*/
+.productCon .topTip li a{font-size: 16px;}
+.productCon .topTip li{ float:left;height:auto; line-height:30px; font-size:16px;  width:33.3%;  box-sizing:border-box;}
+.product_banner .banners .con{ width:90%;  height:100%; position:absolute; top:0; left:5%; margin-left:0;}
+.product_banner .banners .p1,.product_banner .banners .p2{ margin-bottom: 5px;text-align:right; font-size:14px; position:relative; left:0; top:0; }
+.product_banner .banners .p1{ text-align:left; margin-top:10%; }
+.product_banner .banners .helps{position:relative; right:0; top:0; font-size:16px; float:right;  } 
+.productCon .listBox .list li .pic{  width:100%; height:auto; }
+.productCon .listBox .list li .text{  width:100%; height:auto;   box-sizing:border-box; }
+.productCon .listBox .list li .text .title02{font-size: 20px;}
+.productCon .listBox .list li .text p{font-size: 16px;}
+.productCon .listBox .list li .text .p1{font-size: 16px;}
+.productCon .listBox .list li .text .p1 span{ width:100%;font-size: 16px;}
+.productCon .listBox .list li .text .money{ position:relative; top:0; left:0; text-align:right;}
+
+body{font-size: 12px;}
