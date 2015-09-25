@@ -88,9 +88,11 @@
         <input id="userNumber" type="text" class="text" value="1">
         <a href="javascript:;" class="add" onclick="updateNumber(true)"></a>
     </div>
+    <p>姓名</p>
+    <input id="userName" class="sdate" placeholder="请输入姓名" />
     <p>联系方式</p>
     <input id="userPhone" class="sdate" placeholder="请输入手机号" />
-    <p>你在哪天需要我们的服务？</p>
+    <p>你在哪天需要我们的服务？(可多选)</p>
     <input id="dateList" class="sdate" placeholder="请选择出行日期(可多选) ..." />
     <p>旅行需求</p>
     <div class="box">
@@ -178,6 +180,9 @@
             $('#userNumber').val(n);
         }
     }
+
+    var isClick=false;
+
     function submit()
     {
         var ssd_str = "";
@@ -225,7 +230,7 @@
 
         var timeArr= timeList.split(",");
         var myDate = new Date();
-
+        var userName=$('#userName').val();
 
         if(site=="")
         {
@@ -252,6 +257,11 @@
             alert('手机号格式不正确');
             return;
         }
+        if(userName=="")
+        {
+            alert('请输入姓名');
+            return;
+        }
         for(var i =0;i<timeArr.length;i++)
         {
             var tt = new Date(timeArr[i]);
@@ -263,6 +273,12 @@
             }
         }
         content=str+content;
+        if(isClick)
+        {
+            alert('添加中...');
+            return;
+        }
+        isClick=true;
         $.ajax({
             url :'/we-chat-order-list/add-order',
             type:'post',
@@ -271,12 +287,15 @@
                 content:content,
                 timeList:timeList,
                 phone:userPhone,
+                userName:userName,
                 userNumber:userNumber
             },
             error:function(){
+                isClick=false;
                 alert("提交订购异常");
             },
             success:function(data){
+                isClick=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){

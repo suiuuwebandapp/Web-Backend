@@ -85,6 +85,8 @@
             <input id="userNumber" type="text" class="text" value="<?= $info['wUserNumber']?$info['wUserNumber']:1?>">
             <a href="javascript:;" class="add" onclick="updateNumber(true)"></a>
         </div>
+        <p>姓名</p>
+        <input id="userName" class="sdate" placeholder="请输入手机号" value="<?= $info['wUserName']?>" />
         <p>联系方式</p>
         <input id="userPhone" class="sdate" placeholder="请输入手机号" value="<?= $info['wPhone']?>" />
         <p>你在哪天需要随友？</p>
@@ -126,7 +128,7 @@
         <p>写下你的旅行愿望</p>
         <textarea id="content"></textarea>
         <div class="btnDiv">
-            <a href="javascript:;" class="btn" onclick="submit()">提交定制</a>
+            <a href="javascript:;" class="btn" onclick="submit()">提交修改</a>
         </div>
 
     </div>
@@ -208,6 +210,9 @@
             $('#userNumber').val(n);
         }
     }
+
+    var isClick=false;
+
     function submit()
     {
         var ssd_str = "";
@@ -252,7 +257,13 @@
         var timeList=$('#dateList').val();
         var userNumber=$('#userNumber').val();
         var userPhone=$('#userPhone').val();
+        var userName=$('#userName').val();
         var orderId=$('#orderId').val();
+        if(userName=="")
+        {
+            alert('请填写姓名');
+            return;
+        }
         if(orderId=="")
         {
             alert('未知订单');
@@ -284,6 +295,13 @@
             return;
         }
         content=str+content;
+
+        if(isClick)
+        {
+            alert("修改中...");
+            return;
+        }
+        isClick=true;
         $.ajax({
             url :'/we-chat-order-list/update-order',
             type:'post',
@@ -291,14 +309,17 @@
                 orderId:orderId,
                 site:site,
                 content:content,
+                userName:userName,
                 timeList:timeList,
                 phone:userPhone,
                 userNumber:userNumber
             },
             error:function(){
+                isClick=false;
                 alert("修改订购异常");
             },
             success:function(data){
+                isClick=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){

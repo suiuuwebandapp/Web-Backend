@@ -116,6 +116,7 @@
         });
 
     });
+    var isSend=false;
     function getCode()
     {
         var phone = $('#phone').val();
@@ -130,6 +131,12 @@
             alert('手机号不能为空');
             return;
         }
+        if(isSend)
+        {
+            alert("发送中...");
+            return;
+        }
+        isSend=true;
         $.ajax({
             url :'/we-chat/password-code',
             type:'post',
@@ -138,9 +145,11 @@
                 phone:phone
             },
             error:function(){
+                isSend=false;
                 alert("验证码发送失败");
             },
             success:function(data){
+                isSend=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
@@ -171,6 +180,12 @@
             alert('密码不能为空');
             return;
         }
+        if(isSend)
+        {
+            alert("修改中...");
+            return;
+        }
+        isSend=true;
         $.ajax({
             url :'/we-chat/update-password',
             type:'post',
@@ -180,9 +195,11 @@
                 phone:phone
             },
             error:function(){
-                alert("验证码发送失败");
+                isSend=false;
+                alert("修改失败");
             },
             success:function(data){
+                isSend=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){

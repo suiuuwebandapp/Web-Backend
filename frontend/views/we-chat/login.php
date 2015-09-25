@@ -70,6 +70,8 @@
 </div>
 </div>
 <script>
+
+    var isLogin=false;
     function changeCode()
     {
         $('#codeImg').attr('src','/index/get-code')
@@ -89,6 +91,13 @@
             alert("密码不能为空");
             return;
         }
+        if(isLogin)
+        {
+            alert("登录中");
+            return;
+        }
+        isLogin=true;
+
         $.ajax({
             url :'/we-chat/login',
             type:'post',
@@ -99,9 +108,11 @@
                 remember:remember
             },
             error:function(){
+                isLogin=false;
                 alert("登陆异常");
             },
             success:function(data){
+                isLogin=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){

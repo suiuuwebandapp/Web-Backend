@@ -54,6 +54,7 @@
 </div>
 </div>
 <script>
+    var isClick=false;
     function applyRefund()
     {
         var orderNumber='<?php echo $orderNumber?>';
@@ -74,6 +75,12 @@
             alert('申请原因不能为空');
             return;
         }
+        if(isClick)
+        {
+            alert("申请中...");
+            return;
+        }
+        isClick=true;
         $.ajax({
             url :'/we-chat-order-list/apply-refund',
             type:'post',
@@ -83,9 +90,11 @@
                 phone:phone
             },
             error:function(){
+                isClick=false
                 alert("申请退款异常");
             },
             success:function(data){
+                isClick=false
                 data=eval("("+data+")");
                 if(data.status==1){
                     window.location.href= '<?php echo Yii::$app->params['weChatUrl'];?>'+'/we-chat-order-list/refund-success';

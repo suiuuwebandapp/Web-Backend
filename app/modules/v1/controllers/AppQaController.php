@@ -53,7 +53,7 @@ class AppQaController extends AController {
             if(empty($countryId)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "国家不能为空"));}
             if(empty($cityId)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "城市不能为空"));}
             if(empty($tagList)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "标签不能为空"));}
-            if(empty($userList)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "邀请回答人不能空"));}
+            //if(empty($userList)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "邀请回答人不能空"));}
             $question = new QuestionCommunity();
             $question->qTitle = $title;
             $question->qContent = $content;
@@ -83,7 +83,7 @@ class AppQaController extends AController {
             }
             $qId = Yii::$app->request->post('qId');
             $content = Yii::$app->request->post('content');
-            if(empty($qId)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "标题不能为空"));}
+            if(empty($qId)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "问题不能为空"));}
             if(empty($content)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "内容不能为空"));}
             $answer = new AnswerCommunity();
             $answer->qId = $qId;
@@ -164,6 +164,7 @@ class AppQaController extends AController {
         try {
             $id = Yii::$app->request->get('countryId');
             $rst = $this->qaSer->getQaCity($id);
+
             return $this->apiReturn(Code::statusDataReturn(Code::SUCCESS,$rst));
         }catch (Exception $e) {
             LogUtils::log($e);

@@ -206,19 +206,34 @@
             <li class="menu_top">
                 <a href="javascript:;">
                     <i class="icon-present"></i>
-                    <span class="title"> 圈子管理</span>
+                    <span class="title"> 问答管理</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="#~/circle/list">圈子列表</a>
+                        <a href="#~/qa/question-list">问题列表</a>
                     </li>
                     <li>
-                        <a href="#~/circle/article-list">文章列表</a>
+                        <a href="#~/qa/answer-list">回答列表</a>
+                    </li>
+
+                </ul>
+
+            </li>
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-present"></i>
+                    <span class="title"> 旅图管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#~/travel-picture/tp-list">旅图列表</a>
                     </li>
                     <li>
-                        <a href="#~/circle/comment-list">评论列表</a>
+                        <a href="#~/travel-picture/comment-list">评论列表</a>
                     </li>
+
                 </ul>
 
             </li>

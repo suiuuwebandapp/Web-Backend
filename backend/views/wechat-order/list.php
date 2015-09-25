@@ -142,14 +142,20 @@
                         return data;
                     }
                 },
-                {"targets": [6],"data": "nickName","bSortable": false,
+                {"targets": [6],"data": "wUserName","bSortable": false,
                     "width":"80px",
                     "render": function(data, type, full) {
-                        if(data==null)
+                        if(data!=null&&data!="")
                         {
-                            return "";
+                            return data;
                         }
-                        return data.length<10?data:data.substring(0,10);
+                        var str=full.nickName;
+                        if(str!=null&&str!="")
+                        {
+                            return str.length<10?str:str.substring(0,10);
+                        }
+                        return "";
+
                     }
                 },
                 {"targets": [7],"data": "wPhone","bSortable": false,
@@ -186,6 +192,8 @@
                             html='<span class="label label-default">&nbsp;退款结束&nbsp;</span>';
                         }else if(data==7) {
                             html='<span class="label label-default">&nbsp;拒绝退款&nbsp;</span>';
+                        }else if(data==8) {
+                            html='<span class="label label-default">&nbsp;已取消&nbsp;</span>';
                         }
                         return html;
                     }

@@ -13,6 +13,7 @@ class AnswerCommunity {
 
     const PRIMARY_KEY='aId';
 
+    const SYS_TYPE=2;
     /**
      * @var主键回答id
      */
@@ -37,5 +38,7 @@ class AnswerCommunity {
     public $type;
 
     public $zan;
+
+
 
 }

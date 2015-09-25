@@ -75,15 +75,20 @@
     {
         $('#codeImg').attr('src','/index/get-code')
     }
+
+    var isClick=false;
     function register()
     {
         var code=$('#wechat_code').val();
-
-
         var phone = $('#wechat_phone').val();
         var areaCode = $('#wechat_country').attr('areaCode');
         //var valNum = $('#wechat_valNum').val();
         var password = $('#wechat_password').val();
+        if(isClick)
+        {
+            alert("注册中...");
+            return;
+        }
         if(areaCode=="")
         {
             alert('国家不能为空');
@@ -114,6 +119,8 @@
             alert('请同意网站注册协议');
             return;
         }
+        isClick=true;
+
         $.ajax({
             url :'/we-chat/phone-register',
             type:'post',
@@ -121,9 +128,11 @@
                 code:code
             },
             error:function(){
+                isClick=false;
                 alert("注册失败");
             },
             success:function(data){
+                isClick=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
@@ -143,12 +152,18 @@
     {
         window.location.href='/we-chat/show-country?rUrl=/we-chat/register';
     }
+    var isSend=false;
     function getCode()
     {
         var phone = $('#wechat_phone').val();
         var areaCode = $('#wechat_country').attr('areaCode');
         //var valNum = $('#wechat_valNum').val();
         var password = $('#wechat_password').val();
+        if(isSend)
+        {
+            alert("发送中");
+            return;
+        }
         if(areaCode=="")
         {
             alert('验证码不能为空');
@@ -169,6 +184,7 @@
             alert('密码不能为空');
             return;
         }
+        isSend=true;
         $.ajax({
             url :'/we-chat/send-message',
             type:'post',
@@ -179,8 +195,10 @@
             },
             error:function(){
                 alert("验证码发送失败");
+                isSend=false;
             },
             success:function(data){
+                isSend=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){

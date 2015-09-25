@@ -79,8 +79,14 @@
     {
         window.location.href='/we-chat/access-reg';
     }
+    var isBinding=false;
     function binding()
     {
+        if(isBinding)
+        {
+            alert("绑定中...");
+            return;
+        }
         var phone = $('#phone').val();
         //var valNum = $('#valNum').val();
         var password = $('#password').val();
@@ -99,6 +105,7 @@
             alert('密码不能为空');
             return;
         }
+        isBinding=true;
         $.ajax({
             url :'/we-chat/binding',
             type:'post',
@@ -107,9 +114,11 @@
                 password:password
             },
             error:function(){
+                isBinding=false;
                 alert("验证码发送失败");
             },
             success:function(data){
+                isBinding=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){

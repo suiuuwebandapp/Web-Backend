@@ -39,7 +39,7 @@ for($i=1;$i<count($arr);$i++)
                         <div class="form-group">
                             <label class="col-md-3 control-label">用户昵称</label>
                             <div class="col-md-9 control-label" style="text-align: left">
-                                <?=$info['nickName']?>
+                                <?=!empty($info['wUserName'])?$info['wUserName']:$info['nickName']?>
                             </div>
                         </div>
                     </div>

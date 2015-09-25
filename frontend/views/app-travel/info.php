@@ -156,7 +156,7 @@
         if (isCollection) {
             //添加收藏
             $.ajax({
-                url: 'http://api.suiuu.com/v1/app-attention/add-collection-travel'+"?token="+"<?php echo urlencode($token);?>",
+                url: 'http://app.suiuu.com/v1/app-attention/add-collection-travel'+"?token="+"<?php echo urlencode($token);?>",
                 type: 'post',
                 data: {
                     travelId: tripId
@@ -187,7 +187,7 @@
         } else {
             //取消收藏
             $.ajax({
-                url: 'http://api.suiuu.com/v1/app-attention/delete-attention'+"?token="+"<?php echo urlencode($token);?>",
+                url: 'http://app.suiuu.com/v1/app-attention/delete-attention'+"?token="+"<?php echo urlencode($token);?>",
                 type: 'post',
                 data: {
                     attentionId: $('#collection_trip').attr('attentionIdTrip')

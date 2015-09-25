@@ -76,7 +76,6 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .syContent p{ line-height:1.5rem; font-size:0.85rem; }
 .syContent p.bq{ line-height:1.5rem; margin-bottom:5px;background:url(../images/biaoqian.png) no-repeat 0 0.35rem; padding-left:25px;}
 .syContent p.bq span{ color:#4FD8C3; margin-right:10px;}
-.syContent .line{ border-bottom:1px solid #ddd;}
 .syContent .line b{ color:#aaa; font-size:0.7rem;}
 .syContent .line img{ float:right; margin-left:3px; margin-top:5px;}
 .syContent .title{ text-align:center; line-height:2rem; font-size:0.9rem; width:100%;}

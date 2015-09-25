@@ -43,10 +43,15 @@ class WeChatOrderListController extends WController {
         $timeList=Yii::$app->request->post('timeList');
         $userNumber=Yii::$app->request->post('userNumber');
         $userPhone=Yii::$app->request->post('phone');
+        $userName=Yii::$app->request->post('userName');
         $userSign=$this->userObj->userSign;
         if(empty($userSign))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "无效的用户"));
+        }
+        if(empty($userName))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "用户姓名不能为空"));
         }
         if(empty($site))
         {
@@ -90,6 +95,7 @@ class WeChatOrderListController extends WController {
         $orderEntity->wUserNumber=$userNumber;
         $orderEntity->wPhone=$userPhone;
         $orderEntity->openId=$openId;
+        $orderEntity->wUserName=$userName;
         $this->orderListSer->insertWeChatInfo($orderEntity);
 
         return json_encode(Code::statusDataReturn(Code::SUCCESS, '/we-chat-order-list/order-success'));
@@ -107,10 +113,15 @@ class WeChatOrderListController extends WController {
         $timeList=Yii::$app->request->post('timeList');
         $userNumber=Yii::$app->request->post('userNumber');
         $userPhone=Yii::$app->request->post('phone');
+        $userName=Yii::$app->request->post('userName');
         $userSign=$this->userObj->userSign;
         if(empty($orderId))
         {
             return json_encode(Code::statusDataReturn(Code::FAIL, "无效的订购订单"));
+        }
+        if(empty($userName))
+        {
+            return json_encode(Code::statusDataReturn(Code::FAIL, "用户姓名不能为空"));
         }
         if(empty($userSign))
         {
@@ -145,6 +156,7 @@ class WeChatOrderListController extends WController {
         $orderEntity->wPhone=$userPhone;
         $orderEntity->wOrderId=$orderId;
         $orderEntity->wUserSign=$userSign;
+        $orderEntity->wUserName=$userName;
         $this->orderListSer->updateOrderInfo($orderEntity);
         return json_encode(Code::statusDataReturn(Code::SUCCESS, '/we-chat-order-list/order-success'));
     }

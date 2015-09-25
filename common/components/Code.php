@@ -158,7 +158,7 @@ class Code
 
 
 
-    const RECOMMEND_ANSWER_USER = 'a4c1406ff4cc382389f19bf6ec3e55c1';//推荐用户
+    const RECOMMEND_ANSWER_USER = 'a4c1406ff4cc382389f19bf6ec3e55c1';//推荐用户//随小游
     /**
      * 错误信息
      */

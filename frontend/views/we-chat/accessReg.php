@@ -134,11 +134,17 @@
         });
 
     });
+    var isClick=false;
     function getCode()
     {
         var phone = $('#phone').val();
         var areaCode = $("#accCodeId").val();
         //var valNum = $('#valNum').val();
+        if(isClick)
+        {
+            alert("已经发送请稍后");
+            return;
+        }
         if(areaCode=="")
         {
             alert('国家不能为空');
@@ -154,6 +160,7 @@
             alert('图型验证码不能为空');
             return;
         }*/
+        isClick=true;
         $.ajax({
             url :'/we-chat/acc-send-message',
             type:'post',
@@ -163,8 +170,10 @@
             },
             error:function(){
                 alert("验证码发送失败");
+                isClick=false;
             },
             success:function(data){
+                isClick=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){
@@ -175,7 +184,13 @@
             }
         });
     }
+
     $('#register').bind("click",function(){
+        if(isClick)
+        {
+            alert("注册中...");
+            return;
+        }
         var password = $('#password').val();
         var code =$('#code').val();
         var nickname = $('#nickname').val();
@@ -199,6 +214,7 @@
             alert('请同意网站注册协议');
             return;
         }
+        isClick=true;
         $.ajax({
             url :'/we-chat/access-reg',
             type:'post',
@@ -208,9 +224,11 @@
                 nickname:nickname
             },
             error:function(){
+                isClick=false;
                 alert("注册失败");
             },
             success:function(data){
+                isClick=false;
                 //hide load
                 data=eval("("+data+")");
                 if(data.status==1){

@@ -20,11 +20,11 @@ class WeChatOrderListDb extends ProxyDb{
         $sql = sprintf("
             INSERT INTO wechat_order_list
             (
-             wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wCreateTime,wLastTime,wOrderNumber,wUserNumber,wPhone,openId,isDel
+             wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wCreateTime,wLastTime,wOrderNumber,wUserNumber,wPhone,openId,isDel,wUserName
             )
             VALUES
             (
-            :wOrderSite,:wOrderTimeList,:wOrderContent,:wUserSign,:wStatus,now(),now(),:wOrderNumber,:wUserNumber,:wPhone,:openId,FALSE
+            :wOrderSite,:wOrderTimeList,:wOrderContent,:wUserSign,:wStatus,now(),now(),:wOrderNumber,:wUserNumber,:wPhone,:openId,FALSE,:wUserName
             )
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -37,6 +37,7 @@ class WeChatOrderListDb extends ProxyDb{
         $command->bindParam(":wUserNumber", $weChatOrderList->wUserNumber, PDO::PARAM_INT);
         $command->bindParam(":wPhone", $weChatOrderList->wPhone, PDO::PARAM_STR);
         $command->bindParam(":openId", $weChatOrderList->openId, PDO::PARAM_STR);
+        $command->bindParam(":wUserName", $weChatOrderList->wUserName, PDO::PARAM_STR);
         return $command->execute();
     }
 
@@ -147,7 +148,7 @@ WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
     public function updateWeChatOrderInfo(WeChatOrderList $weChatOrderList){
         $sql = sprintf("
             UPDATE wechat_order_list SET
-            wOrderSite=:wOrderSite,wOrderTimeList=:wOrderTimeList,wOrderContent=:wOrderContent,wPhone=:wPhone,wUserNumber=:wUserNumber,wLastTime=now()
+            wOrderSite=:wOrderSite,wOrderTimeList=:wOrderTimeList,wOrderContent=:wOrderContent,wPhone=:wPhone,wUserNumber=:wUserNumber,wLastTime=now(),wUserName=:wUserName
             WHERE wOrderId=:wOrderId AND wUserSign=:wUserSign
         ");
         $command=$this->getConnection()->createCommand($sql);
@@ -158,6 +159,7 @@ WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
         $command->bindParam(":wUserNumber", $weChatOrderList->wUserNumber, PDO::PARAM_INT);
         $command->bindParam(":wOrderId", $weChatOrderList->wOrderId, PDO::PARAM_INT);
         $command->bindParam(":wUserSign", $weChatOrderList->wUserSign, PDO::PARAM_STR);
+        $command->bindParam(":wUserName", $weChatOrderList->wUserName, PDO::PARAM_STR);
         return $command->execute();
     }
 
@@ -243,7 +245,7 @@ WHERE a.wUserSign=:userSign  AND isDel=FALSE ORDER BY a.wOrderId DESC
             $this->setParam("wOrderNumber",$orderNumber);
         }*/
         $this->setParam("isDel",$isDel);
-        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wPhone,wLastTime,wUserNumber,c.headImg,c.nickname as nickName,wMoney,wDetails,b.headImg as rHeadImg,b.nickName as rNickName');
+        $this->setSelectInfo('wOrderId,wOrderSite,wOrderTimeList,wOrderContent,wUserSign,wStatus,wRelativeSign,wOrderNumber,wCreateTime,wUserName,wPhone,wLastTime,wUserNumber,c.headImg,c.nickname as nickName,wMoney,wDetails,b.headImg as rHeadImg,b.nickName as rNickName');
         $this->setSql($sql);
         return $this->find($page);
     }

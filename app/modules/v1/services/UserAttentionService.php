@@ -224,11 +224,11 @@ class UserAttentionService extends BaseDb
                         break;
                     case UserAttention::TYPE_FOR_TRAVEL_PICTURE:
                         $tpSer = new TravelPictureService();
-                        $tpSer->updateTravelPictureAttentionCount($rId,false);
+                        $tpSer->updateTravelPictureAttentionCount($rest['relativeId'],false);
                         break;
                     case UserAttention::TYPE_FOR_QA:
                         $qaSer = new QaCommunityService();
-                        $qaSer->updateQaAttentionCount($rId,false);
+                        $qaSer->updateQaAttentionCount($rest['relativeId'],false);
                         break;
 
                 }

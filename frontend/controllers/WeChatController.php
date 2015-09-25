@@ -150,7 +150,7 @@ class WeChatController extends WController
             } else {
                 //关于用户发送消息的
                 if ($keyword!="") {
-                    if ($keyword == '0') {
+                    if ($keyword == '01') {
                         //$this->wechatInterface->getWechatUserInfo($fromUsername, true); //更新的时候抓取用户信息
                         //随小游的二维码
                         $this->commonMsgImg(WeChat::IMG_TPL, $fromUsername, $toUsername, $time,  'TGL0j4APeEwDfKjdw1Ylc9ZSs937OEOIjjqQGGQEDG1KCasscUkZe9W5LAplP0dk');
@@ -165,9 +165,11 @@ class WeChatController extends WController
                                 if($word['nType']==WeChatNewsList::TYPE_TEXT){
                                     $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text,$word['nContent']);
                                 }
-                                else{
+                                else if($word['nType']==WeChatNewsList::TYPE_NEWS){
                                     $rst = $this->newsListSer->findNewsByKeyword($keyword);
                                     $this->msgHandle($fromUsername, $toUsername, $time, $rst);
+                                }else if($word['nType']==WeChatNewsList::TYPE_IMG){
+                                    $this->commonMsgImg(WeChat::IMG_TPL, $fromUsername, $toUsername, $time,$word['nContent']);
                                 }
                                 break;
                             }

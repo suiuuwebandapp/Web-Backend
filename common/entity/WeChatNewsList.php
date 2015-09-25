@@ -14,6 +14,7 @@ class WeChatNewsList
 
     const TYPE_TEXT = 1;//文本
     const TYPE_NEWS = 2;//图文
+    const TYPE_IMG = 3;//图片
 
     const STATUS_NORMAL=1;//正常
     const STATUS_DISABLED=2;//禁用

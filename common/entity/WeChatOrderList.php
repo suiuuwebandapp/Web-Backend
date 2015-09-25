@@ -91,4 +91,9 @@ class WeChatOrderList{
      * @var随友联系方式
      */
     public $tripContact;
+
+    /**
+     * @var用户名字
+     */
+    public $wUserName;
 }

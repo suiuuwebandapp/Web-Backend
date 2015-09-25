@@ -50,10 +50,10 @@ class AppTravelPictureController  extends AController {
             $titleImg= Yii::$app->request->post('titleImg');
             $address= Yii::$app->request->post('address');
             if(empty($title)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "标题不能为空"));}
-            if(empty($country)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "国家不能为空"));}
+            /*if(empty($country)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "国家不能为空"));}
             if(empty($city)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "城市不能为空"));}
             if(empty($lon)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "经度不能为空"));}
-            if(empty($lat)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "纬度不能为空"));}
+            if(empty($lat)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "纬度不能为空"));}*/
             if(empty($tags)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "标签不能为空"));}
             if(empty($picList)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "图片不能为空"));}
             if(empty($titleImg)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "封面不能为空"));}
@@ -176,6 +176,11 @@ class AppTravelPictureController  extends AController {
             LogUtils::log($e);
             return $this->apiReturn(Code::statusDataReturn(Code::FAIL,"获取异常"));
         }
+    }
+
+    public function actionTag()
+    {
+
     }
 
     //得到类似
