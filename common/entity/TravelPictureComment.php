@@ -10,6 +10,9 @@ namespace common\entity;
 
 
 class TravelPictureComment {
+
+    const PRIMARY_KEY='id';
+
     public $id;
     public $tpId;
     public $comment;

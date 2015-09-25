@@ -11,6 +11,8 @@ namespace common\entity;
 
 class TravelPicture {
 
+    const PRIMARY_KEY='id';
+
     public $id;
     public $title;
     public $contents;

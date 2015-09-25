@@ -18,7 +18,7 @@ use frontend\services\UserBaseService;
 use yii\base\Exception;
 use yii\console\Controller;
 
-require (dirname(dirname(dirname(__FILE__)))."/common/components/simple_html_dom.php");
+require_once (dirname(dirname(dirname(__FILE__)))."/common/components/simple_html_dom.php");
 
 
 class XiechengController extends Controller{
