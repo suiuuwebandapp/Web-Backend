@@ -12,7 +12,6 @@
 
 .productCon .topTip{ width:100%; height:auto;  }
 .productCon .topTip .inner{ width:100%; }
-.productCon .topTip li{ float:left;height:auto; line-height:40px;  width:33.3%;  box-sizing:border-box;}
 
 .productCon .listBox{ background:none;   padding-top:0;}
 .productCon .listBox .listCon{ width:100%; margin:0; }

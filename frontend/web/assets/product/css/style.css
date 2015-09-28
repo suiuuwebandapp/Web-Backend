@@ -47,9 +47,14 @@ a{text-decoration:none; outline:none; blr:expression(this.onFocus=this.blur()); 
 .productCon .topTip{ width:100%; height:80px; background:#3dd9c3; }
 .productCon .topTip.active{ z-index:999; position:fixed; top:0; left:0; }
 .productCon .topTip .inner{ width:1004px; margin:0 auto;}
-.productCon .topTip li{ float:left;height:80px; line-height:80px;  width:11.1%; text-align:center; border-right:1px solid #8BE8DE; box-sizing:border-box;}
+.productCon .topTip li{ position:relative; float:left;height:80px; line-height:80px;  width:20%; text-align:center; border-right:1px solid #8BE8DE; box-sizing:border-box;}
 .productCon .topTip li.nobd{ border:none;}
 .productCon .topTip li a{ border-bottom:1px solid #fff;  text-align:center; color:#fff; font-size:18px;  }
+.productCon .topTip li .drops{ padding:0 10px; z-index:9999; display:none; border-radius:5px; width:100px; margin-left:-61px; background:rgba(0, 0, 0, 0.6); position:absolute; top:95px; left:50%; text-align:center; color:#fff; font-size:18px;  }
+.productCon .topTip li .drops:before{ content:""; position:absolute; top:-20px; left:50%;width:0; margin-left:-5px; height:0; border:10px solid; border-color:transparent transparent  rgba(0, 0, 0, 0.6) transparent;}
+.productCon .topTip li .drops a{ border-bottom:1px solid #fff; text-decoration:none; width:100%; display:block; line-height:45px; height:45px; }
+.productCon .topTip li .drops a:hover{ color:#fffc86;}
+.productCon .topTip li .drops a:last-child{ border:none; }
 
 .productCon .listBox{ background:url(../images/product/bg.png) no-repeat center 30px; width:100%; height:auto;margin:0 auto; padding-top:240px;}
 .productCon .listBox .listCon{ width:1004px; height:auto;margin:0 auto;}

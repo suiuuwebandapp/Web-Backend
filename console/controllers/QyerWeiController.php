@@ -9,6 +9,9 @@
 
 namespace console\controllers;
 
+use backend\components\Page;
+use backend\services\TravelPictureService;
+use common\models\TravelPictureDb;
 use frontend\services\UserBaseService;
 use common\components\UrlUtil;
 use common\entity\TravelPicture;
@@ -24,6 +27,39 @@ class QyerWeiController extends Controller{
 
 
 
+    public function actionTest()
+    {
+
+        $pService=new TravelPictureService();
+        $page=new Page();
+        $page->showAll=true;
+        $page=$pService->getTpList($page,null,null,null);
+        $allTag='';
+        foreach($page->getList() as $travelPicture)
+        {
+            if($travelPicture['tags']==''){
+                continue;
+            }
+            $allTag.=$travelPicture['tags'].",";
+        }
+        $list=explode(',',$allTag);
+        $newArray=[];
+        foreach($list as $name)
+        {
+            if(!array_key_exists($name,$newArray)){
+                $newArray[$name]=1;
+            }else{
+                $newArray[$name]= $newArray[$name]+1;
+            }
+        }
+        asort($newArray);
+
+        var_dump($newArray);
+    }
+
+    public function cmp($a, $b){
+        return $a['order'] - $b['order'];
+    }
 
     public function actionRun()
     {
