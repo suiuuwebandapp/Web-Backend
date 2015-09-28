@@ -313,9 +313,12 @@
 }
 
 #messageSessionDiv{
-    max-height: 641px;
+    height: 631px;
     overflow-y: scroll;
 }
 .sycon .myEmail .past01 .left .datas{
     width: 45px;
+}
+.sycon .myEmail .past01 .right{
+    margin-top: 0px;
 }
