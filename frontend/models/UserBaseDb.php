@@ -33,6 +33,11 @@ class UserBaseDb extends ProxyDb
             ub.isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,ub.profession,co.cname AS countryCname,
             co.ename AS countryEname,ci.cname AS cityCname,ci.ename AS cityEname,surname,name';
 
+    /**
+     * 查询用户基本信息 不联表查询
+     */
+    const FIND_USER_BASE_SELECT='userId,nickname,surname,name,email,phone,ub.areaCode,sex,birthday,headImg,hobby,school,qq,wechat,intro,info,
+            travelCount,registerIp,status,ub.registerTime,lastLoginTime,userSign,isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,profession,balance';
 
     /**
      * 添加用户
@@ -98,7 +103,7 @@ class UserBaseDb extends ProxyDb
     public function findByEmailAndPwd($email, $password)
     {
         $sql = sprintf("
-            SELECT * FROM user_base WHERE email=:email AND password=:password
+            SELECT ".self::FIND_USER_BASE_SELECT." FROM user_base WHERE email=:email AND password=:password
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":email", $email, PDO::PARAM_STR);
@@ -116,7 +121,7 @@ class UserBaseDb extends ProxyDb
     public function findByPhoneAndPwd($phone, $password)
     {
         $sql = sprintf("
-            SELECT * FROM user_base WHERE phone=:phone AND password=:password
+            SELECT ".self::FIND_USER_BASE_SELECT." FROM user_base WHERE phone=:phone AND password=:password
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":phone", $phone, PDO::PARAM_STR);
@@ -133,7 +138,7 @@ class UserBaseDb extends ProxyDb
     public function findByEmail($email)
     {
         $sql = sprintf("
-            SELECT * FROM user_base WHERE email=:email
+            SELECT ".self::FIND_USER_BASE_SELECT." FROM user_base WHERE email=:email
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":email", $email, PDO::PARAM_STR);
@@ -149,7 +154,7 @@ class UserBaseDb extends ProxyDb
     public function findByPhone($phone)
     {
         $sql = sprintf("
-            SELECT * FROM user_base WHERE phone=:phone
+            SELECT ".self::FIND_USER_BASE_SELECT." FROM user_base WHERE phone=:phone
         ");
         $command = $this->getConnection()->createCommand($sql);
         $command->bindParam(":phone", $phone, PDO::PARAM_STR);
@@ -166,7 +171,7 @@ class UserBaseDb extends ProxyDb
     public function findById($userId, $status = null)
     {
         $sql = sprintf("
-            SELECT * FROM user_base WHERE userId=:userId
+            SELECT ".self::FIND_USER_BASE_SELECT." FROM user_base WHERE userId=:userId
         ");
         if ($status != null) {
             $sql .= " AND status=:status";
@@ -189,7 +194,7 @@ class UserBaseDb extends ProxyDb
     public function findPasswordByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT * FROM user_base WHERE userSign=:userSign
+            SELECT ".self::FIND_USER_BASE_SELECT." FROM user_base WHERE userSign=:userSign
         ");
         if ($status != null) {
             $sql .= " AND status=:status";
@@ -283,7 +288,7 @@ class UserBaseDb extends ProxyDb
     public function findBaseAllBySign($userSign, $status = 1)
     {
         $sql = sprintf("
-            SELECT *
+            SELECT ".self::FIND_USER_BASE_SELECT."
             FROM user_base WHERE userSign=:userSign
         ");
         if ($status != null) {
