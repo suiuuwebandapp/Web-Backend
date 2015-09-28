@@ -98,7 +98,7 @@ class TravelPictureDb extends ProxyDb {
         return $this->find($page);
     }
 
-    public function getTravelPictureList($page,$tags,$search)
+    public function getTravelPictureList($page,$tags,$search,$id=null)
     {
         $sql=sprintf("
         FROM travel_picture a
@@ -114,6 +114,11 @@ class TravelPictureDb extends ProxyDb {
             $sql.=" AND a.id IN (";
             $sql.=$tags;
             $sql.=")";
+        }
+        if(!empty($id))
+        {
+            $sql.=" AND a.id<>:id";
+            $this->setParam('id',$search);
         }
         $this->setSelectInfo('a.id,a.title,a.contents,a.picList,a.country,a.city,a.lon,a.lat,a.tags,a.userSign,a.createTime,a.commentCount,a.attentionCount,a.titleImg,a.address,b.headImg');
         $this->setSql($sql);

@@ -128,7 +128,8 @@ class WeChatDb extends ProxyDb{
     {
         $sql=sprintf("
         FROM wechat_user_info a
-        LEFT JOIN user_base b ON a.userSign=b.userSign
+        LEFT JOIN user_access c ON c.openId=a.openId
+        LEFT JOIN user_base b ON c.userId=b.userSign
          WHERE 1=1
         ");
         if(!empty($searchText)){

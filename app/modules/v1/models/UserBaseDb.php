@@ -97,7 +97,7 @@ class UserBaseDb extends ProxyDb
     public function findByEmailAndPwd($email, $password)
     {
         $sql = sprintf("
-            SELECT userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            SELECT userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version
             FROM user_base WHERE email=:email AND password=:password
@@ -118,7 +118,7 @@ class UserBaseDb extends ProxyDb
     public function findByPhoneAndPwd($phone, $password)
     {
         $sql = sprintf("
-            SELECT userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            SELECT userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version  FROM user_base WHERE phone=:phone AND password=:password
         ");
@@ -137,7 +137,7 @@ class UserBaseDb extends ProxyDb
     public function findByEmail($email)
     {
         $sql = sprintf("
-            SELECT userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            SELECT userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version  FROM user_base WHERE email=:email
         ");
@@ -155,7 +155,7 @@ class UserBaseDb extends ProxyDb
     public function findByPhone($phone)
     {
         $sql = sprintf("
-            SELECT userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            SELECT userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version  FROM user_base WHERE phone=:phone
         ");
@@ -174,7 +174,7 @@ class UserBaseDb extends ProxyDb
     public function findById($userId, $status = null)
     {
         $sql = sprintf("
-            SELECT userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            SELECT userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version  FROM user_base WHERE userId=:userId
         ");
@@ -199,7 +199,7 @@ class UserBaseDb extends ProxyDb
     public function findPasswordByUserSign($userSign, $status = null)
     {
         $sql = sprintf("
-            SELECT userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            SELECT userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version  FROM user_base WHERE userSign=:userSign
         ");
@@ -295,7 +295,7 @@ class UserBaseDb extends ProxyDb
     public function findBaseAllBySign($userSign, $status = 1)
     {
         $sql = sprintf("
-            SELECT userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            SELECT userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version
             FROM user_base WHERE userSign=:userSign
@@ -322,7 +322,7 @@ class UserBaseDb extends ProxyDb
     {
         $sql = sprintf("
             SELECT
-            userId,nickname,password,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
+            userId,nickname,phone,areaCode,email,registerTime,registerIp,lastLoginTime,lastLoginIp,sex,
             birthday,surname,name,qq,wechat,headImg,hobby,profession,school,intro,info,travelCount,userSign,status,
             isPublisher,countryId,cityId,lon,lat,balance,version
             FROM user_base WHERE userSign=

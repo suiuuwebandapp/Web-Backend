@@ -237,6 +237,23 @@
                 </ul>
 
             </li>
+            <li class="menu_top">
+                <a href="javascript:;">
+                    <i class="icon-present"></i>
+                    <span class="title"> 版本日志</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="#~/version/list">版本列表</a>
+                    </li>
+                    <li>
+                        <a href="#~/travel-picture/comment-list">日志列表</a>
+                    </li>
+
+                </ul>
+
+            </li>
             <!--
             <li class="menu_top">
                 <a href="javascript:;">

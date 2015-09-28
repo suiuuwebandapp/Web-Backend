@@ -212,12 +212,29 @@ class TravelPictureService  extends BaseDb {
             {
                 $search=$city;
             }
-            $page= $this->tpDb->getTravelPictureList($page,$tagStr,$search);
-            return array('data'=>$page->getList(),'msg'=>$page);
+            $page= $this->tpDb->getTravelPictureList($page,$tagStr,$search,$id);
+            $like=$this->rollLike($page->getList());
+            return array('data'=>$like,'msg'=>$page);
         }catch (Exception $e){
             throw $e;
         }finally{
             $this->closeLink();
+        }
+    }
+
+    private function rollLike($arr)
+    {
+        if(count($arr)<6)
+        {
+            return $arr;
+        }else{
+            $array=array();
+            $rand = array_rand($arr,5);
+            foreach($rand as $val)
+            {
+                $array[]=$arr[$val];
+            }
+            return $array;
         }
     }
 

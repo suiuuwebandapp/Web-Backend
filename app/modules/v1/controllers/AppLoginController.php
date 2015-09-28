@@ -217,6 +217,7 @@ class AppLoginController extends AController{
          */
         $userBase=$this->userBaseService->findUserAccessByOpenIdAndType($openId,$type);
         if($userBase!=null){
+            if($userBase->phone!=null||$userBase->email!=null){
             if($userBase->status!=UserBase::USER_STATUS_NORMAL){
                 echo json_encode(Code::statusDataReturn(Code::FAIL,"User Status Is Disabled"));
             }else{
@@ -235,6 +236,7 @@ class AppLoginController extends AController{
                 echo json_encode(Code::statusDataReturn(Code::SUCCESS,$userBase,$sysSign));
             }
             exit;
+            }
         }
         if($sex!=UserBase::USER_SEX_MALE&&$sex!=UserBase::USER_SEX_FEMALE&&$sex!=UserBase::USER_SEX_SECRET){
             echo json_encode(Code::statusDataReturn(Code::PARAMS_ERROR,"Invalid Sex Value"));

@@ -192,6 +192,7 @@ class AppTravelPictureController  extends AController {
             $page = new Page(Yii::$app->request);
             $page->sortName='id';
             $page->sortType="DESC";
+            $page->showAll=true;
             $rst = $this->tpSer->getLike($page,$tpId);
             return $this->apiReturn(Code::statusDataReturn(Code::SUCCESS,$rst));
         }catch (Exception $e) {
