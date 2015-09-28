@@ -311,3 +311,11 @@
 .sycon .myInformation .box{
     border: none;
 }
+
+#messageSessionDiv{
+    max-height: 641px;
+    overflow-y: scroll;
+}
+.sycon .myEmail .past01 .left .datas{
+    width: 45px;
+}
