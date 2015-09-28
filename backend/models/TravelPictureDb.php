@@ -108,10 +108,9 @@ class TravelPictureDb extends ProxyDb {
         }
         if(!empty($id))
         {
-            $sql.=" AND a.id=:id";
+            $sql.=" AND a.id=:id ";
             $this->setParam("id",$id);
         }
-
         if(!empty($tags)){
             $sql.=" AND a.id IN (";
             $sql.=$tags;

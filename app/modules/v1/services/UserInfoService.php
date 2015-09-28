@@ -85,9 +85,12 @@ class UserInfoService  extends BaseDb
             $QaDb = new QaCommunityDb($conn);
             $QaPage = $QaDb->getUserQa($QaPage,$userSign);
             $data['QaCount']=$QaPage->totalCount;
-            $travelPage=new Page();
-            $travelPage = $this->userAttentionDb->getCollectTravelList($userSign,$travelPage);
-            $data['collectCount']=$travelPage->totalCount;
+            $attentionNumb = $this->userAttentionDb->getCount($userSign);
+            $data['collectCount']="";
+            if(isset($attentionNumb["numb"]))
+            {
+                $data['collectCount']=$attentionNumb["numb"];
+            }
             return $data;
         } catch (Exception $e) {
             throw $e;

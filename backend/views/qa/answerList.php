@@ -134,7 +134,6 @@
                     "render": function(data, type, full) {
                         var html='';
 
-                        html +='<a href="javascript:;"  onclick="showInfo(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
                         html +='<a href="javascript:;" onclick="deleteQ(\''+data+'\',\''+full.qId+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
                         return html;
                     }

@@ -195,7 +195,7 @@ class UserAttentionDb extends ProxyDb
         $this->setParam("relativeType", UserAttention::TYPE_FOR_QA);
         $this->setParam("attentionStatus", UserAttention::ATTENTION_STATUS_NORMAL);
         $this->setParam("userSign", $userSign);
-        $this->setSelectInfo('a.qId,a.qTitle,a.qContent,a.qAddr,a.qCountryId,a.qCityId,a.qTag,a.qUserSign,a.qCreateTime,a.qInviteAskUser,a.pvNumber,a.attentionNumber,b.userSign,b.headImg,b.nickname');
+        $this->setSelectInfo('a.qId,a.qTitle,a.qContent,a.qAddr,a.qCountryId,a.qCityId,a.qTag,a.qUserSign,a.qCreateTime,a.qInviteAskUser,a.pvNumber,a.attentionNumber,a.aNumber,b.userSign,b.headImg,b.nickname');
         $this->setSql($sql);
         return $this->find($page);
     }
@@ -264,7 +264,7 @@ class UserAttentionDb extends ProxyDb
         return $command->queryOne();
     }
     /**
-     * 得到关注数量
+     * 得到关注用户数量
      * @param $userSign
      * @return array
      */
@@ -281,6 +281,25 @@ class UserAttentionDb extends ProxyDb
         return $command->queryOne();
     }
 
+    /**
+     * 得到用户关注数量
+     * @param $userSign
+     * @return array
+     */
+    public function getCount($userSign)
+    {
+
+        $sql=sprintf("
+            SELECT COUNT(*) as numb  FROM user_attention a
+            WHERE a.status=1 AND a.userSign=:userSign AND  (a.relativeType=:travelTrip OR a.relativeType=:tp OR a.relativeType=:qa)
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        $command->bindValue(":travelTrip", UserAttention::TYPE_COLLECT_FOR_TRAVEL, PDO::PARAM_INT);
+        $command->bindValue(":tp", UserAttention::TYPE_FOR_TRAVEL_PICTURE, PDO::PARAM_INT);
+        $command->bindValue(":qa", UserAttention::TYPE_FOR_QA, PDO::PARAM_INT);
+        return $command->queryOne();
+    }
 
 
 }

@@ -54,6 +54,7 @@ class TravelPictureController extends CController{
         if(is_numeric($search)&&strlen($search)<8)
         {
             $id=$search;
+            $search="";
         }
         $page = $this->tpService->getTpList($page,$tag,$search,$id);
         $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());

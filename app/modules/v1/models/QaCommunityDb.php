@@ -179,7 +179,7 @@ GROUP BY aUserSign ORDER BY COUNT(aUserSign) DESC  LIMIT 0,5) as ss LEFT JOIN us
         WHERE a.qUserSign=:userSign
         ");
         $this->setParam('userSign',$userSign);
-        $this->setSelectInfo('a.qId,qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber,attentionNumber,b.nickname,b.headImg,b.intro,b.info');
+        $this->setSelectInfo('a.qId,qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber,attentionNumber,aNumber,b.nickname,b.headImg,b.intro,b.info');
         $this->setSql($sql);
         return $this->find($page);
     }

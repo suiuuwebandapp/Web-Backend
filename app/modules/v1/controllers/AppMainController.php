@@ -238,6 +238,7 @@ exit;
                     "description"=>$type
                 )
             );
+            echo $ch;exit;
             return $ch;
         } catch (\Pingpp\Error\Base $e) {
             header('Status: ' . $e->getHttpStatus());

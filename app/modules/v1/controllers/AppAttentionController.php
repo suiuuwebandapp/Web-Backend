@@ -63,7 +63,7 @@ class AppAttentionController extends AController
         $this->loginValid();
         try {
             $page = new Page(\Yii::$app->request);
-            $userSign = $this->userObj->userSign;
+            $userSign = \Yii::$app->request->get("userSign");
             $data = $this->AttentionService->getUserCollectionTravel($userSign, $page);
             return $this->apiReturn(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
@@ -78,7 +78,8 @@ class AppAttentionController extends AController
         $this->loginValid();
         try {
             $page = new Page(\Yii::$app->request);
-            $userSign = $this->userObj->userSign;
+            $userSign = \Yii::$app->request->get("userSign");
+            //$this->userObj->userSign
             $data = $this->AttentionService->getUserAttentionTp($userSign, $page);
             return $this->apiReturn(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
@@ -92,7 +93,7 @@ class AppAttentionController extends AController
         $this->loginValid();
         try {
             $page = new Page(\Yii::$app->request);
-            $userSign = $this->userObj->userSign;
+            $userSign = \Yii::$app->request->get("userSign");
             $data = $this->AttentionService->getUserAttentionQa($userSign, $page);
             return $this->apiReturn(Code::statusDataReturn(Code::SUCCESS, $data));
         } catch (Exception $e) {
@@ -196,7 +197,7 @@ class AppAttentionController extends AController
     //删除
     public function actionDeleteAttention()
     {
-        header("Access-Control-Allow-Origin:*");
+        header("Access-Control-Allow-Origin:http://www.suiuu.com");
         $this->loginValid();
         try{
             $attentionId= \Yii::$app->request->post('attentionId');
