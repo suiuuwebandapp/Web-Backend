@@ -488,7 +488,7 @@ class UserBaseService extends BaseDb
         $userBase->name = '';
         $userBase->qq = '';
         $userBase->wechat = '';
-        $userBase->birthday = '0000-00-00';
+        $userBase->birthday = null;
         $userBase->userSign = Code::getUUID();
         $userBase->status = UserBase::USER_STATUS_NORMAL;
         if(empty($userBase->registerIp)){

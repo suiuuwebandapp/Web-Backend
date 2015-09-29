@@ -36,8 +36,8 @@ class UserBaseDb extends ProxyDb
     /**
      * 查询用户基本信息 不联表查询
      */
-    const FIND_USER_BASE_SELECT='userId,nickname,surname,name,email,phone,ub.areaCode,sex,birthday,headImg,hobby,school,qq,wechat,intro,info,
-            travelCount,registerIp,status,ub.registerTime,lastLoginTime,userSign,isPublisher,ub.cityId,ub.countryId,ub.lon,ub.lat,profession,balance';
+    const FIND_USER_BASE_SELECT='userId,nickname,surname,name,email,phone,areaCode,sex,birthday,headImg,hobby,school,qq,wechat,intro,info,
+            travelCount,registerIp,status,registerTime,lastLoginTime,userSign,isPublisher,cityId,countryId,lon,lat,profession,balance';
 
     /**
      * 添加用户

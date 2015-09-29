@@ -184,6 +184,9 @@ class UserInfoController extends CController
             $userInfo->wechat = $wechat;
             $userInfo->sex = $sex;
             $userInfo->nickname = $nickname;
+            if(empty($birthday)){
+                $birthday=null;
+            }
             $userInfo->birthday = $birthday;
             $userInfo->intro = $intro;
             $userInfo->info = $info;

@@ -197,7 +197,7 @@
 
                         <p><span>出生日期:</span><span class="form_tip" id="birthdayTip"></span></p>
                         <input type="text"
-                               value="<?= $this->context->userObj->birthday == '0000-00-00' ? '1990-01-01' : $this->context->userObj->birthday; ?>"
+                               value="<?= empty($this->context->userObj->birthday)? '1990-01-01' : $this->context->userObj->birthday; ?>"
                                id="birthday" class="wdzj-text">
 
                         <p><span>常住地:</span><span class="form_tip" id="cityTip"></span></p>
