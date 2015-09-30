@@ -375,6 +375,7 @@ class UserInfoController extends CController
             if ($areaCode == "") {
                 $areaCode = "+86";
             }
+
             return $this->render("registerPublisher", [
                 'email' => $email,
                 'phone' => $phone,
@@ -436,13 +437,9 @@ class UserInfoController extends CController
         $userBase = null;
         if ($this->userObj == null) {
             $userBase = new UserBase();
-            $userPublisher = new UserPublisher();
         } else {
             $userBase = clone $this->userObj;
-            $userPublisher = $this->userBaseService->findUserPublisherByUserSign($userBase->userSign);
-            if ($userPublisher == null) {
-                $userPublisher = new UserPublisher();
-            }
+
         }
         $userBase->nickname = $nickname;
         $userBase->surname = $surname;
@@ -468,9 +465,21 @@ class UserInfoController extends CController
                 }
             }
 
-            $this->userBaseService->updateUserBase($userBase);
-            $this->refreshUserInfo();//刷新缓存
-            return json_encode(Code::statusDataReturn(Code::SUCCESS, '/user-info/register-publisher-next'));
+            if(UserBase::isDefaultHeadImg($this->userObj->headImg)){
+                $this->userBaseService->updateUserBase($userBase);
+                $this->refreshUserInfo();//刷新缓存
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, '/user-info/register-publisher-next'));
+            }else{
+                $userBase->isPublisher=true;
+                $userPublisher = new UserPublisher();
+                $userPublisher->countryId = $userBase->countryId;
+                $userPublisher->cityId = $userBase->cityId;
+                $userPublisher->kind = UserPublisher::USER_PUBLISHER_CARD_KIND_NO;
+
+                $this->userBaseService->updateUserBaseAndAddUserPublisher($userBase, $userPublisher);
+                $this->refreshUserInfo();//刷新缓存
+                return json_encode(Code::statusDataReturn(Code::SUCCESS, '/index/trip-help'));
+            }
 
         } catch (Exception $e) {
             LogUtils::log($e);
@@ -542,10 +551,11 @@ class UserInfoController extends CController
     {
         try {
             $source = "." . $source;
-            if ($ext == "png") {
+            $imgType=exif_imagetype($source);
+            if ($imgType == IMAGETYPE_PNG) {
                 $img = imagecreatefrompng($source);
             }
-            if ($ext == "jpg") {
+            if ($imgType == IMAGETYPE_JPEG||$imgType==IMAGETYPE_JPEG2000) {
                 $img = imagecreatefromjpeg($source);
             }
 
@@ -559,11 +569,11 @@ class UserInfoController extends CController
             //裁剪
             imagecopy($resultImg, $newImg, 0, 0, $selectorX, $selectorY, $viewPortW, $viewPortH);
 
-            if ($ext == "png") {
+            if ($imgType == IMAGETYPE_PNG) {
                 imagesavealpha($resultImg, true);
             }
 
-            if ($ext == "png") {
+            if ($imgType == IMAGETYPE_PNG) {
                 $white = imagecolorallocatealpha($resultImg, 0, 0, 0, 127);
                 imagealphablending($resultImg, false);
                 imagefill($resultImg, 0, 0, $white);
@@ -586,11 +596,11 @@ class UserInfoController extends CController
             }
             $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $ext;
             $picName = $fileFolder . "/" . $new_file_name;
-            if ($ext == "png") {
+            if ($imgType == IMAGETYPE_PNG) {
                 header('Content-type: image/png');
                 imagepng($resultImg, $picName);
             }
-            if ($ext == "jpg") {
+            if ($imgType == IMAGETYPE_JPEG||$imgType==IMAGETYPE_JPEG2000) {
                 header('Content-type: image/jpg');
                 imagejpeg($resultImg, $picName);
             }

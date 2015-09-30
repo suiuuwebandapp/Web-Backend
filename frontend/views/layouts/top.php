@@ -135,7 +135,7 @@
 <!--nav end-->
 
 
-<!--[if gt IE 9]>
+<!--[if lt IE 9]>
 <script type="text/javascript" src="/assets/chat/js/swfobject.js"></script>
 <script type="text/javascript">WEB_SOCKET_SWF_LOCATION = "/assets/chat/swf/WebSocketMain.swf";</script>
 <![endif]-->

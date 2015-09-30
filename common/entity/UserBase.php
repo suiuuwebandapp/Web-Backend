@@ -149,4 +149,14 @@ class UserBase {
      */
     public $version;
 
+
+    public static function isDefaultHeadImg($headImg)
+    {
+        if($headImg=='http://www.suiuu.com/assets/images/user_default.png'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

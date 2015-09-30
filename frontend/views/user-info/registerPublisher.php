@@ -249,7 +249,7 @@
                 <input type="text" value="<?=$this->context->userObj->wechat?>" name="wechat" id="wechat">
             </div>
         </div>
-        <a href="javascript:;" id="createPublisher" class="nextBtn">下一步</a>
+        <a href="javascript:;" id="createPublisher" class="nextBtn"><?=\common\entity\UserBase::isDefaultHeadImg($this->context->userObj->headImg)?'下一步':'保存信息'?></a>
     </div>
 </div>
 
