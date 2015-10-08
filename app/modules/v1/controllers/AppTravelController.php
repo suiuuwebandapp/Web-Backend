@@ -48,10 +48,10 @@ class AppTravelController extends AController
         try{
             $page=new Page(Yii::$app->request);
             //$page->showAll=true;
-            $title=Yii::$app->request->get('title');
+            $title=Yii::$app->request->get('cc');
             $countryId=Yii::$app->request->get('countryId');
             $cityId=Yii::$app->request->get('cityId');
-            $cc=Yii::$app->request->get('cc');
+            /*$cc=Yii::$app->request->get('cc');
             if(!empty($cc))
             {
                 if(empty($countryId)&&empty($cityId)){
@@ -66,7 +66,7 @@ class AppTravelController extends AController
                         $cityId=implode(",",$cityId);
                     }
                 }
-            }
+            }*/
             $peopleCount=Yii::$app->request->get('peopleCount');
             $startPrice=Yii::$app->request->get('startPrice');
             $endPrice=Yii::$app->request->get('endPrice');

@@ -47,14 +47,14 @@
         <a href="#menu"></a>
         我的随游
     </div>
-    <div class="content">
+    <div class="content" style="margin-top: 3.2rem">
         <?php if(count($list)==0){?>
         <img src="/assets/other/weixin/images/logo02.png" class="logo">
         <p class="noOrder">你还没有发布随游哦</p>
         <?php }?>
         <?php foreach($list as $val){?>
         <div class="box clearfix">
-            <a  href="javascript:;" class="pic fl"><img class="cover" src="<?php echo $val['titleImg'];?>"></a>
+            <a  href="javascript:;" class="pic fl"><img class="cover min-height-order" src="<?php echo $val['titleImg'];?>"></a>
             <div class="details fl">
                 <a href="javascript:;" class="colBlue">已发布</a>
                 <p><?php echo $val['title'];?></p>

@@ -68,7 +68,7 @@
                     $title=mb_strlen($tripInfo['info']['title'],"utf-8")>8?mb_substr($tripInfo['info']['title'],0,8,"utf-8")."...":$tripInfo['info']['title'];
                     ?>
                     <div class="box clearfix">
-                        <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
+                        <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img class="min-height-order" src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
                         <div class="details fr">
                             <p><?php echo $title;?></p>
                             <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
@@ -119,7 +119,7 @@
                 $title=mb_strlen($tripInfo['info']['title'],"utf-8")>8?mb_substr($tripInfo['info']['title'],0,8,"utf-8")."...":$tripInfo['info']['title'];
                 ?>
                 <div class="box clearfix">
-                    <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
+                    <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img class="min-height-order" src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
                     <div class="details fr">
                         <p><?php echo $title;?></p>
                         <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>
@@ -169,7 +169,7 @@
                 $title=mb_strlen($tripInfo['info']['title'],"utf-8")>8?mb_substr($tripInfo['info']['title'],0,8,"utf-8")."...":$tripInfo['info']['title'];
                 ?>
                 <div class="box clearfix">
-                    <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
+                    <a href="/wechat-user-center/my-order-info?id=<?php echo $val['orderNumber'] ?>"  class="pic fl"><img class="min-height-order" src="<?php echo $tripInfo['info']['titleImg'];?>"></a>
                     <div class="details fr">
                         <p><?php echo $title;?></p>
                         <p class="data">出发日期：<span><?php echo $val['beginDate'];?></span></p>

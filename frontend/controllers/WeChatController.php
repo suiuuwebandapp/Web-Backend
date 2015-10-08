@@ -79,6 +79,7 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
+        return $this->renderPartial("test");
         exit;
         header("Content-type:text/html;charset=utf-8");
         $url ="https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=Hd8fqOvD00hhYDDHmYD0JF7DI7xAWpGXf1vTU_ldT4Fry9N3M4TmHj9XoHCuRKVGU6NwXtEi06YRqKyiuAfeQ7DkhDAs9BnTLrPYTiNLlqo";

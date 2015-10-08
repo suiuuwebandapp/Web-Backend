@@ -63,7 +63,7 @@
     <div class="content" id="tripList">
         <?php foreach($list as $val){
             ?>
-        <div class="box">
+        <div class="box min-height">
             <a href="/wechat-trip/info?tripId=<?php echo $val['tripId']?>" class="pic"><img src="<?php echo $val['titleImg']?>"></a>
             <div class="details">
                 <h3 class="title"><?php echo $val['title']?></h3>
@@ -91,7 +91,7 @@
             $(this).attr("class","active");
         }
     });
-    var active="<?php echo $active;?>";
+    var active="<?php echo $activity;?>";
 
     var sort='<?php echo $sort;?>';
     if(sort==2)
@@ -139,7 +139,7 @@
                         var html="";
                         for(var i=0;i<listCount;i++)
                         {
-                            html+='<div class="box">';
+                            html+='<div class="box min-height">';
                             html+='<a href="/wechat-trip/info?tripId='+list[i].tripId+'" class="pic"><img src="'+list[i].titleImg+'"></a>';
                             html+='<div class="details">';
                             html+='<h3 class="title">'+list[i].title+'</h3>';

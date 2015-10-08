@@ -38,18 +38,43 @@
     </div>
     <div class="pass">
         <a href="javascript:;" class="btn" onclick="wxSendMessage('<?=$rInfo->userSign?>','<?php echo isset($userObj->headImg)?$userObj->headImg:"/assets/other/weixin/images/logo01.png" ?>')">发送</a>
-        <input id="wxSendMessage" type="text" class="text">
+        <input id="wxSendMessage" type="text" class="text" onfocus="onfocus_1()" onblur="clearTimeout_1()">
     </div>
 </div>
 
 <script>
     $(document).ready(function(){
         changeHight();
+        window.addEventListener('keydown', doKeyDown,true);
     });
+var timeOutId=0;
+    function onfocus_1()
+    {
 
+        /*alert(document.body.clientHeight);
+        alert(document.body.offsetHeight);
+        alert(document.body.scrollHeight);
+        alert(document.body.scrollTop);
+        alert(window.screen.height);
+        alert(window.screen.availHeight);*/
+        timeOutId=setInterval(function(){ $(window).scrollTop(document.body.scrollHeight/2);},20);
+
+
+    }
+    function clearTimeout_1()
+    {
+        clearInterval(timeOutId);
+    }
+    function doKeyDown(e)
+    {
+        var keyID = e.keyCode ? e.keyCode :e.which;
+        if(keyID==13)
+        {
+            wxSendMessage('<?=$rInfo->userSign?>','<?php echo isset($userObj->headImg)?$userObj->headImg:"/assets/other/weixin/images/logo01.png" ?>');
+        }
+    }
     function newMessage(messageInfo)
     {
-        changeHight();
         var headImg=messageInfo.sender_HeadImg;
         var content=messageInfo.content;
         var str = '<li class="zuo clearfix">';
@@ -61,6 +86,7 @@
         str+='</p>';
         str+='</li>';
         $("#messageUl").append(str);
+        changeHight();
     }
 </script>
 </body>

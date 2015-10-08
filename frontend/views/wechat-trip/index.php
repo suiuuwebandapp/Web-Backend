@@ -50,13 +50,13 @@
         <!--banner开始-->
         <div class="bd">
             <ul class="banners">
-                <li class="banner01" onclick="gotoUrl('/wechat-trip/select-list?activity=1')">
+                <li class="banner01  min-height" onclick="gotoUrl('/wechat-trip/select-list?activity=1')">
                     <p class="title">大手拉小手的旅行</p>
-                    <img src="http://image.suiuu.com/suiuu_index/01.jpg">
+                    <img class="min-height" src="http://image.suiuu.com/suiuu_index/01.jpg">
                 </li>
-                <li class="banner01" onclick="gotoUrl('/wechat-trip/select-list?activity=2')">
+                <li class="banner01  min-height" onclick="gotoUrl('/wechat-trip/select-list?activity=2')">
                     <p class="title">梦中的情人节</p>
-                    <img src="http://image.suiuu.com/suiuu_index/10.jpg">
+                    <img class="min-height" src="http://image.suiuu.com/suiuu_index/10.jpg">
                 </li>
             </ul>
             <div class="hd"><ul></ul></div>
@@ -103,7 +103,7 @@
         <div class="content" id="tripList1">
             <?php foreach($page as $val){
                 ?>
-                <div class="box">
+                <div class="box  min-height">
                     <a href="/wechat-trip/info?tripId=<?php echo $val['tripId']?>" class="pic"><img src="<?php echo $val['titleImg']?>"></a>
                     <div class="details">
                         <h3 class="title"><?php echo $val['title']?></h3>
@@ -203,7 +203,7 @@
                     }else{
                     for(var i=0;i<listCount;i++)
                     {
-                        html+='<div class="box">';
+                        html+='<div class="box  min-height">';
                         html+='<a href="/wechat-trip/info?tripId='+list[i].tripId+'" class="pic"><img src="'+list[i].titleImg+'"></a>';
                         html+='<div class="details">';
                         html+='<h3 class="title">'+list[i].title+'</h3>';
