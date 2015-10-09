@@ -304,4 +304,20 @@ class UserBaseDb extends ProxyDb
         return $command->queryOne();
     }
 
+
+    /**
+     * 获取系统用户小号
+     * @return array
+     */
+    public function getSysUserList()
+    {
+        $sql = sprintf("
+            SELECT userSign,nickname,headImg FROM user_base
+            WHERE phone is null and email is NULL
+        ");
+
+        $command = $this->getConnection()->createCommand($sql);
+
+        return $command->queryAll();
+    }
 }

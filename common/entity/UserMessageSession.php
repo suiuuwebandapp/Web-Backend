@@ -28,4 +28,6 @@ class UserMessageSession {
 
     public $isRead;
 
+    public $unReadCount;
+
 }

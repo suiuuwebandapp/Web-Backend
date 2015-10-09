@@ -318,7 +318,6 @@ class UploadController extends UnCController
                     $userPhoto=$userBaseService->addUserPhoto($userPhoto);
                     return json_encode(Code::statusDataReturn(Code::SUCCESS,$userPhoto));
                 }catch (Exception $e){
-                    throw $e;
                     return json_encode(Code::statusDataReturn(Code::FAIL));
                 }
             }

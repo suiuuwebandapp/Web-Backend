@@ -13,7 +13,7 @@ namespace backend\controllers;
 use common\components\Code;
 use common\components\Aes;
 use backend\services\SysUserService;
-use frontend\entity\UserBase;
+use backend\services\UserMessageService;
 use yii\web\Controller;
 
 class CController extends  Controller{
@@ -25,6 +25,8 @@ class CController extends  Controller{
     public $enableCsrfValidation=false;
 
     public $__sysUserService=null;
+
+    public $tipList=null;
 
     public function __construct($id, $module = null)
     {
@@ -52,8 +54,13 @@ class CController extends  Controller{
             }else{
                 return $this->redirect('/login');
             }
-
         }
+        if(empty(\Yii::$app->redis->get(Code::SYS_USER_CHAT_SESSION.\Yii::$app->session->id))){
+            \Yii::$app->redis->set(Code::SYS_USER_CHAT_SESSION.\Yii::$app->session->id,json_encode($currentUser));
+        }
+        $userMessageService=new UserMessageService();
+        $unReadMessageCount=$userMessageService->getUnReadMessageCount();
+        $this->tipList['unReadMessageCount']=$unReadMessageCount==0?'':$unReadMessageCount;
         parent::__construct($id, $module);
     }
 }

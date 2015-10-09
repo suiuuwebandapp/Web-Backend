@@ -167,4 +167,25 @@ class UserBaseService extends BaseDb{
         return $userBase;
 
     }
+
+
+    /**
+     * 获取系统用户列表
+     * @return array
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function getSysUserList()
+    {
+        try{
+            $conn=$this->getConnection();
+            $userBaseDb=new UserBaseDb($conn);
+            $list=$userBaseDb->getSysUserList();
+            return $list;
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
 }

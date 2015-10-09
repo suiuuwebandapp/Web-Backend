@@ -121,6 +121,156 @@ var Main = function() {
         initLeftMenuByUrl(url);
     };
 
+    /**
+     * 初始化聊天
+     */
+    var initSocketConnection=function() {
+        // 创建websocket
+        ws = new WebSocket("ws://localhost:7272");
+        // 当socket连接打开时，输入用户名
+        ws.onopen = function () {
+            if(reconnect == false) {
+                // 登录
+                var login_data = JSON.stringify({"type":"login","user_key":sessionId,"is_admin":1});
+                console.log("socket connection success");
+                ws.send(login_data);
+                reconnect = true;
+            }else{
+                // 断线重连
+                var relogin_data = JSON.stringify({"type":"re_login","user_key":sessionId,"is_admin":1});
+                console.log("socket reconnection success");
+                ws.send(relogin_data);
+            }
+        };
+        // 当有消息时根据消息类型显示不同信息
+        ws.onmessage = function (e) {
+            console.log(e.data);
+            var data = JSON.parse(e.data);
+            switch(data['type']){
+                // 服务端ping客户端
+                case 'ping':
+                    ws.send(JSON.stringify({"type":"pong"}));
+                    break;;
+                // 登录 更新用户列表
+                case 'login':
+                    console.log(data['client_name']+"登录成功");
+                    break;
+                // 断线重连，只更新用户列表
+                case 're_login':
+                    console.log(data['client_name']+"重连成功");
+                    break;
+                // 发言
+                case 'say':
+                    //{"type":"say","from_client_id":xxx,"to_client_id":"all/client_id","content":"xxx","time":"xxx"}
+                    console.log(data);
+                    processNewMessage(data);
+                    break;
+                // 用户退出 更新用户列表
+                case 'logout':
+                    console.log("用户退出了登录");
+            }
+
+        };
+        ws.onclose = function () {
+            console.log("连接关闭，定时重连");
+
+        };
+        ws.onerror = function () {
+            console.log("出现错误");
+        };
+    };
+
+    var processNewMessage=function(data){
+        var newMessage=new Array();
+        newMessage.push({
+            'nickname':data.sender_name,
+            'headImg':data.sender_HeadImg,
+            'sessionKey':data.session_key,
+            'userId':data.receive_id,
+            'relateId':data.sender_id,
+            'lastConcatTime':data.time,
+            'lastContentInfo':data.content,
+            'relateNickname':data.receive_name,
+            'relateHeadImg':data.receive_head_img,
+            'unReadCount':1
+        });
+        //判断当前是否是聊天详情页
+        var sessionList = $('#sessionList');
+
+
+        var messageTip=$("#header_message_box a span");
+        var oldCount=$(messageTip).text()==''?0:parseInt($(messageTip).text());
+        var oldMessageCount=oldCount+1;
+        $(messageTip).html(oldMessageCount);
+
+
+        if(sessionList.length==0){
+            return;
+        }
+
+
+
+        var sessionLi=$(sessionList).find("li[sessionKey='"+data.session_key+"']").size();
+        var selectSessionKey=$(sessionList).find("li[class='active']").eq(0).attr('sessionKey');
+        var unReadCount=0;
+        if(sessionLi>0){
+            unReadCount=$(sessionList).find("li[sessionKey='"+data.session_key+"']").find("div[class='tip']").text();
+            if($.trim(unReadCount)==''){unReadCount=1;}else{unReadCount=parseInt(unReadCount)+1;};
+            $(sessionList).find("li[sessionKey='"+data.session_key+"']").remove();
+
+        }
+        newMessage[0].unReadCount=unReadCount;
+        console.info(newMessage);
+        $('#sessionListTmpl').tmpl(newMessage,{
+            getName:function(name){return name;},
+            getUnReadCount:function(count){count=count==0?'':count;return count;}
+        }).prependTo('#userSessionListUl');
+
+        //判断是当前详情页的会话是否是新消息会话
+        $(sessionList).find("li[sessionKey='"+selectSessionKey+"']").addClass("active");
+        if(selectSessionKey==data.session_key){
+
+            var newMessageInfo=new Array();
+            newMessageInfo.push({
+                'messageId': '',
+                'sessionkey': selectSessionKey,
+                'receiveId': data.receive_id,
+                'senderId': data.sender_id,
+                'url': '',
+                'content': data.content,
+                'sendTime': data.time,
+                'readTime': '',
+                'isRead': '',
+                'isShield': ''
+            });
+            var liUserId=$(sessionList).find("li[class='active']").eq(0).attr('userId');
+            var senderImg=$(sessionList).find("li[class='active']").find('img').eq(0).attr('src');
+            var receiveImg=$(sessionList).find("li[class='active']").find('img').eq(1).attr('src');
+            var senderName=$(sessionList).find("li[class='active']").find("span[class='nickname']").eq(0).text();
+            var receiveName=$(sessionList).find("li[class='active']").find("span[class='nickname']").eq(1).text();
+            $('#messageListTmpl').tmpl(newMessageInfo,{
+                getType:function(userId){if(liUserId!=userId){return 'in';}else{return 'out';}},
+                getImg:function(userId){if(liUserId!=userId){return senderImg;}else{return receiveImg;}},
+                getName:function(userId){if(liUserId!=userId){return senderName;}else{return receiveName;}}
+            }).appendTo('#messageListUl')
+            $("#chats").find('.scroller').slimScroll({
+                scrollTo: getLastPostPos()
+            });
+        }
+
+        $(sessionList).find('li').off('click').on('click',function(){
+            $(sessionList).find('li').removeClass('active');
+            $(this).addClass('active');
+            findSessionInfo(this);
+        });
+        $(sessionList).find('li').off('mouseover').on('mouseover',function(){
+            $(this).find('b').show();
+        });
+        $(sessionList).find('li').off('mouseout').on('mouseout',function(){
+            $(this).find('b').hide();
+        });
+    };
+
 	// public functions
 	return {
 
@@ -130,6 +280,7 @@ var Main = function() {
 			this.basePath = options.basePath;
 			//window.setInterval("Main.reinitIframe()", 200);
             initLeftMenu();
+            initSocketConnection();
 		},
         refresh:function(url){
             var l=window.location.href;
@@ -140,6 +291,10 @@ var Main = function() {
                 l=l+"#~"+url;
             }
             window.location.href=l;
+            if(l.indexOf('#~')>-1){
+                this.refreshContent(l);
+            }
+
         },
         refreshContent:function(url){
             if(url==null||url==''){
@@ -403,10 +558,8 @@ var Main = function() {
 			}
 			return array;
 		}
-		
-	};
 
-
+    };
 }();
 
 

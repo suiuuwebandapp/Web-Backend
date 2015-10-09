@@ -92,6 +92,9 @@
                     <li>
                         <a href="#~/user-recommend/to-list"> 推荐用户</a>
                     </li>
+                    <li>
+                        <a href="#~/user-message/to-list"> 用户消息</a>
+                    </li>
                 </ul>
             </li>
             <li class="menu_top">

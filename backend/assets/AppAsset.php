@@ -48,10 +48,11 @@ class AppAsset extends AssetBundle
         'assets/admin/layout/scripts/demo.js',
         'assets/admin/pages/scripts/index.js',
         'assets/admin/pages/scripts/tasks.js',
+        'assets/chat/js/web_socket.js',
+        'assets/chat/js/json.js',
         'assets/global/scripts/main.js'
     ];
     public $depends = [
-        'yii\web\YiiAsset',
     ];
 
 

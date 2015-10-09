@@ -69,10 +69,19 @@ f
 <!--[if lt IE 9]>
 <script src="<?=Yii::$app->params['res_url'] ?>/assets/plugins/respond.min.js"></script>
 <script src="<?=Yii::$app->params['res_url'] ?>/assets/plugins/excanvas.min.js"></script>
+<script type="text/javascript" src="/assets/chat/js/swfobject.js"></script>
+<script type="text/javascript">WEB_SOCKET_SWF_LOCATION = "/assets/chat/swf/WebSocketMain.swf";</script>
 <![endif]-->
 
+<script type="text/javascript">
+    /*** scoket connec***/
+    if (typeof console == "undefined") {
+        this.console = {log: function (msg) {}};
+    }
+    WEB_SOCKET_DEBUG = true;
+    var ws, name, client_list = {}, timeid, reconnect = false;
+    var sessionId = '<?=session_id()?>';
 
-<script>
     jQuery(document).ready(function () {
         Layout.init(); // init layout
         QuickSidebar.init(); // init quick sidebar

@@ -78,10 +78,12 @@ class UserMessageService extends BaseDb
                     $receiverMessageSession->relateUserId=$userMessage->senderId;
                     $receiverMessageSession->lastContentInfo=$userMessage->content;
                     $receiverMessageSession->isRead=false;
+                    $receiverMessageSession->unReadCount=1;
 
                     $this->userMessageDb->addUserMessageSession($receiverMessageSession);
                 }else{
-                    $this->userMessageDb->updateUserMessageSession($receiverMessageSession['sessionId'],$userMessage->content,false);
+                    $unReadCount=$receiverMessageSession['unReadCount']+1;
+                    $this->userMessageDb->updateUserMessageSession($receiverMessageSession['sessionId'],$userMessage->content,false,$unReadCount);
                 }
             }else{
                 //如果屏蔽了，那么要设置userMessage 屏蔽状态
@@ -96,10 +98,11 @@ class UserMessageService extends BaseDb
                 $senderMessageSession->relateUserId=$userMessage->receiveId;
                 $senderMessageSession->lastContentInfo=$userMessage->content;
                 $senderMessageSession->isRead=true;
+                $senderMessageSession->unReadCount=0;
 
                 $this->userMessageDb->addUserMessageSession($senderMessageSession);
             }else{
-                $this->userMessageDb->updateUserMessageSession($senderMessageSession['sessionId'],$userMessage->content,true);
+                $this->userMessageDb->updateUserMessageSession($senderMessageSession['sessionId'],$userMessage->content,true,0);
             }
 
             $this->userMessageDb->addUserMessage($userMessage);
@@ -151,11 +154,12 @@ class UserMessageService extends BaseDb
                     $userMessageSession->receiveId=$userMessage->receiveId;
                     $userMessageSession->lastContentInfo=$userMessage->content;
                     $userMessageSession->isRead=false;
+                    $userMessageSession->unReadCount=1;
 
                     $this->userMessageDb->addUserMessageSession($userMessageSession);
                 }else{
-
-                    $this->userMessageDb->updateUserMessageSession($userMessageSession['sessionId'],$userMessage->content,false);
+                    $unReadCount=$userMessageSession['unReadCount']+1;
+                    $this->userMessageDb->updateUserMessageSession($userMessageSession['sessionId'],$userMessage->content,false,$unReadCount);
                 }
                 $userMessage->isShield=false;
                 $this->userMessageDb->addUserMessage($userMessage);

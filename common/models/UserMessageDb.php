@@ -10,6 +10,7 @@
 namespace common\models;
 
 
+use backend\components\Page;
 use common\components\Code;
 use common\entity\UserMessage;
 use common\entity\UserMessageSession;
@@ -98,11 +99,11 @@ class UserMessageDb extends ProxyDb
         $sql=sprintf("
             INSERT INTO user_message_session
             (
-              sessionKey,userId,relateId,lastConcatTime,lastContentInfo,isRead
+              sessionKey,userId,relateId,lastConcatTime,lastContentInfo,isRead,unReadCount
             )
             VALUES
             (
-              :sessionKey,:userId,:relateId,now(),:lastContentInfo,:isRead
+              :sessionKey,:userId,:relateId,now(),:lastContentInfo,:isRead,:unReadCount
             )
         ");
 
@@ -112,6 +113,7 @@ class UserMessageDb extends ProxyDb
         $command->bindParam(":userId", $userMessageSession->userId, PDO::PARAM_STR);
         $command->bindParam(":relateId", $userMessageSession->relateUserId, PDO::PARAM_STR);
         $command->bindParam(":isRead", $userMessageSession->isRead, PDO::PARAM_INT);
+        $command->bindParam(":unReadCount",$userMessageSession->unReadCount,PDO::PARAM_INT);
 
         $command->execute();
     }
@@ -122,14 +124,15 @@ class UserMessageDb extends ProxyDb
      * @param $sessionId
      * @param $content
      * @param $isRead
+     * @param int $unReadCount
      * @throws \yii\db\Exception
      */
-    public function updateUserMessageSession($sessionId,$content,$isRead)
+    public function updateUserMessageSession($sessionId,$content,$isRead,$unReadCount=0)
     {
 
         $sql=sprintf("
           UPDATE user_message_session SET
-          lastConcatTime=now(),lastContentInfo=:lastContentInfo,isRead=:isRead
+          lastConcatTime=now(),lastContentInfo=:lastContentInfo,isRead=:isRead,unReadCount=:unReadCount
           WHERE sessionId=:sessionId
         ");
 
@@ -137,6 +140,7 @@ class UserMessageDb extends ProxyDb
         $command->bindParam(":sessionId", $sessionId, PDO::PARAM_INT);
         $command->bindParam(":lastContentInfo", $content, PDO::PARAM_STR);
         $command->bindParam(":isRead", $isRead, PDO::PARAM_INT);
+        $command->bindParam(":unReadCount",$unReadCount,PDO::PARAM_INT);
 
         $command->execute();
     }
@@ -153,7 +157,7 @@ class UserMessageDb extends ProxyDb
         $sql=sprintf("
             SELECT DISTINCT ub.nickname,ub.headImg,s.* FROM
             (
-                SELECT sessionId,sessionKey,userId,relateId,lastConcatTime,lastContentInfo,isRead
+                SELECT sessionId,sessionKey,userId,relateId,lastConcatTime,lastContentInfo,isRead,unReadCount
                 FROM user_message_session
                 WHERE userId=:userId
             )
@@ -228,7 +232,7 @@ class UserMessageDb extends ProxyDb
     {
         $sql=sprintf("
           UPDATE user_message_session SET
-          isRead=TRUE
+          isRead=TRUE,unReadCount=0
           WHERE sessionKey=:sessionKey AND userId=:userId
         ");
 
@@ -376,6 +380,54 @@ class UserMessageDb extends ProxyDb
 
     }
 
+
+
+    /****************************后台******************************/
+
+
+    /**
+     * 后台获取系统用户列表
+     * @param Page $page
+     * @param $keywords
+     * @return Page
+     */
+    public function getSysUserMessageSessionList(Page $page,$keywords)
+    {
+        $sql=sprintf("
+            FROM
+            (
+                SELECT sessionId,sessionKey,userId,relateId,lastConcatTime,lastContentInfo,isRead,unReadCount
+                FROM user_message_session WHERE userId IN (SELECT userSign FROM user_base WHERE phone IS NULL AND email IS NULL)
+            )
+            AS s
+            LEFT JOIN user_base ub ON ub.userSign=s.relateId
+            LEFT JOIN user_base ubs on ubs.userSign=s.userId
+            WHERE 1=1
+        ");
+        if(!empty($keywords)){
+            $sql.=' AND ub.nickname like :keywords ';
+            $this->setParam('keywords','%'.$keywords.'%');
+        }
+
+        $sql.=' ORDER BY s.isRead,s.lastConcatTime DESC ';
+        $this->setSql($sql);
+        $this->setSelectInfo(' DISTINCT ub.nickname,ub.headImg,s.*,ubs.nickname as relateNickname,ubs.headImg as relateHeadImg ');
+
+        return $this->find($page);
+
+    }
+
+    public function getUnReadSysUserMessageCount()
+    {
+        $sql=sprintf("
+            SELECT SUM(unReadCount) AS unReadCount
+            FROM user_message_session
+            WHERE userId IN (SELECT userSign FROM user_base WHERE phone IS NULL AND email IS NULL)
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+
+        return $command->queryOne();
+    }
 
 
 }

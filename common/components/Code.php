@@ -120,7 +120,8 @@ class Code
     const SYS_USER_LOGIN_ERROR_COUNT_PREFIX='S_U_L_C_P';//用户登录错误次数前缀 使用方法 前缀+用户名
     const SYS_USER_LOGIN_VERIFY_CODE='S_U_L_V_C'; //用户登录验证码 SESSION KEY
     const SYS_USER_LOGIN_VERIFY_CODE_EXPIRE_TIME='86400';
-
+    const SYS_USER_CHAT_SESSION='S_U_C_S';//后台聊天session
+    const SYS_ALL_USER_SIGN_CHAT='S_A_U_S_C';
     /**
      * 标签key Tag Redis Key
      */

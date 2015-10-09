@@ -16,7 +16,7 @@ var phoneTime=0;
 
 function initSocketConnection() {
     // 创建websocket
-    ws = new WebSocket("ws://58.96.191.44:7272");
+    ws = new WebSocket("ws://localhost:7272");
     // 当socket连接打开时，输入用户名
     ws.onopen = function () {
         if(reconnect == false) {
@@ -136,16 +136,12 @@ var newMessageProcess=function (messageInfo)
     userHtml+='<li class="message"><a style="width: 240px;height: 40px" href="/user-info?tab=myMessage"><img src="'+messageInfo.sender_HeadImg+'"><span>'+nickname+'</span>';
     userHtml+='<p>给您发了私信</p>';
     userHtml+='</a></li>';
-    if(userHtml==""){
-        userHtml='<li><p style="text-align: center;width: 240px">暂无私信消息</p></li>';
-    }
 
     $("#unReadUserMessageList").html(userHtml+$("#unReadUserMessageList").html());
     var nowUserMessageCount=$("#unReadUserMessageList li[class='message']").size();
     if(nowUserMessageCount>maxMessageCount){
         $("#unReadUserMessageList li[class='message']").last().remove();
     }
-    $("#moreUserMessage").show();
     setTopUnReadMessageCount(1);
 
     if(typeof(messageSessionList)!="undefined"){
@@ -166,11 +162,11 @@ var newMessageProcess=function (messageInfo)
 }
 
 var setTopUnReadMessageCount=function(count) {
-    if($("#topNewMessageCount").html()==""){
-        count=parseInt(count)
-    }else{
-        count=parseInt(count)+parseInt($("#topNewMessageCount").html());
+    if(count==undefined){
+        return;
     }
+
+    count=$("#unReadUserMessageList li[class='message']").size()+parseInt(count);
     if(count>0){
         $("#topNewMessageCount").show();
         $("#topNewMessageCount").html(count);
@@ -185,11 +181,7 @@ var setTopUnReadMessageCount=function(count) {
         $("#topNewMessageCount").html("");
         $("#noUserMessage").show();
         $("#moreUserMessage").hide();
-
-
     }
-
-
 };
 
 

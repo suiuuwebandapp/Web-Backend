@@ -52,6 +52,5 @@ class LoginAsset extends AssetBundle
         'assets/global/scripts/main.js'
     ];
     public $depends = [
-        'yii\web\YiiAsset',
     ];
 }
