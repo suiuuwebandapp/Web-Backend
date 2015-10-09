@@ -15,23 +15,28 @@
         <!-- BEGIN LOGO -->
         <div class="page-logo">
             <a href="index.html">
-                <img src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/>
+                <img src="<?= Yii::$app->params['res_url'] ?>/assets/admin/layout/img/logo.png" alt="logo"
+                     class="logo-default"/>
             </a>
+
             <div class="menu-toggler sidebar-toggler hide">
                 <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
             </div>
         </div>
         <!-- END LOGO -->
         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
+           data-target=".navbar-collapse">
         </a>
         <!-- END RESPONSIVE MENU TOGGLER -->
         <!-- BEGIN TOP NAVIGATION MENU -->
         <div class="top-menu">
             <ul class="nav navbar-nav pull-right">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
-                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar" style="display: none">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar"
+                    style="display: none">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                       data-close-others="true">
                         <i class="icon-bell"></i>
 					<span class="badge badge-default">
 					7 </span>
@@ -133,19 +138,23 @@
                             </a>
                         </li>
                     </ul>
-                </list>
+                    </list>
+                </li>
                 <!-- END NOTIFICATION DROPDOWN -->
                 <!-- BEGIN INBOX DROPDOWN -->
                 <li class="dropdown" id="header_message_box">
-                    <a href="javascript:;" onclick="Main.refresh('/user-message/to-list')" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <i class="icon-envelope"></i><span class="badge badge-default"><?=$this->context->tipList['unReadMessageCount']?></span>
+                    <a href="javascript:;" onclick="Main.refresh('/user-message/to-list')" class="dropdown-toggle"
+                       data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <i class="icon-envelope"></i><span
+                            class="badge badge-default"><?= $this->context->tipList['unReadMessageCount'] ?></span>
                     </a>
                     <ul class="dropdown-menu" style="display: none"></ul>
                 </li>
                 <!-- END INBOX DROPDOWN -->
                 <!-- BEGIN TODO DROPDOWN -->
                 <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar" style="display: none">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                       data-close-others="true">
                         <i class="icon-calendar"></i>
 					<span class="badge badge-default">
 					3 </span>
@@ -167,7 +176,8 @@
 									30% </span>
 									</span>
 									<span class="progress">
-									<span style="width: 40%;" class="progress-bar progress-bar-success" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+									<span style="width: 40%;" class="progress-bar progress-bar-success"
+                                          aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
 									<span class="sr-only">
 									40% Complete </span>
 									</span>
@@ -183,7 +193,8 @@
 									65% </span>
 									</span>
 									<span class="progress progress-striped">
-									<span style="width: 65%;" class="progress-bar progress-bar-danger" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+									<span style="width: 65%;" class="progress-bar progress-bar-danger"
+                                          aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
 									<span class="sr-only">
 									65% Complete </span>
 									</span>
@@ -199,7 +210,8 @@
 									98% </span>
 									</span>
 									<span class="progress">
-									<span style="width: 98%;" class="progress-bar progress-bar-success" aria-valuenow="98" aria-valuemin="0" aria-valuemax="100">
+									<span style="width: 98%;" class="progress-bar progress-bar-success"
+                                          aria-valuenow="98" aria-valuemin="0" aria-valuemax="100">
 									<span class="sr-only">
 									98% Complete </span>
 									</span>
@@ -215,7 +227,8 @@
 									10% </span>
 									</span>
 									<span class="progress progress-striped">
-									<span style="width: 10%;" class="progress-bar progress-bar-warning" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+									<span style="width: 10%;" class="progress-bar progress-bar-warning"
+                                          aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
 									<span class="sr-only">
 									10% Complete </span>
 									</span>
@@ -231,7 +244,8 @@
 									58% </span>
 									</span>
 									<span class="progress progress-striped">
-									<span style="width: 58%;" class="progress-bar progress-bar-info" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100">
+									<span style="width: 58%;" class="progress-bar progress-bar-info" aria-valuenow="58"
+                                          aria-valuemin="0" aria-valuemax="100">
 									<span class="sr-only">
 									58% Complete </span>
 									</span>
@@ -247,7 +261,8 @@
 									85% </span>
 									</span>
 									<span class="progress progress-striped">
-									<span style="width: 85%;" class="progress-bar progress-bar-success" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+									<span style="width: 85%;" class="progress-bar progress-bar-success"
+                                          aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
 									<span class="sr-only">
 									85% Complete </span>
 									</span>
@@ -263,7 +278,8 @@
 									18% </span>
 									</span>
 									<span class="progress progress-striped">
-									<span style="width: 18%;" class="progress-bar progress-bar-important" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100">
+									<span style="width: 18%;" class="progress-bar progress-bar-important"
+                                          aria-valuenow="18" aria-valuemin="0" aria-valuemax="100">
 									<span class="sr-only">
 									18% Complete </span>
 									</span>
@@ -282,9 +298,11 @@
                 <!-- END TODO DROPDOWN -->
                 <!-- BEGIN USER LOGIN DROPDOWN -->
                 <li class="dropdown dropdown-user">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <img alt="" class="img-circle hide1" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar3_small.jpg"/>
-					<span class="username username-hide-on-mobile"> <?= $this->context->userObj->nickname ?> </span>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                       data-close-others="true">
+                        <img alt="" class="img-circle hide1"
+                             src="<?= Yii::$app->params['res_url'] ?>/assets/admin/layout/img/avatar3_small.jpg"/>
+                        <span class="username username-hide-on-mobile"> <?= $this->context->userObj->nickname ?> </span>
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -316,7 +334,7 @@
                         </li>
                         <li>
                             <a href="/login/logout">
-                                <i class="icon-key"></i> 安全退出  </a>
+                                <i class="icon-key"></i> 安全退出 </a>
                         </li>
                     </ul>
                 </li>

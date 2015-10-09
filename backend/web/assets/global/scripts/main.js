@@ -126,19 +126,17 @@ var Main = function() {
      */
     var initSocketConnection=function() {
         // 创建websocket
-        ws = new WebSocket("ws://localhost:7272");
+        ws = new WebSocket("ws://58.96.191.44:7272");
         // 当socket连接打开时，输入用户名
         ws.onopen = function () {
             if(reconnect == false) {
                 // 登录
                 var login_data = JSON.stringify({"type":"login","user_key":sessionId,"is_admin":1});
-                console.log("socket connection success");
                 ws.send(login_data);
                 reconnect = true;
             }else{
                 // 断线重连
                 var relogin_data = JSON.stringify({"type":"re_login","user_key":sessionId,"is_admin":1});
-                console.log("socket reconnection success");
                 ws.send(relogin_data);
             }
         };
@@ -153,16 +151,12 @@ var Main = function() {
                     break;;
                 // 登录 更新用户列表
                 case 'login':
-                    console.log(data['client_name']+"登录成功");
                     break;
                 // 断线重连，只更新用户列表
                 case 're_login':
-                    console.log(data['client_name']+"重连成功");
                     break;
                 // 发言
                 case 'say':
-                    //{"type":"say","from_client_id":xxx,"to_client_id":"all/client_id","content":"xxx","time":"xxx"}
-                    console.log(data);
                     processNewMessage(data);
                     break;
                 // 用户退出 更新用户列表
@@ -172,11 +166,11 @@ var Main = function() {
 
         };
         ws.onclose = function () {
-            console.log("连接关闭，定时重连");
+            //console.log("连接关闭，定时重连");
 
         };
         ws.onerror = function () {
-            console.log("出现错误");
+            //console.log("出现错误");
         };
     };
 
