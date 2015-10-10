@@ -28,7 +28,7 @@ use frontend\services\WeChatService;
 use yii\base\Exception;
 
 class WechatUserCenterController extends WController {
-    public $layout=false;
+    public $layout="wechat";
     public $enableCsrfValidation=false;
     public $userOrderService =null ;
     private $tripSer;
@@ -57,6 +57,7 @@ class WechatUserCenterController extends WController {
 
     public function actionMyTrip()
     {
+        $this->activeIndex=5;
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
@@ -69,7 +70,7 @@ class WechatUserCenterController extends WController {
             $userPublisherId=$createPublisherInfo->userPublisherId;
             $myList=$this->tripSer->getMyTripList($userPublisherId);
         }
-        return $this->renderPartial('myTrip',['list'=>$myList,'userObj'=>$this->userObj,'active'=>5,'newMsg'=>0]);
+        return $this->render('myTrip',['list'=>$myList,'userObj'=>$this->userObj]);
     }
 
 
@@ -78,6 +79,7 @@ class WechatUserCenterController extends WController {
      */
     public function actionMyOrder()
     {
+        $this->activeIndex=3;
         $login = $this->loginValid();
         if(!$login){
         return $this->redirect(['/we-chat/login']);
@@ -87,7 +89,7 @@ class WechatUserCenterController extends WController {
             $unList=$this->userOrderService->getUnFinishOrderList($userSign);
             $list=$this->userOrderService->getFinishOrderList($userSign);
             $allList = array_merge($unList,$list);
-            return $this->renderPartial('myOrder',['list'=>$list,'unList'=>$unList,'allList'=>$allList,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+            return $this->render('myOrder',['list'=>$list,'unList'=>$unList,'allList'=>$allList,'userObj'=>$this->userObj]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str="系统异常"');
@@ -103,6 +105,8 @@ class WechatUserCenterController extends WController {
      */
     public function actionTripOrder()
     {
+        $this->bgWhite=true;
+        $this->activeIndex=6;
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
@@ -116,13 +120,13 @@ class WechatUserCenterController extends WController {
         $publisherId=$userPublisherObj->userPublisherId;
         $list=$this->userOrderService->getPublisherOrderList($publisherId);
         $newList=$this->userOrderService->getUnConfirmOrderByPublisher($publisherId);
-        return $this->renderPartial('tripOrder',['list'=>$list,'newList'=>$newList,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
+        return $this->render('tripOrder',['list'=>$list,'newList'=>$newList,'userObj'=>$this->userObj]);
     }
 
     public function actionTripOrderInfo()
     {
         try{
-
+            $this->activeIndex=6;
             $login = $this->loginValid();
             if(!$login){
                 return $this->redirect(['/we-chat/login']);
@@ -167,7 +171,7 @@ class WechatUserCenterController extends WController {
             }
             $userSer =new UserBaseService();
             $userInfo = $userSer->findUserByUserSign($info->userId);
-            return $this->renderPartial('tripOrderInfo',['info'=>$info,'userInfo'=>$userInfo,'userObj'=>$this->userObj,'active'=>6,'newMsg'=>0]);
+            return $this->render('tripOrderInfo',['info'=>$info,'userInfo'=>$userInfo,'userObj'=>$this->userObj]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str=系统异常');
@@ -177,6 +181,7 @@ class WechatUserCenterController extends WController {
     public function actionMyOrderInfo()
     {
         try{
+            $this->activeIndex=3;
             $login = $this->loginValid();
             if(!$login){
                 return $this->redirect(['/we-chat/login']);
@@ -206,7 +211,7 @@ class WechatUserCenterController extends WController {
                 $userBaseService = new UserBaseService();
                 $publisherBase=$userBaseService->findUserByUserSign($sign);
             }
-            return $this->renderPartial('myOrderInfo',['info'=>$info,"contact"=>$contact,'publisherBase'=>$publisherBase,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+            return $this->render('myOrderInfo',['info'=>$info,"contact"=>$contact,'publisherBase'=>$publisherBase,'userObj'=>$this->userObj]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str="系统异常"');
@@ -347,7 +352,8 @@ class WechatUserCenterController extends WController {
             {
                 $contact=new UserOrderContact();
             }
-            return $this->renderPartial("perfectOrder",["orderNumber"=>$orderNumber,"hasAirplane"=>$hasAirplane,'orderInfo'=> $orderInfo,"contact"=>$contact,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
+            $this->activeIndex=4;
+            return $this->render("perfectOrder",["orderNumber"=>$orderNumber,"hasAirplane"=>$hasAirplane,'orderInfo'=> $orderInfo,"contact"=>$contact,'userObj'=>$this->userObj]);
         }
         $orderNumber=\Yii::$app->request->post('orderNumber');
         $username=\Yii::$app->request->post('username');
@@ -490,7 +496,7 @@ class WechatUserCenterController extends WController {
     public function actionApplyRefund()
     {
         $orderId=trim(\Yii::$app->request->get("id", ""));
-        return $this->renderPartial("applyRefund",['orderId'=>$orderId]);
+        return $this->render("applyRefund",['orderId'=>$orderId]);
     }
 
     /**
@@ -588,6 +594,8 @@ class WechatUserCenterController extends WController {
     public function actionGetUserRemind()
     {
         try{
+            $this->activeIndex=4;
+            $this->bgWhite=true;
             $login = $this->loginValid();
             if(!$login){
                 return $this->redirect(['/we-chat/login']);
@@ -600,7 +608,7 @@ class WechatUserCenterController extends WController {
             //用户会话列表
             $userMessageService=new UserMessageService();
             $sessionList=$userMessageService->getUserMessageSessionList($userSign);
-            return $this->renderPartial('messageRemind',['list'=>$list,"sessionList"=>$sessionList,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
+            return $this->render('messageRemind',['list'=>$list,"sessionList"=>$sessionList,'userObj'=>$this->userObj]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str=获取消息异常');
@@ -610,6 +618,7 @@ class WechatUserCenterController extends WController {
     public function actionUserMessageInfo()
     {
         try{
+            $this->activeIndex=4;
             $login = $this->loginValid();
             if(!$login){
                 return $this->redirect(['/we-chat/login']);
@@ -625,7 +634,7 @@ class WechatUserCenterController extends WController {
             /*if(empty($list)){
                 return $this->redirect('/we-chat/error?str=未知的会话列表');
             }*/
-            return $this->renderPartial('messageInfo',["list"=>$list,"userSign"=>$userSign,'rInfo'=>$rInfo,'userObj'=>$this->userObj,'active'=>4,'newMsg'=>0]);
+            return $this->renderPartial('messageInfo',["list"=>$list,"userSign"=>$userSign,'rInfo'=>$rInfo,'userObj'=>$this->userObj]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str=获取消息异常');

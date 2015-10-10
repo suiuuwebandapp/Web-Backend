@@ -24,7 +24,7 @@ use yii\base\Exception;
 class WeChatOrderListController extends WController {
 
     public $orderListSer;
-    public $layout=false;
+    public $layout="wechat";
     public $enableCsrfValidation=false;
     public function __construct($id, $module = null)
     {
@@ -193,6 +193,7 @@ class WeChatOrderListController extends WController {
     public function actionSysShowOrder()
     {
         try {
+
             //待定 左栏
             $this->loginValid();
             $password=Yii::$app->request->get('password');
@@ -205,7 +206,7 @@ class WeChatOrderListController extends WController {
             if(empty($data)){
                 return $this->redirect('/we-chat/error?str=无效订单');
             }else {
-                return $this->renderPartial('sysOrderInfo', ['val' => $data,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+                return $this->renderPartial('sysOrderInfo', ['val' => $data,'userObj'=>$this->userObj]);
             }
         }catch (Exception $e)
         {
@@ -215,8 +216,9 @@ class WeChatOrderListController extends WController {
     }
     public function actionIndex()
     {
+        $this->activeIndex=2;
         $this->loginValid();
-        return $this->renderPartial('index',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->renderPartial('index',['userObj'=>$this->userObj]);
     }
 
     public function actionOrderView()
@@ -231,11 +233,13 @@ class WeChatOrderListController extends WController {
         {
             $n='目的地城市';
         }
-        return $this->renderPartial('orderView',['c'=>$c,'n'=>$n,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        $this->activeIndex=2;
+        return $this->render('orderView',['c'=>$c,'n'=>$n,'userObj'=>$this->userObj]);
     }
 
     public function actionEditOrder()
     {
+        $this->activeIndex=2;
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
@@ -249,11 +253,13 @@ class WeChatOrderListController extends WController {
         if($data['wStatus']!=WeChatOrderList::STATUS_NORMAL){
             return $this->redirect('/we-chat/error?str=已处理无法修改');
         }
-        return $this->renderPartial('editOrder',['info'=>$data,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->render('editOrder',['info'=>$data,'userObj'=>$this->userObj]);
     }
 
     public function actionOrderManage()
     {
+        $this->activeIndex=2;
+        $this->bgWhite=true;
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
@@ -261,19 +267,22 @@ class WeChatOrderListController extends WController {
         $userSign=$this->userObj->userSign;
         if(empty($userSign))
         {
-            return $this->renderPartial('noOrder',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+            return $this->render('noOrder',['userObj'=>$this->userObj]);
         }
         $page = new Page(Yii::$app->request);
         $data = $this->orderListSer->getOrderListByUserSign(  $userSign,$page);
         if(empty($data->getList())){
-            return $this->renderPartial('noOrder',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+            return $this->render('noOrder',['userObj'=>$this->userObj]);
         }else{
-            return $this->renderPartial('orderList',['list'=>$data->getList(),'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+            $this->bgWhite=false;
+            return $this->render('orderList',['list'=>$data->getList(),'userObj'=>$this->userObj]);
         }
     }
 
     public function actionOrderInfo()
     {
+        $this->bgWhite=true;
+        $this->activeIndex=2;
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
@@ -284,7 +293,7 @@ class WeChatOrderListController extends WController {
         if(empty($data)){
             return $this->redirect('/we-chat/error?str=订单用户不匹配');
         }
-        return $this->renderPartial('orderInfo',['info'=>$data,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->render('orderInfo',['info'=>$data,'userObj'=>$this->userObj]);
     }
 
     public function actionDeleteOrder()
@@ -431,35 +440,42 @@ class WeChatOrderListController extends WController {
     }
     public function actionOrderSuccess()
     {
+        $this->bgWhite=true;
+        $this->activeIndex=2;
         $this->loginValid();
-        return $this->renderPartial('orderSuccess',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->render('orderSuccess',['userObj'=>$this->userObj]);
     }
     public function actionRefundSuccess()
     {
+        $this->bgWhite=true;
+        $this->activeIndex=2;
         $this->loginValid();
-        return $this->renderPartial('refundSuccess',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->render('refundSuccess',['userObj'=>$this->userObj]);
     }
     public function actionBinding()
     {
+        $this->activeIndex=2;
         $this->loginValid();
-        return $this->renderPartial('binding',['userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->render('binding',['userObj'=>$this->userObj]);
     }
 
     public function actionShowOrder()
     {
+        $this->activeIndex=2;
         $this->loginValid();
         $a=Yii::$app->request->get('o');
         $v=Aes::decrypt($a,"suiuu9527",128);
         $data = $this->orderListSer->getWeChatOrderListByOrderNumber($v);
-        return $this->renderPartial('orderInfo',['info'=>$data,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->render('orderInfo',['info'=>$data,'userObj'=>$this->userObj]);
     }
 
 
     public function actionShowRefund()
     {
+        $this->activeIndex=2;
         $this->loginValid();
         $orderNumber=Yii::$app->request->get('o');
-        return $this->renderPartial('applyRefund',['orderNumber'=>$orderNumber,'userObj'=>$this->userObj,'active'=>2,'newMsg'=>0]);
+        return $this->render('applyRefund',['orderNumber'=>$orderNumber,'userObj'=>$this->userObj]);
     }
 
     public function actionTest()

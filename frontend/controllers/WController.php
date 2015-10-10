@@ -20,9 +20,9 @@ class WController extends SController {
     public $userObj=null;
     public $userPublisherObj=null;
     public $userBaseService=null;
+    public $activeIndex=0;
 
-    public $layout=false;
-    public $enableCsrfValidation=false;
+    public $bgWhite=false;
 
     public function __construct($id, $module = null)
     {

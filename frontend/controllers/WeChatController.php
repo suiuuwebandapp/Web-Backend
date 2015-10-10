@@ -44,17 +44,14 @@ use yii\web\Cookie;
 class WeChatController extends WController
 {
 
-
-
-
-    public $enableCsrfValidation=false;
-    public $layout=false;
+    public $layout="wechat";
     public $weChatSer;
     public $newsListSer;
     public $wechatInterface;
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
+        $this->bgWhite=true;
         $this->wechatInterface=new WechatInterface();
         $this->weChatSer=new WeChatService();
         $this->newsListSer = new WeChatNewsListService();
@@ -79,7 +76,7 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
-        return $this->renderPartial("test");
+        return $this->render("test");
         exit;
         header("Content-type:text/html;charset=utf-8");
         $url ="https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=Hd8fqOvD00hhYDDHmYD0JF7DI7xAWpGXf1vTU_ldT4Fry9N3M4TmHj9XoHCuRKVGU6NwXtEi06YRqKyiuAfeQ7DkhDAs9BnTLrPYTiNLlqo";
@@ -88,7 +85,7 @@ class WeChatController extends WController
         $josn1 = '{"type":"image","offset":"0","count":"20"}';
         $rst = Common::CurlHandel($url,$jsonData);
         var_dump($rst);exit;
-        return $this->renderPartial("test");
+        return $this->render("test");
     }
 
 
@@ -219,7 +216,7 @@ class WeChatController extends WController
             if ($rst['status'] == Code::SUCCESS) {
                 $rstJson = json_decode($rst['data']);
                 if(!isset($rstJson->openid)){
-                    return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                    return   $this->render('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                     exit;
                 }
                 $openId = $rstJson->openid;
@@ -237,17 +234,17 @@ class WeChatController extends WController
                 }
 
             } else {
-                return   $this->renderPartial('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+                return   $this->render('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 exit;
             }
         } else {
-            return $this->renderPartial('errorHint', array('str1'=>'无法获取CODE','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->render('errorHint', array('str1'=>'无法获取CODE','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         if (isset($_GET['actionType'])) {
             $actionType = $_GET['actionType'];
         } else {
-            return $this->renderPartial('errorHint', array('str1'=>'无法获取Type','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->render('errorHint', array('str1'=>'无法获取Type','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
         switch ($actionType) {
@@ -277,11 +274,12 @@ class WeChatController extends WController
 
     public function actionError()
     {
+        $this->activeIndex=7;
         $this->loginValid();
         $str=Yii::$app->request->get('str');
         $btn=Yii::$app->request->get('btn','返回');
         $url=Yii::$app->request->get('url',"javascript:history.go(-1)");
-        return $this->renderPartial('errorHint', array('str1'=>$str,'str2'=>$btn,'url'=>$url,'userObj'=>$this->userObj,'active'=>7,'newMsg'=>0));
+        return $this->render('errorHint', array('str1'=>$str,'str2'=>$btn,'url'=>$url,'userObj'=>$this->userObj,'active'=>7,'newMsg'=>0));
     }
 
     public function actionShowCountry()
@@ -289,7 +287,7 @@ class WeChatController extends WController
         $rUrl=Yii::$app->request->get('rUrl');
         $countrySer=new CountryService();
         $list = $countrySer->getCountryList();
-        return $this->renderPartial('country',['list'=>$list,'rUrl'=>$rUrl]);
+        return $this->render('country',['list'=>$list,'rUrl'=>$rUrl]);
     }
 
 
@@ -327,12 +325,12 @@ class WeChatController extends WController
             return $this->renderPartial('jspay',['jsApiParameters'=>$jsApiParameters['data'],'rUrl'=>$rUrl]);
         }else
         {
-            return $this->renderPartial('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'返回','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->render('errorHint', array('str1'=>$jsApiParameters['data'],'str2'=>'返回','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
         }catch (Exception $e)
         {
             LogUtils::log($e);
-            return $this->renderPartial('errorHint', array('str1'=>$e->getMessage(),'str2'=>'返回','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            return $this->render('errorHint', array('str1'=>$e->getMessage(),'str2'=>'返回','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
         }
     }
     public function actionAliPay()
@@ -345,7 +343,7 @@ class WeChatController extends WController
         $v=Aes::decrypt($c,"alipay9527",128);
         $arr= explode('_',$v);
         if(!isset($arr[1])){
-            return $this->renderPartial('errorHint',array('str1'=>'未知订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+            return $this->render('errorHint',array('str1'=>'未知订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
         }else
         {
             $userSign = $arr[0];
@@ -362,7 +360,7 @@ class WeChatController extends WController
             }
             if(empty($data)||$data==false)
             {
-                return $this->renderPartial('errorHint',array('str1'=>'无效订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+                return $this->render('errorHint',array('str1'=>'无效订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
             }
         }
 
@@ -372,7 +370,7 @@ class WeChatController extends WController
         {
             if($data['wStatus']!=WeChatOrderList::STATUS_PROCESSED)
             {
-                return $this->renderPartial('errorHint',array('str1'=>'不是可支付订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+                return $this->render('errorHint',array('str1'=>'不是可支付订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
             }
             $orderEntity=new WeChatOrderList();
             $orderEntity->wOrderNumber=$data['wOrderNumber'];
@@ -385,7 +383,7 @@ class WeChatController extends WController
         {
             if($data->status!=UserOrderInfo::USER_ORDER_STATUS_PAY_WAIT)
             {
-                return $this->renderPartial('errorHint',array('str1'=>'不是可支付订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+                return $this->render('errorHint',array('str1'=>'不是可支付订单','str2'=>'返回','url'=>"javascript:history.go(-1)"));
             }
             $userbase = new UserBase();
             $userbase->userSign=$userSign;
@@ -405,11 +403,11 @@ class WeChatController extends WController
         $type=Yii::$app->request->get('t');//1支付类型为定制
         if(empty($userSign))
         {
-            return $this->renderPartial('errorHint',array('str1'=>'用户名不能为空','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+            return $this->render('errorHint',array('str1'=>'用户名不能为空','str2'=>'返回','url'=>"javascript:history.go(-1)"));
         }
         if(empty($orderNumber))
         {
-            return $this->renderPartial('errorHint',array('str1'=>'订单号不能为空','str2'=>'返回','url'=>"javascript:history.go(-1)"));
+            return $this->render('errorHint',array('str1'=>'订单号不能为空','str2'=>'返回','url'=>"javascript:history.go(-1)"));
         }
         $str=$userSign."_".$orderNumber."_".$type;
         $c=Aes::encrypt($str,"alipay9527",128);
@@ -718,7 +716,7 @@ class WeChatController extends WController
                 return json_encode(Code::statusDataReturn(Code::SUCCESS,"登陆成功"));
             }else
             {
-                return $this->renderPartial('login');
+                return $this->render('login');
             }
     }
 
@@ -845,7 +843,7 @@ class WeChatController extends WController
     {
             $c=Yii::$app->request->get('c');
             $n=Yii::$app->request->get('n');
-            return $this->renderPartial('register',['c'=>$c,'n'=>$n]);
+            return $this->render('register',['c'=>$c,'n'=>$n]);
 
     }
 
@@ -972,7 +970,7 @@ class WeChatController extends WController
                 }
             }else
             {
-                return $this->renderPartial('binding');
+                return $this->render('binding');
             }
     }
 
@@ -1077,7 +1075,7 @@ class WeChatController extends WController
                 $bindFlag=0;
                 $userBase=new UserBase();
             }
-            return $this->renderPartial('accessReg',['countryList'=>$countryList,'areaCode'=>"+86",'bindFlag'=>$bindFlag,'userBase'=>$userBase,'userAccess'=>$userAccess]);
+            return $this->render('accessReg',['countryList'=>$countryList,'areaCode'=>"+86",'bindFlag'=>$bindFlag,'userBase'=>$userBase,'userAccess'=>$userAccess]);
         }
     }
 
@@ -1086,7 +1084,7 @@ class WeChatController extends WController
     {
         $countrySer=new CountryService();
         $countryList = $countrySer->getCountryList();
-        return $this->renderPartial("getPassword",['countryList'=>$countryList,'areaCode'=>"+86"]);
+        return $this->render("getPassword",['countryList'=>$countryList,'areaCode'=>"+86"]);
     }
 
 

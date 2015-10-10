@@ -1,42 +1,7 @@
-<!doctype html>
-<html lang="zh-CN"><head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>随游</title>
-    <link type="text/css" rel="stylesheet" href="/assets/other/weixin/css/common.css">
-    <link type="text/css" rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
+
+
     <script type="text/javascript" src="/assets/other/weixin/js/jquery.SuperSlide.2.1.1.js"></script>
-    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('div#menu').mmenu();
-        });
-    </script>
-    <script>
-        function showHtml()
-        {
-            $("#page").show();
-            $("#loading").hide();
-        }
-    </script>
-    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
-</head>
 
-<body  class="bgwhite" onload="showHtml()">
-
-<div id="loading" class="overlay">
-    <div class="spinner" id="loading">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
-</div>
-<div id="page" class="userCenter">
-    <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
         <p class="navTop"><?php echo $info['info']['title'];?></p>
@@ -157,7 +122,6 @@
 
         </div>
     </div>
-</div>
 <script>
     $('#collection_trip').bind('click',submitCollection);
     /**
@@ -183,6 +147,7 @@
                 url: '/wechat-trip/add-collection-travel',
                 type: 'post',
                 data: {
+                    _csrf: $('input[name="_csrf"]').val(),
                     travelId: tripId
                 },
                 error: function () {
@@ -215,6 +180,7 @@
                 url: '/wechat-trip/delete-attention',
                 type: 'post',
                 data: {
+                    _csrf: $('input[name="_csrf"]').val(),
                     attentionId: $('#collection_trip').attr('attentionIdTrip')
                 },
                 error: function () {
@@ -243,5 +209,3 @@
         }
     }
 </script>
-</body>
-</html>

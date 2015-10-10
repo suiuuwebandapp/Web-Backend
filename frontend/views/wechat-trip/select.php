@@ -1,48 +1,9 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>随游</title>
-    <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
-    <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
+
     <style type="text/css">
         .selectItemBox{border:1px solid #eee; width: 80%; position:absolute;background: #fff;display: none}
         .selectItem{display:none;color: #858585;padding-left: 5px;margin-top: 10px; width: 80%;}
-      /*  a:hover{background: #000033}*/
+        /*  a:hover{background: #000033}*/
     </style>
-    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('div#menu').mmenu();
-        });
-    </script>
-    <script>
-        function showHtml()
-        {
-            $("#page").show();
-            $("#loading").hide();
-        }
-    </script>
-    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
-</head>
-
-<body  class="bgwhite" onload="showHtml()">
-
-<div id="loading" class="overlay">
-    <div class="spinner" id="loading">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
-</div>
-<div id="page" hidden="hidden" class="userCenter">
-    <?php include "left.php"; ?>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
         <p class="navTop">搜索</p>
@@ -80,7 +41,6 @@
         <span>法国</span><span>德国</span><span>英国</span><span>荷兰</span><span>瑞士</span>
         <span>意大利</span><span>西班牙</span><span>葡萄牙</span><span>奥地利</span><span>比利时</span>
     </div>
-</div>
 </div>
 <script>
     $("#country_search").keyup(function(){
@@ -121,5 +81,3 @@
     }
 </script>
 
-</body>
-</html>

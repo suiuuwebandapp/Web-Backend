@@ -1,43 +1,6 @@
-<!doctype html>
-<html lang="zh-CN"><head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>随游</title>
-    <link type="text/css" rel="stylesheet" href="/assets/other/weixin/css/common.css">
-    <link type="text/css" rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
+
     <script type="text/javascript" src="/assets/other/weixin/js/jquery.SuperSlide.2.1.1.js"></script>
-    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('div#menu').mmenu();
-        });
-    </script>
-    <script>
-        function showHtml()
-        {
-            $("#page").show();
-            $("#loading").hide();
-        }
-    </script>
-    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
-</head>
-
-<body  class="bgwhite" onload="showHtml()">
-
-<div id="loading" class="overlay">
-    <div class="spinner" id="loading">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
-</div>
-<div id="page" class="userCenter">
-        <?php include "left.php"; ?>
-        <div class="Uheader header mm-fixed-top">
+    <div class="Uheader header mm-fixed-top">
             <p class="navTop"><?php echo mb_strlen($info['info']['title'],"utf-8")>9?mb_substr($info['info']['title'],0,9,"utf-8")."...":$info['info']['title'];?></p>
             <a href="javascript:history.go(-1);" class="back"></a>
             <a href="javascript:;" class="collect <?php if(count($info['attention'])!=0){echo "active";}?>" id="collection_trip" attentionIdTrip="<?php if(count($info['attention'])!=0){echo $info['attention'][0]['attentionId'];}?>"></a>
@@ -150,7 +113,6 @@
     </ul>
     </div>
     </div>
-    </div>
 <div class="fixed btns clearfix">
     <a href="/wechat-user-center/user-message-info?rUserSign=<?= $createUserInfo->userSign;?>" class="bgOrange fl">咨询</a>
     <a href="/wechat-trip/add-order-view?tripId=<?=$info['info']['tripId'];?>" class="bgBlue fr">预定</a>
@@ -161,7 +123,6 @@
     <img src="/assets/other/weixin/images/cset.png" class="smile">
     <p style="text-align:left;">随游设计师仅提供本行程路线的制定，我们会另外安排合适的随友陪伴您游玩</p>
 </div>
-</body>
 <script>
 
     function maskChange(bo)
@@ -197,6 +158,7 @@
                 url: '/wechat-trip/add-collection-travel',
                 type: 'post',
                 data: {
+                    _csrf: $('input[name="_csrf"]').val(),
                     travelId: tripId
                 },
                 error: function () {
@@ -229,6 +191,7 @@
                 url: '/wechat-trip/delete-attention',
                 type: 'post',
                 data: {
+                    _csrf: $('input[name="_csrf"]').val(),
                     attentionId: $('#collection_trip').attr('attentionIdTrip')
                 },
                 error: function () {
@@ -257,4 +220,3 @@
         }
     }
 </script>
-</html>

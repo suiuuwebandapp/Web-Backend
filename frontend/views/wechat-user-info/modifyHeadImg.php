@@ -1,45 +1,5 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>随游</title>
-    <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
-    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
-    <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('div#menu').mmenu();
-        });
-    </script>
-    <script>
-        function showHtml()
-        {
-            $("#page").show();
-            $("#loading").hide();
-        }
-    </script>
-    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
-    <link rel="stylesheet" href="/assets/cropper/cropper.min.css">
-    <script src="/assets/cropper/cropper.min.js"></script>
-</head>
-
-<body onload="showHtml()">
-
-<div id="loading" class="overlay">
-    <div class="spinner" id="loading">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
-</div>
-<div id="page" hidden="hidden" class="userCenter">
-    <?php include "left.php"; ?>
+<link rel="stylesheet" href="/assets/cropper/cropper.min.css">
+<script src="/assets/cropper/cropper.min.js"></script>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
         <p class="navTop">上传头像</p>
@@ -55,9 +15,10 @@
             </div>
             <div class="fileBtn">
                 <form class="avatar-form" action="/wechat-user-info/wechat-upload-head-img" enctype="multipart/form-data" method="post" id="avatar-form">
-                <input id="avatar_src" type="hidden" class="avatar-src" name="avatar_src">
-                <input id="avatar_data" type="hidden" class="avatar-data" name="avatar_data">
-                <label for="file_head">上传头像</label><input type="file" id="file_head" name="file_head"  accept="image/*" onchange="javascript:setImagePreview();">
+                    <input type="hidden" name="_csrf" value="<?php echo Yii::$app->request->getCsrfToken()?>">
+                    <input id="avatar_src" type="hidden" class="avatar-src" name="avatar_src">
+                    <input id="avatar_data" type="hidden" class="avatar-data" name="avatar_data">
+                    <label for="file_head">上传头像</label><input type="file" id="file_head" name="file_head"  accept="image/*" onchange="javascript:setImagePreview();">
                 </form>
             </div>
         </div>
@@ -66,7 +27,7 @@
     <div class="container" style="margin-top: 10%;">
         <iframe name="uploadfrm" id="uploadfrm" style="display: none;"></iframe>
         <form name="formHead" method="post" action="" id="formHead" enctype="multipart/form-data" target="uploadfrm">
-
+            <input type="hidden" name="_csrf" value="<?php echo Yii::$app->request->getCsrfToken()?>">
             <div>
                 <div>
                    <!-- <input type="file" name="file_head" id="file_head" onchange="javascript:setImagePreview();" />-->
@@ -80,7 +41,6 @@
         </form>
 
     </div>
-</div>
     <script type="text/javascript">
         function setImagePreview() {
             var preview, img_txt, localImag, file_head = document.getElementById("file_head"),
@@ -190,5 +150,3 @@
         window.location.href=url;
     }
 </script>
-</body>
-</html>

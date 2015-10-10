@@ -1,69 +1,30 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport">
-    <title>密码找回</title>
-    <link rel="stylesheet" href="/assets/other/weixin/css/common.css">
-    <link rel="stylesheet" href="/assets/other/weixin/css/weixin.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery-1.11.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
-    <script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
-    <style>
-        .formTip{
-            float: right;
-            margin-right: 80px;
-            font-size: 14px;
-            height: 2.7rem;
-        }
-        .accAreaCodeSelect{
-            font-size: 16px;
-        }
-        .accAreaCodeSelect .select2-choice{
-            border-radius:0px !important;
-            background: #eee !important;
-            color: #858585;
-            text-align: center;
-            font-size: 0.85rem;
-            padding: 10px;
-            height: 2.7rem;
-        }
 
-        .select2-hidden-accessible{
-            display: none;
-        }
-    </style>
-    <link rel="stylesheet" href="/assets/other/weixin/css/jquery.mmenu.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery.mmenu.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('div#menu').mmenu();
-        });
-    </script>
-    <script>
-        function showHtml()
-        {
-            $("#page").show();
-            $("#loading").hide();
-        }
-    </script>
-    <link rel="stylesheet" href="/assets/other/weixin/css/loading.css">
-</head>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/select2/select2_metro.css">
+<script type="text/javascript" src="/assets/plugins/select2/select2.min.js"></script>
+<style>
+    .formTip{
+        float: right;
+        margin-right: 80px;
+        font-size: 14px;
+        height: 2.7rem;
+    }
+    .accAreaCodeSelect{
+        font-size: 16px;
+    }
+    .accAreaCodeSelect .select2-choice{
+        border-radius:0px !important;
+        background: #eee !important;
+        color: #858585;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 10px;
+        height: 2.7rem;
+    }
 
-<body  class="bgwhite" onload="showHtml()">
-
-<div id="loading" class="overlay">
-    <div class="spinner" id="loading">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
-</div>
-<div id="page" hidden="hidden" class="userCenter">
-    <?php include "left.php"; ?>
+    .select2-hidden-accessible{
+        display: none;
+    }
+</style>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
         <p class="navTop">找回密码</p>
@@ -103,7 +64,6 @@
     <a href="javascript:;" class="btn" onclick="updatePassword()">确定</a>
 
 </div>
-</div>
 <script>
     $(document).ready(function () {
         //初始化区号选择
@@ -142,6 +102,7 @@
             type:'post',
             data:{
                 areaCode:areaCode,
+                _csrf: $('input[name="_csrf"]').val(),
                 phone:phone
             },
             error:function(){
@@ -192,6 +153,7 @@
             data:{
                 code:code,
                 password:password,
+                _csrf: $('input[name="_csrf"]').val(),
                 phone:phone
             },
             error:function(){
@@ -212,5 +174,3 @@
         });
     }
 </script>
-</body>
-</html>

@@ -107,6 +107,16 @@ class AppLoginController extends AController{
         $areaCode=\Yii::$app->request->post('areaCode',"+86");
         $type=trim(\Yii::$app->request->post('type',""));
         $openId=trim(\Yii::$app->request->post('unionID',""));
+        $sex=\Yii::$app->request->post("sex");
+        $headImg=\Yii::$app->request->post("headImg");
+        if(empty($sex))
+        {
+            $sex=UserBase::USER_SEX_SECRET;
+        }
+        if(empty($headImg))
+        {
+            $headImg = \Yii::$app->params["base_dir"] . '/assets/images/user_default.png';
+        }
         if(empty($sendCode))
         {
             return $this->apiReturn(Code::statusDataReturn(Code::PARAMS_ERROR,'验证码错误'));
@@ -153,6 +163,8 @@ class AppLoginController extends AController{
                 $userBase->password = $password;
                 $userBase->nickname=$nickname;
                 $userBase->areaCode=$areaCode;
+                $userBase->sex=$sex;
+                $userBase->headImg=$headImg;
                 $userBase=$userBaseService->addUser($userBase,$userAccess);
             }else{
                 $userBase=$tempUserBase;
@@ -160,6 +172,8 @@ class AppLoginController extends AController{
                 $userBase->phone = $phone;
                 $userBase->password = $password;
                 $userBase->nickname=$nickname;
+                $userBase->sex=$sex;
+                $userBase->headImg=$headImg;
                 $userBaseService->updateUserBase($userBase);
             }
             $enPassword = \Yii::$app->params['encryptPassword'];

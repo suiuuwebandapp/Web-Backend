@@ -29,13 +29,14 @@ use Yii;
 use yii\base\Exception;
 
 class WechatUserInfoController extends WController {
-    public $layout=false;
+    public $layout="wechat";
     public $enableCsrfValidation=false;
     public $userOrderService =null ;
     public $userBaseSer=null;
     public $tripSer=null;
     public function __construct($id, $module = null)
     {
+        $this->activeIndex=8;
         $this->userBaseSer=new UserBaseService();
         $this->tripSer=new TripService();
         parent::__construct($id, $module);
@@ -43,29 +44,30 @@ class WechatUserInfoController extends WController {
 
     public function actionSetting()
     {
+
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
         }
         $userSign=$this->userObj->userSign;
         $userInfo = $this->userBaseSer->findUserByUserSignArray($userSign);
-        return $this->renderPartial('setting',["userInfo"=>$userInfo,'userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render('setting',["userInfo"=>$userInfo,'userObj'=>$this->userObj]);
     }
 
     public function actionSupply()
     {
         $this->loginValid();
-        return $this->renderPartial('supply',['userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render('supply',['userObj'=>$this->userObj]);
     }
     public function actionContact()
     {
         $this->loginValid();
-        return $this->renderPartial('contact',['userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render('contact',['userObj'=>$this->userObj]);
     }
     public function actionNotice()
     {
         $this->loginValid();
-        return $this->renderPartial('notice',['userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render('notice',['userObj'=>$this->userObj]);
     }
     public function actionInfo()
     {
@@ -76,7 +78,7 @@ class WechatUserInfoController extends WController {
         $userSign=$this->userObj->userSign;
         $userInfo = $this->userBaseSer->findUserByUserSignArray($userSign);
         $access =$this->userBaseSer->findUserAccessByUserSign($userSign);
-        return $this->renderPartial('info',["userInfo"=>$userInfo,"access"=>$access,'userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render('info',["userInfo"=>$userInfo,"access"=>$access,'userObj'=>$this->userObj]);
     }
     public function actionHeadImg()
     {
@@ -86,7 +88,7 @@ class WechatUserInfoController extends WController {
         }
         $userSign=$this->userObj->userSign;
         $userInfo = $this->userBaseSer->findUserByUserSignArray($userSign);
-        return $this->renderPartial('headImg',["userInfo"=>$userInfo,'userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render('headImg',["userInfo"=>$userInfo,'userObj'=>$this->userObj]);
     }
 
     public function actionAccess()
@@ -98,7 +100,7 @@ class WechatUserInfoController extends WController {
         $userSign=$this->userObj->userSign;
         $userInfo = $this->userBaseSer->findUserByUserSignArray($userSign);
         $access =$this->userBaseSer->findUserAccessByUserSign($userSign);
-        return $this->renderPartial('modifyAccess',["userInfo"=>$userInfo,"access"=>$access,'userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render('modifyAccess',["userInfo"=>$userInfo,"access"=>$access,'userObj'=>$this->userObj]);
     }
     public function actionUpView()
     {
@@ -117,7 +119,7 @@ class WechatUserInfoController extends WController {
         $countrySer=new CountryService();
         $countryList = $countrySer->getCountryList();
         $cityList=$countrySer->getCityList($userInfo["countryId"],null);
-        return $this->renderPartial($re_view,["userInfo"=>$userInfo,'countryList'=>$countryList,'cityList'=>$cityList,'userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+        return $this->render($re_view,["userInfo"=>$userInfo,'countryList'=>$countryList,'cityList'=>$cityList,'userObj'=>$this->userObj]);
     }
 
     public function actionGetCityById()
@@ -252,7 +254,7 @@ class WechatUserInfoController extends WController {
                 $userPublisherId=$createPublisherInfo->userPublisherId;
                 $myList=$this->tripSer->getMyTripList($userPublisherId);
             }
-            return $this->renderPartial("userInfo",['attention'=>$data,'userInfo'=>$userInfo,'tripList'=>$myList,'userObj'=>$this->userObj,'active'=>8,'newMsg'=>0]);
+            return $this->render("userInfo",['attention'=>$data,'userInfo'=>$userInfo,'tripList'=>$myList,'userObj'=>$this->userObj]);
          }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect('/we-chat/error?str=系统异常');
@@ -262,6 +264,7 @@ class WechatUserInfoController extends WController {
 
     public function actionTripList()
     {
+        $this->activeIndex=1;
         $this->loginValid();
         $userSign = Yii::$app->request->get("userSign");
         $publisherService=new PublisherService();
@@ -271,11 +274,12 @@ class WechatUserInfoController extends WController {
             $userPublisherId=$createPublisherInfo->userPublisherId;
             $myList=$this->tripSer->getMyTripList($userPublisherId);
         }
-        return $this->renderPartial("tripList",['tripList'=>$myList,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        return $this->render("tripList",['tripList'=>$myList,'userObj'=>$this->userObj]);
     }
 
     public function actionAttentionList()
     {
+        $this->activeIndex=1;
         $this->loginValid();
         $userSign = Yii::$app->request->get("userSign");
         $page=new Page();
@@ -284,7 +288,7 @@ class WechatUserInfoController extends WController {
         $page->showAll=true;
         $AttentionService = new UserAttentionService();
         $data = $AttentionService->getUserCollectionTravel($userSign, $page);
-        return $this->renderPartial("attentionList",['list'=>$data,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        return $this->render("attentionList",['list'=>$data,'userObj'=>$this->userObj]);
     }
 
     /**

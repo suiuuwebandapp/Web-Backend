@@ -27,7 +27,7 @@ use frontend\services\UserOrderService;
 use yii\base\Exception;
 
 class WechatTripController extends WController {
-    public $layout=false;
+    public $layout="wechat";
     public $enableCsrfValidation=false;
     public $userOrderService =null ;
     private $tripService;
@@ -44,12 +44,14 @@ class WechatTripController extends WController {
 
     public function actionIndex()
     {
+        $this->activeIndex=1;
+        $this->bgWhite=true;
         try{
             $this->loginValid(false);
             $page=new Page();
             $page->pageSize=10;
             $page= $this->tripService->getList($page,null,null,null,0,null,null,null,null,array(TravelTrip::TRAVEL_TRIP_TYPE_EXPLORE));
-            return $this->renderPartial("index",["page"=>$page->getList(),'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+            return $this->render("index",["page"=>$page->getList(),'userObj'=>$this->userObj,"active"=>2,"newMsg"=>0]);
         }catch (Exception $e){
             LogUtils::log($e);
             return $this->redirect(['/we-chat/error', 'str' => '系统未知异常']);
@@ -64,15 +66,19 @@ class WechatTripController extends WController {
 
     public function actionSelect()
     {
+
+        $this->bgWhite=true;
+        $this->activeIndex=1;
         $cc =  \Yii::$app->redis->get(Code::TRIP_COUNTRY_CITY);
         $arrCC=json_decode($cc,true);
         $countryList = isset($arrCC['c'])?$arrCC['c']:array();
         $cityList = isset($arrCC['ct'])?$arrCC['ct']:array();
-        return $this->renderPartial('select',['cList'=>$countryList,'ctList'=>$cityList,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        return $this->render('select',['cList'=>$countryList,'ctList'=>$cityList,'userObj'=>$this->userObj]);
     }
 
     public function actionSelectList()
     {
+        $this->activeIndex=1;
         $login = $this->loginValid(false);
         $activity=\Yii::$app->request->get("activity");
         $str=\Yii::$app->request->get("str");
@@ -117,13 +123,14 @@ class WechatTripController extends WController {
         {
             return json_encode(Code::statusDataReturn(Code::SUCCESS,$page->getList()));
         }
-        return $this->renderPartial('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,"activity"=>$activity,
-            'peopleCount'=>$peopleCount,"amount"=>$amount,"startPrice"=>$startPrice,"tag"=>$tag,"sort"=>$sort,"type"=>$type,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0
+        return $this->render('selectList',['str'=>$str,'list'=> $page->getList(),'c'=>$page->currentPage,"activity"=>$activity,
+            'peopleCount'=>$peopleCount,"amount"=>$amount,"startPrice"=>$startPrice,"tag"=>$tag,"sort"=>$sort,"type"=>$type,'userObj'=>$this->userObj
         ]);
     }
 
     public function actionSearch()
     {
+        $this->activeIndex=1;
         $login = $this->loginValid(false);
         $str=\Yii::$app->request->get("str");
         $peopleCount=\Yii::$app->request->get("peopleCount",0);
@@ -139,13 +146,14 @@ class WechatTripController extends WController {
             $endPrice=$priceArr[1];
         }
         $tag=\Yii::$app->request->get("tag");
-        return $this->renderPartial('search',['str'=>$str,'peopleCount'=>$peopleCount,"startPrice"=>$startPrice,"endPrice"=>$endPrice,"tag"=>$tag,'type'=>$type,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        return $this->render('search',['str'=>$str,'peopleCount'=>$peopleCount,"startPrice"=>$startPrice,"endPrice"=>$endPrice,"tag"=>$tag,'type'=>$type,'userObj'=>$this->userObj]);
     }
 
     public function actionInfo()
     {
         $login = $this->loginValid(false);
         $tripId=\Yii::$app->request->get("tripId");
+        $this->bgWhite=true;
         $returnUrl="info";
         if(empty($this->userObj))
         {
@@ -176,7 +184,8 @@ class WechatTripController extends WController {
         $page->pageSize=5;
         $rst= $this->tripCommentSer->getTravelComment($tripId,$page,$userSign);
         $userRecommend=$this->tripService->findTravelTripRecommendByTripId($tripId);
-        return $this->renderPartial($returnUrl,['info'=>$travelInfo,'createUserInfo'=>$createUserInfo,'userRecommend'=>$userRecommend,'comment'=>$rst,'userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+        $this->activeIndex=1;
+        return $this->render($returnUrl,['info'=>$travelInfo,'createUserInfo'=>$createUserInfo,'userRecommend'=>$userRecommend,'comment'=>$rst,'userObj'=>$this->userObj]);
     }
 
     public function actionAddOrder()
@@ -299,6 +308,7 @@ class WechatTripController extends WController {
 
     public function actionAddOrderView()
     {
+        $this->activeIndex=1;
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
@@ -321,18 +331,19 @@ class WechatTripController extends WController {
         if($travelInfo['info']['type']==TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC){
             $returnUrl="addTrafficOrder";
         }
-        return $this->renderPartial($returnUrl,['info'=>$travelInfo,'publisherId'=>$publisherId,'userObj'=>$this->userObj,'active'=>1,'newMsg'=>0]);
+        return $this->render($returnUrl,['info'=>$travelInfo,'publisherId'=>$publisherId,'userObj'=>$this->userObj]);
     }
 
     public function actionAddTrafficOrder()
     {
+        $this->activeIndex=3;
         $login = $this->loginValid();
         if(!$login){
             return $this->redirect(['/we-chat/login']);
         }
         if(empty($_POST))
         {
-            return $this->renderPartial("addTrafficOrder",['userObj'=>$this->userObj,'active'=>3,'newMsg'=>0]);
+            return $this->render("addTrafficOrder",['userObj'=>$this->userObj]);
         }
         $tripId=trim(\Yii::$app->request->post("tripId", ""));
         $serviceStr=trim(\Yii::$app->request->post("serviceList", ""));

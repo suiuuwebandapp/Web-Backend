@@ -63,6 +63,9 @@
 .min-height{
     min-height: 200px;
 }
+.min-height-banner{
+    min-height: 300px;
+}
 .min-height-order{
     min-height: 120px;
 }
