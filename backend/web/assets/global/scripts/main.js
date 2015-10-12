@@ -568,9 +568,26 @@ var UserCashRecordType ={
     USER_CASH_RECORD_STATUS_SUCCESS :'2',
     USER_CASH_RECORD_STATUS_FAIL    :'3'
 }
-var FrontUrl={
-    'tripUrl' :'http://www.suiuu.com/view-trip/info?trip='
-};
+
+/**
+ * 页面地址管理
+ */
+var UrlManager=function(){
+    return{
+        getTripSearchUrl:function(keywords){
+            return "/view-trip/list?s="+encodeURIComponent(keywords);
+        },
+        getTripInfoUrl:function(tripId){
+            return "/view-trip/info/"+tripId+".html";
+        },
+        getTripEditUrl:function(tripId){
+            return "/trip/edit-trip?trip="+tripId;
+        },
+        getUserInfoUrl:function(userId){
+            return "/view-user/info/"+userId+".html";
+        }
+    }
+}();
 
 /*******************************************************************************
  * Usage

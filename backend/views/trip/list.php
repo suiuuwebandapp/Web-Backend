@@ -104,7 +104,8 @@
                     "bSortable": false,
                     "render": function(data, type, full) {
                         var html='';
-                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/view-trip/info?trip="?>'+full.tripId+'" target="_blank" >'+data+'</a>';
+                        UrlManager.getTripInfoUrl(full.tripId);
+                        html +='<a href="'+UrlManager.getTripInfoUrl(full.tripId)+'" target="_blank" >'+data+'</a>';
                         return html;
                     }
                 },

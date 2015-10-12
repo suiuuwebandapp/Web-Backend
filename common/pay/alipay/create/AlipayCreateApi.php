@@ -10,6 +10,7 @@
 namespace common\pay\alipay\create;
 
 use common\components\Aes;
+use common\components\SiteUrl;
 use common\entity\UserBase;
 use common\entity\UserOrderInfo;
 use common\entity\WeChatOrderList;
@@ -132,7 +133,7 @@ class AlipayCreateApi {
         $this->subject=$this->strFilter($tripInfo['title']);
         $this->total_fee=$order->totalPrice;
         $this->body=$this->strFilter($tripInfo['intro']);//暂时写成随游详情 详情内容中不能有空格等参数
-        $this->show_url=\Yii::$app->params['base_dir']."/view-trip/info?trip=".$tripInfo['tripId'];
+        $this->show_url=SiteUrl::getTripUrl($tripInfo['tripId']);
 
 
         $alipayConfig=new AlipayConfig();

@@ -1342,7 +1342,7 @@
                         $("#preview").removeAttr("disabled");
                         data = eval("(" + data + ")");
                         if (data.status == 1) {
-                            window.location.href = '/view-trip/info?trip=' + data.data.tripId;
+                            window.location.href = UrlManager.getTripInfoUrl(data.data.tripId) ;
                         } else {
                             Main.showTip("保存随游失败");
                         }

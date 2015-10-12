@@ -677,7 +677,7 @@ function getComment(page) {
                     }
                     str += '<li>';
                     str += '<div class="user-pic fl">';
-                    str += '<a  href="/view-user/info?u='+obj.data[i].userSign+'" target="_blank"><img src=\"' + obj.data[i].headImg + '\" alt=\"\"></a>';
+                    str += '<a  href="'+UrlManager.getUserInfoUrl(obj.data[i].userSign)+'" target="_blank"><img src=\"' + obj.data[i].headImg + '\" alt=\"\"></a>';
                     str += '<span class=\"user-name\">';
                     str += obj.data[i].nickname;
                     if (obj.data[i].travelCount > 0) {

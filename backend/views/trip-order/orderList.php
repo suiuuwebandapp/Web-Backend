@@ -135,7 +135,7 @@
                         tripId=data.info.tripId;
                         title=data.info.title;
                         title=title.length<20?title:title.substring(0,20);
-                        html='<a title="'+data.info.title+'" href="'+FrontUrl.tripUrl+tripId+'" target="_blank">'+title+'</a>';
+                        html='<a title="'+data.info.title+'" href="'+UrlManager.getTripInfoUrl(tripId)+'" target="_blank">'+title+'</a>';
                         return html;
                     }
                 },

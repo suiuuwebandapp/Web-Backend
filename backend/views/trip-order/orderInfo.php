@@ -63,7 +63,7 @@ if($orderInfo!=null){
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4">随游:</label>
                                             <div class="col-md-8">
-                                                <p class="form-control-static"><a target="_blank" href="<?php echo Yii::$app->params['suiuu_url']?>/view-trip/info?trip=<?=$travelInfo['info']['tripId']?>"><?=$travelInfo['info']['title']?></a></p>
+                                                <p class="form-control-static"><a target="_blank" href="<?=\common\components\SiteUrl::getTripUrl($travelInfo['info']['tripId'])?>"><?=$travelInfo['info']['title']?></a></p>
                                             </div>
                                         </div>
                                         <div class="col-md-6">

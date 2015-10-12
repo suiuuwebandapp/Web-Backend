@@ -43,7 +43,7 @@
                         <?php if($relateRecommend!=null&&count($relateRecommend)>0){?>
                             <?php foreach ($relateRecommend as $trip) {?>
                                 <div>
-                                    <a href="/view-trip/info?trip=<?=$trip['tripId']?>"><img src="<?=$trip['titleImg']?>" alt=""/></a>
+                                    <a href="<?=\common\components\SiteUrl::getTripUrl($trip['tripId'])?>"><img src="<?=$trip['titleImg']?>" alt=""/></a>
                                     <h4><?=mb_strlen($trip['title'],"UTF-8")>5?mb_substr($trip['title'],0,5,"UTF-8")."...":$trip['title']?></h4>
                                     <p>
                                         <span><img src="<?= $trip['score']>=2?'/assets/images/start1.fw.png':'/assets/images/start2.fw.png'; ?>" width="13" height="13"></span>

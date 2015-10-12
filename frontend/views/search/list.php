@@ -204,7 +204,7 @@
             }
 
             html+='<li>' +
-            '<a href="/view-trip/info?trip='+trip.tripId+'"><img src="'+trip.titleImg+'" data-original="'+trip.titleImg+'" alt=""></a>' +
+            '<a href="'+UrlManager.getTripInfoUrl(trip.tripId)+'"><img src="'+trip.titleImg+'" data-original="'+trip.titleImg+'" alt=""></a>' +
             '<p class="posi"><img src="'+trip.headImg+'" alt=""><span>'+trip.nickname+'</span></p>' +
             '<div><h4>'+title+'</h4><p class="xing">';
             if(trip.score>=2){

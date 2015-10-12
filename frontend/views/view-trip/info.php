@@ -383,7 +383,7 @@
         common : {
             bdText : '随游网-<?=htmlspecialchars(str_replace("\n"," ",$travelInfo['info']['intro']))?>',
             bdDesc : '随游网-<?=htmlspecialchars(str_replace("\n"," ",$travelInfo['info']['title']))?>',
-            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip='.$travelInfo['info']['tripId'];?>&',
+            bdUrl : '<?=\common\components\SiteUrl::getTripUrl($travelInfo['info']['tripId']);?>&',
             bdPic : '<?=$travelInfo['info']['titleImg']?>'
         },
         share : [{

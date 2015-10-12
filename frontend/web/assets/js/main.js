@@ -269,7 +269,10 @@ var UrlManager=function(){
             return "/view-trip/list?s="+encodeURIComponent(keywords);
         },
         getTripInfoUrl:function(tripId){
-            return "/view-trip/info?trip="+tripId;
+            return "/view-trip/info/"+tripId+".html";
+        },
+        getTripEditUrl:function(tripId){
+            return "/trip/edit-trip?trip="+tripId;
         }
     }
 }();
@@ -361,6 +364,7 @@ String.prototype.replaceAll = function(reallyDo, replaceWith, ignoreCase) {
         return this.replace(reallyDo, replaceWith);
     }
 }
+
 String.prototype.endWith=function(s){
     if(s==null||s==""||this.length==0||s.length>this.length)
         return false;

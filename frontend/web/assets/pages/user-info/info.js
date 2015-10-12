@@ -842,13 +842,13 @@ function buildMyTripHtml(tripList){
         html+=' </dl>';
         html+=' <p>';
         if(tripInfo.status==TripStatus.TRAVEL_TRIP_STATUS_DRAFT){
-            html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">编辑发布</a>';
-            html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
+            html+=' <a href="'+UrlManager.getTripEditUrl(tripInfo.tripId)+'" class="sure">编辑发布</a>';
+            html+=' <a href="'+UrlManager.getTripInfoUrl(tripInfo.tripId)+'" class="cancel">查看详情</a>';
         }else if(tripInfo.status==TripStatus.TRAVEL_TRIP_AUTO_SAVE){
-            html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">继续编辑</a>';
+            html+=' <a href="'+UrlManager.getTripEditUrl(tripInfo.tripId)+'" class="sure">继续编辑</a>';
         }else{
-            html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
-            html+=' <a href="/trip/edit-trip?trip='+tripInfo.tripId+'" class="sure">重新编辑</a>';
+            html+=' <a href="'+UrlManager.getTripInfoUrl(tripInfo.tripId)+'" class="cancel">查看详情</a>';
+            html+=' <a href="'+UrlManager.getTripEditUrl(tripInfo.tripId)+'" class="sure">重新编辑</a>';
 
         }
         if(count!=''){ html+='<a href="/trip/to-apply-list?trip='+tripInfo.tripId+'" class="sure">新申请</a>';};
@@ -929,7 +929,7 @@ function buildMyJoinTripHtml(tripList){
         html+='   </dd>';
         html+=' </dl>';
         html+='<p>';
-        html+=' <a href="/view-trip/info?trip='+tripInfo.tripId+'" class="cancel">查看详情</a>';
+        html+=' <a href="'+UrlManager.getTripInfoUrl(tripInfo.tripId)+'" class="cancel">查看详情</a>';
         html+=' <a href="javascript:;" onclick="quitTravelTrip('+tripInfo.tripId+',this)" class="sure">退出随游</a>';
         html+='</p>';
         html+='</div>';
@@ -1050,14 +1050,14 @@ function buildOrderList(list,type){
         html+='</dt>';
         html+='<dd>';
         html+=orderStatusHtml;
-        html+='<span><a href="/view-trip/info?trip='+travelInfo.info.tripId+'" class="colGreen">'+travelInfo.info.title+'</a></span>';
+        html+='<span><a href="'+UrlManager.getTripInfoUrl(travelInfo.info.tripId)+'" class="colGreen">'+travelInfo.info.title+'</a></span>';
         html+='<span><b>'+Main.formatDate(orderInfo.beginDate,'yyyy年MM月dd日')+'</b><br><b>'+Main.convertTimePicker(orderInfo.startTime,2)+'</b></span>';
         html+='<span>'+orderInfo.personCount+'</span>';
         if(orderInfo.phone==''||orderInfo.phone==null){
             html+='<span class="colOrange">未接单</span>';
         }else{
             html+='<span>';
-            html+='<a href="/view-user/info?u='+orderInfo.userSign+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'"></a>';
+            html+='<a href="'+UrlManager.getUserInfoUrl(orderInfo.userSign)+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'"></a>';
             html+='<a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br>';
             html+='<img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a>';
             if(Main.isNotEmpty(orderInfo.phone)){
@@ -1148,11 +1148,11 @@ function buildPublisherOrderList(list){
         html+='</dt>';
         html+='<dd>';
         html+=orderStatusHtml;
-        html+='<span><a href="/view-trip/info?trip='+travelInfo.info.tripId+'" class="colGreen">'+travelInfo.info.title+'</a></span>';
+        html+='<span><a href="'+UrlManager.getTripInfoUrl(travelInfo.info.tripId)+'" class="colGreen">'+travelInfo.info.title+'</a></span>';
         html+='<span><b>'+Main.formatDate(orderInfo.beginDate,'yyyy年MM月dd日')+'</b><br><b>'+Main.convertTimePicker(orderInfo.startTime,2)+'</b></span>';
         html+='<span>'+orderInfo.personCount+'</span>';
         html+='<span>';
-        html+='<a href="/view-user/info?u='+orderInfo.userId+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'"></a>';
+        html+='<a href="'+UrlManager.getUserInfoUrl(orderInfo.userId)+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'"></a>';
         html+='<a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br>';
         html+='<img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a>';
         if(Main.isNotEmpty(orderInfo.phone)){
@@ -1233,11 +1233,11 @@ function buildUnConfirmList(list){
         html+='</dt>';
         html+='<dd>';
         html+=orderStatusHtml;
-        html+='<span><a href="/view-trip/info?trip='+travelInfo.info.tripId+'" class="colGreen">'+travelInfo.info.title+'</a></span>';
+        html+='<span><a href="'+UrlManager.getTripInfoUrl(travelInfo.info.tripId)+'" class="colGreen">'+travelInfo.info.title+'</a></span>';
         html+='<span><b>'+Main.formatDate(orderInfo.beginDate,'yyyy年MM月dd日')+'</b><br><b>'+Main.convertTimePicker(orderInfo.startTime,2)+'</b></span>';
         html+='<span>'+orderInfo.personCount+'</span>';
         html+='<span>';
-        html+='<a href="/view-user/info?u='+orderInfo.userId+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'"></a>';
+        html+='<a href="'+UrlManager.getUserInfoUrl(orderInfo.userId)+'" target="_blank" class="user"><img src="'+orderInfo.headImg+'"></a>';
         html+='<a href="javascript:;" class="message"><b>'+orderInfo.nickname+'</b><br>';
         html+='<img onclick="Main.showSendMessage(\''+orderInfo.userId+'\')"  src="/assets/images/xf.fw.png" width="18" height="12"></a>';
         if(Main.isNotEmpty(orderInfo.phone)){
@@ -1622,11 +1622,11 @@ function initCollect(){
                     if(title.length>15){
                         title=title.substring(0,15)+"...";
                     }
-                    str+='<a href="/view-trip/info?trip='+rst.tripId+'" class="pic">';
+                    str+='<a href="'+UrlManager.getTripInfoUrl(rst.tripId)+'" class="pic">';
                     str+='  <img src="'+rst.titleImg+'" width="410" height="267">';
                     str+='  <p class="p4"><span>￥'+rst.basePrice+'</span>每次</p>';
                     str+='</a>';
-                    str+='<a href="/view-user/info?u='+rst.userSign+'" target="_blank" class="user"><img src="'+rst.headImg+'"></a>';
+                    str+='<a href="'+UrlManager.getUserInfoUrl(rst.userSign)+'" target="_blank" class="user"><img src="'+rst.headImg+'"></a>';
                     str+='  <p class="title">'+rst.title+'</p>';
                     str+='<p class="xing">';
                     if(rst.score>=2){str+='<img src="/assets/images/start1.fw.png" alt="">';}else{str+='<img src="/assets/images/start2.fw.png" alt="">';}
@@ -1678,7 +1678,7 @@ function initMyComment(page){
                     var rst= result.data.data[i];
                     str+='<li>';
                     str+='<div class="userPic">';
-                    str+='<a href="/view-user/info?u='+rst.userSign+'" target="_blank"><img alt="" src="'+rst.headImg+'"></a>';
+                    str+='<a href="'+UrlManager.getUserInfoUrl(rst.userSign)+'" target="_blank"><img alt="" src="'+rst.headImg+'"></a>';
                     str+='<span>'+rst.nickname+'</span>';
                     str+='</div>';
                     if(rst.rnickname!=null){
@@ -2475,7 +2475,7 @@ function buildMessageSessionHtml(list){
     $("#messageSessionDiv ul").html("");
     $("#messageInfoDiv ul").html("");//清空
     var html='',tempSession='',content='';
-    if(list==''||list.length==0){
+    if(list==null||list.length==0){
         $("#messageNothing").show();
         return;
     }

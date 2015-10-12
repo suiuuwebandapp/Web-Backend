@@ -344,7 +344,7 @@
                         html+='             '+basePriceType;
                         html+='         </p>';
                         html+='     </a>';
-                        html+='     <a target="_blank" href="/view-user/info?u='+trip.userSign+'" class="user"><img src="'+trip.headImg+'" ></a>';
+                        html+='     <a target="_blank" href="'+UrlManager.getUserInfoUrl(trip.userSign)+'" class="user"><img src="'+trip.headImg+'" ></a>';
                         html+='     <p class="title">'+title+'</p>';
                         html+='     <p class="xing">'
 

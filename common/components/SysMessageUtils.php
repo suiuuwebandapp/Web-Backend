@@ -113,7 +113,7 @@ class SysMessageUtils {
         try{
             $messageRemindSer = new UserMessageRemindService();
             $content="亲爱的随友，您申请加入的随游：【".$tripTitle."】已经通过审核。";
-            $url="/view-trip/info?trip=".$tripId;
+            $url=SiteUrl::getTripUrl($tripId);
             $messageRemindSer->addMessageRemind($tripId,UserMessageRemind::TYPE_PUBLISH_CONFIRM_JOIN,$cUserSign,$rUserSign,UserMessageRemind::R_TYPE_TRIP,$content,$url);
         }catch (Exception $messageException){
         }

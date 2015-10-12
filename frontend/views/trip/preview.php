@@ -262,7 +262,7 @@
                 $("#finishTrip").removeAttr("disabled");
                 data=eval("("+data+")");
                 if(data.status==1){
-                    window.location.href='/view-trip/info?trip='+tripId;
+                    window.location.href = UrlManager.getTripInfoUrl(data.data.tripId) ;
                 }else{
                     Main.showTip("发布随游失败");
                 }

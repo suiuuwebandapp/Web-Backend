@@ -64,7 +64,7 @@
                 <a href="javascript:;">亚洲</a>
                 <div class="drops">
                     <a href="#tg">泰国</a>
-                    <a href="#yn">印尼</a>
+<!--                    <a href="#yn">印尼</a>-->
                     <a href="#mlxy">马来西亚</a>
                     <a href="#sllk">斯里兰卡</a>
                     <a href="#jpz">柬埔寨</a>
@@ -102,16 +102,16 @@
                         <p class="money">RMB<span>5502</span></p>
                     </div>
                 </li>
-                <li>
-                    <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic nanfei-22.jpg"></a>
-                    <div class="text">
-                        <h2 class="title02">SHAMWARI 保护区</h2>
-                        <p class="p1"><span class="span01">简介：</span><span>体验最畅销的志愿者项目之一，加入屡获殊荣的养护队伍。这是一次千载难逢的机会，在知名的Shamwari禁猎区参与世界濒危动物的保护工作。</span></p>
-                        <p>时间：15天</p>
-                        <p>地点：伊丽莎白港</p>
-                        <p class="money">RMB<span>5505</span></p>
-                    </div>
-                </li>
+<!--                <li>-->
+<!--                    <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic nanfei-22.jpg"></a>-->
+<!--                    <div class="text">-->
+<!--                        <h2 class="title02">SHAMWARI 保护区</h2>-->
+<!--                        <p class="p1"><span class="span01">简介：</span><span>体验最畅销的志愿者项目之一，加入屡获殊荣的养护队伍。这是一次千载难逢的机会，在知名的Shamwari禁猎区参与世界濒危动物的保护工作。</span></p>-->
+<!--                        <p>时间：15天</p>-->
+<!--                        <p>地点：伊丽莎白港</p>-->
+<!--                        <p class="money">RMB<span>5505</span></p>-->
+<!--                    </div>-->
+<!--                </li>-->
                 <li>
                     <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic nanfei-23.jpg"></a>
                     <div class="text">
@@ -350,19 +350,19 @@
                     </div>
                 </li>
             </ul>
-            <h2 class="title" id="yn">印尼</h2>
-            <ul class="list">
-                <li>
-                    <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic2.jpg"></a>
-                    <div class="text">
-                        <h2 class="title02">巴厘岛与珊瑚为生</h2>
-                        <p class="p1"><span class="span01">简介：</span><span>浮潜参与水下珊瑚养殖，体验村民生活，与当地人住在海边的小屋，探索附近的丛林，深山以及这片大海。</span></p>
-                        <p>时间：6天</p>
-                        <p>地点：巴厘岛北部</p>
-                        <p class="money">RMB<span>9933</span></p>
-                    </div>
-                </li>
-            </ul>
+<!--            <h2 class="title" id="yn">印尼</h2>-->
+<!--            <ul class="list">-->
+<!--                <li>-->
+<!--                    <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic2.jpg"></a>-->
+<!--                    <div class="text">-->
+<!--                        <h2 class="title02">巴厘岛与珊瑚为生</h2>-->
+<!--                        <p class="p1"><span class="span01">简介：</span><span>浮潜参与水下珊瑚养殖，体验村民生活，与当地人住在海边的小屋，探索附近的丛林，深山以及这片大海。</span></p>-->
+<!--                        <p>时间：6天</p>-->
+<!--                        <p>地点：巴厘岛北部</p>-->
+<!--                        <p class="money">RMB<span>9933</span></p>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--            </ul>-->
             <h2 class="title" id="mlxy">马来西亚</h2>
             <ul class="list">
                 <li>

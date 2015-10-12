@@ -369,7 +369,7 @@
                             title=title.substring(0,13)+"...";
                         }
                         html+='<li><div class="box"><img src="'+trip.titleImg+'" alt="" width="284px" height="260px"></div>';
-                        html+='<a href="/view-trip/info?trip='+trip.tripId+'"><div class="zhezhao">';
+                        html+='<a href="'+UrlManager.getTripInfoUrl(trip.tripId)+'"><div class="zhezhao">';
                         html+='<p>'+trip.intro+'</p>';
                         html+='<p class="pingjia">评价';
                         html+='<img src="/assets/images/start1.fw.png" width="13" height="13">';

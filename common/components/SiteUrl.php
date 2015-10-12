@@ -16,7 +16,7 @@ class SiteUrl {
     public static function getTripUrl($tripId)
     {
         $baseUrl=\Yii::$app->params['base_dir'];
-        return $baseUrl."/view-trip/info?trip=".$tripId;
+        return $baseUrl."/view-trip/info/".$tripId.".html";
     }
 
     public static function getTripSearchUrl($keywords)
@@ -33,9 +33,8 @@ class SiteUrl {
     public static function getViewUserUrl($userId)
     {
         $baseUrl=\Yii::$app->params['base_dir'];
-        return $baseUrl."/view-user/info?u=".$userId;
+        return $baseUrl."/view-user/info/".$userId.".html";
     }
-
 
     public static function getEditTripUrl($tripId)
     {
