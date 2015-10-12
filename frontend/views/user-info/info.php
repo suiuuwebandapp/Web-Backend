@@ -789,7 +789,7 @@ if (!empty($wechatAccount)) {
         common : {
             bdText : '随游网-<?=htmlspecialchars(str_replace("\n"," ",111))?>',
             bdDesc : '随游网-<?=htmlspecialchars(str_replace("\n"," ",222))?>',
-            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip=333';?>&',
+            bdUrl : '<?=Yii::$app->params['base_dir'].'/view-trip/info?trip=333';?>',
             bdPic : '<?=444?>'
         },
         share : [{

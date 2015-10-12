@@ -500,7 +500,7 @@ if (!empty($travelInfo['info']['type'])&&$travelInfo['info']['type'] == \common\
         common: {
             bdText: '随游网-<?=htmlspecialchars(str_replace("\n"," ",$travelInfo['info']['intro']))?>',
             bdDesc: '随游网-<?=htmlspecialchars(str_replace("\n"," ",$travelInfo['info']['title']))?>',
-            bdUrl: '<?=\common\components\SiteUrl::getTripUrl($travelInfo['info']['tripId']);?>&',
+            bdUrl: '<?=\common\components\SiteUrl::getTripUrl($travelInfo['info']['tripId']);?>',
             bdPic: '<?=$travelInfo['info']['titleImg']?>'
         },
         share: [{
