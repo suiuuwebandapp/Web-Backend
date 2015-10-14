@@ -20,6 +20,8 @@ use common\entity\UserOrderInfo;
 use common\entity\WeChatNewsList;
 use common\entity\WeChatOrderList;
 use common\entity\WeChatUserInfo;
+use common\entity\WechatVote;
+use common\models\BaseDb;
 use common\pay\alipaywap\create\AlipaywapConfig;
 use common\pay\alipaywap\create\AlipaywapCreateApi;
 use common\pay\alipaywap\lib\AlipaywapNotify;
@@ -48,9 +50,11 @@ class WeChatController extends WController
     public $weChatSer;
     public $newsListSer;
     public $wechatInterface;
+
     public function __construct($id, $module = null)
     {
         parent::__construct($id, $module);
+        $this->enableCsrfValidation=false;
         $this->bgWhite=true;
         $this->wechatInterface=new WechatInterface();
         $this->weChatSer=new WeChatService();
@@ -76,6 +80,13 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
+        /*$url_1 ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
+        $app_id = WeChat::APP_ID;
+        $url_test1_1  = Yii::$app->params['weChatUrl']."/we-chat/get-code?actionType=110&unAttention=1";//购课放在了第一位
+        $url_test1_2 =  Yii::$app->params['weChatUrl'] ."/we-chat/get-code?actionType=12";
+        $url_test1_1_s=sprintf($url_1,$app_id,urlencode($url_test1_1));
+        $url_test1_2_s=sprintf($url_1,$app_id,urlencode($url_test1_2));
+        echo $url_test1_1_s;exit;*/
         return $this->render("test");
         exit;
         header("Content-type:text/html;charset=utf-8");
@@ -168,6 +179,22 @@ class WeChatController extends WController
                                     $this->msgHandle($fromUsername, $toUsername, $time, $rst);
                                 }else if($word['nType']==WeChatNewsList::TYPE_IMG){
                                     $this->commonMsgImg(WeChat::IMG_TPL, $fromUsername, $toUsername, $time,$word['nContent']);
+                                }else if($word['nType']==WeChatNewsList::TYPE_SCHOOL){
+                                    $wechatInfo=$this->weChatSer->findWechatInfoByOpenId($fromUsername);
+                                    if(empty($wechatInfo))
+                                    {
+                                        $this->wechatInterface->getWechatUserInfo($fromUsername, true);
+                                    }
+                                    if(empty($wechatInfo["v_school"])){
+                                    $this->weChatSer->updateSchool($keyword,$fromUsername);
+                                        $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text,$word['nContent']);
+                                    }else{
+                                        $data = $this->newsListSer->getKeyWordInfo('禁止修改学校');
+                                        if(!empty($data)){
+                                            $this->commonMsgTxt(WeChat::TEXT_TPL, $fromUsername, $toUsername, $time, $msgType_text,$data['nContent']);
+                                        }
+                                    }
+
                                 }
                                 break;
                             }
@@ -201,7 +228,7 @@ class WeChatController extends WController
     public function actionGetCode()
     {
         if (!$this->is_weixin()) {
-            $this->showNoWx();
+           return $this->showNoWx();
             exit;
         }
         //$actionType 菜单的选择如11表示第一列第一个 12 第一列第二个
@@ -209,6 +236,12 @@ class WeChatController extends WController
         $openId = '';
         $actionType = '';
         $userSign = '';
+        if (isset($_GET['actionType'])) {
+            $actionType = $_GET['actionType'];
+        } else {
+            return $this->render('errorHint', array('str1'=>'无法获取Type','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
+            exit;
+        }
         if (isset($_GET['code'])) {
             $code = $_GET['code'];
             $url = sprintf(WeChat::GET_OAUTH2_OPENID, WeChat::APP_ID, WeChat::APP_SECRET, $code);
@@ -220,17 +253,20 @@ class WeChatController extends WController
                     exit;
                 }
                 $openId = $rstJson->openid;
-                $weChatUserInfo=new WeChatUserInfo();
-                $weChatUserInfo->openId=$openId;
-                $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
-                if (!empty($WeChatRst)&&!empty($WeChatRst['v_nickname'])) {
-                    Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
-                } else {
-                    $this->wechatInterface->getWechatUserInfo($openId, true); //抓取用户信息
+
+                if(!isset($_GET['unAttention'])){
                     $weChatUserInfo=new WeChatUserInfo();
                     $weChatUserInfo->openId=$openId;
-                    $WeChatRstN = $this->weChatSer->getUserInfo($weChatUserInfo);
-                    Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRstN));
+                    $WeChatRst = $this->weChatSer->getUserInfo($weChatUserInfo);
+                    if (!empty($WeChatRst)&&!empty($WeChatRst['v_nickname'])) {
+                        Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRst));
+                    } else {
+                        $this->wechatInterface->getWechatUserInfo($openId, true); //抓取用户信息
+                        $weChatUserInfo=new WeChatUserInfo();
+                        $weChatUserInfo->openId=$openId;
+                        $WeChatRstN = $this->weChatSer->getUserInfo($weChatUserInfo);
+                        Yii::$app->session->set(Yii::$app->params['weChatSign'],json_encode($WeChatRstN));
+                    }
                 }
 
             } else {
@@ -241,16 +277,33 @@ class WeChatController extends WController
             return $this->render('errorHint', array('str1'=>'无法获取CODE','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
             exit;
         }
-        if (isset($_GET['actionType'])) {
-            $actionType = $_GET['actionType'];
-        } else {
-            return $this->render('errorHint', array('str1'=>'无法获取Type','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
-            exit;
-        }
+
         switch ($actionType) {
-            case "11":
-                $url = Yii::$app->params['weChatUrl']. "/we-chat-order-list";
-                header("location: " . $url);
+            case "110":
+            case "111":
+            case "112":
+            case "113":
+            case "114":
+            case "115":
+            case "116":
+            case "117":
+            case "118":
+            case "119":
+            case "120":
+            case "121":
+            case "122":
+            case "123":
+            case "124":
+            case "125":
+                $vote=new WechatVote();
+                $vote->createTime=BaseDb::DB_PARAM_NOW;
+                $vote->openId=$openId;
+                $vote->type=$actionType;
+                try{
+                $this->weChatSer->addWechatVote($vote);
+                }catch  (Exception $e){
+                }
+                header("location: " . "http://v.xiumi.us/stage/v5/22Oqv/4958646");
                 break;
             case "12":
                 $url = Yii::$app->params['weChatUrl']. "/we-chat-order-list/order-manage";
@@ -641,7 +694,7 @@ class WeChatController extends WController
 
     public function showNoWx()
     {
-        echo "请在微信浏览器打开";
+        return $this->render('errorHint', array('str1'=>'请在微信客户端打开','str2'=>'返回微信 ','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
     }
 
 
@@ -656,6 +709,7 @@ class WeChatController extends WController
      */
     public function actionLogin()
     {
+        $this->enableCsrfValidation=true;
             if($_POST)
             {
                 $username=\Yii::$app->request->post('username');
@@ -726,7 +780,7 @@ class WeChatController extends WController
      */
     public function actionPhoneRegister()
     {
-
+        $this->enableCsrfValidation=true;
         $sendCode=Yii::$app->request->post('code');
 
         if(empty($sendCode))
@@ -784,7 +838,7 @@ class WeChatController extends WController
      */
     public function actionSendMessage()
     {
-
+        $this->enableCsrfValidation=true;
 
         $phone = \Yii::$app->request->post('phone');//发送给用户的手机
         $areaCode = \Yii::$app->request->post('areaCode');//区号
@@ -854,6 +908,7 @@ class WeChatController extends WController
      */
     public function actionAccSendMessage()
     {
+        $this->enableCsrfValidation=true;
         $phone = \Yii::$app->request->post('phone');//发送给用户的手机
         $areaCode = \Yii::$app->request->post('areaCode');//区号
         $valNum = \Yii::$app->request->post('valNum');//区号
@@ -915,6 +970,7 @@ class WeChatController extends WController
 
     public function actionBinding()
     {
+        $this->enableCsrfValidation=true;
             if($_POST)
             {
                 $username=trim(\Yii::$app->request->post('username',""));
@@ -976,6 +1032,7 @@ class WeChatController extends WController
 
     public function actionAccessReg()
     {
+        $this->enableCsrfValidation=true;
         if($_POST)
         {
             $sendCode=trim(\Yii::$app->request->post('code',""));
@@ -1082,6 +1139,7 @@ class WeChatController extends WController
 
     public function actionPasswordView()
     {
+        $this->enableCsrfValidation=true;
         $countrySer=new CountryService();
         $countryList = $countrySer->getCountryList();
         return $this->render("getPassword",['countryList'=>$countryList,'areaCode'=>"+86"]);
@@ -1090,6 +1148,7 @@ class WeChatController extends WController
 
     public function actionPasswordCode()
     {
+        $this->enableCsrfValidation=true;
         $phone = Yii::$app->request->post('phone');//用户名
         if (empty($phone) || strlen($phone) > 50 || strlen($phone) < 5) {
             $errors = "用户名格式不正确";
@@ -1131,6 +1190,7 @@ class WeChatController extends WController
 
     public function actionUpdatePassword()
     {
+        $this->enableCsrfValidation=true;
         $phone = Yii::$app->request->post('phone');//用户名
         if (empty($phone) || strlen($phone) > 50 || strlen($phone) < 5) {
             $errors = "用户名格式不正确";

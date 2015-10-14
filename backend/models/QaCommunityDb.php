@@ -73,7 +73,7 @@ class QaCommunityDb extends ProxyDb {
     public function  getQuestionById($id)
     {
         $sql = sprintf("
-            SELECT qId,qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber,attentionNumber,aNumber,c.headImg FROM question_community a
+            SELECT qId,qTitle,qContent,qAddr,qCountryId,qCityId,qTag,qUserSign,qCreateTime,qInviteAskUser,pvNumber,attentionNumber,aNumber,c.nickname,c.headImg FROM question_community a
             LEFT JOIN user_base c ON a.qUserSign = c.userSign
              WHERE qId=:qId;
         ");
@@ -82,25 +82,39 @@ class QaCommunityDb extends ProxyDb {
         return $command->queryOne();
     }
 
+    public function getUserInfo($userSign)
+    {
+        $sql = sprintf("
+            SELECT headImg,nickname,userSign FROM user_base
+             WHERE userSign=:userSign AND phone  is NULL AND email  is NULL;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);
+        return $command->queryOne();
+    }
+
     public function getAnswerListByQid($page,$type,$id)
     {
         $sql=sprintf("
-        FROM answer_community a WHERE qId=:qId
+        FROM (SELECT * FROM answer_community WHERE qId=:qId) as a
+        LEFT JOIN user_base b ON a.aUserSign=b.userSign
         ");
         $this->setParam('qId',$id);
         if(!empty($type))
         {
-            $sql.=" AND type=:type";
+            $sql.=" AND a.type=:type";
             $this->setParam('type',$type);
         }
+        $this->setSelectInfo("a.*,b.nickname");
         $this->setSql($sql);
         return $this->find($page);
     }
 
     public function getAnswerList($page,$search)
     {
+        //
         $sql=sprintf("
-        FROM (SELECT a.*,c.headImg,c.nickname FROM answer_community a
+        FROM (SELECT a.*,c.headImg,c.nickname FROM (SELECT * FROM answer_community LIMIT 0,100) as a
         LEFT JOIN user_base c ON a.aUserSign = c.userSign) as ls WHERE 1=1
         ");
         if(!empty($search))

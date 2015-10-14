@@ -57,7 +57,7 @@ var timeOutId=0;
         alert(document.body.scrollTop);
         alert(window.screen.height);
         alert(window.screen.availHeight);*/
-        timeOutId=setInterval(function(){ $(window).scrollTop(document.body.scrollHeight/2);},20);
+        timeOutId=setInterval(function(){ $(window).scrollTop(document.body.scrollHeight/2+20);},20);
 
 
     }

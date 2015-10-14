@@ -110,6 +110,16 @@ GROUP BY aUserSign ORDER BY COUNT(aUserSign) DESC  LIMIT 0,5) as ss LEFT JOIN us
         return $command->queryAll();
     }
 
+    public function getUserByName($name){
+        $sql = sprintf("
+            SELECT nickname,headImg,userSign FROM user_base WHERE nickname like :name;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $name='%'.$name."%";
+        $command->bindParam(":name", $name, PDO::PARAM_STR);
+        return $command->queryAll();
+    }
+
     public function updateQuestionPv($id,$pv)
     {
         $sql = sprintf("

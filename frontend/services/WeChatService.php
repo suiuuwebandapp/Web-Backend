@@ -135,6 +135,18 @@ class WeChatService extends BaseDb{
         }
     }
 
+    public function findWechatInfoByOpenId($openId)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->weChatDb=new WeChatDb($conn);
+            return $this->weChatDb->findWechatInfoByOpenId($openId);
+        } catch (Exception $e) {
+            throw new Exception('得到用户信息异常', Code::FAIL, $e);
+        } finally {
+            $this->closeLink();
+        }
+    }
     /**
      * 插入用户
      * @param $arr
@@ -175,7 +187,9 @@ class WeChatService extends BaseDb{
     {
         try {
             $weChatUserInfoOld =new WeChatUserInfo();
+            if(!empty($userSign)){
             $weChatUserInfoOld->userSign=$userSign;
+            }
             $weChatUserInfo=$this->arr2WeChatUserInfo($arr,$weChatUserInfoOld);
             if($weChatUserInfo->openId=='')
             {
@@ -189,6 +203,32 @@ class WeChatService extends BaseDb{
         } finally {
             $this->closeLink();
         }
+    }
+
+    public function addWechatVote($vote)
+    {
+        $id=0;
+        try {
+            $this->saveObject($vote);
+            $id= $this->getLastInsertId();
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+        return $id;
+    }
+
+//统计学校
+    public function updateSchool($school,$openId)
+    {
+        if(empty($school)||empty($openId))
+        {
+            return null;
+        }
+        $conn = $this->getConnection();
+        $this->weChatDb=new WeChatDb($conn);
+        return $this->weChatDb->updateSchool($school,$openId);
     }
 
     public function bindingWeChatByUnionID($userSign,$unionID)
@@ -229,6 +269,7 @@ class WeChatService extends BaseDb{
         $weChatUserInfo->unionID=isset($arr['unionid'])?$arr['unionid']:'';
         $weChatUserInfo->v_remark=isset($arr['remark'])?$arr['remark']:'';
         $weChatUserInfo->v_groupid=isset($arr['groupid'])?$arr['groupid']:0;
+        $weChatUserInfo->v_school=isset($arr['v_school'])?$arr['v_school']:0;
         return $weChatUserInfo;
     }
     private function curlHandel($url,$data)

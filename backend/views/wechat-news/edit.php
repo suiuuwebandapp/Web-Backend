@@ -87,6 +87,14 @@
                                             <input type="radio" name="optionsRadios" value="2"  <?php if($info['nType']==2){echo "checked";}?> onclick="changedx(2)" >
                                             图文
                                         </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optionsRadios" value="3"  <?php if($info['nType']==3){echo "checked";}?> onclick="changedx(3)" >
+                                            图片
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optionsRadios" value="4"  <?php if($info['nType']==4){echo "checked";}?> onclick="changedx(1)" >
+                                            学校
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -207,14 +215,20 @@
     }
     function changedx(i)
     {
-        if(i==1)
+        if(i==1||i==4)
         {
             $('#txt_id1').show();
             $('#txt_id2').hide();
-        }else
+        }else if(i==2)
         {
             $('#txt_id1').hide();
             $('#txt_id2').show();
+        }
+        else if(i==3)
+        {
+            alert("图片消息请删除后重新添加");
+            $('#txt_id1').show();
+            $('#txt_id2').hide();
         }
     }
 
@@ -239,7 +253,7 @@
             Main.errorTip("消息类型不允许为空");
             return;
         }
-        if(type=="1"){
+        if(type=="1"||type=="4"){
             content =  $('#textareaid1').val();
             if(content==''){
                 Main.errorTip("文本消息不允许为空");

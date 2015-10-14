@@ -252,6 +252,7 @@ class WechatInterface {
 
                 $file_str = '错误发生时间：[' . date('Y-m-d H:i:s') . ']错误内容:{获取用户信息' . $rst['data'] . '}';
                 $this->write_to_log(WeChat::LOG_XXX_NAME, $file_str);
+                return Code::statusDataReturn(Code::FAIL);
                 exit;
             }
         }

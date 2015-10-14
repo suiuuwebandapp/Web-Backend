@@ -26,8 +26,11 @@
             <div class="portlet-body flip-scroll" id="table_div">
                 <div class="table-info-form">
                     <form id="datatables_form" onsubmit="return false;">
-                        <div class="input-group input-xlarge pull-left">
-                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入用户昵称、手机或邮箱">
+                        <div class="col-md-8 input-group">
+                            <input type="text" name="searchText" style="60px;!important;" placeholder="请输入用户昵称、手机或邮箱">
+                            <div  style="padding-left: 400px;60px;!important;">
+                            <input type="text" name="school"  placeholder="请输入用学校">
+                            </div>
                                     <span class="input-group-btn">
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
                                     </span>

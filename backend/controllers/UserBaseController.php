@@ -123,10 +123,10 @@ class UserBaseController extends CController{
     public function actionWechatUserList()
     {
         $search=\Yii::$app->request->get("searchText","");
-
+        $school=\Yii::$app->request->get("school","");
         $page=new Page(\Yii::$app->request);
 
-        $page= $this->wechatService->getWechatUserBaseList($page,$search);
+        $page= $this->wechatService->getWechatUserBaseList($page,$search,$school);
 
         $tableResult=new TableResult($page->draw,count($page->getList()),$page->totalCount,$page->getList());
 

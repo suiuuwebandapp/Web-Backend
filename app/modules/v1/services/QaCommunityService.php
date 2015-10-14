@@ -37,7 +37,7 @@ class QaCommunityService  extends BaseDb {
                 $userRemind = new UserMessageRemindDb($conn);
                 $content="";
                 $url="";
-                $userRemind->addUserMessageRemind($questionCommunity->qId,UserMessageRemind::TYPE_INVITED,$questionCommunity->qUserSign,$val,UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
+                $userRemind->addUserMessageRemind($qId,UserMessageRemind::TYPE_INVITED,$questionCommunity->qUserSign,$val,UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
             }
             $this->commit($tran);
             $tagSer = new TagListService();
@@ -122,6 +122,20 @@ class QaCommunityService  extends BaseDb {
             $sysUser = $userBase->findBaseInfoBySign(Code::RECOMMEND_ANSWER_USER);
             $rstArr = array('inviteUser'=>$rst,'sysUser'=>$sysUser);
             return $rstArr;
+        }catch (Exception $e){
+            throw $e;
+        }finally{
+            $this->closeLink();
+        }
+    }
+
+    public function getUserByName($name)
+    {
+        $conn=$this->getConnection();
+        try{
+            $this->qaCommunityDb=new QaCommunityDb($conn);
+            $rst = $this->qaCommunityDb->getUserByName($name);
+            return $rst;
         }catch (Exception $e){
             throw $e;
         }finally{

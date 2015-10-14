@@ -29,7 +29,7 @@
                         <div class="col-md-8 input-group ">
                             <input type="text" name="searchText" class="input-xlarge" placeholder="请输入标题 或 关键字">
                             <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态：</label>
-                            <select name="status" class="form-control input-medium" >
+                            <select name="status" class="form-control input-medium" style="width: 15% !important;" >
                                 <option value="1">上线</option>
                                 <option value="2">下线</option>
                                 <option value="0">全部</option>
@@ -163,6 +163,9 @@
                                 break;
                             case "3":
                                 return "图片消息";
+                                break;
+                            case "4":
+                                return "学校统计";
                                 break;
                             default:
                                 return "未知";

@@ -67,5 +67,9 @@ class WeChatUserInfo {
      * @var分组
      */
     public $v_groupid;
+    /**
+     * @var学校
+     */
+    public $v_school;
 
 }

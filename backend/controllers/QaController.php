@@ -43,7 +43,9 @@ class QaController extends CController{
         return $this->render("add");
     }
 
-
+    public function actionAddAnswer(){
+        return $this->render("addAnswer");
+    }
 
 
     public function actionGetQaList()
@@ -118,15 +120,18 @@ class QaController extends CController{
         {
             $id=Yii::$app->request->post("id");
             $aContent=Yii::$app->request->post("answer");
+            $userSign=Yii::$app->request->post("userSign");
+            $type=AnswerCommunity::SYS_TYPE;
             try {
 
                 if(empty($id)){return json_encode(Code::statusDataReturn(Code::FAIL, "标题不能为空"));}
                 if(empty($aContent)){return json_encode(Code::statusDataReturn(Code::FAIL, "内容不能为空"));}
+                if(empty($userSign)){$userSign=Code::RECOMMEND_ANSWER_USER;$type=AnswerCommunity::USER_TYPE;}
                 $answer = new AnswerCommunity();
                 $answer->qId = $id;
                 $answer->aContent = $aContent;
-                $answer->aUserSign = Code::RECOMMEND_ANSWER_USER;
-                $answer->type=AnswerCommunity::SYS_TYPE;
+                $answer->aUserSign = $userSign;
+                $answer->type=$type;
                 $this->qaService->addAnswer($answer);
                 return  json_encode(Code::statusDataReturn(Code::SUCCESS,""));
             }catch (Exception $e) {
@@ -135,10 +140,16 @@ class QaController extends CController{
 
         }
         $id=Yii::$app->request->get("id");
-        $type=Yii::$app->request->get("type","2");
+        $type=Yii::$app->request->get("type");
         $rst = $this->qaService->getQuestionInfo($id);
+        $userRst=array();
+        if(isset($rst["qInviteAskUser"])&&!empty($rst["qInviteAskUser"]))
+        {
+            $userRst=$this->qaService->getInvitationUser(($rst["qInviteAskUser"]));
+
+        }
         $page=new Page(Yii::$app->request);
         $sysAnswer = $this->qaService->getAnswerListByQid($page,$type,$id);
-        return $this->render("sysAnswer",['id'=>$id,'info'=>$rst,"answer"=>$sysAnswer->getList()]);
+        return $this->render("sysAnswer",['id'=>$id,'info'=>$rst,"answer"=>$sysAnswer->getList(),'userRst'=>$userRst]);
     }
 }

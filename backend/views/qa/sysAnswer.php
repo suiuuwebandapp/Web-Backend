@@ -19,7 +19,7 @@
             <div class="modal-body">
                 <div  style="height: 500px;overflow: scroll">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12" >
                             <div class="portlet-body form">
                                 <!-- BEGIN FORM-->
                                 <div class="form-body">
@@ -41,34 +41,104 @@
                                         <!--/span-->
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <label class=" col-md-4">问题标题:</label>
-                                            <div class="col-md-12">
+                                            <label class=" col-md-2 control-label">问题标题:</label>
+                                            <div class="col-md-7  valdate right">
                                                 <p class="form-control-static"><?=$info['qTitle']?></p>
                                             </div>
-                                        </div>
                                     </div>
                                     <div class="row">
                                         <!--/span-->
-                                        <div class="col-md-12">
-                                            <label class=" col-md-4">问题详情:</label>
-                                            <div class="col-md-12">
+                                            <label class=" col-md-2 control-label">问题详情</label>
+                                            <div class="col-md-7 valdate right">
                                                 <p class="form-control-static"><?=$info['qContent']?></p>
                                             </div>
-                                        </div>
                                         <!--/span-->
                                     </div>
                                     <div class="row">
                                         <!--/span-->
-                                        <div class="col-md-12">
-                                            <label class=" col-md-4">系统回答:</label>
                                             <div class="col-md-12">
-                                               <textarea id="sysAnswer" class="col-md-12"><?= isset($answer[0]["aContent"])?$answer[0]["aContent"]:""?></textarea>
+                                               <div class="portlet grey-cascade box">
+
+                                                    <div class="portlet-title">
+
+                                                        <div class="caption">
+
+                                                            <i class="fa fa-cogs"></i>回答列表
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="portlet-body">
+
+                                                        <div class="table-responsive">
+
+                                                            <table class="table table-hover table-bordered table-striped">
+
+                                                                <thead>
+
+                                                                <tr>
+
+                                                                    <th>
+
+                                                                        回答人
+
+                                                                    </th>
+
+                                                                    <th>
+
+                                                                       内容
+
+                                                                    </th>
+
+
+
+                                                                </tr>
+
+                                                                </thead>
+
+                                                                <tbody>
+                                                                <?php foreach($answer as $val){?>
+                                                                    <tr>
+
+                                                                        <td class="col-md-2">
+
+                                                                            <?= isset($val["nickname"])?$val["nickname"]:"匿名"?>
+
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <?= isset($val["aContent"])?$val["aContent"]:""?>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                <?php }?>
+
+                                                                </tbody>
+
+                                                            </table>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
                                             </div>
-                                        </div>
                                         <!--/span-->
                                     </div>
-
+                                    <div class="row">
+                                        <!--/span-->
+                                            <div class="col-md-12">
+                                                <label class=" col-md-4">选择回答用户:</label>
+                                                <select id="selectUser" class="col-md-2 ">
+                                                    <option value="">随小游</option>
+                                                    <?php foreach($userRst as $val){?>
+                                                        <option value="<?=$val["userSign"]?>"><?=$val['nickname']?></option>
+                                                    <?php }?></select>
+                                                <textarea id="sysAnswer" class="col-md-12"></textarea>
+                                            </div>
+                                        <!--/span-->
+                                    </div>
                                 </div>
                                 <!-- END FORM-->
                             </div>
@@ -93,15 +163,22 @@
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/data-tables/DT_bootstrap.js"></script>
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/admin/pages/scripts/table-ajax.js" ></script>
 <script type="text/javascript">
+
 function subAnswer()
 {
     var answer = $("#sysAnswer").val();
+    if(answer=="")
+    {
+        alert("请填写回答内容");
+        return;
+    }
     $.ajax({
         url: "/qa/sys-answer",
         type: 'post',
         data: {
             id: "<?=$id ?>",
-            answer: answer
+            answer: answer,
+            userSign:$("#selectUser").val()
         },
         error: function () {
             //hide load

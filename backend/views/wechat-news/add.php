@@ -90,6 +90,10 @@
                                                     <input type="radio" name="optionsRadios" value="3" onclick="changedx(3)"  >
                                                     图片
                                                 </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="optionsRadios" value="4" onclick="changedx(1)"  >
+                                                    学校
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -264,7 +268,7 @@
             Main.errorTip("消息类型不允许为空");
             return;
         }
-        if(type=="1"){
+        if(type=="1"||type=="4"){
             content =  $('#textareaid1').val();
             if(content=='')
             {

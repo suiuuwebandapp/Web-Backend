@@ -22,16 +22,17 @@ class WechatService extends BaseDb{
     /**
      * @param Page $page
      * @param $search
+     * @param $school
      * @return Page|null
      * @throws Exception
      * @throws \Exception
      */
-    public function getWechatUserBaseList(Page $page,$search)
+    public function getWechatUserBaseList(Page $page,$search,$school=null)
     {
         try{
             $conn=$this->getConnection();
             $wechatDb=new WeChatDb($conn);
-            $page=$wechatDb->getWeChatOrderList($page,$search);
+            $page=$wechatDb->getWeChatOrderList($page,$search,$school);
         }catch (Exception $e){
             throw $e;
         }finally{

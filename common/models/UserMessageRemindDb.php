@@ -36,7 +36,7 @@ class UserMessageRemindDb extends ProxyDb
           VALUES (:relativeId,:relativeUserSign,:relativeType,:userSign,now(),:rStatus,:rType,:content,:url);
         ");
         $command=$this->getConnection()->createCommand($sql);
-        $command->bindParam(":relativeId", $relativeId, PDO::PARAM_INT);
+        $command->bindParam(":relativeId", $relativeId, PDO::PARAM_STR);
         $command->bindParam(":relativeUserSign", $relativeUserSign, PDO::PARAM_STR);
         $command->bindParam(":relativeType", $relativeType, PDO::PARAM_INT);
         $command->bindParam(":userSign", $userSign, PDO::PARAM_STR);

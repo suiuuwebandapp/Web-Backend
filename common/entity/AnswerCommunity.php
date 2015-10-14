@@ -13,7 +13,8 @@ class AnswerCommunity {
 
     const PRIMARY_KEY='aId';
 
-    const SYS_TYPE=2;
+    const SYS_TYPE=2;//系统回答
+    const USER_TYPE=3;//普通回答
     /**
      * @var主键回答id
      */

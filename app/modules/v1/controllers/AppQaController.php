@@ -47,13 +47,14 @@ class AppQaController extends AController {
             $cityId = Yii::$app->request->post('cityId');
             $tagList = Yii::$app->request->post('tags');
             $userList = Yii::$app->request->post('userList');
+            $userListCount=count(explode(",",$userList));
             if(empty($title)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "标题不能为空"));}
             if(empty($content)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "内容不能为空"));}
             if(empty($addr)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "地点不能为空"));}
             if(empty($countryId)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "国家不能为空"));}
             if(empty($cityId)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "城市不能为空"));}
             if(empty($tagList)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "标签不能为空"));}
-            //if(empty($userList)){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "邀请回答人不能空"));}
+            if($userListCount>6){return $this->apiReturn(Code::statusDataReturn(Code::FAIL, "邀请回答最多为6人"));}
             $question = new QuestionCommunity();
             $question->qTitle = $title;
             $question->qContent = $content;
@@ -190,6 +191,20 @@ class AppQaController extends AController {
         }
     }
 
+    public function actionGetUserByName()
+    {
+        $this->loginValid();
+        try {
+            $name= Yii::$app->request->get('name');
+
+            if(empty($name)){return $this->apiReturn(Code::statusDataReturn(Code::PARAMS_ERROR, "名称不能为空"));}
+            $rst = $this->qaSer->getUserByName($name);
+            return $this->apiReturn(Code::statusDataReturn(Code::SUCCESS,$rst));
+        }catch (Exception $e) {
+            LogUtils::log($e);
+            return $this->apiReturn(Code::statusDataReturn(Code::FAIL,"提交问题异常"));
+        }
+    }
     public function actionGetQaList()
     {
         $this->loginValid();

@@ -9,7 +9,7 @@ $serviceArr = json_decode($info->serviceInfo,true);
 <div class="csyoderDetail">
     <div class="content">
         <div class="box">
-            <a href="" class="pic"><img src="<?= $tripInfo['info']['titleImg'];?>"></a>
+            <a href="/wechat-trip/info?tripId=<?= $tripInfo['info']['tripId'];?>" class="pic"><img src="<?= $tripInfo['info']['titleImg'];?>"></a>
             <div class="details">
                 <h3 class="title"><?= $tripInfo['info']['title'];?></h3>
                 <p class="line clearfix">
@@ -24,8 +24,11 @@ $serviceArr = json_decode($info->serviceInfo,true);
         </div>
         <div class="part clearfix">
             <?php  if(!empty($userInfo)){?>
-            <a href="#" class="userPic"><img src="<?= $userInfo->headImg?>"></a>
+            <a href="/wechat-user-info/user-info?userSign=<?= $userInfo->userSign?>" class="userPic"><img src="<?= $userInfo->headImg?>"></a>
             <span class="userName"><?= $userInfo->nickname?></span>
+                <a href="/wechat-user-center/user-message-info?rUserSign=<?= $userInfo->userSign;?>" class="chat"></a>
+                <p class="datas">订单创建时间：<span><?=$info->createTime;?></span></p>
+                <p class="numbers">订单号 :<span> <?=$info->orderNumber;?></span></p>
             <?php }else{?>
                 <a href="#" class="btnfr02 colOrange">未知用户</a>
             <?php }?>

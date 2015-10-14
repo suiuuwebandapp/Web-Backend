@@ -151,4 +151,33 @@ class QaService extends BaseDb{
             $this->closeLink();
         }
     }
+
+    public function getInvitationUser($userList)
+    {
+        try {
+            $conn = $this->getConnection();
+            $this->qaDb = new QaCommunityDb($conn);
+            $rst = null;
+            if(empty($userList))
+            {
+                return $rst;
+            }
+            $userSign="";
+            $uArr=explode(',',$userList);
+            foreach($uArr as $val )
+            {
+                $userRst= $this->qaDb->getUserInfo($val);
+
+                if(isset($userRst["userSign"]))
+                {
+                    $rst[]=$userRst;
+                }
+            }
+            return $rst;
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->closeLink();
+        }
+    }
 }

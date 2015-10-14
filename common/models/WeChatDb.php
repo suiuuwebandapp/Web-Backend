@@ -85,12 +85,24 @@ class WeChatDb extends ProxyDb{
         return $command->queryOne();
     }
 
+    public function findWechatInfoByOpenId($openId)
+    {
+        $sql = sprintf("
+           SELECT * FROM wechat_user_info
+            WHERE openId=:openId;
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":openId", $openId, PDO::PARAM_STR);
+        return $command->queryOne();
+    }
 
     public function updateWeChatUserInfo(WeChatUserInfo $weChatUserInfo){
         $sql = sprintf("
             UPDATE wechat_user_info SET
             v_nickname=:v_nickname,v_sex=:v_sex,v_city=:v_city,v_country=:v_country,
-            v_province=:v_province,v_language=:v_language,v_headimgurl=:v_headimgurl,v_subscribe_time=:v_subscribe_time,v_remark=:v_remark,v_groupid=:v_groupid
+            v_province=:v_province,v_language=:v_language,v_headimgurl=:v_headimgurl,
+            v_subscribe_time=:v_subscribe_time,v_remark=:v_remark,v_groupid=:v_groupid,
+            v_school=:v_school
             WHERE openId=:openId
         ");
         //userSign=:userSign,unionID=:unionID,
@@ -108,6 +120,7 @@ class WeChatDb extends ProxyDb{
         $command->bindParam(":v_subscribe_time", $weChatUserInfo->v_subscribe_time, PDO::PARAM_INT);
         $command->bindParam(":v_remark", $weChatUserInfo->v_remark, PDO::PARAM_STR);
         $command->bindParam(":v_groupid", $weChatUserInfo->v_groupid, PDO::PARAM_INT);
+        $command->bindParam(":v_school", $weChatUserInfo->v_school, PDO::PARAM_STR);
         return $command->execute();
     }
 
@@ -124,7 +137,21 @@ class WeChatDb extends ProxyDb{
         return $command->execute();
     }
 
-    public function getWeChatOrderList($page,$searchText)
+    public function updateSchool($school,$openId)
+    {
+        $sql = sprintf("
+            UPDATE wechat_user_info SET
+           v_school=:v_school
+            WHERE openId=:openId
+        ");
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindParam(":v_school", $school, PDO::PARAM_STR);
+        $command->bindParam(":openId", $openId, PDO::PARAM_STR);
+        return $command->execute();
+    }
+
+
+    public function getWeChatOrderList($page,$searchText,$school)
     {
         $sql=sprintf("
         FROM wechat_user_info a
@@ -135,6 +162,10 @@ class WeChatDb extends ProxyDb{
         if(!empty($searchText)){
             $sql.=" AND (b.nickname like :search OR a.v_nickname like :search OR a.openId like :search ) ";
             $this->setParam("search","%".$searchText."%");
+        }
+        if(!empty($school)){
+            $sql.=" AND a.v_school=:v_school ";
+            $this->setParam("v_school",$school);
         }
         $this->setSelectInfo('a.*,b.nickname');
         $this->setSql($sql);

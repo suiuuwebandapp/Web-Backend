@@ -432,6 +432,10 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 .csyoderDetail .content .part .userPic{ height:2.85rem; width:2.85rem; border-radius:50%; display:block; overflow:hidden; float:left;   }
 .csyoderDetail .content .part .userPic img{ width:100%; display:block; }
 .csyoderDetail .content .part .userName{ float:left; margin-top:0.9rem; margin-left:3px; font-size:0.85rem; }
+.csyoderDetail .content .part .chat{ float:right; height:48px; width:48px; background:url(../images/chat.png) no-repeat center center; background-size:1.71rem 1.71rem; }
+.csyoderDetail .content .part .datas{ clear:both; padding:0 10px;  }
+.csyoderDetail .content .part .numbers{ clear:both; padding:0 10px;  }
+
 .csyoderDetail .content .part .btnfr{ float:right; text-decoration:none;margin-top:0.9rem; }
 .csyoderDetail .content .part .btnfr:hover{   text-decoration:underline; }
 .csyoderDetail .content .part p{ line-height:1.5rem; }
