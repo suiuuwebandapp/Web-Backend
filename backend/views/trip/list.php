@@ -35,7 +35,7 @@
                                 <option value="3">已删除</option>
                                 <option value="0">全部</option>
                             </select>
-                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">状态：</label>
+                            <label class="col-md-1 control-label" style="text-align: right;padding: 3px">类别：</label>
                             <select name="type" class="form-control " style="width: 15% !important;">
                                 <option value="0">全部</option>
                                 <option value="<?=\common\entity\TravelTrip::TRAVEL_TRIP_TYPE_TRAFFIC?>">交通服务</option>

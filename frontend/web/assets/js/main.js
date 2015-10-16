@@ -53,6 +53,10 @@ var Main = function() {
         changeLocationUrl : function(location) {
             window.location.href = location;
         },
+        parseDate:function(strDate){
+            return eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,
+                function (a) { return parseInt(a, 10) - 1; }).match(/\d+/g) + ')');
+        },
         /**
          * yyyy-MM-dd hh:mm:ss
          * @param strDate
@@ -273,6 +277,9 @@ var UrlManager=function(){
         },
         getTripEditUrl:function(tripId){
             return "/trip/edit-trip?trip="+tripId;
+        },
+        getUserInfoUrl:function(userId){
+            return "/view-user/info/"+userId+".html";
         }
     }
 }();

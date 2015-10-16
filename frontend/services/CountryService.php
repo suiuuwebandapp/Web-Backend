@@ -110,7 +110,7 @@ class CountryService extends BaseDb{
             $conn = $this->getConnection();
             $this->countryDb = new CountryDb($conn);
             $countryId=$this->countryDb->getCountryByName($name);
-            if($countryId!==false)
+            if($countryId!==false&&!empty($countryId))
             {
                 $countryIdArray=[];
                 foreach($countryId as $country){
@@ -119,10 +119,10 @@ class CountryService extends BaseDb{
                 return array($countryIdArray,null);
             }
             $cityId=$this->countryDb->getCityByName($name);
-            if($cityId!==false)
+            if($cityId!==false&&!empty($cityId))
             {
                 $cityIdArray=[];
-                foreach($cityIdArray as $city){
+                foreach($cityId as $city){
                     $cityIdArray[]=$city['id'];
                 }
                 return array(null,$cityIdArray);

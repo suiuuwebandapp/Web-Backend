@@ -1,6 +1,8 @@
 /**
  * Custom module for you to write your own javascript functions
  */
+
+var frontBaseUrl='http://www.suiuu.com';
 var Main = function() {
 
 	// private functions & variables
@@ -278,7 +280,7 @@ var Main = function() {
 		},
         refresh:function(url){
             var l=window.location.href;
-            if(url!=""){
+            if(url!=""&&url!=undefined){
                 if(l.indexOf('#~')>-1){
                     l=l.substring(0,l.indexOf('#~'));
                 }
@@ -539,6 +541,21 @@ var Main = function() {
 			}
 			return result;
 		},
+        getFormParams:function(form){
+            var a=$(form).serializeArray();
+            var o={};
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        },
 		//初始化预览
 		initPreview :function (array,str,type){
 			array=null;
@@ -585,6 +602,9 @@ var UrlManager=function(){
         },
         getUserInfoUrl:function(userId){
             return "/view-user/info/"+userId+".html";
+        },
+        getVolunteerInfoUrl:function(volunteerId){
+            return frontBaseUrl+"/volunteer/view/"+volunteerId+".html";
         }
     }
 }();

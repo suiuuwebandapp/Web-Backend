@@ -36,7 +36,7 @@ var FormValidation = function() {
 				//success.hide();
 				//error.show();
 				
-				
+
 			 	var errors=validator.errorList;
 			 	if(errors.length>0){
 			 		var val_error=errors[0];

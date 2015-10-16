@@ -244,8 +244,8 @@
                 <li>
                     <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic8.jpg"></a>
                     <div class="text">
-                        <h2 class="title02">北岛遇上奇异鸟</h2>
-                        <p class="p1"><span class="span01">简介：</span><span>带你巡回新西兰的北岛，您将接触濒临灭绝的新西兰国鸟，动手养护，努力恢复它们的自然栖息地的热带雨林。</span></p>
+                        <h2 class="title02">新西兰自然保护区</h2>
+                        <p class="p1"><span class="span01">简介：</span><span>这是一个了解保护景观，栖息地和天然资源的好方法，用不同视角看待奇异鸟王国。</span></p>
                         <p>时间：7天</p>
                         <p>地点：新西兰</p>
                         <p class="money">RMB<span>1945</span></p>

@@ -11,7 +11,8 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '<controller:view-trip>/<action:info>/<trip:\d+>.html'=>'<controller>/<action>',
-                '<controller:view-user>/<action:info>/<u:\w+>.html'=>'<controller>/<action>'
+                '<controller:view-user>/<action:info>/<u:\w+>.html'=>'<controller>/<action>',
+                '<controller:volunteer>/<action:view>/<vId:\d+>.html'=>'<controller>/<action>'
             ],
         ],
         'redis' => [

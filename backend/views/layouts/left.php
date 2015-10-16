@@ -141,6 +141,12 @@
                     <li>
                         <a href="#~/trip/comment-list"  class="left_menu_link"> 随游评论</a>
                     </li>
+                    <li>
+                        <a href="#~/volunteer/list"> 志愿产品</a>
+                    </li>
+                    <li style="display: none">
+                        <a href="#~/volunteer/to-add"> 添加志愿产品</a>
+                    </li>
                 </ul>
             </li>
             <li class="menu_top">

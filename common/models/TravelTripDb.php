@@ -101,7 +101,6 @@ class TravelTripDb extends ProxyDb
      */
     public function getList($page, $title, $countryId, $cityId, $peopleCount, $startPrice, $endPrice, $tag, $isHot,$typeArray, $status)
     {
-
         $sql = sprintf("
             FROM travel_trip AS t
             LEFT JOIN user_publisher AS uo ON uo.userPublisherId=t.createPublisherId

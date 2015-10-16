@@ -86,6 +86,7 @@ class Code
 
 
     const TRAVEL_TRIP_TAG_PREFIX='T_T_T_P';//随游标签前缀
+    const TRAVEL_TRIP_COUNTRY_CITY_TRIP_COUNT='T_T_C_C_T_C';
 
     const QUESTION_COMMUNITY_TAG_PREFIX='Q_C_T_P';//问答标签前缀
     const TRAVEL_PICTURE_TAG_PREFIX='T_P_T_P';//旅图标签前缀
@@ -103,6 +104,7 @@ class Code
     const TRIP_COUNTRY_CITY = "TRIP_COUNTRY_CITY";//已有随游的国家城市
 
     const TRIP_SERVICE_PRICE=1.05;//服务费
+
 
     /**
      * 异常信息（后台）

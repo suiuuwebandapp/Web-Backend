@@ -28,14 +28,23 @@ class SController extends Controller {
         $rv=new RequestValidate();
         $rv->validate();
 
-        $tripService=new TripService();
-        $searchPage=new Page();
-        $searchPage->showAll=true;
-        $this->searchList=$tripService->getTripDesSearchList($searchPage,null)->getList();
+        if(!\Yii::$app->request->getIsAjax()){
 
-        $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
-        if(isset($currentUser)){
-            self::initUserMessage();
+            $tripService=new TripService();
+            $searchPage=new Page();
+            $searchPage->showAll=true;
+            $list=\Yii::$app->redis->get(Code::TRAVEL_TRIP_COUNTRY_CITY_TRIP_COUNT);
+            if(empty($list)){
+                $this->searchList=$tripService->getTripDesSearchList($searchPage,null)->getList();
+                \Yii::$app->redis->set(Code::TRAVEL_TRIP_COUNTRY_CITY_TRIP_COUNT,json_encode($this->searchList));
+            }else{
+                $this->searchList=json_decode($list,true);
+            }
+
+            $currentUser=\Yii::$app->session->get(Code::USER_LOGIN_SESSION);
+            if(isset($currentUser)&&(!\Yii::$app->request->getIsAjax())){
+                self::initUserMessage();
+            }
         }
 
         parent::__construct($id, $module);

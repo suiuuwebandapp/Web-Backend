@@ -28,7 +28,6 @@ AppAsset::register($this);
     <meta content="" name="description"/>
     <meta content="" name="author"/>
     <meta name="MobileOptimized" content="320">
-f
     <?= Html::csrfMetaTags() ?>
     <?php $this->head() ?>
     <link rel="shortcut icon" href="favicon.ico"/>
