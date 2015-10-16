@@ -22,7 +22,8 @@
         $(function () {
             var now = new Date(),
                 year = now.getFullYear(),
-                month = now.getMonth();
+                month = now.getMonth(),
+                day = now.getDate();
             // Mobiscroll Calendar initialization
             $('#dateList').mobiscroll().calendar({
                 theme: 'mobiscroll',  // Specify theme like: theme: 'ios' or omit setting to use default
@@ -33,6 +34,7 @@
                 controls: ['calendar'], // Show only the calendar
                 endYear:2020, //结束年份
                 startYear: (new Date()).getFullYear(), //开始年份
+                minDate: new Date(year, month, day),
                 selectedValues: [] // Initial selected days
             });
         });

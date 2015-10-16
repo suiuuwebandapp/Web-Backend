@@ -1,6 +1,5 @@
 
 
-
     <script src="/assets/other/weixin/js/mobiscroll.core.js"></script>
     <script src="/assets/other/weixin/js/mobiscroll.util.datetime.js"></script>
     <script src="/assets/other/weixin/js/mobiscroll.datetimebase.js"></script>
@@ -23,7 +22,8 @@
         $(function () {
             var now = new Date(),
                 year = now.getFullYear(),
-                month = now.getMonth();
+                month = now.getMonth(),
+                day = now.getDate();
             // Mobiscroll Calendar initialization
             $('#timeList').mobiscroll().time({
                 theme: 'mobiscroll',
@@ -36,7 +36,10 @@
                 theme: 'mobiscroll',  // Specify theme like: theme: 'ios' or omit setting to use default
                 lang: 'zh',           // Specify language like: lang: 'pl' or omit setting to use default
                 display: 'bottom',    // Specify display mode like: display: 'bottom' or omit setting to use default
-                counter: true
+                counter: true,
+                endYear:2020, //结束年份
+                startYear: (new Date()).getFullYear(), //开始年份
+                minDate: new Date(year, month, day)
             });
         });
     </script>

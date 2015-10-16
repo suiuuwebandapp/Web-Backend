@@ -1,44 +1,10 @@
 
 
 
-    <link rel="stylesheet" href="/assets/other/weixin/css/jquery-ui.css">
-    <script type="text/javascript" src="/assets/other/weixin/js/jquery-ui.js"></script>
-
-    <script type="text/javascript">
-
-        /*-----随游-价格区间拖动条----*/
-        $(function() {
-            var startPrice="<?php echo $startPrice;?>";
-            var endPrice="<?php echo $endPrice;?>";
-            $( "#slider-range" ).slider({
-                range: true,
-                min: 0,
-                max: 10000,
-                values: [ startPrice, endPrice ],
-                slide: function( event, ui ) {
-                    $( "#amount" ).val( "￥" + ui.values[ 0 ] + " - ￥" + ui.values[ 1 ] );
-                }
-            });
-            var tag="<?php echo $tag;?>";
-            $("#tagSpan span").each(function(){
-                if(tag.indexOf($(this).html())>=0)
-                {
-                    $(this).attr("class","active");
-                }
-            });
-            var type="<?php echo $type;?>";
-            $("#typeSpan span").each(function(){
-                if(type.indexOf($(this).attr("type"))>=0)
-                {
-                    $(this).attr("class","active");
-                }
-            });
-            $( "#amount" ).val( "￥" + $( "#slider-range" ).slider( "values", 0 ) +
-            " - ￥" + $( "#slider-range" ).slider( "values", 1 ) );
-        });
+    <link rel="stylesheet" href="/assets/other/weixin/css/nouislider.css">
+    <script type="text/javascript" src="/assets/other/weixin/js/nouislider.min.js"></script>
 
 
-    </script>
     <div class="Uheader header mm-fixed-top">
         <a href="#menu"></a>
         <p class="navTop">筛选搜索</p>
@@ -70,16 +36,51 @@
     </div>
         <input id="tagList" name="tag" value="" hidden="hidden">
         <input id="typeList" name="type" value="" hidden="hidden">
+        <input id="amount" name="amount" value="" hidden="hidden">
     <div class="price-select clearfix">
-        <p>
-            <label for="amount">价格:</label>
-            <input type="text" id="amount" name="amount">
-        </p>
-        <div id="slider-range"></div>
+        <div id="money">
+            <p id="p1">价格(元):&nbsp;&nbsp;</p>
+            <div id="v2">0</div>
+            <div id="v3">-</div>
+            <div id="v1">1</div>
+        </div>
+        <div id="slider"></div>
+        <!--价格区间滑块-->
+
     </div>
     <a href="javascript:;" class="btn"  onclick="submitSearch()">确定</a>
     </form>
 </div>
+    <script>
+        var slider = document.getElementById('slider');
+        var startPrice="<?php echo $startPrice;?>";
+        var endPrice="<?php echo $endPrice;?>";
+        noUiSlider.create(slider, {
+            start: [startPrice, endPrice],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 10000
+            },
+            step: 1
+        });
+        var valueInput = document.getElementById('v1'),
+            valueSpan = document.getElementById('v2');
+
+        // When the slider value changes, update the input and span
+        slider.noUiSlider.on('update', function( values, handle ) {
+            if ( handle ) {
+                valueInput.innerHTML = Math.round(values[handle]);
+            } else {
+                valueSpan.innerHTML = Math.round(values[handle]);
+            }
+        });
+
+        // When the input changes, set the slider value
+        valueInput.addEventListener('change', function(){
+            slider.noUiSlider.set([null, this.value]);
+        });
+    </script>
 <script>
     function submitSearch()
     {
@@ -105,7 +106,8 @@
                 typeList+=$(this).attr('type');
             }
         });
-        var amount=$("#amount").val();
+
+        $("#amount").val("￥" + $("#v2").html()+" - ￥"+$("#v1").html());
         $("#tagList").val(tagList);
         $("#typeList").val(typeList);
         var site=$('#site').val();
