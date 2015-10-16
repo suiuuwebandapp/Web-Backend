@@ -40,9 +40,9 @@
     <div class="price-select clearfix">
         <div id="money">
             <p id="p1">价格(元):&nbsp;&nbsp;</p>
-            <div id="v2">0</div>
+            <div id="v2">￥0</div>
             <div id="v3">-</div>
-            <div id="v1">1</div>
+            <div id="v1">￥1</div>
         </div>
         <div id="slider"></div>
         <!--价格区间滑块-->
@@ -70,9 +70,9 @@
         // When the slider value changes, update the input and span
         slider.noUiSlider.on('update', function( values, handle ) {
             if ( handle ) {
-                valueInput.innerHTML = Math.round(values[handle]);
+                valueInput.innerHTML = "￥"+Math.round(values[handle]);
             } else {
-                valueSpan.innerHTML = Math.round(values[handle]);
+                valueSpan.innerHTML = "￥"+Math.round(values[handle]);
             }
         });
 
@@ -107,7 +107,7 @@
             }
         });
 
-        $("#amount").val("￥" + $("#v2").html()+" - ￥"+$("#v1").html());
+        $("#amount").val($("#v2").html()+" - "+$("#v1").html());
         $("#tagList").val(tagList);
         $("#typeList").val(typeList);
         var site=$('#site').val();

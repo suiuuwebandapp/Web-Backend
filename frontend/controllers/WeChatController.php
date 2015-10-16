@@ -80,22 +80,6 @@ class WeChatController extends WController
     //todo @test
     public function actionTest()
     {
-        /*$url_1 ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
-        $app_id = WeChat::APP_ID;
-        $url_test1_1  = Yii::$app->params['weChatUrl']."/we-chat/get-code?actionType=110&unAttention=1";//购课放在了第一位
-        $url_test1_2 =  Yii::$app->params['weChatUrl'] ."/we-chat/get-code?actionType=12";
-        $url_test1_1_s=sprintf($url_1,$app_id,urlencode($url_test1_1));
-        $url_test1_2_s=sprintf($url_1,$app_id,urlencode($url_test1_2));
-        echo $url_test1_1_s;exit;*/
-        return $this->render("test");
-        exit;
-        header("Content-type:text/html;charset=utf-8");
-        $url ="https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=Hd8fqOvD00hhYDDHmYD0JF7DI7xAWpGXf1vTU_ldT4Fry9N3M4TmHj9XoHCuRKVGU6NwXtEi06YRqKyiuAfeQ7DkhDAs9BnTLrPYTiNLlqo";
-        $jsonData=array("type"=>"image","offset"=>0,"count"=>20);
-
-        $josn1 = '{"type":"image","offset":"0","count":"20"}';
-        $rst = Common::CurlHandel($url,$jsonData);
-        var_dump($rst);exit;
         return $this->render("test");
     }
 

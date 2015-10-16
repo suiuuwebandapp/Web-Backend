@@ -27,7 +27,7 @@
                 <div class="table-info-form ">
                     <form id="datatables_form" onsubmit="return false;">
                         <div class="col-md-8 input-group ">
-                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入问题编号或回答内容或用户昵称">
+                            <input type="text" name="searchText" class="input-xlarge" placeholder="请输入问题编号或回答内容">
                                     <span class="input-group-btn">
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
                                     </span>
@@ -40,6 +40,7 @@
                 <table id="table_list" class="table table-hover">
                     <thead class="flip-content">
                     <tr>
+                        <th>答案Id</th>
                         <th>问题编号</th>
                         <th>回答</th>
                         <th>回答人</th>
@@ -80,10 +81,12 @@
             'tableData':{},
             'tableOrder':[],
             'tableColumn':[
-                {"targets": [0],"data": "qId",
-                    "width":"150px","bSortable": false},
+                {"targets": [0],"data": "aId",
+                    "width":"50px","bSortable": false},
+                {"targets": [1],"data": "qId",
+                    "width":"50px","bSortable": false},
                 {
-                    "targets": [1],
+                    "targets": [2],
                     "data": "aContent",
                     "width":"150px",
                     "bSortable": false,
@@ -92,19 +95,19 @@
                     }
                 },
                 {
-                    "targets": [2],
+                    "targets": [3],
                     "data": "nickname",
                     "bSortable": false,
                     "width":"150px"
                 },
                 {
-                    "targets": [3],
+                    "targets": [4],
                     "data": "aCreateTime",
                     "width":"150px",
                     "bSortable": false
                 },
                 {
-                    "targets": [4],
+                    "targets": [5],
                     "data": "type",
                     "bSortable": false,
                     "width":"150px",
@@ -124,13 +127,13 @@
                     }
                 },
                 {
-                    "targets": [5],
+                    "targets": [6],
                     "data": "zan",
                     "width":"100px",
                     "bSortable": false
                 },
                 {
-                    "targets": [6],
+                    "targets": [7],
                     "data": "aId",
                     "bSortable": false,
                     "width":"200px",

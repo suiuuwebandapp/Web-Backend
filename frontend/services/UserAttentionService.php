@@ -91,7 +91,7 @@ class UserAttentionService extends BaseDb
                 $userRemind = new UserMessageRemindService();
                 $content="###";
                 $url="###";
-                $userRemind->addMessageRemind($rstId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign,UserMessageRemind::R_TYPE_USER,$content,$url);
+                $userRemind->addMessageRemind($rId,UserMessageRemind::TYPE_ATTENTION,$cUserSign,$userSign,UserMessageRemind::R_TYPE_USER,$content,$url);
                 return $rstId;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注无需继续关注'));
@@ -615,7 +615,7 @@ class UserAttentionService extends BaseDb
                 $userRemind = new UserMessageRemindService();
                 $content="###";
                 $url="###";
-                $userRemind->addMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
+                $userRemind->addMessageRemind($id,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['qUserSign'],UserMessageRemind::R_TYPE_QUESTION_ANSWER,$content,$url);
                 return $rst;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));
@@ -650,7 +650,7 @@ class UserAttentionService extends BaseDb
                 $userRemind = new UserMessageRemindService();
                 $content="###";
                 $url="###";
-                $userRemind->addMessageRemind($rst,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['userSign'],UserMessageRemind::R_TYPE_TRAVEL_PICTURE,$content,$url);
+                $userRemind->addMessageRemind($id,UserMessageRemind::TYPE_ATTENTION,$userSign,$info['userSign'],UserMessageRemind::R_TYPE_TRAVEL_PICTURE,$content,$url);
                 return $rst;
             }else{
                 echo json_encode(Code::statusDataReturn(Code::FAIL,'已经关注'));

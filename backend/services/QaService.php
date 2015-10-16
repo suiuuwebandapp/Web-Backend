@@ -81,6 +81,8 @@ class QaService extends BaseDb{
             $conn = $this->getConnection();
             $this->qaDb = new QaCommunityDb($conn);
             $page=$this->qaDb->getAnswerList($page,$search);
+            $numb=$this->qaDb->getAnswerNumber($search);
+            $page->totalCount=$numb;
         } catch (Exception $e) {
             throw $e;
         } finally {

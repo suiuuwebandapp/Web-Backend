@@ -112,19 +112,45 @@ class QaCommunityDb extends ProxyDb {
 
     public function getAnswerList($page,$search)
     {
-        //
-        $sql=sprintf("
-        FROM (SELECT a.*,c.headImg,c.nickname FROM (SELECT * FROM answer_community LIMIT 0,100) as a
-        LEFT JOIN user_base c ON a.aUserSign = c.userSign) as ls WHERE 1=1
+
+        $sql="SELECT  a.*,c.headImg,c.nickname FROM (SELECT * FROM answer_community %s ORDER BY aId desc LIMIT :startRow,:pageSize) as a
+            LEFT JOIN user_base c ON a.aUserSign = c.userSign";
+
+        $arg="";
+        if(!empty($search))
+        {
+            $arg=" WHERE (aContent like :search OR qId=:qId)";
+        }
+        $sql = sprintf($sql,$arg);
+        $command=$this->getConnection()->createCommand($sql);
+        $command->bindValue(':startRow',intval($page->startRow), PDO::PARAM_INT);
+        $command->bindValue(':pageSize',intval($page->pageSize), PDO::PARAM_INT);
+        if(!empty($search))
+        {
+            $command->bindParam(':qId',$search, PDO::PARAM_INT);
+            $search1="%".$search."%";
+            $command->bindParam(':search',$search1, PDO::PARAM_STR);
+        }
+        $page->setList($command->queryAll());
+        return $page;
+    }
+    public function getAnswerNumber($search)
+    {
+        $sql = sprintf("
+            SELECT COUNT(*) FROM answer_community WHERE 1=1
         ");
         if(!empty($search))
         {
-            $sql.=" AND (ls.aContent like :search OR ls.nickname like :search OR ls.qId=:qId)";
-            $this->setParam('search','%'.$search.'%');
-            $this->setParam('qId',$search);
+            $sql.=" AND (aContent like :search OR qId=:qId)";
         }
-        $this->setSql($sql);
-        return $this->find($page);
+        $command=$this->getConnection()->createCommand($sql);
+        if(!empty($search))
+        {
+            $search="%".$search."%";
+            $command->bindParam(':search',$search, PDO::PARAM_STR);
+            $command->bindParam(':qId',$search, PDO::PARAM_INT);
+        }
+        return $command->queryOne();
     }
 
     public function updateAnswerNumber($id,$number)
