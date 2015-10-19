@@ -137,7 +137,7 @@ class QaCommunityDb extends ProxyDb {
     public function getAnswerNumber($search)
     {
         $sql = sprintf("
-            SELECT COUNT(*) FROM answer_community WHERE 1=1
+            SELECT COUNT(*) as numb FROM answer_community WHERE 1=1
         ");
         if(!empty($search))
         {

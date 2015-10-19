@@ -31,9 +31,7 @@
                                     <span class="input-group-btn">
                                         <button id="search" class="btn green-meadow" type="button">搜索</button>
                                     </span>
-                            <div class="pull-right">
-                                <a id="addArticle" href="javascript:" class="btn green-meadow"><i class="fa fa-plus"></i> 添加答案</a>
-                            </div>
+
                         </div>
                     </form>
                 </div>
