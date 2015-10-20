@@ -191,17 +191,23 @@
                     "targets": [9],
                     "data": "newsId",
                     "bSortable": false,
-                    "width":"250px",
+                    "width":"100px",
                     "render": function(data, type, full) {
                         var html='';
+                        html+='<div class="btn-group">';
+                        html+='<button class="btn btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown">&nbsp;&nbsp;设置&nbsp;&nbsp;<i ></i></button>';
+                        html+='<ul class="dropdown-menu" role="menu">';
                         if(full.nStatus!=1){
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\',\''+full.nAntistop+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 上线</a>&nbsp;&nbsp;';
+                            html +='<li><a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\',\''+full.nAntistop+'\')" ><i ></i> 上线</a></li>';
                         }else{
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\',\''+full.nAntistop+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 下线</a>&nbsp;&nbsp;';
+                            html +='<li><a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.nStatus+'\',\''+full.nAntistop+'\')"><i></i> 下线</a></li>';
                         }
-                        html +='<a href="<?php echo Yii::$app->params["suiuu_url"]."/we-chat/get-news-info?id="?>'+data+'" target="_blank"  class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="editOrder(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
+                        html +='<li><a href="<?php echo Yii::$app->params["suiuu_url"]."/we-chat/get-news-info?id="?>'+data+'" target="_blank"  ><i></i> 查看</a></li>';
+                        html +='<li><a href="javascript:;" onclick="editOrder(\''+data+'\')"><i></i> 编辑</a></li>';
+                        html +='<li><a href="javascript:;" onclick="deleteOrder(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a></li>';
+                        html+='</ul>';
+                        html+='</div>';
+
                         return html;
                     }
                 }

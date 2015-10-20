@@ -135,13 +135,17 @@
                     "targets": [8],
                     "data": "qId",
                     "bSortable": false,
-                    "width":"200px",
+                    "width":"100px",
                     "render": function(data, type, full) {
                         var html='';
-
-                        html +='<a href="javascript:;"  onclick="showInfo(\''+data+'\')" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> 查看</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="answer(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 回答</a>&nbsp;&nbsp;';
-                        html +='<a href="javascript:;" onclick="deleteQ(\''+data+'\')" class="btn default btn-xs red-sunglo"><i class="fa fa-trash-o"></i> 删除</a>';
+                        html+='<div class="btn-group">';
+                        html+='<button class="btn btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown">&nbsp;&nbsp;设置&nbsp;&nbsp;<i class="fa fa-angle-down"></i></button>';
+                        html+='<ul class="dropdown-menu" role="menu">';
+                        html +='<li><a href="javascript:;"  onclick="showInfo(\''+data+'\')" ><i ></i> 查看</a></li>';
+                        html +='<li><a href="javascript:;" onclick="answer(\''+data+'\')" ><i ></i> 回答</a></li>';
+                        html +='<li><a href="javascript:;" onclick="deleteQ(\''+data+'\')" ><i ></i> 删除</a></li>';
+                        html+='</ul>';
+                        html+='</div>';
                         return html;
                     }
                 }

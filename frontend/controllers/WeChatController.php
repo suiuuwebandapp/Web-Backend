@@ -233,6 +233,7 @@ class WeChatController extends WController
             if ($rst['status'] == Code::SUCCESS) {
                 $rstJson = json_decode($rst['data']);
                 if(!isset($rstJson->openid)){
+                    $this->wechatInterface->write_to_log(WeChat::LOG_XXX_NAME, json_encode($code)."无法获取用户openId".json_encode($rst));
                     return   $this->render('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                     exit;
                 }
@@ -254,6 +255,7 @@ class WeChatController extends WController
                 }
 
             } else {
+                $this->wechatInterface->write_to_log(WeChat::LOG_XXX_NAME, json_encode($code)."无法获取用户信息".json_encode($rst));
                 return   $this->render('errorHint', array('str1'=>'无法获取用户信息','str2'=>'返回微信','url'=>"javascript:WeixinJSBridge.call('closeWindow')"));
                 exit;
             }
