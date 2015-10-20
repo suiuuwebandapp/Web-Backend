@@ -1,6 +1,6 @@
 
 <script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.all.min.js?<?=time().rand(100,999)?>"></script>
+<script type="text/javascript" src="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/ueditor/ueditor.all.min.js"></script>
 <style type="text/css">.edui-dialog {margin-top: 50px !important; }</style>
 <a id="ueModal"  data-target="#ueModalDiv" data-toggle="modal"></a>
 <div class="modal fade modal-scrollable modal-scroll" id="ueModalDiv" tabindex="-1" role="basic" aria-hidden="true" style="z-index: 999;">
@@ -10,8 +10,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="false"></button>
                 <h4 class="modal-title">请输入富文本内容</h4>
             </div>
-            <div class="scroller" style="height: 500px" data-always-visible="1" data-rail-visible1="1">
-                <script id="container" name="content" type="text/plain" style="height:100%"></script>
+            <div class="scroller" style="height: 400px" data-always-visible="1" data-rail-visible1="1">
+                <script id="container" name="content" type="text/plain" style="height:400%;overflow:scroll"></script>
             </div>
             <div class="modal-footer">
                 <button type="submit" onclick="UEditorUtil.saveUEditorContent()" callBackFun="" class="btn green-meadow">保存</button>
@@ -25,8 +25,12 @@
     var ue="";
     (function(){
         //初始化ueditor
-        ue= UE.getEditor('container');
+        ue=UE.getEditor('container',{
+            initialFrameHeight: 300
+        });
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+
+
         UE.Editor.prototype.getActionUrl = function(action) {
             if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
                 return '/upload/upload-content-img';
@@ -36,6 +40,7 @@
                 return this._bkGetActionUrl.call(this, action);
             }
         }
+        Metronic.initSlimScroll($(".scroller"));
     })(jQuery);
 
 

@@ -11,7 +11,6 @@
 
 
 <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/mobiscroll/css/mobiscroll.custom-2.14.4.min.css"  />
-
 <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/select2/select2_metro.css"
 <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-uploadifive/uploadifive.css">
 
@@ -84,7 +83,7 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">国家&nbsp;</label>
                             <div class="col-md-4 valdate">
-                                <select id="countryId" name="countryIds" class="form-control select2" placeholder="请选择国家" required>
+                                <select id="countryId" name="countryIds" class="form-control select2" placeholder="请选择国家">
                                     <option value=""></option>
                                     <?php foreach($countryList as $country){ ?>
                                         <option value="<?= $country['id'] ?>"
@@ -98,7 +97,7 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">城市&nbsp;</label>
                             <div class="col-md-4 valdate">
-                                <select id="cityId" name="cityIds" class="form-control select2" placeholder="请选择城市" required>
+                                <select id="cityId" name="cityIds" class="form-control select2" placeholder="请选择城市">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -144,7 +143,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="recommendInfo" name="recommendInfo" value="<?=$volunteerInfo['recommendInfo']?>" class="form-control" placeholder="请输入推荐理由" maxlength="30" required/>
+                                    <textarea name="recommendInfo" id="recommendInfo" class="form-control" placeholder="请输入推荐理由"><?=$volunteerInfo['recommendInfo']?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -153,16 +152,16 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <button id="info" type="button" class="btn UEditor" html="<?=$volunteerInfo['info']?>">&nbsp;&nbsp;编辑&nbsp;&nbsp;</button>
+                                    <button id="info" type="button" class="btn UEditor" html="<?=htmlspecialchars($volunteerInfo['info'])?>">&nbsp;&nbsp;编辑&nbsp;&nbsp;</button>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">行前准备</label>
+                            <label class="col-md-3 control-label">请输入预定说明</label>
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="prepare" name="prepare" value="<?=$volunteerInfo['prepare']?>" class="form-control" placeholder="请选择城市" maxlength="30" required/>
+                                    <textarea name="prepare" id="prepare" class="form-control" placeholder="请输入预定说明"><?=$volunteerInfo['prepare']?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +170,7 @@
                             <div class="valdate col-md-4">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <textarea id="scheduleIntro" name="scheduleIntro"  class="form-control" placeholder="请输入行程简介" maxlength="30" required><?=$volunteerInfo['scheduleIntro']?></textarea>
+                                    <textarea id="scheduleIntro" name="scheduleIntro"  class="form-control" placeholder="请输入行程简介" ><?=$volunteerInfo['scheduleIntro']?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -183,14 +182,14 @@
                                         <?php if($key==0){?>
                                             <div class="valdate">
                                                 <div class="input-icon right input-group">
-                                                    <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" maxlength="30"><?=$schedule?></textarea>
+                                                    <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" ><?=$schedule?></textarea>
                                                     <span class="input-group-btn"><button id="addSchedule" class="btn blue" type="button">+</button></span>
                                                 </div>
                                             </div>
                                         <?php }else{?>
                                             <div class="valdate">
                                                 <div class="input-icon right input-group" style="margin-top: 10px">
-                                                    <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" maxlength="30"><?=$schedule?></textarea>
+                                                    <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" ><?=$schedule?></textarea>
                                                     <span class="input-group-btn"><button class="btn blue" type="button" onclick="$(this).parent().parent().remove();">--</button></span>
                                                 </div>
                                             </div>
@@ -199,7 +198,7 @@
                                 <?php }else{ ?>
                                     <div class="valdate">
                                         <div class="input-icon right input-group">
-                                            <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" maxlength="30"></textarea>
+                                            <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" ></textarea>
                                             <span class="input-group-btn"><button id="addSchedule" class="btn blue" type="button">+</button></span>
                                         </div>
                                     </div>
@@ -211,7 +210,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <button id="eat" type="button" html="<?=$volunteerInfo['eat']?>" class="btn UEditor">&nbsp;&nbsp;编辑&nbsp;&nbsp;</button>
+                                    <button id="eat" type="button" html="<?=htmlspecialchars($volunteerInfo['eat'])?>" class="btn UEditor">&nbsp;&nbsp;编辑&nbsp;&nbsp;</button>
                                 </div>
                             </div>
                         </div>
@@ -220,7 +219,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <button id="hotel" type="button" html="<?=$volunteerInfo['hotel']?>" class="btn UEditor">&nbsp;&nbsp;编辑&nbsp;&nbsp;</button>
+                                    <button id="hotel" type="button" html="<?=htmlspecialchars($volunteerInfo['hotel'])?>" class="btn UEditor">&nbsp;&nbsp;编辑&nbsp;&nbsp;</button>
                                 </div>
                             </div>
                         </div>
@@ -229,7 +228,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <textarea id="note" name="note" class="form-control" placeholder="请输入注意事项" required=""><?=$volunteerInfo['note']?></textarea>
+                                    <textarea id="note" name="note" class="form-control" placeholder="请输入注意事项"><?=$volunteerInfo['note']?></textarea>
                                 </div>
                             </div>
                         </div>

@@ -94,7 +94,7 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">城市&nbsp;</label>
                             <div class="col-md-4 valdate">
-                                <select id="cityId" name="cityIds" class="form-control select2" placeholder="请选择城市" required>
+                                <select id="cityId" name="cityIds" class="form-control select2" placeholder="请选择城市">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -104,7 +104,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="kind" name="kind" class="form-control" placeholder="请输入产品分类"  required>
+                                    <input type="text" id="kind" name="kind" class="form-control" placeholder="请输入产品分类">
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="recommendInfo" name="recommendInfo" value="" class="form-control" placeholder="请输入推荐理由" maxlength="30" required/>
+                                    <textarea name="recommendInfo" id="recommendInfo" class="form-control" placeholder="请输入推荐理由"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -163,11 +163,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">行前准备</label>
+                            <label class="col-md-3 control-label">预定说明</label>
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="prepare" name="prepare" value="" class="form-control" placeholder="请选择城市" maxlength="30" required/>
+                                    <textarea name="prepare" id="prepare" class="form-control" placeholder="请输入预定说明"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                             <div class="valdate col-md-4">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <textarea id="scheduleIntro" name="scheduleIntro"  class="form-control" placeholder="请输入行程简介" maxlength="30" required></textarea>
+                                    <textarea id="scheduleIntro" name="scheduleIntro"  class="form-control" placeholder="请输入行程简介"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                             <div id="scheduleList" class="col-md-4">
                                 <div class="valdate">
                                     <div class="input-icon right input-group">
-                                        <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" maxlength="30"></textarea>
+                                        <textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排" ></textarea>
                                         <span class="input-group-btn"><button id="addSchedule" class="btn blue" type="button">+</button></span>
                                     </div>
                                 </div>
@@ -214,7 +214,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <textarea id="note" name="note" class="form-control" placeholder="请输入注意事项" required=""></textarea>
+                                    <textarea id="note" name="note" class="form-control" placeholder="请输入注意事项"></textarea>
                                 </div>
                             </div>
                         </div>

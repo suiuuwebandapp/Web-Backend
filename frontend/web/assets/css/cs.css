@@ -1819,23 +1819,17 @@ transition:1s;
 
 /*---------------志愿详情---------*/
 .zybanner_out{ position:relative;}
-.zhiyuanNav{ background:rgba(0,0,0,0.5); height:76px; width:100%; position:absolute; bottom:0; left:0; z-index:5; }
+.zhiyuanNav{ background:rgba(0,0,0,0.5); height:110px; width:100%; position:absolute; bottom:0; left:0; z-index:5; }
 .zhiyuanNav.fixed{ position:fixed; top:0; left:0; width:100%; }
+.zhiyuanNav .money{ font-size:27px; color:#3dd9c3; }
 
-.zhiyuanNav .inner{ width:1000px; margin:0 auto; position:relative; }
-.zhiyuanNav .inner .title{ margin-top:8px; font-size:24px; color:#fff; }
+.zhiyuanNav .inner{ padding-top:10px;height:100px;   width:1000px; margin:0 auto; position:relative; }
+.zhiyuanNav .inner .title{ font-size:24px; color:#fff; }
 .zhiyuanNav .inner .p1{ padding-left:20px; font-size:18px; color:#fff; background:url(../images/zyicon.png) no-repeat 0 3px; }
-.zhiyuanNav .inner .right{ position:absolute; right:0; bottom:0;}
+.zhiyuanNav .inner .right{ position:absolute; right:0; bottom:15px;}
 .zhiyuanNav .inner .right span{ width:60px; height:27px; line-height:27px; color:#fff; border-radius:5px; display:inline-block; cursor:pointer;margin-left:30px; border:1px solid #fff;   text-align:center; font-size:18px;}
-.zhiyuanNav .inner .right span:hover{ width:60px; height:27px; line-height:27px; color:#fff;  background:#3dd9c3; border:1px solid transparent; }
+.zhiyuanNav .inner .right span:hover,.zhiyuanNav .inner .right span.active{ width:60px; height:27px; line-height:27px; color:#fff;  background:#3dd9c3; border:1px solid transparent; }
 
-.zhiyuanNav .right .tip{ position:absolute; left:0; top:40px; width:100%; height:50px;  }
-.zhiyuanNav .right .tip p{ display:none; position:absolute;  background:#4ED8C3;   width:100px; height:35px; line-height:35px; border-radius:3px; text-align:center; color:#FFFF99; font-size:22px; }
-.zhiyuanNav .right .tip p:nth-child(1){ left:12px; top:0; }
-.zhiyuanNav .right .tip p:nth-child(2){ left:110px; top:0; }
-.zhiyuanNav .right .tip p:nth-child(3){ left:207px; top:0; }
-.zhiyuanNav .right .tip p:nth-child(4){ left:302px; top:0; }
-.zhiyuanNav .right .tip p:before{ height:0; width:0; content:""; top:-19px; left:50%; margin-left:-10px; position:absolute; border:10px solid #4ED8C3;border-color:transparent transparent #4ED8C3 transparent;  }
 
 
 .zhiyuan_detail{ width:1000px; margin:10px auto 0;}

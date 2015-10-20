@@ -592,16 +592,16 @@ var UserCashRecordType ={
 var UrlManager=function(){
     return{
         getTripSearchUrl:function(keywords){
-            return "/view-trip/list?s="+encodeURIComponent(keywords);
+            return frontBaseUrl+"/view-trip/list?s="+encodeURIComponent(keywords);
         },
         getTripInfoUrl:function(tripId){
-            return "/view-trip/info/"+tripId+".html";
+            return frontBaseUrl+"/view-trip/info/"+tripId+".html";
         },
         getTripEditUrl:function(tripId){
-            return "/trip/edit-trip?trip="+tripId;
+            return frontBaseUrl+"/trip/edit-trip?trip="+tripId;
         },
         getUserInfoUrl:function(userId){
-            return "/view-user/info/"+userId+".html";
+            return frontBaseUrl+"/view-user/info/"+userId+".html";
         },
         getVolunteerInfoUrl:function(volunteerId){
             return frontBaseUrl+"/volunteer/view/"+volunteerId+".html";

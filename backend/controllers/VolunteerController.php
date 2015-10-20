@@ -140,6 +140,9 @@ class VolunteerController  extends CController{
         $picList=\Yii::$app->request->post('picList','');
 
 
+
+
+
         try{
 
             $priceArray=[];
@@ -149,6 +152,14 @@ class VolunteerController  extends CController{
                 $temp['day']=$priceInfo[1];
                 $priceArray[]=$temp;
             }
+
+            if(!empty($scheduleList)){$scheduleList=json_encode($scheduleList);}
+            if(!empty($includeList)){$includeList=json_encode($includeList);}
+            if(!empty($unIncludeList)){$unIncludeList=json_encode($unIncludeList);}
+            if(!empty($priceArray)){$priceArray=json_encode($priceArray);}
+            if(!empty($picList)){$picList=json_encode($picList);}
+
+
             $volunteer=new VolunteerTrip();
             $volunteer->sysUserId=$this->userObj->userId;
             $volunteer->title=$title;
@@ -170,12 +181,12 @@ class VolunteerController  extends CController{
             $volunteer->orgInfo=$orgInfo;
             $volunteer->recommendInfo=$recommendInfo;
             $volunteer->scheduleIntro=$scheduleIntro;
-            $volunteer->scheduleList=json_encode($scheduleList);
-            $volunteer->includeList=json_encode($includeList);
-            $volunteer->unIncludeList=json_encode($unIncludeList);
+            $volunteer->scheduleList=$scheduleList;
+            $volunteer->includeList=$includeList;
+            $volunteer->unIncludeList=$unIncludeList;
             $volunteer->dateList=str_replace(' ','',$dateList);
-            $volunteer->priceList=json_encode($priceArray);
-            $volunteer->picList=json_encode($picList);
+            $volunteer->priceList=$priceArray;
+            $volunteer->picList=$picList;
 
             $volunteer->status=VolunteerTrip::VOLUNTEER_STATUS_OUTLINE;
 
@@ -241,6 +252,12 @@ class VolunteerController  extends CController{
                 $priceArray[] = $temp;
             }
 
+            if(!empty($scheduleList)){$scheduleList=json_encode($scheduleList);}
+            if(!empty($includeList)){$includeList=json_encode($includeList);}
+            if(!empty($unIncludeList)){$unIncludeList=json_encode($unIncludeList);}
+            if(!empty($priceArray)){$priceArray=json_encode($priceArray);}
+            if(!empty($picList)){$picList=json_encode($picList);}
+
             $volunteer->title = $title;
             $volunteer->titleImg = $titleImg;
             $volunteer->ageInfo = $ageInfo;
@@ -260,12 +277,12 @@ class VolunteerController  extends CController{
             $volunteer->orgInfo = $orgInfo;
             $volunteer->recommendInfo = $recommendInfo;
             $volunteer->scheduleIntro = $scheduleIntro;
-            $volunteer->scheduleList = json_encode($scheduleList);
-            $volunteer->includeList = json_encode($includeList);
-            $volunteer->unIncludeList = json_encode($unIncludeList);
-            $volunteer->dateList = str_replace(' ', '', $dateList);
-            $volunteer->priceList = json_encode($priceArray);
-            $volunteer->picList = json_encode($picList);
+            $volunteer->scheduleList=$scheduleList;
+            $volunteer->includeList=$includeList;
+            $volunteer->unIncludeList=$unIncludeList;
+            $volunteer->dateList=str_replace(' ','',$dateList);
+            $volunteer->priceList=$priceArray;
+            $volunteer->picList=$picList;
 
 
             $this->volunteerService->updateObject($volunteer);

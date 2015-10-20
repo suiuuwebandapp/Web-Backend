@@ -13,7 +13,7 @@
 
 
 <style type="text/css">
-    .zhiyuanNav .inner .p1{font-size: 20px}
+    .zhiyuanNav .inner .p1{font-size: 20px;margin: 5px 0px 0px 5px;}
     .mbsc-mobiscroll .dwwr{background: #ffffff;}
     .mbsc-mobiscroll .dw-persp{text-align: center;}
     .sydetail .web-right .kuang{padding-bottom: 0px;}
@@ -40,26 +40,14 @@
         <div class="inner">
             <h3 class="title"><?=$volunteerInfo['title']?></h3>
             <p class="p1"><?=$volunteerInfo['countryCname']?> <?=$volunteerInfo['cityCname']?></p>
-            <div class="right">
-                <?php if(!empty($volunteerInfo['priceList'])){ $volunteerInfo['priceList']=json_decode($volunteerInfo['priceList'],true);?>
-                    <?php foreach($volunteerInfo['priceList'] as $priceInfo){ ?>
-                        <span><?=$priceInfo['day']?>天</span>
-                    <?php } ?>
-                    <div class="tip">
-                        <?php foreach($volunteerInfo['priceList'] as $priceInfo){ ?>
-                            <p>￥<?=$priceInfo['price']?></p>
-                        <?php } ?>
-                    </div>
+            <?php if(!empty($volunteerInfo['priceList'])){ $volunteerInfo['priceList']=json_decode($volunteerInfo['priceList'],true);?>
+            <p class="money" id="showMoney">￥<?=$volunteerInfo['priceList'][0]['price']?></p>
+            <div class="right" id="priceSpanList">
+                <?php foreach($volunteerInfo['priceList'] as $key=> $priceInfo){ ?>
+                    <span <?=$key==0?"class='active'":"";?> price="￥<?=$priceInfo['price']?>"><?=$priceInfo['day']?>天</span>
                 <?php } ?>
-                <script type="text/javascript">
-                    $(function(){
-                        $('.zhiyuanNav .inner .right span').hover(function(e) {
-                            var num=$(this).index();
-                            $('.zhiyuanNav .right .tip p').eq(num).toggle();
-                        });
-                    })
-                </script>
             </div>
+            <?php } ?>
         </div>
     </div>
 </div>
@@ -74,14 +62,20 @@
                         <span><b class="icon icon03"></b>出发地点：<b><?=$volunteerInfo['beginSite']?></b></span>
                         <span><b class="icon icon04"></b>有效期至：<b><?=$volunteerInfo['endDate']?></b></span>
                     </div>
-                    <p id="detail" class="title02">推荐理由</p>
-                    <div><?=nl2br($volunteerInfo['recommendInfo'])?></div>
+                    <?php if(!empty($volunteerInfo['recommendInfo'])){ ?>
+                        <p id="detail" class="title02">推荐理由</p>
+                        <div><?=nl2br($volunteerInfo['recommendInfo'])?></div>
+                    <?php } ?>
                     <p id="detail" class="title02">项目详情</p>
                     <div><?=nl2br($volunteerInfo['info'])?></div>
-                    <p id="detail" class="title02">行前准备</p>
-                    <div><?=nl2br($volunteerInfo['prepare'])?></div>
-                    <p id="detail" class="title02">行程安排</p>
-                    <div><?=nl2br($volunteerInfo['scheduleIntro'])?></div>
+                    <?php if(!empty($volunteerInfo['prepare'])){ ?>
+                        <p id="detail" class="title02">预定说明</p>
+                        <div><?=nl2br($volunteerInfo['prepare'])?></div>
+                    <?php } ?>
+                    <?php if(!empty($volunteerInfo['scheduleIntro'])){ ?>
+                        <p id="detail" class="title02">行程安排</p>
+                        <div><?=nl2br($volunteerInfo['scheduleIntro'])?></div>
+                    <?php } ?>
                     <div class="design">
                         <?php if(!empty($volunteerInfo['scheduleList'])){ $volunteerInfo['scheduleList']=json_decode($volunteerInfo['scheduleList'],true);?>
                             <div class="line"></div>
@@ -95,22 +89,25 @@
                     <div><?=nl2br($volunteerInfo['eat'])?></div>
                     <p id="detail" class="title02">住宿安排</p>
                     <div><?=nl2br($volunteerInfo['hotel'])?></div>
-                    <p id="detail" class="title02">注意事项</p>
-                    <div><?=nl2br($volunteerInfo['note'])?></div>
-
+                    <?php if(!empty($volunteerInfo['note'])){ ?>
+                        <p id="detail" class="title02">注意事项</p>
+                        <div><?=nl2br($volunteerInfo['note'])?></div>
+                    <?php } ?>
+                    <?php if(!empty($volunteerInfo['includeList'])&&!empty($volunteerInfo['unIncludeList'])){ ?>
                     <p class="title02">价格内容</p>
-                    <div class="contian clearfix">
-                        <?php if(empty($volunteerInfo['includeList'])){$volunteerInfo['includeList']=json_decode($volunteerInfo['includeList'],true); ?>
-                            <?php foreach($volunteerInfo['includeList'] as $detail){ ?>
-                                <span><b class="icon icon01"></b><?=$detail?></span>
+                        <div class="contian clearfix">
+                            <?php if(!empty($volunteerInfo['includeList'])){$volunteerInfo['includeList']=json_decode($volunteerInfo['includeList'],true); ?>
+                                <?php foreach($volunteerInfo['includeList'] as $detail){ ?>
+                                    <span><b class="icon icon01"></b><?=$detail?></span>
+                                <?php } ?>
                             <?php } ?>
-                        <?php } ?>
-                        <?php if(empty($volunteerInfo['unIncludeList'])){$volunteerInfo['unIncludeList']=json_decode($volunteerInfo['unIncludeList'],true); ?>
-                            <?php foreach($volunteerInfo['unIncludeList'] as $detail){ ?>
-                                <span><b class="icon icon02"></b><?=$detail?></span>
+                            <?php if(!empty($volunteerInfo['unIncludeList'])){$volunteerInfo['unIncludeList']=json_decode($volunteerInfo['unIncludeList'],true); ?>
+                                <?php foreach($volunteerInfo['unIncludeList'] as $detail){ ?>
+                                    <span><b class="icon icon02"></b><?=$detail?></span>
+                                <?php } ?>
                             <?php } ?>
-                        <?php } ?>
-                    </div>
+                        </div>
+                    <?php } ?>
                     <ul class="detNav tabTitle clearfix">
                         <li><a href="javascript:;" class="icon icon01 active">预定流程</a></li>
                         <li><a href="javascript:;" class="icon icon02">退款说明</a></li>
@@ -226,7 +223,16 @@
     $(document).ready(function(){
         setLineHeight();
         initScroll();
+        initBtnClick();
     });
+
+    function initBtnClick(){
+        $("#priceSpanList span").on("click",function(){
+            $("#priceSpanList span").removeClass("active");
+            $(this).addClass("active");
+            $("#showMoney").html($(this).attr("price"));
+        });
+    }
 
     /**
      * 鼠标滚动事件处理

@@ -33,7 +33,6 @@ class AppAsset extends AssetBundle
     public $js = [
         'assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js',
         'assets/global/plugins/bootstrap/js/bootstrap.min.js',
-        'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js',
         'assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js',
         'assets/global/plugins/jquery.blockui.min.js',
         'assets/global/plugins/jquery.cokie.min.js',
