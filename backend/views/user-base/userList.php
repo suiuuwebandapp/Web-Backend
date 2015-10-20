@@ -94,7 +94,7 @@
                     "data": "nickname",
                     "bSortable": false,
                     "render": function(data, type, full) {
-                        return data.length<20?data:data.substring(0,20);
+                        return '<a href="'+full.userSign+'" target="_blank">'+data.length<20?data:data.substring(0,20)+'</a>';
                     }
                 },
                 {"targets": [2],"data": "phone","bSortable": false,"width":"180px"},
@@ -132,19 +132,24 @@
                     "targets": [7],
                     "data": "userSign",
                     "bSortable": false,
-                    "width":"300px",
+                    "width":"140px",
                     "render": function(data, type, full) {
                         var html='';
-                        html +='<a href="javascript:;" onclick="showUserInfo(\''+full.userSign+'\')" class="btn default btn-xs blue-hoki"><i class="fa fa-cog"></i> 查看</a>&nbsp;&nbsp;';
+
+                        html+='<div class="btn-group">';
+                        html+='<button class="btn btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown">&nbsp;&nbsp;设置&nbsp;&nbsp;<i class="fa fa-angle-down"></i></button>';
+                        html+='<ul class="dropdown-menu" role="menu">';
+                        html+='<li><a href="javascript:;" onclick="showUserInfo(\''+full.userSign+'\')"> 查看</a></li>';
+                        html+='<li><a href="'+UrlManager.getUserInfoUrl(full.userSign)+'" target="_blank"> 查看个人中心</a></li>';
                         if(full.userRecommendId!=null){
-                            html +='<a href="javascript:;" onclick="deleteUserRecommend(\''+full.userRecommendId+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 移除推荐</a>&nbsp;&nbsp;';
+                            html +='<li><a href="javascript:;" onclick="deleteUserRecommend(\''+full.userRecommendId+'\')"> 移除推荐</a></li>';
                         }else{
-                            html +='<a href="javascript:;" onclick="addUserRecommend(\''+data+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 设置推荐</a>&nbsp;&nbsp;';
+                            html +='<li><a href="javascript:;" onclick="addUserRecommend(\''+data+'\')"> 设置推荐</a></li>';
                         }
                         if(full.status==1){
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs"><i class="fa fa-ban"></i> 禁用</a>&nbsp;&nbsp;';
+                            html +='<li><a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" > 禁用</a></li>';
                         }else if(full.status==2){
-                            html +='<a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" class="btn default btn-xs green-meadow"><i class="fa fa-check-circle"></i> 启用</a>&nbsp;&nbsp;';
+                            html +='<li><a href="javascript:;" onclick="changeStatus(\''+data+'\',\''+full.status+'\')" > 启用</a>;</li>';
                         }
                         return html;
                     }

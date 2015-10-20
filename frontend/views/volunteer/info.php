@@ -251,10 +251,12 @@
             if (scrollTop > 325) {
                 $(".zhiyuanNav").addClass('fixed');
                 $(".sydetail .web-right").css('margin-left','172px');
+                $(".sydetail .web-right").css('top','120px');
                 $('.sydetail .web-right').addClass('fixed')
             } else {
                 $(".zhiyuanNav").removeClass('fixed');
                 $(".sydetail .web-right").css('margin-left','0');
+                $(".sydetail .web-right").css('top','0');
                 $('.sydetail .web-right').removeClass('fixed')
             }
             if (fixHeight > maxHeight) {

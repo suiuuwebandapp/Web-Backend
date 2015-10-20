@@ -41,6 +41,7 @@ var Main = function() {
         buildHeadInfo(currentLi);
         $("#headUl a").click(function() {
             var href = ($(this).attr('href')).replace('#~', '');
+            $.ajaxSetup({cache:true});
             $.get(href, function (data) {
                 $("#div_main_container").html(data);
             });
@@ -77,6 +78,7 @@ var Main = function() {
         if(url.indexOf('#~')>-1){
             //如果有，加载相应的地址
             var href=url.substring(url.indexOf('#~')+2,url.length);
+            $.ajaxSetup({cache:true});
             $.get(href, function (data) {
                 $("#div_main_container").html(data);
             });
@@ -90,6 +92,7 @@ var Main = function() {
             var defaultUrl=$(defaultLi).find("a").attr("href");
 
             var href=defaultUrl.replace("#~","");
+            $.ajaxSetup({cache:true});
             $.get(href,function(data){
                 $("#div_main_container").html(data);
             });
@@ -107,6 +110,7 @@ var Main = function() {
         $("#left_menu_ul a").click(function(){
             if(($(this).attr('href')).indexOf('#~')>-1){
                 var href=($(this).attr('href')).replace('#~','');
+                $.ajaxSetup({cache:true});
                 $.get(href,function(data){
                     $("#div_main_container").html(data);
                 });
@@ -299,6 +303,7 @@ var Main = function() {
             initLeftMenuByUrl(url);
         },
         refreshContentAjax:function(action){
+            $.ajaxSetup({cache:true});
             $.get(action, function (data) {
                 $("#div_main_container").html(data);
             });

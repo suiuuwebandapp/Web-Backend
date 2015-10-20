@@ -11,7 +11,6 @@
 
 
 <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/mobiscroll/css/mobiscroll.custom-2.14.4.min.css"  />
-
 <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/select2/select2_metro.css"
 <link rel="stylesheet" type="text/css" href="<?=Yii::$app->params['res_url'] ?>/assets/global/plugins/jquery-uploadifive/uploadifive.css">
 
@@ -131,7 +130,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="beginSite" name="beginSite" value="" class="form-control" placeholder="请输入出发地点" maxlength="30" required/>
+                                    <input type="text" id="beginSite" name="beginSite" value="" class="form-control" placeholder="请输入出发地点" maxlength="100" required/>
                                 </div>
                             </div>
                         </div>
@@ -276,7 +275,7 @@
                                     <span class="input-group-addon">￥</span>
                                     <input type="text" name="date" value="" class="form-control price_date" placeholder="请输入天数" maxlength="30" required/>
                                     <span class="input-group-addon">天</span>
-                                    <span class="input-group-btn"><button id="addInclude" class="btn blue" type="button">+</button></span>
+                                    <span class="input-group-btn"><button id="addPriceInfo" class="btn blue" type="button">+</button></span>
                                 </div>
                             </div>
                         </div>
@@ -456,7 +455,6 @@
     }
 
     function addSchedule(){
-
         var html ='<div class="valdate">';
             html+='<div class="input-icon right input-group" style="margin-top: 10px">';
             html+='<textarea name="scheduleInfo" class="form-control" placeholder="请输入行程安排"></textarea>';

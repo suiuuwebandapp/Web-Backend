@@ -125,7 +125,7 @@
                             <div class="col-md-4 valdate">
                                 <div class="input-icon right">
                                     <i class="fa"></i>
-                                    <input type="text" id="beginSite" name="beginSite" value="<?=$volunteerInfo['beginSite']?>" class="form-control" placeholder="请输入出发地点" maxlength="30" required/>
+                                    <input type="text" id="beginSite" name="beginSite" value="<?=$volunteerInfo['beginSite']?>" class="form-control" placeholder="请输入出发地点" maxlength="100" required/>
                                 </div>
                             </div>
                         </div>
