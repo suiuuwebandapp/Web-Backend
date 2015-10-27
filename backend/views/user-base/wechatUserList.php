@@ -93,7 +93,7 @@
             'tableColumn':[
                 {"targets": [0],"data": "v_nickname","bSortable": false,"width":"100px",
                     "render": function(data, type, full) {
-                        return decodeURI(data);
+                        return data;
                     }
                 },
                 {

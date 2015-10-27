@@ -49,7 +49,7 @@ class SysMessageUtils {
         try{
             $messageRemindSer = new UserMessageRemindService();
             foreach($tripPublisherList as $publisher){
-                $content="您有新的可接随游订单，订单号：".$orderNumber.",点击查看详情";
+                $content="您有新的可接随游订单，订单号：".$orderNumber."，点击查看详情";
                 $url="/user-info?tab=tripManager";
                 $messageRemindSer->addMessageRemind($orderNumber,UserMessageRemind::TYPE_NEW_ORDER,$cUserSign,$publisher['userSign'],UserMessageRemind::R_TYPE_ORDER,$content,$url);
             }
@@ -70,9 +70,9 @@ class SysMessageUtils {
     {
         try{
             $messageRemindSer = new UserMessageRemindService();
-            $content="亲爱的用户，您好，随友已经确认了您的订单：".$orderNumber."，我们将尽快给您打款。";
+            $content="亲爱的用户，您好，随友已经确认了您的订单：".$orderNumber;
             $url="/user-info?tab=myOrderManager";
-            $messageRemindSer->addMessageRemind($orderNumber,UserMessageRemind::TYPE_PUBLISH_CONFIRM_REFUND,$cUserSign,$rUserSign,UserMessageRemind::R_TYPE_ORDER,$content,$url);
+            $messageRemindSer->addMessageRemind($orderNumber,UserMessageRemind::TYPE_PUBLISH_CONFIRM,$cUserSign,$rUserSign,UserMessageRemind::R_TYPE_ORDER,$content,$url);
         }catch (Exception $messageException){
 
         }

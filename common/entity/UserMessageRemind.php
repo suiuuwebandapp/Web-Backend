@@ -35,7 +35,7 @@ class UserMessageRemind
 
     const TYPE_NEW_ORDER=10;//用户新下单
 
-    const TYPE_PUBLISH_CONFIRM_REFUND=11;//随友确认退款
+    const TYPE_PUBLISH_CONFIRM=11;//随友确认
     const TYPE_USER_CONFIRM=12;//用户确认
     const TYPE_PUBLISH_CONFIRM_JOIN=13; //随友同意加入
     const TYPE_PUBLISH_UN_CONFIRM_JOIN=14; //随友拒绝加入

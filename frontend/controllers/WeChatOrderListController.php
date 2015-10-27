@@ -25,7 +25,7 @@ class WeChatOrderListController extends WController {
 
     public $orderListSer;
     public $layout="wechat";
-    public $enableCsrfValidation=false;
+    public $enableCsrfValidation=true;
     public function __construct($id, $module = null)
     {
         $this->orderListSer = new WeChatOrderListService();

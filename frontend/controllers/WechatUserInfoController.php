@@ -30,7 +30,7 @@ use yii\base\Exception;
 
 class WechatUserInfoController extends WController {
     public $layout="wechat";
-    public $enableCsrfValidation=false;
+    public $enableCsrfValidation=true;
     public $userOrderService =null ;
     public $userBaseSer=null;
     public $tripSer=null;

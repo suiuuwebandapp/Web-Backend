@@ -13,9 +13,10 @@ namespace frontend\controllers;
 use common\components\RequestValidate;
 use frontend\services\VolunteerService;
 
-class VolunteerController extends UnCController {
+class WechatVolunteerController extends WController {
 
-
+    public $layout="wechat";
+    public $enableCsrfValidation=false;
     public $volunteerService;
 
 
@@ -29,13 +30,18 @@ class VolunteerController extends UnCController {
     public function actionView()
     {
         $volunteerId=\Yii::$app->request->get('vId');
-        if (RequestValidate::is_mobile_request()) {
-            return $this->redirect(['/wechat-volunteer/view',"vId"=>$volunteerId]);
+
+        if (!RequestValidate::is_mobile_request()) {
+            return $this->redirect(['/volunteer/view',"vId"=>$volunteerId]);
+        }
+        $this->bgWhite=true;
+        $this->loginValid();
+        if(empty($volunteerId)){
+            return $this->redirect(['/we-chat/error', 'str' => '系统未知异常']);
         }
         $volunteerInfo=$this->volunteerService->findById($volunteerId);
-
         return $this->render('info',[
-           'volunteerInfo'=>$volunteerInfo
+           'volunteerInfo'=>$volunteerInfo,'userObj'=>$this->userObj
         ]);
 
     }

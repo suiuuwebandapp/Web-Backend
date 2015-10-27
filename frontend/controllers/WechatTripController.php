@@ -28,7 +28,7 @@ use yii\base\Exception;
 
 class WechatTripController extends WController {
     public $layout="wechat";
-    public $enableCsrfValidation=false;
+    public $enableCsrfValidation=true;
     public $userOrderService =null ;
     private $tripService;
     public $tripCommentSer;

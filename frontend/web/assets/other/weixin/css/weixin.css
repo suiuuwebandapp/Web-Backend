@@ -872,6 +872,60 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 
 
+/*-----------志愿详情------------*/
+.zhiyuanBanner .moneyDiv{ padding:5px 10px; box-sizing:border-box; color:#fff; position:absolute; left:0; bottom:0;   width:100%; background:rgba(0,0,0,0.5); }
+.zhiyuanBanner .moneyDiv .p1{ margin:5px 0 10px; padding-left:20px; line-height:20px; background:url(../images/pos.png) no-repeat 0 center; font-size:0.64rem; }
+.zhiyuanBanner .moneyDiv .times{  width:100%; position:relative;  }
+.zhiyuanBanner .moneyDiv .times span{ cursor:pointer; border:1px solid #fff; height:1.07rem; line-height:1.07rem; width:2.32rem; border-radius:5px; display:block; float:left;  text-align:center; margin-right:10px;  }
+.zhiyuanBanner .moneyDiv .times span:hover,.zhiyuanBanner .moneyDiv .times span.active{ border:1px solid #30dbc3;  background:#30dbc3;   }
+.zhiyuanBanner .moneyDiv .times strong{ color:#30dbc3; float:right;}
+.zyDetails .details li .icon{ font-size:0.7rem; padding-left:0.9rem; background:url(../images/zyicon01.png) no-repeat 0 0; background-size:0.642rem 13.85rem;}
+.zyDetails .details li .icon1{ background-position:0 0.3rem;}
+.zyDetails .details li .icon2{ background-position:0 -8.69rem;}
+.zyDetails .details li .icon3{ background-position:0 -4.3rem;}
+.zyDetails .details li .icon4{ background-position:0 -13rem;}
+.zyDetails .tuijian{ padding:0 10px 10px;}
+.zyDetails .tuijian p{ text-align:left; line-height:1.2rem; font-size:0.85rem;}
+.zybtns{ padding:0; width:100%; display:table; background:#F6F6F6;}
+.zybtns a{ padding:10px 0; border-right:1px solid #ddd; box-sizing:border-box; border-radius:0; width:25%; display:table-cell; color:#4fd8c3; }
+.zybtns a .icon{background:url(../images/zyicon.png) no-repeat 0 0; background-size:6.03rem 15.6rem; height:1.25rem; width:1.42rem; display:block; margin:0 auto;}
+.zybtns a .icon01{ background-position:0 0rem;}
+.zybtns a .icon02{ background-position:0 -4.64rem;}
+.zybtns a .icon03{ background-position:0 -9.46rem;}
+.zybtns a .icon04{ background-position:0 -14.3rem;}
+.zybtns a:hover,.zybtns a.active{ background:#4fd8c3; color:#fff;}
+.zybtns a:hover .icon01,.zybtns a.active .icon01{ background-position:-4.75rem 0rem;}
+.zybtns a:hover .icon02,.zybtns a.active .icon02{ background-position:-4.75rem -4.64rem;}
+.zybtns a:hover .icon03,.zybtns a.active .icon03{ background-position:-4.75rem -9.46rem;}
+.zybtns a.last{ color:#858585; border:none;}
+.zybtns a.last:hover{ background:#F6F6F6;color:#858585;  }
+
+.zyDetails .dataCon{ position:relative; }
+.zyDetails .dataCon .datas{ color:#4fd8c3; }
+.zyDetails .dataCon .datas b{ height:12px; width:12px; background:#4fd8c3; border-radius:50%; margin-right:5px; display:inline-block; vertical-align:middle; }
+.zyDetails .dataCon p{ padding-left:18px;}
+.zyDetails .dataCon .line{ position:absolute; left:5px; top:10px; width:2px; height:92%; background:#4fd8c3;}
+
+/*-----------志愿详情日期------------*/
+.zyCon_data{ background:#f5f5f5 ; padding-bottom:5rem; margin:0 auto; max-width:640px; }
+.zyCon_data .box{ background:#fff; height:12rem; margin-bottom:10px;}
+
+
+
+/*-----------志愿详情咨询------------*/
+.actCon{ display:none;}
+.zyCon_chat{ padding:0 0 5rem; background:#f5f5f5;}
+.zyCon_chat .list{ background:#fff; padding:3.2rem 10px 0; }
+.zyCon_chat .list li{ cursor:pointer; background:url("../images/go.png") no-repeat right center; background-size:0.607rem 0.928rem; height:2.5rem; line-height:2.5rem; border-bottom:1px solid  #f5f5f5;}
+.zyCon_chat .list li span{ margin-right:15px;}
+.zyCon_chat .list li .get{ float:right;}
+.zyCon_chat .list li .get img{ margin-left:10px; vertical-align:middle; height:2rem;}
+.zyCon_chat .tip{ text-align:center; margin-top:60%;}
+.chatPro{ display:none; height:100%; width:100%; background:rgba(0,0,0,0.8); position:fixed; left:0; top:0; z-index:9999;}
+.chatPro .close{ position:absolute; right:10px; top:10px; display:block; height:50px; width:50px; background:url(../images/close.png) no-repeat center center;}
+.chatPro img{  width:10rem; display:block; margin:40% auto 10px;}
+.chatPro p{ color:#aaa;  text-align:center; font-size:1rem;}
+
 /*-----------交通订单确认--------*/
 .jtdingdan{ padding:3.2rem 0 0;}
 .jtdingdan .box{ margin-bottom:15px; padding:10px; background:#fff;}
@@ -963,12 +1017,12 @@ nav{ height:3rem; line-height:3rem; width:100%; text-align:center; background:#6
 
 /*-----------设置-个人资料---------*/
 .cshezhi_ziliao{ padding:3.2rem 0 0;}
-.cshezhi_ziliao .box .user{ cursor:pointer; width:100%; display:table; background:url("../images/go.png") no-repeat right center;}
+.cshezhi_ziliao .box .user{ cursor:pointer; width:100%; display:table; background:url("../images/go.png") no-repeat right center; background-size:0.607rem 0.928rem;}
 .cshezhi_ziliao .box .user .pic{ margin:0 auto; overflow:hidden; height:3.8rem; width:3.8rem; display:block;   border-radius:50%; border:2px solid #30DBC3;}
 .cshezhi_ziliao .box .user .pic img{ width:100%; display:block;}
 .cshezhi_ziliao .box{ position:relative; margin-bottom:15px; padding:10px; background:#fff;}
 
-.cshezhi_ziliao .box .list li{ cursor:pointer;  height:2.5rem; line-height:2.5rem; border-bottom:1px solid #f5f5f5; background:url(../images/go.png) no-repeat right center;}
+.cshezhi_ziliao .box .list li{ cursor:pointer;  height:2.5rem; line-height:2.5rem; border-bottom:1px solid #f5f5f5; background:url(../images/go.png) no-repeat right center; background-size:0.607rem 0.928rem;}
 .cshezhi_ziliao .box .list li span{ width:3.9rem; float:left;}
 .cshezhi_ziliao .box .list li b{  float:left;}
 .cshezhi_ziliao .box .list li b.icon{ margin-right:10px; margin-top:0.5rem; height:1.6rem; width:1.6rem; float:left;background:url(../images/icon02.fw.png) no-repeat 0 0; background-size:1.6rem 28.9rem;}

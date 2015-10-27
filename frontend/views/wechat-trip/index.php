@@ -26,6 +26,10 @@
                     <p class="title">梦中的情人节</p>
                     <img class="min-height" src="http://image.suiuu.com/suiuu_index/10.jpg">
                 </li>
+                <li class="banner01  min-height" onclick="gotoUrl('static/product')">
+                    <p class="title"></p>
+                    <img class="min-height" src="http://image.suiuu.com/suiuu_index/index1.jpg">
+                </li>
             </ul>
             <div class="hd"><ul></ul></div>
         </div>
