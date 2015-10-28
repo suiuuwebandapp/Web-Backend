@@ -82,11 +82,7 @@
             $('.productCon .topTip .inner li .drops a').click(function(e) {
                 $(this).parent('.drops').css('display','none');
             });
-
-
-        })
-
-
+        });
     </script>
     <div class="listBox">
         <div class="listCon">
@@ -292,6 +288,7 @@
                     <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic dayangzhou-37.jpg"></a>
                     <div class="text">
                         <h2 class="title02">社区可持续发展</h2>
+
                         <p class="p1"><span class="span01">简介：</span><span>
                           协助实现村落的可持续生活<br/>
                           实施提供村庄新鲜饮用水的项目<br/>
@@ -324,7 +321,7 @@
                     <div class="text">
                         <h2 class="title02">大象需要你</h2>
                         <p class="p1"><span class="span01">简介：</span><span>山谷包围的森林，美好而平静的居所，这些被忽视和滥杀的大象需要你</span></p>
-                        <p>时间：8天</p>
+                        <p>时间：7天</p>
                         <p>地点：清迈</p>
                         <p class="money">RMB<span>3699</span></p>
                     </div>
@@ -332,11 +329,11 @@
                 <li>
                     <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic1-2.jpg"></a>
                     <div class="text">
-                        <h2 class="title02">你好，曼谷</h2>
-                        <p class="p1"><span class="span01">简介：</span><span>鼓励孩子（6-14岁）用英语沟通，热带天堂，完美海滩，清澈水域和酒吧餐馆，来曼谷感受一切吧！</span></p>
-                        <p>时间：21天</p>
+                        <h2 class="title02">苏林自然之村</h2>
+                        <p class="p1"><span class="span01">简介：</span><span>体验曼谷背包客区的喧嚣，对比泰国农村学校的轻松。到达素万那普机场后，团队将护送你到山路的住宿自由休息一天，探索这个不拘一格的地区。</span></p>
+                        <p>时间：8天</p>
                         <p>地点：曼谷</p>
-                        <p class="money">RMB<span>9699</span></p>
+                        <p class="money">RMB<span>4359</span></p>
                     </div>
                 </li>
                 <li>
@@ -382,9 +379,9 @@
                     <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/pic yazhou-11.jpg"></a>
                     <div class="text">
                         <h2 class="title02">马可波罗眼中最美的岛屿</h2>
-                        <p class="p1"><span class="span01">简介：</span><span>靠近美丽的斯里兰卡海岸，生活在当地家庭中，享受真正的当地体验，主要任务是和来自其他国家和地区的18-25岁年轻人一起负责英语教学。</span></p>
+                        <p class="p1"><span class="span01">简介：</span><span>基于野生Wasgamuwa国家公园的心脏地带，是斯里兰卡最振奋人心的产品路线之一，进行公园亚洲象群的生态研究。</span></p>
                         <p>时间：14天</p>
-                        <p>地点：科伦坡</p>
+                        <p>地点：斯里兰卡科伦坡</p>
                         <p class="money">RMB<span>10369</span></p>
                     </div>
                 </li>
@@ -409,6 +406,16 @@
                         <p>时间：14天</p>
                         <p>地点：暹粒</p>
                         <p class="money">RMB<span>6750</span></p>
+                    </div>
+                </li>
+                <li>
+                    <a href="javascript:;" class="pic"><img src="http://image.suiuu.com/suiuu_product/jpz_jb.jpg"></a>
+                    <div class="text">
+                        <h2 class="title02">金边向水而生</h2>
+                        <p class="p1"><span class="span01">简介：</span><span>帮助贫困儿童&体验迷人的柬埔寨文化&探索吴哥窟庙宇。</span></p>
+                        <p>时间：14天</p>
+                        <p>地点：金边</p>
+                        <p class="money">RMB<span>6710</span></p>
                     </div>
                 </li>
             </ul>

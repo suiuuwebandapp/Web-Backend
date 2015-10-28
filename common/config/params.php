@@ -1,5 +1,6 @@
 <?php
 return [
+    'front_suiuu_url'=>'http://www.suiuu.com',
     'suiuu_image_url'=>'http://image.suiuu.com',
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',

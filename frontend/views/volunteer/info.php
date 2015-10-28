@@ -20,6 +20,10 @@
     .mbsc-mobiscroll .dw-cal .dw-sel .dw-i{border-radius: 50%;}
     .mbsc-ic-arrow-left5:before{background-position: 0 0 !important;background-size: 36px 40px !important;}
     .mbsc-ic-arrow-right5:before{background-position: 0 0 !important;background-size: 36px 40px !important;}
+    .sydetail .web-content .web-left .title02{margin-top: 30px;margin-bottom:10px;line-height: 22px;height: 22px;}
+    .content_info{line-height: 1.5;}
+    .content_info p{line-height: 1.5;}
+    .sydetail .web-content .web-left p{line-height: 1.5;}
 </style>
 
 <div class="zybanner_out">
@@ -63,35 +67,57 @@
                         <span><b class="icon icon04"></b>有效期至：<b><?=$volunteerInfo['endDate']?></b></span>
                     </div>
                     <?php if(!empty($volunteerInfo['recommendInfo'])){ ?>
-                        <p id="detail" class="title02">推荐理由</p>
-                        <div><?=nl2br($volunteerInfo['recommendInfo'])?></div>
+                        <p  class="title02">推荐理由</p>
+                        <div class="content_info"><?=nl2br($volunteerInfo['recommendInfo'])?></div>
                     <?php } ?>
-                    <p id="detail" class="title02">项目详情</p>
-                    <div><?=nl2br($volunteerInfo['info'])?></div>
-                    <?php if(!empty($volunteerInfo['prepare'])){ ?>
-                        <p id="detail" class="title02">预定说明</p>
-                        <div><?=nl2br($volunteerInfo['prepare'])?></div>
-                    <?php } ?>
+                    <p  class="title02">项目详情</p>
+                    <div class="content_info"><?=nl2br($volunteerInfo['info'])?></div>
                     <?php if(!empty($volunteerInfo['scheduleIntro'])){ ?>
-                        <p id="detail" class="title02">行程安排</p>
-                        <div><?=nl2br($volunteerInfo['scheduleIntro'])?></div>
+                        <p  class="title02">行程安排</p>
+                        <div class="content_info"><?=nl2br($volunteerInfo['scheduleIntro'])?></div>
                     <?php } ?>
-                    <div class="design">
+                    <div class="design content_info">
                         <?php if(!empty($volunteerInfo['scheduleList'])){ $volunteerInfo['scheduleList']=json_decode($volunteerInfo['scheduleList'],true);?>
                             <div class="line"></div>
+                            <?php $start=0;$end=0;?>
                             <?php foreach($volunteerInfo['scheduleList'] as $key => $schedule){ ?>
-                                <p class="tP"><span></span>第<?=$key+1?>天</p>
+                                <?php
+                                    if(empty(trim($schedule))){
+                                        continue;
+                                    }
+                                    $start=$key;
+                                    $end=$key+1;
+                                    $flag=false;
+                                    do{
+                                        if(array_key_exists($end,$volunteerInfo['scheduleList'])&&empty(trim($volunteerInfo['scheduleList'][$end]))){
+                                            $flag=true;
+                                            $end++;
+                                        }else{
+                                            $flag=false;
+                                        }
+                                    }while($flag);
+                                ?>
+                                <p class="tP"><span></span><?=($end-$start)==1?'第'.++$start."天":'第'.++$start.'-'.$end.'天'?></p>
                                 <div style="margin:0 0 15px 20px;"><?=nl2br($schedule)?></div>
+                                <?php $end=0; ?>
                             <?php } ?>
                         <?php } ?>
                     </div>
-                    <p id="detail" class="title02">餐饮安排</p>
-                    <div><?=nl2br($volunteerInfo['eat'])?></div>
-                    <p id="detail" class="title02">住宿安排</p>
-                    <div><?=nl2br($volunteerInfo['hotel'])?></div>
+                    <?php if(!empty($volunteerInfo['eat'])){ ?>
+                        <p  class="title02">餐饮安排</p>
+                        <div class="content_info"><?=nl2br($volunteerInfo['eat'])?></div>
+                    <?php } ?>
+                    <?php if(!empty($volunteerInfo['hotel'])){ ?>
+                        <p  class="title02">住宿安排</p>
+                        <div class="content_info"><?=nl2br($volunteerInfo['hotel'])?></div>
+                    <?php } ?>
                     <?php if(!empty($volunteerInfo['note'])){ ?>
-                        <p id="detail" class="title02">注意事项</p>
-                        <div><?=nl2br($volunteerInfo['note'])?></div>
+                        <p  class="title02">注意事项</p>
+                        <div class="content_info"><?=nl2br($volunteerInfo['note'])?></div>
+                    <?php } ?>
+                    <?php if(!empty($volunteerInfo['prepare'])){ ?>
+                        <p  class="title02">预定说明</p>
+                        <div class="content_info"><?=nl2br($volunteerInfo['prepare'])?></div>
                     <?php } ?>
                     <?php if(!empty($volunteerInfo['includeList'])&&!empty($volunteerInfo['unIncludeList'])){ ?>
                     <p class="title02">价格内容</p>
@@ -142,7 +168,7 @@
         </div>
         <div class="web-right">
             <div class="kuang clearfix">
-                <input type="hidden" id="dateList" value="" />
+                <input type="hidden" id="dateList" value="<?=$volunteerInfo['dateList']?>" />
             </div>
             <div class="kuang clearfix">
                 <div class="user bgGreen">
@@ -223,6 +249,7 @@
     $(document).ready(function(){
         setLineHeight();
         initScroll();
+        initDatPicker();
         initBtnClick();
     });
 
@@ -273,12 +300,13 @@
     }
 
     function setLineHeight(){
+        if($("div[class='design'] p[class='tP']").size()==0){
+            return;
+        }
         var first=$("div[class='design'] p[class='tP']").first().offset().top;
         var last=$("div[class='design'] p[class='tP']").last().offset().top;
         var height=parseInt(last)-parseInt(first);
         $("div[class='design'] div[class='line']").height(height);
-
-        initDatPicker();
     }
 
 
@@ -312,11 +340,18 @@
             lang: 'zh',           // Specify language like: lang: 'pl' or omit setting to use default
             display: 'inline',    // Specify display mode like: display: 'bottom' or omit setting to use default
             counter: false,        // More info about counter: http://docs.mobiscroll.com/2-15-1/calendar#!opt-counter
-            multiSelect: false,    // More info about multiSelect: http://docs.mobiscroll.com/2-15-1/calendar#!opt-multiSelect
+            multiSelect: true,    // More info about multiSelect: http://docs.mobiscroll.com/2-15-1/calendar#!opt-multiSelect
             invalid:invalidDateArray,
-            marked: markDateArray,
             minDate:Main.parseDate(nowDate),
-            maxDate:Main.parseDate(maxDate)
+            maxDate:Main.parseDate(maxDate),
+            onMonthChange:function(){
+               $(".dw-cal-table").on("click",function(){
+                   return false;
+               });
+            }
+        });
+        $(".dw-cal-table").on("click",function(){
+            return false;
         });
     }
 

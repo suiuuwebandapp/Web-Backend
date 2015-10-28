@@ -272,7 +272,7 @@
                                             <div class="valdate">
                                                 <div class="input-icon right input-group">
                                                     <input type="text" name="include" value="<?=$unInclude?>" class="form-control" placeholder="请输入价格不包含内容" maxlength="30" />
-                                                    <span class="input-group-btn"><button id="addInclude" class="btn blue" type="button">+</button></span>
+                                                    <span class="input-group-btn"><button id="addUnInclude" class="btn blue" type="button">+</button></span>
                                                 </div>
                                             </div>
                                         <?php }else{?>
@@ -288,7 +288,7 @@
                                     <div class="valdate">
                                         <div class="input-icon right input-group">
                                             <input type="text" name="include" value="" class="form-control" placeholder="请输入价格不包含内容" maxlength="30" />
-                                            <span class="input-group-btn"><button id="addInclude" class="btn blue" type="button">+</button></span>
+                                            <span class="input-group-btn"><button id="addUnInclude" class="btn blue" type="button">+</button></span>
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -330,7 +330,7 @@
                                             <div class="valdate">
                                                 <div class="input-icon right input-group">
                                                     <i class="fa" style="z-index: 99;right: 80px"></i>
-                                                    <input type="text" name="price" value="<?=$priceInfo['price']?>" class="form-control price" placeholder="请输入价格" maxlength="30" required style="padding-right: 50px"/>
+                                                    <input type="text" name="price" value="<?=$priceInfo['price']?>" class="form-control price" placeholder="请输入价格" maxlength="30" required/>
                                                     <span class="input-group-addon">￥</span>
                                                     <input type="text" name="date" value="<?=$priceInfo['day']?>" class="form-control price_date" placeholder="请输入天数" maxlength="30" required/>
                                                     <span class="input-group-addon">天</span>
@@ -341,7 +341,7 @@
                                             <div class="valdate">
                                                 <div class="input-icon right input-group" style="margin-top: 10px">
                                                     <i class="fa" style="z-index: 99;right: 80px"></i>
-                                                    <input type="text" name="price" value="<?=$priceInfo['price']?>" class="form-control price" placeholder="请输入价格" maxlength="30" required style="padding-right: 50px"/>
+                                                    <input type="text" name="price" value="<?=$priceInfo['price']?>" class="form-control price" placeholder="请输入价格" maxlength="30" required/>
                                                     <span class="input-group-addon">￥</span>
                                                     <input type="text" name="date" value="<?=$priceInfo['day']?>" class="form-control price_date" placeholder="请输入天数" maxlength="30" required/>
                                                     <span class="input-group-addon">天</span>
@@ -354,7 +354,7 @@
                                     <div class="valdate">
                                         <div class="input-icon right input-group">
                                             <i class="fa" style="z-index: 99;right: 80px"></i>
-                                            <input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required style="padding-right: 50px"/>
+                                            <input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required />
                                             <span class="input-group-addon">￥</span>
                                             <input type="text" name="date" value="" class="form-control price_date" placeholder="请输入天数" maxlength="30" required/>
                                             <span class="input-group-addon">天</span>
@@ -383,7 +383,7 @@
                                             <?php foreach($volunteerInfo['picList']as $key=>$pic){ ?><?php } ?>
                                             <div class="uploadifive-queue-item complete" id="uploadifive-picUpload-file-<?=$key?>" src="<?=$pic?>">
                                                 <a class="close" href="javascript:;" onclick="$(this).parent().remove()">X</a>
-                                                <div><span class="filename">404.png</span><span class="fileinfo"> - Completed</span></div>
+                                                <div><span class="filename"><?=$pic?></span><span class="fileinfo"> - Completed</span></div>
                                                 <div class="progress" style="display: none;">
                                                     <div class="progress-bar" style="width: 100%;"></div>
                                                 </div>
@@ -591,7 +591,7 @@
         var html ='<div class="valdate">';
             html+='<div class="input-icon right input-group" style="margin-top: 10px">';
             html+='<i class="fa" style="z-index: 99;right: 80px"></i>';
-            html+='<input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required style="padding-right: 50px"/>';
+            html+='<input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required/>';
             html+='<span class="input-group-addon">￥</span>';
             html+='<input type="text" name="date" value="" class="form-control price_date" placeholder="请输入天数" maxlength="30" required/>';
             html+='<span class="input-group-addon">天</span>';
@@ -617,9 +617,7 @@
 
         $("#scheduleList textarea").each(function(){
             var val=$(this).val();
-            if(val.length>0){
-                scheduleList.push(val);
-            }
+            scheduleList.push(val);
         });
         $("#includeList input").each(function(){
             var val=$(this).val();
@@ -655,14 +653,6 @@
         }
         if(info==undefined||info==''){
             Main.errorTip("项目详情不允许为空");
-            return;
-        }
-        if(eat==undefined||eat==''){
-            Main.errorTip("餐饮安排不允许为空");
-            return;
-        }
-        if(hotel==undefined||hotel==''){
-            Main.errorTip("住宿安排不允许为空");
             return;
         }
         if(orgImg==''){

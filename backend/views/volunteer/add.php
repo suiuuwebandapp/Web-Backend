@@ -39,10 +39,12 @@
         max-height: 50px;
     }
     .input-group  input.price_date{
+        padding: 0px;
         width: 119px;
     }
     .input-group  input.price:{
         width: 240px;
+        padding: 0px;
         border-right: none;
     }
 
@@ -271,7 +273,7 @@
                             <div class="col-md-4 valdate" id="priceList">
                                 <div class="input-icon right input-group">
                                     <i class="fa" style="z-index: 99;right: 80px"></i>
-                                    <input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required style="padding-right: 50px"/>
+                                    <input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required />
                                     <span class="input-group-addon">￥</span>
                                     <input type="text" name="date" value="" class="form-control price_date" placeholder="请输入天数" maxlength="30" required/>
                                     <span class="input-group-addon">天</span>
@@ -493,7 +495,7 @@
         var html ='<div class="valdate">';
         html+='<div class="input-icon right input-group" style="margin-top: 10px">';
         html+='<i class="fa" style="z-index: 99;right: 80px"></i>';
-        html+='<input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required style="padding-right: 50px"/>';
+        html+='<input type="text" name="price" value="" class="form-control price" placeholder="请输入价格" maxlength="30" required/>';
         html+='<span class="input-group-addon">￥</span>';
         html+='<input type="text" name="date" value="" class="form-control price_date" placeholder="请输入天数" maxlength="30" required/>';
         html+='<span class="input-group-addon">天</span>';
@@ -521,9 +523,7 @@
 
         $("#scheduleList textarea").each(function(){
             var val=$(this).val();
-            if(val.length>0){
-                scheduleList.push(val);
-            }
+            scheduleList.push(val);
         });
         $("#includeList input").each(function(){
             var val=$(this).val();
@@ -559,14 +559,6 @@
         }
         if(info==undefined||info==''){
             Main.errorTip("项目详情不允许为空");
-            return;
-        }
-        if(eat==undefined||eat==''){
-            Main.errorTip("餐饮安排不允许为空");
-            return;
-        }
-        if(hotel==undefined||hotel==''){
-            Main.errorTip("住宿安排不允许为空");
             return;
         }
         if(orgImg==''){

@@ -15,36 +15,36 @@ class SiteUrl {
 
     public static function getTripUrl($tripId)
     {
-        $baseUrl=\Yii::$app->params['base_dir'];
+        $baseUrl=\Yii::$app->params['front_suiuu_url'];
         return $baseUrl."/view-trip/info/".$tripId.".html";
     }
 
     public static function getTripSearchUrl($keywords)
     {
-        $baseUrl=\Yii::$app->params['base_dir'];
+        $baseUrl=\Yii::$app->params['front_suiuu_url'];
         return $baseUrl."/view-trip/list?s=".$keywords;
     }
     public static function getTripActivityUrl($keywords)
     {
-        $baseUrl=\Yii::$app->params['base_dir'];
+        $baseUrl=\Yii::$app->params['front_suiuu_url'];
         return $baseUrl."/view-trip/list?a=".$keywords;
     }
 
     public static function getViewUserUrl($userId)
     {
-        $baseUrl=\Yii::$app->params['base_dir'];
+        $baseUrl=\Yii::$app->params['front_suiuu_url'];
         return $baseUrl."/view-user/info/".$userId.".html";
     }
 
     public static function getEditTripUrl($tripId)
     {
-        $baseUrl=\Yii::$app->params['base_dir'];
+        $baseUrl=\Yii::$app->params['front_suiuu_url'];
         return $baseUrl."/trip/edit-trip?trip=".$tripId;
     }
 
     public static function getOrderPayUrl($orderNumber)
     {
-        $baseUrl=\Yii::$app->params['base_dir'];
+        $baseUrl=\Yii::$app->params['front_suiuu_url'];
         return $baseUrl."/user-order/info?orderNumber=".$orderNumber;
 
     }
